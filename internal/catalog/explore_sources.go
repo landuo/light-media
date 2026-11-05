@@ -66,6 +66,12 @@ func (e *Explorer) CloseIdleConnections() {
 var exploreRequestSlots = make(chan struct{}, 4)
 
 func (e *Explorer) request(ctx context.Context, source, method, path string, params url.Values, body any, out any) error {
+	return e.requestProvider(ctx, source, method, path, params, body, out, false)
+}
+
+// Recognition consumes provider business-error envelopes itself, as the fixed
+// source clients do. The normal Explore contract still rejects those envelopes.
+func (e *Explorer) requestProvider(ctx context.Context, source, method, path string, params url.Values, body any, out any, preserveEnvelope bool) error {
 	errorSource := source
 	if strings.HasPrefix(source, "anilist_") {
 		errorSource = "anilist"
@@ -93,6 +99,9 @@ func (e *Explorer) request(ctx context.Context, source, method, path string, par
 		// Public client protocol constants used by MoviePilot's Frodo adapter;
 		// these identify the client, and are not the user's account credentials.
 		ts := time.Now().Format("20060102")
+		if preserveEnvelope && query.Get("_ts") != "" {
+			ts = query.Get("_ts")
+		}
 		sign := hmac.New(sha1.New, []byte("bf7dddc7c9cfe6f7"))
 		sign.Write([]byte(method + "&" + url.QueryEscape(path) + "&" + ts))
 		query.Set("apiKey", "0dad551ec0f84ed02907ff5c42e8ec70")
@@ -121,36 +130,63 @@ func (e *Explorer) request(ctx context.Context, source, method, path string, par
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
-	response, err := e.http.Do(req)
-	if err != nil {
-		if ctx.Err() != nil || errors.Is(err, context.DeadlineExceeded) || errors.Is(err, context.Canceled) {
-			return failure("canceled", 0)
+	var data []byte
+	retrySessionGET := preserveEnvelope && (source == "douban" || source == "bangumi") && method == http.MethodGet
+	for attempt := 0; ; attempt++ {
+		response, err := e.http.Do(req)
+		if err != nil {
+			if ctx.Err() != nil || errors.Is(err, context.Canceled) || !retrySessionGET && errors.Is(err, context.DeadlineExceeded) {
+				return failure("canceled", 0)
+			}
+			if retrySessionGET && attempt == 0 && sourceProviderConnectionFailure(err) {
+				e.http.CloseIdleConnections()
+				continue
+			}
+			return failure("unavailable", 0)
 		}
-		return failure("unavailable", 0)
-	}
-	defer response.Body.Close()
-	if response.StatusCode != http.StatusOK {
-		code := "unavailable"
-		switch response.StatusCode {
-		case 401, 403:
-			code = "unauthorized"
-		case 404:
-			code = "not_found"
-		case 429:
-			code = "rate_limited"
+		// DoubanApi._handle_response deliberately parses any HTTP status.
+		// Bangumi and ordinary Explore still require a 200 response.
+		if response.StatusCode != http.StatusOK && !(preserveEnvelope && source == "douban") {
+			response.Body.Close()
+			code := "unavailable"
+			switch response.StatusCode {
+			case 401, 403:
+				code = "unauthorized"
+			case 404:
+				code = "not_found"
+			case 429:
+				code = "rate_limited"
+			}
+			return failure(code, response.StatusCode)
 		}
-		return failure(code, response.StatusCode)
-	}
-	data, err := io.ReadAll(io.LimitReader(response.Body, maxBody+1))
-	if err != nil || len(data) > maxBody {
-		return failure("invalid_response", 0)
+		data, err = io.ReadAll(io.LimitReader(response.Body, maxBody+1))
+		response.Body.Close()
+		if err != nil {
+			if ctx.Err() != nil {
+				return failure("canceled", 0)
+			}
+			if retrySessionGET && attempt == 0 && sourceProviderConnectionFailure(err) {
+				e.http.CloseIdleConnections()
+				continue
+			}
+			if retrySessionGET {
+				// Requests consumes the response before get_res returns; a body
+				// transport failure becomes None, not a JSON decoding exception.
+				return failure("unavailable", 0)
+			}
+			return failure("invalid_response", 0)
+		}
+		if len(data) > maxBody {
+			return failure("invalid_response", 0)
+		}
+		break
 	}
 	var envelope struct {
 		Code  int             `json:"code"`
 		Error json.RawMessage `json:"error"`
 	}
 	arrayResponse := source == "anilist_translations" || source == "bangumi" && path == "/calendar"
-	if !arrayResponse && (decode(data, &envelope) != nil || envelope.Code != 0 || len(envelope.Error) > 0 && string(envelope.Error) != "null" && string(envelope.Error) != "\"\"") {
+	if !preserveEnvelope && !arrayResponse && (decode(data, &envelope) != nil || envelope.Code != 0 || len(envelope.Error) > 0 && string(envelope.Error) != "null" && string(envelope.Error) != "\"\"") {
 		return failure("invalid_response", 0)
 	}
 	if decode(data, out) != nil {

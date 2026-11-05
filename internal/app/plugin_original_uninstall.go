@@ -25,6 +25,13 @@ func (a *App) originalPluginUninstallHTTP(r *http.Request, path string) (any, er
 		return nil, &APIError{"APP_STOPPING", "服务正在停止", http.StatusServiceUnavailable}
 	}
 	defer a.wg.Done()
+	return a.uninstallOriginalPlugin(ctx, instance)
+}
+
+// The endpoint and the finite SDK manager share the same uninstall sequence.
+// Their callers own operation serialization and background admission; callbacks
+// must not re-enter the HTTP endpoint while that lifecycle lock is held.
+func (a *App) uninstallOriginalPlugin(ctx context.Context, instance string) (any, error) {
 	if err := a.setOriginalPluginInstalled(ctx, instance, false); err != nil {
 		return nil, err
 	}

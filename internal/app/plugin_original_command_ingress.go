@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
-	"unicode"
 
 	"light-media/internal/commandrouter"
 )
@@ -133,8 +132,7 @@ func (a *App) standardWebCommandHTTP(w http.ResponseWriter, r *http.Request, pat
 			text = ""
 		}
 		hasMedia = originalViewJSONTruth(payload["image"]) || originalViewJSONTruth(payload["images"])
-		// The original MessageChain routes slash commands before media/AI
-		// handling. Image metadata never enters CommandExcute or command data;
+		// Image metadata never enters CommandExcute or command data;
 		// this text-command bridge neither parses nor retrieves media.
 	}
 	channel := "Web"
@@ -158,7 +156,7 @@ func (a *App) standardWebCommandHTTP(w http.ResponseWriter, r *http.Request, pat
 	// messages retain their own broadcast after the pending-input branch.
 	text, commandText := originalWebCommandText(text)
 	if !commandText {
-		if strings.TrimSpace(text) != "" && !strings.HasPrefix(strings.ToLower(text), "/ai") && !strings.HasPrefix(text, "CALLBACK:") {
+		if strings.TrimSpace(text) != "" && !strings.HasPrefix(text, "CALLBACK:") {
 			a.emitStandardBusinessEvent(r.Context(), "user.message", map[string]any{"text": text, "userid": user, "channel": "Web", "source": user, "chat_id": nil, "reply_to_message_id": nil})
 			writeJSON(w, r, map[string]bool{"success": true, "accepted": true})
 			return true
@@ -182,23 +180,8 @@ func (a *App) standardWebCommandHTTP(w http.ResponseWriter, r *http.Request, pat
 	return true
 }
 
-// Keep the original explicit /noai escape and /ai prefix test, without
-// implementing or silently swallowing the unrelated AI/message branches.
+// With model routing excluded, every raw slash command uses the same ordinary
+// registry. Prefixes are not reserved, rewritten, or silently consumed.
 func originalWebCommandText(text string) (string, bool) {
-	space := func(r rune) bool { return unicode.IsSpace(r) || r >= 0x1c && r <= 0x1f }
-	trimmed := strings.TrimFunc(text, space)
-	if len(trimmed) >= 5 && strings.EqualFold(trimmed[:5], "/noai") {
-		rest := trimmed[5:]
-		if rest == "" {
-			text = ""
-		} else {
-			for _, r := range rest {
-				if space(r) || r == ':' || r == '：' {
-					text = strings.TrimFunc(strings.TrimPrefix(rest, string(r)), space)
-				}
-				break
-			}
-		}
-	}
-	return text, strings.HasPrefix(text, "/") && !strings.HasPrefix(strings.ToLower(text), "/ai")
+	return text, strings.HasPrefix(text, "/")
 }

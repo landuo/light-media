@@ -1,0 +1,65 @@
+{
+  "status": "accepted",
+  "features": [
+    "S05",
+    "S12"
+  ],
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_positions": {
+    "S05": [
+      "app/db/subscribe_oper.py:10-22,174,214,258,268",
+      "app/db/models/subscribe.py",
+      "app/chain/subscribe.py:169,617-624,1402,1415,2156,4181,4262"
+    ],
+    "S12": [
+      "app/chain/torrents.py:402,434",
+      "app/helper/torrent.py:66",
+      "app/modules/indexer/spider/__init__.py:189-209",
+      "ordinary external category data: exact sites312 helper/catalog hashes bound in projection"
+    ]
+  },
+  "target_positions": {
+    "S05": [
+      "internal/plugins/subscription_host.go",
+      "internal/app/plugin_original_host_subscriptions.go",
+      "internal/app/plugin_original_host_subscriptions_patch.go",
+      "internal/app/subscription_quality_source.go",
+      "internal/app/types.go"
+    ],
+    "S12": [
+      "internal/plugins/site_host.go",
+      "internal/app/plugin_original_host_sites.go",
+      "internal/app/plugin_original_host_sites_categories.go",
+      "internal/app/plugin_original_host_sites_rss.go",
+      "internal/sites/plugin_host_resources.go",
+      "internal/sites/rousi.go"
+    ]
+  },
+  "review": {
+    "root_independent_actual_sdk_seconds": 3.428,
+    "initial_red": "business-expanded-independent-r1.log used an old external worker which rejected the newly added imdbid field; r2 uses separately built business-fixture-expanded. Preserved; not a passing product run.",
+    "hash_audit": "all13 subscription and14 category manifest dependencies matched current files",
+    "runtime": "latest Linux expanded cmd/server installed actual standard SDK binaries, update/version/PID/data/clone/cold/errors/uninstall; owned HTTP peers and synthetic historical rows explicitly distinguished",
+    "browser": "existing real common business fixture config/data/clone UI evidence; not a claim that every subscription field was individually clicked",
+    "source": "actual fixed SubscribeOper/Base ORM on isolated source runtime + actual SQLite35 cases; full165 supported schema/category projection from actual helper;855+10 fixed category cases"
+  },
+  "adaptations": [
+    "SDK stable host identifiers and native execution/ownership invariants retained; no arbitrary database setter. All46 source fields accounted:30 executable native writable fields and16 explicit identity/single-user/generated-time/absent-host-business boundaries in subscription-expanded-final.json; no new subscription business subsystem.",
+    "Existing TV season identity/mapping and native counter/year/policy/payload bounds are retained and listed; explicit NULL/empty/no-op and four SQLite scalar flag types preserved where executable.",
+    "No AI/workflow/official authorization added; SitesHelper ordinary public categories only. External resource source was not pinned by fixed Dockerfile; observed exact NAS/resource SHA is recorded."
+  ],
+  "files": {
+    "testdata/plugin-host-business-20261031/subscription-expanded-final.json": "9facd15f3fb02058a4a8079b1574ffd24edfbb34835eab9a31c12f97f1d2b9f2",
+    "testdata/plugin-host-business-20261031/category-supported-final.json": "1e962e28d975f261f571bda6ad46c4ddfcb4427e4a1314aac070ef06861c6e99",
+    "testdata/plugin-host-business-20261031/process-linux-expanded/result.json": "825873d1de9622e24055b5b1318996f52e26b13d7acedf50beb6e0b7de8b6d93",
+    "testdata/plugin-host-business-20261031/process-linux-expanded/cleanup.json": "4e42bd73495d204916c5bf6f377f5b1a6b2c2c62523c5c63f35f85454e04fde2",
+    "testdata/plugin-host-business-20261031/build-server-linux-expanded/build.json": "1e547d8b0ba722a8e3439fde3d1d7034fbdf372d6d4055dbe17d45c0bf147c8d",
+    "testdata/plugin-host-business-20261031/build-server-linux-expanded/inputs.json": "339b471151003b13f31236dedb6549ce3ad0c87c501696dc59690baf5a656afc",
+    "testdata/plugin-host-business-20261031/subscription-source-orm-r5/oracle.json": "4bddf99666f15752152e0e9305aa1ec9c011754cb199df823e6813e12eea96ed",
+    "testdata/plugin-host-business-20261031/subscription-source-orm-r5/cleanup.json": "834a7ac9bee7b446e6a59a8db1dac86423e9285c3e0d6f16b0261e64936bee70",
+    "testdata/plugin-host-business-20261031/browser/observations.json": "ce6ee2ce02ec60d63534e2b961b611c71e325e5f902e9fd67898a7cddafbd381",
+    "testdata/plugin-host-integration-20261031/business-expanded-independent-r2.log": "98219c24b178745f0e06f1c956d8727419749ec011eccdf2af992360d6f2fbac",
+    "testdata/plugin-host-integration-20261031/catalog-supported-complete-r2/projection.json": "014df39db26d6e1cfad04e33364f7c088307fa64ab3f178a33dceb8714799422"
+  },
+  "delivery": "local codex/plugin-host-resources-20261031 only; no commit/push/deployment"
+}

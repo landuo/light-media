@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_location": "app/core/config.py:70",
+  "source_sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+  "source_constant_default": "Asia/Shanghai",
+  "command": [
+    "go",
+    "build",
+    "-race",
+    "-o",
+    "work/plugin-platform-final-20261104/settings/timezone-sdk-probe",
+    "testdata/plugin-platform-final-20261104/settings/timezone_sdk_probe.go"
+  ],
+  "run_command": [
+    "work/plugin-platform-final-20261104/settings/timezone-sdk-probe"
+  ],
+  "go_version": "go version go1.26.2 darwin/arm64",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "executable_sha256": "8e9392df4df751f50d557343c6e97b6c2a24661e8c32aacd1b3172a2f5006096",
+  "bound_inputs": {
+    "internal/plugins/protocol.go": "4dd45fba68965bed4255ecd4382036914b40f45945da6313fbe9ea46c8119454",
+    "internal/plugins/concurrent_session.go": "c3f79283e113a669737cc44d1cdc23dc47cc5cd346e7ec02339ea9d6b838cdd6",
+    "testdata/plugin-platform-final-20261104/settings/timezone_sdk_probe.go": "02d7d93b4307d10ff564c9234eea7234ef5309f63454583b016a12820d73f237",
+    "testdata/plugin-platform-final-20261104/settings/timezone-sdk-probe-result.json": "3656b8e1dba348846a017b15e2915aadb3b5caab19c5c6395d62a4e0f679c4b0"
+  },
+  "case_count": 3,
+  "all3_actual_worker_pids_exited": true,
+  "classification": "Actual SDK timezone environment exposure proof, current own independently compiled child worker. Host invocation is macOS; Linux app/browser proof is separately bound. Source default is constant, explicit host TZ is inherited exactly; no settings getter required for this native-language adaptation.",
+  "cleanup": {
+    "owned_executable_removed": true,
+    "owned_processes_remaining": 0
+  }
+}

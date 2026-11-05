@@ -1,0 +1,29 @@
+{
+  "classification": "independent real CUA browser observation of actual isolated Linux cmd/server, read-only after actor UI writes",
+  "observer": "/root",
+  "url": "http://192.168.8.129:54441/#plugins",
+  "source": {
+    "card_version": "1.1",
+    "config_path": "/page?ui=source-r6",
+    "actual_page_html_marker": "actual-native-js-restored"
+  },
+  "clone": {
+    "card_version": "1.0",
+    "config_path": "/page?ui=clone-r6",
+    "actual_page_html_marker": "actual-native-js-restored"
+  },
+  "checks": [
+    "two separately loaded cards have distinct source/clone versions",
+    "detail renderer reads actual current source and clone configuration",
+    "both independently persisted data contain JavaScript fetch-populated HTML",
+    "clone detail does not contain source configuration path",
+    "root changed no configuration and closed owned browser tab"
+  ],
+  "artifacts": {
+    "testdata/plugin-platform-final-20261104/browser-ocr/root-ui/clone.ax.txt": "418aee3d87290b7a315deb4191678dfeb8a58cfda7d7cc7d16012e2b0f813837",
+    "testdata/plugin-platform-final-20261104/browser-ocr/root-ui/clone.png": "54170b6d035ecc9e1851cecc7dd1b58c10cae8572ed5f55b185354c5e9dc476a",
+    "testdata/plugin-platform-final-20261104/browser-ocr/root-ui/source.ax.txt": "bde98171cca0f25a4e4bd4b80e74f016598eac371a1e8e563de2ee7bdcc0fd25",
+    "testdata/plugin-platform-final-20261104/browser-ocr/root-ui/source.png": "4de2dce6f889e389d6540395abcb438b2d3e7180a2329cb9cd16913fd23217d2"
+  },
+  "target_binding": "R6 exact main ff036cac image d149ea88; product-r6-binding-qualification.json documents postcompile central sampling race. This observation is not S18/current combined-source proof."
+}

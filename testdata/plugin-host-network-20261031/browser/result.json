@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "classification": "actual browser against owned Linux cmd/server and installed SDK",
+  "origin": "http://192.168.8.129:38721",
+  "server_sha256": "69b62b0e8cd3e9f9da07899739e62532aa34fcee17e66e395772e0427262a300",
+  "observations": [
+    "source config saved browser-source; page button made actual GET and updated returned text",
+    "invalid file URI produced visible 502; successful prior data retained",
+    "corrected browser-recovered succeeded after explicit page button",
+    "clone retained clone-config after source changes; own browser-clone save/call succeeded",
+    "browser reload retained source recovered config and data; source v2 and clone v1"
+  ],
+  "limits": [
+    "Browser reload is not server restart; process restart is separate driver evidence",
+    "Owned protocol origins, not live GitHub"
+  ]
+}

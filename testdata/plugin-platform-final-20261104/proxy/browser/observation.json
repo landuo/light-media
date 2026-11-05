@@ -1,0 +1,41 @@
+{
+  "classification": "actual Chrome via supported CUA on owned Linux R9 main LAN relay; real native Go POST/authenticated owned proxy, not mock",
+  "browser": "Chrome extension session S19 Proxy, tab368189633 closed successfully",
+  "runtime_sha256": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+  "actions": [
+    "Source v2 configuration initially CLI source; changed body browser S19 source and checked run once; save succeeded, actual page showed third200 nativePOST row.",
+    "Source changed URL to not-a-valid-target, body browser S19 must not send, checked runonce; save failed with request id, form values and checkbox retained.",
+    "Same retained draft URL restored to owned-native.invalid/owned-native, body browser S19 recovered; save succeeded and page showed source fourth200 row.",
+    "Clone v1 configuration still CLI clone (source modification did not overwrite it); changed only clone body browser S19 clone and checked runonce, save succeeded. Clone actual page had exactly its own two rows and no source/recovered body."
+  ],
+  "failures_retained": [
+    {
+      "type": "automation locator",
+      "detail": "First exact username locator omitted duplicate Vuetify accessible name; observed DOM then used full accessible name, no product change."
+    },
+    {
+      "type": "automation transition",
+      "detail": "An immediate clone menu click after dialog close raced transition; fresh DOM showed menu closed, opened semantically after state check."
+    },
+    {
+      "type": "external automation interruption",
+      "detail": "Final whole-page reload was blocked by another Chrome extension UI. No workaround attempted. Reload is not claimed as executed. All core UI writes/data views above were already completed; independent full host cold follows separately."
+    }
+  ],
+  "cleanup": {
+    "created_tab_closed": true,
+    "viewport_override_used": false
+  },
+  "evidence": {
+    "source-post.jpg": "abbca5576e25e44ee4106b148d619d118e89ccb4e76c7a7938efa732c21669c5",
+    "source-recovered.dom.txt": "dcf127c93db70f88f6a1f01168a1a3733cf4391ddb8dd7aab655c3b433dc4b2b",
+    "clone-before.dom.txt": "6070d62dd769861a128e7729281503277155eb68d8599fca546f212458a03087",
+    "clone-post.dom.txt": "95b02960b019cc86b1477d878f0b3ba23c0628e7dfea48b46db58dc95b5465d1",
+    "clone-post.jpg": "7db77969099a0fcb1b9dc6cda41c7a1c7d2fc345f8e92a38f6b359ba5ff9d3b0",
+    "source-post.dom.txt": "ace0cfc697d4eb2e4350548ee40abc7bd30b497668d671425224fafee5111fd8",
+    "failure.jpg": "71ea0a78b1bcd80c277cf668ff5c96b2bda55147a182e330742fc2a27de8e590",
+    "source-recovered.jpg": "593ea5843835e785cfe8bc24391b1f3489c8b5dcf35180b67855ada6384e2dec",
+    "failure.dom.txt": "c119fc877481071cf55d8db426267606e13856a38ec6900c9be2d4224a8cfc1b"
+  },
+  "recorded_utc": "2026-11-04T17:59:47.488915+00:00"
+}

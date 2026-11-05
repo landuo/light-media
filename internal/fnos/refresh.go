@@ -10,6 +10,7 @@ import (
 type RefreshResult struct {
 	AllLibraries bool     `json:"all_libraries"`
 	LibraryGUIDs []string `json:"library_guids"`
+	SourceResult *bool    `json:"source_result,omitempty"`
 }
 
 func serviceTruthyData(raw json.RawMessage) bool {
@@ -68,18 +69,37 @@ func (s *Service) RefreshLibrariesByPaths(ctx context.Context, paths []string) (
 // The host can prepare durable receipts while iterating; beforeScan commits its
 // submitting boundary. Memory depends on library count, not imported file count.
 func (s *Service) RefreshLibraryBatches(ctx context.Context, next func(context.Context, []ServiceLibrary) ([]string, error), beforeScan func() error) (RefreshResult, error) {
+	return s.refreshLibraryBatches(ctx, next, beforeScan, nil, false)
+}
+
+// RefreshLibraryBatchesGuarded keeps the existing paged contract, adding a
+// current-authority check after preflight and before EACH real remote write,
+// including the scanall fallback and a reauthenticated batch.
+func (s *Service) RefreshLibraryBatchesGuarded(ctx context.Context, next func(context.Context, []ServiceLibrary) ([]string, error), beforeScan, beforeWrite func() error) (RefreshResult, error) {
+	return s.refreshLibraryBatches(ctx, next, beforeScan, beforeWrite, false)
+}
+
+func (s *Service) refreshLibraryBatches(ctx context.Context, next func(context.Context, []ServiceLibrary) ([]string, error), beforeScan, beforeWrite func() error, sourceItems bool) (RefreshResult, error) {
 	result := RefreshResult{LibraryGUIDs: []string{}}
 	if ctx == nil || next == nil || beforeScan == nil {
 		return result, &ServiceError{Code: "invalid_input"}
 	}
 	current, err := s.session(ctx)
 	if err != nil {
+		if sourceItems && refreshUnauthenticated(err) {
+			return result, nil
+		}
 		return result, err
 	}
 	if !current.admin {
+		if sourceItems {
+			value := false
+			result.SourceResult = &value
+			return result, nil
+		}
 		return result, &ServiceError{Code: "unauthorized"}
 	}
-	libraries, err := current.readLibraries(ctx, false)
+	libraries, err := current.readLibrariesWithPaths(ctx, false, sourceItems)
 	if err != nil {
 		return result, err
 	}
@@ -87,6 +107,7 @@ func (s *Service) RefreshLibraryBatches(ctx context.Context, next func(context.C
 	seen := map[string]bool{}
 	all := false
 	count := 0
+collect:
 	for {
 		paths, err := next(ctx, libraries)
 		if err != nil {
@@ -99,14 +120,33 @@ func (s *Service) RefreshLibraryBatches(ctx context.Context, next func(context.C
 			if ctx.Err() != nil {
 				return result, &ServiceError{Code: "canceled"}
 			}
-			if !servicePath(target, false) {
+			if sourceItems && target == "" {
+				count++
+				all = true
+				break collect
+			}
+			if !sourceItems && !servicePath(target, false) {
 				return result, &ServiceError{Code: "invalid_input"}
 			}
 			count++
 			matched := ""
 			for _, library := range libraries {
 				for _, directory := range library.Directories {
-					if target == directory || strings.HasPrefix(target, directory+"/") {
+					candidate, parent := target, directory
+					if sourceItems {
+						// Source is_subpath resolves the target and then this
+						// directory only when visited. A previous match/fallback
+						// must not inspect later malformed paths or symlinks.
+						candidate, err = resolveRefreshSourcePath(target)
+						if err != nil {
+							return result, err
+						}
+						parent, err = resolveRefreshSourcePath(directory)
+						if err != nil {
+							return result, err
+						}
+					}
+					if candidate == parent || strings.HasPrefix(candidate, strings.TrimSuffix(parent, "/")+"/") {
 						matched = library.GUID
 						break
 					}
@@ -117,6 +157,9 @@ func (s *Service) RefreshLibraryBatches(ctx context.Context, next func(context.C
 			}
 			if matched == "" {
 				all = true
+				if sourceItems {
+					break collect
+				}
 			}
 			if matched != "" && !seen[matched] {
 				seen[matched] = true
@@ -125,6 +168,12 @@ func (s *Service) RefreshLibraryBatches(ctx context.Context, next func(context.C
 		}
 	}
 	if count == 0 {
+		if sourceItems {
+			_ = current.call(ctx, "/task/running", nil, "", nil)
+			value := true
+			result.SourceResult = &value
+			return result, nil
+		}
 		return result, &ServiceError{Code: "invalid_input"}
 	}
 	if err := beforeScan(); err != nil {
@@ -137,6 +186,11 @@ func (s *Service) RefreshLibraryBatches(ctx context.Context, next func(context.C
 		// Preflight workaround from the original. Its result alone never
 		// proves a scan was accepted or any media is visible.
 		_ = current.call(ctx, "/task/running", nil, "", nil)
+		if beforeWrite != nil {
+			if err := beforeWrite(); err != nil {
+				return result, err
+			}
+		}
 		var raw json.RawMessage
 		if err := current.call(ctx, "/mdb/scanall", serviceEmptyPost{}, "", &raw); err != nil {
 			return result, err
@@ -146,6 +200,10 @@ func (s *Service) RefreshLibraryBatches(ctx context.Context, next func(context.C
 		}
 		result.AllLibraries = true
 		result.LibraryGUIDs = []string{}
+		if sourceItems {
+			value := true
+			result.SourceResult = &value
+		}
 		return result, nil
 	}
 	if all {
@@ -164,10 +222,19 @@ func (s *Service) RefreshLibraryBatches(ctx context.Context, next func(context.C
 			_ = current.call(ctx, "/task/running", nil, "", nil)
 		}
 		var raw json.RawMessage
+		if beforeWrite != nil {
+			if err := beforeWrite(); err != nil {
+				return result, err
+			}
+		}
 		if err := current.call(ctx, "/mdb/scan/"+guid, serviceEmptyPost{}, "", &raw); err != nil || !serviceTruthyData(raw) {
 			return refreshAll()
 		}
 		result.LibraryGUIDs = append(result.LibraryGUIDs, guid)
+	}
+	if sourceItems {
+		value := true
+		result.SourceResult = &value
 	}
 	return result, nil
 }

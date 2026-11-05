@@ -1,0 +1,72 @@
+{
+  "file": "mpserverstatus/__init__.py",
+  "sha256": "63583e9706aeee31a181b2fefa4e80c793ae4f2b9a76c9efea5956f8b0043d90",
+  "function_line": 315,
+  "function_end_line": 338,
+  "observations": [
+    {
+      "line": 322,
+      "kind": "dynamic_metadata_read",
+      "name": "status_code"
+    },
+    {
+      "line": 319,
+      "kind": "dynamic_metadata_read",
+      "name": "headers"
+    },
+    {
+      "line": 320,
+      "kind": "dynamic_metadata_read",
+      "name": "content"
+    },
+    {
+      "line": 321,
+      "kind": "dynamic_metadata_read",
+      "name": "text"
+    },
+    {
+      "line": 323,
+      "kind": "dynamic_metadata_read",
+      "name": "version"
+    },
+    {
+      "line": 323,
+      "kind": "dynamic_metadata_read",
+      "name": "raw"
+    },
+    {
+      "line": 333,
+      "kind": "header_alias_read",
+      "name": "Server"
+    },
+    {
+      "line": 334,
+      "kind": "header_alias_read",
+      "name": "Date"
+    },
+    {
+      "line": 335,
+      "kind": "header_alias_read",
+      "name": "Content-Type"
+    }
+  ],
+  "status": "passed",
+  "expected_sha256": "63583e9706aeee31a181b2fefa4e80c793ae4f2b9a76c9efea5956f8b0043d90",
+  "classification": "Read-only stdlib AST supplement: header alias/getattr metadata reads of the exact bound original source; no plugin imports/runtime/settings/DB access or arbitrary source literals exported.",
+  "original_container_unchanged": true,
+  "original_state_before": {
+    "Pid": 1778027,
+    "StartedAt": "2026-10-28T11:43:10.979716372Z",
+    "Running": true,
+    "Restarting": false
+  },
+  "original_state_after": {
+    "Pid": 1778027,
+    "StartedAt": "2026-10-28T11:43:10.979716372Z",
+    "Running": true,
+    "Restarting": false
+  },
+  "driver_sha256": "47e459cbcf6cf5c1135c61e07eb1546f4d122099ae093a712ce00d8b3c17339e",
+  "program_sha256": "ef0800df333062916067e48b6ed8e778ddd13c94e24d31f506c39fa583623696",
+  "scope": "MPServerStatus uses its own configured server URL with RequestUtils timeout; not a request using host configured-site credentials. Normal Go HTTP exposes these headers/protocol too; no new business implementation accepted here."
+}

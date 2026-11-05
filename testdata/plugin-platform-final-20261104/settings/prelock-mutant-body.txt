@@ -1,0 +1,9 @@
+func (m *concurrentClient) notifyCancellation(call *concurrentHostCall) {
+ <-call.sent
+ m.mu.Lock()
+ live := m.calls[call.id] == call && !m.stopping && (!m.draining || call.cleanup) && m.terminal == nil
+ m.mu.Unlock()
+ if live {
+  if _, err := m.transport.write(Frame{Protocol: ProtocolVersion, ID: call.id, Type: "call", Identity: m.client.binding.Identity, Method: "transport.cancel", Payload: json.RawMessage(`null`)}, nil); err != nil { m.abort(err) }
+ }
+}

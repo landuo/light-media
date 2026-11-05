@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "classification": "actual Linux app test binary, separate actual Linux Go SDK worker, owned HTTP targets/authenticated proxies; not cmd/server/UI evidence",
+  "cases": [
+    "configured-auth-no-proxy-retained",
+    "source-getter-uppercase",
+    "environment-lowercase",
+    "environment-cgi",
+    "environment-host-specific",
+    "environment-no-proxy",
+    "source-clone-private-read-and-revocation-public-boundary"
+  ],
+  "roots": 2,
+  "command": "OWNED_HOST_PROXY_FIXTURE_BINARY=<owned>/worker-linux ./native-sdk-linux.test -test.run ^TestOriginalHostProxyActualSDK -test.v",
+  "actual_log": "native-sdk-linux.log",
+  "files_observed_after_compile": {
+    "internal/plugins/network_proxy_host.go": "2be2e4f533e4a2506fe61d8af40650234b1553371795e1e2eacdaa73289d9991",
+    "internal/app/plugin_original_host_proxy.go": "fb1a8175a1d5c51b355c165c6b506d3ab111b8c84a3e9e22dc4c288d74bf52dd",
+    "internal/app/plugin_original_host_proxy_sdk_test.go": "c1e69da7397982dc4a0399c30ebbf687717c535d2f500fde872ed2b229983820",
+    "cmd/plugin-host-proxy-fixture/main.go": "f9154102efbc6fd976641c67cfe50bbe612bb92720e556901d3d83f5bd9e05d6",
+    "work/plugin-platform-final-20261104/proxy/native-sdk-linux.test": "7f5368cede3a6970d63a44989b6c255952f89eaf61169e30c1f25ce258a84760",
+    "work/plugin-platform-final-20261104/proxy/worker-linux": "ff511d7f3ece730711b0c729fa4b1675845ba65d502e6053b7f9fe81b18b885e"
+  },
+  "limitation": "This test binary was compiled once before this post-build hash sample; final cmd/server uses independently captured pre/post stable R9 input closure coordinated by root."
+}

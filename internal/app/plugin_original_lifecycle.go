@@ -119,9 +119,8 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 	return nil
 }
 
-// This initializer slice is connected to the actual Clone HTTP endpoint.
-// Full stop_service/reload-event/register translation remains the next slice;
-// these calls alone are not represented as complete original reload behavior.
+// Clone uses the same reload lifecycle, then repeats the source initializer
+// when its copied configuration is nonempty.
 func (a *App) initializeOriginalCloneCalls(ctx context.Context, instance string) error {
 	object, reloadErr := a.reloadOriginalPlugin(ctx, instance)
 	if reloadErr != nil {

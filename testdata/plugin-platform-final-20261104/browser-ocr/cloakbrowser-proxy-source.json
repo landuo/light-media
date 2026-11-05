@@ -1,0 +1,174 @@
+{
+  "classification": "read-only paired wrapper source files from disposable no-network image; no old service/config executed",
+  "files": [
+    {
+      "path": "license.py",
+      "sha256": "707e7a5d928e99797aace2286ccffef0f9573cc3b1c7e84759df66033f2a8177",
+      "matches": [
+        {
+          "line": 223,
+          "text": "    return str(denial_dir / f\"{uuid.uuid4().hex}.json\")\n\n\n_LICENSE_KEY_SOURCE_PARAM = \"param\"\n_LICENSE_KEY_SOURCE_ENV = \"env\"\n_LICENSE_KEY_SOURCE_DEFAULT_FILE = \"default_file\"\n_LICENSE_KEY_SOURCE_CUSTOM_FILE = \"custom_file\"\n_LICENSE_KEY_SOURCE_NONE = \"none\"\n\n\ndef _resolve_license_key_with_source(\n    license_key: str | None = None,\n) -> tuple[str | None, str]:\n    \"\"\"Resolve license key with source tracking for env-injection decisions.\n\n    Returns (key, source) where source is one of the _LICENSE_KEY_SOURCE_*"
+        }
+      ]
+    },
+    {
+      "path": "__main__.py",
+      "sha256": "526172944c4c38dbd8aa6c48cdd7fff6c0407d7135607bb8b474f2db11f34df3",
+      "matches": [
+        {
+          "line": 370,
+          "text": "    if \"error\" in binary:\n        print(f\"Binary:    unavailable ({binary['error']})\")\n    else:\n        if binary[\"tier\"] == \"override\":\n            print(\"Version:   set via CLOAKBROWSER_BINARY_PATH (see Launch line)\")\n        else:\n            requested_channel = binary.get(\"requested_channel\", \"stable\")\n            resolved_channel = binary.get(\"resolved_channel\")\n            if binary.get(\"channel_fallback\"):\n                print(f\"Channel:   Preview {ARROW} Stable fallback\")\n            elif resolved_channel:\n                print(f\"Channel:   {resolved_channel.capitalize()}\")\n            else:\n                print(f\"Channel:   {requested_channel.capitalize()}\")\n            latest = binary.get(\"latest_version\")\n            if latest:"
+        },
+        {
+          "line": 412,
+          "text": "        print(f\"Installed: {binary['installed']}\")\n        if binary.get(\"cache_dir\"):\n            print(f\"Cache:     {binary['cache_dir']}\")\n        if binary.get(\"override\"):\n            print(f\"Override:  {binary['override']} (CLOAKBROWSER_BINARY_PATH)\")\n\n    launch = diag[\"launch\"]\n    if not launch.get(\"tested\"):\n        print(f\"Launch:    {launch['reason']}\")\n    elif launch[\"ok\"]:\n        # Windows prints nothing, so say it ran rather than show an empty version.\n        print(f\"Launch:    {MARK_OK} {launch['version'] or 'runs (no version reported on Windows)'}\")\n    else:\n        print(f\"Launch:    {MARK_FAIL} failed {DASH} {launch['error']}\")\n        for lib in launch.get(\"missing_libs\", []):\n            print(f\"           missing: {lib}\")"
+        },
+        {
+          "line": 489,
+          "text": "\n\ndef cmd_info(args: argparse.Namespace) -> None:\n    quick = getattr(args, \"quick\", False)\n    diag = _collect_diagnostics(quick=quick, proxy=getattr(args, \"proxy\", None))\n    if getattr(args, \"json\", False):\n        import json\n\n        print(json.dumps(diag, indent=2))\n    else:\n        _print_diagnostics(diag)\n\n\ndef cmd_update(args: argparse.Namespace) -> None:\n    from .download import check_for_pro_update, check_for_update\n"
+        }
+      ]
+    },
+    {
+      "path": "browser.py",
+      "sha256": "e3d32302b4a4e9ec95131b394c22e9a1b86599a638d068706d6c1f80b69c43b7",
+      "matches": [
+        {
+          "line": 319,
+          "text": "    username: str\n    password: str\n\n\ndef launch(\n    headless: bool = True,\n    proxy: str | ProxySettings | None = None,\n    args: list[str] | None = None,\n    stealth_args: bool = True,\n    timezone: str | None = None,\n    locale: str | None = None,\n    geoip: bool = False,\n    humanize: bool = False,\n    human_preset: HumanPreset = \"default\",\n    human_config: HumanConfigOverrides | None = None,\n    extension_paths: list[str] | None = None,"
+        },
+        {
+          "line": 387,
+          "text": "\n    logger.debug(\"Launching stealth Chromium (headless=%s, args=%d)\", headless, len(chrome_args))\n\n    denial_path = mint_denial_file() if resolve_license_key(license_key) else None\n    launch_env = build_launch_env(license_key, user_env=kwargs.pop(\"env\", None), status_file=denial_path)\n    env_kwargs = {} if launch_env is None else {\"env\": launch_env}\n\n    pw = sync_playwright().start()\n    try:\n        browser = pw.chromium.launch(\n            executable_path=binary_path,\n            headless=headless,\n            args=chrome_args,\n            ignore_default_args=IGNORE_DEFAULT_ARGS,\n            **env_kwargs,\n            **proxy_kwargs,"
+        },
+        {
+          "line": 388,
+          "text": "    logger.debug(\"Launching stealth Chromium (headless=%s, args=%d)\", headless, len(chrome_args))\n\n    denial_path = mint_denial_file() if resolve_license_key(license_key) else None\n    launch_env = build_launch_env(license_key, user_env=kwargs.pop(\"env\", None), status_file=denial_path)\n    env_kwargs = {} if launch_env is None else {\"env\": launch_env}\n\n    pw = sync_playwright().start()\n    try:\n        browser = pw.chromium.launch(\n            executable_path=binary_path,\n            headless=headless,\n            args=chrome_args,\n            ignore_default_args=IGNORE_DEFAULT_ARGS,\n            **env_kwargs,\n            **proxy_kwargs,\n            **kwargs,"
+        },
+        {
+          "line": 514,
+          "text": "\n    logger.debug(\"Launching stealth Chromium async (headless=%s, args=%d)\", headless, len(chrome_args))\n\n    denial_path = mint_denial_file() if resolve_license_key(license_key) else None\n    launch_env = build_launch_env(license_key, user_env=kwargs.pop(\"env\", None), status_file=denial_path)\n    env_kwargs = {} if launch_env is None else {\"env\": launch_env}\n\n    pw = await async_playwright().start()\n    try:\n        browser = await pw.chromium.launch(\n            executable_path=binary_path,\n            headless=headless,\n            args=chrome_args,\n            ignore_default_args=IGNORE_DEFAULT_ARGS,\n            **env_kwargs,\n            **proxy_kwargs,"
+        },
+        {
+          "line": 515,
+          "text": "    logger.debug(\"Launching stealth Chromium async (headless=%s, args=%d)\", headless, len(chrome_args))\n\n    denial_path = mint_denial_file() if resolve_license_key(license_key) else None\n    launch_env = build_launch_env(license_key, user_env=kwargs.pop(\"env\", None), status_file=denial_path)\n    env_kwargs = {} if launch_env is None else {\"env\": launch_env}\n\n    pw = await async_playwright().start()\n    try:\n        browser = await pw.chromium.launch(\n            executable_path=binary_path,\n            headless=headless,\n            args=chrome_args,\n            ignore_default_args=IGNORE_DEFAULT_ARGS,\n            **env_kwargs,\n            **proxy_kwargs,\n            **kwargs,"
+        },
+        {
+          "line": 670,
+          "text": "    context_kwargs.update(kwargs)\n    _drop_conflicting_viewport(context_kwargs, kwargs)\n\n    # Resolve env for the browser process (license key injection, if needed)\n    user_env = context_kwargs.pop(\"env\", None)\n    denial_path = mint_denial_file() if resolve_license_key(license_key) else None\n    launch_env = build_launch_env(license_key, user_env=user_env, status_file=denial_path)\n    if launch_env is not None:\n        context_kwargs[\"env\"] = launch_env\n\n    seed_widevine_hint(user_data_dir, binary_path)\n\n    pw = sync_playwright().start()\n    try:\n        context = pw.chromium.launch_persistent_context(\n            user_data_dir=os.fspath(user_data_dir),"
+        },
+        {
+          "line": 674,
+          "text": "    user_env = context_kwargs.pop(\"env\", None)\n    denial_path = mint_denial_file() if resolve_license_key(license_key) else None\n    launch_env = build_launch_env(license_key, user_env=user_env, status_file=denial_path)\n    if launch_env is not None:\n        context_kwargs[\"env\"] = launch_env\n\n    seed_widevine_hint(user_data_dir, binary_path)\n\n    pw = sync_playwright().start()\n    try:\n        context = pw.chromium.launch_persistent_context(\n            user_data_dir=os.fspath(user_data_dir),\n            executable_path=binary_path,\n            headless=headless,\n            args=chrome_args,\n            ignore_default_args=IGNORE_DEFAULT_ARGS,"
+        },
+        {
+          "line": 832,
+          "text": "    context_kwargs.update(kwargs)\n    _drop_conflicting_viewport(context_kwargs, kwargs)\n\n    # Resolve env for the browser process (license key injection, if needed)\n    user_env = context_kwargs.pop(\"env\", None)\n    denial_path = mint_denial_file() if resolve_license_key(license_key) else None\n    launch_env = build_launch_env(license_key, user_env=user_env, status_file=denial_path)\n    if launch_env is not None:\n        context_kwargs[\"env\"] = launch_env\n\n    seed_widevine_hint(user_data_dir, binary_path)\n\n    pw = await async_playwright().start()\n    try:\n        context = await pw.chromium.launch_persistent_context(\n            user_data_dir=os.fspath(user_data_dir),"
+        },
+        {
+          "line": 836,
+          "text": "    user_env = context_kwargs.pop(\"env\", None)\n    denial_path = mint_denial_file() if resolve_license_key(license_key) else None\n    launch_env = build_launch_env(license_key, user_env=user_env, status_file=denial_path)\n    if launch_env is not None:\n        context_kwargs[\"env\"] = launch_env\n\n    seed_widevine_hint(user_data_dir, binary_path)\n\n    pw = await async_playwright().start()\n    try:\n        context = await pw.chromium.launch_persistent_context(\n            user_data_dir=os.fspath(user_data_dir),\n            executable_path=binary_path,\n            headless=headless,\n            args=chrome_args,\n            ignore_default_args=IGNORE_DEFAULT_ARGS,"
+        },
+        {
+          "line": 894,
+          "text": "\n    return context\n\n\ndef launch_context(\n    headless: bool = True,\n    proxy: str | ProxySettings | None = None,\n    args: list[str] | None = None,\n    stealth_args: bool = True,\n    user_agent: str | None = None,\n    viewport: Any = _VIEWPORT_UNSET,\n    locale: str | None = None,\n    timezone: str | None = None,\n    color_scheme: Literal[\"light\", \"dark\", \"no-preference\"] | None = None,\n    geoip: bool = False,\n    humanize: bool = False,"
+        },
+        {
+          "line": 953,
+          "text": "    args = _append_webrtc_exit_ip(args, exit_ip)\n    # --fingerprint-timezone is process-wide (reads CommandLine in renderer),\n    # so it applies to ALL contexts, not just the default one.\n    # locale and timezone are set via binary flags only \u2014 no CDP emulation.\n    browser = launch(headless=headless, proxy=proxy, args=args, stealth_args=stealth_args,\n                     timezone=timezone, locale=locale, extension_paths=extension_paths,\n                     license_key=license_key, browser_version=browser_version,\n                     release_channel=release_channel,\n                     # Caller chose a viewport geometry \u2192 don't also auto-maximize\n                     # the window (mirrors the persistent-context path + JS).\n                     _suppress_maximize=(viewport is not _VIEWPORT_UNSET or \"no_viewport\" in kwargs))\n\n    context_kwargs: dict[str, Any] = {}\n    if user_agent:\n        context_kwargs[\"user_agent\"] = user_agent\n    context_kwargs.update("
+        },
+        {
+          "line": 1007,
+          "text": "\n    return context\n\n\nasync def launch_context_async(\n    headless: bool = True,\n    proxy: str | ProxySettings | None = None,\n    args: list[str] | None = None,\n    stealth_args: bool = True,\n    user_agent: str | None = None,\n    viewport: Any = _VIEWPORT_UNSET,\n    locale: str | None = None,\n    timezone: str | None = None,\n    color_scheme: Literal[\"light\", \"dark\", \"no-preference\"] | None = None,\n    geoip: bool = False,\n    humanize: bool = False,"
+        },
+        {
+          "line": 1085,
+          "text": "    args = _append_webrtc_exit_ip(args, exit_ip)\n    # --fingerprint-timezone is process-wide (reads CommandLine in renderer),\n    # so it applies to ALL contexts, not just the default one.\n    # locale and timezone are set via binary flags only \u2014 no CDP emulation.\n    browser = await launch_async(headless=headless, proxy=proxy, args=args, stealth_args=stealth_args,\n                                 timezone=timezone, locale=locale, extension_paths=extension_paths,\n                                 license_key=license_key, browser_version=browser_version,\n                                 release_channel=release_channel,\n                                 # Caller chose a viewport geometry \u2192 don't also auto-maximize\n                                 # the window (mirrors the persistent-context path + JS).\n                                 _suppress_maximize=(viewport is not _VIEWPORT_UNSET or \"no_viewport\" in kwargs))\n\n    context_kwargs: dict[str, Any] = {}\n    if user_agent:\n        context_kwargs[\"user_agent\"] = user_agent\n    context_kwargs.update("
+        },
+        {
+          "line": 1751,
+          "text": "        return {}, [f\"--proxy-server={_normalize_http_string_url(proxy)}\"]\n\n    # HTTP/HTTPS without credentials: use Playwright's proxy dict\n    if isinstance(proxy, dict):\n        return {\"proxy\": proxy}, []\n    return {\"proxy\": _parse_proxy_url(proxy)}, []"
+        },
+        {
+          "line": 1752,
+          "text": "\n    # HTTP/HTTPS without credentials: use Playwright's proxy dict\n    if isinstance(proxy, dict):\n        return {\"proxy\": proxy}, []\n    return {\"proxy\": _parse_proxy_url(proxy)}, []"
+        }
+      ]
+    },
+    {
+      "path": "__init__.py",
+      "sha256": "3221d68a12bb8ebe21d8201362baf90f64f670ae65b4a1a2e1f99d6f6608e233",
+      "matches": []
+    },
+    {
+      "path": "geoip.py",
+      "sha256": "70c956cefc9c2a280e09bbb41c9fd1337899cfc4bb79fcc383cea0703c5eb809",
+      "matches": [
+        {
+          "line": 270,
+          "text": "            remaining = _remaining_seconds(deadline)\n            if remaining is not None and remaining <= 0:\n                return None\n            request_timeout = min(10.0, remaining) if remaining is not None else 10.0\n            resp = httpx.get(url, proxy=proxy_url or None, timeout=request_timeout)\n            resp.raise_for_status()\n            ip = resp.text.strip()\n            # Validate it looks like an IP\n            ipaddress.ip_address(ip)\n            logger.debug(\"Exit IP via %s: %s\", url, ip)\n            return ip\n        except httpx.UnsupportedProtocol:\n            logger.warning(\n                \"SOCKS5 proxy requires socksio: pip install 'cloakbrowser[geoip]'\"\n            )\n            return None"
+        }
+      ]
+    },
+    {
+      "path": "widevine.py",
+      "sha256": "37235de8598abd2a3bf56c98cdd5323c1aefcfd9a0fb210f6d50aafff8a76b6e",
+      "matches": []
+    },
+    {
+      "path": "config.py",
+      "sha256": "8828f891a0e68eda6650054f347be1520cc82c4ca3bb11ca1d46ce48802061b7",
+      "matches": [
+        {
+          "line": 196,
+          "text": "\ndef check_platform_available() -> None:\n    \"\"\"Raise a clear error if no pre-built binary exists for this platform.\n\n    Skipped when CLOAKBROWSER_BINARY_PATH is set (user has their own build).\n    \"\"\"\n    if get_local_binary_override():\n        return\n\n    tag = get_platform_tag()  # raises if platform unsupported entirely\n    if tag not in AVAILABLE_PLATFORMS:\n        available = \", \".join(sorted(AVAILABLE_PLATFORMS))\n        import sys\n\n        sys.exit(\n            f\"\\n\\033[1mCloakBrowser\\033[0m \u2014 Pre-built binaries are currently only available for: {available}.\\n\\n\""
+        },
+        {
+          "line": 208,
+          "text": "        import sys\n\n        sys.exit(\n            f\"\\n\\033[1mCloakBrowser\\033[0m \u2014 Pre-built binaries are currently only available for: {available}.\\n\\n\"\n            f\"To use CloakBrowser now, set CLOAKBROWSER_BINARY_PATH to a local Chromium binary.\"\n        )\n\n\ndef get_effective_version(\n    pro: bool = False, release_channel: str | None = None\n) -> str | None:\n    \"\"\"Return the best available version: auto-updated if available, else platform default.\n\n    Reads a platform-scoped marker file from the cache directory.\n    Returns the platform's hardcoded version if no update has been downloaded.\n"
+        },
+        {
+          "line": 316,
+          "text": "# ---------------------------------------------------------------------------\ndef get_local_binary_override() -> str | None:\n    \"\"\"Check if user has set a local binary path via env var.\n\n    Set CLOAKBROWSER_BINARY_PATH to use a locally built Chromium instead of downloading.\n    \"\"\"\n    return os.environ.get(\"CLOAKBROWSER_BINARY_PATH\")\n\n\n# ---------------------------------------------------------------------------\n# Headless viewport handling by binary version\n# ---------------------------------------------------------------------------\n# First Chromium build that reports coherent headless dimensions without an\n# emulated viewport. On these binaries the wrapper launches headless with\n# no_viewport; older binaries need a fixed DEFAULT_VIEWPORT to stay coherent.\n# None => not shipped yet; feature off, behavior byte-identical to today."
+        },
+        {
+          "line": 318,
+          "text": "    \"\"\"Check if user has set a local binary path via env var.\n\n    Set CLOAKBROWSER_BINARY_PATH to use a locally built Chromium instead of downloading.\n    \"\"\"\n    return os.environ.get(\"CLOAKBROWSER_BINARY_PATH\")\n\n\n# ---------------------------------------------------------------------------\n# Headless viewport handling by binary version\n# ---------------------------------------------------------------------------\n# First Chromium build that reports coherent headless dimensions without an\n# emulated viewport. On these binaries the wrapper launches headless with\n# no_viewport; older binaries need a fixed DEFAULT_VIEWPORT to stay coherent.\n# None => not shipped yet; feature off, behavior byte-identical to today.\n# TODO: set to the chromium version string that first ships it.\nHEADLESS_NO_VIEWPORT_MIN_VERSION: str | None = \"148.0.7778.215.4\""
+        },
+        {
+          "line": 341,
+          "text": "    \"\"\"Whether headless can launch with ``no_viewport`` on the resolved binary.\n\n    Only binaries at or above ``HEADLESS_NO_VIEWPORT_MIN_VERSION`` qualify; older\n    ones keep ``DEFAULT_VIEWPORT``. A local override binary\n    (``CLOAKBROWSER_BINARY_PATH``) is unknown-version, so stay on the safe path.\n    \"\"\"\n    if HEADLESS_NO_VIEWPORT_MIN_VERSION is None:\n        return False\n    # A declared version (browser_version arg OR CLOAKBROWSER_VERSION env) wins even\n    # under a local override \u2014 the caller is asserting the version (also how internal\n    # builds opt in). Only an override with no declared version stays on the safe path.\n    try:\n        declared = normalize_requested_version(browser_version)\n    except ValueError:\n        declared = None\n    if declared:"
+        },
+        {
+          "line": 384,
+          "text": "# linux-x64/windows-x64 have it at 146.0.7680.177.5, but the free macOS (145.x)\n# and linux-arm64 (146.0.7680.177.3) floors predate it, so those only qualify\n# once they resolve to a Pro/newer build (148+). Platforms absent from this map\n# are treated as never-inline (unknown capability => safe fallback).\nHTTP_PROXY_INLINE_AUTH_MIN_VERSION: dict[str, str] = {\n    \"linux-x64\": \"146.0.7680.177.5\",\n    \"windows-x64\": \"146.0.7680.177.5\",\n    \"linux-arm64\": \"148.0.7778.215.3\",\n    \"darwin-arm64\": \"148.0.7778.215.3\",\n    \"darwin-x64\": \"148.0.7778.215.3\",\n}\n\n\ndef binary_supports_http_proxy_inline_auth(\n    license_key: str | None = None,\n    browser_version: str | None = None,"
+        },
+        {
+          "line": 409,
+          "text": "    floor, credentialed HTTP proxies fall back to Playwright's proxy dict. A\n    local override with no declared version is unknown-version, so stay on the\n    safe fallback. Python, JS and .NET mirror this gate.\n    \"\"\"\n    floor = HTTP_PROXY_INLINE_AUTH_MIN_VERSION.get(get_platform_tag())\n    if floor is None:\n        return False\n    try:\n        declared = normalize_requested_version(browser_version)\n    except ValueError:\n        declared = None\n    if declared:\n        version = declared\n    elif get_local_binary_override():\n        return False\n    else:"
+        }
+      ]
+    },
+    {
+      "path": "_version.py",
+      "sha256": "08c1f7e06b7502a3bbcff4ea463f785f0a211a85427fc69eb3476392a9b8e669",
+      "matches": []
+    },
+    {
+      "path": "download.py",
+      "sha256": "0fd03c2f955fe77fc3cf917cb213fffb7197a2ce8cd84d3ffe2270794553d2c0",
+      "matches": [
+        {
+          "line": 180,
+          "text": "        license_key: Pro license key. Also reads from CLOAKBROWSER_LICENSE_KEY env var.\n        browser_version: Exact Chromium version pin. Also reads from CLOAKBROWSER_VERSION.\n        release_channel: Stable (default) or Preview binary channel.\n\n    Set CLOAKBROWSER_BINARY_PATH to skip download and use a local build.\n    \"\"\"\n    # Check for local override first\n    local_override = get_local_binary_override()\n    if local_override:\n        path = Path(local_override)\n        if not path.exists():\n            raise FileNotFoundError(\n                f\"CLOAKBROWSER_BINARY_PATH set to '{local_override}' but file does not exist\"\n            )\n        logger.info(\"Using local binary override: %s\", local_override)\n        return str(path)"
+        },
+        {
+          "line": 188,
+          "text": "    if local_override:\n        path = Path(local_override)\n        if not path.exists():\n            raise FileNotFoundError(\n                f\"CLOAKBROWSER_BINARY_PATH set to '{local_override}' but file does not exist\"\n            )\n        logger.info(\"Using local binary override: %s\", local_override)\n        return str(path)\n\n    requested_version = normalize_requested_version(browser_version)\n\n    # Pro license key check (custom download URL overrides Pro path)\n    from .license import resolve_license_key, validate_license\n\n    key = resolve_license_key(license_key)\n    if os.environ.get(\"CLOAKBROWSER_DOWNLOAD_URL\"):"
+        }
+      ]
+    }
+  ],
+  "dependency_image": "sha256:33354456e8e19c65193b9ca471e45450a620c541759cc42e76cf00a03b025881",
+  "driver_sha256": "edb6e3e197929652dd57f8d97867f31950b0f2999fa6dfbb4cc61d64726d8c50"
+}

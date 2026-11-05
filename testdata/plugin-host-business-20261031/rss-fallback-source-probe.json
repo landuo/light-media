@@ -1,0 +1,569 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "classification": "synthetic fixed-source AST replay, owned response, Rust unavailable branch, actual lxml/chardet/dateutil",
+  "environment": {
+    "lxml": [
+      6,
+      1,
+      1,
+      0
+    ],
+    "libxml": [
+      2,
+      14,
+      6
+    ],
+    "chardet": "7.4.3",
+    "dateutil": "2.9.0.post0",
+    "timezone": "Asia/Shanghai"
+  },
+  "source_methods": {
+    "request_utils": {
+      "detect_xml_declared_encoding": {
+        "line": 840,
+        "end_line": 852,
+        "sha256": "3cc7c6a960b6e6275cb7c06d19b2e1993ea1fb08d942111a2aa5a6570b13f45c"
+      },
+      "is_low_confidence_http_encoding": {
+        "line": 855,
+        "end_line": 862,
+        "sha256": "121eea275cd1a29f788293b8be7f431634fe58536cf9de7d72dccecee202ff15"
+      },
+      "get_decoded_xml_content": {
+        "line": 865,
+        "end_line": 943,
+        "sha256": "f829a5e2b49a8dab5fb5c1800b2b71537a04ca7143468c5673a109c0492d2667"
+      }
+    },
+    "rss_helper": {
+      "__parse_with_rust": {
+        "line": 230,
+        "end_line": 244,
+        "sha256": "5b4fdd61e321f7f16fd71b069b34dfebf2933ceb08be55db6e13741689e244cf"
+      },
+      "parse": {
+        "line": 246,
+        "end_line": 451,
+        "sha256": "bf562169003170e8a1119e20d40fcf1aecc6031522cfabecd9ae5ac11112d2b3"
+      }
+    },
+    "date_parser": {
+      "get_time": {
+        "line": 378,
+        "end_line": 382,
+        "sha256": "80752d2e895f9fd8dea6ed13f4879aad495015aa27bc380b4959eb1fdf83b5d5"
+      }
+    }
+  },
+  "datetime_normalization": "TorrentsChain.rss fixed source line484 strftime(%Y-%m-%d %H:%M:%S)",
+  "network_calls": 0,
+  "production_writes": 0,
+  "cases": [
+    {
+      "name": "valid",
+      "input": "<rss><channel><item><title>Owned</title><link>details.php?id=1</link></item></channel></rss>",
+      "returned": [
+        {
+          "title": "Owned",
+          "enclosure": "details.php?id=1",
+          "size": 0,
+          "description": "",
+          "link": "details.php?id=1",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "truncated_xml",
+      "input": "<rss><channel><item><title>Owned</title><link>details.php?id=1</link>",
+      "returned": [
+        {
+          "title": "Owned",
+          "enclosure": "details.php?id=1",
+          "size": 0,
+          "description": "",
+          "link": "details.php?id=1",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "mismatched_close",
+      "input": "<rss><channel><item><title>Owned</title><link>details.php?id=1</item></channel></rss>",
+      "returned": [
+        {
+          "title": "Owned",
+          "enclosure": "details.php?id=1",
+          "size": 0,
+          "description": "",
+          "link": "details.php?id=1",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "bare_ampersand",
+      "input": "<rss><channel><item><title>A & B</title><link>details.php?id=1</link></item></channel></rss>",
+      "returned": [
+        {
+          "title": "A  B",
+          "enclosure": "details.php?id=1",
+          "size": 0,
+          "description": "",
+          "link": "details.php?id=1",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "whitespace_title",
+      "input": "<rss><channel><item><title>   </title><link>details.php?id=1</link></item></channel></rss>",
+      "returned": [
+        {
+          "title": "   ",
+          "enclosure": "details.php?id=1",
+          "size": 0,
+          "description": "",
+          "link": "details.php?id=1",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "namespace_legacy",
+      "input": "<feed xmlns=\"urn:owned\"><entry><title>Owned</title><link href=\"details.php?id=1\"/></entry></feed>",
+      "returned": [],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "duplicate_title",
+      "input": "<rss><item><title>First</title><title>Second</title><enclosure url=\"download.php?id=1\" length=\"12\"/></item></rss>",
+      "returned": [
+        {
+          "title": "First",
+          "enclosure": "download.php?id=1",
+          "size": 12,
+          "description": "",
+          "link": "",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "external_entity_disabled",
+      "input": "<!DOCTYPE rss [<!ENTITY secret SYSTEM \"http://never-fetch.invalid/private\">]><rss><item><title>A&secret;B</title><link>details.php?id=1</link></item></rss>",
+      "returned": [
+        {
+          "title": "A",
+          "enclosure": "details.php?id=1",
+          "size": 0,
+          "description": "",
+          "link": "details.php?id=1",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "undeclared_entity",
+      "input": "<rss><item><title>A&missing;B</title><link>details.php?id=1</link></item></rss>",
+      "returned": [
+        {
+          "title": "A",
+          "enclosure": "details.php?id=1",
+          "size": 0,
+          "description": "",
+          "link": "details.php?id=1",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "predefined_entity",
+      "input": "<rss><item><title>A&amp;B</title><link>details.php?id=1</link></item></rss>",
+      "returned": [
+        {
+          "title": "A&B",
+          "enclosure": "details.php?id=1",
+          "size": 0,
+          "description": "",
+          "link": "details.php?id=1",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "cdata_title",
+      "input": "<rss><item><title><![CDATA[A & B]]></title><link>details.php?id=1</link></item></rss>",
+      "returned": [
+        {
+          "title": "A & B",
+          "enclosure": "details.php?id=1",
+          "size": 0,
+          "description": "",
+          "link": "details.php?id=1",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "mixed_title_text",
+      "input": "<rss><item><title>Before<em>inside</em>after</title><link>details.php?id=1</link></item></rss>",
+      "returned": [
+        {
+          "title": "Before",
+          "enclosure": "details.php?id=1",
+          "size": 0,
+          "description": "",
+          "link": "details.php?id=1",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "comment_title_tail",
+      "input": "<rss><item><title>Before<!-- own -->after</title><link>details.php?id=1</link></item></rss>",
+      "returned": [
+        {
+          "title": "Before",
+          "enclosure": "details.php?id=1",
+          "size": 0,
+          "description": "",
+          "link": "details.php?id=1",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "unescaped_attribute",
+      "input": "<rss><item><title>Owned</title><enclosure url=\"download.php?id=1&passkey=owned\" length=\"1\"/></item></rss>",
+      "returned": [
+        {
+          "title": "Owned",
+          "enclosure": "download.php?id=1=owned",
+          "size": 1,
+          "description": "",
+          "link": "",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "internal_entity_attribute",
+      "input": "<!DOCTYPE rss [<!ENTITY own \"VALUE\">]><rss><item><title>Owned</title><enclosure url=\"download.php?x=&own;\" length=\"1\"/></item></rss>",
+      "returned": [
+        {
+          "title": "Owned",
+          "enclosure": "download.php?x=VALUE",
+          "size": 1,
+          "description": "",
+          "link": "",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "unicode_decimal_size",
+      "input": "<rss><item><title>Owned</title><enclosure url=\"download.php?id=1\" length=\"١٢\"/></item></rss>",
+      "returned": [
+        {
+          "title": "Owned",
+          "enclosure": "download.php?id=1",
+          "size": 12,
+          "description": "",
+          "link": "",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "non_decimal_digit_size",
+      "input": "<rss><item><title>Owned</title><enclosure url=\"download.php?id=1\" length=\"²\"/></item></rss>",
+      "returned": [],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        },
+        {
+          "level": "debug",
+          "message": "解析RSS条目失败：invalid literal for int() with base 10: '²' - Traceback (most recent call last):\n  File \"8a83efeacd3e26b82be495e17d50146e31c96a60:app/helper/rss.py\", line 395, in parse\nValueError: invalid literal for int() with base 10: '²'\n"
+        }
+      ]
+    },
+    {
+      "name": "large_integer_size",
+      "input": "<rss><item><title>Owned</title><enclosure url=\"download.php?id=1\" length=\"18446744073709551616\"/></item></rss>",
+      "returned": [
+        {
+          "title": "Owned",
+          "enclosure": "download.php?id=1",
+          "size": 18446744073709551616,
+          "description": "",
+          "link": "",
+          "pubdate": ""
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "date_rfc1123",
+      "input": "<rss><item><title>Owned</title><link>details</link><pubDate>Sat, 31 Oct 2026 00:00:00 GMT</pubDate></item></rss>",
+      "returned": [
+        {
+          "title": "Owned",
+          "enclosure": "details",
+          "size": 0,
+          "description": "",
+          "link": "details",
+          "pubdate": "2026-10-31 08:00:00"
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "date_iso_offset",
+      "input": "<rss><item><title>Owned</title><link>details</link><pubDate>2026-10-31T07:08:09+02:00</pubDate></item></rss>",
+      "returned": [
+        {
+          "title": "Owned",
+          "enclosure": "details",
+          "size": 0,
+          "description": "",
+          "link": "details",
+          "pubdate": "2026-10-31 13:08:09"
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "date_naive",
+      "input": "<rss><item><title>Owned</title><link>details</link><pubDate>2026-10-31 07:08:09</pubDate></item></rss>",
+      "returned": [
+        {
+          "title": "Owned",
+          "enclosure": "details",
+          "size": 0,
+          "description": "",
+          "link": "details",
+          "pubdate": "2026-10-31 07:08:09"
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "date_invalid",
+      "input": "<rss><item><title>Owned</title><link>details</link><pubDate>not-a-date</pubDate></item></rss>",
+      "returned": [
+        {
+          "title": "Owned",
+          "enclosure": "details",
+          "size": 0,
+          "description": "",
+          "link": "details",
+          "pubdate": null
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "date_relative_rejected",
+      "input": "<rss><item><title>Owned</title><link>details</link><pubDate>yesterday</pubDate></item></rss>",
+      "returned": [
+        {
+          "title": "Owned",
+          "enclosure": "details",
+          "size": 0,
+          "description": "",
+          "link": "details",
+          "pubdate": null
+        }
+      ],
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "debug",
+          "message": "关闭解析器时出错：no element found (line 0)"
+        }
+      ]
+    },
+    {
+      "name": "expired_literal",
+      "input": "RSS Link has expired, You need to get new!",
+      "returned": false,
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "error",
+          "message": "RSS内容不是有效的XML格式"
+        }
+      ]
+    },
+    {
+      "name": "not_xml",
+      "input": "owned invalid text",
+      "returned": false,
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "error",
+          "message": "RSS内容不是有效的XML格式"
+        }
+      ]
+    },
+    {
+      "name": "empty",
+      "input": "",
+      "returned": false,
+      "request_calls": 1,
+      "events": [
+        {
+          "level": "error",
+          "message": "RSS内容为空"
+        }
+      ]
+    }
+  ],
+  "finding": "The fixed helper returns False for the literal expired-RSS response under this ordinary HTTP fixture; the chain's None renewal branch is not reached by that literal alone."
+}

@@ -1,0 +1,52 @@
+{
+  "status": "passed",
+  "classification": "final exact self-owned test artifact cleanup; no product/fixture source/old acceptance/current-final/combined-platform changes",
+  "scope": "only two proven self-built NAS test image tags/IDs plus nine message_audit S18/S19 work-directory Go executables",
+  "images_removed": 2,
+  "image_reference_counts_before_deletion": [
+    {
+      "tag": "light-media-plugin-browser-acceptance-final:20261104",
+      "exact": 0,
+      "including_descendant_candidate_count": 0
+    },
+    {
+      "tag": "light-media-plugin-browser-acceptance-runtime-r9:20261104",
+      "exact": 0,
+      "including_descendant_candidate_count": 0
+    }
+  ],
+  "local_executables_removed": 9,
+  "local_bytes_removed": 151928862,
+  "previously_sealed_binary_hashes": 6,
+  "cleanup_time_hashes_not_retroactive_test_bindings": 3,
+  "remaining_owned_local_executable_files": [],
+  "retained_non_binary_paths": [
+    "work/plugin-platform-final-20261104/site-http/relay-state.json",
+    "work/plugin-platform-final-20261104/site-http/remote-root.txt",
+    "work/plugin-platform-final-20261104/site-http/relay.log",
+    "work/plugin-platform-final-20261104/proxy/driver-template.py"
+  ],
+  "old_manifests_and_selected_source_unchanged": true,
+  "delivery": {
+    "branch": "codex/plugin-host-resources-20261031",
+    "head": "97476582910dc4b696f7ccd5010f28d823812d40",
+    "no_commit_push_merge_or_production_deployment": true
+  },
+  "excluded_operations": [
+    "no docker prune",
+    "no force deletion",
+    "no wildcard removal",
+    "no container deletion/change",
+    "no production inspect output or production-targeted mutation",
+    "no NAS /home/admin directory operations in this cleanup follow-up",
+    "no current-final* or combined-platform removal",
+    "no old evidence/manifest rewrite"
+  ],
+  "evidence_files": {
+    "message-audit-final-cleanup-precheck.json": "00fd2269e1da73f43ff8b9baa6b2b9218242b1cc4e28511c27499c3d1dcca557",
+    "message-audit-final-image-cleanup.json": "6a9c4de7cb01b2e2b6c93c6be2c780dd6696d9ec91e9cf68acb201fa36f7ddb4",
+    "message-audit-final-image-verify.json": "8178cbc69c7f7a41632785dec17cfe667b9763b9a263c898c28fa4082eebf1fe",
+    "message-audit-final-local-cleanup.json": "df41d6a718ad8636ebd860092ba51ad8ab48f03ff8c51e5e767491cd90012776"
+  },
+  "ended_utc": "2026-11-05T01:14:29.287239+00:00"
+}

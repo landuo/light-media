@@ -1,0 +1,196 @@
+{
+  "base_manifest_sha256": "34cb22783610b56eb4bb8f822d8cf062c3da4216d332bcb5e13ee328ce69dd7e",
+  "base_manifest": "../manifest.json",
+  "scope": [
+    "S01 connection/is_inactive",
+    "S03/S13 post-mutation guard receipt and category partial preservation"
+  ],
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "branch": "codex/plugin-host-resources-20261031",
+  "head": "97476582910dc4b696f7ccd5010f28d823812d40",
+  "delivery": "local uncommitted working tree; no commit/push/main/production deployment by this agent",
+  "target_files": {
+    "cmd/plugin-host-downloader-fixture/main.go": {
+      "sha256": "5175e2c810053294ee6b4ac4c916327d977f5c594d799929c0eba76438551de7",
+      "size": 9899
+    },
+    "internal/app/plugin_original_host_downloader.go": {
+      "sha256": "9d937733455ff1fbdb307217f6fee2e91f0baf18372b086880af4718f1afb577",
+      "size": 19481
+    },
+    "internal/app/plugin_original_host_downloader_connection.go": {
+      "sha256": "5dd07cbe7afae196decaaad511be472682199ab8b66e361cfdf2c7d7d44cb4c8",
+      "size": 943
+    },
+    "internal/app/plugin_original_host_downloader_connection_test.go": {
+      "sha256": "6e62069e567af8449008f9d4f8234af703cd09c6e0a3a2153991afc39a57a602",
+      "size": 4786
+    },
+    "internal/app/plugin_original_host_downloader_delete_files.go": {
+      "sha256": "dedf220d9090bc997880fb45a7528f7f76c361e3a7e99cbc0c6ef5443b42ff62",
+      "size": 13103
+    },
+    "internal/app/plugin_original_host_downloader_delete_files_test.go": {
+      "sha256": "a758c757b7747c03fb1dfcfd24d678345b9d6034fec75e71c09b9b0f7a87db8d",
+      "size": 10058
+    },
+    "internal/app/plugin_original_host_downloader_disabled_test.go": {
+      "sha256": "2b7349b3c87d34c60aefb40bf3d155c33d1b8eff69888bf97510d378cec78973",
+      "size": 3922
+    },
+    "internal/app/plugin_original_host_downloader_material_test.go": {
+      "sha256": "656d7c4d71dd2e767e4dd55eaaef66e96bb60fb9f62f49928255f2a486e13f14",
+      "size": 6436
+    },
+    "internal/app/plugin_original_host_downloader_postguard_test.go": {
+      "sha256": "7b252d1c79a19e4293b6c5af12dd38d57a215b8195ab27a4d99f44d866d69887",
+      "size": 5362
+    },
+    "internal/app/plugin_original_host_downloader_test.go": {
+      "sha256": "e85057a03e08f39994e33eb3481d2e075def25bb5277e6d1d623f1d3fded02c5",
+      "size": 27958
+    },
+    "internal/app/plugin_original_host_downloader_trackers.go": {
+      "sha256": "93cd3134e529308851ddb44c64d124ff73f0747de2e5a938a7b1f0ba1fa2644b",
+      "size": 10720
+    },
+    "internal/app/plugin_original_host_downloader_trackers_test.go": {
+      "sha256": "2f854278504b7ab7a47267769ccdaa597e211e3d8ec6df98201333b670a5f0e9",
+      "size": 10807
+    },
+    "internal/plugins/downloader_host.go": {
+      "sha256": "a45c880dac4373d5c2f96f3e15282b0e24b8425cb886c1c5363ca71e10101a69",
+      "size": 13517
+    },
+    "internal/plugins/downloader_host_connection.go": {
+      "sha256": "ff2a50416006eb2576fbc097994dc403db6b9a9747b6310e37af156d624db257",
+      "size": 1693
+    },
+    "internal/plugins/downloader_host_connection_test.go": {
+      "sha256": "b32192df75cae85bdaf8a664ae202fd63e5a71905596174a2991c53547c2c706",
+      "size": 1518
+    },
+    "internal/plugins/downloader_host_delete_files.go": {
+      "sha256": "9ca1c097b7909a29ed969f3a8206b862ae2f76428ca11057d1f2e75a86c31fa2",
+      "size": 1865
+    },
+    "internal/plugins/downloader_host_test.go": {
+      "sha256": "612c4a9723a102d181c8ad5af1246e024a0ab859c98f1f7d0e48192df4bd6ebc",
+      "size": 2332
+    },
+    "internal/plugins/downloader_host_trackers.go": {
+      "sha256": "df94053d156dfc222bbcee09dbc05dabedb9a90523527d208e8fe1e8e6e255c3",
+      "size": 4197
+    },
+    "internal/plugins/iyuuautoseed/native/plugin_host.go": {
+      "sha256": "5174647fc597ffac5a03e49b7c21d48840f2df8600321cf3c664829f0e854755",
+      "size": 15913
+    },
+    "internal/plugins/iyuuautoseed/native/plugin_host_delete_files.go": {
+      "sha256": "8a85c11317e611a41887bb08477ee950fc7fd326b53bc488948b26dc070d69bd",
+      "size": 1671
+    },
+    "internal/plugins/iyuuautoseed/native/plugin_host_material.go": {
+      "sha256": "18a8f7f00525dc324949018433b7e50101219b95b4601cb40b67fea7d0cc6253",
+      "size": 15790
+    },
+    "internal/plugins/iyuuautoseed/native/plugin_host_material_test.go": {
+      "sha256": "650cf94f71806e007e6069cbed3357b71cfb3b9c273213afac755d851a24abb2",
+      "size": 7471
+    },
+    "internal/plugins/iyuuautoseed/native/plugin_host_test.go": {
+      "sha256": "7fc0faad405cb56f13dbe5051bc65afcbb681c09487bed1e982575bb94b3092c",
+      "size": 3744
+    }
+  },
+  "evidence_files": {
+    "auth-fixture-failure.json": {
+      "sha256": "5e191a018caee56628ea1894e76280ca8b3c4a545acacb61088913b274402241",
+      "size": 2922
+    },
+    "build-binding.json.gz": {
+      "sha256": "329f770262f31886bf56542c2d7cd7713d5ded021ee58bd8fb6228a089b425c9",
+      "size": 194756
+    },
+    "cleanup-nas.json": {
+      "sha256": "7c33feed8513f0ed2cba90c16d345b56019af482a1916d4cd5fa76d53aa0e3f4",
+      "size": 277
+    },
+    "connection-compile-r2.log.gz": {
+      "sha256": "fbf023eb3c8a64f4536828735ca879f46ccb7e9c7961614755572783d8ec6ebf",
+      "size": 121
+    },
+    "connection-compile.log.gz": {
+      "sha256": "7028f4ffdc32db5e1af20e041a3b4f85437d594e0b919435bc919875468b95ce",
+      "size": 203
+    },
+    "increment-connection-postguard-race.log.gz": {
+      "sha256": "d958e03dd7bcc7f5d16b9b7085fec0a209101d7609536def90dd81aa0bd8c584",
+      "size": 5125
+    },
+    "increment-real-connection-r2.log.gz": {
+      "sha256": "2dbf1df85cc68a94de50cb3645e652671e16887cdaf0907b1fbb2821f22c4c78",
+      "size": 105
+    },
+    "increment-real-connection.log.gz": {
+      "sha256": "48a292a9c80f3572f0a1aed5334858f1bf68b736366aa042af454be022996649",
+      "size": 485
+    },
+    "increment-sdk-validation-race.log.gz": {
+      "sha256": "f798e6bbdce6eb8c67a5bb4113e76564c4882576edaf380d9b95118936a53e64",
+      "size": 240
+    },
+    "increment-server-connection.log.gz": {
+      "sha256": "7d132429b817c692b57cae3986bf038aa0d0bbbdbcdaeec1c734216c6bc09cbe",
+      "size": 2785
+    },
+    "postguard-actual-sdk-race.log.gz": {
+      "sha256": "c033a64a819b3ee33299e4055021cfaccf84d16c4681d97431f6a6bd4de8f288",
+      "size": 2624
+    },
+    "postguard-connection-build.log.gz": {
+      "sha256": "f7ea3195a644162f443433acda5da0639cddcdd8dab5006146607623c00646e1",
+      "size": 384
+    },
+    "real-connection-result.json": {
+      "sha256": "7c7e0937659824ab47169372cf42b5ab7a46cfef59bede50222952499d0a5b1a",
+      "size": 3979
+    },
+    "README.md": {
+      "sha256": "159e540a5dc2475b9b1a2758df894af468e08b6b048ffd5015fceaef8fc19600",
+      "size": 11781
+    }
+  },
+  "additional_evidence": {
+    "connection-source-oracle.json": {
+      "sha256": "26571819221b3743eaf583fe16f8fd663cf74b00fc68bea33cfe76b13babac92",
+      "size": 6738
+    }
+  },
+  "new_capability": "downloader.connection.read",
+  "new_response_field": {
+    "DownloaderMutationV1.failure_code": [
+      "CALL_CHANGED_AFTER_MUTATION",
+      "PARTIAL_MUTATION"
+    ],
+    "normal_response": "omitempty; no change to normal confirmed response",
+    "required_consumer_behavior": "Preserve observed accepted/outcome/IDs; stop follow-up calls on old reference, query actual state, never auto-retry unknown/partial effects."
+  },
+  "tests": {
+    "actual_SDK_race": "increment-connection-postguard-race.log.gz:72.091s PASS, Connection9 cases + cancellation + postguard8 cases",
+    "SDK_projection_validation_race": "increment-sdk-validation-race.log.gz:2.027s PASS",
+    "real_Linux_connection": "real-connection-result.json:14 HTTP events; actual auth-enabled qB5.1.2/TR4.0.6 success/denied/unreachable/disabled; no task writes; config once + uninstall",
+    "source": "connection-source-oracle.json:14 source constructors/predicates +6 SeedRescue real consumer AST cases +8 additional direct hash-bound consumers"
+  },
+  "source_adaptations": [
+    "Go per-request fixed read-only auth/session probe replaces Python retained client presence; Enabled is not a connection fact.",
+    "Invalid/missing URL or identity is rejected by existing host structure validation; source explicit missing host/port False or constructor attribute failure is never fabricated as connected.",
+    "Probe does not copy source login side effects changing global incomplete-file suffix preferences.",
+    "Cancelled/revoked/changed probe returns error; actual auth/network failure returns inactive=true with no raw error/credential/URL.",
+    "Scope/config revocation after dispatch does not erase observed unknown/confirmed receipt; zero selected write still returns original guard error."
+  ],
+  "base_open_review_resolved": "The disclosed postguard overwrite is fixed and causally verified through a real installed SDK worker; partial category results preserved.",
+  "independent_review": "Parent /root owns final independent review and accepted-manifest generation; baseline evidence retains its original binary versions.",
+  "cleanup": "cleanup-nas.json confirms owned containers/root/newTR image removed; local increment test binaries retained only for parent independent verification and next task, no owned runtime remains.",
+  "history_integrity": "Baseline README restored byte-for-byte to a557c8ec958b19be928450aa5df6dfff40f58be9d7b08d0e033dc19699c08d62 (8857 bytes); increment prose retained in this directory README.md at its original 159e540a5dc2475b9b1a2758df894af468e08b6b048ffd5015fceaef8fc19600 hash. Baseline manifest untouched."
+}

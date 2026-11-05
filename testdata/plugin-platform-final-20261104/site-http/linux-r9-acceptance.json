@@ -1,0 +1,344 @@
+{
+  "feature_id": "S18",
+  "status": "passed",
+  "classification": "current unified R9 cmd/server, owned Linux process / real loopback HTTP / separately compiled SDK; no IAB repeated here, R8 UI remains its own historical facts",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "runtime_binding": "../browser-ocr/product-r9-build-inputs.json",
+  "runtime_binding_sha256": "6dbb01ab6aa4f2ce507bb49185430c7bb17c568f4ebbc97fdc98ee01a5921f38",
+  "tested_runtime_target_files": {
+    "internal/app/plugin_original_host_site_http.go": "726a0f353eab7311262f247f80fe24f934ec6a8da91ad324590d525dd25e4399",
+    "internal/app/plugin_original_host_site_http_json.go": "cdf90011d2d6acaea407241063d6da4377b952bf65e1fa44fbbb00a42b0f8ddc",
+    "internal/plugins/site_http_host.go": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+    "internal/app/plugin_original_resources.go": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b"
+  },
+  "result": {
+    "status": "passed",
+    "classification": "actual Linux cmd/server and separately compiled standard SDK; owned synthetic HTTP/cookies only, no real site/signin service or existing data modified",
+    "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "bindings": {
+      "server": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+      "worker": "6ab7ae0041677fe909de5b06d23ca45308df7e5071cf319a1fe6c9dd6543c845",
+      "worker_v2": "67afde3baee75a6a0d2fe54871c97c1504b8b25c66c297d617af4a9845038ce1",
+      "driver": "82eb914b34662050904f946be3548de2658e44a0e4814c4702c09b15100d36c4"
+    },
+    "observations": [
+      {
+        "case": "actual-private-credentials-cookie-flow-host-agent",
+        "credentials_verified": true,
+        "cookie_flow_verified": true,
+        "user_agent": "MoviePilot/2.15.7 (Linux 6.18.18.c1168-trim; x86_64)",
+        "host_agent_suffix_verified": true,
+        "ua_write_denied": true
+      },
+      {
+        "case": "source-clone-config-data-isolation-and-failure-recovery",
+        "source": {
+          "calls": [
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6Y2hvaWNlJTVCJTVEPW9uZSZjaG9pY2UlNUIlNUQ9dHdv",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 503,
+                "content": "b3duZWQtaHR0cC1zdGF0dXM1MDM=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": null,
+              "request_state": "unknown"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrc291cmNl",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            }
+          ],
+          "config": {
+            "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI source\"}]}",
+            "run_once": false
+          },
+          "pid": 1598567,
+          "version": "1.0"
+        },
+        "clone": {
+          "calls": [
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrY2xvbmU=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            }
+          ],
+          "config": {
+            "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI clone\"}]}",
+            "run_once": false
+          },
+          "pid": 1598593,
+          "version": "1.0"
+        },
+        "non2xx_preserved": true,
+        "post_drop_unknown_no_retry": true
+      },
+      {
+        "case": "actual-update-and-cold-no-replay",
+        "before": {
+          "OwnedHostSiteHTTP": {
+            "calls": [
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6Y2hvaWNlJTVCJTVEPW9uZSZjaG9pY2UlNUIlNUQ9dHdv",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 503,
+                  "content": "b3duZWQtaHR0cC1zdGF0dXM1MDM=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": null,
+                "request_state": "unknown"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrc291cmNl",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              }
+            ],
+            "config": {
+              "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI source\"}]}",
+              "run_once": false
+            },
+            "pid": 1598613,
+            "version": "2.0"
+          },
+          "OwnedHostSiteHTTPcopy": {
+            "calls": [
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrY2xvbmU=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              }
+            ],
+            "config": {
+              "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI clone\"}]}",
+              "run_once": false
+            },
+            "pid": 1598593,
+            "version": "1.0"
+          }
+        },
+        "after": {
+          "OwnedHostSiteHTTP": {
+            "calls": [
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6Y2hvaWNlJTVCJTVEPW9uZSZjaG9pY2UlNUIlNUQ9dHdv",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 503,
+                  "content": "b3duZWQtaHR0cC1zdGF0dXM1MDM=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": null,
+                "request_state": "unknown"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrc291cmNl",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              }
+            ],
+            "config": {
+              "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI source\"}]}",
+              "run_once": false
+            },
+            "pid": 1598637,
+            "version": "2.0"
+          },
+          "OwnedHostSiteHTTPcopy": {
+            "calls": [
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrY2xvbmU=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              }
+            ],
+            "config": {
+              "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI clone\"}]}",
+              "run_once": false
+            },
+            "pid": 1598645,
+            "version": "1.0"
+          }
+        },
+        "wire_count_unchanged": true
+      }
+    ],
+    "wire": [
+      {
+        "method": "POST",
+        "path": "/echo",
+        "body_sha256": "ca3c20d89098bf20c8be943ff7abb4d5a942512dd6230630d64e86a05985dfb3",
+        "body": "choice%5B%5D=one&choice%5B%5D=two",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": true,
+        "token_correct": true
+      },
+      {
+        "method": "GET",
+        "path": "/set-cookie",
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "body": "",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "POST",
+        "path": "/cookie-echo",
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "body": "",
+        "has_configured_cookie": false,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "GET",
+        "path": "/agent",
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "body": "",
+        "has_configured_cookie": true,
+        "has_configured_ua": false,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "GET",
+        "path": "/status",
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "body": "",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "POST",
+        "path": "/drop",
+        "body_sha256": "20fc7033a0d8a4026c1dc0b4851ddc81da204811deba995d274cccb57b28cf59",
+        "body": "owned-no-retry",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "body_sha256": "fd8f827a30bf1864d20fee6edad1b7234eda4d33352343258a63c173c221049e",
+        "body": "message=CLI+source",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "body_sha256": "825ba9ad38204feac9c57764770a03852c65eb19f4324e3b3f43a627c14fa26f",
+        "body": "message=CLI+clone",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      }
+    ],
+    "uninstalled_api404": true,
+    "stopped": true
+  },
+  "notes": [
+    "All private credentials, cookie reuse and readonly host USER_AGENT verified through actual SDK/main, not mocked.",
+    "Source and clone configured independently; source updated 2.0 while clone retained1.0; full main cold restart preserved exact state and emitted zero repeated HTTP.",
+    "503 real response retained; dropped POST exactly one outward request and unknown outcome; invalid method sends zero requests.",
+    "Both instances uninstalled, APIs404 and this second owned server stopped. Shared proxy UI hold remains a separate server/root subtree.",
+    "Reserved credential-header rejection has separate actual Linux SDK and race evidence; this driver does not pretend it performed those eight negative requests."
+  ],
+  "evidence_files": {
+    "linux-r9/result.json": "51645fb49543c8b07a8dd1fc0fac3c6408c4ab2d3c6990147ae9cb9fb9e0050b",
+    "linux-r9/server.log": "926e8483e76f522045cdb25ec015f4078ef78efaa7be143d7589884b674ba2e9",
+    "linux-r9-driver.log": "0d178ce279cfba76c456741a7bf07cc5573f616e3d9e4beac73cb4b1d7f32f42"
+  },
+  "cleanup_evidence": {
+    "path": "../proxy/cleanup.json",
+    "sha256": "0b7978519071273c58fbf6ed86070dbdf06053aa356a9e95eb2c84b33b719b23",
+    "note": "R9 site-http subprocess was in its own subtree of the same precisely owned proxy acceptance root; whole root removed after both independent Apps uninstalled/stopped."
+  }
+}

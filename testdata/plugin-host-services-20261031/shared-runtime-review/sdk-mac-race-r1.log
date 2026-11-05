@@ -1,0 +1,17 @@
+=== RUN   TestOriginalHostBrowserActualSDKJSCloneAndRecovery
+{"app_version":"0.4.19","event":"login","id":"log_EjKiwS7cmPwr5i-DeHsfCreX","instance_id":"instance_rHc007boBD5dlC42CUtfFLRo","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T16:37:28.822813Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":690,"event":"request_completed","http_status":200,"id":"log_kMKVO7DlyXr2rbygDoEkqBzI","instance_id":"instance_rHc007boBD5dlC42CUtfFLRo","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_bQOvmpbIdsohR9TDWiM6xiFv","time":"2026-10-31T16:37:28.823388Z"}
+{"app_version":"0.4.19","duration_ms":9,"event":"request_completed","http_status":200,"id":"log_J98imdKKb95q9LfTLW37h6k0","instance_id":"instance_rHc007boBD5dlC42CUtfFLRo","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_Gb0ksug8ARVyk55OzsfFOO3a","time":"2026-10-31T16:37:29.340255Z"}
+    plugin_original_host_browser_test.go:65: original endpoint success expected: 200 {"data":{"message":"插件制品获取失败: plugin acquisition preflight: unsafe root ancestor","success":false},"request_id":"req_Gb0ksug8ARVyk55OzsfFOO3a"}
+{"app_version":"0.4.19","event":"stopped","id":"log_DWQQqBbK16YwKYO9Cje3BjY-","instance_id":"instance_rHc007boBD5dlC42CUtfFLRo","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T16:37:29.342Z","workflow_id":""}
+--- FAIL: TestOriginalHostBrowserActualSDKJSCloneAndRecovery (1.42s)
+=== RUN   TestOriginalHostBrowserActualSDKConfigurationRevocationBeforeScriptWrite
+{"app_version":"0.4.19","event":"login","id":"log_9DNZSQSeoCIDyzPgxBneurFx","instance_id":"instance_VYb2iI5v45wasCFvh7GoYmpG","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T16:37:30.228553Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":689,"event":"request_completed","http_status":200,"id":"log_vydMSuTDXWwD5Ghs_UjOOVS_","instance_id":"instance_VYb2iI5v45wasCFvh7GoYmpG","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_6ybb18m8jfoVh_7dnoc1Arhl","time":"2026-10-31T16:37:30.229151Z"}
+    plugin_original_host_browser_test.go:121: original endpoint success expected: 200 {"data":{"message":"插件制品获取失败: plugin acquisition preflight: unsafe root ancestor","success":false},"request_id":"req_AYjEFMa--WJMDP3I1GDV-van"}
+{"app_version":"0.4.19","duration_ms":4,"event":"request_completed","http_status":200,"id":"log_1gTns1WwsY_MhlGZ3nmEdtBA","instance_id":"instance_VYb2iI5v45wasCFvh7GoYmpG","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_AYjEFMa--WJMDP3I1GDV-van","time":"2026-10-31T16:37:30.253878Z"}
+{"app_version":"0.4.19","event":"stopped","id":"log_mmBf4xczpNDKITGlvJ_C8xeY","instance_id":"instance_VYb2iI5v45wasCFvh7GoYmpG","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T16:37:30.254989Z","workflow_id":""}
+--- FAIL: TestOriginalHostBrowserActualSDKConfigurationRevocationBeforeScriptWrite (0.91s)
+FAIL
+FAIL	light-media/internal/app	4.913s
+FAIL

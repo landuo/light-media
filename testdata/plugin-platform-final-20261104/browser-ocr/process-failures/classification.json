@@ -1,0 +1,33 @@
+{
+  "classification": "historical actual failures and interrupted test preserved; none declared passed",
+  "rows": [
+    {
+      "directory": "browser-final-r1",
+      "reason": "harness docker top format lacked required PID column"
+    },
+    {
+      "directory": "browser-final-r2",
+      "reason": "actual clone HTML acquired but Chromium late profile file remained: product cleanup retry subsequently fixed"
+    },
+    {
+      "directory": "browser-r5-final",
+      "reason": "actual source/clone/update passed then cold default-headed launch hit artificial10s displayfd limit: product source600s subsequently fixed"
+    },
+    {
+      "directory": "ocr-r6-final",
+      "reason": "harness12s startup polling expired as cold Docker app started"
+    },
+    {
+      "directory": "ocr-r6-r2-final",
+      "reason": "harness wrongly read credential field from correctly redacted settings API"
+    },
+    {
+      "directory": "ocr-r6-r3-final",
+      "reason": "harness restored bootstrap cookie while peer retained source duplicate-cookie expectation; actual causal mutation retained separately"
+    },
+    {
+      "directory": "ocr-r6-r4-final",
+      "reason": "explicitly interrupted to honor coordinator request for minimal causal gate before full rerun; not a completed run"
+    }
+  ]
+}

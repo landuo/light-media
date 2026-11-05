@@ -1,0 +1,88 @@
+{
+  "feature": "S17",
+  "status": "implemented_pending_browser_seal_and_independent_root_review",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_locations": [
+    "app/api/endpoints/message.py:88-126",
+    "app/chain/message.py:111-278,280-455,458-574,623-793",
+    "app/chain/__init__.py:start_message_processing_status/finish_message_processing_status",
+    "app/schemas/message.py:86-193",
+    "app/command.py:269+"
+  ],
+  "target_files": {
+    "internal/app/plugin_original_host_message_inbound.go": "6f6d8c4406d4bfa826f15c653d806a972a9943b2b076b388f8caaf5c0cd5c68a",
+    "internal/plugins/message_inbound.go": "9749c6aea2c086641d834793fba583161dce142109c6c33e2b6f81d16a108520",
+    "internal/app/plugin_original_command_ingress.go": "08abe1f47eec52ed2b833abb58037f96ce7d6acf42a9d4a461f33053f449f606"
+  },
+  "fixture_files": {
+    "cmd/plugin-host-message-fixture/main.go": "49865d0e989a5cc6d2a4ff0ea12c8bec3053887346fc5cb09613c929cddff639",
+    "internal/app/plugin_original_host_message_inbound_test.go": "e3a0cd02f1ec367c3b531d0abf901bbff5a49b286451aa1da4ec6838674d30e7",
+    "internal/plugins/message_inbound_test.go": "c15b6d2be8e2a7a5db06f731fcd7ca442fd1478cf4924550e65837736617e1ba",
+    "internal/app/plugin_original_command_ingress_test.go": "6f584e78813ddc1bdf47adb852e32cea084f086e8b4dfd4262c4be4fa0c31ce9",
+    "internal/app/plugin_original_command_media_test.go": "016790d5fa7995fc29769d21a88039eac8b3231342a076bbb31f9d94a9dfa95f",
+    "internal/app/plugin_module_process_user_message_test.go": "feafe600f627299281480725509929e6018f9ae5f4ed7ceaf326f86b87854ba9",
+    "testdata/plugin-host-message-20261031/capture_source.py": "5e75d7398944dac393cc088269c82af9fb94f4c7149dcab134f734b4948630c7",
+    "testdata/plugin-host-message-20261031/source-oracle.json": "89359793c3b532e6fd21d18a508c7664a82355909623b6ae2e14367fcf4ec277",
+    "testdata/plugin-host-message-20261031/run_process.py": "7a0d53d1cb14080fc175dc684492f6ead8e48791fc21d489f50fec573d482fc8"
+  },
+  "adaptations": [
+    {
+      "source": "POST loopback message with shared API_TOKEN/PORT",
+      "target": "current authenticated standard-worker Messages.Receive over instance-bound HostCaller; exact bytes and repeated query/form retained; no raw shared token disclosure",
+      "impact": "ordinary plugin channel integration uses SDK operation rather than direct private loopback HTTP"
+    },
+    {
+      "source": "Python object model/async background task",
+      "target": "JSON/bytes envelope, declared Go parser method and non-durable exact-object background lease; shutdown cancels/join",
+      "impact": "background acknowledgement is admission, not business completion"
+    },
+    {
+      "source": "message.py AI/global model selection, /ai and /noai routing and LLM transcription",
+      "target": "excluded completely under current user scope; raw slash strings follow normal registry",
+      "impact": "no reserved or rewrite AI prefixes, no Agent/model placeholder. Fixed-source three exclusive-prefix observations retained as excluded provenance, not scope failures."
+    },
+    {
+      "source": "site/subscribe/media/transfer built-in channel assistants",
+      "target": "not developed as new business systems by this platform bridge; ordinary registered plugin commands/callbacks/user.message retained",
+      "impact": "business commands use existing host where supported; bridge does not claim all MP built-in assistants"
+    }
+  ],
+  "tests": [
+    {
+      "file": "sdk-scoped-normal.jsonl",
+      "kind": "actual SDK host+worker with fixed source AST projection",
+      "roots_pass": 8,
+      "seconds": 13.217,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "sdk-scoped-race.jsonl",
+      "kind": "actual host+worker race",
+      "roots_pass": 8,
+      "seconds": 101.37,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "web-command-regression.jsonl",
+      "kind": "existing actual SDK Web/attachment command regression",
+      "roots_pass": 3,
+      "seconds": 2.007,
+      "fail": 0,
+      "skip": 0
+    }
+  ],
+  "linux_process": {
+    "status": "running_awaiting_browser",
+    "server_sha256": "f5f15eb115b120aea2d0fd6b8677ff56f740a260bf05a578cddc9ff4c23cfeac",
+    "observed_steps": "install, config one-shot reset, parser, encrypted history, user.message, ordinary command, parser failure+recovery, source/clone isolation, code update, cold restart no replay",
+    "classification": "real Linux cmd/server + installed compiled SDK; synthetic controlled channel payload, no external messenger service"
+  },
+  "browser": {
+    "status": "parent_root_operating",
+    "blocker_resolved": "NAS SSH TCP forwarding administratively prohibited; own LAN-only relay to own loopback test process supplied instead. No sshd/production change."
+  },
+  "source_scope_review": "independent-source-scope-review.json",
+  "no_commit_push_merge_deploy": true
+}

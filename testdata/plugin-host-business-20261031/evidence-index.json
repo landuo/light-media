@@ -1,0 +1,84 @@
+{
+  "scope": "S04-S07, S12 finite ordinary host resources; central parity matrix owns acceptance state",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "current_owned_and_small_shared_source_hashes": {
+    "cmd/plugin-host-business-fixture/main.go": "479e5299b7c4f07370cc1c091b5045908a69dc1ba85d226f952a037308798754",
+    "internal/app/plugin_original_host_history.go": "79c3651f884726d21a52a0c0ced4bbc1943da917cfbd8cd3abb305616a86221e",
+    "internal/app/plugin_original_host_history_test.go": "ce7698827cef1b5f9c77a674452a72f0c70cfb10b06eb8fa59f73d03c6e255fc",
+    "internal/app/plugin_original_host_settings.go": "ad22c789d8960100b42ad2f4168130219218b54c55367f9ac462d5a3b26c2d65",
+    "internal/app/plugin_original_host_settings_test.go": "f7fac041396929d24caa57f051808fc143773437dc1248a5741f561a8bcf6fa5",
+    "internal/app/plugin_original_host_sites.go": "f27e8cfdbe15aa4d46661cd8d531d019dfb9d4e71c7284d6bbb0c5a369d4f386",
+    "internal/app/plugin_original_host_sites_categories.go": "1aee3dae6a1265152c99fe5739dcd2656699d4b97dce47f57234fc9080d85d83",
+    "internal/app/plugin_original_host_sites_categories_test.go": "3991e294cc917cda0b5804c7aab5954e3371dc99b5fe6d256c6cbe9e8bca80a6",
+    "internal/app/plugin_original_host_sites_rss.go": "f5e807a222adc8e6b465bdd18cac5406e6b00616740a8c8cb74bfcf1a98368b6",
+    "internal/app/plugin_original_host_sites_rss_test.go": "f2120879d64430feff44f28cb326fec968b346abd8ee91893039811230b8c124",
+    "internal/app/plugin_original_host_sites_test.go": "bef0b6995c7271d23075362512af4724c4bce08f39715f8921ed0a0e51072194",
+    "internal/app/plugin_original_host_subscriptions.go": "fabd59e30655b0b2adead64acb488bf6f0825eb6f69d147b2ed88b6bde3979fe",
+    "internal/app/plugin_original_host_subscriptions_null_test.go": "b5edc0b937a91f07832575551a2f48480123abd62e405c1834917aac5a7fcd96",
+    "internal/app/plugin_original_host_subscriptions_test.go": "4c80cd4f5f18f1db4a87ec216efeb8b8f59c1bdb6fcdd5b7be862ba28d3753e4",
+    "internal/app/runtime.go": "5b86e9ee9ff8d97bc49c621645494a51ca8507e27dd8f78d8c71ff97a5490c65",
+    "internal/app/subscription_quality_source.go": "01e8102e6e0c08bf766773d9ba3cb33412714e490974cab97de67f5ac5c8d2a3",
+    "internal/app/types.go": "e2c79dc416270366c9e6f78fc9ff23c2a11ca9c3a11d091acd640dacd024d1b9",
+    "internal/plugins/history_host.go": "c68cd2d612b3ecd3aed6c7a2cdefc75f88bb314d93f82e326b16fadb5b5b6a52",
+    "internal/plugins/settings_host.go": "8fc165f2c960b3b89d33e7eefee4535750523b64d6cfe51ebfed83c9f7ec571f",
+    "internal/plugins/site_host.go": "db86becbad6e142887d572ed566c01301d1cbdf12ac10f833821048b85a82fd8",
+    "internal/plugins/subscription_host.go": "b43bff954ba7053e0137fda9dffde75b7834c369edf91ab79884d96dd0e49ca9",
+    "internal/plugins/subscription_host_test.go": "bccbe96710a8aca52aa3cb51d40af5e3b38519055c384d628548ed2fca5a9927",
+    "internal/sites/plugin_host_resources.go": "672b150469a46321c6bdd17ad2ba53f902ea3f668932fe9c0a5583ff091203a3",
+    "internal/sites/rousi.go": "f2c7b3f85dd68d5ba9f6900556244187d6403340173e0999b818879cb23a097c"
+  },
+  "driver_sha256": "007378e08d3b229ad7c85232c033c8816ffa3c8e14e8f8d38b0806a0fbfde2f5",
+  "normal_latest": {
+    "path": "testdata/plugin-host-business-20261031/verification/all-current-normal-r2.log",
+    "app_seconds": 12.627,
+    "plugins_seconds": 0.603,
+    "sites_note": "no matching tests; parser dependency verification separately recorded"
+  },
+  "race_latest": {
+    "path": "testdata/plugin-host-business-20261031/verification/all-current-race.log",
+    "app_seconds": 89.802,
+    "plugins_seconds": 1.609,
+    "note": "resource source exact final; fixture before metadata-only fixtureVersion variable addition, same default manifest1.0 and operations; distinct final Linux fixture builds separately sealed"
+  },
+  "mac_process": {
+    "path": "testdata/plugin-host-business-20261031/process-mac-current/result.json",
+    "classification": "actual cmd/server and installed external standard worker, owned site protocol, synthetic past database rows; no update release in this earlier run"
+  },
+  "linux_process": {
+    "path": "testdata/plugin-host-business-20261031/process-linux-final/result.json",
+    "classification": "NAS linux-amd64 actual cmd/server and two bound worker releases; owned site/artifact protocol; synthetic past database rows; source-only update, clone isolation, cold restart and uninstall"
+  },
+  "browser": {
+    "path": "testdata/plugin-host-business-20261031/browser/observations.json",
+    "snapshot_note": "r3 before final RSS/category/null fixes; supports actual generic config form, failed save retained input, recovery and source/clone data isolation only"
+  },
+  "source_replay": {
+    "core": "testdata/plugin-host-business-20261031/source-oracle.json",
+    "rss": "testdata/plugin-host-business-20261031/rss-fallback-source-probe.json",
+    "category": "testdata/plugin-host-business-20261031/category-source-oracle.json",
+    "classification": "fixed original AST with owned doubles; RSS uses actual lxml6.1.1/chardet7.4.3/dateutil2.9.0.post0 and unavailable optional Rust branch; categories use captured actual17site projection plus synthetic edge maps"
+  },
+  "retained_logs": [
+    "all-current-normal.log",
+    "all-current-normal-r2.log",
+    "all-current-race.log",
+    "subscription-null-noop-r1.log",
+    "subscription-null-noop-r2.log",
+    "rss-recover-r4.log",
+    "rss-recover-r5.log",
+    "rss-recover-r6.log",
+    "rss-category-r1.log",
+    "sites-list-order-r1.log",
+    "site-refresh-r1.log",
+    "history-r1.log",
+    "rss-existing-source-parser.log",
+    "process-local-current-r1.log"
+  ],
+  "no_production_mutation": true,
+  "known_limits": [
+    "Actual public tracker credentials and production past-state migration not exercised by these synthetic site/protocol fixtures.",
+    "Category template data is the captured17site projection backed by exact current NAS helper/catalog hashes and mutable Resources historical candidate matching; fixed main repository Dockerfile did not pin these external artifacts.",
+    "Go RSS private recovery passed26 observed original-source cases; this is not a claim of general lxml byte-for-byte compatibility.",
+    "Typed SDK preserves finite ordinary operation semantics with host transport/config/path guards and private credentials/material adaptation recorded in README; unsupported fields/methods fail explicitly."
+  ]
+}

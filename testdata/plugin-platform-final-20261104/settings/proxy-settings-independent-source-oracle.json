@@ -1,0 +1,206 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+  "python": "3.12.13",
+  "cases": [
+    {
+      "name": "unset",
+      "proxy_host": null,
+      "environment": {},
+      "proxy": null,
+      "proxy_server": null
+    },
+    {
+      "name": "empty",
+      "proxy_host": "",
+      "environment": {},
+      "proxy": null,
+      "proxy_server": null
+    },
+    {
+      "name": "whitespace",
+      "proxy_host": "  ",
+      "environment": {},
+      "proxy": null,
+      "proxy_server": null
+    },
+    {
+      "name": "explicit-over-environment",
+      "proxy_host": " http://owned:synthetic@Proxy.Example:3128 ",
+      "environment": {
+        "HTTP_PROXY": "http://env-http.invalid:80",
+        "HTTPS_PROXY": "http://env-https.invalid:81"
+      },
+      "proxy": {
+        "http": "http://owned:synthetic@Proxy.Example:3128",
+        "https": "http://owned:synthetic@Proxy.Example:3128"
+      },
+      "proxy_server": {
+        "server": " http://owned:synthetic@Proxy.Example:3128 "
+      }
+    },
+    {
+      "name": "explicit-encoded-auth",
+      "proxy_host": "http://owned%40name:synthetic%3Avalue@Proxy.Example:3128",
+      "environment": {},
+      "proxy": {
+        "http": "http://owned%40name:synthetic%3Avalue@Proxy.Example:3128",
+        "https": "http://owned%40name:synthetic%3Avalue@Proxy.Example:3128"
+      },
+      "proxy_server": {
+        "server": "http://proxy.example:3128",
+        "username": "owned%40name",
+        "password": "synthetic%3Avalue"
+      }
+    },
+    {
+      "name": "explicit-ipv6",
+      "proxy_host": "http://[::1]:3128",
+      "environment": {},
+      "proxy": {
+        "http": "http://[::1]:3128",
+        "https": "http://[::1]:3128"
+      },
+      "proxy_server": {
+        "server": "http://::1:3128"
+      }
+    },
+    {
+      "name": "explicit-no-scheme",
+      "proxy_host": "127.0.0.1:3128",
+      "environment": {},
+      "proxy": {
+        "http": "127.0.0.1:3128",
+        "https": "127.0.0.1:3128"
+      },
+      "proxy_server": {
+        "server": "127.0.0.1:3128"
+      }
+    },
+    {
+      "name": "http-upper",
+      "proxy_host": null,
+      "environment": {
+        "HTTP_PROXY": " http://upper-http.invalid:80 "
+      },
+      "proxy": {
+        "http": "http://upper-http.invalid:80",
+        "https": "http://upper-http.invalid:80"
+      },
+      "proxy_server": null
+    },
+    {
+      "name": "https-lower",
+      "proxy_host": null,
+      "environment": {
+        "https_proxy": " http://lower-https.invalid:81 "
+      },
+      "proxy": {
+        "http": "http://lower-https.invalid:81",
+        "https": "http://lower-https.invalid:81"
+      },
+      "proxy_server": null
+    },
+    {
+      "name": "uppercase-nonempty-wins",
+      "proxy_host": null,
+      "environment": {
+        "HTTP_PROXY": "http://upper.invalid:80",
+        "http_proxy": "http://lower.invalid:81"
+      },
+      "proxy": {
+        "http": "http://upper.invalid:80",
+        "https": "http://upper.invalid:80"
+      },
+      "proxy_server": null
+    },
+    {
+      "name": "empty-uppercase-falls-through",
+      "proxy_host": null,
+      "environment": {
+        "HTTP_PROXY": "",
+        "http_proxy": "http://lower.invalid:81"
+      },
+      "proxy": {
+        "http": "http://lower.invalid:81",
+        "https": "http://lower.invalid:81"
+      },
+      "proxy_server": null
+    },
+    {
+      "name": "whitespace-uppercase-falls-through",
+      "proxy_host": null,
+      "environment": {
+        "HTTPS_PROXY": "  ",
+        "https_proxy": " http://lower.invalid:81 "
+      },
+      "proxy": {
+        "http": "http://lower.invalid:81",
+        "https": "http://lower.invalid:81"
+      },
+      "proxy_server": null
+    },
+    {
+      "name": "split-schemes",
+      "proxy_host": null,
+      "environment": {
+        "HTTP_PROXY": "http://http.invalid:80",
+        "https_proxy": "http://https.invalid:81"
+      },
+      "proxy": {
+        "http": "http://http.invalid:80",
+        "https": "http://https.invalid:81"
+      },
+      "proxy_server": null
+    },
+    {
+      "name": "all-only",
+      "proxy_host": null,
+      "environment": {
+        "ALL_PROXY": "socks5h://all.invalid:1080"
+      },
+      "proxy": null,
+      "proxy_server": null
+    },
+    {
+      "name": "no-proxy-does-not-change-property",
+      "proxy_host": null,
+      "environment": {
+        "HTTP_PROXY": "http://http.invalid:80",
+        "NO_PROXY": "*"
+      },
+      "proxy": {
+        "http": "http://http.invalid:80",
+        "https": "http://http.invalid:80"
+      },
+      "proxy_server": null
+    },
+    {
+      "name": "cgi-does-not-change-property",
+      "proxy_host": null,
+      "environment": {
+        "HTTP_PROXY": "http://http.invalid:80",
+        "REQUEST_METHOD": "GET"
+      },
+      "proxy": {
+        "http": "http://http.invalid:80",
+        "https": "http://http.invalid:80"
+      },
+      "proxy_server": null
+    },
+    {
+      "name": "host-specific-does-not-change-property",
+      "proxy_host": null,
+      "environment": {
+        "http://owned.invalid_proxy": "http://specific.invalid:80"
+      },
+      "proxy": null,
+      "proxy_server": null
+    }
+  ],
+  "classification": "Exact fixed PROXY/PROXY_SERVER/_get_env_proxy property AST, controlled synthetic inputs and process-local environment in disposable readonly network-none Python3.12 container. Source getters do not perform requests environment merging; that is independently bound existing transport evidence.",
+  "dependency_image": "sha256:33354456e8e19c65193b9ca471e45450a620c541759cc42e76cf00a03b025881",
+  "driver_sha256": "7ba5c9cad092adedce91f10508a5d976536253c4d2a0daee2982240ae755737d",
+  "selected_source_sha256": "f57189e40fccd9e3809ac944f08d85cc700e29c7dc6d65e77cfa0fa471cad781",
+  "program_sha256": "0458e06545b6132a7a077aa8346b559094fe67932e9e9de15f554e45727b12ab"
+}

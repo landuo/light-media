@@ -1,0 +1,968 @@
+{
+  "status": "passed",
+  "classification": "actual Linux product Dockerfile image, cmd/server -> installed standard SDK -> native pinned CloakBrowser; owned HTML/FS responses; external Python driver not product runtime",
+  "image_id": "sha256:7c9ef884baa3c750d5c08fc128bc29fcb9a244f30d95623f0b8b749892cdc77c",
+  "driver_sha256": "6242a3eaf1ed87561f9ba94e19fb08b68d5923283f2e7da456dd1774a3d832c6",
+  "worker_sha256": "5b3faf0e34eaa2b8012b5f9bd677ae001230ed483ff41f6a4f9b0b636569f606",
+  "update_worker_sha256": "b9deeed3cbb07e2860e725d55a6039aa78c86b009290a05f9efedc81fe8ed756",
+  "observations": [
+    {
+      "phase": "actual-headed-native-js",
+      "source_pid": 17,
+      "mode": "source-default-headed-Xvfb",
+      "rendered_marker": true,
+      "networkidle_after_fetch": true,
+      "cleanup": {
+        "temp_profiles": 0,
+        "remaining_native_browser_processes": 0,
+        "actual_process_table": [
+          "PID                 PPID                STAT                COMMAND",
+          "1602748             1602724             Ssl                 light-media",
+          "1602847             1602748             Sl                  plugin-host-bro"
+        ]
+      }
+    },
+    {
+      "phase": "actual-native-networkidle-failure",
+      "result": null,
+      "cleanup": {
+        "temp_profiles": 0,
+        "remaining_native_browser_processes": 0,
+        "actual_process_table": [
+          "PID                 PPID                STAT                COMMAND",
+          "1602748             1602724             Ssl                 light-media",
+          "1602847             1602748             Sl                  plugin-host-bro"
+        ]
+      }
+    },
+    {
+      "phase": "actual-clone-update-cold",
+      "source_pid": 17,
+      "clone_pid": 310,
+      "updated_pid": 404,
+      "cold_pid": 16,
+      "source_update_keeps_clone_pid": true,
+      "cold_no_render_replay": true,
+      "config_and_last_persisted": true
+    },
+    {
+      "phase": "actual-FS-protocol-fallback",
+      "classification": "owned FS HTTP protocol responses; actual native fallback, not live challenge provider",
+      "commands": [
+        "request.get",
+        "request.get",
+        "request.get"
+      ],
+      "truthy_missing_response_preserves_none": true
+    },
+    {
+      "phase": "actual-source-PROXY_SERVER",
+      "source_getter_oracle_sha256": "4910a433596bf1b0343e62213ab08db7758a3687686ef6b9f6dfec0d614c5ffd",
+      "runtime_env_proxy": "owned unreachable loopback fixture; NO_PROXY protects the owned FS control endpoint",
+      "cases": [
+        {
+          "case": "http-upper",
+          "actual_FS_payloads": [
+            {
+              "cmd": "request.get",
+              "cookies": [
+                {
+                  "name": "owned-browser",
+                  "value": "one"
+                }
+              ],
+              "maxTimeout": 3000,
+              "url": "http://127.0.0.1:46001/page"
+            }
+          ]
+        },
+        {
+          "case": "explicit-encoded-auth",
+          "actual_FS_payloads": [
+            {
+              "cmd": "sessions.create",
+              "proxy": {
+                "password": "synthetic%3Avalue",
+                "url": "http://proxy.example:3128",
+                "username": "owned%40name"
+              },
+              "session": "7c9d766e-da52-4376-bd3f-8b0832cedbd7"
+            },
+            {
+              "cmd": "request.get",
+              "cookies": [
+                {
+                  "name": "owned-browser",
+                  "value": "one"
+                }
+              ],
+              "maxTimeout": 3000,
+              "session": "7c9d766e-da52-4376-bd3f-8b0832cedbd7",
+              "url": "http://127.0.0.1:46001/page"
+            },
+            {
+              "cmd": "sessions.destroy",
+              "session": "7c9d766e-da52-4376-bd3f-8b0832cedbd7"
+            }
+          ]
+        },
+        {
+          "case": "explicit-ipv6",
+          "actual_FS_payloads": [
+            {
+              "cmd": "request.get",
+              "cookies": [
+                {
+                  "name": "owned-browser",
+                  "value": "one"
+                }
+              ],
+              "maxTimeout": 3000,
+              "proxy": {
+                "url": "http://::1:3128"
+              },
+              "url": "http://127.0.0.1:46001/page"
+            }
+          ],
+          "native_invalid_source_server_safe_none_no_target_requests": true
+        }
+      ]
+    }
+  ],
+  "parent_tool_integrity": [
+    {
+      "phase": "before-bootstrap",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": false,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-bootstrap",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before-start",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-start",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/auth/login",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/auth/login",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/plugins/install",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/plugins/install",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before PUT /api/plugins/OwnedHostBrowser",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after PUT /api/plugins/OwnedHostBrowser",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/plugins/OwnedHostBrowser/clone",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/plugins/OwnedHostBrowser/clone",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before PUT /api/plugins/OwnedHostBrowsertwin",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after PUT /api/plugins/OwnedHostBrowsertwin",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowsertwin/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowsertwin/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/plugins/install",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/plugins/install",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before-stop",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-stop",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before-start",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-start",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/auth/login",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/auth/login",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before-stop",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-stop",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before-start",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-start",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/auth/login",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/auth/login",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before-stop",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-stop",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before-start",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-start",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/auth/login",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/auth/login",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before PUT /api/plugins/OwnedHostBrowser",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after PUT /api/plugins/OwnedHostBrowser",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBrowser/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/plugins/OwnedHostBrowsertwin/uninstall",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/plugins/OwnedHostBrowsertwin/uninstall",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/plugins/OwnedHostBrowser/uninstall",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/plugins/OwnedHostBrowser/uninstall",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before-stop",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-stop",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 5,
+      "missing": [],
+      "changed": []
+    }
+  ],
+  "protected_tool_sha256": {
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/run_browser_process.py": "6242a3eaf1ed87561f9ba94e19fb08b68d5923283f2e7da456dd1774a3d832c6",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/proxy-settings-source-oracle.json": "4910a433596bf1b0343e62213ab08db7758a3687686ef6b9f6dfec0d614c5ffd",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-worker-linux": "5b3faf0e34eaa2b8012b5f9bd677ae001230ed483ff41f6a4f9b0b636569f606",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/browser-worker-v2-linux": "b9deeed3cbb07e2860e725d55a6039aa78c86b009290a05f9efedc81fe8ed756",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/.owned-sentinel": "ff16480a52dd9af642e6679d9342c700a2a660332bef938a3650a698e346e2e4"
+  },
+  "http_counts": {
+    "page": 7,
+    "data": 6,
+    "pending": 1,
+    "external": 0
+  },
+  "runtime": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e  /usr/local/bin/light-media\nChromium 146.0.7680.177 \nuid=1000(media) gid=1001(media) groups=1001(media)\n",
+  "cleanup": {
+    "temp_profiles": 0,
+    "remaining_native_browser_processes": 0,
+    "actual_process_table": [
+      "PID                 PPID                STAT                COMMAND",
+      "1604609             1604586             Ssl                 light-media"
+    ],
+    "instances_uninstalled": true,
+    "API404": true,
+    "uninstalled": [
+      {
+        "instance": "OwnedHostBrowsertwin",
+        "uninstall_response": {
+          "data_retained": false,
+          "success": true,
+          "uninstalled": true
+        },
+        "subsequent_custom_api_status": 404,
+        "subsequent_custom_api_response": {
+          "detail": "Not Found"
+        }
+      },
+      {
+        "instance": "OwnedHostBrowser",
+        "uninstall_response": {
+          "data_retained": true,
+          "success": true,
+          "uninstalled": true
+        },
+        "subsequent_custom_api_status": 404,
+        "subsequent_custom_api_response": {
+          "detail": "Not Found"
+        }
+      }
+    ],
+    "plugin_workers": 0,
+    "container_absent": true,
+    "container_name": "light-media-browser-proof-8b03d9ff5f",
+    "data_directory_retained_for_evidence": true
+  }
+}

@@ -1,0 +1,590 @@
+{
+  "OwnedHostMessage": {
+    "config": {
+      "body": "{\"info\":{\"userid\":\"browser-user\",\"channel\":\"飞书\",\"source\":\"Owned\",\"text\":\"browser ordinary recovered\"}}",
+      "run_once": false,
+      "source": "Owned"
+    },
+    "pid": 1504417,
+    "trace": [
+      {
+        "args": {
+          "source": [
+            "Owned"
+          ]
+        },
+        "body_sha256": "9d2483eee9a7c43c8f26eeb4dfea69e8da7f28e77298b29207872a80286aad0d",
+        "body_size": 225,
+        "form": {},
+        "kind": "parse",
+        "source": "Owned"
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "message_id": "owned-message-id",
+            "source": "Owned",
+            "text": "source ordinary",
+            "userid": 9007199254740993
+          }
+        },
+        "kind": "processing_begin"
+      },
+      {
+        "kind": "event",
+        "value": {
+          "type": "user.message",
+          "data": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "reply_to_message_id": 42,
+            "source": "Owned",
+            "text": "source ordinary",
+            "userid": 9007199254740993
+          },
+          "event_id": "671ce6a2-738a-469d-ad2b-f8ee46eafb0d",
+          "priority": 10
+        }
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "message_id": "owned-message-id",
+            "source": "Owned",
+            "status": {
+              "channel": "飞书",
+              "chat_id": "owned-chat",
+              "message_id": "owned-message-id",
+              "metadata": {
+                "owned": true
+              },
+              "source": "Owned",
+              "userid": 9007199254740993
+            },
+            "userid": 9007199254740993
+          }
+        },
+        "kind": "processing_end"
+      },
+      {
+        "args": {
+          "source": [
+            "Owned"
+          ]
+        },
+        "body_sha256": "50aa4b7b1b859c14b58b3530f8a2dde4cfe463cbedcfa6ee5e5983cea71856d2",
+        "body_size": 233,
+        "form": {},
+        "kind": "parse",
+        "source": "Owned"
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "message_id": "owned-message-id",
+            "source": "Owned",
+            "text": "/owned_inbound argument",
+            "userid": 9007199254740993
+          }
+        },
+        "kind": "processing_begin"
+      },
+      {
+        "kind": "event",
+        "value": {
+          "type": "command.excute",
+          "data": {
+            "channel": "飞书",
+            "cmd": "/owned_inbound argument",
+            "processing_status": {
+              "channel": "飞书",
+              "chat_id": "owned-chat",
+              "message_id": "owned-message-id",
+              "metadata": {
+                "owned": true
+              },
+              "source": "Owned",
+              "userid": 9007199254740993
+            },
+            "source": "Owned",
+            "user": 9007199254740993
+          },
+          "event_id": "b486f59a-6749-43c1-a672-5f2102bad4c6",
+          "priority": 10
+        }
+      },
+      {
+        "kind": "event",
+        "value": {
+          "type": "owned.inbound.command",
+          "data": {
+            "action": "owned",
+            "arg_str": "argument",
+            "channel": "飞书",
+            "source": "Owned",
+            "user": 9007199254740993
+          },
+          "event_id": "4ba5d041-c9cb-496c-be67-c3428aefa097",
+          "priority": 10
+        }
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "message_id": "owned-message-id",
+            "source": "Owned",
+            "status": {
+              "channel": "飞书",
+              "chat_id": "owned-chat",
+              "message_id": "owned-message-id",
+              "metadata": {
+                "owned": true
+              },
+              "source": "Owned",
+              "userid": 9007199254740993
+            },
+            "userid": 9007199254740993
+          }
+        },
+        "kind": "processing_end"
+      },
+      {
+        "args": {
+          "source": [
+            "Owned"
+          ]
+        },
+        "body_sha256": "f9f39f8465ba6c4a4599f32912eb70ae8cbf0d0e303745ba8b773353b38cb20a",
+        "body_size": 16,
+        "form": {},
+        "kind": "parse",
+        "source": "Owned"
+      },
+      {
+        "args": {
+          "source": [
+            "Owned"
+          ]
+        },
+        "body_sha256": "2f01a97bbdd3db772caa077e1d91c8baddd2a351c8ba3fcaca860e01a436665b",
+        "body_size": 228,
+        "form": {},
+        "kind": "parse",
+        "source": "Owned"
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "message_id": "owned-message-id",
+            "source": "Owned",
+            "text": "recovered ordinary",
+            "userid": 9007199254740993
+          }
+        },
+        "kind": "processing_begin"
+      },
+      {
+        "kind": "event",
+        "value": {
+          "type": "user.message",
+          "data": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "reply_to_message_id": 42,
+            "source": "Owned",
+            "text": "recovered ordinary",
+            "userid": 9007199254740993
+          },
+          "event_id": "fe84b7d4-de5d-4ad8-9a22-93cdb9642b82",
+          "priority": 10
+        }
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "message_id": "owned-message-id",
+            "source": "Owned",
+            "status": {
+              "channel": "飞书",
+              "chat_id": "owned-chat",
+              "message_id": "owned-message-id",
+              "metadata": {
+                "owned": true
+              },
+              "source": "Owned",
+              "userid": 9007199254740993
+            },
+            "userid": 9007199254740993
+          }
+        },
+        "kind": "processing_end"
+      },
+      {
+        "kind": "event",
+        "value": {
+          "type": "user.message",
+          "data": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "reply_to_message_id": 42,
+            "source": "OwnedClone",
+            "text": "clone ordinary",
+            "userid": 9007199254740993
+          },
+          "event_id": "a801a44c-5fac-4660-bff4-2a408beeaa07",
+          "priority": 10
+        }
+      },
+      {
+        "args": {
+          "source": [
+            "Owned"
+          ]
+        },
+        "body_sha256": "791c09085ac6f1701a7152a92d8de736a1a4040f56a5662200378f8c090ecf2f",
+        "body_size": 205,
+        "form": {},
+        "kind": "parse",
+        "source": "Owned"
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "message_id": "browser-owned-source",
+            "source": "Owned",
+            "text": "browser ordinary source verified",
+            "userid": 9007199254740993
+          }
+        },
+        "kind": "processing_begin"
+      },
+      {
+        "kind": "event",
+        "value": {
+          "type": "user.message",
+          "data": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "reply_to_message_id": null,
+            "source": "Owned",
+            "text": "browser ordinary source verified",
+            "userid": 9007199254740993
+          },
+          "event_id": "7be5f0b6-a276-4a3e-ae9e-2cb5f8b3026b",
+          "priority": 10
+        }
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "message_id": "browser-owned-source",
+            "source": "Owned",
+            "status": {
+              "channel": "飞书",
+              "chat_id": "owned-chat",
+              "message_id": "browser-owned-source",
+              "metadata": {
+                "owned": true
+              },
+              "source": "Owned",
+              "userid": 9007199254740993
+            },
+            "userid": 9007199254740993
+          }
+        },
+        "kind": "processing_end"
+      },
+      {
+        "args": {
+          "source": [
+            "Owned"
+          ]
+        },
+        "body_sha256": "3d6b3a90e3cb7438b7e6956d4064fa8589fa8786e526489c8272efa9d23318f3",
+        "body_size": 15,
+        "form": {},
+        "kind": "parse",
+        "source": "Owned"
+      },
+      {
+        "args": {
+          "source": [
+            "Owned"
+          ]
+        },
+        "body_sha256": "fcc5994240345a6d442c212ec3cb45557ac26ad5a32b4c79323499728e94d0f6",
+        "body_size": 106,
+        "form": {},
+        "kind": "parse",
+        "source": "Owned"
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": null,
+            "message_id": null,
+            "source": "Owned",
+            "text": "browser ordinary recovered",
+            "userid": "browser-user"
+          }
+        },
+        "kind": "processing_begin"
+      },
+      {
+        "kind": "event",
+        "value": {
+          "type": "user.message",
+          "data": {
+            "channel": "飞书",
+            "chat_id": null,
+            "reply_to_message_id": null,
+            "source": "Owned",
+            "text": "browser ordinary recovered",
+            "userid": "browser-user"
+          },
+          "event_id": "e3bb7aa6-766b-4f28-8975-d538babdfb60",
+          "priority": 10
+        }
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": null,
+            "message_id": null,
+            "source": "Owned",
+            "status": {
+              "channel": "飞书",
+              "chat_id": null,
+              "message_id": null,
+              "metadata": {
+                "owned": true
+              },
+              "source": "Owned",
+              "userid": "browser-user"
+            },
+            "userid": "browser-user"
+          }
+        },
+        "kind": "processing_end"
+      },
+      {
+        "kind": "event",
+        "value": {
+          "type": "user.message",
+          "data": {
+            "channel": "飞书",
+            "chat_id": null,
+            "reply_to_message_id": null,
+            "source": "OwnedClone",
+            "text": "browser clone independent",
+            "userid": "browser-clone-user"
+          },
+          "event_id": "18735e3a-12bd-4a59-b7f4-97b92efaf78f",
+          "priority": 10
+        }
+      }
+    ],
+    "version": "2.0"
+  },
+  "OwnedHostMessagecopy": {
+    "config": {
+      "body": "{\"info\":{\"userid\":\"browser-clone-user\",\"channel\":\"飞书\",\"source\":\"OwnedClone\",\"text\":\"browser clone independent\"}}",
+      "run_once": false,
+      "source": "OwnedClone"
+    },
+    "pid": 1504423,
+    "trace": [
+      {
+        "args": {
+          "source": [
+            "OwnedClone"
+          ]
+        },
+        "body_sha256": "f0cd14f4f6ad12bbe080982d0017e40429f27584746030eeb983ef14f836108d",
+        "body_size": 229,
+        "form": {},
+        "kind": "parse",
+        "source": "OwnedClone"
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "message_id": "owned-message-id",
+            "source": "OwnedClone",
+            "text": "clone ordinary",
+            "userid": 9007199254740993
+          }
+        },
+        "kind": "processing_begin"
+      },
+      {
+        "kind": "event",
+        "value": {
+          "type": "user.message",
+          "data": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "reply_to_message_id": 42,
+            "source": "OwnedClone",
+            "text": "clone ordinary",
+            "userid": 9007199254740993
+          },
+          "event_id": "4371ad69-2607-4a5d-83db-14893f61ff34",
+          "priority": 10
+        }
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "message_id": "owned-message-id",
+            "source": "OwnedClone",
+            "status": {
+              "channel": "飞书",
+              "chat_id": "owned-chat",
+              "message_id": "owned-message-id",
+              "metadata": {
+                "owned": true
+              },
+              "source": "OwnedClone",
+              "userid": 9007199254740993
+            },
+            "userid": 9007199254740993
+          }
+        },
+        "kind": "processing_end"
+      },
+      {
+        "kind": "event",
+        "value": {
+          "type": "user.message",
+          "data": {
+            "channel": "飞书",
+            "chat_id": "owned-chat",
+            "reply_to_message_id": null,
+            "source": "Owned",
+            "text": "browser ordinary source verified",
+            "userid": 9007199254740993
+          },
+          "event_id": "0182f9e0-3bc4-4dea-aeb8-e87c2ba4a266",
+          "priority": 10
+        }
+      },
+      {
+        "kind": "event",
+        "value": {
+          "type": "user.message",
+          "data": {
+            "channel": "飞书",
+            "chat_id": null,
+            "reply_to_message_id": null,
+            "source": "Owned",
+            "text": "browser ordinary recovered",
+            "userid": "browser-user"
+          },
+          "event_id": "29243cee-d9d5-4190-bd2b-acfb6f6ddb32",
+          "priority": 10
+        }
+      },
+      {
+        "args": {
+          "source": [
+            "OwnedClone"
+          ]
+        },
+        "body_sha256": "415437151e266dc8d60fd404a189a624c95d2cc5fc6e66f3d6222120640665b2",
+        "body_size": 116,
+        "form": {},
+        "kind": "parse",
+        "source": "OwnedClone"
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": null,
+            "message_id": null,
+            "source": "OwnedClone",
+            "text": "browser clone independent",
+            "userid": "browser-clone-user"
+          }
+        },
+        "kind": "processing_begin"
+      },
+      {
+        "kind": "event",
+        "value": {
+          "type": "user.message",
+          "data": {
+            "channel": "飞书",
+            "chat_id": null,
+            "reply_to_message_id": null,
+            "source": "OwnedClone",
+            "text": "browser clone independent",
+            "userid": "browser-clone-user"
+          },
+          "event_id": "11f07449-6efa-4880-b897-948aefe133b0",
+          "priority": 10
+        }
+      },
+      {
+        "call": {
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "chat_id": null,
+            "message_id": null,
+            "source": "OwnedClone",
+            "status": {
+              "channel": "飞书",
+              "chat_id": null,
+              "message_id": null,
+              "metadata": {
+                "owned": true
+              },
+              "source": "OwnedClone",
+              "userid": "browser-clone-user"
+            },
+            "userid": "browser-clone-user"
+          }
+        },
+        "kind": "processing_end"
+      }
+    ],
+    "version": "1.0"
+  }
+}

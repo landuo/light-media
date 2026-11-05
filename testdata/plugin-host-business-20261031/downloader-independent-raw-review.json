@@ -1,0 +1,476 @@
+{
+  "classification": "independent static review of raw installed AST dynamic aliases + fixed source wrappers and target SDK/resource/native transport; no production operations",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "raw_ast_sha256": "e3c924eb8d6efc70582d9af1a974c12231377b6a764abc68cf52df557bef106f",
+  "raw_ast_files": 77,
+  "raw_downloader_calls": [
+    {
+      "plugin": "TorrentTransfer",
+      "file": "torrenttransfer/__init__.py",
+      "source_sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "line": 638,
+      "callee": "downloader.add_torrent",
+      "owner": "TorrentTransfer.__download"
+    },
+    {
+      "plugin": "TorrentTransfer",
+      "file": "torrenttransfer/__init__.py",
+      "source_sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "line": 648,
+      "callee": "downloader.get_torrent_id_by_tag",
+      "owner": "TorrentTransfer.__download"
+    },
+    {
+      "plugin": "TorrentTransfer",
+      "file": "torrenttransfer/__init__.py",
+      "source_sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "line": 661,
+      "callee": "downloader.add_torrent",
+      "owner": "TorrentTransfer.__download"
+    },
+    {
+      "plugin": "TorrentTransfer",
+      "file": "torrenttransfer/__init__.py",
+      "source_sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "line": 690,
+      "callee": "from_downloader.get_completed_torrents",
+      "owner": "TorrentTransfer.transfer"
+    },
+    {
+      "plugin": "TorrentTransfer",
+      "file": "torrenttransfer/__init__.py",
+      "source_sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "line": 793,
+      "callee": "to_downloader.get_torrents",
+      "owner": "TorrentTransfer.transfer"
+    },
+    {
+      "plugin": "TorrentTransfer",
+      "file": "torrenttransfer/__init__.py",
+      "source_sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "line": 798,
+      "callee": "from_downloader.delete_torrents",
+      "owner": "TorrentTransfer.transfer"
+    },
+    {
+      "plugin": "TorrentTransfer",
+      "file": "torrenttransfer/__init__.py",
+      "source_sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "line": 899,
+      "callee": "from_downloader.delete_torrents",
+      "owner": "TorrentTransfer.transfer"
+    },
+    {
+      "plugin": "TorrentTransfer",
+      "file": "torrenttransfer/__init__.py",
+      "source_sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "line": 962,
+      "callee": "to_downloader.get_torrents",
+      "owner": "TorrentTransfer.check_recheck"
+    },
+    {
+      "plugin": "TorrentTransfer",
+      "file": "torrenttransfer/__init__.py",
+      "source_sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "line": 976,
+      "callee": "to_downloader.start_torrents",
+      "owner": "TorrentTransfer.check_recheck"
+    },
+    {
+      "plugin": "IYUUAutoSeed",
+      "file": "iyuuautoseed/__init__.py",
+      "source_sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+      "line": 764,
+      "callee": "downloader_obj.get_completed_torrents",
+      "owner": "IYUUAutoSeed.auto_seed"
+    },
+    {
+      "plugin": "IYUUAutoSeed",
+      "file": "iyuuautoseed/__init__.py",
+      "source_sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+      "line": 893,
+      "callee": "downloader_obj.get_torrents",
+      "owner": "IYUUAutoSeed.check_recheck_service"
+    },
+    {
+      "plugin": "IYUUAutoSeed",
+      "file": "iyuuautoseed/__init__.py",
+      "source_sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+      "line": 913,
+      "callee": "downloader_obj.start_torrents",
+      "owner": "IYUUAutoSeed.check_recheck_service"
+    },
+    {
+      "plugin": "IYUUAutoSeed",
+      "file": "iyuuautoseed/__init__.py",
+      "source_sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+      "line": 1081,
+      "callee": "service.instance.add_torrent",
+      "owner": "IYUUAutoSeed.__download"
+    },
+    {
+      "plugin": "IYUUAutoSeed",
+      "file": "iyuuautoseed/__init__.py",
+      "source_sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+      "line": 1092,
+      "callee": "service.instance.get_torrent_id_by_tag",
+      "owner": "IYUUAutoSeed.__download"
+    },
+    {
+      "plugin": "IYUUAutoSeed",
+      "file": "iyuuautoseed/__init__.py",
+      "source_sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+      "line": 1099,
+      "callee": "service.instance.set_torrent_category",
+      "owner": "IYUUAutoSeed.__download"
+    },
+    {
+      "plugin": "IYUUAutoSeed",
+      "file": "iyuuautoseed/__init__.py",
+      "source_sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+      "line": 1104,
+      "callee": "service.instance.add_torrent",
+      "owner": "IYUUAutoSeed.__download"
+    },
+    {
+      "plugin": "IYUUAutoSeed",
+      "file": "iyuuautoseed/__init__.py",
+      "source_sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+      "line": 1157,
+      "callee": "downloader_obj.get_torrents",
+      "owner": "IYUUAutoSeed.__download_torrent"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 1183,
+      "callee": "client.torrents_delete_tags",
+      "owner": "BrushFlowLanduo._delete_qbittorrent_tags"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 1207,
+      "callee": "service.instance.get_torrents",
+      "owner": "BrushFlowLanduo._cleanup_unused_task_tag"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 1231,
+      "callee": "client.torrents_tags",
+      "owner": "BrushFlowLanduo._cleanup_unused_task_tags"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 1235,
+      "callee": "service.instance.get_torrents",
+      "owner": "BrushFlowLanduo._cleanup_unused_task_tags"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 1782,
+      "callee": "service.instance.get_torrents",
+      "owner": "BrushFlowLanduo._calculate_global_downloader_size"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 1850,
+      "callee": "self.downloader.start_torrents",
+      "owner": "BrushFlowLanduo.__brush_site_torrents"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 2117,
+      "callee": "downloader.get_torrents",
+      "owner": "BrushFlowLanduo._run_check"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 2155,
+      "callee": "downloader.delete_torrents",
+      "owner": "BrushFlowLanduo._run_check"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 2210,
+      "callee": "self.downloader.stop_torrents",
+      "owner": "BrushFlowLanduo._protect_promotion_downloads"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 2585,
+      "callee": "service.instance.get_torrents",
+      "owner": "BrushFlowLanduo._collect_global_dynamic_delete_candidates"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 2784,
+      "callee": "service.instance.qbc.torrents_reannounce",
+      "owner": "BrushFlowLanduo._run_global_dynamic_delete"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 2788,
+      "callee": "service.instance.delete_torrents",
+      "owner": "BrushFlowLanduo._run_global_dynamic_delete"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 2889,
+      "callee": "self.downloader.get_completed_torrents",
+      "owner": "BrushFlowLanduo.__delete_torrent_for_proxy"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 3078,
+      "callee": "downloader.add_torrent",
+      "owner": "BrushFlowLanduo.__download"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 3089,
+      "callee": "downloader.get_torrent_id_by_tag",
+      "owner": "BrushFlowLanduo.__download"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 3102,
+      "callee": "downloader.add_torrent",
+      "owner": "BrushFlowLanduo.__download"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 3112,
+      "callee": "downloader.change_torrent",
+      "owner": "BrushFlowLanduo.__download"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 3126,
+      "callee": "downloader.qbc.torrents_reannounce",
+      "owner": "BrushFlowLanduo.__qb_torrents_reannounce"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 3270,
+      "callee": "downloader.get_downloading_torrents",
+      "owner": "BrushFlowLanduo.__get_downloading_count"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 3286,
+      "callee": "service.instance.get_downloading_torrents",
+      "owner": "BrushFlowLanduo.__get_global_downloading_count"
+    },
+    {
+      "plugin": "TorrentTransfermusic",
+      "file": "torrenttransfermusic/__init__.py",
+      "source_sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "line": 640,
+      "callee": "downloader.add_torrent",
+      "owner": "TorrentTransfermusic.__download"
+    },
+    {
+      "plugin": "TorrentTransfermusic",
+      "file": "torrenttransfermusic/__init__.py",
+      "source_sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "line": 650,
+      "callee": "downloader.get_torrent_id_by_tag",
+      "owner": "TorrentTransfermusic.__download"
+    },
+    {
+      "plugin": "TorrentTransfermusic",
+      "file": "torrenttransfermusic/__init__.py",
+      "source_sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "line": 663,
+      "callee": "downloader.add_torrent",
+      "owner": "TorrentTransfermusic.__download"
+    },
+    {
+      "plugin": "TorrentTransfermusic",
+      "file": "torrenttransfermusic/__init__.py",
+      "source_sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "line": 692,
+      "callee": "from_downloader.get_completed_torrents",
+      "owner": "TorrentTransfermusic.transfer"
+    },
+    {
+      "plugin": "TorrentTransfermusic",
+      "file": "torrenttransfermusic/__init__.py",
+      "source_sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "line": 795,
+      "callee": "to_downloader.get_torrents",
+      "owner": "TorrentTransfermusic.transfer"
+    },
+    {
+      "plugin": "TorrentTransfermusic",
+      "file": "torrenttransfermusic/__init__.py",
+      "source_sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "line": 800,
+      "callee": "from_downloader.delete_torrents",
+      "owner": "TorrentTransfermusic.transfer"
+    },
+    {
+      "plugin": "TorrentTransfermusic",
+      "file": "torrenttransfermusic/__init__.py",
+      "source_sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "line": 901,
+      "callee": "from_downloader.delete_torrents",
+      "owner": "TorrentTransfermusic.transfer"
+    },
+    {
+      "plugin": "TorrentTransfermusic",
+      "file": "torrenttransfermusic/__init__.py",
+      "source_sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "line": 964,
+      "callee": "to_downloader.get_torrents",
+      "owner": "TorrentTransfermusic.check_recheck"
+    },
+    {
+      "plugin": "TorrentTransfermusic",
+      "file": "torrenttransfermusic/__init__.py",
+      "source_sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "line": 978,
+      "callee": "to_downloader.start_torrents",
+      "owner": "TorrentTransfermusic.check_recheck"
+    },
+    {
+      "plugin": "CleanInvalidSeed",
+      "file": "cleaninvalidseed/__init__.py",
+      "source_sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+      "line": 341,
+      "callee": "downloader_obj.get_torrents",
+      "owner": "CleanInvalidSeed.get_all_torrents"
+    },
+    {
+      "plugin": "CleanInvalidSeed",
+      "file": "cleaninvalidseed/__init__.py",
+      "source_sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+      "line": 660,
+      "callee": "downloader_obj.set_torrents_tag",
+      "owner": "CleanInvalidSeed.set_torrent_label"
+    },
+    {
+      "plugin": "CleanInvalidSeed",
+      "file": "cleaninvalidseed/__init__.py",
+      "source_sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+      "line": 667,
+      "callee": "downloader_obj.set_torrent_tag",
+      "owner": "CleanInvalidSeed.set_torrent_label"
+    },
+    {
+      "plugin": "CleanInvalidSeed",
+      "file": "cleaninvalidseed/__init__.py",
+      "source_sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+      "line": 947,
+      "callee": "downloader_obj.delete_torrents",
+      "owner": "CleanInvalidSeed.clean_invalid_seed"
+    },
+    {
+      "plugin": "SeedRescue",
+      "file": "seedrescue/__init__.py",
+      "source_sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+      "line": 1552,
+      "callee": "service.instance.add_torrent",
+      "owner": "SeedRescue._start_source"
+    },
+    {
+      "plugin": "SeedRescue",
+      "file": "seedrescue/__init__.py",
+      "source_sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+      "line": 1659,
+      "callee": "service.instance.get_torrents",
+      "owner": "SeedRescue._get_torrent"
+    },
+    {
+      "plugin": "SeedRescue",
+      "file": "seedrescue/__init__.py",
+      "source_sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+      "line": 1672,
+      "callee": "service.instance.get_downloading_torrents",
+      "owner": "SeedRescue._downloading_count"
+    }
+  ],
+  "finding": {
+    "get_downloading_torrents": {
+      "calls": [
+        {
+          "plugin": "BrushFlowLanduo",
+          "file": "brushflowlanduo/__init__.py",
+          "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 3270,
+          "callee": "downloader.get_downloading_torrents",
+          "owner": "BrushFlowLanduo.__get_downloading_count"
+        },
+        {
+          "plugin": "BrushFlowLanduo",
+          "file": "brushflowlanduo/__init__.py",
+          "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 3286,
+          "callee": "service.instance.get_downloading_torrents",
+          "owner": "BrushFlowLanduo.__get_global_downloading_count"
+        },
+        {
+          "plugin": "SeedRescue",
+          "file": "seedrescue/__init__.py",
+          "source_sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+          "line": 1672,
+          "callee": "service.instance.get_downloading_torrents",
+          "owner": "SeedRescue._downloading_count"
+        }
+      ],
+      "source": "qB wrapper291 vendor status_filter=downloading; Transmission wrapper152 statuses downloading/download_pending",
+      "target_before_fix": "SDK Tasks exact/List all/Completed lacked vendor downloading selection",
+      "reported_to_root": true,
+      "root_disposition": "root delegated finite downloading addition to downloader agent; not an extra counted group",
+      "status": "implementation/validation owned by downloader agent"
+    }
+  },
+  "reviewed_present_semantics": [
+    "Completed nil/all vs empty/none, qB daemonfilter then exact state/progress/left predicate; TR status5/6 and label subset",
+    "Finite additive qB tags vs TR replacement/original_tags union; global delete-tags distinct from detaching tasks",
+    "Source-only task removal passes deleteFiles=false / delete_local_data=false; unknown mutation outcomes fail and do not auto replay",
+    "Exact current invocation guard and downloader full Config identity checked around native requests; credentials remain host",
+    "qB add bytes/magnet/URL, category/paused defaults, cookie sync/fallback/version logic and TR cookie material present; URL new actual daemon validation pending in producer work",
+    "Direct vendor torrents_tags/delete_tags/reannounce actual raw calls are represented; dynamic service.instance.is_inactive requires existing service inventory/runtime mapping, not a new business system"
+  ],
+  "scope_limit": "Raw AST includes dynamic calls missed by resolved-host-calls.json.gz; static suffix/receiver review does not claim arbitrary runtime getattr/exec configurations exhaustive."
+}

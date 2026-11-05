@@ -1,0 +1,41 @@
+{
+  "classification": "explicit S07 USER_AGENT incremental evidence lineage; immutable prior accepted-s07 preserved",
+  "status": "source/current target/actualR9 readonly getter proven; final combined verification pending",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_source": {
+    "path": "app/core/config.py:959–963; app/utils/http.py:329–432, get_caller",
+    "config_file_sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e"
+  },
+  "prior_acceptance": {
+    "path": "testdata/plugin-host-integration-20261031/accepted-s07.json",
+    "sha256": "56d06536a0cc5603a55510ece6f387cf741c18c40900f652817f99368aa40279",
+    "settings_target_sha256": "4ec65e11af79caf51ec70509705c3970acc555070c315e3f3e429dcef382cb0c"
+  },
+  "current_target_files": {
+    "internal/app/plugin_original_host_settings.go": "d5070bca96fa25c833c3dfde951246d443c757f03eadd5226f7ff99ff438626f",
+    "internal/app/plugin_original_command_ingress.go": "08abe1f47eec52ed2b833abb58037f96ce7d6acf42a9d4a461f33053f449f606",
+    "internal/app/plugin_original_host_site_http.go": "726a0f353eab7311262f247f80fe24f934ec6a8da91ad324590d525dd25e4399",
+    "internal/plugins/settings_host.go": "b9b500ac565ef98f98d8e32b5c2285cdc7fa869a5be6df8be2199846bcc78137",
+    "internal/plugins/site_http_host.go": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697"
+  },
+  "actual_delta": "SystemSettings.Get USER_AGENT returns fixed-source-compatible MoviePilot/2.15.7 uname/cpu identity; Set rejected. Current host HTTP explicitly selects it and appends Plugin/<actual lowercase instance> only on source default/global-UA branch; configured browserUA/custom headers remain source branches. No Agent capability or new business system.",
+  "actual_linux": {
+    "main_sha256": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+    "evidence": "site-http/linux-r9-acceptance.json#result.observations[0]",
+    "observed_getter": "MoviePilot/2.15.7 (Linux 6.18.18.c1168-trim; x86_64)",
+    "readonly_set_denied": true,
+    "host_suffix_verified": true
+  },
+  "actual_sdk": "settings/s18-independent-sdk-binding.json:6 actual dual-race roots, source/clone/global/browser/explicit UA four source branches plus current getter/read-only",
+  "related_evidence": {
+    "settings/settings-complete-scope-review.json": "442008286ed059e8a223fbcf89089637d581dc08cf900e7fa0961da638605a69",
+    "settings/site-http-useragent-independent-source-oracle.json": "b9efe3ca4c24b739aa5ace1fa8c5d553501e5d5974fdfc5f305728b73e7e72ff",
+    "settings/s18-independent-review.json": "3da65166ed277782f86d4c1e8c7790bfe2ad58c917a5e492d915b0f080cface9",
+    "site-http/linux-r9-acceptance.json": "287efca4212ed9baae10f743df076cae3c151925007ee79c5e65989d25ffd7ab",
+    "site-http/current-evidence.json": "4a0c3fe0e6ce249b11c3b2290034d657405c4b97100a63f5fa2cd706a8d3adc8",
+    "site-http/vet-test-literal-lineage.json": "c64b520cbc859eb52dcb8fabf71b77ec05e49844a1669b994a1e1bc132615542",
+    "browser-ocr/product-r9-build-inputs.json": "6dbb01ab6aa4f2ce507bb49185430c7bb17c568f4ebbc97fdc98ee01a5921f38"
+  },
+  "no_old_manifest_rewrite": true,
+  "final_combined_evidence": "current-final-platform/binding.json (awaiting full555)"
+}

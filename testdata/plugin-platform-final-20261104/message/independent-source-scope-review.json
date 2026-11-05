@@ -1,0 +1,212 @@
+{
+  "classification": "independent fixed-source semantic/scope review; not all business helper migration, not runtime equivalence proof",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "sources": {
+    "app/plugins/__init__.py": {
+      "sha256": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f"
+    },
+    "app/core/plugin.py": {
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7"
+    },
+    "app/core/event.py": {
+      "sha256": "7aec5ea981f14f582b9a2946eb2184814b26c530a6b8494ce9a776f83060c98d"
+    },
+    "app/api/endpoints/plugin.py": {
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce"
+    },
+    "app/helper/interaction.py": {
+      "sha256": "2921d1a9f5931206f8b30fe58d36cc7e502f3e314110e8448680860643ff8457"
+    },
+    "app/command.py": {
+      "sha256": "e178d40ba65ee3fdd9fdce9f198f6a4433c8ddd8e3c73496bd843a40a4e7af3f"
+    },
+    "app/chain/message.py": {
+      "sha256": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1"
+    },
+    "app/chain/__init__.py": {
+      "sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753"
+    },
+    "app/schemas/message.py": {
+      "sha256": "e5b2f504e2c5d470b74a33756e577e19ce3f9b5284f9a0e1e2d522d1e3955597"
+    },
+    "app/schemas/types.py": {
+      "sha256": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1"
+    },
+    "app/api/endpoints/message.py": {
+      "sha256": "b635fee943af5d867532133d96550ac840c0dbac847fe5fde2e230c567191bbd"
+    },
+    "app/helper/plugin.py": {
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba"
+    },
+    "app/scheduler.py": {
+      "sha256": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d"
+    }
+  },
+  "areas": [
+    {
+      "source": "app/plugins/__init__.py:20-58,239-342",
+      "behavior": "ordinary base object, name, configuration, KV, data path, post_message, close",
+      "target": [
+        "internal/app/plugin_original_base.go",
+        "internal/plugins/base.go",
+        "internal/app/plugin_original_notice.go"
+      ],
+      "finding": "已有桥覆盖；Python对象/async替换为Go当前对象+JSON/显式context。新settings/storage等不是Base方法替代；按方向单列S项。",
+      "target_hashes": {
+        "internal/app/plugin_original_base.go": "989020d5ae77a79b4d3cba80048144cb50534cc7a65b2afbce2632e5e680effb",
+        "internal/plugins/base.go": "88d704b1249fd6af462f8dc8157586f1e30d579e4cc4719abf3289821f311aed",
+        "internal/app/plugin_original_notice.go": "925353cde3d3326e66ce4e6b3f74f835fa1728efab8266ca8dc983493c551569"
+      }
+    },
+    {
+      "source": "app/core/plugin.py:72-139,156-265,619-690",
+      "behavior": "start/init/stop/reload, selective classes and cleanup",
+      "target": [
+        "internal/app/plugin_original_lifecycle.go",
+        "internal/app/plugin_original_registry.go",
+        "internal/app/plugin_original_startup.go"
+      ],
+      "finding": "现平台原版路径已存在；无重新加入退休invoke队列。独立实际SDK/进程生命周期由对应证据负责。",
+      "target_hashes": {
+        "internal/app/plugin_original_lifecycle.go": "a479ad6c0c7fdd7d3f24fddf676f956588c94030be1cace2cd72f4476d4cabcd",
+        "internal/app/plugin_original_registry.go": "496d1b2547eea2b7032dd3ff8ac2da9bdd080f2e018e53f004677e07f8833318",
+        "internal/app/plugin_original_startup.go": "45157ded3a95ea17e4564f2d4e20767ab66199e7d1e72feafe23f61a92126f7d"
+      }
+    },
+    {
+      "source": "app/core/plugin.py:1905-2235",
+      "behavior": "central clone code/metadata/config/KV/federation transformations",
+      "target": [
+        "internal/app/plugin_instances.go",
+        "internal/app/plugin_original_identity.go",
+        "internal/app/plugin_original_install.go"
+      ],
+      "finding": "统一平台管理；不存在每个业务插件重复clone API。Go二进制不可改源码字符串；SDK元数据/独立制品与联邦资产派生为已记录适配。",
+      "target_hashes": {
+        "internal/app/plugin_instances.go": "d5544fc148dc8d4ea2b0c9a4069bc91ad290073f891f039099e02908ffc747d8",
+        "internal/app/plugin_original_identity.go": "6187675359f78d77cb2428870147773aa878667a5b57b8347342b41194cce169",
+        "internal/app/plugin_original_install.go": "880bef4fbad5377684a374158178a8d8db84d3a21b639ce326d76410a2015288"
+      }
+    },
+    {
+      "source": "app/core/event.py:120-294,351-433,727",
+      "behavior": "ordinary check/send/priority queue/dynamic handlers and synchronous chain mutation",
+      "target": [
+        "internal/app/plugin_original_event_registry.go",
+        "internal/app/plugin_original_event_queue.go",
+        "internal/app/plugin_original_chain_event.go",
+        "internal/plugins/events.go"
+      ],
+      "finding": "普通事件桥与多监听/动态操作存在；工作流和Agent专用4事件由显式scope拒绝，不是占位成功。",
+      "target_hashes": {
+        "internal/app/plugin_original_event_registry.go": "261bd3d1f6d8e059aa09516898410203e292c791a9acb49fe7fb20e58818fb4a",
+        "internal/app/plugin_original_event_queue.go": "70c506b5fc11dd64987e6690b0160acfecb6c0fe0deb5177efd0c9ddfed77557",
+        "internal/app/plugin_original_chain_event.go": "3dc6115f969c8819231750f454ad0be9de81a9f2afa91705f7a379c7558185c4",
+        "internal/plugins/events.go": "55fd83977122e8a3e1561c30b545e3a484a79df1f0822c7a86fa462ff37a0fe1"
+      }
+    },
+    {
+      "source": "app/command.py:269 and app/chain/message.py:349-361",
+      "behavior": "ordinary command.excute dispatcher then declared plugin event",
+      "target": [
+        "internal/app/plugin_original_command_ingress.go",
+        "internal/app/plugin_original_commands.go"
+      ],
+      "finding": "本次发现并移除继承的模型前缀特殊处理。所有斜杠命令统一普通注册表，/ai与/noai无专用接口/重写。源历史样例保留，专用分支不计范围。",
+      "target_hashes": {
+        "internal/app/plugin_original_command_ingress.go": "08abe1f47eec52ed2b833abb58037f96ce7d6acf42a9d4a461f33053f449f606",
+        "internal/app/plugin_original_commands.go": "12b96e0d9c882e2c3922f82b2badd04c8adfbe1e2b711b89971340ea0c96d28b"
+      }
+    },
+    {
+      "source": "app/helper/interaction.py and app/chain/message.py:213-231,315-331,458-574",
+      "behavior": "pending input before ordinary commands; second check; attachment/callback constraints",
+      "target": [
+        "internal/app/plugin_original_input.go",
+        "internal/plugininput/manager.go",
+        "internal/app/plugin_original_host_message_inbound.go"
+      ],
+      "finding": "S17复用实际pending input入口，两处检查与有附件不消费均受固定源oracle与实际worker测试验证。",
+      "target_hashes": {
+        "internal/app/plugin_original_input.go": "dd2f03f25e26f3852ebfe084c428c7c188c8dc0e9ba8671eebc65aa688914b27",
+        "internal/plugininput/manager.go": "88308a80f8e4e07d86bc28fe9d223f0f5068e3a5a926d420af74a8adcbf69a15",
+        "internal/app/plugin_original_host_message_inbound.go": "6f6d8c4406d4bfa826f15c653d806a972a9943b2b076b388f8caaf5c0cd5c68a"
+      }
+    },
+    {
+      "source": "app/api/endpoints/message.py:88-126; app/chain/message.py:111-162,164-278,280-455,623-793",
+      "behavior": "channel admission -> parser -> username fallback -> input -> ordinary history/status/callback/command/user.message",
+      "target": [
+        "internal/app/plugin_original_host_message_inbound.go",
+        "internal/plugins/message_inbound.go"
+      ],
+      "finding": "S17新增message.receive标准能力与真实异步lease，body字节/重复form值/大整数保持；未暴露API_TOKEN或任意loopback URL。真实Linux进程已跑，浏览器进行中，不能仅凭SDK升级验收。",
+      "target_hashes": {
+        "internal/app/plugin_original_host_message_inbound.go": "6f6d8c4406d4bfa826f15c653d806a972a9943b2b076b388f8caaf5c0cd5c68a",
+        "internal/plugins/message_inbound.go": "9749c6aea2c086641d834793fba583161dce142109c6c33e2b6f81d16a108520"
+      }
+    },
+    {
+      "source": "app/helper/message.py:829-850",
+      "behavior": "MessageHelper.put(role=user) immediately returns (only system/plugin accepted)",
+      "target": [
+        "internal/app/plugin_original_host_message_inbound.go"
+      ],
+      "finding": "源_record_user_message调用role=user的helper没有SSE副作用，目标只保存ordinary DB历史不遗漏该副作用；原messageoper.add对应加密history。",
+      "target_hashes": {
+        "internal/app/plugin_original_host_message_inbound.go": "6f6d8c4406d4bfa826f15c653d806a972a9943b2b076b388f8caaf5c0cd5c68a"
+      }
+    },
+    {
+      "source": "app/core/plugin.py:844-1131; app/api/endpoints/plugin.py:114-233",
+      "behavior": "commands/services/modules/custom API/frontend/auth providers",
+      "target": [
+        "internal/app/plugin_original_api_methods.go",
+        "internal/app/plugin_original_services.go",
+        "internal/app/plugin_original_modules.go",
+        "internal/app/plugin_original_auth.go"
+      ],
+      "finding": "源码mixed get_actions/get_agent_tools专用分支无需迁移；普通getter和插件登录provider保持。未发现新占位扩展。",
+      "target_hashes": {
+        "internal/app/plugin_original_api_methods.go": "a74f449b0791595248c0774d6cb996b366510c9301a0f92fd4dafe726a98a4bc",
+        "internal/app/plugin_original_services.go": "cb1c93b92cec031b93a3e1cc0fe127363c2da37d02180804a364295f88f1238c",
+        "internal/app/plugin_original_modules.go": "2c34943b4e368ec95a7de97bed34bf99a731bc6051158bc5e8bb307c2f60b768",
+        "internal/app/plugin_original_auth.go": "d7603e327faa9e6d05e19e6e4d3ab09f303916c2dc36692dc5cd91264b1f19d4"
+      }
+    },
+    {
+      "source": "app/core/plugin.py:1133-1271",
+      "behavior": "sidebar nav/dashboard metadata and rendering",
+      "target": [
+        "internal/app/plugin_original_view_adapter.go",
+        "internal/app/plugin_original_manager_http.go",
+        "web/src/components/PluginDashboard.vue"
+      ],
+      "finding": "当前前后端平台机制存在，实际UI与源分支证据由原matrix负责；本审查不因文件存在升级状态。",
+      "target_hashes": {
+        "internal/app/plugin_original_view_adapter.go": "da34783bb464f0154de6732c0b8db59c0a6f0064a3f3ad52fbd87fc9aa9714ca",
+        "internal/app/plugin_original_manager_http.go": "b3961f0fbe0c80316e1155eb10de9dc4a6178f9f52dd491805575e2da3d7b88e",
+        "web/src/components/PluginDashboard.vue": "37b60315548edd6169f3a3fd30f3167a797f8752cd84ac3de464c57641d05332"
+      }
+    }
+  ],
+  "new_confirmed_gap": "model-specific prefixes were still specially consumed/rewritten in new/old ordinary ingress; removed under latest user scope",
+  "known_open_items": [
+    "S07 finite settings evidence",
+    "S14 protected network evidence",
+    "S15 ordinary OCR implementation/evidence",
+    "S16 actual JS renderer evidence",
+    "S17 Linux/browser evidence seal",
+    "50 stable whole-platform integration/source evidence audit"
+  ],
+  "limitations": [
+    "No claim that all arbitrary third-party business code or Python libraries are migrated. Ordinary platform interfaces and current installed-call audit are distinct from paused business implementations.",
+    "This independent review combines source inspections with existing inventory, not a new exhaustive call-graph proof. Actual validation references retained in unique matrix."
+  ],
+  "scope_exclusions": [
+    "workflow engine/actions/execution interfaces and get_actions",
+    "AI models/Agent/tools/get_agent_tools/model prefix dispatch/transcription",
+    "official SitesHelper grade/RSA gate",
+    "multi-user and remote storage"
+  ]
+}

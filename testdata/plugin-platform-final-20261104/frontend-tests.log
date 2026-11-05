@@ -1,0 +1,722 @@
+
+> light-media-web@0.4.19 test
+> node --experimental-transform-types --disable-warning=ExperimentalWarning --test tests/*.test.mjs
+
+✔ actual Add dialog waits for real acceptance, prevents repeat submits and only then emits source done (12.349208ms)
+✔ source business failure emits error and toast without done; each existing parent closes on error (29.993917ms)
+✔ status transport failure retains the form/draft and permits an explicit retry (1.562334ms)
+✔ unmount cancels the native completion wait and suppresses late success (0.693209ms)
+✔ API token generation uses cryptographic bytes and the original unbiased alphabet (12.51875ms)
+✔ only the fixed proxy mount changes application URLs (1.1445ms)
+✔ all request types and download/image URLs retain the HTTPS mount (124.78ms)
+✔ directory card uses original four labels and saves each selected policy through actual form handler (47.793709ms)
+✔ loading and saving an unmigrated directory does not invent always or never (0.783208ms)
+✔ an explicit source None marker survives unrelated directory edits (0.575917ms)
+✔ adding a native directory uses source None while preserving an existing unmigrated marker (1.042542ms)
+✔ picker opens without changing a typed path, reveals it and lists only directories (35.7515ms)
+✔ virtual parents are navigation only; selecting a real directory updates immediately (18.837334ms)
+✔ free typed paths outside the tree remain unchanged and never become browse permissions (2.481917ms)
+✔ root and directory failures expose working retry actions (1.396125ms)
+✔ directory read errors can be retried without selecting a different path (9.306208ms)
+✔ Escape and explicit close dismiss the picker and restore trigger focus (1.112875ms)
+✔ a late response from a closed picker cannot replace a newly opened tree (0.707833ms)
+✔ Tab and Shift+Tab stay inside the picker and skip hidden or disabled controls (0.693084ms)
+✔ Tab stays on the panel if no visible enabled controls are available (0.54ms)
+✔ fixed DirectoryCard intersection_and_source_order (2.267708ms)
+✔ fixed DirectoryCard keep_current (1.134583ms)
+✔ fixed DirectoryCard empty_clear (0.109ms)
+✔ fixed DirectoryCard null_preserves (0.325209ms)
+✔ fixed DirectoryCard second_failure_preserves (0.368166ms)
+✔ fixed DirectoryCard first_failure_preserves (0.095917ms)
+✔ only existing Go operations are selectable; raw plugin API remains unchanged (0.143375ms)
+✔ download directories are global source paths without a downloader or library binding (1.649ms)
+✔ default downloader and automatic save location are valid selections (0.124708ms)
+✔ download requests never carry organization rule or library identities (0.165ms)
+✔ LAN HTTP can add both downloader types as distinct disabled drafts and edit their cards (10.050042ms)
+✔ section save preserves existing downloader identity and unrelated settings while saving new disabled drafts (2.064208ms)
+✔ download cards join history by downloader and hash, preserving the original resource title (2.273666ms)
+✔ remaining time uses actual outstanding bytes and hides unknown or finished estimates (0.475417ms)
+✔ ordinary module DownloaderTorrent preserves its formatted fields and media metadata (0.887083ms)
+✔ provider IDs never enter TMDB search or subscription requests without resolution (11.416ms)
+✔ search normalizes managed-site rows, excludes disabled sites and encodes selected IDs (0.648667ms)
+✔ series cancellation retains failed seasons and never retries successful or replacement subscriptions (0.363875ms)
+✔ movie retries preserve create/cancel intent after the first request may have committed (0.211833ms)
+✔ seasons exclude specials and existing subscriptions while failed batches retry only unfinished seasons (0.619ms)
+✔ TMDB sends original filters and drops only incompatible selections when media type changes (2.438334ms)
+✔ Douban combines source labels as tags; Bangumi preserves category zero and deselected sort (0.465084ms)
+✔ tab order ignores retired sources and restores each known source exactly once (0.129916ms)
+✔ AniList preserves original enumeration values, defaults and descending fifteen-year options (0.209209ms)
+✔ append deduplicates within and across pages while retaining different source identities (0.274208ms)
+✔ duplicate-only pages continue until the upstream feed ends (0.123458ms)
+✔ an explicitly continuing page can be empty after upstream entries are filtered (0.128375ms)
+✔ filter reset isolates late responses and leaves the new request loading state intact (0.152292ms)
+✔ failures preserve successful pages and retry the failed page with a released loading flag (0.256625ms)
+✔ source states remain independent and concurrent duplicate loads do not send extra requests (0.162791ms)
+✔ local navigation exposes authorized mounts without granting virtual parents file capabilities (66.984917ms)
+✔ initial folder uses the common ancestor of configured download folders (0.135625ms)
+✔ file filtering supports original wildcard and case controls without interpreting regex (2.65375ms)
+✔ TV batch numbering uses parsed episodes for offsets and natural filename order for consecutive numbers (16.232542ms)
+✔ batch organize requires an explicit identity and keeps previews separate from confirmed submissions (1.275958ms)
+✔ TV single-file requests carry confirmed numbering mappings and never silently submit merged episodes (0.236042ms)
+✔ individual preview blocks duplicate destinations before any confirmation request (0.167375ms)
+✔ manual organize can leave identity and target automatic or submit a literal target path (0.201ms)
+✔ manual organize preserves explicit false switches and leaves automatic switches unset (0.093541ms)
+✔ explicit selection toggles once by name or checkbox and exit clears its state (21.400666ms)
+✔ sorting preserves existing selections while refresh discards files that disappeared (7.648125ms)
+✔ virtual mount parents navigate even in selection mode and cannot enter batch actions (4.475917ms)
+✔ selection reconciliation excludes virtual or unsupported items and deduplicates paths (5.801375ms)
+✔ frontend diagnostics send only fixed page/code and bounded reports (66.952375ms)
+✔ batch deletes only selected executions with the chosen media-library scope (1.718875ms)
+✔ delete-all keeps failures available and continues remaining selected files without reporting all successful (0.291959ms)
+✔ HTTP success without confirmed deletion remains a failed selection (0.150666ms)
+✔ catalog images stay on the authenticated same-origin proxy (4.735417ms)
+✔ queue presents the actual object, paths, stage and last recorded activity (0.890708ms)
+✔ download metadata distinguishes a resource task from its downloader (0.13725ms)
+✔ old or missing associations stay explicit without guessing from IDs or payloads (0.091916ms)
+✔ partial summaries preserve useful subjects and suppress blank or invalid metadata (1.929166ms)
+✔ keyword resource search sends an abortable authenticated request without inventing a TMDB identity (129.136625ms)
+✔ keyword resources publish each completed site before the final snapshot (0.680167ms)
+✔ keyword search surfaces actual API failure and releases request state (0.56425ms)
+✔ release title is only a suggested catalog query, never an automatically selected identity (0.359375ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ install: HTTP 200 business failure is shown without success or navigation (49.254083ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ install: HTTP 200 business failure is shown without success or navigation (2.3ms)
+✔ install: explicit success preserves standard artifact request identity (1.231958ms)
+✔ install: unsupported legacy reply {} never claims success (0.653958ms)
+✔ install: unsupported legacy reply {"run":{"id":"legacy"}} never claims success (0.826458ms)
+✔ install: unsupported legacy reply {"review_pending":true} never claims success (0.959125ms)
+✔ install: unsupported legacy reply {"initialization":{"id":"legacy"}} never claims success (0.754416ms)
+✔ install: HTTP error remains visible and retry remains possible (1.629333ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ repository-update: HTTP 200 business failure is shown without success or navigation (3.351959ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ repository-update: HTTP 200 business failure is shown without success or navigation (2.579167ms)
+✔ repository-update: explicit success preserves standard artifact request identity (1.132834ms)
+✔ repository-update: unsupported legacy reply {} never claims success (0.53825ms)
+✔ repository-update: unsupported legacy reply {"run":{"id":"legacy"}} never claims success (0.681625ms)
+✔ repository-update: unsupported legacy reply {"review_pending":true} never claims success (0.625458ms)
+✔ repository-update: unsupported legacy reply {"initialization":{"id":"legacy"}} never claims success (0.752375ms)
+✔ repository-update: HTTP error remains visible and retry remains possible (0.455292ms)
+✔ external install sends the exact selected source without force or fabricated version (0.659708ms)
+✔ external update uses install contract, success=true (0.721291ms)
+✔ external update uses install contract, success=false (0.45ms)
+✔ clone without an exact market candidate or missing bound source/version does not get an update action (1.160167ms)
+✔ exact clone update candidate uses clone instance identity and never overwrites its source (0.588708ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ source settings saved clears stale market and reloads existing lists (1.985334ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ old outstanding discovery cannot repopulate removed sources after settings save (1.737042ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ marketplace refresh follows entry and explicit actions without a periodic status timer (3.299875ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ repeated explicit refresh during slow discovery coalesces into one fresh read (1.262042ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ partial repository failure stays visible with usable cards and explicit refresh retries (2.200834ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ malformed detailed market response keeps existing results and reports failure (1.912458ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ market refresh transfers upgrade source to installed cards and excludes installed upgrades from market grid (1.266792ms)
+✔ uninstall uses formal DELETE and backend retention=true, not card identity (0.874458ms)
+✔ uninstall uses formal DELETE and backend retention=false, not card identity (0.553292ms)
+✔ uninstall uses formal DELETE and backend retention=undefined, not card identity (0.735875ms)
+✔ reset: business-message preserves confirmation and never announces success (0.507042ms)
+✔ reset: business-fallback preserves confirmation and never announces success (0.358792ms)
+✔ reset: http preserves confirmation and never announces success (0.343917ms)
+✔ uninstall: business-message preserves confirmation and never announces success (0.314459ms)
+✔ uninstall: business-fallback preserves confirmation and never announces success (0.379417ms)
+✔ uninstall: http preserves confirmation and never announces success (0.3615ms)
+✔ reset retains its existing POST contract and clears confirmation only on success (0.471292ms)
+✔ confirmation template retains the open dialog with an inline error alert (53.150417ms)
+✔ unavailable card rejects open without HTTP or dialogs (0.643542ms)
+✔ unavailable card rejects settings without HTTP or dialogs (0.430334ms)
+✔ unavailable card rejects install without HTTP or dialogs (0.349959ms)
+✔ unavailable card rejects clone without HTTP or dialogs (0.324291ms)
+✔ unavailable card rejects reset without HTTP or dialogs (0.319584ms)
+✔ unavailable card rejects repository-update without HTTP or dialogs (0.292083ms)
+✔ unavailable direct install rejects bypass with fallback reason (0.35575ms)
+✔ unavailable direct openPlugin rejects bypass with fallback reason (0.345333ms)
+✔ retired update and restore actions cannot revive the removed executor (0.353083ms)
+✔ unavailable reset rejects writes and retains the active dialog (0.360167ms)
+✔ unavailable repository-update rejects writes and retains the active dialog (0.379083ms)
+✔ unavailable uninstall remains formal DELETE with real retained feedback (0.487583ms)
+✔ available=true keeps settings and install compatibility (0.545834ms)
+✔ available=undefined keeps settings and install compatibility (0.560541ms)
+✔ config draft survives availability change; local and remote saves do not send HTTP (53.018666ms)
+✔ unavailable card template disables mutations but keeps source link and uninstall (13.12475ms)
+✔ installed refresh propagates unavailable status to an already open config dialog (0.837959ms)
+✔ configuration template with unavailable notice and disabled save compiles (2.619334ms)
+✔ market displays twenty then appends twenty and resets pagination on filter changes (2.598333ms)
+✔ global search loads market once and clicking an uninstalled result executes the actual installer (0.773667ms)
+✔ fixed market sort selection and Enter close the filter menu, IME composition retains it (0.377875ms)
+✔ only usable declared plugin providers become buttons (5.844875ms)
+✔ default AuthPage receives exact instance and only confirmed exchange logs in (1.19ms)
+✔ missing ticket and unsuccessful exchange stay visible and never announce login (0.29575ms)
+✔ closing or choosing another provider discards stale imports and aborts requests (0.313791ms)
+✔ changed package URL refuses stale provider metadata (0.170833ms)
+✔ one pending exchange cannot be replayed by duplicate component events (0.692083ms)
+✔ provider retrieval failure is retryable and unmount suppresses late results (0.611791ms)
+✔ clone descriptor retains compiled source identity while Axios preserves requested literal identities (1.609292ms)
+✔ component retry refreshes providers so an upgraded package can load without page reload (0.39075ms)
+✔ complete original AutoBackup form supports subtitle and six exact visibility declarations (2.395209ms)
+✔ visibility preserves fixed with-model JavaScript truthiness and missing-name errors (0.567334ms)
+✔ renderer maps subtitle to actual Vuetify and applies visibility without a plugin special case (0.773459ms)
+✔ fixed actual Axios: same-origin-host-scheduler (6.04775ms)
+✔ fixed actual Axios: same-origin-web-message-leading-slash (23.430625ms)
+✔ fixed actual Axios: fixed-file-alias (1.994541ms)
+✔ fixed actual Axios: fixed-remotes-alias (0.365958ms)
+✔ fixed actual Axios: same-origin-absolute (0.321042ms)
+✔ fixed actual Axios: same-origin-baseURL (0.309167ms)
+✔ fixed actual Axios: same-origin-root-baseURL (0.272042ms)
+✔ fixed actual Axios: explicit-other-plugin (0.192083ms)
+✔ fixed actual Axios: callable-client (0.229ms)
+✔ fixed actual Axios: request-config-and-transform (0.62ms)
+✔ fixed actual Axios: HTTP200-success-false-resolves (0.223583ms)
+✔ fixed actual Axios: HTTP200-error-field-resolves (0.529583ms)
+✔ fixed actual Axios: default-invalid-JSON-is-text (4.033625ms)
+✔ fixed actual Axios: default-HTML-is-text (1.473916ms)
+✔ fixed actual Axios: explicit-text-does-not-JSON-parse (1.790667ms)
+✔ fixed actual Axios: bodyless204-empty-string (0.214625ms)
+✔ fixed actual Axios: HTTP503-rejects-Axios-error (1.294625ms)
+✔ fixed actual Axios: request-custom-transforms (0.858542ms)
+✔ native envelope adaptation keeps business false and explicit peer API unbound (4.058459ms)
+✔ same-origin absolute URLs and baseURL retain source aliases; external origins never reach transport (0.438625ms)
+✔ fixed optimizer preserves explicit signals and aborts only automatically controlled global requests (5.531708ms)
+✔ existing native list/config adaptation retains fixed management payloads rather than treating names as custom APIs (0.325125ms)
+✔ fixed existing folder and user-order aliases retain their raw wire; dynamic source URLs are never rebound (0.27525ms)
+✔ source raw folder properties named data/request_id are not mistaken for a native host envelope (0.180167ms)
+✔ BrushFlow original API contract preserves every explicitly requested source route (5.625792ms)
+✔ BrushFlow mutation methods keep source payloads and only refresh after explicit success (30.844084ms)
+✔ BrushFlow ten unchanged assets load all four original exports with actual Vue and Vuetify (68.971167ms)
+✔ BrushFlow full-page navigation retains the displayed clone and original main nav key (2.27725ms)
+✔ original plugin icons stay local and use their original cover colors; absent icons use the original default logo (21.499166ms)
+✔ custom clone icons keep their safe URL and reset a failed image when its full URL changes (3.434208ms)
+✔ restyled cards show the clone display version and mount bundled icons under the application path (5.60975ms)
+✔ a failed icon switches both image and cover color to the original fallback, then resets when the plugin changes (8.722416ms)
+✔ actual card shows only supplied installation statistics and source label chips (4.867542ms)
+✔ actual author links allow only HTTP(S) without credentials and retain invalid authors as text (16.313583ms)
+[Vue warn]: Unhandled error during execution of app errorHandler
+✔ fixed recommend paths and discover prefixes deduplicate independently of names (4.220625ms)
+✔ opaque source routes, resolution and public images retain source identity (0.694292ms)
+✔ fixed media detail title/year hints survive opaque route encoding and resolve requests (0.271875ms)
+✔ actual ExtraSourceView matches fixed watcher: dependency-null (213.409709ms)
+✔ actual ExtraSourceView matches fixed watcher: truthy-default-restores-after-clear (47.824125ms)
+✔ actual ExtraSourceView matches fixed watcher: key-order-reversed (23.861ms)
+✔ actual ExtraSourceView matches fixed watcher: falsey-restores-default (26.438375ms)
+✔ actual ExtraSourceView matches fixed watcher: array-reference-comparison (31.108625ms)
+✔ actual Axios preserves fixed query/page order and opaque MediaInfo identity (8.828875ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ clone business-false preserves real error and draft: 分身插件 OwnedStandardFixtureqa1 已存在 (105.027292ms)
+✔ clone business-false preserves real error and draft: fallback (76.501333ms)
+✔ business-false overrides even otherwise valid created identity (11.842959ms)
+✔ strict matching clone success emits once and sends original request identity (20.77925ms)
+✔ clone malformed success still rejected: {"created":false} (10.407042ms)
+✔ clone malformed success still rejected: {"instance_id":"wrong"} (17.438208ms)
+✔ clone malformed success still rejected: {"plugin_id":"wrong"} (9.502875ms)
+✔ clone malformed success still rejected: {"source_instance_id":"wrong"} (16.053458ms)
+✔ clone HTTP error preserves draft and dialog (27.031958ms)
+✔ clone pending duplicate submit sends only one request (23.370333ms)
+✔ source market card is not filtered by an installed clone sharing plugin_id (4.608625ms)
+✔ fixed cloned JS global API literals use clone, while runtime-assembled source stays source (12.458125ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ clone identity uses the complete instance ID and lowercases only the suffix (17.7795ms)
+✔ optional values remain empty for server inheritance and metadata uses UTF-8 byte limits (2.520417ms)
+✔ icons allow real HTTP/HTTPS and mounted relative assets, never scripts, credentials or protocol-relative URLs (0.3645ms)
+✔ clone dialog has five editable fields, inherited placeholders, responsive original layout and accurate ID preview (300.754458ms)
+✔ cancel, close and outside/escape dismissal send no request; reopening starts a clean form (2.956459ms)
+✔ invalid suffix, total ID length, version and icon never reach transport (13.8475ms)
+✔ one in-flight clone locks fields/dismissal and success cannot resubmit even before unmount (1.296ms)
+✔ API errors preserve form and request ID; conflicts include retained tombstones and migration is not mislabeled as permissions (28.906209ms)
+✔ malformed or mismatched success envelopes do not announce creation (3.760375ms)
+✔ card uses display version and safe real icon, resets failure on icon change and emits the exact clone instance (121.43125ms)
+✔ market/uninstalled or sortable cards have no clone menu (1.152875ms)
+✔ actual card-to-dialog flow creates once, refreshes lists and statistics and keeps the source folder without an organization write (269.152292ms)
+✔ creation remains successful when the subsequent list refresh fails and never posts a second clone (5.840459ms)
+✔ update menu requires an exact repository candidate and never treats display version as an update (3.174917ms)
+✔ pinned update action opens history, closes without writes, then updates latest without a second confirmation (3.755667ms)
+✔ incompatible catalog update remains disabled while installed settings stay usable (2.1285ms)
+✔ retired migration envelopes cannot claim a repository update succeeded (3.979834ms)
+✔ clone settings keep the exact instance and ignore retired review metadata (2.352167ms)
+✔ retired restore and update actions cannot submit stale clone review snapshots (1.19375ms)
+✔ unavailable retained code disables ordinary install with actual code availability reason (10.530125ms)
+✔ device profile changes preserve shared visible widgets before and after remote geometry loads (337.787792ms)
+✔ capturing a device layout saves its current geometry rather than the widest cached layout (188.877459ms)
+✔ installed dashboard breakpoint/ID and exact source width coercion (1.712791ms)
+✔ installed per-profile layout/visibility normalization retains explicit reset envelope (2.632208ms)
+✔ source refresh truth and JavaScript timer conversion; no global pause control (0.128334ms)
+✔ a successful refresh replaces rows, attributes and width instead of replaying the previous widget (0.665833ms)
+✔ fixed server layout wins over newer local cache; missing server backfills local (0.945667ms)
+✔ entering edit mode retains measured automatic height; explicit resize wins and reset restores measured height (0.139625ms)
+✔ standard Vue entry uses only metadata-bound immutable same-origin assets (3.408333ms)
+✔ original API URLs preserve literal, runtime and explicit peer identities (0.9815ms)
+✔ source risk confirmation details and requested identity survive the actual fetch adapter (27.4995ms)
+✔ original successful response stays unwrapped and invalid JSON remains text (1.26875ms)
+✔ all eight original assets load their four actual federation exports with the app Vue module (7.620959ms)
+✔ source API accepts arbitrary JSON and encodes Axios-style query params without rewriting requested identity (11.592125ms)
+✔ full-page source component sequence tries custom nav component then AppPage then Page (0.570458ms)
+✔ custom APIs preserve plain text and text errors without decoding binary or retrying writes (4.194334ms)
+✔ explicit Axios binary response types preserve bytes and preserve upload request identity (3.563584ms)
+✔ full original MergeMessageNotify forms retain literal dotted keys, tabs and nested dialogs (9.308916ms)
+✔ plugin literal model binding cannot access prototypes and links cannot execute scripts (0.399292ms)
+✔ a newly introduced tab or nested dialog key remains reactive on its first edit (1.114084ms)
+✔ actual Lark form and source dynamic handlers retain the independent model (1.217959ms)
+✔ original switch and Ace model bindings save the current independent draft (0.199125ms)
+✔ all installed SiteStatistic reference pages and charts render through the whitelist (10.9025ms)
+✔ all actual MPServerStatus forms and complete reference pages use supported original components (13.06225ms)
+✔ plugin data tables support actual process lists and reject executable HTML (1.996042ms)
+✔ unsupported original UI behavior is reported before save, not silently discarded (0.208958ms)
+✔ complete large plugin histories retain every row with bounded page rendering (139.737459ms)
+✔ original uninstall switches and installed-plugin multiselect use supported controls (6.145166ms)
+✔ complete original AutoSignIn form retains its cron editor and independent interval draft (0.736959ms)
+✔ complete original IYUU form supports its explanatory span, underline and safe README link (0.816833ms)
+✔ source text components retain presentation props and original event expressions (0.303416ms)
+✔ dynamic link expressions and model aliases validate the resolved URL before binding (0.126834ms)
+✔ fixed ColorThief2.6 quality20 pixel quantization and fallback use the actual browser library (4.3285ms)
+✔ fixed image cache shares promises/results, evicts first at100 and keeps original quality/fallback (1.888959ms)
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+✔ original auto detection and explicit app/desktop choices persist across reloads (5.469042ms)
+✔ actual avatar layout menu changes the shared mode and writes only the layout preference (202.042583ms)
+✔ actual App footer More opens apps and the application center shares the authenticated navigation cache (214.931125ms)
+✔ actual log dialog starts with 50 physical lines then receives scoped, buffered source lines (40.8855ms)
+✔ actual log dialog pause/resume and gap use the existing host stream boundary (1.093209ms)
+✔ actual log dialog shows history failure and three reconnect attempts then explicit retry (0.992375ms)
+✔ original logging normalization, burst grouping and filters match actual source references (2.177083ms)
+✔ structured Go log adaptation retains zero timestamps, literal text and concrete instance scope (1.461458ms)
+✔ history and resumed stream deduplicate stable IDs within a bounded 600-line display (3.535625ms)
+✔ fixed physical-line parser, continuation metadata and 600-line bound are retained (6.585333ms)
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+✔ all changed Vue templates compile, including market settings integration (80.505209ms)
+✔ parse newline/comma/Chinese comma, trim, stable exact dedupe and URL restrictions (3.4515ms)
+✔ environment-locked repositories reject every mutation and preserve exact sources without saving system settings (2.970459ms)
+✔ list add/edit/cancel/remove/reorder and duplicate rejection retain exact source strings (1.535584ms)
+✔ text switching keeps original ordered normalization and reports dropped invalid entries (0.5385ms)
+✔ empty list/text cannot save; unsubmitted row and add drafts are not mandatory save steps (0.450833ms)
+✔ statistics sharing can be disabled independently before any repository or service is configured (0.993417ms)
+✔ successful PUT sends ordered sources without unrelated system settings and emits saved once (0.405833ms)
+✔ Wiki sync writes through its own endpoint and updates draft without closing editor (0.425417ms)
+✔ failed or malformed Wiki response preserves local editor and does not claim success (0.736167ms)
+✔ local-only sources preserve source order/duplicates and explicitly opt into reload (0.327625ms)
+✔ local source failures preserve source draft and automatic reload choice (0.316709ms)
+✔ local-only configuration can remove its final trusted directory and disable reload (0.289333ms)
+✔ configured statistics service and explicit disabled sharing persist independently of repositories (0.265542ms)
+✔ failed PUT preserves draft and does not emit saved: {"result":{"success":false,"message":"不能保存"}} (0.39075ms)
+✔ failed PUT preserves draft and does not emit saved: {"result":{}} (0.315792ms)
+✔ failed PUT preserves draft and does not emit saved: {"writeError":"网络失败"} (0.422833ms)
+✔ read error or malformed read cannot overwrite unknown persisted settings (0.61025ms)
+✔ duplicate save while pending does not send twice and list actions remain locked (0.397292ms)
+✔ system settings preserve repository authority and reject malformed unknown fields (1.044209ms)
+✔ fixed-source system fields are outside the repository dialog (4.220083ms)
+✔ GitHub controls load only configured flags and untouched saves omit credential/network fields (0.59825ms)
+✔ GitHub credentials and mirror save through host settings and clear only after actual success (2.091125ms)
+✔ failed GitHub saves retain drafts; a newly typed token replaces a pending clear (1.7985ms)
+✔ local path fields preserve fixed source duplicates and only split English commas (1.348166ms)
+✔ market filters/sorts/options/20-item prefix and separate search match actual fixed frontend AST (2.699459ms)
+✔ market dimensions intersect, multiple selections union, source statistics gate all five sorts (1.649333ms)
+✔ component-synthetic: ordinary history note mounts the same list as the fixed MessageCard (397.6605ms)
+✔ sidebar caches successful empty results and merges concurrent requests (10.188208ms)
+✔ sidebar retries once after failure and never caches a failed result (1007.455916ms)
+✔ logout invalidates old in-flight results without discarding the new session request (1.15025ms)
+✔ sidebar full-page route preserves the chosen clone and source nav key (0.509084ms)
+✔ arbitrary standard source and non-main nav key survive route round trip (0.259333ms)
+✔ fixed hash route retains dot/tab keys and optional main AppPage entry (0.111875ms)
+✔ folder create validates names, preserves both source formats and saves without touching plugin config (20.412167ms)
+✔ rename and appearance keep membership and unknown fields; failed saves retain the dialog and committed grid (4.512417ms)
+✔ actual draggable actions save root order and folder membership once without background refresh during dragging (6.060667ms)
+✔ folder members retain original order, removing one returns it to root and delete needs its own confirmation (7.849166ms)
+✔ sorting inside a folder saves original fractional global order and retains its appearance (2.760958ms)
+✔ legacy order, empty folders, literal hostile names and background URLs do not become executable content (0.174875ms)
+✔ installed filters match all 28 actual reference branches and keep folder counts scoped (1.012958ms)
+✔ actual installed menu supports name choose/clear, quick-filter precedence, IME enter and close (9.56675ms)
+✔ installed filters apply inside a folder and keeps the selected filters without periodic refresh (2.176ms)
+✔ mixed display sort keeps a confirmed user order when the separate folders write fails (2.156792ms)
+✔ fixed view load/order/quick-filter oracle is preserved (0.180333ms)
+▶ fixed mixed-sort and filtered-folder-sort oracle reaches actual component writes
+  ✔ root-mixed-folder-orders (2.261875ms)
+  ✔ filtered-folder-sort-drops-hidden-members (8.863083ms)
+✔ fixed mixed-sort and filtered-folder-sort oracle reaches actual component writes (11.449959ms)
+✔ fixed drag membership removes only first duplicate and preserves destination duplicate guard (0.446041ms)
+✔ fixed second-write failure keeps optimistic folders and already committed order (6.355375ms)
+✔ fixed keep-alive return retains filters and folder while refreshing once, initial activation and sorting do not refresh (3.22125ms)
+✔ fixed original page keeps raw style, spacer and chip in both renderers (1.966291ms)
+✔ fixed native style text preserves author selectors, variables, attributes and rules (0.344875ms)
+✔ renderer registers actual components and uses the native style node (0.637334ms)
+✔ project opens synchronously then resolves history metadata and normalizes raw GitHub URLs (1.689041ms)
+✔ local or missing repository consults exact instance market identity and keeps author fallback (0.263542ms)
+✔ unsafe or absent homepage never navigates a window and closes the empty popup (0.306625ms)
+✔ fixed recent hook timestamp/order/snapshot and max3-on-add but no read truncation (4.108ms)
+✔ complete original RemoveLink form is supported with all thirteen model fields (2.113959ms)
+✔ generic renderer binds the actual Vuetify divider without a plugin special case (0.308375ms)
+✔ fixed FormRender: model-aliases-and-updates (3.361334ms)
+✔ fixed FormRender: literal-unicode-and-punctuation-keys (0.153791ms)
+✔ fixed FormRender: native-style-keeps-css-props-and-complex-author-rules (1.539083ms)
+✔ fixed FormRender: native-style-html-keeps-form-inner-component-layer (0.256333ms)
+✔ fixed FormRender: missing-show-variable-propagates-source-reference-error (0.376667ms)
+✔ fixed FormRender: show-aliases-follow-property-insertion-order (0.110625ms)
+✔ fixed FormRender: ordinary-show-prefixed-property (0.06775ms)
+✔ fixed FormRender: show-before-later-style (0.085958ms)
+✔ fixed FormRender: event-function-factory (0.148ms)
+✔ fixed FormRender: falsey-form-text-falls-through-content (0.270333ms)
+✔ fixed FormRender: form-rich-html-retains-component-layer (0.202625ms)
+✔ fixed FormRender: form-slot-object-array-and-default-precedence (0.286625ms)
+✔ fixed FormRender: owned-rich-recursive-browser-form (0.532541ms)
+✔ fixed PageRender uses literal props/content/events; DashboardRender literal props and named slot arrays (0.368792ms)
+✔ absent or malformed support never implies all platforms or storage (3.531334ms)
+✔ declared Linux local support warns against unsupported original form examples (0.261417ms)
+✔ partial and future valid metadata are descriptive without invented dimensions (0.097292ms)
+✔ both host rendering modes show the same generic escaped notice (4.033958ms)
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onActivated is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+✔ standard config rejects non-success {"success":false,"message":"配置拒绝"} (64.598209ms)
+✔ standard config rejects non-success {} (44.925709ms)
+✔ standard config rejects non-success undefined (39.680375ms)
+✔ standard config success is synchronous, no runs polling (27.058041ms)
+✔ standard config HTTP failure preserves draft and no success (19.062667ms)
+✔ standard config duplicate save coalesces in-flight request (12.612167ms)
+✔ standard config unavailable guard blocks local and remote save, keeps draft (11.737958ms)
+✔ removed legacy action has no request or dialog: runs (4.457875ms)
+✔ removed legacy action has no request or dialog: restore-reviewed (0.984125ms)
+✔ removed legacy action has no request or dialog: update (0.759833ms)
+✔ formal unavailable uninstall retains backend semantics true (1.463666ms)
+✔ formal unavailable uninstall retains backend semantics false (0.677208ms)
+✔ unavailable standard action blocked: install (0.574417ms)
+✔ unavailable standard action blocked: settings (0.554916ms)
+✔ unavailable standard action blocked: clone (0.544417ms)
+✔ unavailable standard action blocked: reset (0.596459ms)
+✔ unavailable standard action blocked: repository-update (0.613459ms)
+✔ standard Plugins template compiles without old review/run UI (88.201834ms)
+✔ standard PluginManageCard template compiles without old review/run UI (30.18975ms)
+✔ standard PluginConfigDialog template compiles without old review/run UI (21.60175ms)
+✔ actual PluginConfigDialog SFC uses standard metadata, not a host builtin or clone as source API ID (235.974709ms)
+✔ actual PluginConfigDialog SFC cancellation aborts loader and never publishes a late remote (27.105458ms)
+✔ actual PluginConfigDialog SFC exposes loader errors instead of a fake success component (19.724333ms)
+✔ actual PluginDataDialog SFC uses standard metadata, not a host builtin or clone as source API ID (18.615625ms)
+✔ actual PluginDataDialog SFC cancellation aborts loader and never publishes a late remote (16.753083ms)
+✔ actual PluginDataDialog SFC exposes loader errors instead of a fake success component (12.67075ms)
+✔ actual PluginDashboardWidget SFC uses standard metadata, not a host builtin or clone as source API ID (21.702083ms)
+✔ actual PluginDashboardWidget SFC cancellation aborts loader and never publishes a late remote (35.259959ms)
+✔ actual PluginDashboardWidget SFC exposes loader errors instead of a fake success component (130.496833ms)
+✔ actual PluginAppPage SFC uses standard metadata, not a host builtin or clone as source API ID (11.681209ms)
+✔ actual PluginAppPage SFC cancellation aborts loader and never publishes a late remote (6.04425ms)
+✔ actual PluginAppPage SFC exposes loader errors instead of a fake success component (10.297167ms)
+✔ fixed AppPage directly loads a URL even when the sidebar declares a different nav key (17.389167ms)
+✔ actual Config never imports after a cancelled form request; unknown schema fails explicitly (52.179458ms)
+✔ actual Config and Page generic successful API mutation emits changed, without special plugin IDs (33.213167ms)
+✔ actual JavaScript federation graph resolves all four exports under instance/digest with shared host modules (12.978417ms)
+✔ unsupported or malformed descriptors fail before any module import (4.745041ms)
+✔ updated package and distinct clones use separate immutable entry graphs; stale versions fail closed (0.774708ms)
+✔ proxy base path is honored without changing descriptor source identity (0.217709ms)
+✔ concurrent consumers share one initialized entry but cancel independently (4.236833ms)
+✔ cancel before metadata and after get prevents late component factory execution (1.349375ms)
+✔ timeout does not publish a late factory and failed initialization automatically rediscovers once (7.214917ms)
+✔ failed component export retries discovery and entry initialization once, but never beyond two attempts (0.639542ms)
+✔ invalid federation entry is an explicit error (0.563375ms)
+✔ invalid federation factory is an explicit error (0.607125ms)
+✔ invalid federation component is an explicit error (0.2895ms)
+✔ generic API leaves method authorization to backend, preserves refusal, preserves identity and never injects credentials (3.600875ms)
+✔ standard ESM namespace and transpiled default exports unwrap before component validation (0.653458ms)
+✔ Unicode and 97-byte API clone identities retain exact percent-encoded graph ownership (0.613667ms)
+✔ physical clone ID punctuation is decoded exactly inside the pinned owner path (0.8575ms)
+✔ actual recursive form renders dynamic show/props, named model, slots, HTML and mutating handlers (187.81275ms)
+✔ fixed JSON page refreshes after every fulfilled HTTP result and preserves data on503 (133.106667ms)
+✔ actual dashboard keeps previous widget and does not create one when get_dashboard returns None (88.863333ms)
+✔ fixed dashboard saves local snapshots before remote and closes/refetches after persistence failure (185.638042ms)
+✔ fixed dashboard shared settings use server first and preserve local fallback on read/backfill failure (233.427709ms)
+✔ dashboard activation refreshes only chosen metadata and deactivation stops timers (78.622708ms)
+✔ actual PWA quick access opens only on eligible top pull, includes stopped plugins, and remembers last three (119.487583ms)
+✔ fixed services submit without awaiting execution and refresh after one second (8.139542ms)
+✔ page and dashboard recursive nodes retain both their own text and nested children (63.688084ms)
+✔ actual desktop and mobile dashboards share enabled choices while preserving independent grid layouts (37.747916ms)
+✔ fixed AppPage loads URL directly without sidebar membership and watches identity/navigation (4.7555ms)
+✔ fixed grid persists drag/resize immediately, keeps width-only height automatic and exits after reset (141.825125ms)
+✔ fixed complete pull gesture preserves continued motion, scroll boundary, dialog cache and content following (109.609375ms)
+✔ dashboard node retains its remote component and API when periodic data refresh preserves identity (8.259916ms)
+✔ fixed PageRender retains a removed listener until its recursive node is unmounted (17.004417ms)
+✔ pinned history dialog requests author notes without a repository override or a release picker (31.777083ms)
+✔ clone history binds its exact instance without letting copied source provenance override configured sources (0.486959ms)
+✔ history failures remain visible and do not install or fabricate entries (0.698583ms)
+✔ history Markdown follows fixed VersionHistory options for formatting, HTML and safe new-window links (15.325667ms)
+✔ fixed Web send: empty-no-request (324.866792ms)
+✔ fixed Web send: encoded-trimmed-command (38.809041ms)
+✔ fixed Web send: HTTP-success-false-body-is-not-interpreted (23.105916ms)
+✔ fixed Web send: HTTP-failure-keeps-draft (11.838583ms)
+✔ fixed Web send: pending-draft-change-is-cleared-on-success (94.349417ms)
+✔ fixed Web history: history-SSE-date-note-null-empty-dedup (23.553625ms)
+✔ fixed Web history: source-sorts-batches-and-appends-older-page (42.458542ms)
+✔ fixed Web history: same-signature-id-is-ignored-and-note-distinguishes (60.571375ms)
+✔ fixed message shortcut URL keeps raw query semantics and menu closes before dialog opens (20.968666ms)
+✔ message history uses source page/size and advances only after nonempty success; failure retries same page (81.487667ms)
+✔ ordinary text Markdown keeps fixed MessageCard breaks/options/link attributes (19.740209ms)
+✔ ordinary MessageCard image/link/note branches remain present and notes match fixed decoder (37.568292ms)
+✔ MoviePilot exported custom and group arrays import with only their original schema fields (2.741209ms)
+✔ tier import preserves the original spaces, empty tiers and AND tokens when sharing (0.180625ms)
+✔ editing rejects duplicate names and IDs while permitting the existing source builtin override quirk (0.18925ms)
+✔ preference migration keeps explicit opt-outs and enables newly available shelves (2.312708ms)
+✔ hidden and repeated intersection callbacks share one first-page request and retain native identities (0.334042ms)
+✔ returning to empty or failed shelves does not refetch, and explicit retry remains possible (0.320958ms)
+✔ disposed shelf response cannot repopulate a reset feed or clear a new request (0.15125ms)
+✔ saving preferences commits a snapshot only after success and rejects simultaneous submits (0.17225ms)
+✔ failed preference save preserves visible shelves and leaves a retryable draft (0.203875ms)
+✔ more routes retain source identifiers and titles separately from API paging (0.531292ms)
+✔ pinned per-task failure keeps successful siblings and updates the rendered summary (9.576708ms)
+✔ manual target can be edited and cleared without changing storage, mode, or explicit switches (2.417875ms)
+✔ storage and method changes preserve the custom target and explicit classification setting (1.451625ms)
+✔ choosing automatic target retains other automatic values and preserves explicit false switches (1.173916ms)
+✔ directory tree selection only changes the target path (1.022375ms)
+✔ preview remains an action and every later click requests current form values again (2.548916ms)
+✔ a pending preview keeps its label and blocks duplicate requests (1.277875ms)
+✔ failed refresh clears old preview results, retains the form, and allows another preview (1.74425ms)
+✔ resource filters include all candidates by default and keep unknown distinct from zero (20.958125ms)
+✔ cross-site groups require exact release identity and downloads use actual site-resource references (0.2985ms)
+✔ promotion remaining is derived only from supplied expiry (0.103084ms)
+✔ single-resource download takes the explicit range or only a same-season parsed hint, never an implicit whole season (0.277834ms)
+✔ raw keyword results suppress only the optional identity prerequisite, keeping real resource and rule reasons (0.146583ms)
+✔ season and release-group filters only narrow the existing results (0.102583ms)
+✔ multiple filter selections match any selected value within a field and combine across fields (0.099458ms)
+✔ cancelled search preserves completed fast-site results and marks only unfinished sites cancelled (1.686542ms)
+✔ connection interruption never presents unfinished sites as successful or empty (13.176959ms)
+✔ navigation and an edited draft do not submit; a repeated explicit search submits exactly once (20.960375ms)
+✔ a request waits for initialization and is never replayed by a remount or navigation (0.523833ms)
+✔ logout clears the remembered target and cannot replay an earlier user search (0.505083ms)
+✔ streams cumulative progress across split UTF-8 and CRLF frames (75.078833ms)
+✔ a stream error retains completed progress and fails the request (2.652917ms)
+✔ an incomplete or malformed stream never reports a fabricated success (0.861166ms)
+✔ ordinary JSON response remains compatible and reports real API errors (1.314375ms)
+✔ cancellation reaches the actual fetch signal and releases busy state (0.39775ms)
+✔ app domain loads, saves verbatim, and reloads without introducing URL validation (37.47075ms)
+✔ missing app domain displays empty and stays optional (2.011292ms)
+✔ domain save preserves current other sections and nullable source preference (9.419583ms)
+✔ unrelated saves keep the latest domain, not the unsaved draft; tabs retain the draft (3.617791ms)
+✔ failed save preserves the draft and old saved setting, and permits retry (1.201542ms)
+✔ pending save disables submissions and guards duplicate handler calls (1.233958ms)
+✔ saved form uses the server response, including an omitted optional domain (0.971834ms)
+✔ inherited source false is displayed without changing the nullable preference on an unrelated save (17.200583ms)
+✔ an unconfirmed source setting stays unknown, disables its switch and cannot be silently saved as true (4.281375ms)
+✔ the source read-site-messages switch saves explicit false and true with the site interval (4.54175ms)
+✔ HTTP 200 with a failed TLS probe shows its actionable message as an error (1.57925ms)
+✔ a failed save clears the old probe result and does not test stale settings (3.898125ms)
+✔ passed and ok probe statuses show the connection message without an error (3.335167ms)
+✔ daily deltas use latest successful Shanghai day, not duplicate refreshes or failures (40.391917ms)
+✔ known sites and aliases use original icons; fallback never carries user info, path or query (7.417417ms)
+✔ actual SiteIcon SFC uses owned cached bytes, then original icon fallback, and retries changed cache identity (59.206ms)
+✔ batch connection tests use all sites, cap concurrency at three, and continue after business and network failures (225.540917ms)
+✔ individual and batch connection tests share slots and deduplicate already running or queued sites (3.326625ms)
+✔ out-of-order whole-list refresh responses preserve other site results when final calibration fails (2.60175ms)
+✔ leaving site management cancels queued connection tests without sending new requests or reloading (1.697125ms)
+✔ site creation starts from a URL, with original credential tabs and effective UA/timeout/rate fields (4.807542ms)
+✔ editing preserves a valid zero priority and accepts priorities above one hundred (2.71725ms)
+✔ inactive sites can be explicitly tested and cards open the correct resources without navigating away (3.56425ms)
+✔ site deletion uses one in-page confirmation and no native confirm (1.243834ms)
+✔ sorting remains available in card actions and posts the complete order (2.6345ms)
+✔ export downloads directly and failures remain visible without a success message (1.027916ms)
+✔ import opens its original preview dialog and blocks old list writes throughout the import (1.297458ms)
+✔ import file selection only previews safe metadata, then start submits each station with actual progress (32.704208ms)
+✔ malformed site files show safe errors and keep the original file-selection stage usable (0.674875ms)
+✔ single-site resource browse loads recent items, searches and paginates using only its own site (34.114167ms)
+✔ Rousi URL selects API credentials for add, edit and credential refresh (2.051334ms)
+✔ site data dialog plots daily history and observed distribution; failed refresh keeps last success (64.822083ms)
+✔ a closed site data dialog discards late refresh results (1.6215ms)
+✔ Rousi edit opens API credentials and submits its independent mailbox token without exposing saved values (1.439875ms)
+✔ site toolbar has only all-site testing, cards use icons, and statistics renders real DOM content (1.405375ms)
+✔ MoviePilot arrays and local export envelopes pass through unchanged without exposing parse excerpts (2.127209ms)
+✔ oversized and unreadable site files never leak file contents through errors (0.231625ms)
+✔ import success requires complete per-site outcomes rather than only an HTTP response (0.6285ms)
+✔ export downloads the authenticated raw attachment with its credentials and cleans the object URL (102.794375ms)
+✔ authentication and malformed export responses are errors, never downloaded as configuration (0.606ms)
+✔ MoviePilot-compatible exports download as a top-level array (1.5525ms)
+✔ preview accepts both document formats and omits URL credentials and query values (1.276959ms)
+✔ sequential imports preserve source format and actual progress across partial failures (0.537625ms)
+✔ single-row backend fallback labels retain the original file position without leaking malformed values (0.449042ms)
+✔ file URLs are invalid previews and the eighth failed row keeps its file position even with an empty backend name (0.260625ms)
+✔ calendar month and week begin on Monday and use actual adjacent dates (3.373916ms)
+✔ month navigation does not skip February from a 31st date and week navigation crosses years (1.335541ms)
+✔ calendar groups real episode events without inventing episode numbers for predictions (8.533041ms)
+✔ editing across tabs preserves subscription details and saves an isolated draft (32.256209ms)
+✔ clearing subscription recognition words sends an explicit empty string (2.697541ms)
+✔ closing discards edits while canceling a subscription requires confirmation before DELETE (2.803583ms)
+✔ a new TV subscription retains its starting episode for whole-season and multi-season creation (2.375875ms)
+✔ save failures keep the editing dialog and draft without deleting the subscription (5.743041ms)
+✔ site keyboard selection starts ArrowUp at the last option and clears to the default site scope (2.622667ms)
+✔ site search clears after keyboard selection and outside focus without clearing selected sites (2.392834ms)
+✔ source regex fields replace only the edited native field and explicit empty keeps a cleared rule empty (2.114542ms)
+✔ original resource dropdown options carry regular expressions rather than native enumerations (0.907334ms)
+✔ new TV subscriptions track a season from an inclusive starting episode without a fixed episode list (3.400375ms)
+✔ legacy explicit episode ranges remain unchanged until the user converts them (0.163916ms)
+✔ subscription progress counts the actual target episodes and excludes explicit exclusions (0.17975ms)
+✔ multi-season creation retains individual success, conflict and failure without retrying a successful season (0.619791ms)
+✔ explicit season totals constrain progress without counting unrelated exclusions (0.18325ms)
+✔ multi-season requests preserve common site and download choices while using each seasons total (0.242416ms)
+✔ ordinary progress follows the fixed source result, including plugin existence facts (1.820583ms)
+✔ plugin recognition seasons use the fixed MediaDetailView order without mutating raw dictionaries (1.269792ms)
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+[Vue warn]: Property undefined was accessed during render but is not defined on instance. 
+  at <App>
+✔ frame guard rejects malformed/oversized/unsafe shapes and never retains note (2.853125ms)
+✔ production delays match 3s initial, 5s background and 3s/4.5s/6.75s manual retries (0.204625ms)
+✔ authentication starts one delayed source, never a competing consumer (0.593167ms)
+✔ same-origin cookie source respects HTTPS mount without query credentials (0.499917ms)
+✔ only 100 newest items live in memory; mark all read is local and does not delete (2.029166ms)
+✔ logout during initial delay clears timers and a new login receives a new delay (0.150542ms)
+✔ expired/logout clears memory and late old callbacks cannot enter a new login (0.232667ms)
+✔ CONNECTING errors stay browser-owned and never create a second source (0.104667ms)
+✔ CLOSED uses three retries; onopen and foreground reset the manual retry chain (0.248125ms)
+✔ background closes after five seconds; short switches preserve stream; foreground opens once (0.127ms)
+✔ hidden startup waits for foreground and never bypasses initial three seconds (0.0885ms)
+✔ background cancels retries; logout/unmount/beforeunload clean all timers and listeners (0.69475ms)
+✔ relative time retains original zh-cn wording and the explicit invalid-date display guard (2.23325ms)
+✔ relative time uses original second/minute/hour/day thresholds in both directions (1.68725ms)
+✔ relative time month/year thresholds use calendar differences rather than fixed 30/365-day divisors (4.31975ms)
+✔ relative time preserves month-end anchors and leap-year calendar boundaries (1.782625ms)
+✔ relative time respects explicit offsets and parses source dates in the current local timezone (3.730291ms)
+✔ relative time spring DST uses elapsed hours but calendar-adjusted day thresholds (2.444667ms)
+✔ relative time autumn DST distinguishes the repeated hour and preserves day rounding (2.147166ms)
+✔ App uses one bell, text-only rendering, separate durable actions and explicit auth cleanup (1.465625ms)
+✔ actual App system-message markup renders HTML/script payloads as escaped text, never note (69.091875ms)
+✔ actual App rendering reads the current clock after login/background while keeping the 15-second trigger (335.233917ms)
+✔ native absolute message timestamp fixes cross-zone age without changing legacy interpretation (11.408375ms)
+✔ present native timestamp must be an explicit valid absolute instant (0.138167ms)
+✔ history search, pagination and grouped view survive a copied URL and browser navigation (3.774083ms)
+✔ queue tabs merge media title/year across jobs and retain each file outcome while unknown files remain separate (0.330041ms)
+✔ unrecognized failures use their actual filename without inventing a movie identity (0.120042ms)
+✔ queue follows actual job state while preserving completed or blocked per-file outcomes (0.072ms)
+✔ original status search suggestions select status without searching literal Chinese status text (0.124833ms)
+✔ history title sorting uses season and episode numbers and grouping retains every selected file (7.869458ms)
+ℹ tests 556
+ℹ suites 0
+ℹ pass 556
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6943.924875

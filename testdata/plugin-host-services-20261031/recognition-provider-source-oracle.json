@@ -1,0 +1,623 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "cachetools_version": "7.1.4",
+  "classification": "unchanged pinned core.cached + TMDb request/snapshot/rate bodies and RequestUtils.request with actual cachetools; owned finite HTTP/session/clock fixtures; no real provider",
+  "sources": {
+    "app/core/cache.py": "fbcd0a557be024741891b539321fd06d09e0025c15f699d3bfdab5cebec2a91d",
+    "app/utils/http.py": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "app/modules/themoviedb/tmdbv3api/tmdb.py": "cf868d6d0d50a17b710ba4bac6c41f8ec51aa6ac3acf4fc89f7c7d642a4746a6"
+  },
+  "cases": [
+    {
+      "case": "valid_status500_snapshot",
+      "replies": [
+        {
+          "status": 500,
+          "body": {
+            "results": []
+          }
+        }
+      ],
+      "calls": [
+        {},
+        {}
+      ],
+      "observations": [
+        {
+          "value": [],
+          "error": false
+        },
+        {
+          "value": [],
+          "error": false
+        }
+      ],
+      "requests": 1,
+      "session_closes": 0,
+      "sleeps": []
+    },
+    {
+      "case": "error_envelope_cached",
+      "replies": [
+        {
+          "status": 404,
+          "body": {
+            "success": false,
+            "status_message": "owned miss"
+          }
+        }
+      ],
+      "calls": [
+        {},
+        {}
+      ],
+      "observations": [
+        {
+          "value": null,
+          "error": true
+        },
+        {
+          "value": null,
+          "error": true
+        }
+      ],
+      "requests": 1,
+      "session_closes": 0,
+      "sleeps": []
+    },
+    {
+      "case": "malformed_not_cached",
+      "replies": [
+        {
+          "status": 502,
+          "body": "owned nonJSON"
+        },
+        {
+          "status": 502,
+          "body": "owned nonJSON"
+        }
+      ],
+      "calls": [
+        {},
+        {}
+      ],
+      "observations": [
+        {
+          "value": null,
+          "error": true
+        },
+        {
+          "value": null,
+          "error": true
+        }
+      ],
+      "requests": 2,
+      "session_closes": 0,
+      "sleeps": []
+    },
+    {
+      "case": "network_four_attempts_each",
+      "replies": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "calls": [
+        {},
+        {}
+      ],
+      "observations": [
+        {
+          "value": null,
+          "error": true
+        },
+        {
+          "value": null,
+          "error": true
+        }
+      ],
+      "requests": 8,
+      "session_closes": 6,
+      "sleeps": []
+    },
+    {
+      "case": "generic_request_two_attempts",
+      "replies": [
+        {
+          "exception": "generic"
+        },
+        {
+          "exception": "generic"
+        }
+      ],
+      "calls": [
+        {}
+      ],
+      "observations": [
+        {
+          "value": null,
+          "error": true
+        }
+      ],
+      "requests": 2,
+      "session_closes": 1,
+      "sleeps": []
+    },
+    {
+      "case": "rate_limit_fresh_retry",
+      "replies": [
+        {
+          "body": {
+            "results": []
+          },
+          "headers": {
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": "1001"
+          }
+        },
+        {
+          "body": {
+            "results": [
+              {
+                "id": 2
+              }
+            ]
+          },
+          "headers": {
+            "X-RateLimit-Remaining": "40"
+          }
+        }
+      ],
+      "calls": [
+        {},
+        {}
+      ],
+      "observations": [
+        {
+          "value": [
+            {
+              "id": 2
+            }
+          ],
+          "error": false
+        },
+        {
+          "value": [
+            {
+              "id": 2
+            }
+          ],
+          "error": false
+        }
+      ],
+      "requests": 2,
+      "session_closes": 0,
+      "sleeps": [
+        1
+      ]
+    },
+    {
+      "case": "past_reset_abs_delay",
+      "replies": [
+        {
+          "body": {
+            "results": []
+          },
+          "headers": {
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": "999"
+          }
+        },
+        {
+          "body": {
+            "results": [
+              {
+                "id": 3
+              }
+            ]
+          },
+          "headers": {
+            "X-RateLimit-Remaining": "40"
+          }
+        }
+      ],
+      "calls": [
+        {}
+      ],
+      "observations": [
+        {
+          "value": [
+            {
+              "id": 3
+            }
+          ],
+          "error": false
+        }
+      ],
+      "requests": 2,
+      "session_closes": 0,
+      "sleeps": [
+        1
+      ]
+    },
+    {
+      "case": "reset_now_no_retry",
+      "replies": [
+        {
+          "body": {
+            "results": []
+          },
+          "headers": {
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": "1000"
+          }
+        }
+      ],
+      "calls": [
+        {}
+      ],
+      "observations": [
+        {
+          "value": [],
+          "error": false
+        }
+      ],
+      "requests": 1,
+      "session_closes": 0,
+      "sleeps": []
+    },
+    {
+      "case": "missing_reset_cached_error",
+      "replies": [
+        {
+          "body": {
+            "results": []
+          },
+          "headers": {
+            "X-RateLimit-Remaining": "0"
+          }
+        }
+      ],
+      "calls": [
+        {},
+        {}
+      ],
+      "observations": [
+        {
+          "value": null,
+          "error": true
+        },
+        {
+          "value": null,
+          "error": true
+        }
+      ],
+      "requests": 1,
+      "session_closes": 0,
+      "sleeps": []
+    },
+    {
+      "case": "fresh_replaces_snapshot",
+      "replies": [
+        {
+          "body": {
+            "results": [
+              {
+                "id": 1
+              }
+            ]
+          }
+        },
+        {
+          "body": {
+            "results": [
+              {
+                "id": 2
+              }
+            ]
+          }
+        }
+      ],
+      "calls": [
+        {},
+        {
+          "fresh": true
+        },
+        {}
+      ],
+      "observations": [
+        {
+          "value": [
+            {
+              "id": 1
+            }
+          ],
+          "error": false
+        },
+        {
+          "value": [
+            {
+              "id": 2
+            }
+          ],
+          "error": false
+        },
+        {
+          "value": [
+            {
+              "id": 2
+            }
+          ],
+          "error": false
+        }
+      ],
+      "requests": 2,
+      "session_closes": 0,
+      "sleeps": []
+    }
+  ],
+  "generic_cases": [
+    {
+      "case": "cache_empty",
+      "skip_empty": false,
+      "operations": [
+        {
+          "result": {}
+        },
+        {
+          "result": {
+            "new": true
+          }
+        }
+      ],
+      "observations": [
+        {
+          "value": {},
+          "loads": 1
+        },
+        {
+          "value": {},
+          "loads": 1
+        }
+      ]
+    },
+    {
+      "case": "skip_empty",
+      "skip_empty": true,
+      "operations": [
+        {
+          "result": {}
+        },
+        {
+          "result": []
+        },
+        {
+          "result": null
+        },
+        {
+          "result": false
+        },
+        {
+          "result": 0
+        },
+        {
+          "result": ""
+        },
+        {
+          "result": {
+            "id": 1
+          }
+        },
+        {
+          "result": {
+            "id": 2
+          }
+        }
+      ],
+      "observations": [
+        {
+          "value": {},
+          "loads": 1
+        },
+        {
+          "value": [],
+          "loads": 2
+        },
+        {
+          "value": null,
+          "loads": 3
+        },
+        {
+          "value": false,
+          "loads": 4
+        },
+        {
+          "value": 0,
+          "loads": 5
+        },
+        {
+          "value": "",
+          "loads": 6
+        },
+        {
+          "value": {
+            "id": 1
+          },
+          "loads": 7
+        },
+        {
+          "value": {
+            "id": 1
+          },
+          "loads": 7
+        }
+      ]
+    },
+    {
+      "case": "none_retries",
+      "skip_empty": false,
+      "operations": [
+        {
+          "result": null
+        },
+        {
+          "result": null
+        },
+        {
+          "result": {
+            "id": 1
+          }
+        },
+        {
+          "result": {
+            "id": 2
+          }
+        }
+      ],
+      "observations": [
+        {
+          "value": null,
+          "loads": 1
+        },
+        {
+          "value": null,
+          "loads": 2
+        },
+        {
+          "value": {
+            "id": 1
+          },
+          "loads": 3
+        },
+        {
+          "value": {
+            "id": 1
+          },
+          "loads": 3
+        }
+      ]
+    },
+    {
+      "case": "fresh_overwrites",
+      "skip_empty": false,
+      "operations": [
+        {
+          "result": {
+            "id": 1
+          }
+        },
+        {
+          "result": {
+            "id": 2
+          },
+          "fresh": true
+        },
+        {
+          "result": {
+            "id": 3
+          }
+        }
+      ],
+      "observations": [
+        {
+          "value": {
+            "id": 1
+          },
+          "loads": 1
+        },
+        {
+          "value": {
+            "id": 2
+          },
+          "loads": 2
+        },
+        {
+          "value": {
+            "id": 2
+          },
+          "loads": 2
+        }
+      ]
+    },
+    {
+      "case": "monotonic_expiry",
+      "skip_empty": false,
+      "operations": [
+        {
+          "result": {
+            "id": 1
+          }
+        },
+        {
+          "result": {
+            "id": 2
+          },
+          "mono": 4000
+        }
+      ],
+      "observations": [
+        {
+          "value": {
+            "id": 1
+          },
+          "loads": 1
+        },
+        {
+          "value": {
+            "id": 2
+          },
+          "loads": 2
+        }
+      ]
+    },
+    {
+      "case": "full_key_identity",
+      "skip_empty": false,
+      "operations": [
+        {
+          "key": "a",
+          "result": {
+            "id": 1
+          }
+        },
+        {
+          "key": "b",
+          "result": {
+            "id": 2
+          }
+        },
+        {
+          "key": "a",
+          "result": {
+            "id": 3
+          }
+        }
+      ],
+      "observations": [
+        {
+          "value": {
+            "id": 1
+          },
+          "loads": 1
+        },
+        {
+          "value": {
+            "id": 2
+          },
+          "loads": 2
+        },
+        {
+          "value": {
+            "id": 1
+          },
+          "loads": 2
+        }
+      ]
+    }
+  ]
+}

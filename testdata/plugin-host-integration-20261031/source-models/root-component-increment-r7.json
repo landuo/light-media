@@ -1,0 +1,60 @@
+{
+  "status": "source-shape and module-error-title increment verified; S11 native Linux/browser acceptance remains separate",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "supersedes_component_counts": {
+    "native_cases": {
+      "douban": 16,
+      "bangumi": 17
+    },
+    "total": 33
+  },
+  "fixed_behaviors": [
+    "truthy wrong-shaped provider objects raise the original ordinary module error; falsey empty results remain None",
+    "Bangumi absent character id short-circuits before malformed actor inspection",
+    "ChainBase system.error title is module.get_name()+发生了错误, with correct four-source identities"
+  ],
+  "verification": [
+    {
+      "path": "native-shape-race-r7.log",
+      "result": "PASS 9.830s",
+      "kind": "fixed AST/provider protocol and actual App functions with race; 33 native cases",
+      "binding_note": "after shape guard changes, before the later one-line module title correction"
+    },
+    {
+      "path": "../../plugin-host-business-20261031/anilist-source/evidence.json",
+      "result": "AniList actual SDK ordinary error observer race r8 PASS30.262s",
+      "kind": "independent SDK/module error event verifies later source-derived title correction"
+    }
+  ],
+  "files": {
+    "internal/app/plugin_original_host_media_sources.go": {
+      "sha256": "03e53b337c78e4b0e9f02586896fb1cad393c8f5ee5289385fc6ba0d0f92dceb",
+      "size": 3305
+    },
+    "internal/app/plugin_original_host_media_douban.go": {
+      "sha256": "95e74902e3027a38a5c9bc1d0847c8e6311c276cde068b9401be601d1a0d7af6",
+      "size": 12947
+    },
+    "internal/app/plugin_original_host_media_bangumi.go": {
+      "sha256": "fc29eab7491032dbc5ae6686e3cf84a26580eb881d5de94f821efd8bf21d7e59",
+      "size": 7459
+    },
+    "internal/app/plugin_original_catalog_recognize.go": {
+      "sha256": "9972c90dbeeaadda584f7d702a7ee261c7ceb69e2b060dc58fb67277545380c2",
+      "size": 7555
+    },
+    "testdata/plugin-host-integration-20261031/source-models/recognition_oracle.py": {
+      "sha256": "4226ab2d325ed2cdb8523d8f2ee046c6d01459a2ad94fc38b78ac7c0b507e68a",
+      "size": 11300
+    },
+    "testdata/plugin-host-integration-20261031/source-models/native-shape-race-r7.log": {
+      "sha256": "1f39d7390b400cf8a4dfcceccfd3d7a621350fa3839b3c7f7def4d2845b53451",
+      "size": 37
+    },
+    "testdata/plugin-host-business-20261031/anilist-source/evidence.json": {
+      "sha256": "647660e3da208e0fa5e0f208210e55d1fd98ae01b10b66474a653934beeb6edc",
+      "size": 8118
+    }
+  },
+  "latest_full_runtime": "Await the separately sealed Linux53-source-case result; do not relabel historical tests as current full-binary tests."
+}

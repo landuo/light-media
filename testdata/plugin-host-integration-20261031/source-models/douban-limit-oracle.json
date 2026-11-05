@@ -1,0 +1,159 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/utils/limit.py": "797da5fde45bc7dcf80966f6fc01b53e33663ad0521c37a095cea16498b3706e",
+    "app/utils/common.py": "f23beea8fec06bb1b93569f4973185cd50f5987ee787946fd06288023560ea4c"
+  },
+  "kind": "fixed rate limiter/handler/retry source AST with owned clock/log/call boundary",
+  "events": [
+    {
+      "now": 1000,
+      "method": "detail",
+      "operation": "limit",
+      "result": null,
+      "calls": 1,
+      "next": 1060.0,
+      "wait": 120.0
+    },
+    {
+      "now": 1001,
+      "method": "detail",
+      "operation": "ok",
+      "result": null,
+      "calls": 1,
+      "next": 1060.0,
+      "wait": 120.0
+    },
+    {
+      "now": 1001,
+      "method": "match",
+      "operation": "ok",
+      "result": {
+        "ok": true
+      },
+      "calls": 1,
+      "next": 0.0,
+      "wait": 60.0
+    },
+    {
+      "now": 1060,
+      "method": "detail",
+      "operation": "limit",
+      "result": null,
+      "calls": 2,
+      "next": 1180.0,
+      "wait": 240.0
+    },
+    {
+      "now": 1180,
+      "method": "detail",
+      "operation": "limit",
+      "result": null,
+      "calls": 3,
+      "next": 1420.0,
+      "wait": 480.0
+    },
+    {
+      "now": 1420,
+      "method": "detail",
+      "operation": "limit",
+      "result": null,
+      "calls": 4,
+      "next": 1900.0,
+      "wait": 600.0
+    },
+    {
+      "now": 1900,
+      "method": "detail",
+      "operation": "limit",
+      "result": null,
+      "calls": 5,
+      "next": 2500.0,
+      "wait": 600.0
+    },
+    {
+      "now": 2500,
+      "method": "detail",
+      "operation": "ok",
+      "result": {
+        "ok": true
+      },
+      "calls": 6,
+      "next": 0.0,
+      "wait": 60.0
+    },
+    {
+      "now": 2501,
+      "method": "detail",
+      "operation": "limit",
+      "result": null,
+      "calls": 7,
+      "next": 2561.0,
+      "wait": 120.0
+    },
+    {
+      "now": 2561,
+      "method": "detail",
+      "operation": "empty",
+      "result": null,
+      "calls": 8,
+      "next": 0.0,
+      "wait": 60.0
+    },
+    {
+      "now": 2562,
+      "method": "detail",
+      "operation": "limit",
+      "result": null,
+      "calls": 9,
+      "next": 2622.0,
+      "wait": 120.0
+    }
+  ],
+  "retry_cases": [
+    {
+      "failures": 0,
+      "limited": false,
+      "calls": 1,
+      "sleeps": [],
+      "result": {
+        "ok": true
+      },
+      "error": null
+    },
+    {
+      "failures": 2,
+      "limited": false,
+      "calls": 3,
+      "sleeps": [
+        3,
+        9
+      ],
+      "result": {
+        "ok": true
+      },
+      "error": null
+    },
+    {
+      "failures": 5,
+      "limited": false,
+      "calls": 5,
+      "sleeps": [
+        3,
+        9,
+        27,
+        81
+      ],
+      "result": null,
+      "error": "ValueError"
+    },
+    {
+      "failures": 1,
+      "limited": true,
+      "calls": 1,
+      "sleeps": [],
+      "result": null,
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,2053 @@
+{
+  "status": "passed",
+  "classification": "actual cmd/server + installed out-of-process standard SDK worker on owned SQLite; source expected ordinary OCR/RMT protocol and synthetic PNG; no live site/OCR challenge/provider",
+  "bindings": {
+    "server": "3728e51209cb46d990abfc9dc87ab9afdb482eddcc5fc3a7d97a4c9ba72ee116",
+    "worker": "41467e9c730c3006b33b2d5850ea67be6f18301a2fd9502241b9a2793db76970",
+    "driver": "558874b2d49774505c7fb143dcc97fca69ac399a63f9a6e5a4f5b626654fee2f",
+    "rmt_oracle": "777f3e1edc4babd124b7a1c2d56f0d22a14882947d182b119a794d1b987271f6",
+    "large_png": "c133b2ccc93d9a329f0333c37e12ba596f7aafd276510f7c8cae4737beb6d9ec",
+    "large_oracle": "b88c01adac064d64c141cc53290f91b8cf63ae5ff705c860f843a112b53d117f",
+    "full_redirect_source_oracle": "b18c05284aeb581a90628e8f84f845177f8329fcac2568ce9d05643fd14b2185",
+    "wire_headers_source_oracle": "6c48937135ffad154c7cdb35d9a992edcd85d2943640964fa3767d06471745cc",
+    "cookie_source_oracle": "73fe563ef0b01d2253f53d712647efe31fbe983e478a2302800689b00c706ddc",
+    "timeout_source_oracle": "8fcb7ae299f4ac84ede74c7cfd49f6712589d528b783faa0a45294b3a84e0e48",
+    "worker_update": "7a1c34095c76a17ad28356459b8cee86e60974b0c63b88eb8ea48c27dab7c563"
+  },
+  "observations": [
+    {
+      "phase": "actual-cookie-parse-source-wire",
+      "source_oracle_sha256": "73fe563ef0b01d2253f53d712647efe31fbe983e478a2302800689b00c706ddc",
+      "duplicate_overwrite_ascii_percent_and_order": true,
+      "header_matches_actual_source_http": true
+    },
+    {
+      "phase": "actual-sdk-20s-read-inactivity-not-total",
+      "elapsed_seconds": 21.13393373414874,
+      "source_timeout_oracle_sha256": "8fcb7ae299f4ac84ede74c7cfd49f6712589d528b783faa0a45294b3a84e0e48",
+      "result": "ABC123"
+    },
+    {
+      "phase": "actual-product-full-fixed-OCR-redirect-source",
+      "source_sha256": "b18c05284aeb581a90628e8f84f845177f8329fcac2568ce9d05643fd14b2185",
+      "cases": [
+        {
+          "kind": "image",
+          "redirects": 1,
+          "result": "OWNED",
+          "actual_trace": [
+            {
+              "method": "GET",
+              "step": 0,
+              "cookie": "owned=initial; other=yes"
+            },
+            {
+              "method": "GET",
+              "step": 1,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "POST",
+              "step": 0,
+              "cookie": null,
+              "body": {
+                "base64_img": "b3duZWQtaW1hZ2U="
+              }
+            }
+          ]
+        },
+        {
+          "kind": "image",
+          "redirects": 30,
+          "result": "OWNED",
+          "actual_trace": [
+            {
+              "method": "GET",
+              "step": 0,
+              "cookie": "owned=initial; other=yes"
+            },
+            {
+              "method": "GET",
+              "step": 1,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 2,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 3,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 4,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 5,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 6,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 7,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 8,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 9,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 10,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 11,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 12,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 13,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 14,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 15,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 16,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 17,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 18,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 19,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 20,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 21,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 22,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 23,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 24,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 25,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 26,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 27,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 28,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 29,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 30,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "POST",
+              "step": 0,
+              "cookie": null,
+              "body": {
+                "base64_img": "b3duZWQtaW1hZ2U="
+              }
+            }
+          ]
+        },
+        {
+          "kind": "image",
+          "redirects": 31,
+          "result": "OWNED",
+          "actual_trace": [
+            {
+              "method": "GET",
+              "step": 0,
+              "cookie": "owned=initial; other=yes"
+            },
+            {
+              "method": "GET",
+              "step": 1,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 2,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 3,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 4,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 5,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 6,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 7,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 8,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 9,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 10,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 11,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 12,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 13,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 14,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 15,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 16,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 17,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 18,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 19,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 20,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 21,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 22,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 23,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 24,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 25,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 26,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 27,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 28,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 29,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 30,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "POST",
+              "step": 0,
+              "cookie": null,
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            }
+          ]
+        },
+        {
+          "kind": "post",
+          "redirects": 30,
+          "result": "OWNED",
+          "actual_trace": [
+            {
+              "method": "POST",
+              "step": 0,
+              "cookie": null,
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 1,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 2,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 3,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 4,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 5,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 6,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 7,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 8,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 9,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 10,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 11,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 12,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 13,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 14,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 15,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 16,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 17,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 18,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 19,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 20,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 21,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 22,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 23,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 24,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 25,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 26,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 27,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 28,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 29,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 30,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            }
+          ]
+        },
+        {
+          "kind": "post",
+          "redirects": 31,
+          "result": "",
+          "actual_trace": [
+            {
+              "method": "POST",
+              "step": 0,
+              "cookie": null,
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 1,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 2,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 3,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 4,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 5,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 6,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 7,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 8,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 9,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 10,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 11,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 12,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 13,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 14,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 15,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 16,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 17,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 18,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 19,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 20,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 21,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 22,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 23,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 24,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 25,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 26,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 27,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 28,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 29,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 30,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase": "real-ocr-rmt",
+      "default_extensions": [
+        ".mp4",
+        ".mkv",
+        ".ts",
+        ".iso",
+        ".rmvb",
+        ".avi",
+        ".mov",
+        ".mpeg",
+        ".mpg",
+        ".wmv",
+        ".3gp",
+        ".asf",
+        ".m4v",
+        ".flv",
+        ".m2ts",
+        ".strm",
+        ".tp",
+        ".f4v"
+      ],
+      "observed_initial_extensions": [
+        ".startup-env"
+      ],
+      "raw_mixed_extensions": [
+        ".runtime",
+        1,
+        null,
+        true
+      ],
+      "observed_cold_extensions": [
+        ".late-env"
+      ],
+      "startup_environment_snapshot": true,
+      "readonly_write_rejected": true,
+      "source_pid": 17,
+      "clone_pid": 33,
+      "updated_pid": 38,
+      "cold_pid": 16,
+      "image_cookie_ua_retained": true,
+      "ocr_receives_no_site_credentials": true,
+      "large_png_bytes": 270448,
+      "large_base64_bytes": 360600,
+      "compressed_image_decoded": true,
+      "source_falsey_and_exception_paths": true,
+      "configuration_init_run_once_calls_sdk": true,
+      "counts": {
+        "image": 67,
+        "ocr": 77
+      }
+    }
+  ],
+  "parent_tool_integrity": [
+    {
+      "phase": "before-bootstrap",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": false,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-bootstrap",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before-start",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-start",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/auth/login",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/auth/login",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/plugins/install",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/plugins/install",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after PUT /api/settings",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before PUT /api/plugins/OwnedHostBusiness",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after PUT /api/plugins/OwnedHostBusiness",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/plugins/OwnedHostBusiness/clone",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/plugins/OwnedHostBusiness/clone",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusinesstwin/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusinesstwin/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusinesstwin/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusinesstwin/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusinesstwin/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusinesstwin/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/plugins/install",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/plugins/install",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusinesstwin/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusinesstwin/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before-stop",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-stop",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before-start",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-start",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/auth/login",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/auth/login",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before PUT /api/plugins/OwnedHostBusiness",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after PUT /api/plugins/OwnedHostBusiness",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/plugins/OwnedHostBusinesstwin/uninstall",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/plugins/OwnedHostBusinesstwin/uninstall",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusinesstwin/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusinesstwin/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/plugins/OwnedHostBusiness/uninstall",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/plugins/OwnedHostBusiness/uninstall",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after POST /api/v1/plugin/OwnedHostBusiness/run",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "before-stop",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "phase": "after-stop",
+      "parent": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA",
+      "parent_present": true,
+      "data_dir": "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-r9-final/data",
+      "data_dir_present": true,
+      "files_checked": 12,
+      "missing": [],
+      "changed": []
+    }
+  ],
+  "protected_tool_sha256": {
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/run_ocr_product_process.py": "558874b2d49774505c7fb143dcc97fca69ac399a63f9a6e5a4f5b626654fee2f",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-product-server.sh": "3728e51209cb46d990abfc9dc87ab9afdb482eddcc5fc3a7d97a4c9ba72ee116",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/business-worker-linux": "41467e9c730c3006b33b2d5850ea67be6f18301a2fd9502241b9a2793db76970",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/rmt-source-oracle.json": "777f3e1edc4babd124b7a1c2d56f0d22a14882947d182b119a794d1b987271f6",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/owned-large.png": "c133b2ccc93d9a329f0333c37e12ba596f7aafd276510f7c8cae4737beb6d9ec",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/large-oracle.json": "b88c01adac064d64c141cc53290f91b8cf63ae5ff705c860f843a112b53d117f",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/ocr-redirect-source-oracle.json": "b18c05284aeb581a90628e8f84f845177f8329fcac2568ce9d05643fd14b2185",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/timeout-oracle.json": "8fcb7ae299f4ac84ede74c7cfd49f6712589d528b783faa0a45294b3a84e0e48",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/cookie-oracle.json": "73fe563ef0b01d2253f53d712647efe31fbe983e478a2302800689b00c706ddc",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/wire-headers-oracle.json": "6c48937135ffad154c7cdb35d9a992edcd85d2943640964fa3767d06471745cc",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/business-worker-v2-linux": "7a1c34095c76a17ad28356459b8cee86e60974b0c63b88eb8ea48c27dab7c563",
+    "/home/admin/light-media-browser-ocr-20261105.gLDANoGA/.owned-sentinel": "ff16480a52dd9af642e6679d9342c700a2a660332bef938a3650a698e346e2e4"
+  },
+  "ocr_post_observations": [
+    {
+      "base64_bytes": 8,
+      "base64_sha256": "db3eaf9a79dc18d098e632573be3e3bf8467688e271dfcb77b2a6c584d422ae4",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 360600,
+      "base64_sha256": "c7007b059bc7c483b127ccc77e60184c2c0348ef3611dcecea6befd8533f75c5",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 360600,
+      "base64_sha256": "c7007b059bc7c483b127ccc77e60184c2c0348ef3611dcecea6befd8533f75c5",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 360600,
+      "base64_sha256": "c7007b059bc7c483b127ccc77e60184c2c0348ef3611dcecea6befd8533f75c5",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 360600,
+      "base64_sha256": "c7007b059bc7c483b127ccc77e60184c2c0348ef3611dcecea6befd8533f75c5",
+      "cookie_absent": true,
+      "authorization_absent": true
+    }
+  ],
+  "cleanup": {
+    "uninstalled": [
+      {
+        "instance": "OwnedHostBusinesstwin",
+        "uninstall_response": {
+          "data_retained": false,
+          "success": true,
+          "uninstalled": true
+        },
+        "subsequent_custom_api_status": 404,
+        "subsequent_custom_api_response": {
+          "detail": "Not Found"
+        }
+      },
+      {
+        "instance": "OwnedHostBusiness",
+        "uninstall_response": {
+          "data_retained": true,
+          "success": true,
+          "uninstalled": true
+        },
+        "subsequent_custom_api_status": 404,
+        "subsequent_custom_api_response": {
+          "detail": "Not Found"
+        }
+      }
+    ],
+    "image_id": "sha256:7c9ef884baa3c750d5c08fc128bc29fcb9a244f30d95623f0b8b749892cdc77c",
+    "server_sha256": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+    "processes_after_uninstall": [
+      "PID                 PPID                STAT                COMMAND",
+      "1603792             1603766             Ssl                 light-media"
+    ],
+    "plugin_worker_browser_display_processes": 0,
+    "temp_profiles": 0,
+    "container_name": "light-media-ocr-proof-38efa4179e",
+    "container_absent": true,
+    "data_directory_retained_for_evidence": true
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "kind": "fixed-source AST URL helper + Python primitive comparisons",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_path": "app/utils/string.py",
+  "source_sha256": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+  "source_line": 293,
+  "cases": [
+    {
+      "url": "https://tracker.invalid/announce?passkey=OWNED_A",
+      "group": "tracker.invalid",
+      "valid": true
+    },
+    {
+      "url": "https://tracker.invalid/other?passkey=OWNED_B",
+      "group": "tracker.invalid",
+      "valid": true
+    },
+    {
+      "url": "udp://tracker.invalid/announce?passkey=OWNED_A",
+      "group": "udp://tracker.invalid/announce?passkey=OWNED_A",
+      "valid": true
+    },
+    {
+      "url": "udp://tracker.invalid/announce?passkey=OWNED_B",
+      "group": "udp://tracker.invalid/announce?passkey=OWNED_B",
+      "valid": true
+    },
+    {
+      "url": "http://user:OWNED_PASSWORD@tracker.invalid:8080/path?token=OWNED_A",
+      "group": "user:OWNED_PASSWORD@tracker.invalid:8080",
+      "valid": true
+    },
+    {
+      "url": "HTTP://tracker.invalid/a?passkey=OWNED_A",
+      "group": "HTTP://tracker.invalid/a?passkey=OWNED_A",
+      "valid": true
+    },
+    {
+      "url": "HTTP://tracker.invalid/a?passkey=OWNED_B",
+      "group": "HTTP://tracker.invalid/a?passkey=OWNED_B",
+      "valid": true
+    },
+    {
+      "url": "",
+      "group": "",
+      "valid": true
+    },
+    {
+      "url": "unknown",
+      "group": "unknown",
+      "valid": true
+    },
+    {
+      "url": "http:///path",
+      "group": "",
+      "valid": true
+    },
+    {
+      "url": "http://[::1]:80/a",
+      "group": "[::1]:80",
+      "valid": true
+    },
+    {
+      "url": "http://host:badport/path",
+      "group": "host:badport",
+      "valid": true
+    },
+    {
+      "url": "http://]broken[",
+      "valid": false,
+      "error_class": "ValueError"
+    },
+    {
+      "url": "http://tracker.invalid\t/path",
+      "group": "tracker.invalid",
+      "valid": true
+    }
+  ],
+  "messages": [
+    "Success",
+    "rejected OWNED_A",
+    " rejected OWNED_A ",
+    "https://tracker.invalid/error?passkey=OWNED_A"
+  ],
+  "message_cases": [
+    {
+      "message": "Success",
+      "nonempty": true,
+      "nonblank": true,
+      "matches": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "stripped_matches": [
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "message": "rejected OWNED_A",
+      "nonempty": true,
+      "nonblank": true,
+      "matches": [
+        false,
+        true,
+        false,
+        false
+      ],
+      "stripped_matches": [
+        false,
+        true,
+        false,
+        false
+      ]
+    },
+    {
+      "message": " rejected OWNED_A ",
+      "nonempty": true,
+      "nonblank": true,
+      "matches": [
+        false,
+        false,
+        true,
+        false
+      ],
+      "stripped_matches": [
+        false,
+        true,
+        false,
+        false
+      ]
+    },
+    {
+      "message": "https://tracker.invalid/error?passkey=OWNED_A",
+      "nonempty": true,
+      "nonblank": true,
+      "matches": [
+        false,
+        false,
+        false,
+        true
+      ],
+      "stripped_matches": [
+        false,
+        false,
+        false,
+        true
+      ]
+    }
+  ],
+  "consumer_comparison": {
+    "source_file": "cleaninvalidseed/__init__.py",
+    "sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+    "line": 841,
+    "cases": [
+      {
+        "status": 2,
+        "message": "Success",
+        "is_error_tracker": false
+      },
+      {
+        "status": 2,
+        "message": "rejected OWNED_A",
+        "is_error_tracker": false
+      },
+      {
+        "status": 2,
+        "message": " rejected OWNED_A ",
+        "is_error_tracker": false
+      },
+      {
+        "status": 2,
+        "message": "https://tracker.invalid/error?passkey=OWNED_A",
+        "is_error_tracker": false
+      },
+      {
+        "status": 3,
+        "message": "Success",
+        "is_error_tracker": false
+      },
+      {
+        "status": 3,
+        "message": "rejected OWNED_A",
+        "is_error_tracker": false
+      },
+      {
+        "status": 3,
+        "message": " rejected OWNED_A ",
+        "is_error_tracker": false
+      },
+      {
+        "status": 3,
+        "message": "https://tracker.invalid/error?passkey=OWNED_A",
+        "is_error_tracker": false
+      },
+      {
+        "status": 4,
+        "message": "Success",
+        "is_error_tracker": false
+      },
+      {
+        "status": 4,
+        "message": "rejected OWNED_A",
+        "is_error_tracker": true
+      },
+      {
+        "status": 4,
+        "message": " rejected OWNED_A ",
+        "is_error_tracker": true
+      },
+      {
+        "status": 4,
+        "message": "https://tracker.invalid/error?passkey=OWNED_A",
+        "is_error_tracker": true
+      }
+    ]
+  }
+}

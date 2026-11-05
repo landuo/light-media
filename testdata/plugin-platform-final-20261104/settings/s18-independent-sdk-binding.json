@@ -1,0 +1,40 @@
+{
+  "status": "6_root_tests_passed",
+  "command": "TMPDIR=<owned0700> OWNED_HOST_SITE_HTTP_FIXTURE_BINARY=<new race-worker> go test -race ./internal/app -run ^TestOriginalHostSiteHTTPActualSDK(FixedSourceWire|CredentialsCookiesAndGuards|PostGuardKeepsConfirmedOutcome|FixedSourceResponseCookies|PrivateCredentialsAndCleanupGrant|FixedSourceUserAgent)$ -count=1 -json",
+  "fixture_build": [
+    "go",
+    "build",
+    "-race",
+    "-o",
+    "work/plugin-platform-final-20261104/settings/site-http-independent-worker",
+    "./cmd/plugin-host-site-http-fixture"
+  ],
+  "fixture_binary_sha256": "ee85a72ae47553ad1d2af96ffd7e2df2894de5ef1f2a683df414c571220e9a28",
+  "fixture_and_host_race": true,
+  "current_relevant_source_sha256": {
+    "internal/plugins/site_http_host.go": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+    "internal/app/plugin_original_host_site_http.go": "726a0f353eab7311262f247f80fe24f934ec6a8da91ad324590d525dd25e4399",
+    "internal/app/plugin_original_host_site_http_json.go": "cdf90011d2d6acaea407241063d6da4377b952bf65e1fa44fbbb00a42b0f8ddc",
+    "internal/app/plugin_original_host_site_http_test.go": "89008f73666143d9d8f8a80b80856cf90a06902e2f9646db6fafb9bee717d481",
+    "internal/app/plugin_original_server_user_agent.go": "5700b9fddf4410a10946c86da75dff3dbc437d9542689de93ced280503b6330f",
+    "internal/app/plugin_original_host_settings.go": "d5070bca96fa25c833c3dfde951246d443c757f03eadd5226f7ff99ff438626f",
+    "internal/app/plugin_original_resources.go": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b",
+    "cmd/plugin-host-site-http-fixture/main.go": "614f2a8ade51fd7e708166e49592ef1143b14fdc8cdded7148c3821335c8648d",
+    "internal/plugins/concurrent_session.go": "c3f79283e113a669737cc44d1cdc23dc47cc5cd346e7ec02339ea9d6b838cdd6"
+  },
+  "relevant_source_changed_during_tests": [],
+  "seconds": 80.381,
+  "roots_pass": 6,
+  "named_subcases_pass": 14,
+  "source_wire_cookie_UA_examples": 18,
+  "reserved_credential_headers_rejected": 8,
+  "failures": 0,
+  "skips": 0,
+  "historical_harness_red": "s18-independent-default-temp-red.jsonl; unsafe default Mac /var ancestor caused install preflight rejection, never product request execution; rerun uses owned real0700 TMPDIR",
+  "owned_temp_directory_empty": true,
+  "log": "testdata/plugin-platform-final-20261104/settings/s18-independent-current-sdk-race.jsonl",
+  "log_sha256": "1fb2791dd18afe0c9c2c49d72cb540f395c6a1ecb97fde005a23ade26a28cd29",
+  "go_version": "go version go1.26.2 darwin/arm64",
+  "classification": "Actual separately built and installed SDK worker/public host entrypoints with owned HTTP external peers; macOS host. Current combined Linux/browser seal is separately required.",
+  "own_fixture_binary_removed": true
+}

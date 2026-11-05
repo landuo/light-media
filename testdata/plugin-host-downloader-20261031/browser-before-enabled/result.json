@@ -1,0 +1,33 @@
+{
+  "kind": "real_browser_real_App_real_standard_SDK_synthetic_downloader_peer",
+  "status": "passed",
+  "url": "http://127.0.0.1:39381/#plugins",
+  "server_sha256": "b45ba08c28a99aebe9acae85e98a7cf1adfb216ea3be302f2fcd942233e995b4",
+  "worker_sha256": "3968c34cbab3d35f49fd92cf6b3f2061ca1d27ac37f64c864e31f0dfb7031cc2",
+  "actions": [
+    "UI configuration save completed returned exact peer hash",
+    "UI add magnet acknowledged by synthetic peer",
+    "UI control pause failed at peer HTTP503; run_once consumed; explicit resave recovered confirmed",
+    "UI start/recheck/remove_task acknowledged and completed re-query returned empty",
+    "UI clone created; initial KV null; clone empty exact selection independent from source config+data; distinct PIDs"
+  ],
+  "source_pid": 51384,
+  "clone_pid": 52464,
+  "limitations": [
+    "Downloader peer is synthetic; actual qB/Transmission are separately proven by Linux real_e2e evidence",
+    "Test account created only in owned local temporary DB"
+  ],
+  "screenshots": [
+    "add.jpg",
+    "clone-empty.jpg",
+    "clone-isolated.jpg",
+    "completed.jpg",
+    "control-failure.jpg",
+    "control-recheck.jpg",
+    "control-recovered.jpg",
+    "control-remove_task.jpg",
+    "control-start.jpg",
+    "removed-empty.jpg",
+    "source-retained.jpg"
+  ]
+}

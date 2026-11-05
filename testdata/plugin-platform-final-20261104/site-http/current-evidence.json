@@ -1,0 +1,122 @@
+{
+  "feature_id": "S18",
+  "status": "ready_for_independent_root_acceptance",
+  "current_target_files": {
+    "internal/plugins/site_http_host.go": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+    "internal/app/plugin_original_host_site_http.go": "726a0f353eab7311262f247f80fe24f934ec6a8da91ad324590d525dd25e4399",
+    "internal/app/plugin_original_host_site_http_json.go": "cdf90011d2d6acaea407241063d6da4377b952bf65e1fa44fbbb00a42b0f8ddc",
+    "internal/app/plugin_original_resources.go": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b",
+    "internal/app/plugin_original_host_site_http_test.go": "89008f73666143d9d8f8a80b80856cf90a06902e2f9646db6fafb9bee717d481",
+    "cmd/plugin-host-site-http-fixture/main.go": "614f2a8ade51fd7e708166e49592ef1143b14fdc8cdded7148c3821335c8648d"
+  },
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_locations": [
+    "app/db/site_oper.py:26,38,92",
+    "app/db/models/site.py:26-34",
+    "app/utils/http.py:329-432,503-541,558-591",
+    "app/core/config.py:959-963"
+  ],
+  "source_oracles": {
+    "settings/site-http-independent-source-oracle.json": "82f75be7d32516af85984b42ada1f12e938e68e79adfe18a171b5094a005998b",
+    "settings/site-http-cookie-independent-source-oracle.json": "e00ea624fb59abe2f22e49d99df985fe7f0a8be06ecd6a77ab9e4678f6788d8c",
+    "settings/site-http-useragent-independent-source-oracle.json": "b9efe3ca4c24b739aa5ace1fa8c5d553501e5d5974fdfc5f305728b73e7e72ff",
+    "settings/site-http-installed-metadata-source-inventory.json": "3505221dba43589f88c808284b7c887f610522e63df5ecffaad1f370b36cc097",
+    "settings/site-http-dynamic-metadata-source-supplement.json": "36572b7045538dadce63a6496440a1c9f54e1e2c98f97bd0a56c2bf92404ddba",
+    "network-post-scope-observation.json": "30a7528bdb82bde729665c0dc95eda22f6aa833e70795522ff659cd79e8837a4"
+  },
+  "source_contracts": {
+    "sites.request": "current configured site, GET/POST; ordered/repeated form/query, explicit JSON/raw bytes, source header defaults/referer, current cookie/UA/proxy/optional raw credential header binding; private response bytes/ContentType/cookie dictionary. POST completed/unknown outcome survives post-request scope change. No automatic POST replay.",
+    "sites.credentials": "exact configured site ID/current real worker scope returns typed Cookie/UA/APIKey/Token privately in IPC/memory for trusted Go code; no implicit public route/config/log/DB projection. Fresh real stop_service cleanup grant remains valid; revoked old ordinary calls denied. Not an OS/network sandbox.",
+    "response_cookies": "private ordered name/value dictionary; nil CookieOverride uses configured cookie, pointer to empty pairs sends no cookie, nonempty replaces. Fixed Response-cookie8 source filtering retained; no new handle/session framework.",
+    "USER_AGENT": "readonly SystemSettings.Get USER_AGENT; UseHostUserAgent explicit mutual exclusion withUseSiteUserAgent; source caller suffix only default headers using global service UA, exact configured ordinary browserUA unchanged, custom headers can keep global agent withoutsuffix"
+  },
+  "necessary_adaptations": [
+    {
+      "source": "raw Python class/requests.Response and calls read fields directly",
+      "Go": "finite explicit typed private IPC; optional string DB null maps host native empty-string fields. Known actual callers use falsey/or-empty semantics. Normal Go handles arbitrary own-memory calculations, not a host template/signature framework."
+    },
+    {
+      "source": "RequestUtils defaults verify=False and may follow crossorigin or derived API hosts",
+      "Go": "existing configured canonical source and TLS validation retained on every outward hop; existing MTeam canonical API normalization is used, no credential forwarding exception/global TLS override."
+    },
+    {
+      "source": "Python library temporary Session/JSON objects",
+      "Go": "host reuses existing Requests proxy merge/inactivity timeout/content decode; precise fixed-source6 request wires,8 cookie cases,4 globalUA cases compared. Source arbitrary class identity/exceptions replaced with typed JSON and sanitized Go failure codes."
+    },
+    {
+      "source": "RequestException→None even after an external write",
+      "Go": "Response nil plus request_state unknown; after recognized POST outcome and stale config, scope_changed preserves completed/unknown factual result. No durable jobs, replay, workflow/action/session engine added."
+    },
+    {
+      "source": "full arbitrary response headers/url used by some plugins on their own URLs",
+      "Go": "only actual site-call needed ContentType plus decoded bytes/cookies exposed; source installed77 metadata static+dynamic inventory separates own-URL Server/Date/raw.version probes that use ordinary Go networking."
+    }
+  ],
+  "evidence_files": {
+    "acceptance.json": "fc8e272693214e766974a5f0adc9754b8032bff22c38bf8d54e1b60588ab63ff",
+    "full-sdk-linux.json": "51f132c1c8e08de92098ff77bcfc420a08331fcc4955092f457f8c6528f7266b",
+    "reserved-credentials-fix.json": "83277a63dd370b2795985ca59a93fd64fa384ceca3502636c1f82f19094fc54b",
+    "linux-r9-acceptance.json": "287efca4212ed9baae10f743df076cae3c151925007ee79c5e65989d25ffd7ab"
+  },
+  "current_main": {
+    "sha256": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+    "binding": "../browser-ocr/product-r9-build-inputs.json",
+    "input_differences": [],
+    "facts": "actual source/clone/config-save/private credentials/cookie reuse/host-UA/call/update/cold/failure/uninstall/stop, 3 observations and 8 actual HTTP rows",
+    "tested_runtime_target_files": {
+      "internal/app/plugin_original_host_site_http.go": "726a0f353eab7311262f247f80fe24f934ec6a8da91ad324590d525dd25e4399",
+      "internal/app/plugin_original_host_site_http_json.go": "cdf90011d2d6acaea407241063d6da4377b952bf65e1fa44fbbb00a42b0f8ddc",
+      "internal/plugins/site_http_host.go": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+      "internal/app/plugin_original_resources.go": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b"
+    }
+  },
+  "sdk_facts": {
+    "roots": [
+      {
+        "name": "TestOriginalHostSiteHTTPActualSDKFixedSourceWire",
+        "seconds": 3.08
+      },
+      {
+        "name": "TestOriginalHostSiteHTTPActualSDKCredentialsCookiesAndGuards",
+        "seconds": 1.07
+      },
+      {
+        "name": "TestOriginalHostSiteHTTPActualSDKPostGuardKeepsConfirmedOutcome",
+        "seconds": 0.51
+      },
+      {
+        "name": "TestOriginalHostSiteHTTPActualSDKFixedSourceResponseCookies",
+        "seconds": 3.98
+      },
+      {
+        "name": "TestOriginalHostSiteHTTPActualSDKPrivateCredentialsAndCleanupGrant",
+        "seconds": 0.96
+      },
+      {
+        "name": "TestOriginalHostSiteHTTPActualSDKFixedSourceUserAgent",
+        "seconds": 0.97
+      }
+    ],
+    "classification": "actual Linux App test binary and independent compiled standard SDK worker; source-controlled owned HTTP endpoints and fixed RequestUtils source-oracle wires/cookies/UA; not browser/main process evidence",
+    "header_fix": "reserved-credentials-fix.json includes current race and actual Linux negative tests, all eight reserved binding headers rejected before HTTP"
+  },
+  "browser": {
+    "evidence": "acceptance.json#browser",
+    "binding": "original R8 binary facts; no relabeling as R9",
+    "current_relation": "Frontend/fixture operations unchanged; host change is the separately validated forbidden credential-binding headers. Actual R9 CLI repeats ordinary host lifecycle. Private values never intentionally projected by fixture."
+  },
+  "intermediate_failures": [
+    "sdk-normal.jsonl retained: Go synthesized Referer on302/307; fixed explicit originalReferer only before final6 wire pass",
+    "sdk-normal-r3.jsonl retained: assertion incorrectly treated existing editable/public UA as password; narrowed to actual sensitive Cookie/APIKey/Token, public UA editor unchanged",
+    "older opaque cookie/transform development variants were never accepted; removed in final trusted private IPC contract, prior logs retained as historical variants",
+    "Independent review found post-R8 credential-binding reserved-header bypass. Fixed, race + actual Linux SDK validated."
+  ],
+  "unverified_not_claimed": [
+    "Final all-platform source closure and independent acceptance decision are root-owned; this file is a slice handoff, not the whole-platform completion claim."
+  ],
+  "no_commit_push_deploy": true,
+  "cleanup_evidence": {
+    "path": "../proxy/cleanup.json",
+    "sha256": "0b7978519071273c58fbf6ed86070dbdf06053aa356a9e95eb2c84b33b719b23"
+  }
+}

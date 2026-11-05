@@ -1,0 +1,32 @@
+{
+  "classification": "actual CUA in-app browser, local macOS cmd/server and separately installed Go worker; Linux process lifecycle recorded separately",
+  "origin": "http://127.0.0.1:61161",
+  "tab": "iab:3",
+  "observations": [
+    {
+      "action": "login and My Plugins",
+      "result": "source v2.0 and clone v1.0 cards visible"
+    },
+    {
+      "action": "source settings run_once=true save then data page",
+      "instance": "OwnedLocalFiles",
+      "pid": 17392,
+      "version": "2.0",
+      "torrent_sha": "f8cf89fbc941ba2d4b8cea92c260ab709b64f3b90e47c4de19d8a1d2091cec95",
+      "resume_sha": "f35c9437a88d09630b4aed37ad6c8b057d5745a70a119a88be675b829d4a855c"
+    },
+    {
+      "action": "save missing backup directory with run_once",
+      "result": "data page shows configured backup directory unavailable; hashes and temp path empty; next settings run_once false"
+    },
+    {
+      "action": "restore original path and run_once, save and reopen data page",
+      "result": "same pid17392 and source instance, both original hashes restored"
+    }
+  ],
+  "limitations": [
+    "NAS SSH port forwarding rejected administratively; no SSH configuration changed",
+    "browser operations run on macOS test instance, not the Linux process",
+    "no production backup/passkey/daemon data accessed"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "classification": "static scenario-state review before bounded actual recovery probe; no product pass claim",
+  "driver_sha256": "63a7d1d500f9ece642ecf63b5b34c4703d509de25df14c7eb61e30b5b76241c4",
+  "states": [
+    {
+      "phase": "bootstrap",
+      "configured_cookie": "owned-cookie=1",
+      "peer_expected": "owned-cookie=1"
+    },
+    {
+      "phase": "source duplicate-cookie oracle applied",
+      "configured_cookie": "source cookie_oracle duplicates_ascii_percent.cookie",
+      "peer_expected": "source trace[0].cookie_bytes_b64 decoded Latin1"
+    },
+    {
+      "phase": "source redirect probe",
+      "saved_restore_cookie": "configured_image_cookie from previous phase, not redacted settings GET",
+      "configured_cookie": "owned=initial; other=yes",
+      "peer_expected": "strict complete fixed-helper redirect traces"
+    },
+    {
+      "phase": "restore then cold",
+      "configured_cookie": "saved configured_image_cookie",
+      "peer_expected": "same source duplicate-cookie wire expectation"
+    }
+  ],
+  "historical_test_bug": "r3 saved the bootstrap initial Cookie while peer retained the source duplicate-cookie expectation. Product correctly sent restored initial Cookie; test peer rejected it. New recovery probe mutates this restore choice while leaving product and source expectations identical."
+}

@@ -1,0 +1,14 @@
+Error response from daemon: Couldn't find PID field in ps output
+Traceback (most recent call last):
+  File "/vol2/1000/docker/light-media-browser-20261101-pCMPM7Bo/run_browser_process.py", line 75, in <module>
+    observations.append(dict(phase='actual-headed-native-js',source_pid=source_pid,mode='source-default-headed-Xvfb',rendered_marker=True,networkidle_after_fetch=True,cleanup=clean_profiles()))
+                                                                                                                                                                               ^^^^^^^^^^^^^^^^
+  File "/vol2/1000/docker/light-media-browser-20261101-pCMPM7Bo/run_browser_process.py", line 69, in clean_profiles
+    listing=subprocess.check_output(['docker','top',name,'-eo','comm'],text=True).splitlines();assert not any('chrome'in x or'Xvfb'in x for x in listing),listing
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['docker', 'top', 'light-media-browser-proof-67e266f548', '-eo', 'comm']' returned non-zero exit status 1.

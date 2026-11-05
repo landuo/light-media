@@ -1,0 +1,50 @@
+{
+  "reviewer": "host_downloader_resources, separate from network implementation",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_source": [
+    "app/utils/http.py:329-560",
+    "app/core/config.py:1069-1087,1155-1164"
+  ],
+  "source_observation": "RequestUtils GET has no provided Session, so no configured-session retry; retains status and content regardless of truthiness; scalar timeout socket inactivity; verify=False; GITHUB_HEADERS global token distinct from repository headers.",
+  "reviewed": [
+    "finite GET/no arbitrary header RPC",
+    "global token only explicit official HTTPS host, dropped permanently on origin crossing",
+    "fresh redirect cookie jar without saved host cookie injection",
+    "scope and network-settings guard before dispatch/redirect and after content, cancellation context reaches HTTP",
+    "bounded wire+decoded content and JSON envelope, decoder errors become no response, oversize explicit failure",
+    "requests environment proxy route preserves caller TLS/dial policy",
+    "per-socket inactivity vs total timeout (already corrected by author)"
+  ],
+  "findings": [
+    {
+      "id": "strict-tls",
+      "source": "RequestUtils.request kwargs verify=False",
+      "target": "DefaultTransport TLS verification retained through NewRequestsTimeoutTransport and NewRequestsProxyTransport",
+      "disposition": "Parent explicitly retains project certificate-verification boundary as necessary safety adaptation; actual trusted owned-CA Linux positive exists; parent adding actual SDK untrusted-self-signed negative and documentation."
+    }
+  ],
+  "known_author_fixes_not_duplicate": [
+    "timeout scalar vs total",
+    "zstd exclusion",
+    "header whitespace/unknown mixed encoding/>5 chain/gzip edge decoding"
+  ],
+  "additional_blocking_findings": [],
+  "validation": {
+    "command": "OWNED_HOST_NETWORK_FIXTURE_BINARY=$PWD/work/plugin-host-downloader-20261031/network-review-fixture TMPDIR=$PWD/work/plugin-host-downloader-20261031/tmp go test -race ./internal/app -run ^TestOriginalHostNetwork(ActualSDKRedirectGuardsAndCancellation|VendorDecoderEdges)$ -count=1 -json",
+    "classification": "actual installed SDK/App with owned synthetic HTTP; decoder values from actual requests/urllib3 vendor oracle; not external public endpoint",
+    "result": "PASS",
+    "log": "downloader-independent-race-r3.jsonl",
+    "prior_failures": {
+      "downloader-independent-race.jsonl": "review invocation omitted required fixture env; no product conclusion",
+      "downloader-independent-race-r2.jsonl": "preexisting fixture binary produced plugin_operation_failed; no cause established. Explicit current cmd/plugin-host-network-fixture rebuilt in owned directory and r3 passed without product edits."
+    }
+  },
+  "sha256": {
+    "internal/plugins/network_host.go": "1ac0fdb7bae5cea8fe9267ae96eb834c1a8c2df43e2a80dc55dcfc23e38b1cdb",
+    "internal/app/plugin_original_host_network.go": "0c693b6da21725db5e870db4a8021154e3040a8d6417698a2950855b126a77fa",
+    "internal/app/plugin_original_host_network_content.go": "13ae2a6e2146deead9c433259b4286463a03d7520fbd7c340cc0e887e4416b05",
+    "internal/networkproxy/requests_timeout.go": "bbcf3b438f39161af610a0284ac894213c4900ccc5105fe591b7bdc075d0289b",
+    "internal/networkproxy/requests_transport.go": "1e409eb302e28902c2719e10a9e830f80e2a510cc3285a029e3a344d9c7b1f97",
+    "testdata/plugin-host-network-20261031/downloader-independent-race-r3.jsonl": "eba5b95f896a8744db071b0874908cce194018977bf75c6b30036ef8144845de"
+  }
+}

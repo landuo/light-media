@@ -1,0 +1,216 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "classification": "fixed wrapper AST + actual deployed vendor AST, no business imports/no outbound I/O",
+  "old_container_id": "d1fd69248ee9fca7ed18b34ac7c121d98f982b8979fce065eeb50968e7c27bba",
+  "version": "7.0.11",
+  "client_sha256": "5d34047c37bcadb00f3320fd8dbbe46aae6583acb5fd7877ed9a4ca0eea4bf34",
+  "utils_sha256": "265829a3ff36580a80b22a816438cef199c58c748b0179b7d09ad928f4c99007",
+  "wrapper_sha256": "6fc20e208b86e9e68ada074643f82b88270c2e51749e460ad881b10f744cf676",
+  "vendor_add_line": 376,
+  "vendor_try_read_line": 62,
+  "wrapper_add_line": 201,
+  "cases": [
+    {
+      "content": "",
+      "accepted": true,
+      "calls": [
+        {
+          "method": "torrent-add",
+          "arguments": {
+            "download-dir": "/owned/downloads",
+            "paused": true,
+            "cookies": "owned=OWNED_COOKIE",
+            "labels": [
+              "owned"
+            ],
+            "filename": ""
+          }
+        }
+      ]
+    },
+    {
+      "content": {
+        "bytes_hex": ""
+      },
+      "accepted": false,
+      "calls": []
+    },
+    {
+      "content": {
+        "bytes_hex": "6f776e65642d6279746573"
+      },
+      "accepted": true,
+      "calls": [
+        {
+          "method": "torrent-add",
+          "arguments": {
+            "download-dir": "/owned/downloads",
+            "paused": true,
+            "cookies": "owned=OWNED_COOKIE",
+            "labels": [
+              "owned"
+            ],
+            "metainfo": "b3duZWQtYnl0ZXM="
+          }
+        }
+      ]
+    },
+    {
+      "content": "http://owned.invalid/a",
+      "accepted": true,
+      "calls": [
+        {
+          "method": "torrent-add",
+          "arguments": {
+            "download-dir": "/owned/downloads",
+            "paused": true,
+            "cookies": "owned=OWNED_COOKIE",
+            "labels": [
+              "owned"
+            ],
+            "filename": "http://owned.invalid/a"
+          }
+        }
+      ]
+    },
+    {
+      "content": "magnet:?xt=urn:btih:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "accepted": true,
+      "calls": [
+        {
+          "method": "torrent-add",
+          "arguments": {
+            "download-dir": "/owned/downloads",
+            "paused": true,
+            "cookies": "owned=OWNED_COOKIE",
+            "labels": [
+              "owned"
+            ],
+            "filename": "magnet:?xt=urn:btih:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    },
+    {
+      "content": "file:///owned/a",
+      "accepted": false,
+      "calls": []
+    },
+    {
+      "content": "FILE:///owned/a",
+      "accepted": false,
+      "calls": []
+    },
+    {
+      "content": "not-a-url",
+      "accepted": true,
+      "calls": [
+        {
+          "method": "torrent-add",
+          "arguments": {
+            "download-dir": "/owned/downloads",
+            "paused": true,
+            "cookies": "owned=OWNED_COOKIE",
+            "labels": [
+              "owned"
+            ],
+            "filename": "not-a-url"
+          }
+        }
+      ]
+    },
+    {
+      "content": "http://owned.invalid/a\nhttp://owned.invalid/b",
+      "accepted": true,
+      "calls": [
+        {
+          "method": "torrent-add",
+          "arguments": {
+            "download-dir": "/owned/downloads",
+            "paused": true,
+            "cookies": "owned=OWNED_COOKIE",
+            "labels": [
+              "owned"
+            ],
+            "filename": "http://owned.invalid/a\nhttp://owned.invalid/b"
+          }
+        }
+      ]
+    },
+    {
+      "content": "http://[invalid]/a",
+      "accepted": false,
+      "calls": []
+    },
+    {
+      "content": "http://[::1/a",
+      "accepted": false,
+      "calls": []
+    },
+    {
+      "content": "http://[127.0.0.1]/a",
+      "accepted": false,
+      "calls": []
+    },
+    {
+      "content": "http://[vF.owned]/a",
+      "accepted": true,
+      "calls": [
+        {
+          "method": "torrent-add",
+          "arguments": {
+            "download-dir": "/owned/downloads",
+            "paused": true,
+            "cookies": "owned=OWNED_COOKIE",
+            "labels": [
+              "owned"
+            ],
+            "filename": "http://[vF.owned]/a"
+          }
+        }
+      ]
+    },
+    {
+      "content": "http://user:OWNED@host\uff1a80/a",
+      "accepted": false,
+      "calls": []
+    },
+    {
+      "content": "http://host.invalid:bad/a",
+      "accepted": true,
+      "calls": [
+        {
+          "method": "torrent-add",
+          "arguments": {
+            "download-dir": "/owned/downloads",
+            "paused": true,
+            "cookies": "owned=OWNED_COOKIE",
+            "labels": [
+              "owned"
+            ],
+            "filename": "http://host.invalid:bad/a"
+          }
+        }
+      ]
+    },
+    {
+      "content": "http://owned.invalid/%not-hex",
+      "accepted": true,
+      "calls": [
+        {
+          "method": "torrent-add",
+          "arguments": {
+            "download-dir": "/owned/downloads",
+            "paused": true,
+            "cookies": "owned=OWNED_COOKIE",
+            "labels": [
+              "owned"
+            ],
+            "filename": "http://owned.invalid/%not-hex"
+          }
+        }
+      ]
+    }
+  ],
+  "local_capture_python_version": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]"
+}

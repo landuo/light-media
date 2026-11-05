@@ -104,9 +104,9 @@ func Resolve(in Inputs) (Snapshot, error) {
 	return out, nil
 }
 
-// ResolveSettingsList applies the fixed Settings list conversion with the
+// ResolveSettingsJSONList applies the fixed Settings list conversion with the
 // caller's actual field factory default, including explicit empty lists.
-func ResolveSettingsList(raw, defaultRaw json.RawMessage) ([]string, error) {
+func ResolveSettingsJSONList(raw, defaultRaw json.RawMessage) (json.RawMessage, error) {
 	value, e := decode(raw)
 	if e != nil {
 		return nil, ErrSourceValidation
@@ -135,6 +135,22 @@ func ResolveSettingsList(raw, defaultRaw json.RawMessage) ([]string, error) {
 	if !ok {
 		return nil, ErrSourceValidation
 	}
+	return json.Marshal(list)
+}
+
+// ResolveSettingsList is the existing string-only filesystem classifier view.
+// Source settings readers use ResolveSettingsJSONList to retain arbitrary JSON
+// list members; no classifier behavior or membership normalization changes.
+func ResolveSettingsList(raw, defaultRaw json.RawMessage) ([]string, error) {
+	normalized, err := ResolveSettingsJSONList(raw, defaultRaw)
+	if err != nil {
+		return nil, err
+	}
+	value, err := decode(normalized)
+	if err != nil {
+		return nil, ErrSourceValidation
+	}
+	list := value.([]any)
 	values := make([]string, 0, len(list))
 	for _, v := range list {
 		s, ok := v.(string)

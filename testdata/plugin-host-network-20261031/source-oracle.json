@@ -1,0 +1,294 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/utils/http.py:329–560",
+  "sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "classification": "pinned AST with owned request outcomes; no source or target live service executed",
+  "cases": [
+    {
+      "name": "ok",
+      "response": {
+        "status_code": 200,
+        "content_b64": "b3duZWQAdGV4dA=="
+      },
+      "calls": [
+        {
+          "method": "get",
+          "url": "http://owned.test/ok",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": {
+            "http": "http://owned-proxy.test:8888",
+            "https": "http://owned-proxy.test:8888"
+          },
+          "timeout": 15,
+          "verify": false,
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "empty",
+      "response": {
+        "status_code": 200,
+        "content_b64": ""
+      },
+      "calls": [
+        {
+          "method": "get",
+          "url": "http://owned.test/empty",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": {
+            "http": "http://owned-proxy.test:8888",
+            "https": "http://owned-proxy.test:8888"
+          },
+          "timeout": 15,
+          "verify": false,
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "created",
+      "response": {
+        "status_code": 201,
+        "content_b64": "Y3JlYXRlZA=="
+      },
+      "calls": [
+        {
+          "method": "get",
+          "url": "http://owned.test/created",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": {
+            "http": "http://owned-proxy.test:8888",
+            "https": "http://owned-proxy.test:8888"
+          },
+          "timeout": 15,
+          "verify": false,
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "forbidden",
+      "response": {
+        "status_code": 403,
+        "content_b64": "bm90IGFsbG93ZWQ="
+      },
+      "calls": [
+        {
+          "method": "get",
+          "url": "http://owned.test/forbidden",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": {
+            "http": "http://owned-proxy.test:8888",
+            "https": "http://owned-proxy.test:8888"
+          },
+          "timeout": 15,
+          "verify": false,
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "missing",
+      "response": {
+        "status_code": 404,
+        "content_b64": "bm90IGZvdW5k"
+      },
+      "calls": [
+        {
+          "method": "get",
+          "url": "http://owned.test/missing",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": {
+            "http": "http://owned-proxy.test:8888",
+            "https": "http://owned-proxy.test:8888"
+          },
+          "timeout": 15,
+          "verify": false,
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "invalid_utf8",
+      "response": {
+        "status_code": 200,
+        "content_b64": "//4="
+      },
+      "calls": [
+        {
+          "method": "get",
+          "url": "http://owned.test/invalid_utf8",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": {
+            "http": "http://owned-proxy.test:8888",
+            "https": "http://owned-proxy.test:8888"
+          },
+          "timeout": 15,
+          "verify": false,
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "connection",
+      "response": null,
+      "calls": [
+        {
+          "method": "get",
+          "url": "http://owned.test/connection",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 15,
+          "verify": false,
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "read_timeout",
+      "response": null,
+      "calls": [
+        {
+          "method": "get",
+          "url": "http://owned.test/read_timeout",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 15,
+          "verify": false,
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "chunked",
+      "response": null,
+      "calls": [
+        {
+          "method": "get",
+          "url": "http://owned.test/chunked",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 15,
+          "verify": false,
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "generic",
+      "response": null,
+      "calls": [
+        {
+          "method": "get",
+          "url": "http://owned.test/generic",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 15,
+          "verify": false,
+          "stream": false
+        }
+      ]
+    }
+  ]
+}

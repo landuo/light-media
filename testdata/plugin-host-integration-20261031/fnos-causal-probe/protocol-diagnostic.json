@@ -1,0 +1,42 @@
+{
+  "classification": "actual finite diagnostic; only newly owned library; original-protocol comparison, not SDK acceptance",
+  "library_id": "6ea87900444941d5a7b6f2e1cc60ec27",
+  "traces": [
+    {
+      "stage": "login",
+      "http": 200,
+      "code": 0,
+      "truthy": true
+    },
+    {
+      "stage": "user",
+      "http": 200,
+      "code": 0,
+      "truthy": true
+    },
+    {
+      "stage": "libraries",
+      "http": 200,
+      "code": 0,
+      "truthy": true
+    },
+    {
+      "stage": "old_json_without_preflight",
+      "http": 200,
+      "code": -14,
+      "truthy": false
+    },
+    {
+      "stage": "source_task_running",
+      "http": 200,
+      "code": 0,
+      "truthy": true
+    },
+    {
+      "stage": "source_empty_post",
+      "http": 200,
+      "code": -14,
+      "truthy": false
+    }
+  ]
+}

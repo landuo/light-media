@@ -784,6 +784,9 @@ func (a *App) preserveSecrets(c *Settings) {
 	}
 }
 func validateSettings(c Settings) error {
+	if err := validateHostMediaRecognizeShareAPI(c.MediaRecognizeShareAPI); err != nil {
+		return err
+	}
 	if c.PriorityRules != nil {
 		if err := priorityrules.ValidateConfiguration(*c.PriorityRules); err != nil {
 			return bad("INVALID_PRIORITY_RULES", "优先级规则配置无效或超过资源上限")

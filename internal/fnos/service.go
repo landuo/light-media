@@ -231,6 +231,12 @@ func (s *serviceSession) libraries(ctx context.Context) ([]ServiceLibrary, error
 }
 
 func (s *serviceSession) readLibraries(ctx context.Context, sortByName bool) ([]ServiceLibrary, error) {
+	return s.readLibrariesWithPaths(ctx, sortByName, false)
+}
+
+// sourcePaths preserves raw pathlib inputs for the plugin source matcher. All
+// existing callers retain the strict, canonical P0 path contract above.
+func (s *serviceSession) readLibrariesWithPaths(ctx context.Context, sortByName, sourcePaths bool) ([]ServiceLibrary, error) {
 	endpoint := "/mediadb/list"
 	if s.admin {
 		endpoint = "/mdb/list"
@@ -253,12 +259,16 @@ func (s *serviceSession) readLibraries(ctx context.Context, sortByName bool) ([]
 		if row.Name == "" {
 			row.Name = row.Title
 		}
-		if !detailGUID.MatchString(row.GUID) || seen[row.GUID] || !serviceText(row.Name, 512) || !serviceText(row.Category, 128) || len(row.Dirs) == 0 || len(row.Dirs) > 32 || s.sensitive(row.Name) || s.sensitive(row.Category) || s.sensitive(row.GUID) {
+		if !detailGUID.MatchString(row.GUID) || seen[row.GUID] || !serviceText(row.Name, 512) || !serviceText(row.Category, 128) || (!sourcePaths && len(row.Dirs) == 0) || len(row.Dirs) > 32 || s.sensitive(row.Name) || s.sensitive(row.Category) || s.sensitive(row.GUID) {
 			return nil, &ServiceError{Code: "invalid_response"}
 		}
 		seen[row.GUID] = true
 		lib := ServiceLibrary{GUID: row.GUID, Name: row.Name, Category: row.Category, Directories: []string{}}
 		for _, dir := range row.Dirs {
+			if sourcePaths {
+				lib.Directories = append(lib.Directories, dir)
+				continue
+			}
 			if !servicePath(dir, true) || s.sensitive(dir) {
 				return nil, &ServiceError{Code: "invalid_response"}
 			}

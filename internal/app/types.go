@@ -6,6 +6,7 @@ import (
 	"light-media/internal/catalog"
 	"light-media/internal/download"
 	"light-media/internal/media"
+	"light-media/internal/plugins"
 	"light-media/internal/priorityrules"
 	"light-media/internal/sites"
 	"light-media/internal/torrentfilter"
@@ -86,6 +87,8 @@ type Settings struct {
 	GitHubToken                 string                       `json:"github_token,omitempty"`
 	RepoGitHubToken             string                       `json:"repo_github_token,omitempty"`
 	PluginServerURL             *string                      `json:"plugin_server_url,omitempty"`
+	MediaRecognizeShare         *bool                        `json:"media_recognize_share,omitempty"`
+	MediaRecognizeShareAPI      string                       `json:"media_recognize_share_api,omitempty"`
 	PluginStatisticShare        *bool                        `json:"plugin_statistic_share,omitempty"`
 	RMTMediaExt                 json.RawMessage              `json:"rmt_mediaext,omitempty"`
 	RMTSubExt                   json.RawMessage              `json:"rmt_subext,omitempty"`
@@ -166,41 +169,45 @@ type ScheduleException struct {
 	Episode    int    `json:"episode"`
 }
 type Subscription struct {
-	SourceContextSHA   string              `json:"source_context_sha,omitempty"`
-	SourceState        string              `json:"source_state,omitempty"`
-	SourceNote         []int               `json:"source_note"`
-	SourceSearchIMDb   bool                `json:"source_search_imdb,omitempty"`
-	BestVersion        bool                `json:"best_version"`
-	BestVersionFull    bool                `json:"best_version_full"`
-	CurrentPriority    *int                `json:"current_priority"`
-	EpisodePriority    map[string]int      `json:"episode_priority"`
-	LackEpisode        *int                `json:"lack_episode"`
-	ManualTotalEpisode bool                `json:"manual_total_episode"`
-	Keyword            string              `json:"keyword"`
-	SiteIDs            []string            `json:"site_ids"`
-	TotalEpisodes      int                 `json:"total_episodes"`
-	DirectoryID        string              `json:"directory_id"`
-	DownloadPath       string              `json:"download_path"`
-	TargetScope        string              `json:"target_scope"`
-	StartEpisode       int                 `json:"start_episode"`
-	ID                 string              `json:"id"`
-	Media              catalog.Media       `json:"media"`
-	Season             int                 `json:"season"`
-	Episodes           []int               `json:"episodes"`
-	Excluded           []int               `json:"excluded"`
-	EpisodeDates       map[int]string      `json:"episode_dates"`
-	AllowEarly         []int               `json:"allow_early"`
-	Policy             Policy              `json:"policy"`
-	Schedule           Schedule            `json:"schedule"`
-	Mappings           []media.MappingRule `json:"mappings"`
-	DownloaderID       string              `json:"downloader_id"`
-	RootID             string              `json:"root_id"`
-	State              string              `json:"state"`
-	Revision           int                 `json:"revision"`
-	LastCheck          string              `json:"last_check"`
-	NextCheck          string              `json:"next_check"`
-	LastReason         string              `json:"last_reason"`
-	CreatedAt          string              `json:"created_at"`
+	SourceFlagValues    map[string]plugins.SubscriptionHostFlagV1 `json:"source_flag_values,omitempty"`
+	SourcePresentFields []string                                  `json:"source_present_fields,omitempty"`
+	SourceYearText      *string                                   `json:"source_year_text,omitempty"`
+	SourceNullFields    []string                                  `json:"source_null_fields,omitempty"`
+	SourceContextSHA    string                                    `json:"source_context_sha,omitempty"`
+	SourceState         string                                    `json:"source_state,omitempty"`
+	SourceNote          []int                                     `json:"source_note"`
+	SourceSearchIMDb    bool                                      `json:"source_search_imdb,omitempty"`
+	BestVersion         bool                                      `json:"best_version"`
+	BestVersionFull     bool                                      `json:"best_version_full"`
+	CurrentPriority     *int                                      `json:"current_priority"`
+	EpisodePriority     map[string]int                            `json:"episode_priority"`
+	LackEpisode         *int                                      `json:"lack_episode"`
+	ManualTotalEpisode  bool                                      `json:"manual_total_episode"`
+	Keyword             string                                    `json:"keyword"`
+	SiteIDs             []string                                  `json:"site_ids"`
+	TotalEpisodes       int                                       `json:"total_episodes"`
+	DirectoryID         string                                    `json:"directory_id"`
+	DownloadPath        string                                    `json:"download_path"`
+	TargetScope         string                                    `json:"target_scope"`
+	StartEpisode        int                                       `json:"start_episode"`
+	ID                  string                                    `json:"id"`
+	Media               catalog.Media                             `json:"media"`
+	Season              int                                       `json:"season"`
+	Episodes            []int                                     `json:"episodes"`
+	Excluded            []int                                     `json:"excluded"`
+	EpisodeDates        map[int]string                            `json:"episode_dates"`
+	AllowEarly          []int                                     `json:"allow_early"`
+	Policy              Policy                                    `json:"policy"`
+	Schedule            Schedule                                  `json:"schedule"`
+	Mappings            []media.MappingRule                       `json:"mappings"`
+	DownloaderID        string                                    `json:"downloader_id"`
+	RootID              string                                    `json:"root_id"`
+	State               string                                    `json:"state"`
+	Revision            int                                       `json:"revision"`
+	LastCheck           string                                    `json:"last_check"`
+	NextCheck           string                                    `json:"next_check"`
+	LastReason          string                                    `json:"last_reason"`
+	CreatedAt           string                                    `json:"created_at"`
 }
 type Intent struct {
 	SourceModuleStarted     bool            `json:"source_module_started,omitempty"`

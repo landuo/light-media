@@ -1,0 +1,3169 @@
+{
+  "kind": "structural/source-position audit only; runtime and semantic evidence reviewed separately",
+  "matrix_sha256": "60df919e6ed8364dc6fdf266fa2efed4f8a1fdb879b687017930db24a58ae868",
+  "source_commits": {
+    "B": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "F": "2829e3b08214348f05ff2f5beae644882eccad58"
+  },
+  "counts": {
+    "已实现待验证": 5,
+    "验收通过": 54,
+    "待实现": 4,
+    "按用户要求排除": 4
+  },
+  "scope_total": 63,
+  "rows": [
+    {
+      "id": "S01",
+      "state": "已实现待验证",
+      "source": "固定 B `app/modules/qbittorrent/qbittorrent.py:254`、`app/modules/transmission/transmission.py:136`；业务调用参照 `testdata/plugins/torrent-transfer-1.10.3/torrenttransfer.py:690`",
+      "target": "SDK `downloader_host.go`；`plugin_original_host_downloader.go`；`iyuuautoseed/native/plugin_host.go`",
+      "evidence": "`testdata/plugin-host-downloader-20261031/`：固定源差分、真实SDK、Linux qB/TR与合成tracker实机；最新qB57/TR41动作、11组race87.737s已通过；最终输入绑定与独立复核仍进行。"
+    },
+    {
+      "id": "S02",
+      "state": "验收通过",
+      "source": "业务参照同文件 `:785,835–857`；固定 B `_PluginBase.get_data_path`",
+      "target": "SDK `base.go`；`plugin_original_base.go`；`cmd/owned-local-files-fixture`；`plugin_original_host_local_files_test.go`",
+      "evidence": "`testdata/plugin-host-local-files-20261031/evidence/acceptance.json`：最新真实Linux安装/保存/错误/恢复/更新/冷启/卸载、Mac浏览器、隔离qB真实备份SHA及独立审查均绑定；必要Go IO/挂载适配已记录。"
+    },
+    {
+      "id": "S03",
+      "state": "已实现待验证",
+      "source": "固定 B qB wrapper `:401,477,503,608`、Transmission wrapper `:201,227,253,375`；业务参照同文件 `:638,661,891,899,976`",
+      "target": "SDK `downloader_host.go`；`plugin_original_host_downloader.go`；原生有限transport",
+      "evidence": "同S01真实qB/TR证明添加/校验/启动/删任务保64KiB原SHA，clone/reload/upgrade/cold/uninstall；URL/Cookie增量尚待单独实际守护进程验证。"
+    },
+    {
+      "id": "S04",
+      "state": "验收通过",
+      "source": "B/app/db/site_oper.py:26,50,56,192,198,225,266；B/app/chain/site.py:66；I/autosignin:1837,1839、sitestatistic:372,402,1108",
+      "target": "SDK `site_host.go`；`plugin_original_host_sites.go`",
+      "evidence": "`testdata/plugin-host-business-20261031/`：固定SiteOper AST+实际SDK/SQL故障；最新完整12.627s、root独立9.037s及真实Mac cmd/server/浏览器已执行，最新Linux已通过。  源行为、最新Linux/实际SDK、浏览器及独立审查闭合见 `testdata/plugin-host-integration-20261031/accepted-s04-s06-s10.json`；实机与协议证据分型。"
+    },
+    {
+      "id": "S05",
+      "state": "验收通过",
+      "source": "B/app/db/subscribe_oper.py:174,214,258,268；I/subscribegroup:182,214,269、brushflowlanduo:3319",
+      "target": "SDK `subscription_host.go`；`plugin_original_host_subscriptions.go`",
+      "evidence": "固定原ORM/SQLite35例、30列native消费、失败/冷热/无效值均过；最新Linux扩展进程包含源更新/分身/冷启/卸载；root实际SDK独审3.428s通过。模型边界与真实UI/协议分型见 `testdata/plugin-host-integration-20261031/accepted-s05-s12.json`。"
+    },
+    {
+      "id": "S06",
+      "state": "验收通过",
+      "source": "B/app/db/downloadhistory_oper.py:19；B/app/db/transferhistory_oper.py:81,92,189；I/subscribegroup:253、removelink:1190,1193,2095、scrapefileclean:992–996",
+      "target": "SDK `history_host.go`；`plugin_original_host_history.go`",
+      "evidence": "同business固定源日期/Hash/src/dest差分；真实硬链接历史→查询→SQL失败→删除仅记录保双端文件→冷恢复；Mac cmd/server与root独立审查已执行，最新Linux已通过。  源行为、最新Linux/实际SDK、浏览器及独立审查闭合见 `testdata/plugin-host-integration-20261031/accepted-s04-s06-s10.json`；实机与协议证据分型。"
+    },
+    {
+      "id": "S07",
+      "state": "已实现待验证",
+      "source": "B/app/db/systemconfig_oper.py:27,92；I/remoteidentifiers:150,162、pluginuninstall:48,72",
+      "target": "SDK `settings_host.go`；`plugin_original_host_settings.go`；`runtime.go`有限缓存",
+      "evidence": "同business源SystemConfig差分与实际SDK、SQL失败、热/冷恢复；真实Mac cmd/server和浏览器失败恢复/分身隔离已取证，最新Linux集成已通过。  源行为、最新Linux/实际SDK、浏览器及独立审查闭合见 `testdata/plugin-host-integration-20261031/accepted-s04-s06-s10.json`；实机与协议证据分型。  2026-10-31动态漏项独审确认RemoveLink读取RMT_MEDIAEXT但settings.read尚未开放，重开待补；此前有限键实际证据保留。"
+    },
+    {
+      "id": "S08",
+      "state": "验收通过",
+      "source": "B/app/helper/mediaserver.py:8–18；B/app/helper/service.py:95,142,162；B/app/modules/trimemedia/trimemedia.py:366–413、api.py:312–338,508–583；I/mediaserverrefresh:62,69,137,242,245",
+      "target": "SDK `media_host.go`；`plugin_original_host_media.go`；`fnos/service_plugin_refresh.go`及`refresh.go`",
+      "evidence": "services固定源20例/Api.request空body oracle与SDK通过；integration/fnos-causal-probe保HTTP200/business -14，源preflight后仍拒绝。r4在刷新前user/info返回-2，未执行刷新，测试库/文件均已清理；只读再查login/user/task成功。r5同r4二进制先观察自建库已入库且任务空，再真实SDK explicit GUID刷新成功，卸载/清理/原7库不变；source-wide/fallback仅固定源与协议实测，最新Linux整链与独立复核通过。  源行为、最新Linux/实际SDK、浏览器及独立审查闭合见 `testdata/plugin-host-integration-20261031/accepted-s04-s06-s10.json`；实机与协议证据分型。"
+    },
+    {
+      "id": "S09",
+      "state": "验收通过",
+      "source": "B/app/chain/storage.py:46,88,100；I/removelink:1674,1679,1757",
+      "target": "SDK `storage_host.go`；`plugin_original_host_storage.go`",
+      "evidence": "services固定源7例+真实App/SDK/文件越界/symlink拒绝、clone/CloseNew/uninstall；Mac cmd/server/浏览器已取证；最新Linux与独立复核通过。  源行为、最新Linux/实际SDK、浏览器及独立审查闭合见 `testdata/plugin-host-integration-20261031/accepted-s04-s06-s10.json`；实机与协议证据分型。"
+    },
+    {
+      "id": "S10",
+      "state": "验收通过",
+      "source": "B/app/core/plugin.py:121,634,815,825,836,1375；B/app/scheduler.py:1251,1338；I/pluginuninstall:54–66,193、mergesiteswitch:788,790、seedrescue:681",
+      "target": "SDK `plugin_host.go`；`plugin_original_host_manager.go`；`plugin_original_uninstall.go`共享卸载",
+      "evidence": "services实际SDK含跨clone/同步module回入/锁忙，新增有副作用get_state与顺序回归；中央旧reset/uninstall2.752s通过。Mac cmd/server/浏览器已有，最新Linux已通过。  源行为、最新Linux/实际SDK、浏览器及独立审查闭合见 `testdata/plugin-host-integration-20261031/accepted-s04-s06-s10.json`；实机与协议证据分型。"
+    },
+    {
+      "id": "S11",
+      "state": "验收通过",
+      "source": "B/app/chain/__init__.py:637；I/subscribegroup:167、brushflowlanduo:3330",
+      "target": "SDK `media_host.go`；`plugin_original_host_media*.go`；`catalog/source_plugin_episode_groups.go`；`sourcezhconv`与`core_business_source_facts.go`",
+      "evidence": "`testdata/plugin-host-integration-20261031/accepted-s11.json`：四源完整模型/缓存/限流/普通分享/错误归属源对照；最终Linux6d7d57f4的53来源流程、17实际进程代次、共享4设置、失败/冷恢复及真实SDK；IAB读取sourcev3/clonev2并独立保存配置/刷新保持，截图与范围限制明确；源证据/目标/全部清单哈希核对。"
+    },
+    {
+      "id": "S12",
+      "state": "验收通过",
+      "source": "B/app/chain/torrents.py:402,434；B/app/helper/torrent.py:66；I/brushflowlanduo:1803、seedrescue:898,1021,1402,1529、iyuuautoseed:1185",
+      "target": "SDK `site_host.go`；`plugin_original_host_sites.go`；`sites/plugin_host_resources.go`",
+      "evidence": "855 generic+10 special分类、165模板完整绑定及3种SDK查询通过；26 RSS恢复、最新Linux cmd/server browse→RSS→私有材料/502/冷恢复及实际Mac UI证据闭合。source/target/hash/独审和版本界限见 `testdata/plugin-host-integration-20261031/accepted-s05-s12.json`。"
+    },
+    {
+      "id": "S13",
+      "state": "已实现待验证",
+      "source": "B/qB wrapper:304,336,383,490,686；B/TR wrapper:168,240,388；I/cleaninvalidseed:660,667、iyuuautoseed:1099、brushflowlanduo:1183,1231,2210,2784,3126",
+      "target": "SDK `downloader_host.go`；`plugin_original_host_downloader.go`；`iyuuautoseed/native/plugin_host.go`",
+      "evidence": "同S01真实qB57/TR41动作及自建tracker；固定14 URI/消息语义oracle，root独立6组SDK4.739s，11组race87.737s已过；最终绑定与复核待补。"
+    },
+    {
+      "id": "S14",
+      "state": "待实现",
+      "source": "B/app/utils/http.py:329–560；B/app/core/config.py:1069–1087,1155–1164；I/remoteidentifiers:105–120，SHA见host-residual-review",
+      "target": "`internal/plugins/network_host.go`；`internal/app/plugin_original_host_network*.go`；`internal/networkproxy/requests_merge.go`",
+      "evidence": "77文件独立AST复核确认遗漏；原RequestUtils/安装版oracle待与新SDK/Linux/browser对应；开发中，未认领通过。"
+    },
+    {
+      "id": "S15",
+      "state": "待实现",
+      "source": "B/app/helper/ocr.py:8–75；B/app/core/config.py:347；I/autosignin/sites/hdsky:102、opencd:97",
+      "target": "现有AutoSignIn仅注入候选hook，普通标准桥正在实现",
+      "evidence": "独审host-residual-review/review.json明确未覆盖；规范化/图片获取/服务POST/源失败及真实SDK/Linux待验。"
+    },
+    {
+      "id": "S16",
+      "state": "待实现",
+      "source": "B/app/helper/browser.py:852–1102；I/autosignin:1884,1974及sites/__init__:63",
+      "target": "现有BrowserTransport仅候选接口，标准具体renderer尚未闭合",
+      "evidence": "独审host-residual-review/review.json确认缺口；原分支及Go浏览器依赖、Linux真实JS执行与清理待验。"
+    },
+    {
+      "id": "S17",
+      "state": "待实现",
+      "source": "B/app/api/endpoints/message.py；B/app/chain/message.py；I/larkmessager:767–781",
+      "target": "现有`plugin_original_command_ingress.go`仅Web入口；`plugin_original_input.go`及普通模块/事件可复用，标准渠道入口待接",
+      "evidence": "独审host-residual-review及services源码映射确认：现有Forward仅测试注入，不算真实接线；实际标准SDK/宿主链待验。"
+    },
+    {
+      "id": "01",
+      "state": "验收通过",
+      "source": "`B/app/core/plugin.py:40`<br>`B/app/db/models/systemconfig.py:8`<br>`B/app/db/models/plugindata.py:14`<br>`B/app/core/config.py:1005`",
+      "target": "`plugin_store.go`; `plugin_original_lifecycle.go`",
+      "evidence": "Linux 真实 cmd/server 四轮生命周期验证，含 init 创建独立数据目录、KV/配置重启恢复、重置及分身卸载保留 owned-file.txt；断言在 `plugin_module_process_test.go:235–336`，日志见 [本轮证据](validation/plugin-module-scoped-20261025.json)。"
+    },
+    {
+      "id": "02",
+      "state": "验收通过",
+      "source": "`B/app/core/plugin.py:195`<br>`B/app/core/plugin.py:72`",
+      "target": "`plugin_original_lifecycle.go`; `plugins/worker.go`",
+      "evidence": "Linux 实际 HTTP 安装后观察独立进程 PID、init_count=1、API 可调用；真实时钟与手动 tick 都进入同一对象；重载换 PID，重启恢复，初始化失败和分身隔离均实测。见 [本轮证据](validation/plugin-module-scoped-20261025.json)。"
+    },
+    {
+      "id": "03",
+      "state": "验收通过",
+      "source": "`B/app/api/endpoints/plugin.py:975`<br>`B/app/core/plugin.py:121`<br>`B/app/api/endpoints/plugin.py:223`<br>`B/app/db/systemconfig_oper.py:30`",
+      "target": "`plugin_original_config.go`; `plugin_original_registry.go`",
+      "evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。"
+    },
+    {
+      "id": "04",
+      "state": "验收通过",
+      "source": "`B/app/core/plugin.py:156`<br>`B/app/core/plugin.py:619`<br>`B/app/core/plugin.py:641`<br>`B/app/api/endpoints/plugin.py:560`",
+      "target": "`plugin_original_manager_http.go`; `plugin_original_lifecycle.go`",
+      "evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。"
+    },
+    {
+      "id": "05",
+      "state": "验收通过",
+      "source": "`B/app/plugins/__init__.py:239`<br>`B/app/db/plugindata_oper.py:12`<br>`B/app/db/systemconfig_oper.py:101`",
+      "target": "`plugin_original_base.go`; `plugins/base.go`",
+      "evidence": "固定源码 Base/PluginData/SystemConfig 对照；真实 Linux cmd/server 经 HTTP 进入实际 SDK，覆盖 True/None、false/0/大整数、同键 upsert 行号、单键/空键删除、未安装命名空间、分身数据/文件隔离、空配置缓存与重启恢复、重置/卸载。见 `plugin_module_process_base_test.go`、`testdata/plugin-module-no-official-auth-20261026/process-before-config-events.log.gz`。"
+    },
+    {
+      "id": "06",
+      "state": "验收通过",
+      "source": "`F/src/components/dialog/PluginMarketSettingDialog.vue:39`<br>`F/src/components/dialog/PluginMarketSettingDialog.vue:191`<br>`F/src/components/dialog/PluginMarketSettingDialog.vue:111`<br>`B/app/api/endpoints/system.py:892`<br>`B/app/core/config.py:859`<br>`B/app/core/config.py:904`<br>`F/src/views/plugin/PluginCardListView.vue:925`<br>`B/app/core/plugin.py:1572`<br>`B/app/core/config.py:873`<br>`F/src/components/dialog/PluginMarketSettingDialog.vue:124`",
+      "target": "`plugin_original_markets.go`; `PluginMarketSettingDialog.vue`",
+      "evidence": "真实Linux生产进程来源保存与重启恢复门通过：`plugin_module_process_market_test.go`；浏览器已实际操作增删/去重、行编辑、拖动排序、文本错误禁存和顺序保存、重开及刷新恢复，系统字段独立保存与无效路径错误不覆盖来源。PID/init/config保持，未安装其他插件。截图、状态和日志见 [本轮证据](validation/plugin-module-no-official-auth-20261026.json)。"
+    },
+    {
+      "id": "07",
+      "state": "验收通过",
+      "source": "`F/src/components/dialog/PluginMarketSettingDialog.vue:142`<br>`B/app/api/endpoints/system.py:847`<br>`B/app/api/endpoints/system.py:122`<br>`B/app/helper/market.py:6`<br>`B/app/helper/market.py:51`<br>`B/app/helper/market.py:84`<br>`B/app/api/endpoints/system.py:816`<br>`B/app/api/endpoints/system.py:835`<br>`B/app/helper/market.py:17`",
+      "target": "`plugin_original_market_wiki.go`; `PluginMarketSettingDialog.vue`",
+      "evidence": "真实Linux+浏览器：故障CONNECT代理只访问raw.githubusercontent.com:443，失败保留3来源；使用宿主代理访问真实Wiki、端到端TLS验证，未点击全局保存即落库97；重复同步97不变，原3个Go索引顺序保留，新增94条及顺序与固定helper AST对同一公开文档的提取结果相同。非法URL不变更清单，匿名401；测试代理已清除、恢复3来源。源码回放含标记正常/缺失/重复/逆序/空文档。见 `wiki-live-verdict.json.gz`、截图及 [证据](validation/plugin-module-no-official-auth-20261026.json)。"
+    },
+    {
+      "id": "08",
+      "state": "验收通过",
+      "source": "`F/src/views/plugin/PluginCardListView.vue:788`<br>`F/src/views/plugin/PluginCardListView.vue:813`<br>`B/app/core/plugin.py:1725`<br>`B/app/helper/plugin.py:487`<br>`B/app/core/plugin.py:1608`<br>`B/app/core/plugin.py:1375`<br>`B/app/api/endpoints/plugin.py:343`<br>`F/src/views/plugin/PluginCardListView.vue:827`<br>`B/app/core/plugin.py:1640`<br>`B/app/core/plugin.py:1526`",
+      "target": "`plugin_original_markets.go`; `plugin_original_market_cards.go`; `plugins/artifacts/python_metadata.go`; `plugins/artifacts/labels.go`; `sourcejson/string.go`; `Plugins.vue`; `PluginSearchDialog.vue`; `plugin-market.ts`",
+      "evidence": "固定前端TS AST11组+固定标签AST12组；同一Linux捕获索引→固定_process_plugin_info AST逐项比较23卡/13字段。199管理/151 SDK/448前端、构建/vet/全包编译通过。真实cmd/server门1083.27s含两次重启、25卡/设置/统计一致；浏览器20→25、作者多选/标签/仓库交集、空结果、本地优先、原版排序菜单/Enter、失败在线仅保留真实本地/重试恢复、同数量刷新20→25、搜索分身9.7→实际SDK get_page仅分身1次/来源0次且PID/config/KV不变。详见当前报告中process-market-menu-final-browser.log、linux-market-fixed-card-verdict.json、market-pagination-refreshed20/reappended25、market-search-clone-v97等证据。  固定报告：[版本与原始证据](validation/plugin-module-no-official-auth-20261026.json)；实际运行日志 `testdata/plugin-module-no-official-auth-20261026/process-market-menu-final-browser.log.gz`。"
+    },
+    {
+      "id": "09",
+      "state": "验收通过",
+      "source": "`B/app/api/endpoints/plugin.py:363`<br>`B/app/core/plugin.py:1558`<br>`B/app/core/plugin.py:1566`<br>`B/app/core/plugin.py:1592`<br>`B/app/utils/string.py:808`<br>`B/app/core/plugin.py:1701`<br>`F/src/components/cards/PluginCard.vue:232`<br>`B/app/core/plugin.py:1652`<br>`B/app/core/plugin.py:720`",
+      "target": "`plugin_original_markets.go`; `plugin_original_market_cache.go`",
+      "evidence": "固定源码回放 `testdata/standard-market/market-oracle.json`；真实Linux多仓库及重启门、浏览器拖动和文本重排后实际安装2.0，标签与来源一致；本地高版本/在线同版本/在线来源顺序真实宿主验证见 `testdata/standard-market/verify_linux_local_selection.py` 和 `linux-local-selection.json.gz`，SDK PID/init/config未变。见 [证据](validation/plugin-module-no-official-auth-20261026.json)。"
+    },
+    {
+      "id": "10",
+      "state": "验收通过",
+      "source": "`F/src/views/plugin/PluginCardListView.vue:931`<br>`B/app/scheduler.py:488`<br>`B/app/scheduler.py:707`<br>`B/app/helper/plugin.py:487`<br>`B/app/helper/plugin.py:387`<br>`B/app/core/plugin.py:1725`<br>`F/src/views/plugin/PluginCardListView.vue:827`<br>`B/app/core/plugin.py:1543`<br>`B/app/core/plugin.py:1785`<br>`B/app/core/cache.py:1125`<br>`B/app/core/cache.py:1240`<br>`B/app/core/cache.py:1294`",
+      "target": "`plugin_original_market_refresh.go`; `Plugins.vue`",
+      "evidence": "固定同步/异步cached源码AST回放+实际HTTP缓存/空成功/失败及race；真实Linux cmd/server与浏览器验证强制失败候选消失、后续普通读取仍命中原缓存、错误不被轮询覆盖且可重试。真实30分钟ticker于03:52:45更新缓存，普通读取的原TTL仍有效到04:05，来源时间戳提前变化，SDK PID/init/config/KV不变。完整进程门PASS（1878.68秒），见 `scheduler-real-tick-verdict.json.gz`、`linux-cache-final.log.gz` 和 [证据](validation/plugin-module-no-official-auth-20261026.json)。"
+    },
+    {
+      "id": "11",
+      "state": "验收通过",
+      "source": "`F/src/components/dialog/PluginMarketDetailDialog.vue:100`<br>`B/app/api/endpoints/plugin.py:576`<br>`B/app/helper/plugin.py:620`<br>`B/app/helper/plugin.py:2805`<br>`B/app/api/endpoints/plugin.py:614`<br>`B/app/core/plugin.py:641`<br>`B/app/core/plugin.py:72`<br>`B/app/api/endpoints/plugin.py:223`<br>`B/app/core/plugin.py:104`<br>`B/app/api/endpoints/plugin.py:621`",
+      "target": "`plugin_original_install.go`; `plugins/artifacts/acquire.go`",
+      "evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。"
+    },
+    {
+      "id": "12",
+      "state": "验收通过",
+      "source": "`F/src/components/dialog/PluginVersionHistoryDialog.vue:48`<br>`F/src/components/dialog/PluginVersionHistoryDialog.vue:102`<br>`B/app/api/endpoints/plugin.py:428`<br>`B/app/helper/plugin.py:418`<br>`B/app/helper/plugin.py:678`<br>`B/app/api/endpoints/plugin.py:591`<br>`B/app/api/endpoints/plugin.py:440`<br>`B/app/api/endpoints/plugin.py:462`<br>`B/app/api/endpoints/plugin.py:295`<br>`B/app/core/plugin.py:1375`<br>`F/src/components/misc/VersionHistory.vue:1`<br>`B/app/api/endpoints/plugin.py:91`",
+      "target": "`plugin_original_history.go`; `plugin_original_class_registry.go`; `plugin_original_release_cache.go`; `plugins/artifacts/history.go`; `PluginVersionHistoryDialog.vue`; `plugin-history-markdown.ts`",
+      "evidence": "固定缓存/端点/类getter AST回放 + 真实HTTP独立Release后台刷新；最新版Linux cmd/server、实际Go制品、浏览器作者顺序2.0/1.0/0.1和Markdown、更新503旧PID/config/KV不变、原弹窗重试2.0换PID保留数据。无仓库版本null、本地Release不支持、缺失类404、init失败类仍返回版本、分身逻辑版本与每源get_state均实测。见 [当前证据](validation/plugin-module-no-official-auth-20261026.json) 的 linux-class-final.log、linux-class-release-cache.json、history-class-verdict.json/截图及class-oracle.json。"
+    },
+    {
+      "id": "13",
+      "state": "验收通过",
+      "source": "`B/app/helper/plugin.py:160`<br>`B/app/helper/plugin.py:903`<br>`B/app/core/plugin.py:1652`<br>`B/app/helper/plugin.py:697`<br>`F/src/components/cards/PluginCard.vue:222`<br>`B/app/helper/plugin.py:2842`<br>`B/app/helper/plugin.py:1762`<br>`B/app/helper/plugin.py:1494`<br>`B/app/core/plugin.py:106`<br>`B/app/helper/plugin.py:2847`<br>`B/app/helper/plugin.py:1576`<br>`B/app/helper/plugin.py:1642`<br>`B/app/core/config.py:1154`<br>`B/app/core/config.py:1166`<br>`B/version.py:1`<br>`B/requirements.in:71`<br>`F/src/views/setting/AccountSettingSystem.vue:1101`<br>`F/src/views/setting/AccountSettingSystem.vue:2081`",
+      "target": "`plugins/artifacts/system_version.go`; `plugins/artifacts/inspect.go`; `plugin_original_github_network.go`; `plugin_original_network.go`; `plugin_original_markets.go`; `PluginSystemSettings.vue`; `plugin_original_market_cards.go`",
+      "evidence": "固定源码AST `testdata/standard-market/github-network-oracle.json`（头9/路由8）及`system-version-oracle.json`1251例；真实HTTP/实际SDK兼容性拒绝与旧Release根通过。Linux `process-github-local-version-linux.log`10.35s PASS：严格TLS受控源、镜像→坏配置代理→环境路径、API跳过镜像、制品实际运行、失败保留PID/config/KV、冷恢复。浏览器门779.17s PASS：基础/高级/开发保存、空保留/显式清除、错误保留草稿、两次真实重启、兼容性禁装→恢复；证据 `github-browser-final-verdict.json`/`github-market-incompatible.png`/`github-settings-cold-developer.ax.txt`，当前报告记录全部路径/哈希。204管理根为203全量通过+已纠正1实际重跑；176 SDK/网络、7宿主race、451前端、构建/vet/全包编译通过。原版/测试协议回放/真实Linux及浏览器证据分开标明。"
+    },
+    {
+      "id": "14",
+      "state": "验收通过",
+      "source": "`F/src/components/cards/PluginCard.vue:222`<br>`F/src/views/plugin/PluginCardListView.vue:827`<br>`B/app/helper/plugin.py:2805`<br>`B/app/api/endpoints/plugin.py:602`<br>`B/app/core/plugin.py:654`<br>`B/app/core/plugin.py:776`<br>`B/app/core/plugin.py:619`<br>`F/src/components/cards/PluginCard.vue:242`<br>`B/app/core/plugin.py:104`<br>`B/app/api/endpoints/plugin.py:591`",
+      "target": "`plugin_original_install.go`; `plugin_original_lifecycle.go`",
+      "evidence": "旧生命周期/失败证据保留；发现自定义版本遗漏后重开并修正。新增最新版Linux真实生产链：9.7不提示较低2.0更新；force精确ID替换进程及类属性，配置/KV和来源PID不变，重启恢复。浏览器实际创建9.7分身，更新后自动显示Owned exact class v2.0；503保留与重试已验证。见 [当前证据](validation/plugin-module-no-official-auth-20261026.json) 的linux-class-final.log、linux-browser-clone-update.json、clone-class-9.7.png、clone-class-updated.png。 **2026-10-27重开：固定B _modify_federation_files:2140与_rename_federation_assets:2201要求更新分身同步派生JS/CSS和顶层资源名，当前仅字节复制；旧后端版本/配置证据保留，待集中派生接入后复验。**  r3集中前端派生补证：真实auto ticker10.07s/DEV10.11s，精确clone2.0更新/前端资源热更/坏包保留与恢复/冷恢复均读取真实JS/CSS/文件名及SDK PID；详见 `docs/validation/plugin-clone-frontend-r3-20261027/result.json`。"
+    },
+    {
+      "id": "15",
+      "state": "验收通过",
+      "source": "`B/app/api/endpoints/plugin.py:933`<br>`B/app/core/plugin.py:1905`<br>`B/app/core/plugin.py:2061`<br>`B/app/core/plugin.py:2139`",
+      "target": "`plugin_instances.go`; `plugins/artifacts/installed.go`",
+      "evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。 **2026-10-27重开：固定B plugin.py:2044/2140–2232分身文本与资源名改写遗漏。源码9树oracle已取得；需平台统一处理初建、分身的分身、更新、前端更新与重启库存，不由各插件自行实现。**  集中JS/CSS字面替换与顶层重命名按固定源码9树回放；真实clone/grandclone/API CSS17px/runtime source区别、clone精确更新/DEV/frontend-only/cold独立实证补齐，详见 `docs/validation/plugin-clone-frontend-r3-20261027/result.json`。 原分身/前端派生/DEV双ticker证据保留；固定Python3.12源码28条件/23派生树、真实platform7 Linux3.50s验证26复制实例中11可调用/15成功但未加载、两类卸载与配置/代码保留、全installed=false及cold新PID。Linux255字节/分隔符控制符安全边界与Go进程适配明示；补证见docs/validation/plugin-clone-suffix15-20261027/result.json。"
+    },
+    {
+      "id": "16",
+      "state": "验收通过",
+      "source": "`B/app/api/endpoints/plugin.py:739`<br>`B/app/schemas/event.py:67`<br>`B/app/core/plugin.py:815`",
+      "target": "`plugin_original_config.go`; `plugin_original_manager_http.go`",
+      "evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。"
+    },
+    {
+      "id": "17",
+      "state": "验收通过",
+      "source": "`B/app/api/endpoints/plugin.py:992`<br>`B/app/core/plugin.py:634`<br>`B/app/api/endpoints/plugin.py:183`",
+      "target": "`plugin_original_uninstall.go`",
+      "evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。"
+    },
+    {
+      "id": "18",
+      "state": "验收通过",
+      "source": "`F/src/views/setting/AccountSettingSystem.vue:2358`<br>`F/src/views/setting/AccountSettingSystem.vue:681`<br>`B/app/api/endpoints/system.py:731`<br>`B/app/helper/plugin.py:209`<br>`B/app/helper/plugin.py:252`<br>`B/app/core/plugin.py:1462`<br>`B/app/helper/plugin.py:313`<br>`B/app/helper/plugin.py:725`<br>`B/app/helper/plugin.py:747`<br>`B/app/core/plugin.py:289`<br>`B/app/helper/plugin.py:323`<br>`B/app/helper/plugin.py:729`<br>`B/app/core/plugin.py:1574`",
+      "target": "`plugin_original_local_repositories.go`; `plugin_original_markets.go`; `plugins/artifacts/local.go`; `PluginSystemSettings.vue`",
+      "evidence": "固定路径AST `local-paths-oracle.json`11输入+4真实文件系统场景，原版目录保存无存在性/32数量门；Go真实HTTP保存35项含重复/未来根，发现明确失败。真实Linux实际SDK本地安装/更新/失败保留/分身/重启，浏览器门2219.51s PASS：设置→实际本地安装/配置/宿主分身→发布v2仅主进程变化，损坏发布保留/合法恢复；未来目录保存但发现失败/重复根2且状态getter主2分身1、关闭监控保留代码、卸载。证据`local-browser-*.json/.png/.ax.txt`/`process-local-dev-browser.log`；206管理根组合、452前端、9race、构建/vet/全包编译通过，路径/哈希见当前报告。  固定报告：[版本与原始证据](validation/plugin-module-no-official-auth-20261026.json)；实际运行日志 `testdata/plugin-module-no-official-auth-20261026/process-local-dev-browser.log.gz`。"
+    },
+    {
+      "id": "19",
+      "state": "验收通过",
+      "source": "`F/src/views/setting/AccountSettingSystem.vue:2383`<br>`B/app/core/plugin.py:289`<br>`B/app/core/plugin.py:335`<br>`B/app/core/plugin.py:582`<br>`B/app/core/plugin.py:543`<br>`B/app/core/plugin.py:641`<br>`B/app/core/plugin.py:363`<br>`B/app/core/plugin.py:320`<br>`B/app/core/plugin.py:421`",
+      "target": "`plugin_original_local_repositories.go`; `plugin_original_install.go`; `plugin_original_lifecycle.go`; `plugins/artifacts/resource_sync.go`",
+      "evidence": "固定watcher AST7分支及monitor/candidate4组合；真实SDK纯索引变更无init/close/stop及注册getter副作用。Linux实际一秒ticker7.37s通过资源/坏包/恢复/后端2/冷重启/分身；浏览器真实one→two→坏包保留→three→backend2，源PID1945859及init2在资源变化中保留，分身1946807保持one；旧源URL409，新资源可用。真实服务重启1944403→1952387恢复源2/分身1配置/资源/独立PID；浏览器卸载和清空设置确认。208管理、178 SDK、3宿主race+1文件系统race及vet/编译通过。见当前报告process-resources-linux.log、process-resources-browser.log、resource-browser-*及local-resources-*。  固定报告：[版本与原始证据](validation/plugin-module-no-official-auth-20261026.json)；实际运行日志 `testdata/plugin-module-no-official-auth-20261026/process-resources-browser.log.gz`。"
+    },
+    {
+      "id": "20",
+      "state": "验收通过",
+      "source": "`B/app/startup/lifecycle.py:73`<br>`B/app/startup/lifecycle.py:41`<br>`B/app/core/plugin.py:690`<br>`B/app/core/plugin.py:1495`<br>`B/app/startup/plugins_initializer.py:6`<br>`B/app/startup/lifecycle.py:49`<br>`B/app/core/plugin.py:712`<br>`B/app/core/plugin.py:755`<br>`B/app/startup/lifecycle.py:45`<br>`B/app/startup/lifecycle.py:106`<br>`B/app/startup/plugins_initializer.py:35`",
+      "target": "`plugin_original_sync.go`; `cmd/server/main.go`",
+      "evidence": "固定startup async函数AST5分支；真实Linux cmd/server3.67s：仓库确实阻塞时现有源1/分身1独立SDK/API先可用，释放后源2/分身1整体换PID；当前版本不重新下载，缺失代码/坏SHA明确失败且保留成员及配置/KV，分身可用；实际CLI安全模式跳过SDK/仓库，合法冷重启修复成功。原版sync force删除语义不伪造成旧代码恢复。初始化/注册顺序另有实际SDK回归和6宿主race；浏览器实际冷恢复见19 resource-browser-cold。证据process-startup-wait-linux.log、startup-oracle.json、startup-backup-host-race.jsonl。  固定报告：[版本与原始证据](validation/plugin-module-no-official-auth-20261026.json)；实际运行日志 `testdata/plugin-module-no-official-auth-20261026/process-startup-wait-linux.log.gz`。"
+    },
+    {
+      "id": "21",
+      "state": "验收通过",
+      "source": "`B/app/helper/plugin.py:918`<br>`B/app/helper/plugin.py:1738`<br>`B/app/helper/plugin.py:939`<br>`B/app/api/endpoints/plugin.py:602`<br>`B/app/helper/plugin.py:967`<br>`B/app/chain/system.py:59`<br>`B/app/chain/system.py:53`<br>`B/app/chain/system.py:109`<br>`B/app/startup/lifecycle.py:89`<br>`B/app/helper/plugin.py:993`<br>`B/app/helper/plugin.py:1773`<br>`B/app/chain/system.py:132`",
+      "target": "`plugin_original_backup.go`; `plugins/artifacts/backup.go`; `plugin_module_process_backup_test.go`",
+      "evidence": "固定实际源码文件系统AST5场景，原安装失败/force及持久刷新等制品回归；2实际SDK恢复/分身根及6宿主race通过。真正独占Docker scratch、network none、无挂载测试2.72s：安装即刷新、SIGTERM关闭备份来源/分身、删除仅自有运行代码、启动先恢复后实际SDK init1/config/KV独立；启动消费快照，坏分身SHA拒绝/404/明确日志而来源可用。非Docker Linux启动不执行Docker恢复。见backup-oracle.json、backup-consumption-oracle-final-tests.jsonl、process-backup-consumed-docker-linux.log及当前报告。  固定报告：[版本与原始证据](validation/plugin-module-no-official-auth-20261026.json)；实际运行日志 `testdata/plugin-module-no-official-auth-20261026/process-backup-consumed-docker-linux.log.gz`。"
+    },
+    {
+      "id": "22",
+      "state": "按用户要求排除",
+      "source": "`B/app/core/plugin.py:1852`<br>`B/app/api/endpoints/plugin.py:577`<br>`B/app/core/plugin.py:98`<br>`B/app/core/plugin.py:1676`<br>`B/app/core/plugin.py:1375`<br>`B/app/core/plugin.py:1876`<br>`B/app/utils/crypto.py:49`<br>`B/app/scheduler.py:1528`<br>`B/app/core/plugin.py:1890`",
+      "target": "`plugin_original_lifecycle.go`; `plugin_original_markets.go`",
+      "evidence": "不计入验收总数、未完成项或阻塞；实际 SDK 已验证等级元数据不影响安装初始化、列表及版本选择；Linux cmd/server 以 level=2/99 的实际制品完成生命周期，匿名管理请求仍401。"
+    },
+    {
+      "id": "23",
+      "state": "验收通过",
+      "source": "`F/src/views/setting/AccountSettingSystem.vue:1805`<br>`F/src/views/plugin/PluginCardListView.vue:858`<br>`F/src/views/plugin/PluginCardListView.vue:903`<br>`B/app/api/endpoints/plugin.py:598`<br>`B/app/helper/server.py:549`<br>`B/app/helper/server.py:51`<br>`B/app/helper/server.py:326`<br>`B/app/helper/server.py:1440`<br>`B/app/helper/server.py:473`<br>`B/app/helper/server.py:485`<br>`B/app/core/config.py:441`<br>`B/app/helper/server.py:564`<br>`B/app/api/endpoints/plugin.py:608`<br>`F/src/components/cards/PluginAppCard.vue:223`<br>`B/app/utils/system.py:997`<br>`B/app/core/config.py:426`<br>`B/app/core/config.py:959`",
+      "target": "`plugin_original_server.go`; `plugin_original_server_uid.go`; `plugin_original_server_user_agent.go`; `Plugins.vue`; `Settings.vue`",
+      "evidence": "固定客户端35场景、UID6分支/CPU12场景；真实Linux SDK安装/统计/开关/503恢复/全局回执/冷重启/分身独立；浏览器2033.88s通过，最终默认页404.35s证明清空后新PID仍为空。官方GET实际2272项，未向官方写入；自建聚合标为合成。212管理/178 SDK/8 host race通过，原始日志与SHA见[当前证据](validation/plugin-module-no-official-auth-20261026.json)。"
+    },
+    {
+      "id": "24",
+      "state": "验收通过",
+      "source": "`B/app/api/endpoints/plugin.py:495`<br>`F/src/components/cards/PluginAppCard.vue:223`<br>`B/app/schemas/plugin.py:98`<br>`B/app/api/endpoints/plugin.py:531`<br>`B/app/helper/server.py:532`<br>`B/app/helper/server.py:425`<br>`B/app/helper/server.py:85`<br>`B/app/api/endpoints/plugin.py:551`<br>`B/app/schemas/plugin.py:109`<br>`B/app/helper/server.py:497`<br>`B/app/api/endpoints/plugin.py:555`<br>`F/src/api/index.ts:8`",
+      "target": "`plugin_original_server.go`; `plugin_original_rating_values.go`; `plugin_original_manager_http.go`",
+      "evidence": "固定schema实际45场景，与校验过SHA的Pydantic-core2.46.4算法对照；真实cmd/server→自建协议peer写读评分、默认/缺失/503/Unicode路径/重复参数/代理/同源重定向，SDK PID/init/config/KV无变化。浏览器确认原菜单无评分控件；官方只读未投票。源码与日志见[当前证据](validation/plugin-module-no-official-auth-20261026.json)。"
+    },
+    {
+      "id": "25",
+      "state": "验收通过",
+      "source": "`F/src/components/cards/PluginCard.vue:278`<br>`F/src/views/plugin/PluginCardListView.vue:789`<br>`B/app/api/endpoints/plugin.py:343`<br>`F/src/components/cards/PluginCard.vue:359`",
+      "target": "`plugin_original_local_cards.go`; `plugin_original_market_cards.go`; `plugin_original_markets.go`; `Plugins.vue`; `PluginManageCard.vue`",
+      "evidence": "固定core/plugin.py:get_local_plugins与endpoints/plugin.py:all_plugins对照；195管理根/41市场组织回归通过。Linux真实cmd/server默认all强刷返回1.0本地后跟2.0更新；本地清单在仓库故障时零元数据请求，失败初始化类仍可见/state=false。浏览器市场仅2个真实未安装候选、3源失败清空/重试恢复、返回我的插件读取2.0；idle12s状态调用数/PID/init/config/KV不变。见 [当前证据](validation/plugin-module-no-official-auth-20261026.json) 的process-all-class-final.log、linux-list-final.log、linux-installed-list-idle.json及market-real-candidates/market-list-force-failed/installed-list-return-v2截图。"
+    },
+    {
+      "id": "26",
+      "state": "验收通过",
+      "source": "`F/src/views/plugin/PluginCardListView.vue:718`<br>`F/src/views/plugin/PluginCardListView.vue:877`<br>`F/src/views/plugin/PluginCardListView.vue:560`<br>`B/app/api/endpoints/user.py:125`<br>`B/app/core/plugin.py:86`<br>`F/src/composables/useKeepAliveRefresh.ts:31`<br>`F/src/views/plugin/PluginCardListView.vue:1012`",
+      "target": "`plugin-organization.ts`; `plugin-market.ts`; `Plugins.vue`; `App.vue`; `plugin_organization_compat.go`",
+      "evidence": "固定前端28分支既有回放+本轮7函数场景、32实际ASGI场景；Linux真实生产/SDK与浏览器1531.67s验证名称/运行/更新组合、条件清除保留、混合拖拽、分组内排序、离开返回保留文件夹与文本，首次与返回加载门有实际组件测试。463前端、13相关host/race通过，证据见[当前报告](validation/plugin-module-no-official-auth-20261026.json)。"
+    },
+    {
+      "id": "27",
+      "state": "验收通过",
+      "source": "`F/src/views/plugin/PluginCardListView.vue:1120`<br>`F/src/views/plugin/PluginCardListView.vue:630`<br>`F/src/views/plugin/PluginCardListView.vue:1386`<br>`B/app/api/endpoints/plugin.py:842`<br>`F/src/components/cards/PluginMixedSortCard.vue:114`<br>`B/app/api/endpoints/plugin.py:1041`<br>`B/app/api/endpoints/plugin.py:1092`",
+      "target": "`plugin_organization.go`; `plugin_organization_order.go`; `plugin_instances.go`; `plugin-organization.ts`; `Plugins.vue`; `PluginFolderDialog.vue`",
+      "evidence": "源码7前端+32ASGI+3成员辅助函数回放；Linux真实2.21s+浏览器1531.67s完成创建/移动/组内及全局排序/移出/外观/重命名/真实SQLite拒写与表单重试/新PID冷恢复/删除分组插件仍可用/卸载清理。来源/分身独立PID且操作间init/config/KV不变；新进程读取同一字典。13host+13race通过，全部原始证据/SHA见[当前报告](validation/plugin-module-no-official-auth-20261026.json)。"
+    },
+    {
+      "id": "28",
+      "state": "验收通过",
+      "source": "`B/app/api/endpoints/plugin.py:648`<br>`B/app/core/plugin.py:783`<br>`F/src/components/dialog/PluginConfigDialog.vue:86`",
+      "target": "`plugin_original_view_adapter.go`; `PluginConfigDialog.vue`",
+      "evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。 SDK 表单默认值与保存值合并回归、浏览器重新打开配置显示已保存值。"
+    },
+    {
+      "id": "29",
+      "state": "验收通过",
+      "source": "`F/src/components/render/FormRender.vue:16`<br>`F/src/components/render/FormRender.vue:114`<br>`F/src/components/dialog/PluginConfigDialog.vue:120`<br>`B/app/api/endpoints/plugin.py:975`<br>`F/src/components/cards/PluginCard.vue:161`",
+      "target": "`PluginFormRenderer.vue`; `plugin-forms.ts`; `plugin_original_config.go`",
+      "evidence": "JSON484.12s + Vue分支2009.81s及f37新Linux/browser163.36s：固定Form13例/Page事件3步、递归/Ace/插槽/中文键/真SQL失败重试/分身冷启；新动态SVG/完整utility/rawCSS/配置init2/真实POST KV/503恢复已实证。详细source→target→SHA见 `docs/validation/plugin-render29-30-parity-20261027.json`。"
+    },
+    {
+      "id": "30",
+      "state": "验收通过",
+      "source": "`B/app/api/endpoints/plugin.py:680`<br>`F/src/components/dialog/PluginDataDialog.vue:79`<br>`F/src/components/render/PageRender.vue:35`",
+      "target": "`PluginDataDialog.vue`; `plugin_original_view_adapter.go`",
+      "evidence": "JSON484.12s + Vue分支2009.81s及f37新Linux/browser163.36s：固定Form13例/Page事件3步、递归/Ace/插槽/中文键/真SQL失败重试/分身冷启；新动态SVG/完整utility/rawCSS/配置init2/真实POST KV/503恢复已实证。详细source→target→SHA见 `docs/validation/plugin-render29-30-parity-20261027.json`。"
+    },
+    {
+      "id": "31",
+      "state": "验收通过",
+      "source": "`B/app/core/plugin.py:1051`<br>`B/app/api/endpoints/plugin.py:764`<br>`F/src/utils/federationLoader.ts:45`<br>`F/src/components/dialog/PluginConfigDialog.vue:188`<br>`F/src/pages/plugin-app.vue:14`",
+      "target": "`plugin_original_frontend_http.go`; `plugin-federation.ts`",
+      "evidence": "固定发现/重试/共享依赖/Config/Page/AppPage候选与静态边界核实；实际Vue2009.81s、源/分身native sidebar、API35第三Page回退和r3取消恢复，前端派生双ticker实证补齐。完整映射及不同构建证据见 `docs/validation/plugin-ui31-33-r3-20261027.json`。"
+    },
+    {
+      "id": "32",
+      "state": "验收通过",
+      "source": "`B/app/core/plugin.py:1191`<br>`F/src/pages/dashboard.vue:662`<br>`F/src/pages/dashboard.vue:733`<br>`F/src/components/misc/DashboardElement.vue:207`<br>`F/src/components/render/DashboardRender.vue:11`",
+      "target": "`plugin_original_dashboard_meta.go`; `PluginDashboard.vue`",
+      "evidence": "固定元信息/调用参数/三项tuple及默认值回放；真实Linux1894.49s+r3浏览器，平板w4h25/移动w1h28/desktopw8h22独立保存读回，五偏好冷恢复/新PID，真实SQL ABORT失败local-first→显示错误→刷新server覆盖→移除故障后保存成功；旧drag/resize和15次轮询弹窗保持补证。source/target/SHA见 `docs/validation/plugin-ui31-33-r3-20261027.json`。"
+    },
+    {
+      "id": "33",
+      "state": "验收通过",
+      "source": "`B/app/core/plugin.py:1133`<br>`F/src/stores/pluginSidebarNav.ts:22`<br>`F/src/utils/pluginSidebarNav.ts:15`<br>`F/src/layouts/components/DefaultLayout.vue:233`<br>`F/src/layouts/components/QuickAccess.vue:159`<br>`F/src/composables/useRecentPlugins.ts:58`<br>`F/src/composables/usePWA.ts:62`",
+      "target": "`plugin_navigation.go`; `PluginQuickAccess.vue`; `App.vue`",
+      "evidence": "真实native侧栏source/clone四链接→AppPage身份、Chrome触屏模拟四实例独立PID、最近3项/cold、真实图标取色、pull开/swipe关/短拉/弹窗防叠加/更多Apps入口，均核对固定源码；没有物理手机证据。详见 `docs/validation/plugin-ui31-33-r3-20261027.json`。"
+    },
+    {
+      "id": "34",
+      "state": "验收通过",
+      "source": "`B/app/log.py:372`<br>`B/app/log.py:494`<br>`F/src/components/dialog/PluginLogDialog.vue:38`<br>`F/src/views/system/LoggingView.vue:398`<br>`F/src/views/system/LoggingView.vue:537`<br>`B/app/api/endpoints/system.py:953`<br>`B/app/api/endpoints/system.py:398`<br>`B/app/api/endpoints/system.py:360`",
+      "target": "`plugin_log_projection.go`; `plugin_log_rotation.go`; `plugin_original_logs.go`; `PluginLogDialog.vue`; `plugin-logs.ts`",
+      "evidence": "固定formatter/parser/物理逆序/ZIP/CPython轮转/Pydantic实际回放；真实Linux独立文件轮转/ZIP内容元数据/失败/冷启，浏览器382.37s验证续行、SSE、筛选、暂停补读、text新窗口、ZIP点击、分身与冷重连。22个实际允许SDK方法可达日志逐一核对，source/clone/native匿名ctx专项/race通过；详见 `docs/validation/plugin-logs34-parity-20261027.json`。"
+    },
+    {
+      "id": "35",
+      "state": "验收通过",
+      "source": "`B/app/core/security.py:254`<br>`B/app/core/plugin.py:873`<br>`B/app/api/endpoints/plugin.py:130`<br>`B/app/api/endpoints/plugin.py:183`<br>`B/app/api/endpoints/plugin.py:253`<br>`B/app/api/endpoints/plugin.py:764`",
+      "target": "`plugin_original_api_methods.go`; `plugin_custom_api.go`; `plugin_original_static_http.go`; `plugins/artifacts/package_resource.go`; `plugin-remote-api.ts`",
+      "evidence": "固定注册9例/静态8例、真实Linux及Vue/API旧证据保留；f37完整Axios callable/config/global/absolute/baseURL/peer/host/binary/raw/file/cold，21cb前端派生与真实取消失败保留；r3最终1479.27s真实Linux+Chrome导航取消2694.78 net::ERR_ABORTED后back恢复，同PID2528604/init1/config、卸载API/文件404通过。新增原静态别名6 filename ASGI/真实platform7 Linux9.38s：Latin1 rawE9保留、中文/emoji原500；Go pinned ABI无Disposition保持200，契约分开。补证docs/validation/plugin-api35-static-filename-20261027/result.json；完整source→target→版本/SHA/原证据见 `docs/validation/plugin-api35-r3-20261027/result.json`。"
+    },
+    {
+      "id": "36",
+      "state": "验收通过",
+      "source": "`B/app/chain/download.py:1020`<br>`B/app/core/event.py:176`<br>`B/app/core/event.py:433`<br>`B/app/core/event.py:753` `B/app/api/endpoints/subscribe.py:231`<br>`B/app/api/endpoints/subscribe.py:855`<br>`B/app/schemas/event.py:620`<br>`B/app/db/models/subscribe.py:11`",
+      "target": "`plugin_original_event_queue.go`; `plugin_original_event_registry.go`; `plugin_standard_business_events.go` `plugin_standard_subscription_events.go`; `subscription_runtime.go`; `subscription_quality_source.go`",
+      "evidence": "44份固定源SHA/92调用/10普通消费者逐条复核，适用宿主的源码→目标→Linux/浏览器证据见 `testdata/plugin-module-no-official-auth-20261026/events36-37-scope-audit.json` 与 `validation/plugin-events-final-20261028.json`。最终SDK核心回归12.852s；目录/metadata批次与普通删除事件由main36–47实机增量闭合，全部旧初红保留。仅范围内事件平台与既有宿主认领通过，未新建独立业务宿主。"
+    },
+    {
+      "id": "37",
+      "state": "验收通过",
+      "source": "`B/app/core/event.py:375`<br>`B/app/chain/download.py:824`<br>`B/app/chain/download.py:1186`",
+      "target": "`plugin_original_chain_event.go`; `plugin_original_mutable_event.go`  `plugin_standard_subscription_events.go`; `subscription_quality_completion_run.go`",
+      "evidence": "44份固定源SHA/92调用/10普通消费者逐条复核，适用宿主的源码→目标→Linux/浏览器证据见 `testdata/plugin-module-no-official-auth-20261026/events36-37-scope-audit.json` 与 `validation/plugin-events-final-20261028.json`。最终SDK核心回归12.852s；目录/metadata批次与普通删除事件由main36–47实机增量闭合，全部旧初红保留。仅范围内事件平台与既有宿主认领通过，未新建独立业务宿主。"
+    },
+    {
+      "id": "38",
+      "state": "验收通过",
+      "source": "`B/app/core/plugin.py:905`<br>`B/app/scheduler.py:1338`<br>`B/app/scheduler.py:975`",
+      "target": "`plugin_original_services.go`; `plugin_services.go`; `plugins/schedule`",
+      "evidence": "实际APScheduler/ProgressHelper/MemoryTLRU固定源码回放；真实Linux最终79d52d门4.22s验证clock max1/2、sync/async、取消旧SDK、副作用/clone/cold/移除；同步浏览器1105.21s验证运行首位/nullnext/非阻塞提交/重复点击仅一次实际执行/失败进度与源UI等待/分身/重启。24h仅受控时钟+真实SDK验证并明确计证。完整映射/原始日志/SHA见 `testdata/plugin-module-no-official-auth-20261026/services38-result.json` 与归档manifest。"
+    },
+    {
+      "id": "39",
+      "state": "验收通过",
+      "source": "`B/app/api/endpoints/system.py:1343`<br>`B/app/scheduler.py:774`<br>`B/app/scheduler.py:808`",
+      "target": "`plugin_original_service_progress.go`; `PluginServices.vue`",
+      "evidence": "实际APScheduler/ProgressHelper/MemoryTLRU固定源码回放；真实Linux最终79d52d门4.22s验证clock max1/2、sync/async、取消旧SDK、副作用/clone/cold/移除；同步浏览器1105.21s验证运行首位/nullnext/非阻塞提交/重复点击仅一次实际执行/失败进度与源UI等待/分身/重启。24h仅受控时钟+真实SDK验证并明确计证。完整映射/原始日志/SHA见 `testdata/plugin-module-no-official-auth-20261026/services38-result.json` 与归档manifest。"
+    },
+    {
+      "id": "40",
+      "state": "验收通过",
+      "source": "`B/app/core/plugin.py:844`<br>`B/app/command.py:156`<br>`B/app/command.py:269`<br>`B/app/chain/message.py:349`",
+      "target": "`plugin_original_commands.go`; `plugin_original_command_ingress.go`",
+      "evidence": "固定命令/输入源码完整scope审计、AST/SDK/race与真实79d门4.22s（provider503→204/失败后恢复/clone/到期/cold），f37浏览器772.59s普通消息入口/trim/Enter/失败保留重试→实际SDK/输入消费与cancel/历史/冷恢复通过。typed Go进程与通用key必要适配已记录；不声明新Telegram或媒体preset业务。详细映射/原始证据/SHA见 `testdata/plugin-module-no-official-auth-20261026/services40-result.json`。"
+    },
+    {
+      "id": "41",
+      "state": "验收通过",
+      "source": "`B/app/helper/interaction.py:498`<br>`B/app/helper/interaction.py:589`<br>`B/app/chain/message.py:482`",
+      "target": "`plugin_original_input.go`; `plugininput`",
+      "evidence": "固定命令/输入源码完整scope审计、AST/SDK/race与真实79d门4.22s（provider503→204/失败后恢复/clone/到期/cold），f37浏览器772.59s普通消息入口/trim/Enter/失败保留重试→实际SDK/输入消费与cancel/历史/冷恢复通过。typed Go进程与通用key必要适配已记录；不声明新Telegram或媒体preset业务。详细映射/原始证据/SHA见 `testdata/plugin-module-no-official-auth-20261026/services40-result.json`。"
+    },
+    {
+      "id": "42",
+      "state": "验收通过",
+      "source": "`B/app/chain/__init__.py:1631`<br>`B/app/chain/__init__.py:63`<br>`B/app/helper/message.py:710`",
+      "target": "`plugin_original_notice.go`; `plugin_notice_delivery.go`; `plugin_original_web_history.go`; `ShortcutMessageDialog.vue`",
+      "evidence": "固定来源/目标/回放/实际SDK与HTTP发送/冷恢复/匿名拒绝，加f37浏览器772.59s：真实命令/input回调、发送失败保留恢复、23条真实SDK通知分页20→30→empty、image/Markdown/link、冷Cookie/ID/新SDK无重投；证据分型/SHA及限制见 `docs/validation/plugin-web-message42-parity-20261027.json`。"
+    },
+    {
+      "id": "43",
+      "state": "验收通过",
+      "source": "`B/app/core/plugin.py:933`；`B/app/chain/__init__.py:224,298,470`；231处直接调用和MessageQueue间接post_message逐处见封存审计",
+      "target": "`plugin_original_modules.go`及现有catalog/resources/download/transfer/storage/notice/command/category桥；完整目标逐方法列于审计",
+      "evidence": "固定529文件重新核对；源码签名/kwargs/反向调用/守卫、目标与实际证据逐处见 `testdata/standard-module-host/modules56-final-host-audit.json.gz`。全部transfer/storage/catalog等增量与Linux/IAB绑定在 `validation/plugin-module-host43-final-20261029.json`；413平台根回归、29目录影视根和192 SDK根、556前端，失败与修复保留。最后目录方式Linux1.64s/IAB93 242.55s含保存、错误、重启及分身隔离。"
+    },
+    {
+      "id": "44",
+      "state": "按用户要求排除",
+      "source": "`B/app/core/plugin.py:958`<br>`B/app/workflow/actions/invoke_plugin.py:48`<br>`B/app/schemas/workflow.py:74`",
+      "target": "`—`",
+      "evidence": "不计验收总数；范围门检查不存在专属入口与运行依赖。"
+    },
+    {
+      "id": "45",
+      "state": "按用户要求排除",
+      "source": "`B/app/core/plugin.py:990`<br>`B/app/agent/tools/factory.py:271`<br>`B/app/agent/tools/manager.py:270`<br>`B/app/agent/tools/base.py:351`",
+      "target": "`—`",
+      "evidence": "不计验收总数；范围门检查不存在专属入口与运行依赖。"
+    },
+    {
+      "id": "46",
+      "state": "按用户要求排除",
+      "source": "`B/app/agent/tools/factory.py:166`<br>`B/app/agent/tools/factory.py:260`<br>`B/app/agent/tools/impl/update_plugin_config.py:64`<br>`B/app/agent/tools/impl/_plugin_tool_utils.py:68`",
+      "target": "`—`",
+      "evidence": "不计验收总数；范围门检查不存在专属入口与运行依赖。"
+    },
+    {
+      "id": "47",
+      "state": "验收通过",
+      "source": "`B/app/core/plugin.py:1098`<br>`B/app/core/auth.py:32`<br>`B/app/api/endpoints/auth.py:54`<br>`F/src/pages/login.vue:206`<br>`B/app/api/endpoints/plugin.py:253`",
+      "target": "`plugin_original_auth.go`; `plugin_original_auth_ticket.go`; `PluginAuthLogin.vue`",
+      "evidence": "固定provider/auth AST回放、11真实SDK/HTTP根、真实121秒过期门122.25s；Linux浏览器403.41s证明匿名组件拒绝/接受→真实Cookie/受保护列表、冷Cookie保持、来源停用仅分身入口、分身独立登录。重放/并发一次/冷票据丢失/资产隔离/卸载CLI实测；详见 `docs/validation/plugin-auth47-parity-20261027.json`。"
+    },
+    {
+      "id": "48",
+      "state": "验收通过",
+      "source": "综合索引，见差异列",
+      "target": "`plugin_original_install.go`; `plugin_original_config.go`; `plugin_original_lifecycle.go`",
+      "evidence": "同一真实主程序完整生命周期已有基线；main64532ab6新Linux752.75s与IAB47精确补齐来源2.0重置→来源KV/配置2→0、分身1.0两行与PID/init保持，两个实例代码/文件hash保持；冷启动新PID3809911/3809916保持上述状态，实际卸载/目录清理通过。源码/目标/分型和原始证据见 `validation/plugin-composite48-49-evidence-audit-20261027.json`、`testdata/plugin-module-no-official-auth-20261026/platform10-runtime/manifest.json`。"
+    },
+    {
+      "id": "49",
+      "state": "验收通过",
+      "source": "综合索引；固定F `PluginCardListView.vue:560`、B `core/plugin.py:933`、`core/event.py:139`，其余具体源沿用06/08/09/13/29/35/38–42",
+      "target": "`plugin_organization_order.go`; `plugin_original_registry.go`; `plugin_original_chain_event.go`; `Plugins.vue`；其余沿用相关生命周期/仓库/表单实现",
+      "evidence": "五组已有源码/目标/实机映射见 `validation/plugin-composite48-49-evidence-audit-20261027.json`。新增同main1cbf浏览器680.10s：分身第四→首位真实拖动；来源/分身PID3745993/3747431与init9/4不变；真实Add同event_id中来源默认值→分身观察来源marker，证明显示排序未改变执行顺序；冷启排序保持、事件15/6无重放。原始53份证据/SHA见 `testdata/plugin-module-no-official-auth-20261026/download-context-20261028/runtime/manifest.json`。"
+    },
+    {
+      "id": "50",
+      "state": "已实现待验证",
+      "source": "综合索引，继承01–43/47–49逐项固定源码；本节无独立原版函数",
+      "target": "`本表与当前任务说明`",
+      "evidence": "[最终证据审计](validation/plugin-module-final-20261029.json)：52份封存清单2854份记录、315源码位置、595份旧证据哈希及当前编译输入均通过；每个范围内索引有源码/目标/实际证据。回归初红及修复保留，无未验证项、未解释差异或阻塞；本任务制品/临时数据/进程已清理。 2026-10-29补充复查新增S01–S13未完成；历史证据保留，综合完成结论待这些项目接入、动态依赖范围核实及实际验收。"
+    }
+  ],
+  "positions": [
+    {
+      "id": "S04",
+      "tree": "B",
+      "path": "app/db/site_oper.py",
+      "location": "26,50,56,192,198,225,266",
+      "sha256": "08e202eb3fc97c7fe5d67d7253867334ada9bdd1747eb23b2d3cbe26da7f0cf0",
+      "valid": true
+    },
+    {
+      "id": "S04",
+      "tree": "B",
+      "path": "app/chain/site.py",
+      "location": "66",
+      "sha256": "06358a8fd070d46ab254015a2f8c7a34f07c35dd240bd2b3fef38cbf219252fa",
+      "valid": true
+    },
+    {
+      "id": "S05",
+      "tree": "B",
+      "path": "app/db/subscribe_oper.py",
+      "location": "174,214,258,268",
+      "sha256": "83c3c0f6d4a588a7a32b3fc67f343e89c8aa1545301c1553859316aa03bf9b2c",
+      "valid": true
+    },
+    {
+      "id": "S06",
+      "tree": "B",
+      "path": "app/db/downloadhistory_oper.py",
+      "location": "19",
+      "sha256": "5a2f6bb7a5dd141553d6bedf3c1bc2a87bedd644062162567d90aa8a78dea1f7",
+      "valid": true
+    },
+    {
+      "id": "S06",
+      "tree": "B",
+      "path": "app/db/transferhistory_oper.py",
+      "location": "81,92,189",
+      "sha256": "da1aa87d7d904a5ba9ef08549797674aab2a81702e9ce017f414fd01114e23c7",
+      "valid": true
+    },
+    {
+      "id": "S07",
+      "tree": "B",
+      "path": "app/db/systemconfig_oper.py",
+      "location": "27,92",
+      "sha256": "87bff2e7c63d2ba98c72d92d6aed2018548730215de017330019bb54478634a2",
+      "valid": true
+    },
+    {
+      "id": "S08",
+      "tree": "B",
+      "path": "app/helper/mediaserver.py",
+      "location": "8–18",
+      "sha256": "deee111a4ad63ce42cc7a5fc136c3491bff97d35c790ce738b6126ab034fe369",
+      "valid": true
+    },
+    {
+      "id": "S08",
+      "tree": "B",
+      "path": "app/helper/service.py",
+      "location": "95,142,162",
+      "sha256": "fa1c4bd99c5196bb2d8170a0fd942f4386e12c5f7e230e43cb0778c22193d6b9",
+      "valid": true
+    },
+    {
+      "id": "S08",
+      "tree": "B",
+      "path": "app/modules/trimemedia/trimemedia.py",
+      "location": "366–413",
+      "sha256": "6eba9360044eb5ad0ff8894f0286322d0a17a38d7f528f9e04e80232f55dbbf3",
+      "valid": true
+    },
+    {
+      "id": "S09",
+      "tree": "B",
+      "path": "app/chain/storage.py",
+      "location": "46,88,100",
+      "sha256": "9665a00d34931bbfe3b44f916d7b0b5f8cb658b3abc5bc7786d84ab659483719",
+      "valid": true
+    },
+    {
+      "id": "S10",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "121,634,815,825,836,1375",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "S10",
+      "tree": "B",
+      "path": "app/scheduler.py",
+      "location": "1251,1338",
+      "sha256": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+      "valid": true
+    },
+    {
+      "id": "S11",
+      "tree": "B",
+      "path": "app/chain/__init__.py",
+      "location": "637",
+      "sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+      "valid": true
+    },
+    {
+      "id": "S12",
+      "tree": "B",
+      "path": "app/chain/torrents.py",
+      "location": "402,434",
+      "sha256": "6c2833fc9a87e9d57881fcdef760d131dd1d36acbc9d5de3d7279cdbd0d96a47",
+      "valid": true
+    },
+    {
+      "id": "S12",
+      "tree": "B",
+      "path": "app/helper/torrent.py",
+      "location": "66",
+      "sha256": "1c8a420d419ee53579079283ea0828536de9d978b6b15e722f1ba53cb51d5dd5",
+      "valid": true
+    },
+    {
+      "id": "S14",
+      "tree": "B",
+      "path": "app/utils/http.py",
+      "location": "329–560",
+      "sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+      "valid": true
+    },
+    {
+      "id": "S14",
+      "tree": "B",
+      "path": "app/core/config.py",
+      "location": "1069–1087,1155–1164",
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "valid": true
+    },
+    {
+      "id": "S15",
+      "tree": "B",
+      "path": "app/helper/ocr.py",
+      "location": "8–75",
+      "sha256": "736e7a078b22fe0ac5ac611d58be6a8d742f7d768d582abfed605fafe65a550c",
+      "valid": true
+    },
+    {
+      "id": "S15",
+      "tree": "B",
+      "path": "app/core/config.py",
+      "location": "347",
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "valid": true
+    },
+    {
+      "id": "S16",
+      "tree": "B",
+      "path": "app/helper/browser.py",
+      "location": "852–1102",
+      "sha256": "cb455ffadc75b32fa0fe151242b7c4162233e525d35257ac3a71e1dda1316f29",
+      "valid": true
+    },
+    {
+      "id": "01",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "40",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "01",
+      "tree": "B",
+      "path": "app/db/models/systemconfig.py",
+      "location": "8",
+      "sha256": "56c948af28f482b39e0d599b6889fd803c375aff50ecdde2d5b4583dca581164",
+      "valid": true
+    },
+    {
+      "id": "01",
+      "tree": "B",
+      "path": "app/db/models/plugindata.py",
+      "location": "14",
+      "sha256": "ae52a13e2e2ec13ed10a632c601e0bacf173df430c6d273866bda4c783926622",
+      "valid": true
+    },
+    {
+      "id": "01",
+      "tree": "B",
+      "path": "app/core/config.py",
+      "location": "1005",
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "valid": true
+    },
+    {
+      "id": "02",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "195",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "02",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "72",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "03",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "975",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "03",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "121",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "03",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "223",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "03",
+      "tree": "B",
+      "path": "app/db/systemconfig_oper.py",
+      "location": "30",
+      "sha256": "87bff2e7c63d2ba98c72d92d6aed2018548730215de017330019bb54478634a2",
+      "valid": true
+    },
+    {
+      "id": "04",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "156",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "04",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "619",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "04",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "641",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "04",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "560",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "05",
+      "tree": "B",
+      "path": "app/plugins/__init__.py",
+      "location": "239",
+      "sha256": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+      "valid": true
+    },
+    {
+      "id": "05",
+      "tree": "B",
+      "path": "app/db/plugindata_oper.py",
+      "location": "12",
+      "sha256": "31043788d1ced9a311a0034074b71d34e97f78f644583ed02522602feffa01ec",
+      "valid": true
+    },
+    {
+      "id": "05",
+      "tree": "B",
+      "path": "app/db/systemconfig_oper.py",
+      "location": "101",
+      "sha256": "87bff2e7c63d2ba98c72d92d6aed2018548730215de017330019bb54478634a2",
+      "valid": true
+    },
+    {
+      "id": "06",
+      "tree": "F",
+      "path": "src/components/dialog/PluginMarketSettingDialog.vue",
+      "location": "39",
+      "sha256": "95a117e41aaccef006889596f4d1189e39ca1e881d85ff7c6c5e1337ced4a349",
+      "valid": true
+    },
+    {
+      "id": "06",
+      "tree": "F",
+      "path": "src/components/dialog/PluginMarketSettingDialog.vue",
+      "location": "191",
+      "sha256": "95a117e41aaccef006889596f4d1189e39ca1e881d85ff7c6c5e1337ced4a349",
+      "valid": true
+    },
+    {
+      "id": "06",
+      "tree": "F",
+      "path": "src/components/dialog/PluginMarketSettingDialog.vue",
+      "location": "111",
+      "sha256": "95a117e41aaccef006889596f4d1189e39ca1e881d85ff7c6c5e1337ced4a349",
+      "valid": true
+    },
+    {
+      "id": "06",
+      "tree": "B",
+      "path": "app/api/endpoints/system.py",
+      "location": "892",
+      "sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "valid": true
+    },
+    {
+      "id": "06",
+      "tree": "B",
+      "path": "app/core/config.py",
+      "location": "859",
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "valid": true
+    },
+    {
+      "id": "06",
+      "tree": "B",
+      "path": "app/core/config.py",
+      "location": "904",
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "valid": true
+    },
+    {
+      "id": "06",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "925",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "06",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1572",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "06",
+      "tree": "B",
+      "path": "app/core/config.py",
+      "location": "873",
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "valid": true
+    },
+    {
+      "id": "06",
+      "tree": "F",
+      "path": "src/components/dialog/PluginMarketSettingDialog.vue",
+      "location": "124",
+      "sha256": "95a117e41aaccef006889596f4d1189e39ca1e881d85ff7c6c5e1337ced4a349",
+      "valid": true
+    },
+    {
+      "id": "07",
+      "tree": "F",
+      "path": "src/components/dialog/PluginMarketSettingDialog.vue",
+      "location": "142",
+      "sha256": "95a117e41aaccef006889596f4d1189e39ca1e881d85ff7c6c5e1337ced4a349",
+      "valid": true
+    },
+    {
+      "id": "07",
+      "tree": "B",
+      "path": "app/api/endpoints/system.py",
+      "location": "847",
+      "sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "valid": true
+    },
+    {
+      "id": "07",
+      "tree": "B",
+      "path": "app/api/endpoints/system.py",
+      "location": "122",
+      "sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "valid": true
+    },
+    {
+      "id": "07",
+      "tree": "B",
+      "path": "app/helper/market.py",
+      "location": "6",
+      "sha256": "1e6b9ee910c2a28b90db03c26e4ebdc57e7f84d8f7b0c3bb52fe5a94b245c59a",
+      "valid": true
+    },
+    {
+      "id": "07",
+      "tree": "B",
+      "path": "app/helper/market.py",
+      "location": "51",
+      "sha256": "1e6b9ee910c2a28b90db03c26e4ebdc57e7f84d8f7b0c3bb52fe5a94b245c59a",
+      "valid": true
+    },
+    {
+      "id": "07",
+      "tree": "B",
+      "path": "app/helper/market.py",
+      "location": "84",
+      "sha256": "1e6b9ee910c2a28b90db03c26e4ebdc57e7f84d8f7b0c3bb52fe5a94b245c59a",
+      "valid": true
+    },
+    {
+      "id": "07",
+      "tree": "B",
+      "path": "app/api/endpoints/system.py",
+      "location": "816",
+      "sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "valid": true
+    },
+    {
+      "id": "07",
+      "tree": "B",
+      "path": "app/api/endpoints/system.py",
+      "location": "835",
+      "sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "valid": true
+    },
+    {
+      "id": "07",
+      "tree": "B",
+      "path": "app/helper/market.py",
+      "location": "17",
+      "sha256": "1e6b9ee910c2a28b90db03c26e4ebdc57e7f84d8f7b0c3bb52fe5a94b245c59a",
+      "valid": true
+    },
+    {
+      "id": "08",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "788",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "08",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "813",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "08",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1725",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "08",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "487",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "08",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1608",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "08",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1375",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "08",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "343",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "08",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "827",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "08",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1640",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "08",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1526",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "09",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "363",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "09",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1558",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "09",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1566",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "09",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1592",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "09",
+      "tree": "B",
+      "path": "app/utils/string.py",
+      "location": "808",
+      "sha256": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+      "valid": true
+    },
+    {
+      "id": "09",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1701",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "09",
+      "tree": "F",
+      "path": "src/components/cards/PluginCard.vue",
+      "location": "232",
+      "sha256": "9ced26a58fb27d1d9ba99cf9dd124f96bfe5ecbc3d8505224066ca6b2df4acf4",
+      "valid": true
+    },
+    {
+      "id": "09",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1652",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "09",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "720",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "10",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "931",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "10",
+      "tree": "B",
+      "path": "app/scheduler.py",
+      "location": "488",
+      "sha256": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+      "valid": true
+    },
+    {
+      "id": "10",
+      "tree": "B",
+      "path": "app/scheduler.py",
+      "location": "707",
+      "sha256": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+      "valid": true
+    },
+    {
+      "id": "10",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "487",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "10",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "387",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "10",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1725",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "10",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "827",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "10",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1543",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "10",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1785",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "10",
+      "tree": "B",
+      "path": "app/core/cache.py",
+      "location": "1125",
+      "sha256": "fbcd0a557be024741891b539321fd06d09e0025c15f699d3bfdab5cebec2a91d",
+      "valid": true
+    },
+    {
+      "id": "10",
+      "tree": "B",
+      "path": "app/core/cache.py",
+      "location": "1240",
+      "sha256": "fbcd0a557be024741891b539321fd06d09e0025c15f699d3bfdab5cebec2a91d",
+      "valid": true
+    },
+    {
+      "id": "10",
+      "tree": "B",
+      "path": "app/core/cache.py",
+      "location": "1294",
+      "sha256": "fbcd0a557be024741891b539321fd06d09e0025c15f699d3bfdab5cebec2a91d",
+      "valid": true
+    },
+    {
+      "id": "11",
+      "tree": "F",
+      "path": "src/components/dialog/PluginMarketDetailDialog.vue",
+      "location": "100",
+      "sha256": "70b8f7ced51f2a5d645b1f320251e6f6433a149c145631d0cfe49950092e137c",
+      "valid": true
+    },
+    {
+      "id": "11",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "576",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "11",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "620",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "11",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "2805",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "11",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "614",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "11",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "641",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "11",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "72",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "11",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "223",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "11",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "104",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "11",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "621",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "12",
+      "tree": "F",
+      "path": "src/components/dialog/PluginVersionHistoryDialog.vue",
+      "location": "48",
+      "sha256": "20ea89ba772dfcc943be5ef13bf9bea1004b79b9dc54c907b2075b9cccbc4a6f",
+      "valid": true
+    },
+    {
+      "id": "12",
+      "tree": "F",
+      "path": "src/components/dialog/PluginVersionHistoryDialog.vue",
+      "location": "102",
+      "sha256": "20ea89ba772dfcc943be5ef13bf9bea1004b79b9dc54c907b2075b9cccbc4a6f",
+      "valid": true
+    },
+    {
+      "id": "12",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "428",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "12",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "418",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "12",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "678",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "12",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "591",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "12",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "440",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "12",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "462",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "12",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "295",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "12",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1375",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "12",
+      "tree": "F",
+      "path": "src/components/misc/VersionHistory.vue",
+      "location": "1",
+      "sha256": "fb26d8ed0c31a618c2b4565bf9b9b4d7cf9d3c3732abfd5be345d1b33ce09cde",
+      "valid": true
+    },
+    {
+      "id": "12",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "91",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "160",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "903",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1652",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "697",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "F",
+      "path": "src/components/cards/PluginCard.vue",
+      "location": "222",
+      "sha256": "9ced26a58fb27d1d9ba99cf9dd124f96bfe5ecbc3d8505224066ca6b2df4acf4",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "2842",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "1762",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "1494",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "106",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "2847",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "1576",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "1642",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "app/core/config.py",
+      "location": "1154",
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "app/core/config.py",
+      "location": "1166",
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "version.py",
+      "location": "1",
+      "sha256": "eee2f1420ca9ab7af63226cfaaf4f7eea4de246c2ae422d0a527feff3b5bcb31",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "B",
+      "path": "requirements.in",
+      "location": "71",
+      "sha256": "060c85ee9a2023df9216f255b0a8deac5771b304ef2705950f694045be99aab1",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "F",
+      "path": "src/views/setting/AccountSettingSystem.vue",
+      "location": "1101",
+      "sha256": "5e5d9eeefda96a706a9e16a28cd310fa2b212a18db7df808f56945b50891c2b1",
+      "valid": true
+    },
+    {
+      "id": "13",
+      "tree": "F",
+      "path": "src/views/setting/AccountSettingSystem.vue",
+      "location": "2081",
+      "sha256": "5e5d9eeefda96a706a9e16a28cd310fa2b212a18db7df808f56945b50891c2b1",
+      "valid": true
+    },
+    {
+      "id": "14",
+      "tree": "F",
+      "path": "src/components/cards/PluginCard.vue",
+      "location": "222",
+      "sha256": "9ced26a58fb27d1d9ba99cf9dd124f96bfe5ecbc3d8505224066ca6b2df4acf4",
+      "valid": true
+    },
+    {
+      "id": "14",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "827",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "14",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "2805",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "14",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "602",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "14",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "654",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "14",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "776",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "14",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "619",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "14",
+      "tree": "F",
+      "path": "src/components/cards/PluginCard.vue",
+      "location": "242",
+      "sha256": "9ced26a58fb27d1d9ba99cf9dd124f96bfe5ecbc3d8505224066ca6b2df4acf4",
+      "valid": true
+    },
+    {
+      "id": "14",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "104",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "14",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "591",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "15",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "933",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "15",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1905",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "15",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "2061",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "15",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "2139",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "16",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "739",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "16",
+      "tree": "B",
+      "path": "app/schemas/event.py",
+      "location": "67",
+      "sha256": "d5134476edc76096098b85ee32d2f96eb5db2441c873c80729a46b91386687d6",
+      "valid": true
+    },
+    {
+      "id": "16",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "815",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "17",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "992",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "17",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "634",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "17",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "183",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "18",
+      "tree": "F",
+      "path": "src/views/setting/AccountSettingSystem.vue",
+      "location": "2358",
+      "sha256": "5e5d9eeefda96a706a9e16a28cd310fa2b212a18db7df808f56945b50891c2b1",
+      "valid": true
+    },
+    {
+      "id": "18",
+      "tree": "F",
+      "path": "src/views/setting/AccountSettingSystem.vue",
+      "location": "681",
+      "sha256": "5e5d9eeefda96a706a9e16a28cd310fa2b212a18db7df808f56945b50891c2b1",
+      "valid": true
+    },
+    {
+      "id": "18",
+      "tree": "B",
+      "path": "app/api/endpoints/system.py",
+      "location": "731",
+      "sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "valid": true
+    },
+    {
+      "id": "18",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "209",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "18",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "252",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "18",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1462",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "18",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "313",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "18",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "725",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "18",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "747",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "18",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "289",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "18",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "323",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "18",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "729",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "18",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1574",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "19",
+      "tree": "F",
+      "path": "src/views/setting/AccountSettingSystem.vue",
+      "location": "2383",
+      "sha256": "5e5d9eeefda96a706a9e16a28cd310fa2b212a18db7df808f56945b50891c2b1",
+      "valid": true
+    },
+    {
+      "id": "19",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "289",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "19",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "335",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "19",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "582",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "19",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "543",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "19",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "641",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "19",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "363",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "19",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "320",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "19",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "421",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "20",
+      "tree": "B",
+      "path": "app/startup/lifecycle.py",
+      "location": "73",
+      "sha256": "a45910b15c78d90d86b8415ded20edf2c9610ee0378ed32b53265e1fb4c3b386",
+      "valid": true
+    },
+    {
+      "id": "20",
+      "tree": "B",
+      "path": "app/startup/lifecycle.py",
+      "location": "41",
+      "sha256": "a45910b15c78d90d86b8415ded20edf2c9610ee0378ed32b53265e1fb4c3b386",
+      "valid": true
+    },
+    {
+      "id": "20",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "690",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "20",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1495",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "20",
+      "tree": "B",
+      "path": "app/startup/plugins_initializer.py",
+      "location": "6",
+      "sha256": "66824a0d94d96e2081d22a434ab49ca9499baab60cafe1410f71bd699353d8ed",
+      "valid": true
+    },
+    {
+      "id": "20",
+      "tree": "B",
+      "path": "app/startup/lifecycle.py",
+      "location": "49",
+      "sha256": "a45910b15c78d90d86b8415ded20edf2c9610ee0378ed32b53265e1fb4c3b386",
+      "valid": true
+    },
+    {
+      "id": "20",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "712",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "20",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "755",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "20",
+      "tree": "B",
+      "path": "app/startup/lifecycle.py",
+      "location": "45",
+      "sha256": "a45910b15c78d90d86b8415ded20edf2c9610ee0378ed32b53265e1fb4c3b386",
+      "valid": true
+    },
+    {
+      "id": "20",
+      "tree": "B",
+      "path": "app/startup/lifecycle.py",
+      "location": "106",
+      "sha256": "a45910b15c78d90d86b8415ded20edf2c9610ee0378ed32b53265e1fb4c3b386",
+      "valid": true
+    },
+    {
+      "id": "20",
+      "tree": "B",
+      "path": "app/startup/plugins_initializer.py",
+      "location": "35",
+      "sha256": "66824a0d94d96e2081d22a434ab49ca9499baab60cafe1410f71bd699353d8ed",
+      "valid": true
+    },
+    {
+      "id": "21",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "918",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "21",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "1738",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "21",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "939",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "21",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "602",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "21",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "967",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "21",
+      "tree": "B",
+      "path": "app/chain/system.py",
+      "location": "59",
+      "sha256": "4522008f452ce98c1089c07fde49431f7a1a2ddb55609176c2f03701cdf05472",
+      "valid": true
+    },
+    {
+      "id": "21",
+      "tree": "B",
+      "path": "app/chain/system.py",
+      "location": "53",
+      "sha256": "4522008f452ce98c1089c07fde49431f7a1a2ddb55609176c2f03701cdf05472",
+      "valid": true
+    },
+    {
+      "id": "21",
+      "tree": "B",
+      "path": "app/chain/system.py",
+      "location": "109",
+      "sha256": "4522008f452ce98c1089c07fde49431f7a1a2ddb55609176c2f03701cdf05472",
+      "valid": true
+    },
+    {
+      "id": "21",
+      "tree": "B",
+      "path": "app/startup/lifecycle.py",
+      "location": "89",
+      "sha256": "a45910b15c78d90d86b8415ded20edf2c9610ee0378ed32b53265e1fb4c3b386",
+      "valid": true
+    },
+    {
+      "id": "21",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "993",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "21",
+      "tree": "B",
+      "path": "app/helper/plugin.py",
+      "location": "1773",
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "valid": true
+    },
+    {
+      "id": "21",
+      "tree": "B",
+      "path": "app/chain/system.py",
+      "location": "132",
+      "sha256": "4522008f452ce98c1089c07fde49431f7a1a2ddb55609176c2f03701cdf05472",
+      "valid": true
+    },
+    {
+      "id": "22",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1852",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "22",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "577",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "22",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "98",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "22",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1676",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "22",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1375",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "22",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1876",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "22",
+      "tree": "B",
+      "path": "app/utils/crypto.py",
+      "location": "49",
+      "sha256": "0843ba824ae7ddd2ce093442fc39cc53ee6c02f272f02f37282b4c359b8e6310",
+      "valid": true
+    },
+    {
+      "id": "22",
+      "tree": "B",
+      "path": "app/scheduler.py",
+      "location": "1528",
+      "sha256": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+      "valid": true
+    },
+    {
+      "id": "22",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1890",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "F",
+      "path": "src/views/setting/AccountSettingSystem.vue",
+      "location": "1805",
+      "sha256": "5e5d9eeefda96a706a9e16a28cd310fa2b212a18db7df808f56945b50891c2b1",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "858",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "903",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "598",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "B",
+      "path": "app/helper/server.py",
+      "location": "549",
+      "sha256": "d71d14373d8984390c6b7a6669ce6f6ffc4258fcf5f163ee189c52c8d3b0d47f",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "B",
+      "path": "app/helper/server.py",
+      "location": "51",
+      "sha256": "d71d14373d8984390c6b7a6669ce6f6ffc4258fcf5f163ee189c52c8d3b0d47f",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "B",
+      "path": "app/helper/server.py",
+      "location": "326",
+      "sha256": "d71d14373d8984390c6b7a6669ce6f6ffc4258fcf5f163ee189c52c8d3b0d47f",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "B",
+      "path": "app/helper/server.py",
+      "location": "1440",
+      "sha256": "d71d14373d8984390c6b7a6669ce6f6ffc4258fcf5f163ee189c52c8d3b0d47f",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "B",
+      "path": "app/helper/server.py",
+      "location": "473",
+      "sha256": "d71d14373d8984390c6b7a6669ce6f6ffc4258fcf5f163ee189c52c8d3b0d47f",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "B",
+      "path": "app/helper/server.py",
+      "location": "485",
+      "sha256": "d71d14373d8984390c6b7a6669ce6f6ffc4258fcf5f163ee189c52c8d3b0d47f",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "B",
+      "path": "app/core/config.py",
+      "location": "441",
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "B",
+      "path": "app/helper/server.py",
+      "location": "564",
+      "sha256": "d71d14373d8984390c6b7a6669ce6f6ffc4258fcf5f163ee189c52c8d3b0d47f",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "608",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "F",
+      "path": "src/components/cards/PluginAppCard.vue",
+      "location": "223",
+      "sha256": "ec8bc0755a4623d32eda8735d0dae48e4b006f7c50f43af2a63e50c9410a7a98",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "B",
+      "path": "app/utils/system.py",
+      "location": "997",
+      "sha256": "3477c8585dd955bcb42f7180e5fabaae05c528af8ddb0cbae0935dbdb0c031db",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "B",
+      "path": "app/core/config.py",
+      "location": "426",
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "valid": true
+    },
+    {
+      "id": "23",
+      "tree": "B",
+      "path": "app/core/config.py",
+      "location": "959",
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "valid": true
+    },
+    {
+      "id": "24",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "495",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "24",
+      "tree": "F",
+      "path": "src/components/cards/PluginAppCard.vue",
+      "location": "223",
+      "sha256": "ec8bc0755a4623d32eda8735d0dae48e4b006f7c50f43af2a63e50c9410a7a98",
+      "valid": true
+    },
+    {
+      "id": "24",
+      "tree": "B",
+      "path": "app/schemas/plugin.py",
+      "location": "98",
+      "sha256": "d57a96c4ab5ec4525ce56e40dccffa93da719626449ed9bf7be80f47809e0f1a",
+      "valid": true
+    },
+    {
+      "id": "24",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "531",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "24",
+      "tree": "B",
+      "path": "app/helper/server.py",
+      "location": "532",
+      "sha256": "d71d14373d8984390c6b7a6669ce6f6ffc4258fcf5f163ee189c52c8d3b0d47f",
+      "valid": true
+    },
+    {
+      "id": "24",
+      "tree": "B",
+      "path": "app/helper/server.py",
+      "location": "425",
+      "sha256": "d71d14373d8984390c6b7a6669ce6f6ffc4258fcf5f163ee189c52c8d3b0d47f",
+      "valid": true
+    },
+    {
+      "id": "24",
+      "tree": "B",
+      "path": "app/helper/server.py",
+      "location": "85",
+      "sha256": "d71d14373d8984390c6b7a6669ce6f6ffc4258fcf5f163ee189c52c8d3b0d47f",
+      "valid": true
+    },
+    {
+      "id": "24",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "551",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "24",
+      "tree": "B",
+      "path": "app/schemas/plugin.py",
+      "location": "109",
+      "sha256": "d57a96c4ab5ec4525ce56e40dccffa93da719626449ed9bf7be80f47809e0f1a",
+      "valid": true
+    },
+    {
+      "id": "24",
+      "tree": "B",
+      "path": "app/helper/server.py",
+      "location": "497",
+      "sha256": "d71d14373d8984390c6b7a6669ce6f6ffc4258fcf5f163ee189c52c8d3b0d47f",
+      "valid": true
+    },
+    {
+      "id": "24",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "555",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "24",
+      "tree": "F",
+      "path": "src/api/index.ts",
+      "location": "8",
+      "sha256": "9e746e31fffe23500b3d92c4e66ee95824a6d39481d1909058c158503e5408e8",
+      "valid": true
+    },
+    {
+      "id": "25",
+      "tree": "F",
+      "path": "src/components/cards/PluginCard.vue",
+      "location": "278",
+      "sha256": "9ced26a58fb27d1d9ba99cf9dd124f96bfe5ecbc3d8505224066ca6b2df4acf4",
+      "valid": true
+    },
+    {
+      "id": "25",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "789",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "25",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "343",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "25",
+      "tree": "F",
+      "path": "src/components/cards/PluginCard.vue",
+      "location": "359",
+      "sha256": "9ced26a58fb27d1d9ba99cf9dd124f96bfe5ecbc3d8505224066ca6b2df4acf4",
+      "valid": true
+    },
+    {
+      "id": "26",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "718",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "26",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "877",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "26",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "560",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "26",
+      "tree": "B",
+      "path": "app/api/endpoints/user.py",
+      "location": "125",
+      "sha256": "8e759777299137f52965be75c1319396f4a144f26a4bd26cca7971dc698dc1b9",
+      "valid": true
+    },
+    {
+      "id": "26",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "86",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "26",
+      "tree": "F",
+      "path": "src/composables/useKeepAliveRefresh.ts",
+      "location": "31",
+      "sha256": "dfda221da3c9ce977384dbf16c4ba5c28c513badcac67776f537904c9299d335",
+      "valid": true
+    },
+    {
+      "id": "26",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "1012",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "27",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "1120",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "27",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "630",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "27",
+      "tree": "F",
+      "path": "src/views/plugin/PluginCardListView.vue",
+      "location": "1386",
+      "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+      "valid": true
+    },
+    {
+      "id": "27",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "842",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "27",
+      "tree": "F",
+      "path": "src/components/cards/PluginMixedSortCard.vue",
+      "location": "114",
+      "sha256": "3c322fc762fdfe2a10127ed45ba29015c63f2c0bbcbd786f211e0f6e0a29075e",
+      "valid": true
+    },
+    {
+      "id": "27",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "1041",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "27",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "1092",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "28",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "648",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "28",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "783",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "28",
+      "tree": "F",
+      "path": "src/components/dialog/PluginConfigDialog.vue",
+      "location": "86",
+      "sha256": "4a168951a10e67add31733f0e791cecd6a09d73ba0d17fd0b9acfd018cbcbbbe",
+      "valid": true
+    },
+    {
+      "id": "29",
+      "tree": "F",
+      "path": "src/components/render/FormRender.vue",
+      "location": "16",
+      "sha256": "8a2641a7cb06242d6a43a80939f9bccb2a00948454f62347ab0c6cf990a41ccc",
+      "valid": true
+    },
+    {
+      "id": "29",
+      "tree": "F",
+      "path": "src/components/render/FormRender.vue",
+      "location": "114",
+      "sha256": "8a2641a7cb06242d6a43a80939f9bccb2a00948454f62347ab0c6cf990a41ccc",
+      "valid": true
+    },
+    {
+      "id": "29",
+      "tree": "F",
+      "path": "src/components/dialog/PluginConfigDialog.vue",
+      "location": "120",
+      "sha256": "4a168951a10e67add31733f0e791cecd6a09d73ba0d17fd0b9acfd018cbcbbbe",
+      "valid": true
+    },
+    {
+      "id": "29",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "975",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "29",
+      "tree": "F",
+      "path": "src/components/cards/PluginCard.vue",
+      "location": "161",
+      "sha256": "9ced26a58fb27d1d9ba99cf9dd124f96bfe5ecbc3d8505224066ca6b2df4acf4",
+      "valid": true
+    },
+    {
+      "id": "30",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "680",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "30",
+      "tree": "F",
+      "path": "src/components/dialog/PluginDataDialog.vue",
+      "location": "79",
+      "sha256": "f947383c3894e23251738d0249e5053e0e016268f6726d621f6f31db3d12e4e5",
+      "valid": true
+    },
+    {
+      "id": "30",
+      "tree": "F",
+      "path": "src/components/render/PageRender.vue",
+      "location": "35",
+      "sha256": "1c185e7ea49e777d90195aff6bf749edf271ba16a267d9e6352d839d115fa1f6",
+      "valid": true
+    },
+    {
+      "id": "31",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1051",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "31",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "764",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "31",
+      "tree": "F",
+      "path": "src/utils/federationLoader.ts",
+      "location": "45",
+      "sha256": "d68d10be26aad74bcafddcfeb0d348238df9b215c713eb6bb42c22cca98df866",
+      "valid": true
+    },
+    {
+      "id": "31",
+      "tree": "F",
+      "path": "src/components/dialog/PluginConfigDialog.vue",
+      "location": "188",
+      "sha256": "4a168951a10e67add31733f0e791cecd6a09d73ba0d17fd0b9acfd018cbcbbbe",
+      "valid": true
+    },
+    {
+      "id": "31",
+      "tree": "F",
+      "path": "src/pages/plugin-app.vue",
+      "location": "14",
+      "sha256": "bab9526bef8961c07b0435014b32be2a805f30841117d36f95e43e9600662cea",
+      "valid": true
+    },
+    {
+      "id": "32",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1191",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "32",
+      "tree": "F",
+      "path": "src/pages/dashboard.vue",
+      "location": "662",
+      "sha256": "a6fc3edf8937653b0d3f83e98b3fed44641de205beef226b661493dd4fd41c76",
+      "valid": true
+    },
+    {
+      "id": "32",
+      "tree": "F",
+      "path": "src/pages/dashboard.vue",
+      "location": "733",
+      "sha256": "a6fc3edf8937653b0d3f83e98b3fed44641de205beef226b661493dd4fd41c76",
+      "valid": true
+    },
+    {
+      "id": "32",
+      "tree": "F",
+      "path": "src/components/misc/DashboardElement.vue",
+      "location": "207",
+      "sha256": "02be8bf4d211b94c0c6c7a6f7cc057707d98c35b17c386f07e5f56224e269e5c",
+      "valid": true
+    },
+    {
+      "id": "32",
+      "tree": "F",
+      "path": "src/components/render/DashboardRender.vue",
+      "location": "11",
+      "sha256": "078d0f0fb8573ab0ed0b0c7e49d455cc587e74c11ece45c556f2166d211ca31e",
+      "valid": true
+    },
+    {
+      "id": "33",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1133",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "33",
+      "tree": "F",
+      "path": "src/stores/pluginSidebarNav.ts",
+      "location": "22",
+      "sha256": "119f27461730d5d7bad0f96bd4ba47f02c94f702e0b592a2bc2ef7d66fecb86f",
+      "valid": true
+    },
+    {
+      "id": "33",
+      "tree": "F",
+      "path": "src/utils/pluginSidebarNav.ts",
+      "location": "15",
+      "sha256": "b6914b69c3017836fd1fa9f615bdcc2df5d8fcc46dbd4b39ee00065a828b7b3d",
+      "valid": true
+    },
+    {
+      "id": "33",
+      "tree": "F",
+      "path": "src/layouts/components/DefaultLayout.vue",
+      "location": "233",
+      "sha256": "1de11dbcc5d79ba752aa4705abac483997411606041a0322f0d9fa7c36e8a283",
+      "valid": true
+    },
+    {
+      "id": "33",
+      "tree": "F",
+      "path": "src/layouts/components/QuickAccess.vue",
+      "location": "159",
+      "sha256": "75c8f664b70f361fd8c4fb5cd2475a4027ada9c754fefc9f331cf54ffed486ff",
+      "valid": true
+    },
+    {
+      "id": "33",
+      "tree": "F",
+      "path": "src/composables/useRecentPlugins.ts",
+      "location": "58",
+      "sha256": "f6b4b2242e146aa95fd602539614549b326256b217642a5cb69243a8c81a19d8",
+      "valid": true
+    },
+    {
+      "id": "33",
+      "tree": "F",
+      "path": "src/composables/usePWA.ts",
+      "location": "62",
+      "sha256": "57727f1967ab22e7dda38724099f3ec18d0513bc428a528b920817861e3443df",
+      "valid": true
+    },
+    {
+      "id": "34",
+      "tree": "B",
+      "path": "app/log.py",
+      "location": "372",
+      "sha256": "f79dd36510403966a3989fbbfcc315eedde943bee6665693d4f7bd1c5a4c8ad6",
+      "valid": true
+    },
+    {
+      "id": "34",
+      "tree": "B",
+      "path": "app/log.py",
+      "location": "494",
+      "sha256": "f79dd36510403966a3989fbbfcc315eedde943bee6665693d4f7bd1c5a4c8ad6",
+      "valid": true
+    },
+    {
+      "id": "34",
+      "tree": "F",
+      "path": "src/components/dialog/PluginLogDialog.vue",
+      "location": "38",
+      "sha256": "9e5f691382f21a4ba12056c05df0ca81a8a232c5bd708740e1efa2f98e0e4592",
+      "valid": true
+    },
+    {
+      "id": "34",
+      "tree": "F",
+      "path": "src/views/system/LoggingView.vue",
+      "location": "398",
+      "sha256": "e5b6b5434d823c16c02d57c4524b5c5e261fb88b5c5aeff5bf44797d5bf1597f",
+      "valid": true
+    },
+    {
+      "id": "34",
+      "tree": "F",
+      "path": "src/views/system/LoggingView.vue",
+      "location": "537",
+      "sha256": "e5b6b5434d823c16c02d57c4524b5c5e261fb88b5c5aeff5bf44797d5bf1597f",
+      "valid": true
+    },
+    {
+      "id": "34",
+      "tree": "B",
+      "path": "app/api/endpoints/system.py",
+      "location": "953",
+      "sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "valid": true
+    },
+    {
+      "id": "34",
+      "tree": "B",
+      "path": "app/api/endpoints/system.py",
+      "location": "398",
+      "sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "valid": true
+    },
+    {
+      "id": "34",
+      "tree": "B",
+      "path": "app/api/endpoints/system.py",
+      "location": "360",
+      "sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "valid": true
+    },
+    {
+      "id": "35",
+      "tree": "B",
+      "path": "app/core/security.py",
+      "location": "254",
+      "sha256": "7c2f1920295d13a40979acc2f74554bdbb94010663909a281c0904d6e3db5040",
+      "valid": true
+    },
+    {
+      "id": "35",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "873",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "35",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "130",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "35",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "183",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "35",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "253",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "35",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "764",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    },
+    {
+      "id": "36",
+      "tree": "B",
+      "path": "app/chain/download.py",
+      "location": "1020",
+      "sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+      "valid": true
+    },
+    {
+      "id": "36",
+      "tree": "B",
+      "path": "app/core/event.py",
+      "location": "176",
+      "sha256": "7aec5ea981f14f582b9a2946eb2184814b26c530a6b8494ce9a776f83060c98d",
+      "valid": true
+    },
+    {
+      "id": "36",
+      "tree": "B",
+      "path": "app/core/event.py",
+      "location": "433",
+      "sha256": "7aec5ea981f14f582b9a2946eb2184814b26c530a6b8494ce9a776f83060c98d",
+      "valid": true
+    },
+    {
+      "id": "36",
+      "tree": "B",
+      "path": "app/core/event.py",
+      "location": "753",
+      "sha256": "7aec5ea981f14f582b9a2946eb2184814b26c530a6b8494ce9a776f83060c98d",
+      "valid": true
+    },
+    {
+      "id": "36",
+      "tree": "B",
+      "path": "app/api/endpoints/subscribe.py",
+      "location": "231",
+      "sha256": "ee93ba32748abbac7ef6f060ad3eeeb05a5681b5bcdd7b691270f6bb7e8ab469",
+      "valid": true
+    },
+    {
+      "id": "36",
+      "tree": "B",
+      "path": "app/api/endpoints/subscribe.py",
+      "location": "855",
+      "sha256": "ee93ba32748abbac7ef6f060ad3eeeb05a5681b5bcdd7b691270f6bb7e8ab469",
+      "valid": true
+    },
+    {
+      "id": "36",
+      "tree": "B",
+      "path": "app/schemas/event.py",
+      "location": "620",
+      "sha256": "d5134476edc76096098b85ee32d2f96eb5db2441c873c80729a46b91386687d6",
+      "valid": true
+    },
+    {
+      "id": "36",
+      "tree": "B",
+      "path": "app/db/models/subscribe.py",
+      "location": "11",
+      "sha256": "efa92d87ca839f42e2f2c38f591dc0635c21ce93fe5cb5120cd0d261e694a67e",
+      "valid": true
+    },
+    {
+      "id": "37",
+      "tree": "B",
+      "path": "app/core/event.py",
+      "location": "375",
+      "sha256": "7aec5ea981f14f582b9a2946eb2184814b26c530a6b8494ce9a776f83060c98d",
+      "valid": true
+    },
+    {
+      "id": "37",
+      "tree": "B",
+      "path": "app/chain/download.py",
+      "location": "824",
+      "sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+      "valid": true
+    },
+    {
+      "id": "37",
+      "tree": "B",
+      "path": "app/chain/download.py",
+      "location": "1186",
+      "sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+      "valid": true
+    },
+    {
+      "id": "38",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "905",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "38",
+      "tree": "B",
+      "path": "app/scheduler.py",
+      "location": "1338",
+      "sha256": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+      "valid": true
+    },
+    {
+      "id": "38",
+      "tree": "B",
+      "path": "app/scheduler.py",
+      "location": "975",
+      "sha256": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+      "valid": true
+    },
+    {
+      "id": "39",
+      "tree": "B",
+      "path": "app/api/endpoints/system.py",
+      "location": "1343",
+      "sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "valid": true
+    },
+    {
+      "id": "39",
+      "tree": "B",
+      "path": "app/scheduler.py",
+      "location": "774",
+      "sha256": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+      "valid": true
+    },
+    {
+      "id": "39",
+      "tree": "B",
+      "path": "app/scheduler.py",
+      "location": "808",
+      "sha256": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+      "valid": true
+    },
+    {
+      "id": "40",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "844",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "40",
+      "tree": "B",
+      "path": "app/command.py",
+      "location": "156",
+      "sha256": "e178d40ba65ee3fdd9fdce9f198f6a4433c8ddd8e3c73496bd843a40a4e7af3f",
+      "valid": true
+    },
+    {
+      "id": "40",
+      "tree": "B",
+      "path": "app/command.py",
+      "location": "269",
+      "sha256": "e178d40ba65ee3fdd9fdce9f198f6a4433c8ddd8e3c73496bd843a40a4e7af3f",
+      "valid": true
+    },
+    {
+      "id": "40",
+      "tree": "B",
+      "path": "app/chain/message.py",
+      "location": "349",
+      "sha256": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+      "valid": true
+    },
+    {
+      "id": "41",
+      "tree": "B",
+      "path": "app/helper/interaction.py",
+      "location": "498",
+      "sha256": "2921d1a9f5931206f8b30fe58d36cc7e502f3e314110e8448680860643ff8457",
+      "valid": true
+    },
+    {
+      "id": "41",
+      "tree": "B",
+      "path": "app/helper/interaction.py",
+      "location": "589",
+      "sha256": "2921d1a9f5931206f8b30fe58d36cc7e502f3e314110e8448680860643ff8457",
+      "valid": true
+    },
+    {
+      "id": "41",
+      "tree": "B",
+      "path": "app/chain/message.py",
+      "location": "482",
+      "sha256": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+      "valid": true
+    },
+    {
+      "id": "42",
+      "tree": "B",
+      "path": "app/chain/__init__.py",
+      "location": "1631",
+      "sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+      "valid": true
+    },
+    {
+      "id": "42",
+      "tree": "B",
+      "path": "app/chain/__init__.py",
+      "location": "63",
+      "sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+      "valid": true
+    },
+    {
+      "id": "42",
+      "tree": "B",
+      "path": "app/helper/message.py",
+      "location": "710",
+      "sha256": "c2b3626b9efb4de5e698a67ebd4624d8f684f8618a29a925d8c8d5001f052e89",
+      "valid": true
+    },
+    {
+      "id": "43",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "933",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "43",
+      "tree": "B",
+      "path": "app/chain/__init__.py",
+      "location": "224,298,470",
+      "sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+      "valid": true
+    },
+    {
+      "id": "44",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "958",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "44",
+      "tree": "B",
+      "path": "app/workflow/actions/invoke_plugin.py",
+      "location": "48",
+      "sha256": "29177ced9afae6e5531098b8c1b423719115b327745a06857972b61f0dbc3388",
+      "valid": true
+    },
+    {
+      "id": "44",
+      "tree": "B",
+      "path": "app/schemas/workflow.py",
+      "location": "74",
+      "sha256": "605d8c1b0532779e609ad2fa891cccdc5703cc95eb592fe500bca074e2faae42",
+      "valid": true
+    },
+    {
+      "id": "45",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "990",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "45",
+      "tree": "B",
+      "path": "app/agent/tools/factory.py",
+      "location": "271",
+      "sha256": "b1ad2e55f6ce64573ab99b75602386517f6a11db471fa3121bdc04c109a70190",
+      "valid": true
+    },
+    {
+      "id": "45",
+      "tree": "B",
+      "path": "app/agent/tools/manager.py",
+      "location": "270",
+      "sha256": "1c6f34242a227d02ce3c3c4560380110aa9d1b0f425b920572178d8d095d67db",
+      "valid": true
+    },
+    {
+      "id": "45",
+      "tree": "B",
+      "path": "app/agent/tools/base.py",
+      "location": "351",
+      "sha256": "3297856882dbaa59828a274d7fc967396a8784a88a842e2d9a510e8fb8fa6e08",
+      "valid": true
+    },
+    {
+      "id": "46",
+      "tree": "B",
+      "path": "app/agent/tools/factory.py",
+      "location": "166",
+      "sha256": "b1ad2e55f6ce64573ab99b75602386517f6a11db471fa3121bdc04c109a70190",
+      "valid": true
+    },
+    {
+      "id": "46",
+      "tree": "B",
+      "path": "app/agent/tools/factory.py",
+      "location": "260",
+      "sha256": "b1ad2e55f6ce64573ab99b75602386517f6a11db471fa3121bdc04c109a70190",
+      "valid": true
+    },
+    {
+      "id": "46",
+      "tree": "B",
+      "path": "app/agent/tools/impl/update_plugin_config.py",
+      "location": "64",
+      "sha256": "4e47689642358ac12df385656338066e57b2edaf84842d89dd81d841938ec6f4",
+      "valid": true
+    },
+    {
+      "id": "46",
+      "tree": "B",
+      "path": "app/agent/tools/impl/_plugin_tool_utils.py",
+      "location": "68",
+      "sha256": "96575e5dc2fe258bb05cf7e3c34df525b1653fbf2cd2432e8ab195635ff963ce",
+      "valid": true
+    },
+    {
+      "id": "47",
+      "tree": "B",
+      "path": "app/core/plugin.py",
+      "location": "1098",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "valid": true
+    },
+    {
+      "id": "47",
+      "tree": "B",
+      "path": "app/core/auth.py",
+      "location": "32",
+      "sha256": "7aecb867d6b1c28618551324173bb86c214fb97bcac346ea4e7389e4f8c21038",
+      "valid": true
+    },
+    {
+      "id": "47",
+      "tree": "B",
+      "path": "app/api/endpoints/auth.py",
+      "location": "54",
+      "sha256": "83ee43152492bb04dd96a22bd5cfa3731a4144a71213e672aced35e8e1e4a18b",
+      "valid": true
+    },
+    {
+      "id": "47",
+      "tree": "F",
+      "path": "src/pages/login.vue",
+      "location": "206",
+      "sha256": "cdcdba3908e89856f04d18749d5bbbe5b5f1cf109af10fe55fd8cfe8d545f131",
+      "valid": true
+    },
+    {
+      "id": "47",
+      "tree": "B",
+      "path": "app/api/endpoints/plugin.py",
+      "location": "253",
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "valid": true
+    }
+  ],
+  "errors": []
+}

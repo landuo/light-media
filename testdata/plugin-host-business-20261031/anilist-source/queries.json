@@ -1,0 +1,18 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_path": "app/modules/anilist/anilist.py",
+  "classification": "literal fixed source detail/search captured with owned invoke boundary",
+  "detail": {
+    "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+    "variables": {
+      "id": 151
+    }
+  },
+  "search": {
+    "query": "\n            query ($search: String!, $count: Int!) {\n              Page(page: 1, perPage: $count) {\n                media(search: $search, type: ANIME, sort: SEARCH_MATCH) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     }\n              }\n            }\n        ",
+    "variables": {
+      "search": "Owned",
+      "count": 20
+    }
+  }
+}

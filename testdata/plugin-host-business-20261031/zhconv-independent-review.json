@@ -1,0 +1,29 @@
+{
+  "classification": "independent read-only source implementation/provenance review plus independently executed existing wheel oracle tests",
+  "fixed_main_requirement": "requirements.in:19 zhconv-rs~=0.4.1 (compatible-series constraint, not exact artifact pin)",
+  "source_helper": "app/utils/zhconv.py convert delegates _zhconv(text,target); pyo3 source default wikitext=true",
+  "external_source_commit": "00e1e97fcf49865b49166c302651e419289fb3d1",
+  "source_files_verified": {
+    "pagerules.rs": "a4e93ee058986185f75c004c16cab66ae1e64440730ab710665b46ff9ba5e40a",
+    "converter.rs": "e4e2080004919428f9ce67da6c1eae5a7f54ef21cac2eed171c55718cb6c8f23",
+    "pyo3-lib.rs": "bebe682e7b8f71f0ccca7bdcc06c1c9ace7ea08fc99395a79407ac581fc1d38c",
+    "build.rs": "292a2b4375be75a4a3d45d22c89e90547cc014b19abf37b8dbc29102057b42e3",
+    "variant.rs": "13a253df34bf56e0b88ffaac8f153c715fefb7440a95a6880f33fc49f9801946",
+    "ZhConversion.php": "5cb0019b32bb39ec5c6e662029f90bd166f7a844efb3bc877f9be41fdd511bf2",
+    "rule.rs": "4ecb83d909f700a97e38efa999978fec76c00f3b60682867df1c9ed8366ca9d5"
+  },
+  "table_sha256": "7540c07b42c584f68a2f14e4ff666fc4cf2c9704c502c2b6e7e5db61b71b742b",
+  "pairs": 4685,
+  "oracle_sha256": "ed48a4910e4c6915157e966533ff7e733715a009f999ea211d913cd9561ca983",
+  "case_count": 6278,
+  "reviewed_algorithm": [
+    "Longest leftmost UTF8 trie and secondary tie precedence",
+    "Removed target comparison and one-rune source skip quirk",
+    "Global adds/removes and target-hans-only mapping plus regional fallback",
+    "Exact script/style/code/pre matching, nested limit10, malformed open-rule tail behavior",
+    "Rule flags, ampersand-aware semicolon split, empty source panic adapted to error, D unordered clauses deterministic contents"
+  ],
+  "test": "verification/zhconv-independent-race.log",
+  "difference_recorded": "Rust HashMap D description order deterministic Go order; only clause order normalized for marked unstable original cases; source empty-map assertion becomes ordinary error",
+  "no_product_edits": true
+}

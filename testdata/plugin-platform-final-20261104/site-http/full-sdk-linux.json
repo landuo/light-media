@@ -1,0 +1,42 @@
+{
+  "status": "passed",
+  "classification": "actual Linux App test binary and independent compiled standard SDK worker; source-controlled owned HTTP endpoints and fixed RequestUtils source-oracle wires/cookies/UA; not browser/main process evidence",
+  "roots": [
+    {
+      "name": "TestOriginalHostSiteHTTPActualSDKFixedSourceWire",
+      "seconds": 3.08
+    },
+    {
+      "name": "TestOriginalHostSiteHTTPActualSDKCredentialsCookiesAndGuards",
+      "seconds": 1.07
+    },
+    {
+      "name": "TestOriginalHostSiteHTTPActualSDKPostGuardKeepsConfirmedOutcome",
+      "seconds": 0.51
+    },
+    {
+      "name": "TestOriginalHostSiteHTTPActualSDKFixedSourceResponseCookies",
+      "seconds": 3.98
+    },
+    {
+      "name": "TestOriginalHostSiteHTTPActualSDKPrivateCredentialsAndCleanupGrant",
+      "seconds": 0.96
+    },
+    {
+      "name": "TestOriginalHostSiteHTTPActualSDKFixedSourceUserAgent",
+      "seconds": 0.97
+    }
+  ],
+  "command": "OWNED_HOST_SITE_HTTP_FIXTURE_BINARY=<owned>/site-http-worker-linux ../../native-sdk-linux.test -test.run ^TestOriginalHostSiteHTTPActualSDK -test.v",
+  "bindings": {
+    "internal/app/plugin_original_host_site_http.go": "726a0f353eab7311262f247f80fe24f934ec6a8da91ad324590d525dd25e4399",
+    "internal/app/plugin_original_host_site_http_json.go": "cdf90011d2d6acaea407241063d6da4377b952bf65e1fa44fbbb00a42b0f8ddc",
+    "internal/app/plugin_original_host_site_http_test.go": "89008f73666143d9d8f8a80b80856cf90a06902e2f9646db6fafb9bee717d481",
+    "internal/plugins/site_http_host.go": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+    "cmd/plugin-host-site-http-fixture/main.go": "614f2a8ade51fd7e708166e49592ef1143b14fdc8cdded7148c3821335c8648d",
+    "work/plugin-platform-final-20261104/proxy/native-sdk-linux.test": "7f5368cede3a6970d63a44989b6c255952f89eaf61169e30c1f25ce258a84760",
+    "work/plugin-platform-final-20261104/site-http/worker-linux": "6ab7ae0041677fe909de5b06d23ca45308df7e5071cf319a1fe6c9dd6543c845",
+    "testdata/plugin-platform-final-20261104/site-http/full-sdk-linux.log": "701889a41b7434b513b9c0c18508689fecbfe28462e5ed88d611ee935bbea096"
+  },
+  "limitation": "Binary hash is exact. Source files sampled after compile; final integration main uses root-owned independent stable pre/post closure. R8 UI facts retain original binding, no relabel."
+}

@@ -1,0 +1,143 @@
+{
+  "status": "passed",
+  "classification": "actual cmd/server + installed out-of-process standard SDK worker on owned SQLite; source expected ordinary OCR/RMT protocol and synthetic PNG; no live site/OCR challenge/provider",
+  "bindings": {
+    "server": "5770c6a3c01f77bf2929937c45d82713cf8f7149b78e2fc427d9bedce12e46a0",
+    "worker": "fb46c34e5d9a9239f3068c6ff7803e9d227c80167443eb46cd0fa6a6b2223ac0",
+    "driver": "b8454d6faabc85de1b9d1f369cc1c5725a0e0843f120520b8640e7c84d3e7389",
+    "rmt_oracle": "777f3e1edc4babd124b7a1c2d56f0d22a14882947d182b119a794d1b987271f6",
+    "large_png": "c133b2ccc93d9a329f0333c37e12ba596f7aafd276510f7c8cae4737beb6d9ec",
+    "large_oracle": "b88c01adac064d64c141cc53290f91b8cf63ae5ff705c860f843a112b53d117f",
+    "wire_headers_source_oracle": "6c48937135ffad154c7cdb35d9a992edcd85d2943640964fa3767d06471745cc",
+    "cookie_source_oracle": "73fe563ef0b01d2253f53d712647efe31fbe983e478a2302800689b00c706ddc",
+    "worker_update": "43553e343cd875b53373c0ba6ef197d4822c449bb009bdc9cc22d4f1ec4f4a90"
+  },
+  "observations": [
+    {
+      "phase": "actual-cookie-parse-source-wire",
+      "source_oracle_sha256": "73fe563ef0b01d2253f53d712647efe31fbe983e478a2302800689b00c706ddc",
+      "duplicate_overwrite_ascii_percent_and_order": true,
+      "header_matches_actual_source_http": true
+    },
+    {
+      "phase": "real-ocr-rmt",
+      "default_extensions": [
+        ".mp4",
+        ".mkv",
+        ".ts",
+        ".iso",
+        ".rmvb",
+        ".avi",
+        ".mov",
+        ".mpeg",
+        ".mpg",
+        ".wmv",
+        ".3gp",
+        ".asf",
+        ".m4v",
+        ".flv",
+        ".m2ts",
+        ".strm",
+        ".tp",
+        ".f4v"
+      ],
+      "observed_initial_extensions": [
+        ".startup-env"
+      ],
+      "raw_mixed_extensions": [
+        ".runtime",
+        1,
+        null,
+        true
+      ],
+      "observed_cold_extensions": [
+        ".late-env"
+      ],
+      "startup_environment_snapshot": true,
+      "readonly_write_rejected": true,
+      "source_pid": 3566045,
+      "clone_pid": 3566072,
+      "updated_pid": 3566091,
+      "cold_pid": 3566122,
+      "image_cookie_ua_retained": true,
+      "ocr_receives_no_site_credentials": true,
+      "large_png_bytes": 270448,
+      "large_base64_bytes": 360600,
+      "compressed_image_decoded": true,
+      "source_falsey_and_exception_paths": true,
+      "configuration_init_run_once_calls_sdk": true,
+      "counts": {
+        "image": 3,
+        "ocr": 11
+      }
+    }
+  ],
+  "ocr_post_observations": [
+    {
+      "base64_bytes": 8,
+      "base64_sha256": "db3eaf9a79dc18d098e632573be3e3bf8467688e271dfcb77b2a6c584d422ae4",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 360600,
+      "base64_sha256": "c7007b059bc7c483b127ccc77e60184c2c0348ef3611dcecea6befd8533f75c5",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 360600,
+      "base64_sha256": "c7007b059bc7c483b127ccc77e60184c2c0348ef3611dcecea6befd8533f75c5",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 360600,
+      "base64_sha256": "c7007b059bc7c483b127ccc77e60184c2c0348ef3611dcecea6befd8533f75c5",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 360600,
+      "base64_sha256": "c7007b059bc7c483b127ccc77e60184c2c0348ef3611dcecea6befd8533f75c5",
+      "cookie_absent": true,
+      "authorization_absent": true
+    }
+  ]
+}

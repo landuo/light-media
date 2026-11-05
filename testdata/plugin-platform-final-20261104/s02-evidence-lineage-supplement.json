@@ -1,0 +1,39 @@
+{
+  "status": "passed",
+  "matrix_rows": [
+    "S02"
+  ],
+  "classification": "evidence lineage supplement; no claim of newly rerun historical Linux process",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "historical_acceptance": {
+    "path": "testdata/plugin-host-local-files-20261031/evidence/acceptance.json",
+    "sha256": "8528ee0e58981c4a6998d934732a0b01e821bc3e639a770651acdccdd0ebfcc5",
+    "stale_review_sha256": "8fb84e2d544fa4b9803bbc0d7a5edef7695eaac0b01d3b6cf4082a5a978bf54f"
+  },
+  "review_amendment": {
+    "path": "testdata/plugin-host-services-20261031/local-files-independent-review.json",
+    "sha256": "904bf1ff1452e7966cd951c56aa4834058b8c74efae4edec69a0d14959e9aead",
+    "reason": "Review was amended after the historical acceptance sealed: exact original Linux driver and artifact hash record archived; original binding finding resolved. Historical acceptance remains immutable.",
+    "independent_reviewed_file_checks": {
+      "cmd/owned-local-files-fixture/main.go": true,
+      "internal/app/plugin_original_host_local_files_test.go": true,
+      "internal/app/plugin_original_base.go": true,
+      "testdata/plugin-host-local-files-20261031/source_oracle.py": true,
+      "testdata/plugin-host-local-files-20261031/run_process.py": true,
+      "testdata/plugin-host-local-files-20261031/evidence/source-oracle.json": true,
+      "testdata/plugin-host-local-files-20261031/evidence/linux-result.json": true,
+      "testdata/plugin-host-local-files-20261031/evidence/browser.json": true,
+      "testdata/plugin-host-services-20261031/local-files-independent-review.log": true,
+      "testdata/plugin-host-local-files-20261031/evidence/linux-run-process.py": true,
+      "testdata/plugin-host-local-files-20261031/evidence/linux-artifact-sha256.txt": true
+    }
+  },
+  "artifacts": {
+    "testdata/plugin-host-local-files-20261031/evidence/acceptance.json": "8528ee0e58981c4a6998d934732a0b01e821bc3e639a770651acdccdd0ebfcc5",
+    "testdata/plugin-host-services-20261031/local-files-independent-review.json": "904bf1ff1452e7966cd951c56aa4834058b8c74efae4edec69a0d14959e9aead",
+    "testdata/plugin-host-local-files-20261031/evidence/linux-run-process.py": "5dd6f59977ed0e816c4e799cd88949f87073f7e7717ce668240d35a351e3c432",
+    "testdata/plugin-host-local-files-20261031/evidence/linux-artifact-sha256.txt": "e0e7f9fac9d18db9398fc1231067c3f25cfeb725d47ccf255b3d2f08818acfcc"
+  },
+  "change_to_product_or_expected_behavior": false,
+  "remaining_within_S02": []
+}

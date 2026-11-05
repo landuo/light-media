@@ -1,0 +1,541 @@
+{
+  "status": "passed",
+  "classification": "actual Linux cmd/server and separately compiled standard SDK; owned synthetic HTTP/cookies only, no real site/signin service or existing data modified",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "bindings": {
+    "server": "15c2b65397fd38af1f6e3ea44178157dec74e8210ae61b7f39f39728528e6df6",
+    "worker": "6ab7ae0041677fe909de5b06d23ca45308df7e5071cf319a1fe6c9dd6543c845",
+    "worker_v2": "67afde3baee75a6a0d2fe54871c97c1504b8b25c66c297d617af4a9845038ce1",
+    "driver": "82eb914b34662050904f946be3548de2658e44a0e4814c4702c09b15100d36c4"
+  },
+  "observations": [
+    {
+      "case": "actual-private-credentials-cookie-flow-host-agent",
+      "credentials_verified": true,
+      "cookie_flow_verified": true,
+      "user_agent": "MoviePilot/2.15.7 (Linux 6.18.18.c1168-trim; x86_64)",
+      "host_agent_suffix_verified": true,
+      "ua_write_denied": true
+    },
+    {
+      "case": "source-clone-config-data-isolation-and-failure-recovery",
+      "source": {
+        "calls": [
+          {
+            "schema_version": 1,
+            "response": {
+              "status_code": 200,
+              "content": "b3duZWQtcmVzcG9uc2U6Y2hvaWNlJTVCJTVEPW9uZSZjaG9pY2UlNUIlNUQ9dHdv",
+              "content_type": "text/plain; charset=utf-8",
+              "cookies": null
+            },
+            "request_state": "completed"
+          },
+          {
+            "schema_version": 1,
+            "response": {
+              "status_code": 503,
+              "content": "b3duZWQtaHR0cC1zdGF0dXM1MDM=",
+              "content_type": "text/plain; charset=utf-8",
+              "cookies": null
+            },
+            "request_state": "completed"
+          },
+          {
+            "schema_version": 1,
+            "response": null,
+            "request_state": "unknown"
+          },
+          {
+            "schema_version": 1,
+            "response": {
+              "status_code": 200,
+              "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrc291cmNl",
+              "content_type": "text/plain; charset=utf-8",
+              "cookies": null
+            },
+            "request_state": "completed"
+          }
+        ],
+        "config": {
+          "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI source\"}]}",
+          "run_once": false
+        },
+        "pid": 1572596,
+        "version": "1.0"
+      },
+      "clone": {
+        "calls": [
+          {
+            "schema_version": 1,
+            "response": {
+              "status_code": 200,
+              "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrY2xvbmU=",
+              "content_type": "text/plain; charset=utf-8",
+              "cookies": null
+            },
+            "request_state": "completed"
+          }
+        ],
+        "config": {
+          "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI clone\"}]}",
+          "run_once": false
+        },
+        "pid": 1572623,
+        "version": "1.0"
+      },
+      "non2xx_preserved": true,
+      "post_drop_unknown_no_retry": true
+    },
+    {
+      "case": "actual-update-and-cold-no-replay",
+      "before": {
+        "OwnedHostSiteHTTP": {
+          "calls": [
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6Y2hvaWNlJTVCJTVEPW9uZSZjaG9pY2UlNUIlNUQ9dHdv",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 503,
+                "content": "b3duZWQtaHR0cC1zdGF0dXM1MDM=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": null,
+              "request_state": "unknown"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrc291cmNl",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            }
+          ],
+          "config": {
+            "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI source\"}]}",
+            "run_once": false
+          },
+          "pid": 1572633,
+          "version": "2.0"
+        },
+        "OwnedHostSiteHTTPcopy": {
+          "calls": [
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrY2xvbmU=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            }
+          ],
+          "config": {
+            "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI clone\"}]}",
+            "run_once": false
+          },
+          "pid": 1572623,
+          "version": "1.0"
+        }
+      },
+      "after": {
+        "OwnedHostSiteHTTP": {
+          "calls": [
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6Y2hvaWNlJTVCJTVEPW9uZSZjaG9pY2UlNUIlNUQ9dHdv",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 503,
+                "content": "b3duZWQtaHR0cC1zdGF0dXM1MDM=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": null,
+              "request_state": "unknown"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrc291cmNl",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            }
+          ],
+          "config": {
+            "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI source\"}]}",
+            "run_once": false
+          },
+          "pid": 1572650,
+          "version": "2.0"
+        },
+        "OwnedHostSiteHTTPcopy": {
+          "calls": [
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrY2xvbmU=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            }
+          ],
+          "config": {
+            "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI clone\"}]}",
+            "run_once": false
+          },
+          "pid": 1572657,
+          "version": "1.0"
+        }
+      },
+      "wire_count_unchanged": true
+    },
+    {
+      "case": "browser-writes-cold-no-replay",
+      "before": {
+        "OwnedHostSiteHTTP": {
+          "calls": [
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6Y2hvaWNlJTVCJTVEPW9uZSZjaG9pY2UlNUIlNUQ9dHdv",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 503,
+                "content": "b3duZWQtaHR0cC1zdGF0dXM1MDM=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": null,
+              "request_state": "unknown"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrc291cmNl",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1icm93c2VyK1MxOCtzb3VyY2U=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1icm93c2VyK1MxOCtyZWNvdmVyZWQ=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            }
+          ],
+          "config": {
+            "request_json": "{\"id\":\"owned-site\",\"path\":\"/echo\",\"method\":\"POST\",\"form\":[{\"name\":\"message\",\"value\":\"browser S18 recovered\"}]}",
+            "run_once": false
+          },
+          "pid": 1572650,
+          "version": "2.0"
+        },
+        "OwnedHostSiteHTTPcopy": {
+          "calls": [
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrY2xvbmU=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1icm93c2VyK1MxOCtjbG9uZQ==",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            }
+          ],
+          "config": {
+            "request_json": "{\"id\":\"owned-site\",\"path\":\"/echo\",\"method\":\"POST\",\"form\":[{\"name\":\"message\",\"value\":\"browser S18 clone\"}]}",
+            "run_once": false
+          },
+          "pid": 1572657,
+          "version": "1.0"
+        }
+      },
+      "after": {
+        "OwnedHostSiteHTTP": {
+          "calls": [
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6Y2hvaWNlJTVCJTVEPW9uZSZjaG9pY2UlNUIlNUQ9dHdv",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 503,
+                "content": "b3duZWQtaHR0cC1zdGF0dXM1MDM=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": null,
+              "request_state": "unknown"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrc291cmNl",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1icm93c2VyK1MxOCtzb3VyY2U=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1icm93c2VyK1MxOCtyZWNvdmVyZWQ=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            }
+          ],
+          "config": {
+            "request_json": "{\"id\":\"owned-site\",\"path\":\"/echo\",\"method\":\"POST\",\"form\":[{\"name\":\"message\",\"value\":\"browser S18 recovered\"}]}",
+            "run_once": false
+          },
+          "pid": 1576989,
+          "version": "2.0"
+        },
+        "OwnedHostSiteHTTPcopy": {
+          "calls": [
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrY2xvbmU=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1icm93c2VyK1MxOCtjbG9uZQ==",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            }
+          ],
+          "config": {
+            "request_json": "{\"id\":\"owned-site\",\"path\":\"/echo\",\"method\":\"POST\",\"form\":[{\"name\":\"message\",\"value\":\"browser S18 clone\"}]}",
+            "run_once": false
+          },
+          "pid": 1576995,
+          "version": "1.0"
+        }
+      },
+      "wire_unchanged": true
+    }
+  ],
+  "wire": [
+    {
+      "method": "POST",
+      "path": "/echo",
+      "body_sha256": "ca3c20d89098bf20c8be943ff7abb4d5a942512dd6230630d64e86a05985dfb3",
+      "body": "choice%5B%5D=one&choice%5B%5D=two",
+      "has_configured_cookie": true,
+      "has_configured_ua": true,
+      "api_key_correct": true,
+      "token_correct": true
+    },
+    {
+      "method": "GET",
+      "path": "/set-cookie",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": "",
+      "has_configured_cookie": true,
+      "has_configured_ua": true,
+      "api_key_correct": false,
+      "token_correct": false
+    },
+    {
+      "method": "POST",
+      "path": "/cookie-echo",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": "",
+      "has_configured_cookie": false,
+      "has_configured_ua": true,
+      "api_key_correct": false,
+      "token_correct": false
+    },
+    {
+      "method": "GET",
+      "path": "/agent",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": "",
+      "has_configured_cookie": true,
+      "has_configured_ua": false,
+      "api_key_correct": false,
+      "token_correct": false
+    },
+    {
+      "method": "GET",
+      "path": "/status",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": "",
+      "has_configured_cookie": true,
+      "has_configured_ua": true,
+      "api_key_correct": false,
+      "token_correct": false
+    },
+    {
+      "method": "POST",
+      "path": "/drop",
+      "body_sha256": "20fc7033a0d8a4026c1dc0b4851ddc81da204811deba995d274cccb57b28cf59",
+      "body": "owned-no-retry",
+      "has_configured_cookie": true,
+      "has_configured_ua": true,
+      "api_key_correct": false,
+      "token_correct": false
+    },
+    {
+      "method": "POST",
+      "path": "/echo",
+      "body_sha256": "fd8f827a30bf1864d20fee6edad1b7234eda4d33352343258a63c173c221049e",
+      "body": "message=CLI+source",
+      "has_configured_cookie": true,
+      "has_configured_ua": true,
+      "api_key_correct": false,
+      "token_correct": false
+    },
+    {
+      "method": "POST",
+      "path": "/echo",
+      "body_sha256": "825ba9ad38204feac9c57764770a03852c65eb19f4324e3b3f43a627c14fa26f",
+      "body": "message=CLI+clone",
+      "has_configured_cookie": true,
+      "has_configured_ua": true,
+      "api_key_correct": false,
+      "token_correct": false
+    },
+    {
+      "method": "POST",
+      "path": "/echo",
+      "body_sha256": "bef45b09decbf32e4cc2e8b5afca373fa14aa632adbb9ba01d77dd9b81db980b",
+      "body": "message=browser+S18+source",
+      "has_configured_cookie": true,
+      "has_configured_ua": true,
+      "api_key_correct": false,
+      "token_correct": false
+    },
+    {
+      "method": "POST",
+      "path": "/echo",
+      "body_sha256": "f7c2ec4d5ed4290b62e8a7831449ae4ad0e412bb8bb5da942b0ad1f9681ef269",
+      "body": "message=browser+S18+recovered",
+      "has_configured_cookie": true,
+      "has_configured_ua": true,
+      "api_key_correct": false,
+      "token_correct": false
+    },
+    {
+      "method": "POST",
+      "path": "/echo",
+      "body_sha256": "946b2f2ba40b90f7bd6988cc7164cf782309fae128ebcf6b25005e9c37158e51",
+      "body": "message=browser+S18+clone",
+      "has_configured_cookie": true,
+      "has_configured_ua": true,
+      "api_key_correct": false,
+      "token_correct": false
+    }
+  ],
+  "uninstalled_api404": true,
+  "stopped": true
+}

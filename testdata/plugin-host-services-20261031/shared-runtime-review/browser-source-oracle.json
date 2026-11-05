@@ -1,0 +1,1111 @@
+{
+  "classification": "fixed-source ordinary helper AST execution with synthetic browser/HTTP boundaries; not a real browser test",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_path": "app/helper/browser.py",
+  "source_sha256": "cb455ffadc75b32fa0fe151242b7c4162233e525d35257ac3a71e1dda1316f29",
+  "http_cookie_source_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "source_symbol": "PlaywrightHelper",
+  "source_lines": [
+    852,
+    1102
+  ],
+  "driver_sha256": "9043b2d78effdbe45f4defdcda9e38c6e615de8aa66967dd136ea69f1c648df9",
+  "cases": [
+    {
+      "case": "browser-default",
+      "mode": "cloakbrowser",
+      "action": false,
+      "input": {},
+      "replies": [],
+      "injected_failure": null,
+      "result": "<html><body>owned rendered</body></html>",
+      "calls": [
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": null
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "wait",
+          "value": {
+            "state": "networkidle",
+            "timeout": 60000
+          }
+        },
+        {
+          "operation": "content",
+          "value": null
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "browser-explicit-empty-mode",
+      "mode": "",
+      "action": false,
+      "input": {},
+      "replies": [],
+      "injected_failure": null,
+      "result": "<html><body>owned rendered</body></html>",
+      "calls": [
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": null
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "wait",
+          "value": {
+            "state": "networkidle",
+            "timeout": 60000
+          }
+        },
+        {
+          "operation": "content",
+          "value": null
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "browser-cookie-ua-proxy",
+      "mode": "cloakbrowser",
+      "action": false,
+      "input": {
+        "cookies": "owned=a=b",
+        "ua": "owned-UA",
+        "proxies": {
+          "server": "http://proxy.invalid:8080"
+        },
+        "headless": true,
+        "timeout": 3
+      },
+      "replies": [],
+      "injected_failure": null,
+      "result": "<html><body>owned rendered</body></html>",
+      "calls": [
+        {
+          "operation": "launch",
+          "value": {
+            "headless": true,
+            "user_agent": "owned-UA",
+            "proxies": {
+              "server": "http://proxy.invalid:8080"
+            }
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "headers",
+          "value": {
+            "cookie": "owned=a=b"
+          }
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "wait",
+          "value": {
+            "state": "networkidle",
+            "timeout": 3000
+          }
+        },
+        {
+          "operation": "content",
+          "value": null
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "browser-failure-launch",
+      "mode": "cloakbrowser",
+      "action": false,
+      "input": {},
+      "replies": [],
+      "injected_failure": "launch",
+      "result": null,
+      "calls": [
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": null
+          }
+        }
+      ]
+    },
+    {
+      "case": "browser-failure-new_page",
+      "mode": "cloakbrowser",
+      "action": false,
+      "input": {},
+      "replies": [],
+      "injected_failure": "new_page",
+      "result": null,
+      "calls": [
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": null
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "browser-failure-goto",
+      "mode": "cloakbrowser",
+      "action": false,
+      "input": {},
+      "replies": [],
+      "injected_failure": "goto",
+      "result": null,
+      "calls": [
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": null
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "browser-failure-wait",
+      "mode": "cloakbrowser",
+      "action": false,
+      "input": {},
+      "replies": [],
+      "injected_failure": "wait",
+      "result": null,
+      "calls": [
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": null
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "wait",
+          "value": {
+            "state": "networkidle",
+            "timeout": 60000
+          }
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "browser-failure-content",
+      "mode": "cloakbrowser",
+      "action": false,
+      "input": {},
+      "replies": [],
+      "injected_failure": "content",
+      "result": null,
+      "calls": [
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": null
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "wait",
+          "value": {
+            "state": "networkidle",
+            "timeout": 60000
+          }
+        },
+        {
+          "operation": "content",
+          "value": null
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "browser-null-timeout",
+      "mode": "cloakbrowser",
+      "action": false,
+      "input": {
+        "timeout": null
+      },
+      "replies": [],
+      "injected_failure": null,
+      "result": null,
+      "calls": [
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": null
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "fs-direct-response",
+      "mode": "FLARESOLVERR",
+      "action": false,
+      "input": {},
+      "replies": [
+        {
+          "status": "ok",
+          "solution": {
+            "response": "<html>owned fs</html>"
+          }
+        }
+      ],
+      "injected_failure": null,
+      "result": "<html>owned fs</html>",
+      "calls": [
+        {
+          "operation": "fs.post",
+          "request": {
+            "url": "http://owned.invalid/fs/v1",
+            "json": {
+              "cmd": "request.get",
+              "url": "http://owned.invalid/page",
+              "maxTimeout": 60000
+            }
+          },
+          "options": {
+            "content_type": "application/json",
+            "timeout": 60
+          }
+        }
+      ]
+    },
+    {
+      "case": "fs-truthy-solution-without-response",
+      "mode": "flaresolverr",
+      "action": false,
+      "input": {},
+      "replies": [
+        {
+          "status": "ok",
+          "solution": {
+            "cookies": []
+          }
+        }
+      ],
+      "injected_failure": null,
+      "result": null,
+      "calls": [
+        {
+          "operation": "fs.post",
+          "request": {
+            "url": "http://owned.invalid/fs/v1",
+            "json": {
+              "cmd": "request.get",
+              "url": "http://owned.invalid/page",
+              "maxTimeout": 60000
+            }
+          },
+          "options": {
+            "content_type": "application/json",
+            "timeout": 60
+          }
+        }
+      ]
+    },
+    {
+      "case": "fs-empty-solution-falls-back",
+      "mode": "flaresolverr",
+      "action": false,
+      "input": {},
+      "replies": [
+        {
+          "status": "ok",
+          "solution": {}
+        }
+      ],
+      "injected_failure": null,
+      "result": "<html><body>owned rendered</body></html>",
+      "calls": [
+        {
+          "operation": "fs.post",
+          "request": {
+            "url": "http://owned.invalid/fs/v1",
+            "json": {
+              "cmd": "request.get",
+              "url": "http://owned.invalid/page",
+              "maxTimeout": 60000
+            }
+          },
+          "options": {
+            "content_type": "application/json",
+            "timeout": 60
+          }
+        },
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": null
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "wait",
+          "value": {
+            "state": "networkidle",
+            "timeout": 60000
+          }
+        },
+        {
+          "operation": "content",
+          "value": null
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "fs-error-falls-back",
+      "mode": "flaresolverr",
+      "action": false,
+      "input": {},
+      "replies": [
+        {
+          "status": "error",
+          "message": "owned"
+        }
+      ],
+      "injected_failure": null,
+      "result": "<html><body>owned rendered</body></html>",
+      "calls": [
+        {
+          "operation": "fs.post",
+          "request": {
+            "url": "http://owned.invalid/fs/v1",
+            "json": {
+              "cmd": "request.get",
+              "url": "http://owned.invalid/page",
+              "maxTimeout": 60000
+            }
+          },
+          "options": {
+            "content_type": "application/json",
+            "timeout": 60
+          }
+        },
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": null
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "wait",
+          "value": {
+            "state": "networkidle",
+            "timeout": 60000
+          }
+        },
+        {
+          "operation": "content",
+          "value": null
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "fs-authenticated-session",
+      "mode": "flaresolverr",
+      "action": false,
+      "input": {
+        "proxies": {
+          "server": "http://proxy.invalid:8080",
+          "username": "owned-user",
+          "password": "owned-password"
+        }
+      },
+      "replies": [
+        {
+          "status": "ok"
+        },
+        {
+          "status": "ok",
+          "solution": {
+            "response": "owned"
+          }
+        },
+        {
+          "status": "ok"
+        }
+      ],
+      "injected_failure": null,
+      "result": "owned",
+      "calls": [
+        {
+          "operation": "fs.post",
+          "request": {
+            "url": "http://owned.invalid/fs/v1",
+            "json": {
+              "cmd": "sessions.create",
+              "session": "owned-session",
+              "proxy": {
+                "url": "http://proxy.invalid:8080",
+                "username": "owned-user",
+                "password": "owned-password"
+              }
+            }
+          },
+          "options": {
+            "content_type": "application/json",
+            "timeout": 60
+          }
+        },
+        {
+          "operation": "fs.post",
+          "request": {
+            "url": "http://owned.invalid/fs/v1",
+            "json": {
+              "cmd": "request.get",
+              "url": "http://owned.invalid/page",
+              "session": "owned-session",
+              "maxTimeout": 60000
+            }
+          },
+          "options": {
+            "content_type": "application/json",
+            "timeout": 60
+          }
+        },
+        {
+          "operation": "fs.post",
+          "request": {
+            "url": "http://owned.invalid/fs/v1",
+            "json": {
+              "cmd": "sessions.destroy",
+              "session": "owned-session"
+            }
+          },
+          "options": {
+            "content_type": "application/json",
+            "timeout": 10
+          }
+        }
+      ]
+    },
+    {
+      "case": "fs-create-failure-still-destroys",
+      "mode": "flaresolverr",
+      "action": false,
+      "input": {
+        "proxies": {
+          "server": "http://proxy.invalid:8080",
+          "username": "owned-user"
+        }
+      },
+      "replies": [
+        {
+          "status": "error"
+        },
+        {
+          "status": "ok"
+        }
+      ],
+      "injected_failure": null,
+      "result": "<html><body>owned rendered</body></html>",
+      "calls": [
+        {
+          "operation": "fs.post",
+          "request": {
+            "url": "http://owned.invalid/fs/v1",
+            "json": {
+              "cmd": "sessions.create",
+              "session": "owned-session",
+              "proxy": {
+                "url": "http://proxy.invalid:8080",
+                "username": "owned-user"
+              }
+            }
+          },
+          "options": {
+            "content_type": "application/json",
+            "timeout": 60
+          }
+        },
+        {
+          "operation": "fs.post",
+          "request": {
+            "url": "http://owned.invalid/fs/v1",
+            "json": {
+              "cmd": "sessions.destroy",
+              "session": "owned-session"
+            }
+          },
+          "options": {
+            "content_type": "application/json",
+            "timeout": 10
+          }
+        },
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": {
+              "server": "http://proxy.invalid:8080",
+              "username": "owned-user"
+            }
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "wait",
+          "value": {
+            "state": "networkidle",
+            "timeout": 60000
+          }
+        },
+        {
+          "operation": "content",
+          "value": null
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "fs-request-exception-still-destroys",
+      "mode": "flaresolverr",
+      "action": false,
+      "input": {
+        "proxies": {
+          "server": "http://proxy.invalid:8080",
+          "password": "owned-password"
+        }
+      },
+      "replies": [
+        {
+          "status": "ok"
+        },
+        "raise",
+        {
+          "status": "ok"
+        }
+      ],
+      "injected_failure": null,
+      "result": "<html><body>owned rendered</body></html>",
+      "calls": [
+        {
+          "operation": "fs.post",
+          "request": {
+            "url": "http://owned.invalid/fs/v1",
+            "json": {
+              "cmd": "sessions.create",
+              "session": "owned-session",
+              "proxy": {
+                "url": "http://proxy.invalid:8080",
+                "password": "owned-password"
+              }
+            }
+          },
+          "options": {
+            "content_type": "application/json",
+            "timeout": 60
+          }
+        },
+        {
+          "operation": "fs.post",
+          "request": {
+            "url": "http://owned.invalid/fs/v1",
+            "json": {
+              "cmd": "request.get",
+              "url": "http://owned.invalid/page",
+              "session": "owned-session",
+              "maxTimeout": 60000
+            }
+          },
+          "options": {
+            "content_type": "application/json",
+            "timeout": 60
+          }
+        },
+        {
+          "operation": "fs.post",
+          "request": {
+            "url": "http://owned.invalid/fs/v1",
+            "json": {
+              "cmd": "sessions.destroy",
+              "session": "owned-session"
+            }
+          },
+          "options": {
+            "content_type": "application/json",
+            "timeout": 10
+          }
+        },
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": {
+              "server": "http://proxy.invalid:8080",
+              "password": "owned-password"
+            }
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "wait",
+          "value": {
+            "state": "networkidle",
+            "timeout": 60000
+          }
+        },
+        {
+          "operation": "content",
+          "value": null
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "action-always-browser-and-prefers-fs",
+      "mode": "flaresolverr",
+      "action": true,
+      "input": {
+        "cookies": "original=owned",
+        "ua": "original-UA"
+      },
+      "replies": [
+        {
+          "status": "ok",
+          "solution": {
+            "response": "ignored",
+            "cookies": [
+              {
+                "name": "cleared",
+                "value": "owned"
+              }
+            ],
+            "userAgent": "cleared-UA"
+          }
+        }
+      ],
+      "injected_failure": null,
+      "result": {
+        "owned": true
+      },
+      "calls": [
+        {
+          "operation": "fs.post",
+          "request": {
+            "url": "http://owned.invalid/fs/v1",
+            "json": {
+              "cmd": "request.get",
+              "url": "http://owned.invalid/page",
+              "maxTimeout": 60000,
+              "cookies": [
+                {
+                  "name": "original",
+                  "value": "owned"
+                }
+              ]
+            }
+          },
+          "options": {
+            "content_type": "application/json",
+            "timeout": 60
+          }
+        },
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": "cleared-UA",
+            "proxies": null
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "headers",
+          "value": {
+            "cookie": "cleared=owned"
+          }
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "wait",
+          "value": {
+            "state": "networkidle",
+            "timeout": 60000
+          }
+        },
+        {
+          "operation": "callback"
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "action-callback-return-survives-context-close-error",
+      "mode": "cloakbrowser",
+      "action": true,
+      "input": {},
+      "replies": [],
+      "injected_failure": "context.close",
+      "result": {
+        "owned": true
+      },
+      "calls": [
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": null
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "wait",
+          "value": {
+            "state": "networkidle",
+            "timeout": 60000
+          }
+        },
+        {
+          "operation": "callback"
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        },
+        {
+          "operation": "context.close"
+        }
+      ]
+    },
+    {
+      "case": "source-page-close-error-skips-context-close",
+      "mode": "cloakbrowser",
+      "action": true,
+      "input": {},
+      "replies": [],
+      "injected_failure": "page.close",
+      "result": {
+        "owned": true
+      },
+      "calls": [
+        {
+          "operation": "launch",
+          "value": {
+            "headless": false,
+            "user_agent": null,
+            "proxies": null
+          }
+        },
+        {
+          "operation": "new_page"
+        },
+        {
+          "operation": "goto",
+          "value": "http://owned.invalid/page"
+        },
+        {
+          "operation": "wait",
+          "value": {
+            "state": "networkidle",
+            "timeout": 60000
+          }
+        },
+        {
+          "operation": "callback"
+        },
+        {
+          "operation": "page.close",
+          "value": null
+        }
+      ]
+    }
+  ],
+  "cookie_cases": [
+    {
+      "input": "",
+      "expected": {}
+    },
+    {
+      "input": "a=1;a=2",
+      "expected": [
+        {
+          "name": "a",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "input": "space=%20;plus=a+b",
+      "expected": [
+        {
+          "name": "space",
+          "value": " "
+        },
+        {
+          "name": "plus",
+          "value": "a+b"
+        }
+      ]
+    },
+    {
+      "input": "latin=%E9;utf8=%C3%A9",
+      "expected": [
+        {
+          "name": "latin",
+          "value": "%E9"
+        },
+        {
+          "name": "utf8",
+          "value": "%C3%A9"
+        }
+      ]
+    },
+    {
+      "input": "raw=中文%20",
+      "expected": [
+        {
+          "name": "raw",
+          "value": "中文%20"
+        }
+      ]
+    },
+    {
+      "input": "invalid=%GG;bare",
+      "expected": [
+        {
+          "name": "invalid",
+          "value": "%GG"
+        }
+      ]
+    },
+    {
+      "input": "equal=a=b",
+      "expected": [
+        {
+          "name": "equal",
+          "value": "a=b"
+        }
+      ]
+    },
+    {
+      "input": " = value",
+      "expected": [
+        {
+          "name": "",
+          "value": "value"
+        }
+      ]
+    },
+    {
+      "input": "mixed=%41%ZZ",
+      "expected": [
+        {
+          "name": "mixed",
+          "value": "A%ZZ"
+        }
+      ]
+    },
+    {
+      "input": "mixed=%2B%GG%41",
+      "expected": [
+        {
+          "name": "mixed",
+          "value": "+%GGA"
+        }
+      ]
+    },
+    {
+      "input": "trim=\u001c%41\u001f",
+      "expected": [
+        {
+          "name": "trim",
+          "value": "A"
+        }
+      ]
+    }
+  ]
+}

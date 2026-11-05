@@ -1,0 +1,1027 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_path": "app/helper/ocr.py:8-75",
+  "source_sha256": "736e7a078b22fe0ac5ac611d58be6a8d742f7d768d582abfed605fafe65a550c",
+  "classification": "actual fixed complete helper AST, synthetic owned PNG/HTTP Response boundary; no app imports, old config/DB reads, network calls or challenge execution",
+  "cases": [
+    {
+      "case": "empty",
+      "request": {},
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [],
+      "expected": ""
+    },
+    {
+      "case": "base64",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "padding",
+      "request": {
+        "image_b64": "YWJjZA"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJjZA=="
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "all_python_whitespace",
+      "request": {
+        "image_b64": " Y W\nJ\tj\u001c ZA　 "
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJjZA=="
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "data_url",
+      "request": {
+        "image_b64": " data:image/png;base64,YWJjZA "
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJjZA=="
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "uppercase_metadata",
+      "request": {
+        "image_b64": "DATA:IMAGE/PNG;BASE64,YWJjZA"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJjZA=="
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "invalid_base64_is_not_decoded",
+      "request": {
+        "image_b64": "!not-valid!"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "!not-valid!="
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "whitespace_only",
+      "request": {
+        "image_b64": " \n\t\u001c"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [],
+      "expected": ""
+    },
+    {
+      "case": "unicode_padding_counts_characters",
+      "request": {
+        "image_b64": "中"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "中==="
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "url_overrides_supplied_base64",
+      "request": {
+        "image_url": "https://owned-site.invalid/image.png",
+        "image_b64": "ZmFsbGJhY2s=",
+        "cookie": "owned-cookie=1",
+        "ua": "Owned/OCR"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "GET",
+          "url": "https://owned-site.invalid/image.png",
+          "constructor": {
+            "ua": "Owned/OCR",
+            "cookies": "owned-cookie=1"
+          }
+        },
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "image_non200_body_still_encoded",
+      "request": {
+        "image_url": "https://owned-site.invalid/image.png",
+        "image_b64": "ZmFsbGJhY2s=",
+        "cookie": "owned-cookie=1",
+        "ua": "Owned/OCR"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "503",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "GET",
+          "url": "https://owned-site.invalid/image.png",
+          "constructor": {
+            "ua": "Owned/OCR",
+            "cookies": "owned-cookie=1"
+          }
+        },
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "b3duZWQgaW1hZ2UgZXJyb3IgYm9keQ=="
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "image_empty_stops_even_with_fallback",
+      "request": {
+        "image_url": "https://owned-site.invalid/image.png",
+        "image_b64": "ZmFsbGJhY2s="
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "empty",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "GET",
+          "url": "https://owned-site.invalid/image.png",
+          "constructor": {
+            "ua": null,
+            "cookies": null
+          }
+        }
+      ],
+      "expected": ""
+    },
+    {
+      "case": "image_network_none_keeps_fallback",
+      "request": {
+        "image_url": "https://owned-site.invalid/image.png",
+        "image_b64": "ZmFsbGJhY2s="
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": null,
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "GET",
+          "url": "https://owned-site.invalid/image.png",
+          "constructor": {
+            "ua": null,
+            "cookies": null
+          }
+        },
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "ZmFsbGJhY2s="
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "image_network_none_without_fallback",
+      "request": {
+        "image_url": "https://owned-site.invalid/image.png"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": null,
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "GET",
+          "url": "https://owned-site.invalid/image.png",
+          "constructor": {
+            "ua": null,
+            "cookies": null
+          }
+        }
+      ],
+      "expected": ""
+    },
+    {
+      "case": "image_data_url_overrides",
+      "request": {
+        "image_url": "data:image/png;base64,YWJjZA",
+        "image_b64": "ZmFsbGJhY2s="
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJjZA=="
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "empty_data_url_is_failed_get_fallback",
+      "request": {
+        "image_url": "data:image/png;base64,",
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": null,
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "GET",
+          "url": "data:image/png;base64,",
+          "constructor": {
+            "ua": null,
+            "cookies": null
+          }
+        },
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "wrong_data_url_is_failed_get_fallback",
+      "request": {
+        "image_url": "data:text/plain;base64,YWJj",
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": null,
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "GET",
+          "url": "data:text/plain;base64,YWJj",
+          "constructor": {
+            "ua": null,
+            "cookies": null
+          }
+        },
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "empty_service",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": null,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": ""
+    },
+    {
+      "case": "post_network_none",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": null,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": ""
+    },
+    {
+      "case": "post_non200_falsey",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 503,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": ""
+    },
+    {
+      "case": "post_302_truthy_without_redirect",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 302,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": "ABC123"
+    },
+    {
+      "case": "result_null",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": null
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": ""
+    },
+    {
+      "case": "result_zero",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": 0
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": ""
+    },
+    {
+      "case": "result_false",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": false
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": ""
+    },
+    {
+      "case": "result_empty_list",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": []
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": ""
+    },
+    {
+      "case": "result_empty_object",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": {}
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": ""
+    },
+    {
+      "case": "result_empty_text",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": ""
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": ""
+    },
+    {
+      "case": "result_true",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": true
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": true
+    },
+    {
+      "case": "result_integer",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": 123456
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": 123456
+    },
+    {
+      "case": "result_list",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": [
+          "A",
+          "B"
+        ]
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "case": "result_object",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": {
+          "owned": "text"
+        }
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": {
+        "owned": "text"
+      }
+    },
+    {
+      "case": "post_missing_result",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "owned": "no result"
+      },
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "expected": ""
+    },
+    {
+      "case": "post_json_array_raises",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": [
+        "owned"
+      ],
+      "invalid_json": false,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "error": "AttributeError"
+    },
+    {
+      "case": "post_json_invalid_raises",
+      "request": {
+        "image_b64": "YWJj"
+      },
+      "images": {
+        "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2DTwAAAAASUVORK5CYII="
+      },
+      "post_status": 200,
+      "post_json": {
+        "result": "ABC123"
+      },
+      "invalid_json": true,
+      "image_mode": "png",
+      "ocr_host": "https://owned-ocr.invalid",
+      "trace": [
+        {
+          "method": "POST",
+          "url": "https://owned-ocr.invalid/captcha/base64",
+          "constructor": {
+            "content_type": "application/json"
+          },
+          "body": {
+            "base64_img": "YWJj"
+          }
+        }
+      ],
+      "error": "ValueError"
+    }
+  ]
+}

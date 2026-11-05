@@ -1,0 +1,1583 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "classification": "fixed AST process/ordinary routing with controlled plugin input/module/event/history; no source business imports, network or AI execution",
+  "sources": {
+    "app/chain/message.py": {
+      "sha256": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1"
+    },
+    "app/chain/__init__.py": {
+      "sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753"
+    },
+    "app/schemas/message.py": {
+      "sha256": "e5b2f504e2c5d470b74a33756e577e19ce3f9b5284f9a0e1e2d522d1e3955597"
+    },
+    "app/schemas/types.py": {
+      "sha256": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1"
+    },
+    "app/api/endpoints/message.py": {
+      "sha256": "b635fee943af5d867532133d96550ac840c0dbac847fe5fde2e230c567191bbd"
+    },
+    "app/command.py": {
+      "sha256": "e178d40ba65ee3fdd9fdce9f198f6a4433c8ddd8e3c73496bd843a40a4e7af3f"
+    }
+  },
+  "symbol_lines": {
+    "process": 111,
+    "handle_message": 164,
+    "_handle_message_core": 280,
+    "_strip_no_ai_prefix": 577,
+    "_has_ai_prefix": 589,
+    "_mark_message_processing_started": 623,
+    "_mark_message_processing_finished": 654,
+    "_handle_callback": 678,
+    "_record_user_message": 1170
+  },
+  "process_cases": [
+    {
+      "name": "ordinary",
+      "parsed": {
+        "userid": "owned-id",
+        "username": "",
+        "source": "ParsedSource",
+        "channel": "飞书",
+        "text": "  ordinary message\u001c ",
+        "images": null,
+        "audio_refs": null,
+        "files": null,
+        "message_id": 9007199254740993,
+        "chat_id": "chat",
+        "reply_to_message_id": 22
+      },
+      "trace": [
+        {
+          "kind": "parser",
+          "kwargs": {
+            "source": "IncomingSource",
+            "body": {
+              "sha256": "53cdee65dd62cc3242d0149ad2aa11fee92e2c04627224ed66339e04074693a4",
+              "size": 10
+            },
+            "form": {
+              "x": "last"
+            },
+            "args": {
+              "source": "IncomingSource"
+            }
+          }
+        },
+        {
+          "kind": "handle",
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": "owned-id",
+            "username": "owned-id",
+            "text": "ordinary message",
+            "original_message_id": 9007199254740993,
+            "original_chat_id": "chat",
+            "reply_to_message_id": 22,
+            "images": null,
+            "audio_refs": null,
+            "files": null
+          }
+        }
+      ]
+    },
+    {
+      "name": "missing-user",
+      "parsed": {
+        "userid": null,
+        "username": "",
+        "source": "ParsedSource",
+        "channel": "飞书",
+        "text": "  ordinary message\u001c ",
+        "images": null,
+        "audio_refs": null,
+        "files": null,
+        "message_id": 9007199254740993,
+        "chat_id": "chat",
+        "reply_to_message_id": 22
+      },
+      "trace": [
+        {
+          "kind": "parser",
+          "kwargs": {
+            "source": "IncomingSource",
+            "body": {
+              "sha256": "53cdee65dd62cc3242d0149ad2aa11fee92e2c04627224ed66339e04074693a4",
+              "size": 10
+            },
+            "form": {
+              "x": "last"
+            },
+            "args": {
+              "source": "IncomingSource"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "empty-user",
+      "parsed": {
+        "userid": "",
+        "username": "",
+        "source": "ParsedSource",
+        "channel": "飞书",
+        "text": "  ordinary message\u001c ",
+        "images": null,
+        "audio_refs": null,
+        "files": null,
+        "message_id": 9007199254740993,
+        "chat_id": "chat",
+        "reply_to_message_id": 22
+      },
+      "trace": [
+        {
+          "kind": "parser",
+          "kwargs": {
+            "source": "IncomingSource",
+            "body": {
+              "sha256": "53cdee65dd62cc3242d0149ad2aa11fee92e2c04627224ed66339e04074693a4",
+              "size": 10
+            },
+            "form": {
+              "x": "last"
+            },
+            "args": {
+              "source": "IncomingSource"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "zero-user",
+      "parsed": {
+        "userid": 0,
+        "username": null,
+        "source": "ParsedSource",
+        "channel": "飞书",
+        "text": "  ordinary message\u001c ",
+        "images": null,
+        "audio_refs": null,
+        "files": null,
+        "message_id": 9007199254740993,
+        "chat_id": "chat",
+        "reply_to_message_id": 22
+      },
+      "trace": [
+        {
+          "kind": "parser",
+          "kwargs": {
+            "source": "IncomingSource",
+            "body": {
+              "sha256": "53cdee65dd62cc3242d0149ad2aa11fee92e2c04627224ed66339e04074693a4",
+              "size": 10
+            },
+            "form": {
+              "x": "last"
+            },
+            "args": {
+              "source": "IncomingSource"
+            }
+          }
+        },
+        {
+          "kind": "handle",
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 0,
+            "username": "0",
+            "text": "ordinary message",
+            "original_message_id": 9007199254740993,
+            "original_chat_id": "chat",
+            "reply_to_message_id": 22,
+            "images": null,
+            "audio_refs": null,
+            "files": null
+          }
+        }
+      ]
+    },
+    {
+      "name": "numeric-name",
+      "parsed": {
+        "userid": "owned-id",
+        "username": 0,
+        "source": "ParsedSource",
+        "channel": "飞书",
+        "text": "  ordinary message\u001c ",
+        "images": null,
+        "audio_refs": null,
+        "files": null,
+        "message_id": 9007199254740993,
+        "chat_id": "chat",
+        "reply_to_message_id": 22
+      },
+      "trace": [
+        {
+          "kind": "parser",
+          "kwargs": {
+            "source": "IncomingSource",
+            "body": {
+              "sha256": "53cdee65dd62cc3242d0149ad2aa11fee92e2c04627224ed66339e04074693a4",
+              "size": 10
+            },
+            "form": {
+              "x": "last"
+            },
+            "args": {
+              "source": "IncomingSource"
+            }
+          }
+        },
+        {
+          "kind": "handle",
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": "owned-id",
+            "username": "0",
+            "text": "ordinary message",
+            "original_message_id": 9007199254740993,
+            "original_chat_id": "chat",
+            "reply_to_message_id": 22,
+            "images": null,
+            "audio_refs": null,
+            "files": null
+          }
+        }
+      ]
+    },
+    {
+      "name": "blank-text",
+      "parsed": {
+        "userid": "owned-id",
+        "username": "",
+        "source": "ParsedSource",
+        "channel": "飞书",
+        "text": " \u001c　 ",
+        "images": null,
+        "audio_refs": null,
+        "files": null,
+        "message_id": 9007199254740993,
+        "chat_id": "chat",
+        "reply_to_message_id": 22
+      },
+      "trace": [
+        {
+          "kind": "parser",
+          "kwargs": {
+            "source": "IncomingSource",
+            "body": {
+              "sha256": "53cdee65dd62cc3242d0149ad2aa11fee92e2c04627224ed66339e04074693a4",
+              "size": 10
+            },
+            "form": {
+              "x": "last"
+            },
+            "args": {
+              "source": "IncomingSource"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "images-only",
+      "parsed": {
+        "userid": "owned-id",
+        "username": "",
+        "source": "ParsedSource",
+        "channel": "飞书",
+        "text": "",
+        "images": [
+          "owned://image"
+        ],
+        "audio_refs": null,
+        "files": null,
+        "message_id": 9007199254740993,
+        "chat_id": "chat",
+        "reply_to_message_id": 22
+      },
+      "trace": [
+        {
+          "kind": "parser",
+          "kwargs": {
+            "source": "IncomingSource",
+            "body": {
+              "sha256": "53cdee65dd62cc3242d0149ad2aa11fee92e2c04627224ed66339e04074693a4",
+              "size": 10
+            },
+            "form": {
+              "x": "last"
+            },
+            "args": {
+              "source": "IncomingSource"
+            }
+          }
+        },
+        {
+          "kind": "handle",
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": "owned-id",
+            "username": "owned-id",
+            "text": "",
+            "original_message_id": 9007199254740993,
+            "original_chat_id": "chat",
+            "reply_to_message_id": 22,
+            "images": [
+              "owned://image"
+            ],
+            "audio_refs": null,
+            "files": null
+          }
+        }
+      ]
+    },
+    {
+      "name": "audio-only",
+      "parsed": {
+        "userid": "owned-id",
+        "username": "",
+        "source": "ParsedSource",
+        "channel": "飞书",
+        "text": "",
+        "images": null,
+        "audio_refs": [
+          "owned://audio"
+        ],
+        "files": null,
+        "message_id": 9007199254740993,
+        "chat_id": "chat",
+        "reply_to_message_id": 22
+      },
+      "trace": [
+        {
+          "kind": "parser",
+          "kwargs": {
+            "source": "IncomingSource",
+            "body": {
+              "sha256": "53cdee65dd62cc3242d0149ad2aa11fee92e2c04627224ed66339e04074693a4",
+              "size": 10
+            },
+            "form": {
+              "x": "last"
+            },
+            "args": {
+              "source": "IncomingSource"
+            }
+          }
+        },
+        {
+          "kind": "handle",
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": "owned-id",
+            "username": "owned-id",
+            "text": "",
+            "original_message_id": 9007199254740993,
+            "original_chat_id": "chat",
+            "reply_to_message_id": 22,
+            "images": null,
+            "audio_refs": [
+              "owned://audio"
+            ],
+            "files": null
+          }
+        }
+      ]
+    },
+    {
+      "name": "files-only",
+      "parsed": {
+        "userid": "owned-id",
+        "username": "",
+        "source": "ParsedSource",
+        "channel": "飞书",
+        "text": "",
+        "images": null,
+        "audio_refs": null,
+        "files": [
+          {
+            "ref": "owned://file"
+          }
+        ],
+        "message_id": 9007199254740993,
+        "chat_id": "chat",
+        "reply_to_message_id": 22
+      },
+      "trace": [
+        {
+          "kind": "parser",
+          "kwargs": {
+            "source": "IncomingSource",
+            "body": {
+              "sha256": "53cdee65dd62cc3242d0149ad2aa11fee92e2c04627224ed66339e04074693a4",
+              "size": 10
+            },
+            "form": {
+              "x": "last"
+            },
+            "args": {
+              "source": "IncomingSource"
+            }
+          }
+        },
+        {
+          "kind": "handle",
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": "owned-id",
+            "username": "owned-id",
+            "text": "",
+            "original_message_id": 9007199254740993,
+            "original_chat_id": "chat",
+            "reply_to_message_id": 22,
+            "images": null,
+            "audio_refs": null,
+            "files": [
+              {
+                "ref": "owned://file"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "route_cases": [
+    {
+      "name": "ordinary",
+      "text": "ordinary message",
+      "pending": false,
+      "channel": "飞书",
+      "status": true,
+      "trace": [
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "ordinary message",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "helper_history",
+          "args": [
+            {
+              "userid": 9007199254740993,
+              "username": "owned-name",
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "text": "ordinary message"
+            }
+          ],
+          "kwargs": {
+            "role": "user"
+          }
+        },
+        {
+          "kind": "history",
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": "owned-name",
+            "text": "ordinary message",
+            "action": 0
+          }
+        },
+        {
+          "kind": "start",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1",
+            "text": "ordinary message"
+          }
+        },
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "ordinary message",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "event",
+          "type": "user.message",
+          "data": {
+            "text": "ordinary message",
+            "userid": 9007199254740993,
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "chat_id": "c1",
+            "reply_to_message_id": 42
+          }
+        },
+        {
+          "kind": "finish",
+          "data": {
+            "status": {
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "userid": 9007199254740993,
+              "message_id": "m1",
+              "chat_id": "c1",
+              "metadata": {
+                "owned": true
+              }
+            },
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1"
+          }
+        }
+      ],
+      "exception": null
+    },
+    {
+      "name": "command",
+      "text": "/owned_inbound one two",
+      "pending": false,
+      "channel": "飞书",
+      "status": true,
+      "trace": [
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "/owned_inbound one two",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "helper_history",
+          "args": [
+            {
+              "userid": 9007199254740993,
+              "username": "owned-name",
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "text": "/owned_inbound one two"
+            }
+          ],
+          "kwargs": {
+            "role": "user"
+          }
+        },
+        {
+          "kind": "history",
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": "owned-name",
+            "text": "/owned_inbound one two",
+            "action": 0
+          }
+        },
+        {
+          "kind": "start",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1",
+            "text": "/owned_inbound one two"
+          }
+        },
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "/owned_inbound one two",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "event",
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_inbound one two",
+            "user": 9007199254740993,
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "processing_status": {
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "userid": 9007199254740993,
+              "message_id": "m1",
+              "chat_id": "c1",
+              "metadata": {
+                "owned": true
+              }
+            }
+          }
+        }
+      ],
+      "exception": null
+    },
+    {
+      "name": "unknown-command",
+      "text": "/owned_missing",
+      "pending": false,
+      "channel": "飞书",
+      "status": false,
+      "trace": [
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "/owned_missing",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "helper_history",
+          "args": [
+            {
+              "userid": 9007199254740993,
+              "username": "owned-name",
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "text": "/owned_missing"
+            }
+          ],
+          "kwargs": {
+            "role": "user"
+          }
+        },
+        {
+          "kind": "history",
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": "owned-name",
+            "text": "/owned_missing",
+            "action": 0
+          }
+        },
+        {
+          "kind": "start",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1",
+            "text": "/owned_missing"
+          }
+        },
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "/owned_missing",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "event",
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_missing",
+            "user": 9007199254740993,
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "processing_status": null
+          }
+        }
+      ],
+      "exception": null
+    },
+    {
+      "name": "explicit-ordinary",
+      "text": "/noai: /owned_inbound owned",
+      "pending": false,
+      "channel": "飞书",
+      "status": true,
+      "trace": [
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "/noai: /owned_inbound owned",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "helper_history",
+          "args": [
+            {
+              "userid": 9007199254740993,
+              "username": "owned-name",
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "text": "/noai: /owned_inbound owned"
+            }
+          ],
+          "kwargs": {
+            "role": "user"
+          }
+        },
+        {
+          "kind": "history",
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": "owned-name",
+            "text": "/noai: /owned_inbound owned",
+            "action": 0
+          }
+        },
+        {
+          "kind": "start",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1",
+            "text": "/noai: /owned_inbound owned"
+          }
+        },
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "/noai: /owned_inbound owned",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "event",
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_inbound owned",
+            "user": 9007199254740993,
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "processing_status": {
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "userid": 9007199254740993,
+              "message_id": "m1",
+              "chat_id": "c1",
+              "metadata": {
+                "owned": true
+              }
+            }
+          }
+        }
+      ],
+      "exception": null
+    },
+    {
+      "name": "explicit-ordinary-prefix",
+      "text": "/noai /ai ordinary text",
+      "pending": false,
+      "channel": "飞书",
+      "status": true,
+      "trace": [
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "/noai /ai ordinary text",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "helper_history",
+          "args": [
+            {
+              "userid": 9007199254740993,
+              "username": "owned-name",
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "text": "/noai /ai ordinary text"
+            }
+          ],
+          "kwargs": {
+            "role": "user"
+          }
+        },
+        {
+          "kind": "history",
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": "owned-name",
+            "text": "/noai /ai ordinary text",
+            "action": 0
+          }
+        },
+        {
+          "kind": "start",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1",
+            "text": "/noai /ai ordinary text"
+          }
+        },
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "/noai /ai ordinary text",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "event",
+          "type": "user.message",
+          "data": {
+            "text": "/ai ordinary text",
+            "userid": 9007199254740993,
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "chat_id": "c1",
+            "reply_to_message_id": 42
+          }
+        },
+        {
+          "kind": "finish",
+          "data": {
+            "status": {
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "userid": 9007199254740993,
+              "message_id": "m1",
+              "chat_id": "c1",
+              "metadata": {
+                "owned": true
+              }
+            },
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1"
+          }
+        }
+      ],
+      "exception": null
+    },
+    {
+      "name": "empty-explicit",
+      "text": "/noai",
+      "pending": false,
+      "channel": "飞书",
+      "status": true,
+      "trace": [
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "/noai",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "helper_history",
+          "args": [
+            {
+              "userid": 9007199254740993,
+              "username": "owned-name",
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "text": "/noai"
+            }
+          ],
+          "kwargs": {
+            "role": "user"
+          }
+        },
+        {
+          "kind": "history",
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": "owned-name",
+            "text": "/noai",
+            "action": 0
+          }
+        },
+        {
+          "kind": "start",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1",
+            "text": "/noai"
+          }
+        },
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "/noai",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "post",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "title": "请输入要使用传统交互处理的内容",
+            "save_history": false
+          }
+        },
+        {
+          "kind": "finish",
+          "data": {
+            "status": {
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "userid": 9007199254740993,
+              "message_id": "m1",
+              "chat_id": "c1",
+              "metadata": {
+                "owned": true
+              }
+            },
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1"
+          }
+        }
+      ],
+      "exception": null
+    },
+    {
+      "name": "input-first",
+      "text": "/owned_inbound",
+      "pending": true,
+      "channel": "飞书",
+      "status": true,
+      "trace": [
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "/owned_inbound",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        }
+      ],
+      "exception": null
+    },
+    {
+      "name": "callback",
+      "text": "CALLBACK:[PLUGIN]OwnedHostMessage|button|rest",
+      "pending": false,
+      "channel": "飞书",
+      "status": true,
+      "trace": [
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "CALLBACK:[PLUGIN]OwnedHostMessage|button|rest",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "start",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1",
+            "text": "CALLBACK:[PLUGIN]OwnedHostMessage|button|rest"
+          }
+        },
+        {
+          "kind": "event",
+          "type": "message.action",
+          "data": {
+            "plugin_id": "OwnedHostMessage",
+            "text": "button|rest",
+            "userid": 9007199254740993,
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "original_message_id": "m1",
+            "original_chat_id": "c1"
+          }
+        },
+        {
+          "kind": "finish",
+          "data": {
+            "status": {
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "userid": 9007199254740993,
+              "message_id": "m1",
+              "chat_id": "c1",
+              "metadata": {
+                "owned": true
+              }
+            },
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1"
+          }
+        }
+      ],
+      "exception": null
+    },
+    {
+      "name": "callback-unsupported",
+      "text": "CALLBACK:[PLUGIN]OwnedHostMessage|button",
+      "pending": false,
+      "channel": "Web",
+      "status": false,
+      "trace": [
+        {
+          "kind": "input",
+          "data": {
+            "channel": "Web",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "CALLBACK:[PLUGIN]OwnedHostMessage|button",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "start",
+          "data": {
+            "channel": "Web",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1",
+            "text": "CALLBACK:[PLUGIN]OwnedHostMessage|button"
+          }
+        }
+      ],
+      "exception": null
+    },
+    {
+      "name": "malformed-callback",
+      "text": "CALLBACK:[PLUGIN]OwnedHostMessage",
+      "pending": false,
+      "channel": "飞书",
+      "status": true,
+      "trace": [
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "CALLBACK:[PLUGIN]OwnedHostMessage",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "start",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1",
+            "text": "CALLBACK:[PLUGIN]OwnedHostMessage"
+          }
+        },
+        {
+          "kind": "finish",
+          "data": {
+            "status": {
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "userid": 9007199254740993,
+              "message_id": "m1",
+              "chat_id": "c1",
+              "metadata": {
+                "owned": true
+              }
+            },
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1"
+          }
+        }
+      ],
+      "exception": "ValueError"
+    },
+    {
+      "name": "qq-callback",
+      "text": "CALLBACK:[PLUGIN]OwnedHostMessage|button",
+      "pending": false,
+      "channel": "QQ",
+      "status": false,
+      "trace": [
+        {
+          "kind": "input",
+          "data": {
+            "channel": "QQ",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "CALLBACK:[PLUGIN]OwnedHostMessage|button",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "start",
+          "data": {
+            "channel": "QQ",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1",
+            "text": "CALLBACK:[PLUGIN]OwnedHostMessage|button"
+          }
+        },
+        {
+          "kind": "event",
+          "type": "message.action",
+          "data": {
+            "plugin_id": "OwnedHostMessage",
+            "text": "button",
+            "userid": 9007199254740993,
+            "channel": "QQ",
+            "source": "ParsedSource",
+            "original_message_id": "m1",
+            "original_chat_id": "c1"
+          }
+        }
+      ],
+      "exception": null
+    },
+    {
+      "name": "input-after-status",
+      "text": "/owned_inbound",
+      "pending": false,
+      "pending_after_status": true,
+      "channel": "飞书",
+      "status": true,
+      "trace": [
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "/owned_inbound",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "helper_history",
+          "args": [
+            {
+              "userid": 9007199254740993,
+              "username": "owned-name",
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "text": "/owned_inbound"
+            }
+          ],
+          "kwargs": {
+            "role": "user"
+          }
+        },
+        {
+          "kind": "history",
+          "args": [],
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": "owned-name",
+            "text": "/owned_inbound",
+            "action": 0
+          }
+        },
+        {
+          "kind": "start",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1",
+            "text": "/owned_inbound"
+          }
+        },
+        {
+          "kind": "input",
+          "data": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "username": "owned-name",
+            "text": "/owned_inbound",
+            "original_chat_id": "c1",
+            "reply_to_message_id": 42,
+            "images": null,
+            "audio_refs": null,
+            "files": null,
+            "has_audio_input": false
+          }
+        },
+        {
+          "kind": "finish",
+          "data": {
+            "status": {
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "userid": 9007199254740993,
+              "message_id": "m1",
+              "chat_id": "c1",
+              "metadata": {
+                "owned": true
+              }
+            },
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "m1",
+            "chat_id": "c1"
+          }
+        }
+      ],
+      "exception": null
+    }
+  ],
+  "finish_cases": [
+    {
+      "name": "different",
+      "status_user": "status-user",
+      "status_message": "status-message",
+      "status_chat": "status-chat",
+      "trace": [
+        {
+          "method": "mark_message_processing_finished",
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": "status-user",
+            "message_id": "status-message",
+            "chat_id": "status-chat",
+            "status": {
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "userid": "status-user",
+              "message_id": "status-message",
+              "chat_id": "status-chat",
+              "metadata": {
+                "owned": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "zero",
+      "status_user": 0,
+      "status_message": 0,
+      "status_chat": 0,
+      "trace": [
+        {
+          "method": "mark_message_processing_finished",
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "original-message",
+            "chat_id": "original-chat",
+            "status": {
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "userid": 0,
+              "message_id": 0,
+              "chat_id": 0,
+              "metadata": {
+                "owned": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "none",
+      "status_user": null,
+      "status_message": null,
+      "status_chat": null,
+      "trace": [
+        {
+          "method": "mark_message_processing_finished",
+          "kwargs": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 9007199254740993,
+            "message_id": "original-message",
+            "chat_id": "original-chat",
+            "status": {
+              "channel": "飞书",
+              "source": "ParsedSource",
+              "userid": null,
+              "message_id": null,
+              "chat_id": null,
+              "metadata": {
+                "owned": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "normalized_username_callback": {
+    "parsed": {
+      "userid": 0,
+      "username": null,
+      "channel": "飞书",
+      "source": "ParsedSource",
+      "text": "CALLBACK:bad",
+      "images": null,
+      "audio_refs": null,
+      "files": null,
+      "message_id": "m1",
+      "chat_id": "c1",
+      "reply_to_message_id": null
+    },
+    "trace": [
+      {
+        "kind": "input",
+        "data": {
+          "channel": "飞书",
+          "source": "ParsedSource",
+          "userid": 0,
+          "username": "0",
+          "text": "CALLBACK:bad",
+          "original_chat_id": "c1",
+          "reply_to_message_id": null,
+          "images": null,
+          "audio_refs": null,
+          "files": null,
+          "has_audio_input": false
+        }
+      },
+      {
+        "kind": "start",
+        "data": {
+          "channel": "飞书",
+          "source": "ParsedSource",
+          "userid": 0,
+          "message_id": "m1",
+          "chat_id": "c1",
+          "text": "CALLBACK:bad"
+        }
+      },
+      {
+        "kind": "post",
+        "data": {
+          "channel": "飞书",
+          "source": "ParsedSource",
+          "userid": 0,
+          "username": "0",
+          "title": "回调数据格式错误，请检查！",
+          "save_history": false
+        }
+      },
+      {
+        "kind": "finish",
+        "data": {
+          "status": {
+            "channel": "飞书",
+            "source": "ParsedSource",
+            "userid": 0,
+            "message_id": "m1",
+            "chat_id": "c1",
+            "metadata": {
+              "owned": true
+            }
+          },
+          "channel": "飞书",
+          "source": "ParsedSource",
+          "userid": 0,
+          "message_id": "m1",
+          "chat_id": "c1"
+        }
+      }
+    ]
+  },
+  "exclusions": {
+    "audio_transcription": "message.py1565+ first checks AgentCapabilityManager.is_audio_input_available and later invokes LLMHelper; model-specific transcription excluded; ordinary parser body and audio_refs remain transported.",
+    "model_routes": "_handle_ai_message/_is_agent_message model dispatch and agent callbacks excluded; no model/agent/workflow extension point added.",
+    "business_interactions": "site/subscribe/media/transfer built-in command flows are not reimplemented by the plugin inbound bridge; registered ordinary plugin commands and plugin callbacks are retained."
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "status": "independent_source_target_and_actual_dual_race_SDK_passed_final_combined_Linux_browser_pending",
+  "reviewer": "/root/settings_scope, independent of /root/message_audit implementation",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_source_sha256": {
+    "app/db/site_oper.py": "08e202eb3fc97c7fe5d67d7253867334ada9bdd1747eb23b2d3cbe26da7f0cf0",
+    "app/db/models/site.py": "5cda6b9eb37de3cc25c66abfd41832341ea5270bc73971a24425bd00ef63c8e4",
+    "app/utils/http.py": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "app/core/config.py": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+    "app/utils/system.py": "3477c8585dd955bcb42f7180e5fabaae05c528af8ddb0cbae0935dbdb0c031db",
+    "version.py": "eee2f1420ca9ab7af63226cfaaf4f7eea4de246c2ae422d0a527feff3b5bcb31"
+  },
+  "source_locations": [
+    "app/db/site_oper.py:26–42,92–96",
+    "app/db/models/site.py:26–34,63–66",
+    "app/utils/http.py:329–464,560–594",
+    "app/core/config.py:959–963",
+    "app/utils/system.py:269–282",
+    "version.py:1"
+  ],
+  "current_targets": {
+    "internal/plugins/site_http_host.go": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+    "internal/app/plugin_original_host_site_http.go": "726a0f353eab7311262f247f80fe24f934ec6a8da91ad324590d525dd25e4399",
+    "internal/app/plugin_original_host_site_http_json.go": "cdf90011d2d6acaea407241063d6da4377b952bf65e1fa44fbbb00a42b0f8ddc",
+    "internal/app/plugin_original_host_site_http_test.go": "89008f73666143d9d8f8a80b80856cf90a06902e2f9646db6fafb9bee717d481",
+    "internal/app/plugin_original_server_user_agent.go": "5700b9fddf4410a10946c86da75dff3dbc437d9542689de93ced280503b6330f",
+    "internal/app/plugin_original_host_settings.go": "d5070bca96fa25c833c3dfde951246d443c757f03eadd5226f7ff99ff438626f",
+    "internal/app/plugin_original_resources.go": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b",
+    "cmd/plugin-host-site-http-fixture/main.go": "614f2a8ade51fd7e708166e49592ef1143b14fdc8cdded7148c3821335c8648d",
+    "internal/plugins/concurrent_session.go": "c3f79283e113a669737cc44d1cdc23dc47cc5cd346e7ec02339ea9d6b838cdd6"
+  },
+  "evidence_sha256": {
+    "testdata/plugin-platform-final-20261104/settings/s18-independent-sdk-binding.json": "673d719a55cd522b0c21b9d8a187f2a21f53c8ab079fa1568bf5e7d99cdd507f",
+    "testdata/plugin-platform-final-20261104/settings/s18-independent-current-sdk-race.jsonl": "1fb2791dd18afe0c9c2c49d72cb540f395c6a1ecb97fde005a23ade26a28cd29",
+    "testdata/plugin-platform-final-20261104/settings/site-http-independent-source-oracle.json": "82f75be7d32516af85984b42ada1f12e938e68e79adfe18a171b5094a005998b",
+    "testdata/plugin-platform-final-20261104/settings/site-http-cookie-independent-source-oracle.json": "e00ea624fb59abe2f22e49d99df985fe7f0a8be06ecd6a77ab9e4678f6788d8c",
+    "testdata/plugin-platform-final-20261104/settings/site-http-useragent-independent-source-oracle.json": "b9efe3ca4c24b739aa5ace1fa8c5d553501e5d5974fdfc5f305728b73e7e72ff",
+    "testdata/plugin-platform-final-20261104/settings/site-http-post-retry-independent-source-oracle.json": "aaa4efea7ff3d8516b53acb6b8b55d11ed698df5d6c305180c0848886f4e53fa",
+    "testdata/plugin-platform-final-20261104/settings/site_http_post_retry_source_oracle.py": "d01c9ad2c903751014d5970e456888f3410377748d8bcc3eba1d80ddfcb7ba73",
+    "testdata/plugin-platform-final-20261104/settings/idempotency_retry_cause.go": "4ca157943aff30c22c2b2c568bee215c2b0257d73926fb67d5cb5f874b87231c",
+    "testdata/plugin-platform-final-20261104/settings/idempotency-go-retry-cause.json": "28b57e200e33517a74bdd63a3d65dbb8485ace94292c0e7369d464085bc3315f",
+    "testdata/plugin-platform-final-20261104/settings/settings-complete-scope-review.json": "442008286ed059e8a223fbcf89089637d581dc08cf900e7fa0961da638605a69"
+  },
+  "actual_independent_result": {
+    "roots_pass": 6,
+    "named_subcases_pass": 14,
+    "source_wire_cookie_UA_examples": 18,
+    "reserved_credential_header_cases": 8,
+    "failures": 0,
+    "skips": 0,
+    "seconds": 80.381,
+    "both_host_and_new_fixture_race_enabled": true,
+    "fixture_binary_removed": true,
+    "owned_temp_empty": true
+  },
+  "reviewed_source_behavior": [
+    "Configured-site SiteOper raw fields can be read by trusted plugin code. Separate private Credentials returns exact current Cookie/UA/APIKey/Token per site identity; safe public Sites.Read stays distinct, enabling arbitrary ordinary Go credential algorithms without host expression/transform framework.",
+    "GET/POST body/query/form pair ordering, repeated names, JSON ASCII/spacing, default vs explicit header defaults, status/non2xx/None distinction and30redirect behavior are source-oracle derived. Host custom reserved-header/origin protections are explicit adaptations.",
+    "Source response.cookies.get_dict filtering and next fresh RequestUtils(cookies=dict) are actually compared on8 edge cases, including foreign/expired, empty, secure, same-name paths, set-then-delete; explicit empty override never falls back to configured Cookie.",
+    "Site config/native identity/plugin scope checked before dispatch and each redirect, changed POST preserves actual completed/unknown state and does not pretend unsent. Fresh detached cleanup context works, stale stopped callback fails, source/clone can explicitly use same global configured site as source does.",
+    "USER_AGENT uses pinned MoviePilot compatibility version2.15.7 matching fixed version.py plus current Unix system/release/source CPU-name mapping; default equal-host UA adds current lower instance identity, while browser UA/explicit headers do not. Source4 frame-derived examples and real caller/clone SDK verify suffix conditions. The earlier discovery report native LightMedia-label suggestion is superseded by this actual compatibility identity implementation."
+  ],
+  "necessary_adaptations": [
+    "Trusted private typed JSON IPC replaces Python in-process Site objects. Native empty credential strings reflect target existing native settings representation; no raw credential HTTP endpoint or additional multiuser permission system. Secret values/cookies stay in trusted plugin memory and must not be logged/persisted; no claim of OS sandbox/forced memory erasure.",
+    "Scoped convenience Request accepts canonical configured-site relative paths and rejects cross-origin redirect/Referer/Origin, protected/hop-by-hop/idempotency headers. Private credentials plus S19 proxy snapshot leave ordinary trusted Go IO available for source algorithms; unrelated credential forwarding remains prohibited by user boundary.",
+    "Source verify=False becomes existing verified TLS boundary; payload/header/JSON typed bounds and safe diagnostic codes replace source unbounded Python objects/tracebacks. Native raw JSON number spellings retain their bytes/precision; raw Body permits exact caller-specified wire encoding.",
+    "Source caller directory maps to authenticated Go lower instance identity; source software compatibility identity is pinned to the requested source revision, distinct from native application release identity."
+  ],
+  "causal_reserved_header_fix": {
+    "finding": "Credential header binding initially bypassed ordinary idempotency and hop-by-hop reserved rules. Source POST does not retry on this condition, but standard Go transport with Idempotency-Key replays a body already received when a reused connection closes before response.",
+    "actual_source_trace": "Both source cases received POST body once and returned None.",
+    "actual_Go_trace": "No key:1 receipt/error; key:2 receipts/success.",
+    "fix": "Credential binding now reuses reserved checks except explicit supported authentication header targets; actual SDK rejects8 bypass names before network.",
+    "public_header_tradeoff": "Idempotency header rejection is explicit Go transport adaptation to preserve nonreplay behavior, not a claim that original RequestUtils rejected those names."
+  },
+  "historical_preflight_red": "Own first command used default Mac symlinked temp ancestor; all6 failed install preflight before resource execution. Preserved s18-independent-default-temp-red.jsonl, corrected to owned0700 TMPDIR without product/expected-output change.",
+  "pending": [
+    "Current combined Linux cmd/server and newly built installed worker/source-clone/update/cold/uninstall evidence",
+    "Actual browser UI against stated final binary, owned process/container/profile/tunnel cleanup",
+    "Final current whole-platform/SDK compilation binding and regression gates"
+  ]
+}

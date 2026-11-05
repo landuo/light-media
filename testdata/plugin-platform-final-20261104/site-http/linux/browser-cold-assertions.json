@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "instance": "OwnedHostSiteHTTP",
+      "expected_text": "browser S18 recovered",
+      "calls": 6,
+      "cold_pid_changed": true,
+      "cold_state_equal": true
+    },
+    {
+      "instance": "OwnedHostSiteHTTPcopy",
+      "expected_text": "browser S18 clone",
+      "calls": 2,
+      "cold_pid_changed": true,
+      "cold_state_equal": true
+    }
+  ],
+  "all_wire_private_material_redacted": true
+}

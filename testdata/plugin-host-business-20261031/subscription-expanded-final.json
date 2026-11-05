@@ -1,0 +1,119 @@
+{
+  "scope": "S05 ordinary plugin host subscription DB read/update",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_orm_columns": 46,
+  "typed_writable_columns": [
+    "sites",
+    "filter_groups",
+    "resolution",
+    "quality",
+    "effect",
+    "include",
+    "exclude",
+    "save_path",
+    "keyword",
+    "imdbid",
+    "name",
+    "year",
+    "poster",
+    "backdrop",
+    "vote",
+    "description",
+    "state",
+    "season",
+    "total_episode",
+    "start_episode",
+    "lack_episode",
+    "note",
+    "downloader",
+    "best_version",
+    "best_version_full",
+    "current_priority",
+    "episode_priority",
+    "search_imdbid",
+    "manual_total_episode",
+    "custom_words"
+  ],
+  "typed_writable_count": 30,
+  "source_only_boundaries": {
+    "immutable_native_identity": [
+      "id",
+      "type",
+      "tmdbid",
+      "media_source",
+      "media_id",
+      "mediaid",
+      "tvdbid",
+      "doubanid",
+      "bangumiid",
+      "anilistid"
+    ],
+    "single_user_owner_read_only": [
+      "username"
+    ],
+    "host_execution_timestamps_read_only": [
+      "date",
+      "last_update"
+    ],
+    "no_existing_native_business_column": [
+      "filter",
+      "media_category",
+      "episode_group"
+    ]
+  },
+  "other_input_boundaries": [
+    "Source state is native N/R/P/S; other source SQL strings have no executable host state.",
+    "TV season null cannot be converted to season0 (specials); exact TV season remains required. Movie scope columns explicitly written are preserved and queryable while native movie acquisition still ignores episode scope, like source.",
+    "Year is decimal0..9999 or empty/null mapped to native year plus exact string projection; arbitrary non-year strings have no native year semantics.",
+    "Native season/episode counters retain0..9999 guard, selected season must not duplicate existing subscription or conflict with native explicit mappings.",
+    "Site/downloader references use host stable IDs; downstream source projection resolves original numericID/name. Missing references reject; no credentials returned.",
+    "Existing policy/recognition word validation and payload bounds remain; JSON cannot represent nonfinite SQL REAL values. No arbitrary SQLite column setter exposed."
+  ],
+  "source_flag_contract": {
+    "columns": [
+      "best_version",
+      "best_version_full",
+      "search_imdbid",
+      "manual_total_episode"
+    ],
+    "source_normalizer": "app/db/subscribe_oper.py:10-22 converts bool to integer only",
+    "source_consumption": [
+      "app/chain/subscribe.py:169,284,339,472,1402 direct best_version truth",
+      "app/chain/subscribe.py:617-624 bool(full) and bool(best)",
+      "app/chain/subscribe.py:1415 imdb/title ternary truth",
+      "app/chain/subscribe.py:2156,4181,4262 manual_total truth"
+    ],
+    "implementation": "finite integer/real/text union; host actual SQLite temporary INTEGER affinity cell normalizes persisted scalar; native boolean from scalar truth; only noncanonical four-column values retained for projection. Temporary cell left empty, absent from persistent schema. REAL JSON uses exponent representation to avoid misbinding an integral-looking float >int64 on cold restore.",
+    "actual_source_oracle": "subscription-source-orm-r5/oracle.json",
+    "actual_source_cases": 35,
+    "source_container_isolation": "subscription-source-orm-r5/cleanup.json"
+  },
+  "effects_verified": [
+    "All writable source ORM patch columns compared against actual source SQLAlchemy2.0.51 / owned in-memory SQLite, including null/empty/equal, bool/2/-1/float/text/numeric affinity/int64 limits and adjacent integers/NOTNULL/overflow.",
+    "Actual external SDK mutates native quality state, title/year/IMDb, season/target episodes, downloader selection and default fallback, encrypted subscription words actually alter recognition title.",
+    "Source P/best_version blocks ordinary native completion gate; native S pauses; no subscribe.modified UI event added by raw DB patch.",
+    "No-op logical NULL/numeric affinity/equal patch avoids revision/job cancellation; compare exact JSON numbers without float64 collapse. Actual changes cancel stale revision work as necessary native guard adaptation.",
+    "Subscription word SQL failure rolls back native row/revision and active words; cold independently restarted standard worker restores exact scalar/year and working encrypted matcher.",
+    "Actual NAS cmd/server pipeline saved new metadata/weak scalar flags/word data, no-op normalized2.0, cold restore, 1.0->1.1 different executable/PID update, clone old version/PID/data retained, uninstallAPI404."
+  ],
+  "normal_log": "verification/all-expanded-normal.log",
+  "race_log": "verification/subscription-expanded-race.log",
+  "linux_process": "process-linux-expanded/result.json",
+  "linux_build": "build-server-linux-expanded/build.json",
+  "linux_cleanup": "process-linux-expanded/cleanup.json",
+  "files": {
+    "cmd/plugin-host-business-fixture/main.go": "479e5299b7c4f07370cc1c091b5045908a69dc1ba85d226f952a037308798754",
+    "internal/app/plugin_original_host_subscriptions.go": "74686137aff7633f4c5884953ce63bc1cd550bea5dca09a5e0a73005e980123a",
+    "internal/app/plugin_original_host_subscriptions_extended_test.go": "e01cbb04e97fac7d6fa648c03a70fb2208dc5d98e8032e58885ec90494c4cab2",
+    "internal/app/plugin_original_host_subscriptions_null_test.go": "b5edc0b937a91f07832575551a2f48480123abd62e405c1834917aac5a7fcd96",
+    "internal/app/plugin_original_host_subscriptions_patch.go": "09eb3268fe232451fa9fbc32a1a4d80b02d41dd3bb1e76e3fe710f457685d5b3",
+    "internal/app/plugin_original_host_subscriptions_test.go": "4c80cd4f5f18f1db4a87ec216efeb8b8f59c1bdb6fcdd5b7be862ba28d3753e4",
+    "internal/app/subscription_quality_source.go": "82e80c3978be70b0b7c5dbda8f68570e861eba7923e96ca56301c34af0704923",
+    "internal/app/types.go": "3baaef53d74ca643b094576025cb5edd6488037b2efee45e31f5ddb2b4a4ee64",
+    "internal/plugins/subscription_host.go": "518ef5fb6e95d820d9b1c521ab588891208a955a86577b0cf3d8ccdae2b4e937",
+    "internal/plugins/subscription_host_test.go": "bccbe96710a8aca52aa3cb51d40af5e3b38519055c384d628548ed2fca5a9927",
+    "testdata/plugin-host-business-20261031/run_process.py": "533ce14c492e9c654677159cfe1cffc9d9628fb2922cb856d27cbd346cf794fd",
+    "testdata/plugin-host-business-20261031/subscription-source-orm-r5/oracle.json": "4bddf99666f15752152e0e9305aa1ec9c011754cb199df823e6813e12eea96ed",
+    "testdata/plugin-host-business-20261031/subscription_source_oracle.py": "cb7911c54bb881488befea37718a47e2d70046ef965b43930dda219bf0ad17cf"
+  }
+}

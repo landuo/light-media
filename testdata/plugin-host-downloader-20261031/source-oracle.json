@@ -1,0 +1,2299 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "isolated fixed-source AST replay; no application imports or production endpoints",
+  "sources": {
+    "qbittorrent": {
+      "path": "app/modules/qbittorrent/qbittorrent.py",
+      "sha256": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+      "methods": {
+        "get_torrents": 224,
+        "get_completed_torrents": 254,
+        "get_downloading_torrents": 291,
+        "delete_torrents_tag": 304,
+        "remove_torrents_tag": 321,
+        "set_torrents_tag": 336,
+        "__get_last_add_torrentid_by_tag": 367,
+        "get_torrent_id_by_tag": 383,
+        "add_torrent": 401,
+        "start_torrents": 477,
+        "stop_torrents": 490,
+        "delete_torrents": 503,
+        "recheck_torrents": 608,
+        "set_torrent_category": 686
+      },
+      "control_calls": [
+        {
+          "method": "torrents_resume",
+          "arguments": {
+            "torrent_hashes": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ]
+          }
+        },
+        {
+          "method": "torrents_pause",
+          "arguments": {
+            "torrent_hashes": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ]
+          }
+        },
+        {
+          "method": "torrents_recheck",
+          "arguments": {
+            "torrent_hashes": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ]
+          }
+        },
+        {
+          "method": "torrents_delete",
+          "arguments": {
+            "delete_files": false,
+            "torrent_hashes": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ]
+          }
+        },
+        {
+          "method": "torrents_delete",
+          "arguments": {
+            "delete_files": true,
+            "torrent_hashes": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ]
+          }
+        },
+        {
+          "method": "torrents_add_tags",
+          "arguments": {
+            "tags": [
+              "owned"
+            ],
+            "torrent_hashes": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ]
+          }
+        },
+        {
+          "method": "torrents_remove_tags",
+          "arguments": {
+            "torrent_hashes": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ],
+            "tags": [
+              "owned"
+            ]
+          }
+        },
+        {
+          "method": "torrents_remove_tags",
+          "arguments": {
+            "torrent_hashes": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ],
+            "tags": [
+              "owned"
+            ]
+          }
+        },
+        {
+          "method": "torrents_delete_tags",
+          "arguments": {
+            "tags": [
+              "owned"
+            ]
+          }
+        },
+        {
+          "method": "torrents_set_category",
+          "arguments": {
+            "category": "owned",
+            "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    },
+    "transmission": {
+      "path": "app/modules/transmission/transmission.py",
+      "sha256": "6fc20e208b86e9e68ada074643f82b88270c2e51749e460ad881b10f744cf676",
+      "methods": {
+        "get_torrents": 102,
+        "get_completed_torrents": 136,
+        "get_downloading_torrents": 151,
+        "set_torrent_tag": 168,
+        "start_torrents": 227,
+        "stop_torrents": 240,
+        "delete_torrents": 253,
+        "recheck_torrents": 375,
+        "change_torrent": 388
+      },
+      "control_calls": [
+        {
+          "method": "start_torrent",
+          "arguments": {
+            "ids": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ]
+          }
+        },
+        {
+          "method": "stop_torrent",
+          "arguments": {
+            "ids": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ]
+          }
+        },
+        {
+          "method": "verify_torrent",
+          "arguments": {
+            "ids": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ]
+          }
+        },
+        {
+          "method": "remove_torrent",
+          "arguments": {
+            "delete_data": false,
+            "ids": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ]
+          }
+        },
+        {
+          "method": "remove_torrent",
+          "arguments": {
+            "delete_data": true,
+            "ids": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "cases": [
+    {
+      "kind": "qbittorrent",
+      "tags": null,
+      "rows": [
+        {
+          "hash": "0000000000000000000000000000000000000001",
+          "state": "uploading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000002",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000003",
+          "state": "queuedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000004",
+          "state": "stalledUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000005",
+          "state": "forcedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000006",
+          "state": "allocating",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000007",
+          "state": "checkingDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000008",
+          "state": "checkingUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000009",
+          "state": "downloading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000a",
+          "state": "error",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000b",
+          "state": "forcedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000c",
+          "state": "missingFiles",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000d",
+          "state": "metaDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000e",
+          "state": "moving",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000f",
+          "state": "queuedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000010",
+          "state": "stalledDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000011",
+          "state": "unknown",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000012",
+          "state": "",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000065",
+          "state": "pausedUP",
+          "progress": 0.9,
+          "amount_left": 0,
+          "tags": "alpha"
+        },
+        {
+          "hash": "0000000000000000000000000000000000000066",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 1,
+          "tags": "alpha"
+        }
+      ],
+      "expected_hashes": [
+        "0000000000000000000000000000000000000001",
+        "0000000000000000000000000000000000000002",
+        "0000000000000000000000000000000000000003",
+        "0000000000000000000000000000000000000004",
+        "0000000000000000000000000000000000000005",
+        "0000000000000000000000000000000000000012"
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "tags": [
+        "alpha"
+      ],
+      "rows": [
+        {
+          "hash": "0000000000000000000000000000000000000001",
+          "state": "uploading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000002",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000003",
+          "state": "queuedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000004",
+          "state": "stalledUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000005",
+          "state": "forcedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000006",
+          "state": "allocating",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000007",
+          "state": "checkingDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000008",
+          "state": "checkingUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000009",
+          "state": "downloading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000a",
+          "state": "error",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000b",
+          "state": "forcedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000c",
+          "state": "missingFiles",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000d",
+          "state": "metaDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000e",
+          "state": "moving",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000f",
+          "state": "queuedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000010",
+          "state": "stalledDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000011",
+          "state": "unknown",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000012",
+          "state": "",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000065",
+          "state": "pausedUP",
+          "progress": 0.9,
+          "amount_left": 0,
+          "tags": "alpha"
+        },
+        {
+          "hash": "0000000000000000000000000000000000000066",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 1,
+          "tags": "alpha"
+        }
+      ],
+      "expected_hashes": [
+        "0000000000000000000000000000000000000001",
+        "0000000000000000000000000000000000000002",
+        "0000000000000000000000000000000000000003",
+        "0000000000000000000000000000000000000004",
+        "0000000000000000000000000000000000000005",
+        "0000000000000000000000000000000000000012"
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "tags": [
+        "alpha",
+        "beta"
+      ],
+      "rows": [
+        {
+          "hash": "0000000000000000000000000000000000000001",
+          "state": "uploading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000002",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000003",
+          "state": "queuedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000004",
+          "state": "stalledUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000005",
+          "state": "forcedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000006",
+          "state": "allocating",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000007",
+          "state": "checkingDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000008",
+          "state": "checkingUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000009",
+          "state": "downloading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000a",
+          "state": "error",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000b",
+          "state": "forcedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000c",
+          "state": "missingFiles",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000d",
+          "state": "metaDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000e",
+          "state": "moving",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000f",
+          "state": "queuedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000010",
+          "state": "stalledDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000011",
+          "state": "unknown",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000012",
+          "state": "",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000065",
+          "state": "pausedUP",
+          "progress": 0.9,
+          "amount_left": 0,
+          "tags": "alpha"
+        },
+        {
+          "hash": "0000000000000000000000000000000000000066",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 1,
+          "tags": "alpha"
+        }
+      ],
+      "expected_hashes": [
+        "0000000000000000000000000000000000000001",
+        "0000000000000000000000000000000000000002",
+        "0000000000000000000000000000000000000003",
+        "0000000000000000000000000000000000000004",
+        "0000000000000000000000000000000000000005",
+        "0000000000000000000000000000000000000012"
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "tags": [
+        "absent"
+      ],
+      "rows": [
+        {
+          "hash": "0000000000000000000000000000000000000001",
+          "state": "uploading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000002",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000003",
+          "state": "queuedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000004",
+          "state": "stalledUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000005",
+          "state": "forcedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000006",
+          "state": "allocating",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000007",
+          "state": "checkingDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000008",
+          "state": "checkingUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000009",
+          "state": "downloading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000a",
+          "state": "error",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000b",
+          "state": "forcedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000c",
+          "state": "missingFiles",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000d",
+          "state": "metaDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000e",
+          "state": "moving",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000f",
+          "state": "queuedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000010",
+          "state": "stalledDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000011",
+          "state": "unknown",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000012",
+          "state": "",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000065",
+          "state": "pausedUP",
+          "progress": 0.9,
+          "amount_left": 0,
+          "tags": "alpha"
+        },
+        {
+          "hash": "0000000000000000000000000000000000000066",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 1,
+          "tags": "alpha"
+        }
+      ],
+      "expected_hashes": []
+    },
+    {
+      "kind": "transmission",
+      "tags": null,
+      "rows": [
+        {
+          "hashString": "00000000000000000000000000000000000000c9",
+          "status": 0,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ca",
+          "status": 1,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cb",
+          "status": 2,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cc",
+          "status": 3,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cd",
+          "status": 4,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ce",
+          "status": 5,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cf",
+          "status": 6,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        }
+      ],
+      "expected_hashes": [
+        "00000000000000000000000000000000000000ce",
+        "00000000000000000000000000000000000000cf"
+      ]
+    },
+    {
+      "kind": "transmission",
+      "tags": [
+        "alpha"
+      ],
+      "rows": [
+        {
+          "hashString": "00000000000000000000000000000000000000c9",
+          "status": 0,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ca",
+          "status": 1,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cb",
+          "status": 2,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cc",
+          "status": 3,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cd",
+          "status": 4,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ce",
+          "status": 5,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cf",
+          "status": 6,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        }
+      ],
+      "expected_hashes": [
+        "00000000000000000000000000000000000000ce",
+        "00000000000000000000000000000000000000cf"
+      ]
+    },
+    {
+      "kind": "transmission",
+      "tags": [
+        "alpha",
+        "beta"
+      ],
+      "rows": [
+        {
+          "hashString": "00000000000000000000000000000000000000c9",
+          "status": 0,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ca",
+          "status": 1,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cb",
+          "status": 2,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cc",
+          "status": 3,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cd",
+          "status": 4,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ce",
+          "status": 5,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cf",
+          "status": 6,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        }
+      ],
+      "expected_hashes": [
+        "00000000000000000000000000000000000000ce",
+        "00000000000000000000000000000000000000cf"
+      ]
+    },
+    {
+      "kind": "transmission",
+      "tags": [
+        "absent"
+      ],
+      "rows": [
+        {
+          "hashString": "00000000000000000000000000000000000000c9",
+          "status": 0,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ca",
+          "status": 1,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cb",
+          "status": 2,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cc",
+          "status": 3,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cd",
+          "status": 4,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ce",
+          "status": 5,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cf",
+          "status": 6,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        }
+      ],
+      "expected_hashes": []
+    }
+  ],
+  "faults": [
+    {
+      "kind": "qbittorrent",
+      "name": "malformed_tags_before_completion_filter",
+      "rows": [
+        {
+          "hash": "ffffffffffffffffffffffffffffffffffffffff",
+          "state": "downloading",
+          "progress": 0,
+          "amount_left": 1
+        }
+      ],
+      "expected_error": true
+    },
+    {
+      "kind": "transmission",
+      "name": "incomplete_status_before_malformed_labels",
+      "rows": [
+        {
+          "hashString": "ffffffffffffffffffffffffffffffffffffffff",
+          "status": 4,
+          "labels": null
+        }
+      ],
+      "expected_error": false,
+      "expected_count": 0
+    }
+  ],
+  "lookups": [
+    {
+      "present": true,
+      "sleeps": [
+        3
+      ],
+      "reads": [
+        {
+          "status": "paused",
+          "tags": [
+            "owned"
+          ]
+        }
+      ],
+      "cleanup": [
+        [
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          [
+            "owned"
+          ]
+        ]
+      ],
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "present": false,
+      "sleeps": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "reads": [
+        {
+          "status": "paused",
+          "tags": [
+            "owned"
+          ]
+        },
+        {
+          "status": "paused",
+          "tags": [
+            "owned"
+          ]
+        },
+        {
+          "status": "paused",
+          "tags": [
+            "owned"
+          ]
+        },
+        {
+          "status": "paused",
+          "tags": [
+            "owned"
+          ]
+        },
+        {
+          "status": "paused",
+          "tags": [
+            "owned"
+          ]
+        },
+        {
+          "status": "paused",
+          "tags": [
+            "owned"
+          ]
+        },
+        {
+          "status": "paused",
+          "tags": [
+            "owned"
+          ]
+        },
+        {
+          "status": "paused",
+          "tags": [
+            "owned"
+          ]
+        },
+        {
+          "status": "paused",
+          "tags": [
+            "owned"
+          ]
+        }
+      ],
+      "cleanup": [],
+      "hash": null
+    }
+  ],
+  "tr_tag_cases": [
+    {
+      "tags": [
+        "new",
+        "new"
+      ],
+      "original_tags": [
+        "existing",
+        "new"
+      ],
+      "accepted": true,
+      "calls": [
+        {
+          "method": "change_torrent",
+          "arguments": {
+            "labels": [
+              "existing",
+              "new"
+            ],
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ],
+      "normalization": "Python set order is unspecified; compare sorted labels only"
+    },
+    {
+      "tags": [],
+      "original_tags": [
+        "existing"
+      ],
+      "accepted": false,
+      "calls": [],
+      "normalization": "Python set order is unspecified; compare sorted labels only"
+    }
+  ],
+  "tr_limit_cases": [
+    {
+      "upload_limit_kb": 123,
+      "download_limit_kb": 0,
+      "accepted": true,
+      "calls": [
+        {
+          "method": "change_torrent",
+          "arguments": {
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "uploadLimited": true,
+            "uploadLimit": 123,
+            "downloadLimited": false,
+            "downloadLimit": 0
+          }
+        }
+      ]
+    },
+    {
+      "upload_limit_kb": 0,
+      "download_limit_kb": 64,
+      "accepted": true,
+      "calls": [
+        {
+          "method": "change_torrent",
+          "arguments": {
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "uploadLimited": false,
+            "uploadLimit": 0,
+            "downloadLimited": true,
+            "downloadLimit": 64
+          }
+        }
+      ]
+    },
+    {
+      "upload_limit_kb": -1,
+      "download_limit_kb": null,
+      "accepted": true,
+      "calls": [
+        {
+          "method": "change_torrent",
+          "arguments": {
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "uploadLimited": true,
+            "uploadLimit": -1
+          }
+        }
+      ]
+    }
+  ],
+  "qb_add_cases": [
+    {
+      "paused": false,
+      "calls": [
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": null,
+            "torrent_files": {
+              "bytes_hex": "6f776e6564206d6174657269616c"
+            },
+            "save_path": "/owned/downloads",
+            "is_paused": false,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": true,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": null,
+            "category": null,
+            "upload_limit": 1024,
+            "download_limit": 2048
+          }
+        }
+      ]
+    },
+    {
+      "paused": true,
+      "calls": [
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": null,
+            "torrent_files": {
+              "bytes_hex": "6f776e6564206d6174657269616c"
+            },
+            "save_path": "/owned/downloads",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": true,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": null,
+            "category": null,
+            "upload_limit": 1024,
+            "download_limit": 2048
+          }
+        }
+      ]
+    }
+  ],
+  "downloading_cases": [
+    {
+      "kind": "qbittorrent",
+      "tags": null,
+      "rows": [
+        {
+          "hash": "0000000000000000000000000000000000000001",
+          "state": "uploading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000002",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000003",
+          "state": "queuedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000004",
+          "state": "stalledUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000005",
+          "state": "forcedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000006",
+          "state": "allocating",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000007",
+          "state": "checkingDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000008",
+          "state": "checkingUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000009",
+          "state": "downloading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000a",
+          "state": "error",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000b",
+          "state": "forcedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000c",
+          "state": "missingFiles",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000d",
+          "state": "metaDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000e",
+          "state": "moving",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000f",
+          "state": "queuedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000010",
+          "state": "stalledDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000011",
+          "state": "unknown",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000012",
+          "state": "",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000065",
+          "state": "pausedUP",
+          "progress": 0.9,
+          "amount_left": 0,
+          "tags": "alpha"
+        },
+        {
+          "hash": "0000000000000000000000000000000000000066",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 1,
+          "tags": "alpha"
+        }
+      ],
+      "expected_hashes": [
+        "0000000000000000000000000000000000000001",
+        "0000000000000000000000000000000000000002",
+        "0000000000000000000000000000000000000003",
+        "0000000000000000000000000000000000000004",
+        "0000000000000000000000000000000000000005",
+        "0000000000000000000000000000000000000006",
+        "0000000000000000000000000000000000000007",
+        "0000000000000000000000000000000000000008",
+        "0000000000000000000000000000000000000009",
+        "000000000000000000000000000000000000000a",
+        "000000000000000000000000000000000000000b",
+        "000000000000000000000000000000000000000c",
+        "000000000000000000000000000000000000000d",
+        "000000000000000000000000000000000000000e",
+        "000000000000000000000000000000000000000f",
+        "0000000000000000000000000000000000000010",
+        "0000000000000000000000000000000000000011",
+        "0000000000000000000000000000000000000012",
+        "0000000000000000000000000000000000000065",
+        "0000000000000000000000000000000000000066"
+      ],
+      "source_request": {
+        "torrent_hashes": null,
+        "status_filter": "downloading"
+      }
+    },
+    {
+      "kind": "qbittorrent",
+      "tags": [
+        "alpha"
+      ],
+      "rows": [
+        {
+          "hash": "0000000000000000000000000000000000000001",
+          "state": "uploading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000002",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000003",
+          "state": "queuedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000004",
+          "state": "stalledUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000005",
+          "state": "forcedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000006",
+          "state": "allocating",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000007",
+          "state": "checkingDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000008",
+          "state": "checkingUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000009",
+          "state": "downloading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000a",
+          "state": "error",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000b",
+          "state": "forcedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000c",
+          "state": "missingFiles",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000d",
+          "state": "metaDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000e",
+          "state": "moving",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000f",
+          "state": "queuedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000010",
+          "state": "stalledDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000011",
+          "state": "unknown",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000012",
+          "state": "",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000065",
+          "state": "pausedUP",
+          "progress": 0.9,
+          "amount_left": 0,
+          "tags": "alpha"
+        },
+        {
+          "hash": "0000000000000000000000000000000000000066",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 1,
+          "tags": "alpha"
+        }
+      ],
+      "expected_hashes": [
+        "0000000000000000000000000000000000000001",
+        "0000000000000000000000000000000000000002",
+        "0000000000000000000000000000000000000003",
+        "0000000000000000000000000000000000000004",
+        "0000000000000000000000000000000000000005",
+        "0000000000000000000000000000000000000006",
+        "0000000000000000000000000000000000000007",
+        "0000000000000000000000000000000000000008",
+        "0000000000000000000000000000000000000009",
+        "000000000000000000000000000000000000000a",
+        "000000000000000000000000000000000000000b",
+        "000000000000000000000000000000000000000c",
+        "000000000000000000000000000000000000000d",
+        "000000000000000000000000000000000000000e",
+        "000000000000000000000000000000000000000f",
+        "0000000000000000000000000000000000000010",
+        "0000000000000000000000000000000000000011",
+        "0000000000000000000000000000000000000012",
+        "0000000000000000000000000000000000000065",
+        "0000000000000000000000000000000000000066"
+      ],
+      "source_request": {
+        "torrent_hashes": null,
+        "status_filter": "downloading"
+      }
+    },
+    {
+      "kind": "qbittorrent",
+      "tags": [
+        "alpha",
+        "beta"
+      ],
+      "rows": [
+        {
+          "hash": "0000000000000000000000000000000000000001",
+          "state": "uploading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000002",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000003",
+          "state": "queuedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000004",
+          "state": "stalledUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000005",
+          "state": "forcedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000006",
+          "state": "allocating",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000007",
+          "state": "checkingDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000008",
+          "state": "checkingUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000009",
+          "state": "downloading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000a",
+          "state": "error",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000b",
+          "state": "forcedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000c",
+          "state": "missingFiles",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000d",
+          "state": "metaDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000e",
+          "state": "moving",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000f",
+          "state": "queuedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000010",
+          "state": "stalledDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000011",
+          "state": "unknown",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000012",
+          "state": "",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000065",
+          "state": "pausedUP",
+          "progress": 0.9,
+          "amount_left": 0,
+          "tags": "alpha"
+        },
+        {
+          "hash": "0000000000000000000000000000000000000066",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 1,
+          "tags": "alpha"
+        }
+      ],
+      "expected_hashes": [
+        "0000000000000000000000000000000000000001",
+        "0000000000000000000000000000000000000002",
+        "0000000000000000000000000000000000000003",
+        "0000000000000000000000000000000000000004",
+        "0000000000000000000000000000000000000005",
+        "0000000000000000000000000000000000000006",
+        "0000000000000000000000000000000000000007",
+        "0000000000000000000000000000000000000008",
+        "0000000000000000000000000000000000000009",
+        "000000000000000000000000000000000000000a",
+        "000000000000000000000000000000000000000b",
+        "000000000000000000000000000000000000000c",
+        "000000000000000000000000000000000000000d",
+        "000000000000000000000000000000000000000e",
+        "000000000000000000000000000000000000000f",
+        "0000000000000000000000000000000000000010",
+        "0000000000000000000000000000000000000011",
+        "0000000000000000000000000000000000000012"
+      ],
+      "source_request": {
+        "torrent_hashes": null,
+        "status_filter": "downloading"
+      }
+    },
+    {
+      "kind": "qbittorrent",
+      "tags": [
+        "absent"
+      ],
+      "rows": [
+        {
+          "hash": "0000000000000000000000000000000000000001",
+          "state": "uploading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000002",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000003",
+          "state": "queuedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000004",
+          "state": "stalledUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000005",
+          "state": "forcedUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000006",
+          "state": "allocating",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000007",
+          "state": "checkingDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000008",
+          "state": "checkingUP",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000009",
+          "state": "downloading",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000a",
+          "state": "error",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000b",
+          "state": "forcedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000c",
+          "state": "missingFiles",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000d",
+          "state": "metaDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000e",
+          "state": "moving",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "000000000000000000000000000000000000000f",
+          "state": "queuedDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000010",
+          "state": "stalledDL",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000011",
+          "state": "unknown",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000012",
+          "state": "",
+          "progress": 1,
+          "amount_left": 0,
+          "tags": " alpha, beta "
+        },
+        {
+          "hash": "0000000000000000000000000000000000000065",
+          "state": "pausedUP",
+          "progress": 0.9,
+          "amount_left": 0,
+          "tags": "alpha"
+        },
+        {
+          "hash": "0000000000000000000000000000000000000066",
+          "state": "pausedUP",
+          "progress": 1,
+          "amount_left": 1,
+          "tags": "alpha"
+        }
+      ],
+      "expected_hashes": [],
+      "source_request": {
+        "torrent_hashes": null,
+        "status_filter": "downloading"
+      }
+    },
+    {
+      "kind": "transmission",
+      "tags": null,
+      "rows": [
+        {
+          "hashString": "00000000000000000000000000000000000000c9",
+          "status": 0,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ca",
+          "status": 1,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cb",
+          "status": 2,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cc",
+          "status": 3,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cd",
+          "status": 4,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ce",
+          "status": 5,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cf",
+          "status": 6,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        }
+      ],
+      "expected_hashes": [
+        "00000000000000000000000000000000000000cc",
+        "00000000000000000000000000000000000000cd"
+      ],
+      "source_request": {
+        "ids": null,
+        "arguments": []
+      }
+    },
+    {
+      "kind": "transmission",
+      "tags": [
+        "alpha"
+      ],
+      "rows": [
+        {
+          "hashString": "00000000000000000000000000000000000000c9",
+          "status": 0,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ca",
+          "status": 1,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cb",
+          "status": 2,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cc",
+          "status": 3,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cd",
+          "status": 4,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ce",
+          "status": 5,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cf",
+          "status": 6,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        }
+      ],
+      "expected_hashes": [
+        "00000000000000000000000000000000000000cc",
+        "00000000000000000000000000000000000000cd"
+      ],
+      "source_request": {
+        "ids": null,
+        "arguments": []
+      }
+    },
+    {
+      "kind": "transmission",
+      "tags": [
+        "alpha",
+        "beta"
+      ],
+      "rows": [
+        {
+          "hashString": "00000000000000000000000000000000000000c9",
+          "status": 0,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ca",
+          "status": 1,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cb",
+          "status": 2,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cc",
+          "status": 3,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cd",
+          "status": 4,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ce",
+          "status": 5,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cf",
+          "status": 6,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        }
+      ],
+      "expected_hashes": [
+        "00000000000000000000000000000000000000cc",
+        "00000000000000000000000000000000000000cd"
+      ],
+      "source_request": {
+        "ids": null,
+        "arguments": []
+      }
+    },
+    {
+      "kind": "transmission",
+      "tags": [
+        "absent"
+      ],
+      "rows": [
+        {
+          "hashString": "00000000000000000000000000000000000000c9",
+          "status": 0,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ca",
+          "status": 1,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cb",
+          "status": 2,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cc",
+          "status": 3,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cd",
+          "status": 4,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000ce",
+          "status": 5,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        },
+        {
+          "hashString": "00000000000000000000000000000000000000cf",
+          "status": 6,
+          "labels": [
+            " alpha ",
+            "beta"
+          ]
+        }
+      ],
+      "expected_hashes": [],
+      "source_request": {
+        "ids": null,
+        "arguments": []
+      }
+    }
+  ]
+}

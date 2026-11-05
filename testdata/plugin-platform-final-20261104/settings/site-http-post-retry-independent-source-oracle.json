@@ -1,0 +1,23 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "requests": "2.34.2",
+  "urllib3": "2.7.0",
+  "cases": [
+    {
+      "idempotency_key": false,
+      "again_body_receipts": 1,
+      "response_present": false
+    },
+    {
+      "idempotency_key": true,
+      "again_body_receipts": 1,
+      "response_present": false
+    }
+  ],
+  "classification": "Actual fixed RequestUtils/paired requests POST307 connection reuse then response EOF, with and without Idempotency-Key; only owned loopback, no target code.",
+  "dependency_image": "sha256:33354456e8e19c65193b9ca471e45450a620c541759cc42e76cf00a03b025881",
+  "driver_sha256": "d01c9ad2c903751014d5970e456888f3410377748d8bcc3eba1d80ddfcb7ba73",
+  "selected_source_sha256": "a0a855e0eacdd53d62224bf9cde1c42c1bae08d192bf5a52b3a345d35a73e4e9",
+  "program_sha256": "14541e519488f8a90a8785189e1884679f05768f7692bc36dd119c50fed4cd18"
+}

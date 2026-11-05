@@ -1,0 +1,58 @@
+{
+  "requests_version": "2.34.2",
+  "urllib3_version": "2.7.0",
+  "requests_models_sha256": "d1bc0d990abf5d5ebee05f890911b4363fadf2d5264b686a963df47c529b6ace",
+  "urllib3_response_sha256": "f525f806491da0b82cc759deea1a6dfb93e772b9c3ccfcdea82d4369285273e3",
+  "classification": "actual deployed vendor Response.content on owned in-memory byte streams; no HTTP request or service mutation",
+  "cases": [
+    {
+      "name": "gzip",
+      "encoding": "gzip",
+      "wire_b64": "H4sIAHMT5moC/8svz0tNUUjOzy0oSi0uBjKfbex8unY6AwBMA6ymGAAAAA==",
+      "content_b64": "b3duZWQgY29tcHJlc3NlZCDmsYnlrZcA",
+      "exception": null
+    },
+    {
+      "name": "deflate",
+      "encoding": "deflate",
+      "wire_b64": "eJzLL89LTVFIzs8tKEotLgYyn23sfLp2OgMAfuEK3A==",
+      "content_b64": "b3duZWQgY29tcHJlc3NlZCDmsYnlrZcA",
+      "exception": null
+    },
+    {
+      "name": "raw-deflate",
+      "encoding": "deflate",
+      "wire_b64": "yy/PS01RSM7PLShKLS4GMp9t7Hy6djoDAA==",
+      "content_b64": "b3duZWQgY29tcHJlc3NlZCDmsYnlrZcA",
+      "exception": null
+    },
+    {
+      "name": "br",
+      "encoding": "br",
+      "wire_b64": "iwuAb3duZWQgY29tcHJlc3NlZCDmsYnlrZcAAw==",
+      "content_b64": "b3duZWQgY29tcHJlc3NlZCDmsYnlrZcA",
+      "exception": null
+    },
+    {
+      "name": "zstd",
+      "encoding": "zstd",
+      "wire_b64": "KLUv/SAYwQAAb3duZWQgY29tcHJlc3NlZCDmsYnlrZcA",
+      "content_b64": "KLUv/SAYwQAAb3duZWQgY29tcHJlc3NlZCDmsYnlrZcA",
+      "exception": null
+    },
+    {
+      "name": "gzip-br",
+      "encoding": "gzip, br",
+      "wire_b64": "CxWAH4sIAHMT5moC/8svz0tNUUjOzy0oSi0uBjKfbex8unY6AwBMA6ymGAAAAAM=",
+      "content_b64": "b3duZWQgY29tcHJlc3NlZCDmsYnlrZcA",
+      "exception": null
+    },
+    {
+      "name": "broken-gzip",
+      "encoding": "gzip",
+      "wire_b64": "bm90IGd6aXA=",
+      "content_b64": null,
+      "exception": "ContentDecodingError"
+    }
+  ]
+}

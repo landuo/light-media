@@ -167,7 +167,7 @@ func (c *Client) get(ctx context.Context, path string, query url.Values, result 
 	for key, value := range query {
 		values[key] = append([]string(nil), value...)
 	}
-	if values.Get("language") == "" {
+	if _, present := values["language"]; !present {
 		values.Set("language", "zh-CN")
 	}
 	if c.credentials.APIKey != "" {

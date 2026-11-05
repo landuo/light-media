@@ -1,0 +1,40 @@
+=== RUN   TestOriginalHostBrowserActualSDKSourceProxyServer
+=== RUN   TestOriginalHostBrowserActualSDKSourceProxyServer/http-upper
+{"app_version":"0.4.19","event":"login","id":"log_1vpGwlU8GUNOqxi3S5THAUjA","instance_id":"instance_nFiaN8jyPomWIbBvSYB6grhX","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-11-04T16:30:37.541043Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":66,"event":"request_completed","http_status":200,"id":"log_ZgVwYkE4PfXt-EVFqJsGBjfl","instance_id":"instance_nFiaN8jyPomWIbBvSYB6grhX","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_qNdiOmG11aM7qpDrcmhWi_vw","time":"2026-11-04T16:30:37.541164Z"}
+{"app_version":"0.4.19","duration_ms":3,"event":"request_completed","http_status":200,"id":"log_ZEi0MVQxBvtdPWOr-j6d-mbx","instance_id":"instance_nFiaN8jyPomWIbBvSYB6grhX","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_4tPn447Ipe7yDTL7LEmEQEkn","time":"2026-11-04T16:30:38.637402Z"}
+    plugin_original_host_browser_proxy_test.go:75: original endpoint success expected: 200 {"data":{"message":"插件制品获取失败: plugin acquisition preflight: unsafe root ancestor","success":false},"request_id":"req_4tPn447Ipe7yDTL7LEmEQEkn"}
+{"app_version":"0.4.19","event":"stopped","id":"log_ZDd5tqoFhekL_QFXdWCIEafY","instance_id":"instance_nFiaN8jyPomWIbBvSYB6grhX","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T16:30:38.637825Z","workflow_id":""}
+=== RUN   TestOriginalHostBrowserActualSDKSourceProxyServer/split-schemes
+{"app_version":"0.4.19","event":"login","id":"log_9rJc5wAZD-1GI1fmBhDhUBJw","instance_id":"instance_cXFwA_CaUKHCf3R-_XVEbHwu","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-11-04T16:30:38.755592Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":77,"event":"request_completed","http_status":200,"id":"log_zq1TkXv5X_JGqqx6iW5aV7cC","instance_id":"instance_cXFwA_CaUKHCf3R-_XVEbHwu","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_bMRYBHcDLSm5CW-0Z-HdtseU","time":"2026-11-04T16:30:38.755699Z"}
+    plugin_original_host_browser_proxy_test.go:75: original endpoint success expected: 200 {"data":{"message":"插件制品获取失败: plugin acquisition preflight: unsafe root ancestor","success":false},"request_id":"req_fdhlsfiMEQYqFaTtdqsV3pJd"}
+{"app_version":"0.4.19","duration_ms":2,"event":"request_completed","http_status":200,"id":"log_8GMhD0mAToxPkByndr0gFdcF","instance_id":"instance_cXFwA_CaUKHCf3R-_XVEbHwu","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_fdhlsfiMEQYqFaTtdqsV3pJd","time":"2026-11-04T16:30:39.833361Z"}
+{"app_version":"0.4.19","event":"stopped","id":"log_pKIWKNYQOGb_ySxzS3vRnGeG","instance_id":"instance_cXFwA_CaUKHCf3R-_XVEbHwu","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T16:30:39.833623Z","workflow_id":""}
+=== RUN   TestOriginalHostBrowserActualSDKSourceProxyServer/all-only
+{"app_version":"0.4.19","event":"login","id":"log_BPJk-zPjf03WPM2CwDklyYiR","instance_id":"instance_dTAgugMYjtEkYqig9tTd4wNV","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-11-04T16:30:39.950048Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":75,"event":"request_completed","http_status":200,"id":"log_dfXdRNJw9jfan7YPr520Kvn5","instance_id":"instance_dTAgugMYjtEkYqig9tTd4wNV","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_etcU-1OS_IT6k8XSkDgCPy_-","time":"2026-11-04T16:30:39.950183Z"}
+    plugin_original_host_browser_proxy_test.go:75: original endpoint success expected: 200 {"data":{"message":"插件制品获取失败: plugin acquisition preflight: unsafe root ancestor","success":false},"request_id":"req_1cAjVjjL0mdZoiG5Pe4oG7Fw"}
+{"app_version":"0.4.19","duration_ms":2,"event":"request_completed","http_status":200,"id":"log_7ykLG6SAricW_EPipbbARt1N","instance_id":"instance_dTAgugMYjtEkYqig9tTd4wNV","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_1cAjVjjL0mdZoiG5Pe4oG7Fw","time":"2026-11-04T16:30:41.027524Z"}
+{"app_version":"0.4.19","event":"stopped","id":"log_cEr6QlNAc6g9sjMCmoNC7u3S","instance_id":"instance_dTAgugMYjtEkYqig9tTd4wNV","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T16:30:41.02774Z","workflow_id":""}
+=== RUN   TestOriginalHostBrowserActualSDKSourceProxyServer/explicit-encoded-auth
+{"app_version":"0.4.19","event":"login","id":"log_tonI38ab0E8qKs2eimjFk7FH","instance_id":"instance_alY4ODib3IG-0Wl6WuwhvC7X","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-11-04T16:30:41.142272Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":74,"event":"request_completed","http_status":200,"id":"log_t9-BBU3bjGGhJSEBWTz67ZKV","instance_id":"instance_alY4ODib3IG-0Wl6WuwhvC7X","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_rH4XyYb08VXUX0QvPYioMskW","time":"2026-11-04T16:30:41.14234Z"}
+    plugin_original_host_browser_proxy_test.go:75: original endpoint success expected: 200 {"data":{"message":"插件制品获取失败: plugin acquisition preflight: unsafe root ancestor","success":false},"request_id":"req__L8c0gHJ3xDTlsplC6r5APCm"}
+{"app_version":"0.4.19","duration_ms":1,"event":"request_completed","http_status":200,"id":"log_ybKNmZ5fe3eDEM9RRjalyhDa","instance_id":"instance_alY4ODib3IG-0Wl6WuwhvC7X","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req__L8c0gHJ3xDTlsplC6r5APCm","time":"2026-11-04T16:30:42.215457Z"}
+{"app_version":"0.4.19","event":"stopped","id":"log_0Ox-M4GHFJ1ynIQ5ecFEZVfM","instance_id":"instance_alY4ODib3IG-0Wl6WuwhvC7X","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T16:30:42.215632Z","workflow_id":""}
+=== RUN   TestOriginalHostBrowserActualSDKSourceProxyServer/explicit-ipv6
+{"app_version":"0.4.19","event":"login","id":"log_D8sn35FIeGcSSYy37hwZuxg6","instance_id":"instance_pJ2lML-m0pgbbSd-xHxEp5JO","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-11-04T16:30:42.324839Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":68,"event":"request_completed","http_status":200,"id":"log_JTU2A6a6ifb6-nrlfwradrvQ","instance_id":"instance_pJ2lML-m0pgbbSd-xHxEp5JO","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_wbH2qV3nTJRkrnojKx0D5TVk","time":"2026-11-04T16:30:42.324928Z"}
+    plugin_original_host_browser_proxy_test.go:75: original endpoint success expected: 200 {"data":{"message":"插件制品获取失败: plugin acquisition preflight: unsafe root ancestor","success":false},"request_id":"req_1wtIsrR0kdM3MF-H4meLw61i"}
+{"app_version":"0.4.19","duration_ms":1,"event":"request_completed","http_status":200,"id":"log_sCBgjJhft1qzweOPVCwRzQ6c","instance_id":"instance_pJ2lML-m0pgbbSd-xHxEp5JO","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_1wtIsrR0kdM3MF-H4meLw61i","time":"2026-11-04T16:30:43.399177Z"}
+{"app_version":"0.4.19","event":"stopped","id":"log_6XKXEtYhsTOB2gykXQyejAGk","instance_id":"instance_pJ2lML-m0pgbbSd-xHxEp5JO","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T16:30:43.399359Z","workflow_id":""}
+--- FAIL: TestOriginalHostBrowserActualSDKSourceProxyServer (5.99s)
+    --- FAIL: TestOriginalHostBrowserActualSDKSourceProxyServer/http-upper (1.21s)
+    --- FAIL: TestOriginalHostBrowserActualSDKSourceProxyServer/split-schemes (1.20s)
+    --- FAIL: TestOriginalHostBrowserActualSDKSourceProxyServer/all-only (1.19s)
+    --- FAIL: TestOriginalHostBrowserActualSDKSourceProxyServer/explicit-encoded-auth (1.19s)
+    --- FAIL: TestOriginalHostBrowserActualSDKSourceProxyServer/explicit-ipv6 (1.21s)
+FAIL
+FAIL	light-media/internal/app	7.367s
+FAIL

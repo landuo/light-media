@@ -1,0 +1,72 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "classification": "current executed regression summary; original failed commands retained; corrections are separate executions",
+  "tests": {
+    "network-race.jsonl": {
+      "root_counts": {
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      "sha256": "2d1f8659db4980bfa2ace7f957c89275531e6f1c6292bbb101f96d9f7b90ecfc",
+      "skips": []
+    },
+    "shared-race-final.jsonl": {
+      "root_counts": {
+        "pass": 381,
+        "fail": 1,
+        "skip": 1
+      },
+      "sha256": "dd52f0d1a3f8579596f9ccefdbbd5041650d1c1487bd3e4af5c63800979be684",
+      "skips": [
+        "TestExploreLivePublicProviders"
+      ]
+    },
+    "pending-admission-normal-worker.jsonl": {
+      "root_counts": {
+        "pass": 86,
+        "fail": 14,
+        "skip": 0
+      },
+      "sha256": "f570b91610053b5a39d8901209e857189c6198eb1e39f58bf511551bef2f20b0",
+      "skips": []
+    },
+    "pending-admission-race.jsonl": {
+      "root_counts": {
+        "pass": 10,
+        "fail": 0,
+        "skip": 0
+      },
+      "sha256": "8b1ceb82a679625e49805f0dac764b2ae3f8e760539938e8a2dcd0b4e9f162c6",
+      "skips": []
+    },
+    "corrected-catalog-and-command.jsonl": {
+      "root_counts": {
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      "sha256": "200dff042e0c8fbe9b329686e101271148f0b0a66499c0586c83aa63e8eb9f3b",
+      "skips": []
+    },
+    "corrected-transfer-final.jsonl": {
+      "root_counts": {
+        "pass": 17,
+        "fail": 0,
+        "skip": 0
+      },
+      "sha256": "6ea279a0f046f0b1fd8be069e5ed8e351bdd76ba25ba822cd2aa86036f8817f6",
+      "skips": []
+    },
+    "anilist-vet-regression.jsonl": {
+      "root_counts": {
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      "sha256": "0f4526e7b5ea79bc279a7796597be840eb755def07975076dae4760694d9a2a2",
+      "skips": []
+    }
+  },
+  "known_pending": "shared concurrent cancellation/Stop race under repair; final acceptance cannot use these failures as passed"
+}

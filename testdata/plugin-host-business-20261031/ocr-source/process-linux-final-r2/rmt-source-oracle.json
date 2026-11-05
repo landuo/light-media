@@ -1,0 +1,240 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+  "pydantic": "2.13.4",
+  "classification": "fixed selected actual field/default factory + generic converter/validator AST and real Pydantic; explicit native environment-over-config input boundary, no full App settings init or config I/O",
+  "cases": [
+    {
+      "case": "default",
+      "expected": [
+        ".mp4",
+        ".mkv",
+        ".ts",
+        ".iso",
+        ".rmvb",
+        ".avi",
+        ".mov",
+        ".mpeg",
+        ".mpg",
+        ".wmv",
+        ".3gp",
+        ".asf",
+        ".m4v",
+        ".flv",
+        ".m2ts",
+        ".strm",
+        ".tp",
+        ".f4v"
+      ]
+    },
+    {
+      "case": "empty",
+      "configuration": [],
+      "expected": []
+    },
+    {
+      "case": "ordered_case_duplicates",
+      "configuration": [
+        ".UPPER",
+        ".mkv",
+        ".mkv"
+      ],
+      "expected": [
+        ".UPPER",
+        ".mkv",
+        ".mkv"
+      ]
+    },
+    {
+      "case": "custom",
+      "configuration": [
+        ".owned"
+      ],
+      "expected": [
+        ".owned"
+      ]
+    },
+    {
+      "case": "null",
+      "configuration": null,
+      "error": "ValidationError"
+    },
+    {
+      "case": "object",
+      "configuration": {},
+      "expected": [
+        ".mp4",
+        ".mkv",
+        ".ts",
+        ".iso",
+        ".rmvb",
+        ".avi",
+        ".mov",
+        ".mpeg",
+        ".mpg",
+        ".wmv",
+        ".3gp",
+        ".asf",
+        ".m4v",
+        ".flv",
+        ".m2ts",
+        ".strm",
+        ".tp",
+        ".f4v"
+      ]
+    },
+    {
+      "case": "false",
+      "configuration": false,
+      "expected": [
+        ".mp4",
+        ".mkv",
+        ".ts",
+        ".iso",
+        ".rmvb",
+        ".avi",
+        ".mov",
+        ".mpeg",
+        ".mpg",
+        ".wmv",
+        ".3gp",
+        ".asf",
+        ".m4v",
+        ".flv",
+        ".m2ts",
+        ".strm",
+        ".tp",
+        ".f4v"
+      ]
+    },
+    {
+      "case": "zero",
+      "configuration": 0,
+      "expected": [
+        ".mp4",
+        ".mkv",
+        ".ts",
+        ".iso",
+        ".rmvb",
+        ".avi",
+        ".mov",
+        ".mpeg",
+        ".mpg",
+        ".wmv",
+        ".3gp",
+        ".asf",
+        ".m4v",
+        ".flv",
+        ".m2ts",
+        ".strm",
+        ".tp",
+        ".f4v"
+      ]
+    },
+    {
+      "case": "json_string",
+      "configuration": "[\".custom\"]",
+      "expected": [
+        ".custom"
+      ]
+    },
+    {
+      "case": "literal_empty_string",
+      "configuration": "[]",
+      "error": "ValidationError"
+    },
+    {
+      "case": "invalid_json",
+      "configuration": "broken",
+      "expected": [
+        ".mp4",
+        ".mkv",
+        ".ts",
+        ".iso",
+        ".rmvb",
+        ".avi",
+        ".mov",
+        ".mpeg",
+        ".mpg",
+        ".wmv",
+        ".3gp",
+        ".asf",
+        ".m4v",
+        ".flv",
+        ".m2ts",
+        ".strm",
+        ".tp",
+        ".f4v"
+      ]
+    },
+    {
+      "case": "spaced_json",
+      "configuration": "  [\".srt\"]  ",
+      "expected": [
+        ".srt"
+      ]
+    },
+    {
+      "case": "unsupported_native_member",
+      "configuration": [
+        1,
+        null,
+        true
+      ],
+      "expected": [
+        1,
+        null,
+        true
+      ]
+    },
+    {
+      "case": "environment_empty",
+      "configuration": [
+        ".configured"
+      ],
+      "environment": [],
+      "expected": []
+    },
+    {
+      "case": "environment_custom",
+      "configuration": [
+        ".configured"
+      ],
+      "environment": [
+        ".env",
+        ".UPPER",
+        ".env"
+      ],
+      "expected": [
+        ".env",
+        ".UPPER",
+        ".env"
+      ]
+    }
+  ],
+  "live_settings": {
+    "initial": [
+      ".startup-env"
+    ],
+    "after_environment_change": [
+      ".startup-env"
+    ],
+    "update_result": [
+      true,
+      ""
+    ],
+    "after_api": [
+      ".runtime",
+      1,
+      null,
+      true
+    ],
+    "cold": [
+      ".late-env"
+    ],
+    "real_base_settings_environment": true,
+    "env_file_disabled": true,
+    "update_env_config_boundary": "owned success recorder; no app.env writes"
+  },
+  "production_writes": 0
+}

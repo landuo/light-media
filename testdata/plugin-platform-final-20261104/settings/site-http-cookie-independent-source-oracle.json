@@ -1,0 +1,144 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "requests": "2.34.2",
+  "urllib3": "2.7.0",
+  "cases": [
+    {
+      "name": "same-name-different-path",
+      "set_cookie": [
+        "owned=root; Path=/",
+        "owned=deep; Path=/deep"
+      ],
+      "response_cookie_dict": {
+        "owned": "deep"
+      },
+      "response_cookie_entries": [
+        {
+          "name": "owned",
+          "value": "root",
+          "domain": "127.0.0.1",
+          "path": "/",
+          "secure": false
+        },
+        {
+          "name": "owned",
+          "value": "deep",
+          "domain": "127.0.0.1",
+          "path": "/deep",
+          "secure": false
+        }
+      ],
+      "next_request_cookie": "owned=deep"
+    },
+    {
+      "name": "foreign-domain",
+      "set_cookie": [
+        "owned=foreign; Domain=other.invalid; Path=/"
+      ],
+      "response_cookie_dict": {},
+      "response_cookie_entries": [],
+      "next_request_cookie": null
+    },
+    {
+      "name": "max-age-zero",
+      "set_cookie": [
+        "owned=gone; Max-Age=0; Path=/"
+      ],
+      "response_cookie_dict": {},
+      "response_cookie_entries": [],
+      "next_request_cookie": null
+    },
+    {
+      "name": "expires-past",
+      "set_cookie": [
+        "owned=old; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/"
+      ],
+      "response_cookie_dict": {},
+      "response_cookie_entries": [],
+      "next_request_cookie": null
+    },
+    {
+      "name": "expires-future",
+      "set_cookie": [
+        "owned=future; Expires=Tue, 01 Jan 2036 00:00:00 GMT; Path=/"
+      ],
+      "response_cookie_dict": {
+        "owned": "future"
+      },
+      "response_cookie_entries": [
+        {
+          "name": "owned",
+          "value": "future",
+          "domain": "127.0.0.1",
+          "path": "/",
+          "secure": false
+        }
+      ],
+      "next_request_cookie": "owned=future"
+    },
+    {
+      "name": "empty-value",
+      "set_cookie": [
+        "owned=; Path=/"
+      ],
+      "response_cookie_dict": {
+        "owned": ""
+      },
+      "response_cookie_entries": [
+        {
+          "name": "owned",
+          "value": "",
+          "domain": "127.0.0.1",
+          "path": "/",
+          "secure": false
+        }
+      ],
+      "next_request_cookie": "owned="
+    },
+    {
+      "name": "same-response-set-then-delete",
+      "set_cookie": [
+        "owned=first; Path=/",
+        "owned=deleted; Max-Age=0; Path=/"
+      ],
+      "response_cookie_dict": {
+        "owned": "first"
+      },
+      "response_cookie_entries": [
+        {
+          "name": "owned",
+          "value": "first",
+          "domain": "127.0.0.1",
+          "path": "/",
+          "secure": false
+        }
+      ],
+      "next_request_cookie": "owned=first"
+    },
+    {
+      "name": "secure-cookie-on-http",
+      "set_cookie": [
+        "owned=secure; Secure; Path=/"
+      ],
+      "response_cookie_dict": {
+        "owned": "secure"
+      },
+      "response_cookie_entries": [
+        {
+          "name": "owned",
+          "value": "secure",
+          "domain": "127.0.0.1",
+          "path": "/",
+          "secure": true
+        }
+      ],
+      "next_request_cookie": "owned=secure"
+    }
+  ],
+  "classification": "Fixed source RequestUtils response.cookies.get_dict then fresh RequestUtils(cookies=dict), actual paired requests/urllib3; owned loopback only, readonly network-none disposable container; no target code.",
+  "dependency_image": "sha256:33354456e8e19c65193b9ca471e45450a620c541759cc42e76cf00a03b025881",
+  "driver_sha256": "6864c40a90fb7d933e91f56e1bed245b64bbc6b50218e96dbc2d0ecffbbe0897",
+  "selected_source_sha256": "eadd593f7910410992a6abcd4fbdd61553b839f3cfbf73e10c938fed10256932",
+  "program_sha256": "20dd950da0427dfd1e6e59683a9d77646200d77fa8da6ca528149dd24e89c02a"
+}

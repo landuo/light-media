@@ -1,0 +1,405 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "classification": "isolated fixed module+API AST replay; actual Path.resolve filesystem; no real fnOS service",
+  "sources": {
+    "app/modules/trimemedia/trimemedia.py": "6eba9360044eb5ad0ff8894f0286322d0a17a38d7f528f9e04e80232f55dbbf3",
+    "app/modules/trimemedia/api.py": "8c674719cb0c91001b1b24621ae8b559661ca7240a8bb698d639c5c3908c625a"
+  },
+  "cases": [
+    {
+      "case": "matched",
+      "paths": [
+        "$root/library/movie.mkv"
+      ],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scan:owned-guid"
+      ]
+    },
+    {
+      "case": "deduplicated",
+      "paths": [
+        "$root/library/one.mkv",
+        "$root/library/two.mkv"
+      ],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scan:owned-guid"
+      ]
+    },
+    {
+      "case": "unmatched_fallback",
+      "paths": [
+        "$root/elsewhere/movie.mkv"
+      ],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scanall"
+      ]
+    },
+    {
+      "case": "none_path_fallback",
+      "paths": [
+        null
+      ],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scanall"
+      ]
+    },
+    {
+      "case": "empty_items",
+      "paths": [],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight"
+      ]
+    },
+    {
+      "case": "partial_failure_fallback",
+      "paths": [
+        "$root/library/movie.mkv"
+      ],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": false,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scan:owned-guid",
+        "preflight",
+        "scanall"
+      ]
+    },
+    {
+      "case": "all_failure_false",
+      "paths": [
+        "$root/library/movie.mkv"
+      ],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": false,
+      "all_result": false,
+      "root": false,
+      "result": false,
+      "trace": [
+        "preflight",
+        "scan:owned-guid",
+        "preflight",
+        "scanall"
+      ]
+    },
+    {
+      "case": "not_authenticated_none",
+      "paths": [
+        "$root/library/movie.mkv"
+      ],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": false,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": null,
+      "trace": []
+    },
+    {
+      "case": "not_admin_false",
+      "paths": [
+        "$root/library/movie.mkv"
+      ],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": false,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": false,
+      "trace": []
+    },
+    {
+      "case": "source_root",
+      "paths": null,
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": true,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scanall"
+      ]
+    },
+    {
+      "case": "resolved_alias_parent",
+      "paths": [
+        "$root/alias/../missing/movie.mkv"
+      ],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scan:owned-guid"
+      ]
+    },
+    {
+      "case": "root_target_fallback",
+      "paths": [
+        "/"
+      ],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scanall"
+      ]
+    },
+    {
+      "case": "root_library_matches",
+      "paths": [
+        "$root/library/movie.mkv"
+      ],
+      "directories": [
+        "/"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scan:owned-guid"
+      ]
+    },
+    {
+      "case": "backslash_filename",
+      "paths": [
+        "$root/library/movie\\part.mkv"
+      ],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scan:owned-guid"
+      ]
+    },
+    {
+      "case": "backslash_library",
+      "paths": [
+        "$root/lib\\name/movie.mkv"
+      ],
+      "directories": [
+        "$root/lib\\name"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scan:owned-guid"
+      ]
+    },
+    {
+      "case": "none_stops_before_loop",
+      "paths": [
+        null,
+        "$root/loop/movie.mkv"
+      ],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scanall"
+      ]
+    },
+    {
+      "case": "unmatched_stops_before_loop",
+      "paths": [
+        "$root/outside/movie.mkv",
+        "$root/loop/movie.mkv"
+      ],
+      "directories": [
+        "$root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scanall"
+      ]
+    },
+    {
+      "case": "matched_stops_before_bad_directory",
+      "paths": [
+        "$root/library/movie.mkv"
+      ],
+      "directories": [
+        "$root/library",
+        "$root/loop"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scan:owned-guid"
+      ]
+    },
+    {
+      "case": "relative_paths",
+      "paths": [
+        "$relative_root/library/movie.mkv"
+      ],
+      "directories": [
+        "$relative_root/library"
+      ],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scan:owned-guid"
+      ]
+    },
+    {
+      "case": "empty_directories_skip_resolution",
+      "paths": [
+        "$root/loop/movie.mkv"
+      ],
+      "directories": [],
+      "authenticated": true,
+      "admin": true,
+      "partial_result": true,
+      "all_result": true,
+      "root": false,
+      "result": true,
+      "trace": [
+        "preflight",
+        "scanall"
+      ]
+    }
+  ],
+  "wire": [
+    {
+      "method": "get",
+      "path": "/v/api/v1/task/running",
+      "body": null,
+      "content_type": null
+    },
+    {
+      "method": "post",
+      "path": "/v/api/v1/mdb/scan/owned-guid",
+      "body": "",
+      "content_type": "application/json"
+    },
+    {
+      "method": "post",
+      "path": "/v/api/v1/mdb/scanall",
+      "body": "",
+      "content_type": "application/json"
+    }
+  ]
+}

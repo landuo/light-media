@@ -100,6 +100,14 @@ func (c Config) URL(target *url.URL) string {
 
 type routedTransport struct{ http, https *http.Transport }
 
+// Keep the public diagnostic fixed while retaining the internal network class
+// required by source-compatible idempotent request retries.
+type routedTransportError struct{ cause error }
+
+func (e routedTransportError) Error() string    { return "proxy_transport_error" }
+func (e routedTransportError) GoString() string { return "proxy_transport_error" }
+func (e routedTransportError) Unwrap() error    { return e.cause }
+
 func (r *routedTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	t := r.http
 	if req.URL.Scheme == "https" {
@@ -110,7 +118,7 @@ func (r *routedTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 		if req.Context().Err() != nil {
 			return nil, req.Context().Err()
 		}
-		return nil, errors.New("proxy_transport_error")
+		return nil, routedTransportError{cause: err}
 	}
 	return response, nil
 }

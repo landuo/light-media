@@ -1,0 +1,78 @@
+{
+  "classification": "NAS-paired native dependency pin; no Python/Node product runtime introduced",
+  "fixed_requirement": "MoviePilot requirements.in cloakbrowser~=0.5.3 (range is not an exact original NAS installed-wheel pin)",
+  "candidate_version": "0.5.3",
+  "wheel": {
+    "filename": "cloakbrowser-0.5.3-py3-none-any.whl",
+    "url": "https://files.pythonhosted.org/packages/93/e8/f0d86ca18b3a1e132ffd965268f621897f60c47ea8c61b1ee9a786fffb36/cloakbrowser-0.5.3-py3-none-any.whl",
+    "sha256": "9082cfd2f104342fd718d9882984da7674ef6616308dd7932bff4b8bd5cf3cfe"
+  },
+  "upstream": "https://github.com/CloakHQ/CloakBrowser",
+  "native_version_linux_x64": "146.0.7680.177.5",
+  "native_archive_url": "https://cloakbrowser.dev/chromium-v146.0.7680.177.5/cloakbrowser-linux-x64.tar.gz",
+  "native_archive_expected_sha256": "4a12bcde95fa1bb1beef2b41ab5e5c27c36be78e3be3d0dac8c64d705216670e",
+  "native_head_content_length": 216890134,
+  "manifest_sha256": "001ee369e3590dc27554f5284c0ea80308fc91c1799d1888ac238edf3fbd6330",
+  "signature_sha256": "998cbd7dd0c8ab358cf23a908440ca032a32c6e4df22b91316c9161b57ee015f",
+  "ed25519_public_key": "MKFKwIhUcKWq5xTuNA0Ovg99njcDEcEJvmWYYhApvaU=",
+  "ed25519_signature_valid": true,
+  "publisher_sources": {
+    "config.py": "8828f891a0e68eda6650054f347be1520cc82c4ca3bb11ca1d46ce48802061b7",
+    "browser.py": "d6343d7de229789af12e5d953e00e6cd16d51ae9940c3417c84273b11ac23422",
+    "download.py": "0fd03c2f955fe77fc3cf917cb213fffb7197a2ce8cd84d3ffe2270794553d2c0",
+    "__init__.py": "2e633707930df2cb322cea08c8799ff04db06cb3631d1ce69cdb911391d2ae14"
+  },
+  "notes": [
+    "source default wrapper adds native fingerprint random seed/platform flags and suppresses enable-automation/unsafe-swiftshader",
+    "humanize goto delegates the original navigation then invalidates internal isolated-world cache; it does not add click/type actions to get_page_source",
+    "source wrapper auto-update behavior is a reproducibility difference requiring an explicit fixed native artifact, not a reason to follow latest silently",
+    "ordinary Chrome is suitable for CDP transport testing but does not prove source stealth binary equivalence"
+  ],
+  "paired_wrapper_version": "0.5.6",
+  "paired_wheel": {
+    "filename": "cloakbrowser-0.5.6-py3-none-any.whl",
+    "url": "https://files.pythonhosted.org/packages/81/91/0972dbfb475111180c260667bff1220b49b0a513e2d605cf31acc740900d/cloakbrowser-0.5.6-py3-none-any.whl",
+    "sha256": "6acd11f110f480d5ef7e01907f7fcf5f30aa09ccb0efbc13a1749b715454b964",
+    "CHROMIUM_VERSION": "146.0.7680.177.5",
+    "PLATFORM_CHROMIUM_VERSIONS": {
+      "linux-x64": "146.0.7680.177.5",
+      "linux-arm64": "146.0.7680.177.3",
+      "darwin-arm64": "145.0.7632.109.2",
+      "darwin-x64": "145.0.7632.109.2",
+      "windows-x64": "146.0.7680.177.5"
+    },
+    "BINARY_SIGNING_PUBKEYS": [
+      "MKFKwIhUcKWq5xTuNA0Ovg99njcDEcEJvmWYYhApvaU="
+    ]
+  },
+  "paired_metadata_evidence": "browser-nas-distributions.json",
+  "native_archive_actual_sha256": "4a12bcde95fa1bb1beef2b41ab5e5c27c36be78e3be3d0dac8c64d705216670e",
+  "native_archive_signed_hash_matches": true,
+  "native_executable_sha256": "715722e8605ae3ce81523c1218aba1ec89425786ab33ceaf99f8a6cb5e70e6e8",
+  "publisher_sources_paired": {
+    "config.py": "8828f891a0e68eda6650054f347be1520cc82c4ca3bb11ca1d46ce48802061b7",
+    "browser.py": "e3d32302b4a4e9ec95131b394c22e9a1b86599a638d068706d6c1f80b69c43b7",
+    "download.py": "0fd03c2f955fe77fc3cf917cb213fffb7197a2ce8cd84d3ffe2270794553d2c0",
+    "human/__init__.py": "ad3797cd74a17da97af636c24a874b2a43105ebaa2522a8a6bf77d80203c58ed"
+  },
+  "playwright_launch_source": {
+    "version": "1.62.0",
+    "url": "https://raw.githubusercontent.com/microsoft/playwright/v1.62.0/packages/playwright-core/src/server/chromium/chromiumSwitches.ts",
+    "sha256": "38c8fda10448ea049b2bb24876e9395c5eefc9a303eda8a2a94055ed928df356"
+  },
+  "playwright_native_dependencies_source": {
+    "version": "1.62.0",
+    "url": "https://raw.githubusercontent.com/microsoft/playwright/v1.62.0/packages/playwright-core/src/server/registry/nativeDeps.ts",
+    "sha256": "17d8a66aefd7a3fa61f92f264c6c77b18181ba55b547044c09c33eec9c20991a",
+    "selected_regions": [
+      "debian12-x64.tools",
+      "debian12-x64.chromium"
+    ]
+  },
+  "arm64": {
+    "version": "146.0.7680.177.3",
+    "archive_sha256": "8b71ce53b4fd131327331a31fba3835d71882d19bfaabde78dd0f5390bd16f45",
+    "signature_evidence": "browser-arm64-manifest-verification.json",
+    "actual_arm_execution": false
+  }
+}

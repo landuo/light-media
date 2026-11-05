@@ -1,0 +1,26 @@
+{
+  "classification": "actual CUA browser write/response validation on owned Linux cmd/server R8; synthetic own HTTP peer",
+  "observer": "/root",
+  "url": "http://192.168.8.129:33213/#plugins",
+  "source_version": "2.0",
+  "clone_version": "1.0",
+  "checks": [
+    "source form saved POST and run_once, actual remote body matches browser S18 source, status200/completed",
+    "DELETE init failure retains form, checked flag and visible error/request id",
+    "restore POST executes browser S18 recovered successfully",
+    "clone starts with separate CLI clone config; browser POST appends clone body without source history",
+    "reload source retains recovered result and excludes clone result",
+    "owned browser tab closed; no public response cookie values or private credential result displayed"
+  ],
+  "artifacts": {
+    "testdata/plugin-platform-final-20261104/site-http/root-ui/clone-post.ax.txt": "e0770bf445c2c5156d4c8b53488bd821b7cef617ad6299fe20d99a035b6a9151",
+    "testdata/plugin-platform-final-20261104/site-http/root-ui/clone-post.png": "a1b7c3eca8ae539ac88db3a382a26302581504d9b60823aeadc58d5926b56641",
+    "testdata/plugin-platform-final-20261104/site-http/root-ui/failure.ax.txt": "bd0eb7d62af173c7fb378ebf90dcc3ce82ceb92e1fa9f8ee0507b7670148be98",
+    "testdata/plugin-platform-final-20261104/site-http/root-ui/failure.png": "de51dcf680b70d09b86b3fc3c9d9aafc75aa0de4a0cf2e2fc416d16622e79c75",
+    "testdata/plugin-platform-final-20261104/site-http/root-ui/recovered-after-refresh.ax.txt": "1a695ba2a0400fc79b35194ce54249affc5c782296613bbd1ba5481e6936154a",
+    "testdata/plugin-platform-final-20261104/site-http/root-ui/recovered-after-refresh.png": "63abdf0924b4c687cd610e571e7275e9d52107757016328ab500c9f42490d4da",
+    "testdata/plugin-platform-final-20261104/site-http/root-ui/source-post.ax.txt": "7ab5c36fe67497599a02d490522b5ea9cb6e45d54bd3dece959a7193bd5202b8",
+    "testdata/plugin-platform-final-20261104/site-http/root-ui/source-post.png": "6c2ffbdd416a1d0d23c31e6e5fb0075652580cc6c496cf1a98ebf7a443ecdab9"
+  },
+  "target_binding": "R8 main15c2b653 snapshot; final S19/S16 proxy delta combined execution pending"
+}

@@ -1,0 +1,49 @@
+{
+  "Id": "3249e9fb501bf15304b0a2a719f72389ec5391939412da6ad9a7e068e9bc4daf",
+  "Name": "/silly_mestorf",
+  "Created": "2026-11-04T15:53:52.825884818Z",
+  "State": {
+    "Status": "created",
+    "Running": false,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 0,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "0001-01-01T00:00:00Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "Image": "sha256:d149ea88987b4cd810462a7a5f0fbc84903e53ff0837f21cc9da598e84ec48d4",
+  "Mounts": [
+    {
+      "Type": "volume",
+      "Name": "90bb523155b05d1e357a64c9961c5736cfdf2522bee4e91fdcb5500f6eeb841d",
+      "Source": "/vol2/docker/volumes/90bb523155b05d1e357a64c9961c5736cfdf2522bee4e91fdcb5500f6eeb841d/_data",
+      "Destination": "/config",
+      "Driver": "local",
+      "Mode": "",
+      "RW": true,
+      "Propagation": ""
+    },
+    {
+      "Type": "bind",
+      "Source": "/vol2/1000/docker/light-media-browser-20261101-pCMPM7Bo",
+      "Destination": "/vol2/1000/docker/light-media-browser-20261101-pCMPM7Bo",
+      "Mode": "",
+      "RW": true,
+      "Propagation": "rprivate"
+    }
+  ],
+  "command": [
+    "--data-dir",
+    "/vol2/1000/docker/light-media-browser-20261101-pCMPM7Bo/ocr-r6-r4-final/data",
+    "--listen",
+    "0.0.0.0:51747"
+  ],
+  "AutoRemove": true,
+  "classification": "owned interrupted R6-r4 created-only container, never an accepted R6-r5 or R9 run; initial running-only sweep missed this state",
+  "explicit_cleanup_stdout": "3249e9fb501b",
+  "exists_after": false
+}

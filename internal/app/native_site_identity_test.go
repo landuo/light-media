@@ -222,6 +222,9 @@ func TestNativeSiteIdentityActualSaveRollbackIncludesMappingConfigAndDeleteCache
 	}
 	site := a.Settings().Sites[0]
 	before := identityRequire(t, a, site.ID)
+	// Creation publishes SiteUpdated asynchronously. Finish its account refresh
+	// before injecting the rollback sentinel so it cannot replace the cache.
+	a.wg.Wait()
 	if err := a.Store.Put(ctx, "site_connection", site.ID, map[string]string{"owned": "synthetic"}); err != nil {
 		t.Fatal(err)
 	}
@@ -237,6 +240,9 @@ func TestNativeSiteIdentityActualSaveRollbackIncludesMappingConfigAndDeleteCache
 	var cache map[string]string
 	if err := a.Store.Get(ctx, "site_connection", site.ID, &cache); err != nil {
 		t.Fatal("cache partially removed", err)
+	}
+	if cache["owned"] != "synthetic" {
+		t.Fatal("cache changed during rollback")
 	}
 	if _, err := a.Store.DB.Exec(`DROP TRIGGER owned_identity_cache_fail`); err != nil {
 		t.Fatal(err)

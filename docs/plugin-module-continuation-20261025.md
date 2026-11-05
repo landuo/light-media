@@ -1,3 +1,83 @@
+## 2026-11-05 新增发布授权：推送远程 main
+
+用户在65/65约定范围验收完成后明确要求“推送到远程main分支”，现授权提交已验收插件模块并合入、推送 `landuo/light-media` 的 `main`。下方“本地未提交/不推送”均保留为发布前历史状态，不再限制本次提交推送。本次不部署生产，不合入其他业务插件或其他开发分支。发布前核对120目标、1818个R9编译输入和2937个选定回归输入均与已验收哈希一致；远端main仍为9747658，可正常快进，不强推。实际产品提交、推送和远程读回另记发布记录。
+
+## 当前执行合同（2026-11-04，开发阶段；发布授权见上）
+
+本轮直接完成插件模块及其必需前后端，暂停其他业务插件；验收测试插件例外。后端全 Go，现有前端，Linux、本地存储、单用户；不开发多用户/权限体系。固定 MoviePilot `8a83efeacd3e26b82be495e17d50146e31c96a60` 与 Frontend `2829e3b08214348f05ff2f5beae644882eccad58`，原版源码/旧服务只读。工作流、AI及其专用接口/配置/页面/依赖/扩展点全部排除，不留占位兼容框架；普通事件、命令和调度保留。此前用户明确排除的官方等级/RSA授权继续排除。
+
+复用 `/Users/accidia/projects/light-media` 的 `codex/plugin-host-resources-20261031`，HEAD `97476582910dc4b696f7ccd5010f28d823812d40`；保护本轮接手时的全部未提交改动，快照哈希在 `work/plugin-platform-final-20261104/resume-dirty.json`。本轮开发/验收授权不包含提交、推送、合并或部署；历史发布授权不视为当前新开发自动发布。当前唯一状态仍为 [plugin-module-parity-matrix.md](plugin-module-parity-matrix.md)，权威账本复用 `migration/ledger.json#plugin_module_scope_plan_20261031`，不新建竞争清单。
+
+接手记录为57/63；未核验证据不自动升级。继续 S07、S14–S17 和50，按“核对→实现→真实宿主/浏览器/失败/冷恢复/分身验证→更新状态”。每个验收通过绑定固定源位置、目标文件与实际证据；源有新增遗漏则补表，不删除条目或降低标准。所有范围内项通过、适配解释闭合且无未验证/阻塞后才报告约定范围完成。
+
+### 2026-11-05 最终结论：约定范围65/65完成，本地未提交
+
+固定后端8a83efe和前端2829e3b的插件模块原50节及源码补充S01–S19已逐项验收；22官方等级/RSA及44/45/46工作流/AI按用户要求排除。统一R9真实Linux主程序、原生浏览器19根、普通OCR/HTTP/代理、实际浏览器操作、分身/失败/更新/冷启/卸载与精确清理完成。最终555/555回归无失败/跳过，2937输入前后稳定，1818个R9编译输入与当前一致；必要Go/凭据与安全适配逐项记录，无范围内未验证项、未解释差异或阻塞。
+
+独立总审 `testdata/plugin-platform-final-20261104/final-independent-review.json`，总封存 `final-completion.json`，唯一当前状态仍是本表链接的 `docs/plugin-module-parity-matrix.md`；账本P01–P13已依据同一叶子索引闭合，未覆盖旧业务插件账本。generic检查通过结构/证据完整性；其要求Git提交的publication final门不冒称通过，因本轮按约定保留未提交工作，不制造测试SHA。实际分支codex/plugin-host-resources-20261031，HEAD/远端main仍9747658；没有提交、推送、合并或生产部署。后续不自动开始业务插件，等待用户新指令。下方各检查点是历史过程，不能覆盖本结论。
+
+### 2026-11-04 当前检查点：59/65，仍未完成
+
+S07/S14/S17完成独立复核；S02旧审查哈希以准确原始driver补封解决，旧封存不改写。最终回归发现32个pending调用撤销后Stop会被过期取消通知写坏管道，已修持写锁后重新核验；首红14/100保留，因果mutation三类真红、修复20轮及真实Linux100压力+16生命周期均通过。当前平台543/543、SDK117/117 race、共享组件267通过（核心探索公网测试1项未配置跳过，不属于插件平台）、前端556/556/build和go vet通过；证据在 `testdata/plugin-platform-final-20261104/`。
+
+S15普通OCR补临时Cookie jar、30/31跳转边界及同名Cookie源行为；S16补实际产品镜像native浏览器/Xvfb运行库和原Dockerfile缺少的前端构建输入。最终R3镜像已实际构建 `b7016b2bd460beade564f5830c5fa82a9213ad8a8566e7522e4c0cad97d14569`；2400个产品构建输入核对当前源码。额外只读HOME测试因Crashpad启动失败保留为失败，不冒称产品普通条件；当前继续产品默认可写环境的真实native/App/浏览器/清理，随后50最终独审。无提交、推送、合并或生产部署。
+
+最新独审确认S18：固定SiteOper原样返回含Cookie/UA/APIKey/Token的Site，普通RequestUtils POST需要这些宿主凭据；当前标准Sites.Read仅脱敏，普通Go net/http和旧host-only签到transport均不能替代。已补入唯一表并继续共享站点HTTP桥，不迁移签到业务。S16冷启暴露displayfd10s人为上限，paired PyVirtualDisplay实际600s；正在按源修复并保留真实首红。root附带站点回滚测试并发问题已证实是创建后的异步SiteUpdated刷新替换sentinel，现等已排队工作后保留原Store.Get和原值断言，race10/10通过；此前密文/schema假设已撤回，不改变产品行为。
+
+S16最新R6镜像 `d149ea88…` 的15个Linux原生测试、真实App/IAB/来源更新/分身/冷启/卸载与profile/进程/容器清理已通过；root另作只读IAB核 source/clone 独立path及实际JS HTML。R6有编译后晚采样central文件的时间窗，`product-r6-binding-qualification.json`明确更正，不能当当前S18全源码闭包。最终组合须前后相同compile inputs重编。OCR完整driver三项错误假设均保红：启动等待过短、读取已脱敏Cookie、恢复bootstrap而peer期待后设Cookie；已停盲重试并以真实容器最小mutation红/正确自建状态绿证明恢复因果，继续完整验收。S18决定以显式私有typed credentials RPC复原源可信插件内存访问，不用无限扩展凭据变换框架；普通查询保持脱敏，私有值不进入公共配置/UI/日志/报告，业务仍暂停。
+
+跨日续接：独审核出13处普通 `settings.USER_AGENT` 读取，S07只读入口缺失，重开该项59/64；复用已有 source-compatible HTTP身份函数补有限只读键，S18增加明确host-UA选择及原Plugin调用者后缀，原默认urllib3/显式headers分支保留。R7已构建pre-UA1815稳定输入，但未进行最终验收，不冒称当前组合版本；待整组setting残余一次性核清再freeze→R8。S18已实现待验证；最终采用私有有序response Cookie值/显式empty override和typed Credentials，不保留新增handle/runtime/变换框架。
+
+20-key全归属复核仅再确认普通自有URL POST缺宿主动态PROXY，补S19，总65；只复制代理相关环境与CGI存在性给可信Go私有SDK，复用现有requests transport，不迁移通知业务。root当前549全回归已因新增共享层主动中止（63构建完成、部分根已执行、整体非通过），不把混合输入称稳定当前版；旧543通过封存不改。等S19及S16 env-only PROXY_SERVER疑点核清后再一次freeze验收。S18在R8主程序真实Linux与root浏览器已走通私有凭据/cookies/UA、POST/503/unknown不重试、失败恢复、source/clone、更新与冷恢复；待driver浏览器后再次cold/卸载清理封存。R8 browser/OCR测试父目录消失，原因尚未知，失败保留不计通过；可在全新独占目录自主恢复，不改旧系统/生产挂载。
+
+最新续接：111个setting引用/20key（含动态getattr）全集审计已freeze，未知key/namespace为零；仅USER_AGENT、私有PROXY依赖、S16 PROXY_SERVER差异，均已进入当前条目。S18修了credential-header绕过导致Go可能重放POST的真缺陷：源实际307+EOF写1次/None，而Go带Idempotency头写2次；统一reserved判定后的8负路径/完整6根双端独审race80.381s已过。S19 root17源例+guard/环境边界三根race、独立源审及实际Mac SDK2根/6路由、真实Linux testbinary+独立worker2根已过，尚等统一main/浏览器。S16继续同一轮源PROXY_SERVER：仅显式配置、encoded原%字串、FS原IPv6坏server；native拒绝向Node错误派生hostname `http`转发凭据的安全适配须写明。不能把R8或中止的549称当前组合完整通过。远端main只读确认仍9747658；无提交/推送/合并/生产部署。
+
+### 2026-11-05 最终组合检查点：59/65，待全回归与独审
+
+统一R9主程序 `ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e` 由前后相同1818个输入编译，实际Linux原生浏览器19根、OCR与browser两条完整App链、S18普通站点HTTP和S19私有代理Go POST的真实main/浏览器/分身/更新/双冷启/卸载清理均已有分版本证据。S07新增USER_AGENT的旧/新target谱系单独补封，不改旧accepted。唯一表仍59/65，五个叶子等待独审签认，第50项等最后整体回归；不把分片通过直接算成整模块完成。
+
+最终 `go vet ./...` 发现S18测试五个外包结构体literal未标字段名，现仅补Name/Value，原值/顺序/源oracle/断言与产品不变，复验exit0。首轮137通过0失败的全回归因而主动停止，原始记录在 `testdata/plugin-platform-final-20261104/current-final-vet-interrupted/`，非整体通过；现按当前测试SHA重跑555根、63个原fixture加S18/S19两个独立worker，闭包在 `work/plugin-platform-final-20261104/current-final/`，结果在 `current-final-platform/`。R9实机main1818输入未受_test.go补丁影响；旧S18测试哈希通过 `site-http/vet-test-literal-lineage.json` 保留而不重写。
+
+最终独审由settings_scope继续核111处/20key完整setting集合、52份历史manifest与新增R9证据、UI136文件同一性和未知目录事故边界。普通浏览器PROXY_SERVER只用显式值、percent原字符串、inline loopback及IPv6不向无关派生主机转发凭据的必要适配已记录。所有业务插件继续暂停；无提交、推送、合并或生产部署。555未结束前不得报告完成。
+
+## 当前执行点（2026-10-31，已授权继续迁移）
+
+用户明确调用“完整项目迁移”继续插件模块，本次已从范围盘点进入实现、源行为对照和验证。固定源版本、排除AI/工作流/官方等级认证、Go/Linux/本地存储/单用户及旧服务只读边界不变；暂停其他业务插件。45/59为本轮起点，未验收的S01–S13与50不因开始开发而升级。
+
+复用主工作树 `/Users/accidia/projects/light-media`，实施分支 `codex/plugin-host-resources-20261031`，固定交付目标 `main`，起点/实际远端 `97476582910dc4b696f7ccd5010f28d823812d40`。现有未提交盘点/审计文档和证据全部保留。按下载器、站点/订阅/历史、存储/媒体/插件管理并行实现独占文件，中央资源路由与账本由主协调者维护。先完成必要宿主桥与实际测试插件，不迁移业务插件；不把接口存在或协议合成当作完整实机验收。
+
+### 实施中检查点（57/63，未提交/推送/部署）
+
+S01–S13标准宿主入口已分片落地，具体未完成分支保持唯一表状态；不以入口数量认领完成。S02已有固定Base源oracle、独立代码/SDK审查、绑定3770输入的Linux进程生命周期、Mac浏览器与真实隔离qB的torrent/fastresume读回SHA。下载器真实qB/TR主流程已跑；主协调者旧准确Hash和新下载器相关回归22.242s通过。旧Base克隆/重置/卸载及资源scope回归2.752s通过。Business/Services真实浏览器证据已落各自testdata/browser，模拟协议与真实依赖分别标记。
+
+S05空/等值patch与null已修，root独立SDK9.037s通过；S13全任务/限速/脱敏tracker新增独立SDK4.739s通过。继续S03 URL/cookie添加分支、S04列表次序、S10枚举与显式get_state副作用、S12宽容RSS恢复。普通分类外部制品已核实当前NAS与固定Resources blob同SHA，真实helper在隔离readonly/networknone容器提取17站16组分类，旧容器状态不变，见integration/catalog-source；不把未固定下载的Dockerfile说成固定了制品。S11普通识别分享非AI，名字匹配/缓存/四源细节继续补齐。S08真实失败与因果probe均保留：明确HTTP200/business -14，原协议preflight后仍拒绝，不能宣称遗漏preflight就是唯一原因；四个自建库/文件已清理、原7库不变。新桥按固定源接task_running/空POST/源fallback，实机只能选自建GUID，不触及原库scanall。细证见`testdata/plugin-host-integration-20261031/`及账本implementation_checkpoint。最终稳定集成及第50项仍未完成。
+
+本轮后续增量：S02以最新封存Linux主程序完成安装/失败/恢复/分身/更新/冷启/卸载，结合真实qB备份SHA、Mac浏览器与独立审查升级验收通过（46/59）。S04–07/S12最新Linux业务进程与root15.494s独审通过；S12另发现仅17模板不足，正在提取既有宿主支持schema的完整普通分类数据。S08同r4二进制r5自建库等待创建任务结束后SDK刷新实机成功、清理且原7库不变；source路径匹配边界继续修正，失败原件保留。S11纯Gozhconv6278和固定TMDB AST20例/race通过。S13独审raw AST发现3处get_downloading_torrents需vendor filter，已加入现有S13补齐，不增计数。证据见唯一表及implementation_checkpoint。 最新独立复核及Linux证据闭合S04/S06/S07/S08/S09/S10，当前52/59；S05继续原生已支持字段扩展，S11名字/缓存/环境分支开发中，S12全支持165模板已实际取证待接入，S13新增downloading与S03 URL/Cookie正在实机验收。
+
+S05/S12最新扩展Linux进程及root3.428s实际SDK独审闭合，当前54/59。S05完整46原列分别记录30原生可写与16明确宿主边界，不声称通用SQL setter；S12完整165支持模板/855+10分类源对照已纳入新构建。唯一验收清单 accepted-s05-s12.json。剩S01/S03/S13最后浏览器/删除增量封存、S11完整四源识别及50审计；无外部阻塞，仍未提交推送部署。
+
+本轮当前S11增量：完整豆瓣/Bangumi源模型43例、普通模块源回放26例、限流/重试15例、启动设置四只读键与真实SDK错误事件归属均已有证据；最新root race11.036s通过，随后补Bangumi无meta与HTTP transport错误源分支。AniList已接完整native入口，32模型/SDK正在独审。真实Linux发现网络代理脱敏wrapper丢失Unwrap导致重试少一层，正在按固定错误文本+保留cause修正和复验。Darwin独立CA假设失败原件保留，不修改全局信任；Linux自建CA已证实有效。S11仍未验收，不以组件通过升级。下载器最终TR7.0.11 vendor空str/file URI边界增量正在实机封存，当前54/59未变。
+
+最新检查点仍54/59：S11四源产品已实现，唯一表改为已实现待验证；services最终Linux主程序6d7d57f4/3797输入稳定，53源场景及浏览器进行中。共享catalog/sites/fnos/sourcezhconv/networkproxy/artifacts回归252根race通过，唯一公网provider实测未配置跳过单列；Hello实际安装/保存/调用/clone/cold/reset/uninstall race12.128s通过。下载器旧四Linux门209232dc全绿及159证据哈希有效，但独审发现App后置guard可能覆盖已发送/已确认回执，继续有限修复与专项验证，未升级S01/S03/S13。S50独审继续动态工厂、普通浏览器/OCR与运行依赖分类，不能把普通OCR或文件内普通browser类整体按AI排除。未提交推送部署。
+
+动态漏项独审重新只读核77个安装版Python文件，SHA全部匹配且旧容器运行状态未变。确认RemoveLink读取RMT_MEDIAEXT而标准settings.read缺该有限只读入口，S07重开，当前53/59；旧键的通过证据保留，不降低验收标准。继续补齐已有宿主设置映射并实际SDK/Linux验证。
+
+S50独立残余审计已核77源文件、203动态调用、110设置引用/20键，追加S14宿主代理/GitHub有限GET、S15普通OCR、S16普通JS渲染，当前53/62。原版普通辅助不得按AI排除；现有候选hook不算实现。RMT_MEDIAEXT仍S07、连接inactive仍S01内部补齐；Lark普通入站消息与现有宿主映射继续核实。详细源/目标/缺口证据在testdata/plugin-host-business-20261031/host-residual-review/review.json。
+
+S11完整验收封存，当前54/62。accepted-s11.json绑定四源模型/普通缓存分享限流、Linux6d7d57f4的53源场、17实际进程代次及IAB sourcev3/clonev2独立配置/刷新；只测拥有的HTTPS协议响应，不称公网provider在线验证；测试NAS实例已清。继续S01/S03/S13连接状态/回执增量、S07扩展名、S14GET/S15OCR/S16真实JS与50普通入站消息完整性核对。
+
+普通渠道入站链确认缺口，追加S17，当前54/63；现Web入口不是Lark parser替代，PostMessage方向相反，AI混合分支仅排除其专属部分。由下载器代理完成当前切片后接有限入站桥，services继续普通浏览器。S14实际旧NAS requests2.34.2/urllib3 2.7.0内存解压oracle发现zstd未启用，目标不应擅自解压，已按实际vendor保持未知编码原bytes并留首红证据；不修改旧服务。
+
+## 本轮范围盘点（2026-10-31，尚不开始迁移）
+
+用户调用“完整项目迁移”并澄清范围为“插件模块”，要求先看需要迁移什么，先不开始迁移。当前仅做固定前后端源码发现、独立复核、现有Go实现候选与缺口映射。范围见 [本轮清单](plugin-module-migration-scope-20261031.md)，权威账本为既有 `migration/ledger.json` 的 `plugin_module_scope_plan_20261031` 子合同，不覆盖原已安装插件快照合同。既有45/59状态不因本轮静态盘点增加；不把31个内置模块或所有业务插件纳入开发，不执行旧resume的提交/下一业务插件指令。后续只有用户要求开始后才进入实施。
+
+## 当前补充复查（2026-10-29）
+
+用户先核对下载器/文件三项，再追问其他遗漏。现行标准SDK缺少多组插件主动调用宿主的入口；已只读核对NAS23实例的全部77份Python源码，哈希匹配交接清单，结合固定B源码及25项资源白名单，确认新增S01–S13。唯一对照表当前 **45/59 验收通过**（已确认清单），50综合结论为“已实现待验证”；动态工厂/属性和运行环境依赖仍待核实，不能承诺遗漏仅限这13类。普通事件/命令/调度、日志、通知、系统消息已有，不重复记缺口；普通Go算法/文件/网络能力不因缺同名RPC就被判为框架遗漏。下方历史46/46及封存JSON不能作为当前完整完成结论。
+
+详细源码映射、适配边界、实际取证和未核实部分见[主动调用复查](plugin-shared-host-full-audit-20261029.md)，三项初查及9项既有边界回归见[先前记录](plugin-downloader-shared-capability-audit-20261029.md)。恢复时继续唯一表S项，不恢复旧私有业务契约，不开发工作流/AI/官方授权等级/多用户系统。本轮仅修改任务、对照和证据文档，未修改生产代码、提交、推送、部署或执行生产写操作。
+
 ## 2026-10-29 本次发布授权与交付
 
 用户已明确授权把已验收插件平台提交并推送 main、删除远端非main分支、部署NAS当前光影容器。以下历史“未提交/不推main/不部署”只记录当时阶段，不限制本次授权。实际提交、分支归档、验证和NAS结果统一见 [发布记录](plugin-module-main-publish-20261029.json)。本轮不整批合入其他业务插件分支。
@@ -16,7 +96,7 @@
 
 范围内状态仅用：待实现、已实现待验证、验收通过、阻塞。每项验收通过必须同时绑定原版源码位置、目标位置、实际验证证据；测试需覆盖真实宿主入口、浏览器、失败、重启和分身隔离。仅编译、接口存在、单测或 HTTP 200 均不构成完成。
 
-## 当前状态（2026-10-29）
+## 历史封存状态（2026-10-29，已由上方补充复查修订）
 
 46/46；约定范围内的插件模块迁移完成。22/44/45/46按用户要求排除；普通事件、命令、调度与47身份provider保留。第43项197方法/231直调+1间接调用有完整源码→目标→差异/证据映射；第50项52清单2854份记录、315源码位置、595份旧证据及当前编译输入均核验通过。实机/回放/合成/触屏模拟分型，原失败和必要适配保留，无未验证项、未解释差异或阻塞。最终报告validation/plugin-module-final-20261029.json；最后Linux/IAB93证据绑定main73add6db，556前端通过。已停止测试进程/隧道并清理本地291、远端241个构建制品和临时数据。2026-10-29已按新授权提交平台962fdf35并合入main，产品发布提交b1d9381e已推送；NAS现有light-media容器已用同提交构建的Linux程序更新，版本0.4.19、healthy。前端556项、SDK/编译及HelloTest宿主链回归通过，生产配置/密钥/7个旧插件记录保持。远程21个非main分支已删除且提交在本地refs/archive/remote-deletion-20261029/保留。完整部署证据、旧业务插件适配边界及浏览器登录页验证范围见 [发布记录](plugin-module-main-publish-20261029.json)。
 
@@ -357,3 +437,5 @@ GitHub设置已实现可选全局/指定仓库Token、加速镜像及普通配�
 2026-10-27继续源码逆查：第35项重开，当前31/46。固定F/src/api/index.ts明确全局Axios实例（含window.MoviePilotAPI），无当前plugin prefix限制；原365.02s证据仅证明own-instance子集，不能据adapter自写crossplugin拒绝断言认领完整源契约。由API代理核同源已存在宿主/显式其他插件/Callable Request和Axios config，必要时复用固定Axios前端依赖，禁止为补接口开发其他业务系统或跨域传凭据。29/30还发现旧自创CSS子集不符合源码：已撤回白名单/selector改写，原样DOM style文本/props按固定源保留（含规则/变量/transform），原始目标文件/tests保存work备查，不删样例，旧拒绝预期改按固定模板/实际函数回放；source10例及相关前端检查通过，新增独占class CSS真实浏览器探针待验。
 
 当前增量：r3 3133门最终1894.49s PASS；主进程2528560→2568412，两worker新PID/五设置全保持，真实SQL失败已移除触发器。IAB39/viewport/隧道34420已关闭；Chrome368189194/1280清理暂被扩展UI占用，测试服务均停。platform4共享构建正在进行，不将尚未实机的post-r3增量算已验收。
+
+S01/S03/S13已正式闭合：固定源/vendor、实际SDK和qB/TR/Linux/浏览器分型证据、postguard因果及连接增量均审过，基线159证据和新14证据/current23目标hash一致，root增量race17.121s。当前57/63，剩S07/S14/S15/S16/S17/50；未提交推送部署。

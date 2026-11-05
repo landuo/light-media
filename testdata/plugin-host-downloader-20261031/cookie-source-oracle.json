@@ -1,0 +1,1082 @@
+{
+  "kind": "fixed-source AST + hash-verified CPython 3.12.13 cookie parser",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+  "methods": {
+    "__get_mapping_value": 50,
+    "__normalize_cookie": 63,
+    "__cookie_key": 72,
+    "__build_site_cookies": 81,
+    "__parse_add_torrent_response": 98,
+    "__supports_cookie_api": 119,
+    "__sync_download_cookies": 131,
+    "add_torrent": 401
+  },
+  "cookie_cases": [
+    {
+      "header": "uid=1; passkey=OWNED_COOKIE",
+      "pairs": [
+        [
+          "uid",
+          "1"
+        ],
+        [
+          "passkey",
+          "OWNED_COOKIE"
+        ]
+      ],
+      "error": false
+    },
+    {
+      "header": "dup=1; dup=2; alpha=a=b",
+      "pairs": [
+        [
+          "dup",
+          "2"
+        ],
+        [
+          "alpha",
+          "a=b"
+        ]
+      ],
+      "error": false
+    },
+    {
+      "header": "quoted=\"a;b\"; esc=\"a\\053b\"",
+      "pairs": [
+        [
+          "quoted",
+          "a;b"
+        ],
+        [
+          "esc",
+          "a+b"
+        ]
+      ],
+      "error": false
+    },
+    {
+      "header": "$Version=1; uid=1; $Path=/legacy",
+      "pairs": [
+        [
+          "uid",
+          "1"
+        ]
+      ],
+      "error": false
+    },
+    {
+      "header": "uid=1; Path=/legacy; HttpOnly; Secure; SameSite=Lax",
+      "pairs": [
+        [
+          "uid",
+          "1"
+        ]
+      ],
+      "error": false
+    },
+    {
+      "header": "Path=/legacy; uid=1",
+      "pairs": [],
+      "error": false
+    },
+    {
+      "header": "uid=1; broken",
+      "pairs": [],
+      "error": false
+    },
+    {
+      "header": "uid=1; @illegal=2",
+      "pairs": [],
+      "error": true
+    },
+    {
+      "header": "uid=1;; garbage",
+      "pairs": [
+        [
+          "uid",
+          "1"
+        ]
+      ],
+      "error": false
+    },
+    {
+      "header": "uid=\"line\\012break\"",
+      "pairs": [],
+      "error": true
+    },
+    {
+      "header": "uid=\"\"",
+      "pairs": [
+        [
+          "uid",
+          ""
+        ]
+      ],
+      "error": false
+    },
+    {
+      "header": "uid=1; Partitioned",
+      "pairs": [],
+      "error": false
+    }
+  ],
+  "hostname_cases": [
+    {
+      "url": "https://TRACKER.invalid/download?token=OWNED_URL",
+      "hostname": "tracker.invalid"
+    },
+    {
+      "url": "https://user:password@tracker.invalid:badport/a",
+      "hostname": "tracker.invalid"
+    },
+    {
+      "url": "//TRACKER.invalid/a",
+      "hostname": "tracker.invalid"
+    },
+    {
+      "url": "https://tracker.invalid/a\nhttps://other.invalid/b",
+      "hostname": "tracker.invalid"
+    },
+    {
+      "url": "https://İ.example/a",
+      "hostname": "i̇.example"
+    },
+    {
+      "url": "http://[fe80::1%ZONE]:80/a",
+      "hostname": "fe80::1%ZONE"
+    },
+    {
+      "url": "not-a-url",
+      "hostname": null
+    },
+    {
+      "url": "https://tracker.invalid\nhttps://other.invalid",
+      "hostname": "tracker.invalidhttps"
+    }
+  ],
+  "sync_cases": [
+    {
+      "version": "2.11.2",
+      "mode": "ok",
+      "url": "https://TRACKER.invalid/download?token=OWNED_URL",
+      "cookie": "uid=1; passkey=OWNED_COOKIE",
+      "existing": [
+        {
+          "domain": "old.invalid",
+          "path": "/",
+          "name": "old",
+          "value": "keep",
+          "expirationDate": 0,
+          "extra": "drop"
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/",
+          "name": "uid",
+          "value": "old-value",
+          "expirationDate": 5
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/other",
+          "name": "uid",
+          "value": "other"
+        },
+        {
+          "domain": "",
+          "name": "invalid",
+          "value": "bad"
+        },
+        {
+          "name": "missingDomain",
+          "value": "bad"
+        }
+      ],
+      "calls": [
+        {
+          "method": "app_web_api_version"
+        },
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": "https://TRACKER.invalid/download?token=OWNED_URL",
+            "torrent_files": null,
+            "save_path": "/owned/downloads",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": false,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": "uid=1; passkey=OWNED_COOKIE",
+            "category": null
+          }
+        }
+      ],
+      "accepted": true,
+      "ids": []
+    },
+    {
+      "version": "2.11.3",
+      "mode": "ok",
+      "url": "https://TRACKER.invalid/download?token=OWNED_URL",
+      "cookie": "uid=1; passkey=OWNED_COOKIE",
+      "existing": [
+        {
+          "domain": "old.invalid",
+          "path": "/",
+          "name": "old",
+          "value": "keep",
+          "expirationDate": 0,
+          "extra": "drop"
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/",
+          "name": "uid",
+          "value": "old-value",
+          "expirationDate": 5
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/other",
+          "name": "uid",
+          "value": "other"
+        },
+        {
+          "domain": "",
+          "name": "invalid",
+          "value": "bad"
+        },
+        {
+          "name": "missingDomain",
+          "value": "bad"
+        }
+      ],
+      "calls": [
+        {
+          "method": "app_web_api_version"
+        },
+        {
+          "method": "app_cookies"
+        },
+        {
+          "method": "app_set_cookies",
+          "arguments": {
+            "cookies": [
+              {
+                "domain": "old.invalid",
+                "path": "/",
+                "name": "old",
+                "value": "keep",
+                "expirationDate": 0
+              },
+              {
+                "domain": "tracker.invalid",
+                "path": "/",
+                "name": "uid",
+                "value": "1"
+              },
+              {
+                "domain": "tracker.invalid",
+                "path": "/other",
+                "name": "uid",
+                "value": "other"
+              },
+              {
+                "domain": "tracker.invalid",
+                "path": "/",
+                "name": "passkey",
+                "value": "OWNED_COOKIE"
+              }
+            ]
+          }
+        },
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": "https://TRACKER.invalid/download?token=OWNED_URL",
+            "torrent_files": null,
+            "save_path": "/owned/downloads",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": false,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": null,
+            "category": null
+          }
+        }
+      ],
+      "accepted": true,
+      "ids": []
+    },
+    {
+      "version": "2.11.3rc1",
+      "mode": "ok",
+      "url": "https://TRACKER.invalid/download?token=OWNED_URL",
+      "cookie": "uid=1; passkey=OWNED_COOKIE",
+      "existing": [
+        {
+          "domain": "old.invalid",
+          "path": "/",
+          "name": "old",
+          "value": "keep",
+          "expirationDate": 0,
+          "extra": "drop"
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/",
+          "name": "uid",
+          "value": "old-value",
+          "expirationDate": 5
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/other",
+          "name": "uid",
+          "value": "other"
+        },
+        {
+          "domain": "",
+          "name": "invalid",
+          "value": "bad"
+        },
+        {
+          "name": "missingDomain",
+          "value": "bad"
+        }
+      ],
+      "calls": [
+        {
+          "method": "app_web_api_version"
+        },
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": "https://TRACKER.invalid/download?token=OWNED_URL",
+            "torrent_files": null,
+            "save_path": "/owned/downloads",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": false,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": "uid=1; passkey=OWNED_COOKIE",
+            "category": null
+          }
+        }
+      ],
+      "accepted": true,
+      "ids": []
+    },
+    {
+      "version": "2.11.3.post1",
+      "mode": "ok",
+      "url": "https://TRACKER.invalid/download?token=OWNED_URL",
+      "cookie": "uid=1; passkey=OWNED_COOKIE",
+      "existing": [
+        {
+          "domain": "old.invalid",
+          "path": "/",
+          "name": "old",
+          "value": "keep",
+          "expirationDate": 0,
+          "extra": "drop"
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/",
+          "name": "uid",
+          "value": "old-value",
+          "expirationDate": 5
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/other",
+          "name": "uid",
+          "value": "other"
+        },
+        {
+          "domain": "",
+          "name": "invalid",
+          "value": "bad"
+        },
+        {
+          "name": "missingDomain",
+          "value": "bad"
+        }
+      ],
+      "calls": [
+        {
+          "method": "app_web_api_version"
+        },
+        {
+          "method": "app_cookies"
+        },
+        {
+          "method": "app_set_cookies",
+          "arguments": {
+            "cookies": [
+              {
+                "domain": "old.invalid",
+                "path": "/",
+                "name": "old",
+                "value": "keep",
+                "expirationDate": 0
+              },
+              {
+                "domain": "tracker.invalid",
+                "path": "/",
+                "name": "uid",
+                "value": "1"
+              },
+              {
+                "domain": "tracker.invalid",
+                "path": "/other",
+                "name": "uid",
+                "value": "other"
+              },
+              {
+                "domain": "tracker.invalid",
+                "path": "/",
+                "name": "passkey",
+                "value": "OWNED_COOKIE"
+              }
+            ]
+          }
+        },
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": "https://TRACKER.invalid/download?token=OWNED_URL",
+            "torrent_files": null,
+            "save_path": "/owned/downloads",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": false,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": null,
+            "category": null
+          }
+        }
+      ],
+      "accepted": true,
+      "ids": []
+    },
+    {
+      "version": "bad-version",
+      "mode": "ok",
+      "url": "https://TRACKER.invalid/download?token=OWNED_URL",
+      "cookie": "uid=1; passkey=OWNED_COOKIE",
+      "existing": [
+        {
+          "domain": "old.invalid",
+          "path": "/",
+          "name": "old",
+          "value": "keep",
+          "expirationDate": 0,
+          "extra": "drop"
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/",
+          "name": "uid",
+          "value": "old-value",
+          "expirationDate": 5
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/other",
+          "name": "uid",
+          "value": "other"
+        },
+        {
+          "domain": "",
+          "name": "invalid",
+          "value": "bad"
+        },
+        {
+          "name": "missingDomain",
+          "value": "bad"
+        }
+      ],
+      "calls": [
+        {
+          "method": "app_web_api_version"
+        },
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": "https://TRACKER.invalid/download?token=OWNED_URL",
+            "torrent_files": null,
+            "save_path": "/owned/downloads",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": false,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": "uid=1; passkey=OWNED_COOKIE",
+            "category": null
+          }
+        }
+      ],
+      "accepted": true,
+      "ids": []
+    },
+    {
+      "version": "2.11.4",
+      "mode": "read-failure",
+      "url": "https://TRACKER.invalid/download?token=OWNED_URL",
+      "cookie": "uid=1; passkey=OWNED_COOKIE",
+      "existing": [
+        {
+          "domain": "old.invalid",
+          "path": "/",
+          "name": "old",
+          "value": "keep",
+          "expirationDate": 0,
+          "extra": "drop"
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/",
+          "name": "uid",
+          "value": "old-value",
+          "expirationDate": 5
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/other",
+          "name": "uid",
+          "value": "other"
+        },
+        {
+          "domain": "",
+          "name": "invalid",
+          "value": "bad"
+        },
+        {
+          "name": "missingDomain",
+          "value": "bad"
+        }
+      ],
+      "calls": [
+        {
+          "method": "app_web_api_version"
+        },
+        {
+          "method": "app_cookies"
+        },
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": "https://TRACKER.invalid/download?token=OWNED_URL",
+            "torrent_files": null,
+            "save_path": "/owned/downloads",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": false,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": "uid=1; passkey=OWNED_COOKIE",
+            "category": null
+          }
+        }
+      ],
+      "accepted": true,
+      "ids": []
+    },
+    {
+      "version": "2.11.4",
+      "mode": "write-failure",
+      "url": "https://TRACKER.invalid/download?token=OWNED_URL",
+      "cookie": "uid=1; passkey=OWNED_COOKIE",
+      "existing": [
+        {
+          "domain": "old.invalid",
+          "path": "/",
+          "name": "old",
+          "value": "keep",
+          "expirationDate": 0,
+          "extra": "drop"
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/",
+          "name": "uid",
+          "value": "old-value",
+          "expirationDate": 5
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/other",
+          "name": "uid",
+          "value": "other"
+        },
+        {
+          "domain": "",
+          "name": "invalid",
+          "value": "bad"
+        },
+        {
+          "name": "missingDomain",
+          "value": "bad"
+        }
+      ],
+      "calls": [
+        {
+          "method": "app_web_api_version"
+        },
+        {
+          "method": "app_cookies"
+        },
+        {
+          "method": "app_set_cookies",
+          "arguments": {
+            "cookies": [
+              {
+                "domain": "old.invalid",
+                "path": "/",
+                "name": "old",
+                "value": "keep",
+                "expirationDate": 0
+              },
+              {
+                "domain": "tracker.invalid",
+                "path": "/",
+                "name": "uid",
+                "value": "1"
+              },
+              {
+                "domain": "tracker.invalid",
+                "path": "/other",
+                "name": "uid",
+                "value": "other"
+              },
+              {
+                "domain": "tracker.invalid",
+                "path": "/",
+                "name": "passkey",
+                "value": "OWNED_COOKIE"
+              }
+            ]
+          }
+        },
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": "https://TRACKER.invalid/download?token=OWNED_URL",
+            "torrent_files": null,
+            "save_path": "/owned/downloads",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": false,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": "uid=1; passkey=OWNED_COOKIE",
+            "category": null
+          }
+        }
+      ],
+      "accepted": true,
+      "ids": []
+    },
+    {
+      "version": "2.11.4",
+      "mode": "version-failure",
+      "url": "https://TRACKER.invalid/download?token=OWNED_URL",
+      "cookie": "uid=1; passkey=OWNED_COOKIE",
+      "existing": [
+        {
+          "domain": "old.invalid",
+          "path": "/",
+          "name": "old",
+          "value": "keep",
+          "expirationDate": 0,
+          "extra": "drop"
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/",
+          "name": "uid",
+          "value": "old-value",
+          "expirationDate": 5
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/other",
+          "name": "uid",
+          "value": "other"
+        },
+        {
+          "domain": "",
+          "name": "invalid",
+          "value": "bad"
+        },
+        {
+          "name": "missingDomain",
+          "value": "bad"
+        }
+      ],
+      "calls": [
+        {
+          "method": "app_web_api_version"
+        },
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": "https://TRACKER.invalid/download?token=OWNED_URL",
+            "torrent_files": null,
+            "save_path": "/owned/downloads",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": false,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": "uid=1; passkey=OWNED_COOKIE",
+            "category": null
+          }
+        }
+      ],
+      "accepted": true,
+      "ids": []
+    },
+    {
+      "version": "2.11.4",
+      "mode": "ok",
+      "url": "https://TRACKER.invalid/download?token=OWNED_URL",
+      "cookie": "uid=1; broken",
+      "existing": [
+        {
+          "domain": "old.invalid",
+          "path": "/",
+          "name": "old",
+          "value": "keep",
+          "expirationDate": 0,
+          "extra": "drop"
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/",
+          "name": "uid",
+          "value": "old-value",
+          "expirationDate": 5
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/other",
+          "name": "uid",
+          "value": "other"
+        },
+        {
+          "domain": "",
+          "name": "invalid",
+          "value": "bad"
+        },
+        {
+          "name": "missingDomain",
+          "value": "bad"
+        }
+      ],
+      "calls": [
+        {
+          "method": "app_web_api_version"
+        },
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": "https://TRACKER.invalid/download?token=OWNED_URL",
+            "torrent_files": null,
+            "save_path": "/owned/downloads",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": false,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": "uid=1; broken",
+            "category": null
+          }
+        }
+      ],
+      "accepted": true,
+      "ids": []
+    },
+    {
+      "version": "2.11.4",
+      "mode": "ok",
+      "url": "magnet:?xt=urn:btih:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cookie": "uid=1; passkey=OWNED_COOKIE",
+      "existing": [
+        {
+          "domain": "old.invalid",
+          "path": "/",
+          "name": "old",
+          "value": "keep",
+          "expirationDate": 0,
+          "extra": "drop"
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/",
+          "name": "uid",
+          "value": "old-value",
+          "expirationDate": 5
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/other",
+          "name": "uid",
+          "value": "other"
+        },
+        {
+          "domain": "",
+          "name": "invalid",
+          "value": "bad"
+        },
+        {
+          "name": "missingDomain",
+          "value": "bad"
+        }
+      ],
+      "calls": [
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": "magnet:?xt=urn:btih:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "torrent_files": null,
+            "save_path": "/owned/downloads",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": false,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": "uid=1; passkey=OWNED_COOKIE",
+            "category": null
+          }
+        }
+      ],
+      "accepted": true,
+      "ids": []
+    },
+    {
+      "version": "2.11.4",
+      "mode": "ok",
+      "url": "",
+      "cookie": "uid=1; passkey=OWNED_COOKIE",
+      "existing": [
+        {
+          "domain": "old.invalid",
+          "path": "/",
+          "name": "old",
+          "value": "keep",
+          "expirationDate": 0,
+          "extra": "drop"
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/",
+          "name": "uid",
+          "value": "old-value",
+          "expirationDate": 5
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/other",
+          "name": "uid",
+          "value": "other"
+        },
+        {
+          "domain": "",
+          "name": "invalid",
+          "value": "bad"
+        },
+        {
+          "name": "missingDomain",
+          "value": "bad"
+        }
+      ],
+      "calls": [],
+      "accepted": false,
+      "ids": []
+    },
+    {
+      "version": "2.11.4",
+      "mode": "ok",
+      "url": "https://tracker.invalid/a\nhttps://other.invalid/b",
+      "cookie": "uid=1; passkey=OWNED_COOKIE",
+      "existing": [
+        {
+          "domain": "old.invalid",
+          "path": "/",
+          "name": "old",
+          "value": "keep",
+          "expirationDate": 0,
+          "extra": "drop"
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/",
+          "name": "uid",
+          "value": "old-value",
+          "expirationDate": 5
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/other",
+          "name": "uid",
+          "value": "other"
+        },
+        {
+          "domain": "",
+          "name": "invalid",
+          "value": "bad"
+        },
+        {
+          "name": "missingDomain",
+          "value": "bad"
+        }
+      ],
+      "calls": [
+        {
+          "method": "app_web_api_version"
+        },
+        {
+          "method": "app_cookies"
+        },
+        {
+          "method": "app_set_cookies",
+          "arguments": {
+            "cookies": [
+              {
+                "domain": "old.invalid",
+                "path": "/",
+                "name": "old",
+                "value": "keep",
+                "expirationDate": 0
+              },
+              {
+                "domain": "tracker.invalid",
+                "path": "/",
+                "name": "uid",
+                "value": "1"
+              },
+              {
+                "domain": "tracker.invalid",
+                "path": "/other",
+                "name": "uid",
+                "value": "other"
+              },
+              {
+                "domain": "tracker.invalid",
+                "path": "/",
+                "name": "passkey",
+                "value": "OWNED_COOKIE"
+              }
+            ]
+          }
+        },
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": "https://tracker.invalid/a\nhttps://other.invalid/b",
+            "torrent_files": null,
+            "save_path": "/owned/downloads",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": false,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": null,
+            "category": null
+          }
+        }
+      ],
+      "accepted": true,
+      "ids": []
+    },
+    {
+      "version": "2.11.4",
+      "mode": "ok",
+      "url": "https://TRACKER.invalid/download?token=OWNED_URL",
+      "cookie": "",
+      "existing": [
+        {
+          "domain": "old.invalid",
+          "path": "/",
+          "name": "old",
+          "value": "keep",
+          "expirationDate": 0,
+          "extra": "drop"
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/",
+          "name": "uid",
+          "value": "old-value",
+          "expirationDate": 5
+        },
+        {
+          "domain": "tracker.invalid",
+          "path": "/other",
+          "name": "uid",
+          "value": "other"
+        },
+        {
+          "domain": "",
+          "name": "invalid",
+          "value": "bad"
+        },
+        {
+          "name": "missingDomain",
+          "value": "bad"
+        }
+      ],
+      "calls": [
+        {
+          "method": "torrents_add",
+          "arguments": {
+            "urls": "https://TRACKER.invalid/download?token=OWNED_URL",
+            "torrent_files": null,
+            "save_path": "/owned/downloads",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": false,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": "",
+            "category": null
+          }
+        }
+      ],
+      "accepted": true,
+      "ids": []
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "requests": "2.34.2",
+  "urllib3": "2.7.0",
+  "classification": "fixed AST with actual vendor HTTP on owned loopback; scaled 0.5 second scalar timeout, no mock",
+  "cases": [
+    {
+      "name": "progress",
+      "timeout_seconds": 0.5,
+      "elapsed_seconds": 1.246,
+      "content": "xxxxx",
+      "requests": [
+        "/progress"
+      ]
+    },
+    {
+      "name": "header-idle",
+      "timeout_seconds": 0.5,
+      "elapsed_seconds": 0.506,
+      "content": null,
+      "requests": [
+        "/header-idle"
+      ]
+    },
+    {
+      "name": "body-idle",
+      "timeout_seconds": 0.5,
+      "elapsed_seconds": 0.506,
+      "content": null,
+      "requests": [
+        "/body-idle"
+      ]
+    },
+    {
+      "name": "redirect-0",
+      "timeout_seconds": 0.5,
+      "elapsed_seconds": 0.93,
+      "content": "xxxxx",
+      "requests": [
+        "/redirect-0",
+        "/redirect-1",
+        "/redirect-2"
+      ]
+    }
+  ]
+}

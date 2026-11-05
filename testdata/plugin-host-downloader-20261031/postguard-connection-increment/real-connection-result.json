@@ -1,0 +1,154 @@
+{
+  "kind": "real_Linux_App_SDK_auth_enabled_daemons",
+  "status": "passed",
+  "server_sha256": "0df55580e4490233e9e9fa5cf12329e2e45ce98db162a004a7941fb9cb00a239",
+  "worker_sha256": "1d9c751c29bbde6945d1322ceff37ae768e34e0296f8a7bfd9ea04fdd64b79c4",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "events": [
+    {
+      "method": "POST",
+      "path": "/api/auth/setup",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/settings",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/connection",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/connection",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/connection",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/connection",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/connection",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/connection",
+      "status": 422
+    },
+    {
+      "method": "PUT",
+      "path": "/api/plugins/HostDownloaderTest/config",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/plugins/HostDownloaderTest/api/snapshot",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/plugins/HostDownloaderTest",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/connection",
+      "status": 404
+    }
+  ],
+  "random_credentials_in_evidence": false,
+  "results": {
+    "qb-good": {
+      "schema_version": 1,
+      "downloader_id": "qb-good",
+      "kind": "qbittorrent",
+      "inactive": false
+    },
+    "qb-denied": {
+      "schema_version": 1,
+      "downloader_id": "qb-denied",
+      "kind": "qbittorrent",
+      "inactive": true
+    },
+    "tr-good": {
+      "schema_version": 1,
+      "downloader_id": "tr-good",
+      "kind": "transmission",
+      "inactive": false
+    },
+    "tr-denied": {
+      "schema_version": 1,
+      "downloader_id": "tr-denied",
+      "kind": "transmission",
+      "inactive": true
+    },
+    "unreachable": {
+      "schema_version": 1,
+      "downloader_id": "unreachable",
+      "kind": "qbittorrent",
+      "inactive": true
+    }
+  },
+  "container_environment": [
+    {
+      "name": "lm-host-downloader-20261031-5tBuDW69",
+      "image_id": "sha256:8479bc5b568aa65e28b7de384f49c300e07e52856fdd85cfcfcc6dddb48736e4",
+      "mounts": [
+        {
+          "source": "/vol2/1000/docker/.light-media-plugin-downloader-20261031-5tBuDW69/qb-config",
+          "target": "/config"
+        },
+        {
+          "source": "/vol2/1000/docker/.light-media-plugin-downloader-20261031-5tBuDW69/downloads",
+          "target": "/downloads"
+        }
+      ]
+    },
+    {
+      "name": "lm-host-tr-20261031-5tBuDW69",
+      "image_id": "sha256:3088e06bd9e45494b106e9bb923646ac919f3e315f86772294ba352af6b49b72",
+      "mounts": [
+        {
+          "source": "/vol2/1000/docker/.light-media-plugin-downloader-20261031-5tBuDW69/tr-config",
+          "target": "/config"
+        },
+        {
+          "source": "/vol2/1000/docker/.light-media-plugin-downloader-20261031-5tBuDW69/tr-downloads",
+          "target": "/downloads"
+        }
+      ]
+    }
+  ],
+  "auth_required_independently_verified": true,
+  "daemon_versions": {
+    "qb": "v5.1.2",
+    "qb_webapi": "2.11.4",
+    "tr": "4.0.6 (38c164933e)"
+  },
+  "disabled_rejected": true,
+  "no_tasks_created": true,
+  "owned_containers_removed": [
+    "lm-host-downloader-20261031-5tBuDW69",
+    "lm-host-tr-20261031-5tBuDW69"
+  ]
+}

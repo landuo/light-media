@@ -1,0 +1,95 @@
+{
+  "reviewer": "/root/host_storage_manager_resources; independent of reviewed Douban/Bangumi implementation",
+  "scope": "Evidence review only; authoritative state remains migration/ledger.json and docs/plugin-module-parity-matrix.md",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "classification": "Fixed-source static review plus independent actual cmd/server/installed SDK execution against owned TLS protocol peers, real owned filesystem lifecycle, and coordinator actual browser evidence",
+  "reviewed_files": {
+    "internal/app/plugin_original_host_media_sources.go": "03e53b337c78e4b0e9f02586896fb1cad393c8f5ee5289385fc6ba0d0f92dceb",
+    "internal/app/plugin_original_host_media_douban.go": "95e74902e3027a38a5c9bc1d0847c8e6311c276cde068b9401be601d1a0d7af6",
+    "internal/app/plugin_original_host_media_douban_limit.go": "0228f4753197ff87b622b96f6ef4442de5a408d33a98344e598d0969fd07fd38",
+    "internal/app/plugin_original_host_media_bangumi.go": "fc29eab7491032dbc5ae6686e3cf84a26580eb881d5de94f821efd8bf21d7e59",
+    "internal/app/plugin_original_catalog_recognize.go": "9972c90dbeeaadda584f7d702a7ee261c7ceb69e2b060dc58fb67277545380c2",
+    "internal/catalog/source_plugin_douban.go": "de8fe1bf4a0bbc779aba2cbb221dc3d873ef8187a73358b7efbfb6b5a2898b5a",
+    "internal/catalog/source_plugin_bangumi.go": "b87850d0dedb024f72e3006489d12216696198abfd3e68e7b8df3637c91a7182",
+    "internal/catalog/source_plugin_http.go": "ae36befe0abda28ab78370408aa3e2a1e037152552a744000c5fd57af864daf8",
+    "internal/catalog/explore_sources.go": "4531b40a4895ebe4a85bfad7b9c08eda09db5aed87530de6945c69b58a9a0f18"
+  },
+  "evidence": {
+    "testdata/plugin-host-integration-20261031/source-models/douban-oracle.json": "bfd5cf9165626237775f786ec6cc2ad3da31de8db46b6e4a5b849284afedbec3",
+    "testdata/plugin-host-integration-20261031/source-models/bangumi-oracle.json": "5b9e09ffd3027271cac1c26ddd0a5397ed692de0794ad58d8e612e5858403967",
+    "testdata/plugin-host-integration-20261031/source-models/douban-native-cases.json": "9dbd6289e054aa55483982ceb92df56afa1e547a6a671bcbcd384db4a5cbe7dd",
+    "testdata/plugin-host-integration-20261031/source-models/bangumi-native-cases.json": "6a63e787d7c795d0eceaf03bad8d5e65a4b57ad2af101a3e5f5f3563f40ea521",
+    "testdata/plugin-host-integration-20261031/source-models/http-source-native-cases.json": "34cc125040b5df459ad5e057d43a7d2a0e1a84714d3fb51922cff4fe6804ab04",
+    "testdata/plugin-host-integration-20261031/source-models/native-shape-race-r7.log": "1f39d7390b400cf8a4dfcceccfd3d7a621350fa3839b3c7f7def4d2845b53451",
+    "testdata/plugin-host-integration-20261031/source-models/douban-unicode-race-r6.log": "e82b3b434824821d577afb413bea700ec7f6c88b2385dc0ede87eaf7ff06dee2",
+    "testdata/plugin-host-services-20261031/native-linux-final/result.json": "43a479d9490fd63521a7ccfd97bb1e186669c1a5c9ee6d1bd59fa2fc683a9a34",
+    "testdata/plugin-host-services-20261031/lifecycle-linux-final/result.json": "4967237f63db3cc77029614b7a730942e7c0692da5cbb67185fd6b89371f704b",
+    "testdata/plugin-host-integration-20261031/native-browser/result.json": "3051072090b7193b85454f064f791e0b63556580467d4d3c94fa61c3451c90dc"
+  },
+  "findings": {
+    "error_identity": {
+      "source": "app/chain/__init__.py:__handle_system_error,run_module,recognize_media",
+      "target": "internal/app/plugin_original_catalog_recognize.go callNative source identity/message",
+      "status": "resolved_in_reviewed_source_and_final_linux_binding"
+    },
+    "bangumi_numeric_year": {
+      "source": "app/modules/bangumi/__init__.py:_matches_meta",
+      "target": "internal/app/plugin_original_host_media_bangumi.go:originalHostMediaBangumiMatches",
+      "status": "resolved_in_reviewed_source_and_final_linux_binding"
+    },
+    "bangumi_bad_actor": {
+      "source": "app/modules/bangumi/bangumi.py:credits lines219-227",
+      "target": "internal/app/plugin_original_host_media_bangumi.go:originalHostMediaRecognizeBangumi",
+      "status": "resolved_in_reviewed_source_and_final_linux_binding"
+    },
+    "truthy_wrong_shape": {
+      "source": "app/modules/bangumi/bangumi.py:search/detail/credits; app/modules/douban/__init__.py:douban_info",
+      "target": "internal/app/plugin_original_host_media_sources.go:originalHostMediaSourceMapping/Sequence",
+      "status": "resolved_in_reviewed_source_and_final_linux_binding"
+    },
+    "episode_count_strict_integer_and_bound": {
+      "source": "app/core/context.py:set_douban_info/set_bangumi_info direct range(1,count+1)",
+      "target": "internal/app/plugin_original_host_media_douban.go:originalHostMediaEpisodeList",
+      "status": "resolved_in_reviewed_source_and_final_linux_binding"
+    },
+    "douban_year_query_python_strip": {
+      "source": "app/modules/douban/__init__.py:match_doubaninfo line1026",
+      "target": "internal/app/plugin_original_host_media_douban.go:originalHostMediaRecognizeDouban",
+      "status": "resolved_in_reviewed_source_and_final_linux_binding"
+    },
+    "douban_unicode_decimal_regex": {
+      "source": "app/core/context.py:set_douban_info Python re \\d + int(duration)",
+      "target": "internal/app/plugin_original_host_media_douban.go:date/year/duration/cover regex and decimal conversion",
+      "status": "resolved_in_reviewed_source_and_final_linux_binding"
+    }
+  },
+  "independently_executed": {
+    "server_sha256": "6d7d57f4e6388a7ec1870e36a8ba295bd154477f10e578d494b67a493d92d568",
+    "source_cases": {
+      "douban": 16,
+      "bangumi": 17,
+      "http_failure_increment": 2,
+      "anilist": 18
+    },
+    "actual_source_cases_total": 53,
+    "cold_source_process_conditions": 16,
+    "total_source_server_processes": 17,
+    "ordinary_startup_keys": 4,
+    "lifecycle_driver_phases": 2,
+    "drivers_exit_code": 0,
+    "owned_nas_root_cleanup_verified": true
+  },
+  "conclusion": "All listed review findings are resolved in reviewed code and the final Linux acceptance server. Douban/Bangumi ordinary recognition module/API/model paths reviewed match the pinned source branches exercised; final 53-case native driver and independent browser host integration passed. No claim of full MoviePilot runtime or live public provider reachability.",
+  "adaptations": [
+    "Use existing Go fixed-origin transport, TLS verification and credential/redirect boundaries; original RequestUtils defaults verify=False are not copied.",
+    "Provider response cache uses immutable snapshots/deep copies to avoid concurrent Go map mutation; typed nil maps/slices map to source None while explicit empty containers remain distinct.",
+    "Source Python integer-key dictionaries cross the existing JSON SDK boundary; internal provider/method mappings stay finite.",
+    "Episode-array allocation is bounded by the real SDK JSON payload budget, with full model validation at the SDK boundary; arbitrary 100000 cap was removed."
+  ],
+  "limitations": [
+    "Source baselines are unchanged AST method replays with owned protocol/parser seams; they are not a running full MoviePilot service.",
+    "Public TMDB/Douban/Bangumi/AniList endpoints were not contacted in this driver; actual HTTPS/fixed-origin code runs through an owned configured CONNECT proxy and trusted owned CA on Linux.",
+    "Browser fixture has no recognize action button; browser config saves and data displays are proven separately from CLI-driven native recognition.",
+    "Error-identity actual SDK observer and limiter/Unicode boundary component proofs were inspected from coordinator evidence; the independent end-to-end driver proves their relevant normal/error outputs."
+  ]
+}

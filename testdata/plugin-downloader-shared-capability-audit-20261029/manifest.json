@@ -1,0 +1,237 @@
+{
+  "date": "2026-10-29",
+  "target_commit": "97476582910dc4b696f7ccd5010f28d823812d40",
+  "scope": "Read-only capability audit; no production code or download-task mutations. S01-S03 remain incomplete.",
+  "classification": {
+    "standard_host_tests": "Actual separate SDK workers and App; synthetic loopback downloader protocols",
+    "sdk_and_native_tests": "Synthetic/unit protocol assertions; not NAS downloads",
+    "instance_data_path": "Local temporary application directories",
+    "NAS": "Read-only SSH Docker inspect and executable SHA observation; no torrent backup or download-task content read"
+  },
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_files": [
+    {
+      "path": "internal/plugins/downloader_tasks.go",
+      "sha256": "80bd320640235780bf3e679a6051649563b3380e83d0d367578f841e24d17110"
+    },
+    {
+      "path": "internal/app/plugin_original_downloader_tasks.go",
+      "sha256": "cbf88517ca5c94427222984085f86ccdb3f5fa064ce784388b18c66564a51f11"
+    },
+    {
+      "path": "internal/app/plugin_original_resources.go",
+      "sha256": "25c62dab5b5fe553b844118cce0035dc5b7a96dcf4d5642bba2f21a5b6590b28"
+    },
+    {
+      "path": "internal/app/plugin_implementation.go",
+      "sha256": "2e7f179da7e02878f514d40e8fdfa5297b99cbf390b3a6acec3555d1fd7ffe3f"
+    },
+    {
+      "path": "internal/app/plugin_original_base.go",
+      "sha256": "989020d5ae77a79b4d3cba80048144cb50534cc7a65b2afbce2632e5e680effb"
+    },
+    {
+      "path": "internal/plugins/base.go",
+      "sha256": "88d704b1249fd6af462f8dc8157586f1e30d579e4cc4719abf3289821f311aed"
+    },
+    {
+      "path": "internal/app/plugin_original_downloader_control.go",
+      "sha256": "09cbd97ce37fcd06bacee28e32afa9ef846e24c50b2355f6c42909e769a11ab8"
+    },
+    {
+      "path": "internal/plugins/torrenttransfer/sdk.go",
+      "sha256": "f0fc5dda92efacefdc542ccbf2afafdbb7e4cfd6df3201a5308ea78bd924c73d"
+    },
+    {
+      "path": "internal/plugins/torrenttransfer/native_host.go",
+      "sha256": "45a5644002c12498e967378a423dd31c7ae238b7d3adb03116e8354141ce6568"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/transfer.go",
+      "sha256": "b41c9a18ccc280cd9a853220ce15945736b42fa394ef860c79a2b18c2b9448cf"
+    },
+    {
+      "path": "internal/app/plugin_original_downloader_tasks_test.go",
+      "sha256": "6e79c87cfc5a0e23b37dda1448be912fb367ad107dbdf1d5169f408b8ecd1f27"
+    },
+    {
+      "path": "internal/app/plugin_original_downloader_tasks_fixture_test.go",
+      "sha256": "526acbda660106e31cf9e9979ecd7e02ad7921ee181ef680530da064ce37307f"
+    },
+    {
+      "path": "internal/plugins/downloader_tasks_test.go",
+      "sha256": "53cc9509dbc995a8f6b57728352e9c34ffeec852406ef6df954303b3ce822650"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/downloading_test.go",
+      "sha256": "29835b2a7eafbc707e60d51e76d4c9bdd06987695854296399fa090b374dcfc5"
+    },
+    {
+      "path": "internal/app/plugin_original_base_test.go",
+      "sha256": "a4d73f6765f61d46da0282d755ad6b3e87d48ef75078bc8b3d1e679019cda6a1"
+    },
+    {
+      "path": "testdata/plugins/torrent-transfer-1.10.3/torrenttransfer.py",
+      "sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5"
+    }
+  ],
+  "test_results": {
+    "result.json": [
+      {
+        "label": "build-worker",
+        "command": [
+          "go",
+          "build",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-downloader-capability-audit-20261029/owned-tasks",
+          "./cmd/owned-downloader-tasks-fixture"
+        ],
+        "exit_code": 0,
+        "duration_s": 0.674
+      },
+      {
+        "label": "build-denied-worker",
+        "command": [
+          "go",
+          "build",
+          "-ldflags=-X main.fixtureDenied=true",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-downloader-capability-audit-20261029/owned-tasks-denied",
+          "./cmd/owned-downloader-tasks-fixture"
+        ],
+        "exit_code": 0,
+        "duration_s": 0.342
+      },
+      {
+        "label": "standard-host-tasks",
+        "command": [
+          "go",
+          "test",
+          "-json",
+          "./internal/app",
+          "-run",
+          "^TestOriginalDownloaderTasks",
+          "-count=1"
+        ],
+        "exit_code": 1,
+        "duration_s": 5.861,
+        "top_level_tests": {
+          "pass": 0,
+          "fail": 5,
+          "skip": 0
+        }
+      }
+    ],
+    "result-safe-tmp.json": [
+      {
+        "label": "standard-host-tasks-safe-tmp",
+        "command": [
+          "go",
+          "test",
+          "-json",
+          "./internal/app",
+          "-run",
+          "^TestOriginalDownloaderTasks",
+          "-count=1"
+        ],
+        "exit_code": 0,
+        "duration_s": 8.525,
+        "top_level_tests": {
+          "pass": 5,
+          "fail": 0,
+          "skip": 0
+        }
+      },
+      {
+        "label": "sdk-and-native-delete",
+        "command": [
+          "go",
+          "test",
+          "-json",
+          "./internal/plugins",
+          "./internal/plugins/iyuuautoseed/native",
+          "-run",
+          "^(TestDownloaderTasksSelectionAndSDKPrecision|TestTransmissionDeleteExplicitlyDistinguishesTaskAndDataForBothDialects)$",
+          "-count=1"
+        ],
+        "exit_code": 0,
+        "duration_s": 0.431,
+        "top_level_tests": {
+          "pass": 2,
+          "fail": 0,
+          "skip": 0
+        }
+      }
+    ],
+    "instance-data-path-result.json": {
+      "label": "instance-data-path",
+      "command": [
+        "go",
+        "test",
+        "-json",
+        "./internal/app",
+        "-run",
+        "^(TestOriginalBaseOwnedDataPathBoundaries|TestOriginalBaseDataPathRejectsInsideRootAliases)$",
+        "-count=1"
+      ],
+      "exit_code": 0,
+      "duration_s": 3.018,
+      "top_level_tests": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      }
+    }
+  },
+  "nas_observed": {
+    "healthy": true,
+    "binary_sha256": "f57f098b1c151d5dcbfe2ca54d22b7378f6a5e57a6ea88e193a27ca61a7d3acd",
+    "mount_destinations": [
+      "/vol2/1000/media",
+      "/etc/ssl/certs",
+      "/etc/hosts",
+      "/app/light-media-server",
+      "/config",
+      "/media"
+    ],
+    "dedicated_downloader_backup_mount": false
+  },
+  "memos": "Two relevant keyword queries returned no matches. Current source and NAS observation used.",
+  "files": [
+    {
+      "path": "testdata/plugin-downloader-shared-capability-audit-20261029/build-denied-worker.jsonl.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "testdata/plugin-downloader-shared-capability-audit-20261029/build-worker.jsonl.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "testdata/plugin-downloader-shared-capability-audit-20261029/instance-data-path.jsonl.gz",
+      "sha256": "5bb691bc7953c54d9a5e77fd40d28bcdac63dbc9eb629a41dda31d491590b99b",
+      "uncompressed_sha256": "08279911874578b42a5ae7610d2e733bd4e92fb080836be79aee0668c492f18e"
+    },
+    {
+      "path": "testdata/plugin-downloader-shared-capability-audit-20261029/sdk-and-native-delete.jsonl.gz",
+      "sha256": "dbcec02d2494861c30e3d382f3d1ac41a1e3d65e9eaa2896cb4f26164579b3c4",
+      "uncompressed_sha256": "b05125276921a648cefd074ea1934c8ab1f7756ffa08f43c0fdfdf15d68e3611"
+    },
+    {
+      "path": "testdata/plugin-downloader-shared-capability-audit-20261029/standard-host-tasks-safe-tmp.jsonl.gz",
+      "sha256": "67f03fecd82220844025664cf10dc2df1a5db5009b8831742793c0de3ac28433",
+      "uncompressed_sha256": "8787f7f65775da015d8b94f70063679e84091bc0c9a39e884e8951e51593051c"
+    },
+    {
+      "path": "testdata/plugin-downloader-shared-capability-audit-20261029/standard-host-tasks.jsonl.gz",
+      "sha256": "7fd6a0bfb02a80b91321aed7bac2ec5a6aad0b00ede23a4001c1dd012266153d",
+      "uncompressed_sha256": "e14529c2601410c49d74c5ca3d0e1462c215aa0f08eb92133a07924b3ea6312f"
+    }
+  ],
+  "cleanup": {
+    "owned-tasks": "removed task-built fixture binary",
+    "owned-tasks-denied": "removed task-built fixture binary",
+    "tmp": "removed empty task TMPDIR"
+  }
+}

@@ -1,0 +1,67 @@
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/valid
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/truncated_xml
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/mismatched_close
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/bare_ampersand
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/whitespace_title
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/namespace_legacy
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/duplicate_title
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/external_entity_disabled
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/undeclared_entity
+    plugin_original_host_sites_rss_test.go:42: lxml recovery mismatch got=[{"description":"","enclosure":"details.php?id=1","link":"details.php?id=1","pubdate":"","size":0,"title":"AB"}] expected=[
+                {
+                  "title": "A",
+                  "enclosure": "details.php?id=1",
+                  "size": 0,
+                  "description": "",
+                  "link": "details.php?id=1",
+                  "pubdate": ""
+                }
+              ]
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/predefined_entity
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/cdata_title
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/mixed_title_text
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/comment_title_tail
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/unescaped_attribute
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/internal_entity_attribute
+    plugin_original_host_sites_rss_test.go:42: lxml recovery mismatch got=[{"description":"","enclosure":"download.php?x=","link":"","pubdate":"","size":1,"title":"Owned"}] expected=[
+                {
+                  "title": "Owned",
+                  "enclosure": "download.php?x=VALUE",
+                  "size": 1,
+                  "description": "",
+                  "link": "",
+                  "pubdate": ""
+                }
+              ]
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/unicode_decimal_size
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/non_decimal_digit_size
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/large_integer_size
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/expired_literal
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/not_xml
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/empty
+--- FAIL: TestOriginalHostBusinessRSSRecoverFixedLXML611Source (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/valid (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/truncated_xml (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/mismatched_close (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/bare_ampersand (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/whitespace_title (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/namespace_legacy (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/duplicate_title (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/external_entity_disabled (0.00s)
+    --- FAIL: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/undeclared_entity (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/predefined_entity (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/cdata_title (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/mixed_title_text (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/comment_title_tail (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/unescaped_attribute (0.00s)
+    --- FAIL: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/internal_entity_attribute (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/unicode_decimal_size (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/non_decimal_digit_size (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/large_integer_size (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/expired_literal (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/not_xml (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/empty (0.00s)
+FAIL
+FAIL	light-media/internal/app	0.978s
+FAIL

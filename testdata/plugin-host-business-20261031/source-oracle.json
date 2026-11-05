@@ -1,0 +1,291 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "synthetic fixed-source AST method replay",
+  "network_calls": 0,
+  "production_writes": 0,
+  "sites": {
+    "source": "app/db/site_oper.py",
+    "methods": {
+      "success": {
+        "line": 225,
+        "end_line": 264,
+        "sha256": "572655183f511f06c43ade026caef2fc957d8437fa8faef2ca571f6fef60820b"
+      },
+      "fail": {
+        "line": 266,
+        "end_line": 285,
+        "sha256": "d6025f5e6e9bcb8a76e780c7cee5a016b1215b9b9158d01ad31bb9d6b28e1ac9"
+      }
+    },
+    "cases": [
+      {
+        "name": "new_success_without_seconds",
+        "initial": null,
+        "success": true,
+        "seconds": null,
+        "clock": "2026-10-31 12:00:00",
+        "expected": {
+          "domain": "owned.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:00:00",
+          "note": {}
+        }
+      },
+      {
+        "name": "new_success_zero",
+        "initial": null,
+        "success": true,
+        "seconds": 0,
+        "clock": "2026-10-31 12:00:00",
+        "expected": {
+          "domain": "owned.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:00:00",
+          "note": {
+            "2026-10-31 12:00:00": 1
+          }
+        }
+      },
+      {
+        "name": "new_failure",
+        "initial": null,
+        "success": false,
+        "seconds": null,
+        "clock": "2026-10-31 12:00:00",
+        "expected": {
+          "domain": "owned.invalid",
+          "success": 0,
+          "fail": 1,
+          "lst_state": 1,
+          "lst_mod_date": "2026-10-31 12:00:00"
+        }
+      },
+      {
+        "name": "existing_success_without_seconds",
+        "initial": {
+          "domain": "owned.invalid",
+          "success": 2,
+          "fail": 3,
+          "seconds": 7,
+          "lst_state": 1,
+          "lst_mod_date": "old",
+          "note": {
+            "old": 7
+          }
+        },
+        "success": true,
+        "seconds": null,
+        "clock": "2026-10-31 12:00:00",
+        "expected": {
+          "domain": "owned.invalid",
+          "success": 3,
+          "fail": 3,
+          "seconds": 7,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:00:00",
+          "note": {
+            "old": 7
+          }
+        }
+      },
+      {
+        "name": "same_second_replaces_note",
+        "initial": {
+          "domain": "owned.invalid",
+          "success": 2,
+          "fail": 3,
+          "seconds": 7,
+          "lst_state": 1,
+          "lst_mod_date": "old",
+          "note": {
+            "2026-10-31 12:00:00": 9
+          }
+        },
+        "success": true,
+        "seconds": 3,
+        "clock": "2026-10-31 12:00:00",
+        "expected": {
+          "domain": "owned.invalid",
+          "success": 3,
+          "fail": 3,
+          "seconds": 3,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:00:00",
+          "note": {
+            "2026-10-31 12:00:00": 3
+          }
+        }
+      },
+      {
+        "name": "eleventh_note_uses_original_denominator",
+        "initial": {
+          "domain": "owned.invalid",
+          "success": 10,
+          "fail": 0,
+          "seconds": 8,
+          "lst_state": 0,
+          "lst_mod_date": "old",
+          "note": {
+            "2026-10-30 12:00:00": 1,
+            "2026-10-30 12:00:01": 2,
+            "2026-10-30 12:00:02": 3,
+            "2026-10-30 12:00:03": 4,
+            "2026-10-30 12:00:04": 5,
+            "2026-10-30 12:00:05": 6,
+            "2026-10-30 12:00:06": 7,
+            "2026-10-30 12:00:07": 8,
+            "2026-10-30 12:00:08": 9,
+            "2026-10-30 12:00:09": 10
+          }
+        },
+        "success": true,
+        "seconds": 11,
+        "clock": "2026-10-31 12:00:00",
+        "expected": {
+          "domain": "owned.invalid",
+          "success": 11,
+          "fail": 0,
+          "seconds": 5,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:00:00",
+          "note": {
+            "2026-10-31 12:00:00": 11,
+            "2026-10-30 12:00:09": 10,
+            "2026-10-30 12:00:08": 9,
+            "2026-10-30 12:00:07": 8,
+            "2026-10-30 12:00:06": 7,
+            "2026-10-30 12:00:05": 6,
+            "2026-10-30 12:00:04": 5,
+            "2026-10-30 12:00:03": 4,
+            "2026-10-30 12:00:02": 3,
+            "2026-10-30 12:00:01": 2
+          }
+        }
+      },
+      {
+        "name": "failure_preserves_note",
+        "initial": {
+          "domain": "owned.invalid",
+          "success": 2,
+          "fail": 3,
+          "seconds": 7,
+          "lst_state": 0,
+          "lst_mod_date": "old",
+          "note": {
+            "old": 7
+          }
+        },
+        "success": false,
+        "seconds": null,
+        "clock": "2026-10-31 12:00:00",
+        "expected": {
+          "domain": "owned.invalid",
+          "success": 2,
+          "fail": 4,
+          "seconds": 7,
+          "lst_state": 1,
+          "lst_mod_date": "2026-10-31 12:00:00",
+          "note": {
+            "old": 7
+          }
+        }
+      }
+    ]
+  },
+  "settings": {
+    "source": "app/db/systemconfig_oper.py",
+    "methods": {
+      "set": {
+        "line": 27,
+        "end_line": 53,
+        "sha256": "ccb3a23bfc42889ea68bea19188da0893e0faa3167a49847c5903cc425f27b9e"
+      },
+      "get": {
+        "line": 92,
+        "end_line": 102,
+        "sha256": "55dc53988824d782a256b57b622b93f303984511a3e3420d6734946bb613c6c3"
+      },
+      "all": {
+        "line": 117,
+        "end_line": 123,
+        "sha256": "f356c292e726ce69ae8b5d7d8f66c4fee6f26a5c8d24113359825a40648ed842"
+      }
+    },
+    "cases": [
+      {
+        "name": "absent_empty",
+        "initial": null,
+        "next": [],
+        "expected_return": true,
+        "expected_value": [],
+        "db_present": true
+      },
+      {
+        "name": "absent_values",
+        "initial": null,
+        "next": [
+          "A => B"
+        ],
+        "expected_return": true,
+        "expected_value": [
+          "A => B"
+        ],
+        "db_present": true
+      },
+      {
+        "name": "same_values",
+        "initial": [
+          "A => B"
+        ],
+        "next": [
+          "A => B"
+        ],
+        "expected_return": null,
+        "expected_value": [
+          "A => B"
+        ],
+        "db_present": true
+      },
+      {
+        "name": "replace_values",
+        "initial": [
+          "A => B"
+        ],
+        "next": [
+          "C => D"
+        ],
+        "expected_return": true,
+        "expected_value": [
+          "C => D"
+        ],
+        "db_present": true
+      },
+      {
+        "name": "clear_values",
+        "initial": [
+          "A => B"
+        ],
+        "next": [],
+        "expected_return": true,
+        "expected_value": [],
+        "db_present": false
+      },
+      {
+        "name": "set_null",
+        "initial": [
+          "A => B"
+        ],
+        "next": null,
+        "expected_return": true,
+        "expected_value": null,
+        "db_present": false
+      }
+    ]
+  }
+}

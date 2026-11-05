@@ -1,0 +1,57 @@
+{
+  "kind": "isolated fixed vendor AST replay",
+  "version": "2026.6.0",
+  "line": 1004,
+  "cases": [
+    {
+      "webapi_version": "2.10.0",
+      "source_filter": "paused",
+      "wire_filter": "paused"
+    },
+    {
+      "webapi_version": "2.10.0",
+      "source_filter": "stopped",
+      "wire_filter": "paused"
+    },
+    {
+      "webapi_version": "2.10.0",
+      "source_filter": "resumed",
+      "wire_filter": "resumed"
+    },
+    {
+      "webapi_version": "2.10.0",
+      "source_filter": "running",
+      "wire_filter": "resumed"
+    },
+    {
+      "webapi_version": "2.10.0",
+      "source_filter": "completed",
+      "wire_filter": "completed"
+    },
+    {
+      "webapi_version": "2.11.0",
+      "source_filter": "paused",
+      "wire_filter": "stopped"
+    },
+    {
+      "webapi_version": "2.11.0",
+      "source_filter": "stopped",
+      "wire_filter": "stopped"
+    },
+    {
+      "webapi_version": "2.11.0",
+      "source_filter": "resumed",
+      "wire_filter": "running"
+    },
+    {
+      "webapi_version": "2.11.0",
+      "source_filter": "running",
+      "wire_filter": "running"
+    },
+    {
+      "webapi_version": "2.11.0",
+      "source_filter": "completed",
+      "wire_filter": "completed"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "kind": "actual_isolated_daemons",
+  "containers": [
+    {
+      "name": "lm-host-downloader-20261031-5tBuDW69",
+      "image_id": "sha256:8479bc5b568aa65e28b7de384f49c300e07e52856fdd85cfcfcc6dddb48736e4",
+      "repo_digests": [
+        "qbittorrentofficial/qbittorrent-nox@sha256:a561d192887101aaeb42617312bb2bb9f91050e77d4ed8d0bfee6c5bbabb1ddc"
+      ],
+      "mounts": [
+        {
+          "source": "/vol2/1000/docker/.light-media-plugin-downloader-20261031-5tBuDW69/qb-config",
+          "target": "/config"
+        },
+        {
+          "source": "/vol2/1000/docker/.light-media-plugin-downloader-20261031-5tBuDW69/downloads",
+          "target": "/downloads"
+        }
+      ]
+    },
+    {
+      "name": "lm-host-tr-20261031-5tBuDW69",
+      "image_id": "sha256:3088e06bd9e45494b106e9bb923646ac919f3e315f86772294ba352af6b49b72",
+      "repo_digests": [
+        "lscr.io/linuxserver/transmission@sha256:452310cb020c036d293e879698097acb6cc653db2676610bf8e3b58a3f4d2af5"
+      ],
+      "mounts": [
+        {
+          "source": "/vol2/1000/docker/.light-media-plugin-downloader-20261031-5tBuDW69/tr-config",
+          "target": "/config"
+        },
+        {
+          "source": "/vol2/1000/docker/.light-media-plugin-downloader-20261031-5tBuDW69/tr-downloads",
+          "target": "/downloads"
+        }
+      ]
+    }
+  ],
+  "qbittorrent_version": "v5.1.2",
+  "qb_webapi_version": "2.11.4"
+}

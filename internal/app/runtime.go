@@ -27,6 +27,8 @@ import (
 )
 
 type App struct {
+	originalHostBrowserHumanize      bool
+	originalHostBrowserHumanPreset   string
 	pluginOriginalBase               originalBaseState
 	pluginOriginalMarkets            originalMarketCache
 	pluginOriginalInput              originalPluginInputRuntime
@@ -83,6 +85,15 @@ type App struct {
 	web                              http.Handler
 	cfgMu                            sync.RWMutex
 	settingsMu                       sync.Mutex
+	originalHostOCRHost              string // Immutable ordinary OCR_HOST startup snapshot; never exposed to workers.
+	originalHostBrowserEmulation     string
+	originalHostFlareSolverrURL      string
+	originalHostSettingsMu           sync.Mutex
+	originalHostSettingsValues       map[string]json.RawMessage
+	originalHostMediaRecognition     *HostMediaRecognitionConfiguration
+	originalHostMediaCache           originalHostMediaRecognitionCache
+	originalHostMediaProviderCaches  sync.Map
+	originalHostDouban               originalHostDoubanState
 	config                           Settings
 	controlMu                        sync.Mutex
 	control                          string
@@ -118,6 +129,7 @@ type Options struct {
 	PluginLogRotation     *PluginLogRotation
 	ResourceSearchPages   *big.Int
 	MediaSearch           *MediaSearchConfiguration
+	HostMediaRecognition  *HostMediaRecognitionConfiguration
 	PluginDeveloperMode   bool      // Original DEV: plugin monitoring only; no other business debug switches.
 	BigMemoryMode         bool      // Original BIG_MEMORY_MODE pool selection, fixed for this App lifetime.
 	SafeMode              bool      // Management remains available without automatic background tasks.
@@ -142,6 +154,22 @@ func New(opts Options) (*App, error) {
 		return nil, e
 	}
 	a := &App{pluginDeveloperMode: opts.PluginDeveloperMode, bigMemoryMode: opts.BigMemoryMode, safeMode: opts.SafeMode, RestartRequested: make(chan struct{}, 1), Store: s, Dir: opts.DataDir, web: opts.Web, control: "running", authAttempts: map[string][]time.Time{}, jobWake: make(chan struct{}, 1), materials: map[string][]byte{}}
+	a.originalHostDouban.searchStamp = time.Now().Format("20060102")
+	a.originalHostOCRHost = originalHostOCRStartupHost(os.LookupEnv)
+	a.originalHostBrowserEmulation, a.originalHostFlareSolverrURL = originalHostBrowserStartup(os.LookupEnv)
+	a.originalHostBrowserHumanize, a.originalHostBrowserHumanPreset, e = originalHostBrowserHumanStartup(os.LookupEnv)
+	if e != nil {
+		_ = s.Close()
+		return nil, e
+	}
+	a.originalHostMediaRecognition = cloneHostMediaRecognitionConfiguration(opts.HostMediaRecognition)
+	if a.originalHostMediaRecognition == nil {
+		a.originalHostMediaRecognition, e = HostMediaRecognitionEnvironment(os.LookupEnv)
+		if e != nil {
+			_ = s.Close()
+			return nil, e
+		}
+	}
 	a.pluginLogRotation = clonePluginLogRotation(opts.PluginLogRotation)
 	a.mediaSearchConfiguration = cloneMediaSearchConfiguration(opts.MediaSearch)
 	if a.mediaSearchConfiguration == nil {
@@ -164,6 +192,10 @@ func New(opts Options) (*App, error) {
 	}
 	if e != nil {
 		s.Close()
+		return nil, e
+	}
+	if e = a.originalHostInitializeMediaExtensions(os.LookupEnv); e != nil {
+		_ = s.Close()
 		return nil, e
 	}
 	// Earlier releases imported Rousi as generic NexusPHP. Select its native
@@ -219,6 +251,12 @@ func New(opts Options) (*App, error) {
 	if e != nil {
 		s.Close()
 		return nil, e
+	}
+	a.originalHostMediaCache.mu.Lock()
+	e = a.originalHostMediaCacheLoadLocked(context.Background())
+	a.originalHostMediaCache.mu.Unlock()
+	if e != nil {
+		a.log("ERROR", "metadata", "recognize_cache_restore_failed", "恢复媒体识别缓存失败", "", "")
 	}
 	// Match the original CategoryHelper process lifetime. Syntax failures start
 	// empty on a cold process; a later failed/empty reload retains these maps.
@@ -286,6 +324,9 @@ func (a *App) Close() error {
 	a.systemMessages.close()
 	a.stopSubscriptionStatistics()
 	a.wg.Wait()
+	if err := a.saveOriginalHostMediaCache(context.Background()); err != nil {
+		a.log("ERROR", "metadata", "recognize_cache_save_failed", "保存媒体识别缓存失败", "", "")
+	}
 	a.closeSubscriptionStatisticsHTTP()
 	a.log("INFO", "runtime", "stopped", "服务已停止", "", "")
 	a.catMu.Lock()

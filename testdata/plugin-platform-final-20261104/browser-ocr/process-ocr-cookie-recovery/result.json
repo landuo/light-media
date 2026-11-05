@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "classification": "actual product container/server -> standard SDK -> actual owned HTTP; source-derived cookie/redirect contract, test-only synthetic PNG and service",
+  "observations": [
+    {
+      "phase": "bootstrap-cookie",
+      "wire_cookie": "owned-cookie=1"
+    },
+    {
+      "phase": "source-duplicate-cookie",
+      "wire_cookie": "dup=last; value= A+B; empty=; equal=a=b"
+    },
+    {
+      "phase": "configured-cookie-restored",
+      "wire_cookie": "dup=last; value= A+B; empty=; equal=a=b"
+    },
+    {
+      "phase": "cold-recovered-cookie",
+      "wire_cookie": "dup=last; value= A+B; empty=; equal=a=b"
+    }
+  ],
+  "driver_sha256": "6f50155bf6d14fab3b285633baeefcd02de871116cbd0d41d27983e103130242",
+  "worker_sha256": "41467e9c730c3006b33b2d5850ea67be6f18301a2fd9502241b9a2793db76970",
+  "mutation": false
+}

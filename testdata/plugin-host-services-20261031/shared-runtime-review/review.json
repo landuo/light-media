@@ -1,0 +1,125 @@
+{
+  "classification": "supporting independent source/target audit, not an acceptance matrix or new status counter",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_sources": [
+    {
+      "path": "app/helper/browser.py",
+      "git_blob": "fd1448bb3487ddc104525f6c0f189ffb75a2eb1d",
+      "sha256": "cb455ffadc75b32fa0fe151242b7c4162233e525d35257ac3a71e1dda1316f29"
+    },
+    {
+      "path": "app/helper/display.py",
+      "git_blob": "3dd6eb76889696d249f82d417d51658aa6c7f0eb",
+      "sha256": "375f96ff40b18ecb262482a868ec26f939f9cae3542b52176284d2e21ddf3742"
+    },
+    {
+      "path": "app/api/endpoints/message.py",
+      "git_blob": "120a4c0ff4430217282eec1612a5f798a49efeb7",
+      "sha256": "b635fee943af5d867532133d96550ac840c0dbac847fe5fde2e230c567191bbd"
+    },
+    {
+      "path": "app/chain/message.py",
+      "git_blob": "5f5f6a3b7f0f6ea588179d7ca6f26ba392bbfc01",
+      "sha256": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1"
+    },
+    {
+      "path": "app/chain/__init__.py",
+      "git_blob": "d379ff06c729c4e8caf821c779d86f4652faacdc",
+      "sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753"
+    },
+    {
+      "path": "app/core/config.py",
+      "git_blob": "9590e02236b9d45adf2c9be146a75680a8a9a381",
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e"
+    },
+    {
+      "path": "requirements.in",
+      "git_blob": "36766b57fe76627fcbe4d2a1b0f0ebd939fbbdac",
+      "sha256": "060c85ee9a2023df9216f255b0a8deac5771b304ef2705950f694045be99aab1"
+    }
+  ],
+  "target_observed_hashes": {
+    "internal/app/plugin_original_command_ingress.go": "b706bd67432aee71b79fbc37220462d7fe76f56f580fca3c153ef4afabf2ba49",
+    "internal/app/plugin_original_modules.go": "2c34943b4e368ec95a7de97bed34bf99a731bc6051158bc5e8bb307c2f60b768",
+    "internal/app/plugin_original_input.go": "dd2f03f25e26f3852ebfe084c428c7c188c8dc0e9ba8671eebc65aa688914b27",
+    "internal/app/plugin_original_notice.go": "925353cde3d3326e66ce4e6b3f74f835fa1728efab8266ca8dc983493c551569",
+    "internal/plugins/input_interaction.go": "748073142e9bffebd8f146d9f33d792530632d65bbf3931204c4fbfd41880da0",
+    "internal/plugins/larkmessager/plugin.go": "bb57ac22eda3c1ad8de0a61c87bb9d3866e1e4d7864f0fbeb627630dcf2e7544",
+    "internal/plugins/larkmessager/types.go": "8cb7a0c17e688ec871d00f2a037fdecc95818ab8d91819cd0d28dac141b481a5",
+    "internal/plugins/autosignin/visits.go": "a459b26ebe44760530f126906861c2ae41ff82bf2cd5ea4a1c012362d2568f5e",
+    "Dockerfile": "be172216d8eaf04e89a8ceef70004494d4bda821d4b45bf6197f98c141c20112",
+    "go.mod": "622569e08ea6fb374e66a0e35f22bc29b276841d7ab74ade1e1d813a6095b5fa"
+  },
+  "incoming_message": {
+    "source": [
+      "app/api/endpoints/message.py:user_message(POST /, body/form/query, API token, background process)",
+      "app/chain/message.py:process(111-162) -> ChainBase.message_parser -> module message_parser",
+      "app/chain/message.py:handle_message/_handle_plugin_input_interaction and traditional CommandExcute/UserMessage branches",
+      "app/chain/__init__.py:message_parser(1083+)"
+    ],
+    "installed_source": {
+      "path": "testdata/plugins/lark-messager-0.9.1/input/_lark_messager_port/reference/source/__init__.py",
+      "sha256": "d9f6a1078706b03dc97247450a8084a8c67f07dbfccb675235fc0e1b91b18372",
+      "symbol": "_forward_to_message_chain",
+      "lines": [
+        767,
+        781
+      ],
+      "behavior": "daemon thread POSTs unchanged ordinary payload to local /api/v1/message with configured source and API token; this is not exclusively AI"
+    },
+    "existing_target": [
+      "Web ingress binds Web/admin identity and does not run arbitrary channel message_parser",
+      "get_module dispatcher can expose message_parser but there is no inbound core consumer found",
+      "InputInteraction SDK manages pending interactions; it does not ingest external channel payloads",
+      "larkmessager.DispatchTrusted forwards through PluginHost.Forward, assigned only by tests; no installed standard SDK binding found",
+      "PostMessage capability sends outbound notifications and cannot stand in for inbound messages"
+    ],
+    "conclusion": "ordinary inbound resource/ingress missing; keep normal parser, pending-input, command and event branches; omit AI/audio-transcription/workflow consumers separately",
+    "validation": "read-only mapped symbols and all Forward assignments; no external message sent"
+  },
+  "browser": {
+    "source_symbol": "PlaywrightHelper852-1102; BrowserSessionHelper137-849 AI excluded independently",
+    "installed_bindings": "browser-installed-bindings.json",
+    "installed_get_page_source_calls": 3,
+    "installed_action_calls_found": 0,
+    "oracle": "browser-source-oracle.json",
+    "oracle_case_count": 18,
+    "source_behavior": [
+      "mode defaults cloakbrowser and is lowercased",
+      "get_page_source uses a truthy FS solution response directly, including missing response -> None; unsuccessful/falsey solution falls back to real browser",
+      "auth proxy creates UUID FS session; request.get has maxTimeout milliseconds and parsed cookies; finally session destroy timeout10 runs even after create failure",
+      "real browser context gets current UA/proxy and cookie header; goto waits default navigation then networkidle(timeout seconds *1000), content returns rendered DOM",
+      "ordinary action(callback) always opens browser; FS only supplies preferred cookies/UA; callback result is returned; no installed references found"
+    ],
+    "inventory": {
+      "go_browser_dependency_found": false,
+      "mac_chrome": "Google Chrome 156.0.8078.48 at /Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+      "nas_host": "x86_64; command-v chromium/chromium-browser/google-chrome and targeted /usr/bin /opt paths found none",
+      "target_runtime": "Alpine3.22; only ca-certificates/tzdata installed; no browser/Xvfb",
+      "source_display": "display.py starts virtual1024x768 display in Docker; supports ordinary default headless=False, must not silently force headlessTrue"
+    },
+    "minimum_implementation": [
+      "finite sites.render DTO uses configured site ID, same-origin path, timeout/headless; host supplies Cookie/UA/proxy and checks scope/current config around requests",
+      "pure-Go CDP controls a pinned verified CloakBrowser native binary with isolated temp profile/context; no Python or Node driver",
+      "FlareSolverr branch retains source request/session/cleanup order and None-vs-truthy solution rules",
+      "actual CDP navigation/networkidle/content and process/context cleanup; support headed mode with isolated Xvfb or document a concrete pending dependency",
+      "configured site credentials never cross origin; allow ordinary cross-origin public scripts/assets without site Cookie; bound full HTML by SDK payload limit"
+    ],
+    "remaining_decisions": [
+      "new Go CDP dependency requires coordinated go.mod/go.sum change",
+      "runtime native browser/glibc/Xvfb packaging must be verified; ordinary Alpine chromium would change source CloakBrowser behavior",
+      "source get_page_source is implemented first because all3 bound installed callsites use it; ordinary action callback is not AI, but currently unused and not claimed migrated by HTML success"
+    ],
+    "not_executed": [
+      "target real browser/CDP rendering",
+      "FS actual service protocol replay",
+      "Linux native binary execution",
+      "public challenge service or private existing site login"
+    ]
+  },
+  "memos": {
+    "query": "FlareSolverr / Playwright / browser+NAS",
+    "matched_title": "服务入口与 Lucky 转发关系",
+    "relevance": "only historical NAS address/old service relationship; no browser/FS installation note found; current SSH checks establish browser absence"
+  }
+}

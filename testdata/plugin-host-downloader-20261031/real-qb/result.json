@@ -1,0 +1,274 @@
+{
+  "kind": "real_e2e",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "real_dependencies": [
+    "Linux production light-media server executable",
+    "separately installed Go SDK fixture worker",
+    "isolated qBittorrent daemon"
+  ],
+  "synthetic_inputs": [
+    "owned 65536-byte file and matching no-tracker private torrent"
+  ],
+  "status": "passed",
+  "server_sha256": "947ead8b2c8fcebc06375efc10e135543f92a55e432862869e5f181278302484",
+  "worker_sha256": {
+    "1.0": "ebec1e2b5126fc584c5f2d163fa5f4f9e8e36e2182a519d962c7f301e39855ce",
+    "2.0": "c6d95f3980059be26c7d73c6fd58a2dfaef2c971570bf3fc897868751b605b53"
+  },
+  "events": [
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/settings",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/plugins/HostDownloaderTest/api/snapshot",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/add",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/control",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/completed",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/completed",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/completed",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/completed",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/completed",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/completed",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/completed",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/completed",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/completed",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/control",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/control",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/control",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/tags",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/control",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/control",
+      "status": 422
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/control",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/control",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/control",
+      "status": 422
+    },
+    {
+      "method": "PUT",
+      "path": "/api/plugins/HostDownloaderTest/config",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/plugins/HostDownloaderTest/api/snapshot",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/clone",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/plugins/HostDownloaderTesttwin/api/snapshot",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTesttwin/api/completed",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/reload",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/plugins/HostDownloaderTest/api/snapshot",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/plugins/HostDownloaderTest/api/snapshot",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/plugins/HostDownloaderTesttwin/api/snapshot",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/plugins/HostDownloaderTest/api/snapshot",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/plugins/HostDownloaderTesttwin/api/snapshot",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/completed",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTesttwin/api/completed",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/control",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/tags",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/control",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/HostDownloaderTest/api/completed",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/plugins/HostDownloaderTest",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/plugins/HostDownloaderTest/api/snapshot",
+      "status": 404
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/plugins/HostDownloaderTesttwin",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/plugins/HostDownloaderTesttwin/api/snapshot",
+      "status": 404
+    }
+  ],
+  "torrent_hash": "0dce760eb604635e0c986a0941c11ce05126fd25",
+  "file_sha256": "c740cc676107aff5d9161a22432f595d39d9df4986171fc04fc1b9ae5d184d20",
+  "file_size": 65536,
+  "pids": {
+    "source": 3469709,
+    "clone": 3469729,
+    "reload": 3469739,
+    "updated": 3469747,
+    "cold_source": 3469763,
+    "cold_clone": 3469770
+  },
+  "qB_version": "v5.1.2",
+  "qB_webapi_version": "2.11.4",
+  "remaining_daemon_tasks": 0
+}

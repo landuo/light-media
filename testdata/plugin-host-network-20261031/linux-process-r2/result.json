@@ -1,0 +1,1344 @@
+{
+  "status": "passed",
+  "classification": "real Linux cmd/server and installed Go SDK lifecycle; actual TLS/HTTP against owned synthetic protocol origins, not live GitHub",
+  "binding": {
+    "server": "5770c6a3c01f77bf2929937c45d82713cf8f7149b78e2fc427d9bedce12e46a0",
+    "worker": "6d5e468e94e89f5012d391646662e7dbff367ff71d7f3fbc356a0311fa0c2f02",
+    "worker_v2": "09d72ffe9c854b2e0aebb39a06e64f9db40cae0747884e09cb041048a666cdd1",
+    "source_oracle": "2e00a8679b1a9b4f110612299fcc77db48343b22fa0b2a2fde33f135730425d4",
+    "vendor_oracle": "22971ddfe160fc0897138135f149e39ffddaaac6c43c51562b0b5bf25933999d",
+    "driver": "e566ec899adf36a55af61caae160c14eacea41347c154081bd9c9c96962cac07",
+    "vendor_edge_oracle": "4b91e57429b2842fdf098ad1d0cd2020763b2b431c54e5b1a97b80bcccda4224"
+  },
+  "observations": [
+    {
+      "case": "source-ok",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQAdGV4dA=="
+        }
+      }
+    },
+    {
+      "case": "source-empty",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": ""
+        }
+      }
+    },
+    {
+      "case": "source-created",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 201,
+          "content": "Y3JlYXRlZA=="
+        }
+      }
+    },
+    {
+      "case": "source-forbidden",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 403,
+          "content": "bm90IGFsbG93ZWQ="
+        }
+      }
+    },
+    {
+      "case": "source-missing",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 404,
+          "content": "bm90IGZvdW5k"
+        }
+      }
+    },
+    {
+      "case": "source-invalid_utf8",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "//4="
+        }
+      }
+    },
+    {
+      "case": "source-connection",
+      "result": {
+        "schema_version": 1,
+        "response": null
+      }
+    },
+    {
+      "case": "source-read_timeout",
+      "result": {
+        "schema_version": 1,
+        "response": null
+      }
+    },
+    {
+      "case": "source-chunked",
+      "result": {
+        "schema_version": 1,
+        "response": null
+      }
+    },
+    {
+      "case": "source-generic",
+      "result": {
+        "schema_version": 1,
+        "response": null
+      }
+    },
+    {
+      "case": "vendor-gzip",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQgY29tcHJlc3NlZCDmsYnlrZcA"
+        }
+      }
+    },
+    {
+      "case": "vendor-deflate",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQgY29tcHJlc3NlZCDmsYnlrZcA"
+        }
+      }
+    },
+    {
+      "case": "vendor-raw-deflate",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQgY29tcHJlc3NlZCDmsYnlrZcA"
+        }
+      }
+    },
+    {
+      "case": "vendor-br",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQgY29tcHJlc3NlZCDmsYnlrZcA"
+        }
+      }
+    },
+    {
+      "case": "vendor-zstd",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "KLUv/SAYwQAAb3duZWQgY29tcHJlc3NlZCDmsYnlrZcA"
+        }
+      }
+    },
+    {
+      "case": "vendor-gzip-br",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQgY29tcHJlc3NlZCDmsYnlrZcA"
+        }
+      }
+    },
+    {
+      "case": "vendor-broken-gzip",
+      "result": {
+        "schema_version": 1,
+        "response": null
+      }
+    },
+    {
+      "case": "vendor-single-whitespace",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQgZWRnZQ=="
+        }
+      }
+    },
+    {
+      "case": "vendor-unknown-single",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "H4sIAAAAAAACA8svz0tNUUhNSU8FAG4mrU0KAAAA"
+        }
+      }
+    },
+    {
+      "case": "vendor-unknown-gzip",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQgZWRnZQ=="
+        }
+      }
+    },
+    {
+      "case": "vendor-gzip-unknown",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQgZWRnZQ=="
+        }
+      }
+    },
+    {
+      "case": "vendor-unknown-broken",
+      "result": {
+        "schema_version": 1,
+        "response": null
+      }
+    },
+    {
+      "case": "vendor-too-many",
+      "result": {
+        "schema_version": 1,
+        "response": null
+      }
+    },
+    {
+      "case": "vendor-gzip-truncated",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQgZWRnZQ=="
+        }
+      }
+    },
+    {
+      "case": "vendor-gzip-header-truncated",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": ""
+        }
+      }
+    },
+    {
+      "case": "vendor-gzip-trailing",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQgZWRnZQ=="
+        }
+      }
+    },
+    {
+      "case": "vendor-gzip-concat",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQgZWRnZW93bmVkIGVkZ2U="
+        }
+      }
+    },
+    {
+      "case": "vendor-gzip-checksum",
+      "result": {
+        "schema_version": 1,
+        "response": null
+      }
+    },
+    {
+      "case": "vendor-deflate-truncated",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQgZWRnZQ=="
+        }
+      }
+    },
+    {
+      "case": "vendor-br-truncated",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": "b3duZWQgZWRnZQ=="
+        }
+      }
+    },
+    {
+      "case": "vendor-empty-gzip",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": ""
+        }
+      }
+    },
+    {
+      "case": "vendor-empty-br",
+      "result": {
+        "schema_version": 1,
+        "response": {
+          "status_code": 200,
+          "content": ""
+        }
+      }
+    },
+    {
+      "case": "headers-redirects-limits",
+      "auth_origin_bound": true,
+      "repo_token_unused": true,
+      "mirror_unused": true,
+      "proxy_auth_confined": true
+    },
+    {
+      "case": "source-scalar-inactivity-timeout",
+      "source_oracle": "timeout-oracle.json",
+      "progress_seconds": 16.197691332083195,
+      "idle_seconds": 15.114558588946238,
+      "source_scalar_seconds": 15,
+      "progress_result": "xxxxx",
+      "idle_result": null
+    },
+    {
+      "case": "upgrade-clone-cold",
+      "before": {
+        "config": {
+          "github_headers": false,
+          "url": "https://owned-text.test/source-config"
+        },
+        "last": {
+          "received": true,
+          "status_code": 200,
+          "text": "owned /source-config"
+        },
+        "pid": 3565414,
+        "version": "1.0"
+      },
+      "after": {
+        "config": {
+          "github_headers": false,
+          "url": "https://owned-text.test/source-config"
+        },
+        "last": {
+          "received": true,
+          "status_code": 200,
+          "text": "owned /source-config"
+        },
+        "pid": 3565741,
+        "version": "2.0"
+      },
+      "cold": {
+        "config": {
+          "github_headers": false,
+          "url": "https://owned-text.test/source-config"
+        },
+        "last": {
+          "received": true,
+          "status_code": 200,
+          "text": "owned /source-config"
+        },
+        "pid": 3565757,
+        "version": "2.0"
+      },
+      "clone": {
+        "config": {
+          "github_headers": false,
+          "url": "https://owned-text.test/clone-config"
+        },
+        "last": {
+          "received": true,
+          "status_code": 200,
+          "text": "owned /clone-config"
+        },
+        "pid": 3565731,
+        "version": "1.0"
+      }
+    }
+  ],
+  "trace": [
+    {
+      "host": "owned-text.test",
+      "path": "/source/ok",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/source/empty",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/source/created",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/source/forbidden",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/source/missing",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/source/invalid_utf8",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/source/connection",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/source/read_timeout",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/source/chunked",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/source/generic",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/gzip",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/deflate",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/raw-deflate",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/br",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/zstd",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/gzip-br",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/broken-gzip",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/single-whitespace",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/unknown-single",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/unknown-gzip",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/gzip-unknown",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/unknown-broken",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/too-many",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/gzip-truncated",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/gzip-header-truncated",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/gzip-trailing",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/gzip-concat",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/gzip-checksum",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/deflate-truncated",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/br-truncated",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/empty-gzip",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/codec/empty-br",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/owned/project/text",
+      "authenticated": true,
+      "has_auth": true,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "accept": "*/*",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/no-headers",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/plain",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "github.unrelated.test",
+      "path": "/text",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/same",
+      "authenticated": true,
+      "has_auth": true,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "accept": "*/*",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/same-end",
+      "authenticated": true,
+      "has_auth": true,
+      "cookie": "owned=same",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "accept": "*/*",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/leave",
+      "authenticated": true,
+      "has_auth": true,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "accept": "*/*",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/back",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "accept": "*/*",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/returned",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "accept": "*/*",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/loop",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/truncated",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/large",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/progress",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/idle",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/source-config",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/clone-config",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/source-config",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    },
+    {
+      "host": "owned-text.test",
+      "path": "/clone-config",
+      "authenticated": false,
+      "has_auth": false,
+      "cookie": "",
+      "accept_encoding": "gzip, deflate, br",
+      "user_agent": "python-urllib3/2.7.0",
+      "accept": "",
+      "content_type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "connection": "keep-alive"
+    }
+  ]
+}

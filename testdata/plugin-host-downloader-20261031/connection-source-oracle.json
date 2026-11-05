@@ -1,0 +1,217 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "classification": "fixed source AST only, constructors use controlled login results; no network or business imports",
+  "sources": {
+    "qbittorrent": {
+      "path": "app/modules/qbittorrent/qbittorrent.py",
+      "sha256": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+      "symbols": {
+        "__init__": 21,
+        "is_inactive": 173
+      }
+    },
+    "transmission": {
+      "path": "app/modules/transmission/transmission.py",
+      "sha256": "6fc20e208b86e9e68ada074643f82b88270c2e51749e460ad881b10f744cf676",
+      "symbols": {
+        "__init__": 22,
+        "is_inactive": 88
+      }
+    }
+  },
+  "predicate_cases": [
+    {
+      "kind": "qbittorrent",
+      "host_present": true,
+      "port_present": true,
+      "client_present": true,
+      "inactive": false
+    },
+    {
+      "kind": "qbittorrent",
+      "host_present": true,
+      "port_present": true,
+      "client_present": false,
+      "inactive": true
+    },
+    {
+      "kind": "qbittorrent",
+      "host_present": false,
+      "port_present": true,
+      "client_present": false,
+      "inactive": false
+    },
+    {
+      "kind": "qbittorrent",
+      "host_present": true,
+      "port_present": false,
+      "client_present": false,
+      "inactive": false
+    },
+    {
+      "kind": "qbittorrent",
+      "constructor_login_succeeded": true,
+      "inactive": false
+    },
+    {
+      "kind": "qbittorrent",
+      "constructor_login_succeeded": false,
+      "inactive": true
+    },
+    {
+      "kind": "qbittorrent",
+      "constructor_missing_host": true,
+      "inactive": null,
+      "exception": "AttributeError"
+    },
+    {
+      "kind": "transmission",
+      "host_present": true,
+      "port_present": true,
+      "client_present": true,
+      "inactive": false
+    },
+    {
+      "kind": "transmission",
+      "host_present": true,
+      "port_present": true,
+      "client_present": false,
+      "inactive": true
+    },
+    {
+      "kind": "transmission",
+      "host_present": false,
+      "port_present": true,
+      "client_present": false,
+      "inactive": false
+    },
+    {
+      "kind": "transmission",
+      "host_present": true,
+      "port_present": false,
+      "client_present": false,
+      "inactive": false
+    },
+    {
+      "kind": "transmission",
+      "constructor_login_succeeded": true,
+      "inactive": false
+    },
+    {
+      "kind": "transmission",
+      "constructor_login_succeeded": false,
+      "inactive": true
+    },
+    {
+      "kind": "transmission",
+      "constructor_missing_host": true,
+      "inactive": null,
+      "exception": "AttributeError"
+    }
+  ],
+  "consumer_cases": [
+    {
+      "service": "missing",
+      "accepted": false
+    },
+    {
+      "service": "no_instance",
+      "accepted": false
+    },
+    {
+      "service": "wrong_type",
+      "accepted": false
+    },
+    {
+      "service": "inactive",
+      "accepted": false
+    },
+    {
+      "service": "active",
+      "accepted": true
+    },
+    {
+      "service": "method_absent",
+      "accepted": true
+    }
+  ],
+  "consumer_source": {
+    "file": "seedrescue/__init__.py",
+    "sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+    "owner": "SeedRescue._valid_config",
+    "line": 698
+  },
+  "adaptations": [
+    "Go configuration requires a valid configured BaseURL, so source no-host/port False and constructor AttributeError are not fabricated as a connected target. Missing/invalid identity returns host error before network.",
+    "Python retains its constructed client and may later be stale. Go uses existing per-request fixed auth/session read, reports connection failure as inactive, and never substitutes enabled for connection.",
+    "Source constructor syncs incomplete-file-suffix preferences after login; Connection is read-only under user boundary and does not mutate any downloader global setting.",
+    "Source disabled getter returns no service; target new public Connection refuses disabled before dispatch. Context/scope/config revocation is an error, not an inactive success."
+  ],
+  "additional_hash_bound_consumers": [
+    {
+      "plugin": "TorrentTransfer",
+      "file": "torrenttransfer/__init__.py",
+      "sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "line": 150,
+      "callee": "service.instance.is_inactive",
+      "owner": "TorrentTransfer.service_info"
+    },
+    {
+      "plugin": "IYUUAutoSeed",
+      "file": "iyuuautoseed/__init__.py",
+      "sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+      "line": 192,
+      "callee": "service_info.instance.is_inactive",
+      "owner": "IYUUAutoSeed.service_infos"
+    },
+    {
+      "plugin": "IYUUAutoSeed",
+      "file": "iyuuautoseed/__init__.py",
+      "sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+      "line": 217,
+      "callee": "service.instance.is_inactive",
+      "owner": "IYUUAutoSeed.auto_service_info"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 493,
+      "callee": "service.instance.is_inactive",
+      "owner": "BrushFlowLanduo.service_info"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 1780,
+      "callee": "service.instance.is_inactive",
+      "owner": "BrushFlowLanduo._calculate_global_downloader_size"
+    },
+    {
+      "plugin": "BrushFlowLanduo",
+      "file": "brushflowlanduo/__init__.py",
+      "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "line": 2581,
+      "callee": "service.instance.is_inactive",
+      "owner": "BrushFlowLanduo._collect_global_dynamic_delete_candidates"
+    },
+    {
+      "plugin": "TorrentTransfermusic",
+      "file": "torrenttransfermusic/__init__.py",
+      "sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "line": 152,
+      "callee": "service.instance.is_inactive",
+      "owner": "TorrentTransfermusic.service_info"
+    },
+    {
+      "plugin": "CleanInvalidSeed",
+      "file": "cleaninvalidseed/__init__.py",
+      "sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+      "line": 166,
+      "callee": "service_info.instance.is_inactive",
+      "owner": "CleanInvalidSeed.service_info"
+    }
+  ],
+  "additional_consumers_note": "Eight direct installed downloader calls plus SeedRescue698 dynamic getattr. MediaServerRefresh69 is the separate S08 media-server connection contract."
+}

@@ -1,0 +1,503 @@
+=== RUN   TestOriginalHostBusinessHistoryActualSDKRecordDeleteRetainsPhysicalFiles
+{"app_version":"0.4.19","event":"published","id":"log_VCkZFm5uA5fY0bqqCXZfZTgV","instance_id":"instance_isuxD5T8UgRZ5noPAVxN2mvN","job_id":"job_fGWORnfzOVOlPDyooVfgcB1o","level":"INFO","message":"已登记本次实际发布成功的文件；源文件保留","module":"import","time":"2026-10-31T14:17:39.316605Z","workflow_id":"wf_Wp5av9J0oXbSAZ7T4xFEhZop"}
+{"app_version":"0.4.19","event":"login","id":"log_RM8xbWjg6luOuOM3A8CG3VT3","instance_id":"instance_isuxD5T8UgRZ5noPAVxN2mvN","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:17:40.058046Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":695,"event":"request_completed","http_status":200,"id":"log_AFK-MzLQbttvW9waLGwymcs3","instance_id":"instance_isuxD5T8UgRZ5noPAVxN2mvN","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_6FTH8KRoth81GNc6diN2NYm1","time":"2026-10-31T14:17:40.058663Z"}
+{"app_version":"0.4.19","duration_ms":1184,"event":"request_completed","http_status":200,"id":"log_sU57uiuHUtWXf-3hWJAamLGp","instance_id":"instance_isuxD5T8UgRZ5noPAVxN2mvN","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_-4s55YC7JzQJ-OGgQffzK9jt","time":"2026-10-31T14:17:44.033882Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_qG6YlJAqSbzo6CMJwfdLae80","instance_id":"instance_isuxD5T8UgRZ5noPAVxN2mvN","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:17:44.035932Z","workflow_id":""}
+{"app_version":"0.4.19","event":"deleted","id":"log_68SqM6mnInz2MPtuzMHFO-eD","instance_id":"instance_isuxD5T8UgRZ5noPAVxN2mvN","job_id":"","level":"INFO","message":"已删除用户选定的整理历史及明确勾选的文件","module":"history","time":"2026-10-31T14:17:44.295071Z","workflow_id":"job_fGWORnfzOVOlPDyooVfgcB1o"}
+{"app_version":"0.4.19","event":"stopped","id":"log_IBRnoSdpISAmdibnGiscJpsV","instance_id":"instance_isuxD5T8UgRZ5noPAVxN2mvN","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:17:45.379371Z","workflow_id":""}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_6c0K1DLjZIJSHW3Kz5xx-reO","instance_id":"instance_h-pwh7m387j2Fg2I-6eay8sd","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:17:45.603526Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_Q0YZCTVzIzTmdpvKumwHANZT","instance_id":"instance_h-pwh7m387j2Fg2I-6eay8sd","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:17:46.646334Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessHistoryActualSDKRecordDeleteRetainsPhysicalFiles (7.64s)
+=== RUN   TestOriginalHostBusinessDownloadHistoryActualSDKSelectsLatestHash
+{"app_version":"0.4.19","event":"login","id":"log_vARXTn96VgopXFPlffRMVDuA","instance_id":"instance_QL8fmOJ3wb2qv6AipxJjfV0a","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:17:47.547686Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":699,"event":"request_completed","http_status":200,"id":"log_vv_Low8bsRGF6ggtk4vb6For","instance_id":"instance_QL8fmOJ3wb2qv6AipxJjfV0a","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_k3KbeHXNc3J6v7nzhR9NwyLy","time":"2026-10-31T14:17:47.548222Z"}
+{"app_version":"0.4.19","duration_ms":482,"event":"request_completed","http_status":200,"id":"log_PMubsCBJGWMCozzE3IaxcEPp","instance_id":"instance_QL8fmOJ3wb2qv6AipxJjfV0a","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_AppOb0RrFxjX1P2SAdTRWCNE","time":"2026-10-31T14:17:49.111045Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_1-dh0VHmAvXWCn6Vp1ZW8CyW","instance_id":"instance_QL8fmOJ3wb2qv6AipxJjfV0a","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:17:49.113008Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_CMP2V47uzkau5xl4wJU_xwbp","instance_id":"instance_QL8fmOJ3wb2qv6AipxJjfV0a","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:17:50.137976Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessDownloadHistoryActualSDKSelectsLatestHash (3.49s)
+=== RUN   TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold
+=== RUN   TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold/absent_empty
+{"app_version":"0.4.19","event":"login","id":"log_sWeka2uFMq9hIrgtWubjOGQG","instance_id":"instance_N2-ghXuy-KRXeXW5Auhn1PM7","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:17:51.048889Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":696,"event":"request_completed","http_status":200,"id":"log_w-MHe6Gwnbx_sNqS0uFpaqG2","instance_id":"instance_N2-ghXuy-KRXeXW5Auhn1PM7","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_NPqr2HIvwXUEQ51BR1gnWkcL","time":"2026-10-31T14:17:51.049377Z"}
+{"app_version":"0.4.19","duration_ms":486,"event":"request_completed","http_status":200,"id":"log_rmtKPueyw3Sm4vX74F3qo-NX","instance_id":"instance_N2-ghXuy-KRXeXW5Auhn1PM7","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_cAAi-2ziF_BgwZb2uy95iPGe","time":"2026-10-31T14:17:52.614453Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_evtFkRqDfMqNVE_seyoKoG8n","instance_id":"instance_N2-ghXuy-KRXeXW5Auhn1PM7","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:17:52.616413Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_LgKSKB1qUT1BdvpwXjEK_qzq","instance_id":"instance_N2-ghXuy-KRXeXW5Auhn1PM7","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:17:53.644614Z","workflow_id":""}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_nZEykL_9Lm9K2H9PT3_ZYaP3","instance_id":"instance_1HsemtqVMm6hlY98tSPzNglg","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:17:53.852172Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_bh-ucQeL5exFQ7LnCE3wIFkQ","instance_id":"instance_1HsemtqVMm6hlY98tSPzNglg","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:17:54.867466Z","workflow_id":""}
+=== RUN   TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold/absent_values
+{"app_version":"0.4.19","event":"login","id":"log_cf0zqDNsftwE7K37MIY5BRVH","instance_id":"instance_QZE6wisPvxlZ_FBfFbdhdpDF","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:17:55.759424Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":688,"event":"request_completed","http_status":200,"id":"log_mg4IgDKZikVYR00Y1yTcs62s","instance_id":"instance_QZE6wisPvxlZ_FBfFbdhdpDF","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_e3h_ghVK4t2KXuzgQUMXY8Nf","time":"2026-10-31T14:17:55.76Z"}
+{"app_version":"0.4.19","duration_ms":470,"event":"request_completed","http_status":200,"id":"log_YierUs9F_oOCYc7lfNilbW0F","instance_id":"instance_QZE6wisPvxlZ_FBfFbdhdpDF","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_dRveFPJv-aFDdP8EFETA-QVO","time":"2026-10-31T14:17:57.31557Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_80rQAGuVlzA9yXta7IAkFUSi","instance_id":"instance_QZE6wisPvxlZ_FBfFbdhdpDF","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:17:57.317475Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_1U5u0o6ynWc3MpKPnTP_ZE8F","instance_id":"instance_QZE6wisPvxlZ_FBfFbdhdpDF","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:17:58.342072Z","workflow_id":""}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_Ul-poAHliEnMMjFHke2RyLqS","instance_id":"instance_TYO3SZ5F-C46zgx54sqXO_TR","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:17:58.551057Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_3Bn3TP8STVrrh8r2gjcygQ7M","instance_id":"instance_TYO3SZ5F-C46zgx54sqXO_TR","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:17:59.569821Z","workflow_id":""}
+=== RUN   TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold/same_values
+{"app_version":"0.4.19","event":"login","id":"log_TOCemTKrl7JRYQYhcyRWc8yV","instance_id":"instance_TbJyNZmHYJCtlGbeDO7Y3l4A","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:00.619582Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":841,"event":"request_completed","http_status":200,"id":"log_EeVzhG0mNA2NGmjGdHQgqypy","instance_id":"instance_TbJyNZmHYJCtlGbeDO7Y3l4A","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_ZHyN1ouEARAy6Et6nMdzftnf","time":"2026-10-31T14:18:00.620183Z"}
+{"app_version":"0.4.19","duration_ms":449,"event":"request_completed","http_status":200,"id":"log_b9QFQrGqFSRahctV3Vabw8o4","instance_id":"instance_TbJyNZmHYJCtlGbeDO7Y3l4A","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_SLozwKxGUsi6OoCo_dhRaT2r","time":"2026-10-31T14:18:02.15254Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_fd7tXX3_3eGhOqgp3aVpsRU4","instance_id":"instance_TbJyNZmHYJCtlGbeDO7Y3l4A","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:02.154506Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_0IlcHYCLt3UA-YH9B0U_qwyu","instance_id":"instance_TbJyNZmHYJCtlGbeDO7Y3l4A","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:03.183692Z","workflow_id":""}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_-1uUuBD4sq75ryObb20eEN5h","instance_id":"instance_yz6JcUlEf4ClLUV3pwWwU-WN","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:03.381838Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_vZI29RsC8R-tV-UOygQDQJqZ","instance_id":"instance_yz6JcUlEf4ClLUV3pwWwU-WN","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:04.395391Z","workflow_id":""}
+=== RUN   TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold/replace_values
+{"app_version":"0.4.19","event":"login","id":"log_JmvCNOK_Nhj2VwoamqTeoZa3","instance_id":"instance_id5PgKWsA092jErXixMpIhdd","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:05.407328Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":785,"event":"request_completed","http_status":200,"id":"log_CzlPRDCzynOwWWXG-J8wp8wC","instance_id":"instance_id5PgKWsA092jErXixMpIhdd","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_b2VDilsTcit0zC_cmuPfdm59","time":"2026-10-31T14:18:05.407864Z"}
+{"app_version":"0.4.19","duration_ms":662,"event":"request_completed","http_status":200,"id":"log_Xnv9soevuweSntd2oQOXPHIc","instance_id":"instance_id5PgKWsA092jErXixMpIhdd","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_MxZv78uZ2TnBvqt7waDzJ_Ok","time":"2026-10-31T14:18:07.167699Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_adAvHBcofMJFUoxlfvce9HUY","instance_id":"instance_id5PgKWsA092jErXixMpIhdd","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:07.169684Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_FTiS7IbGerdYZvlwsIgre0Dp","instance_id":"instance_id5PgKWsA092jErXixMpIhdd","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:08.205736Z","workflow_id":""}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_lk7nfKMhnaNqjl47KzFm5V4u","instance_id":"instance_Nuuspz6-r80QFgpy8gOCgdwr","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:08.399121Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_MV9Q4vgFScJuk2ub8kXtzu6J","instance_id":"instance_Nuuspz6-r80QFgpy8gOCgdwr","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:09.421944Z","workflow_id":""}
+=== RUN   TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold/clear_values
+{"app_version":"0.4.19","event":"login","id":"log_7Mjryv4ZDAHGsMtLwzzHsvEd","instance_id":"instance_wpFgiASfYEWXK7uHaRc_ad8_","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:10.314304Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":692,"event":"request_completed","http_status":200,"id":"log_RRRHUTmPlJHHI5y789qzCLDv","instance_id":"instance_wpFgiASfYEWXK7uHaRc_ad8_","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_WNJqccwapIwcM0SfxpIUP7Rc","time":"2026-10-31T14:18:10.314851Z"}
+{"app_version":"0.4.19","duration_ms":445,"event":"request_completed","http_status":200,"id":"log_I9cHGDDg_2ABu2XWr6UszmZz","instance_id":"instance_wpFgiASfYEWXK7uHaRc_ad8_","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_ntSrP5--IM0ZPWhCMmCeDTtO","time":"2026-10-31T14:18:11.843228Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_S2GLicuoYQvNkk6VJQeoFvH9","instance_id":"instance_wpFgiASfYEWXK7uHaRc_ad8_","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:11.845323Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log__UjilUUUl9kUb7C83KyGiQLo","instance_id":"instance_wpFgiASfYEWXK7uHaRc_ad8_","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:12.882113Z","workflow_id":""}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_C91gHdsFC32XhaKeun4SDFoR","instance_id":"instance_IxzY4PJZyV2ATjzwmLG7p3PC","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:13.09641Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_mT72nlzwlU5vRmE2j_tbJCDQ","instance_id":"instance_IxzY4PJZyV2ATjzwmLG7p3PC","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:14.108466Z","workflow_id":""}
+=== RUN   TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold/set_null
+{"app_version":"0.4.19","event":"login","id":"log_nyUg_HC3REnllFQWocBLnQvE","instance_id":"instance_cnMQadL1nUz2ps7DIBkNouhu","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:14.99984Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":687,"event":"request_completed","http_status":200,"id":"log_8JWf76qOF7qC28wQw-5EKxZ1","instance_id":"instance_cnMQadL1nUz2ps7DIBkNouhu","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_qVQ7idUCDKcEuAw7Bz9mK9ut","time":"2026-10-31T14:18:15.000332Z"}
+{"app_version":"0.4.19","duration_ms":1277,"event":"request_completed","http_status":200,"id":"log_iUh9s3gt9g77-H3bi9MuOxBA","instance_id":"instance_cnMQadL1nUz2ps7DIBkNouhu","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_SzL_u9o6FzbFEkZgtOrKXMqn","time":"2026-10-31T14:18:17.366341Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_nzsImtw4DgJnslJmgV5rGv32","instance_id":"instance_cnMQadL1nUz2ps7DIBkNouhu","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:17.368298Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_jTeb3azopnWT7sR9c7-UZuWJ","instance_id":"instance_cnMQadL1nUz2ps7DIBkNouhu","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:18.396382Z","workflow_id":""}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_yi-IWCvG8fgCgaohirmFHkU0","instance_id":"instance_3O4x5500yBOqLDqnj1vB8SQi","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:18.601837Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_JwDK2B7Qo8lcmJNIWpY8hMmw","instance_id":"instance_3O4x5500yBOqLDqnj1vB8SQi","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:19.613179Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold (29.47s)
+    --- PASS: TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold/absent_empty (4.72s)
+    --- PASS: TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold/absent_values (4.70s)
+    --- PASS: TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold/same_values (4.82s)
+    --- PASS: TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold/replace_values (5.03s)
+    --- PASS: TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold/clear_values (4.69s)
+    --- PASS: TestOriginalHostBusinessSettingsActualSDKFixedSourceFalseyAndCold/set_null (5.50s)
+=== RUN   TestOriginalHostBusinessSettingsActualSDKOrdinarySharedRecognizeKeys
+{"app_version":"0.4.19","event":"login","id":"log_mtzaXowG7YQy1VVKFbSwdVze","instance_id":"instance_ZGIrP2xupJEPrnNEEV2KOzVB","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:20.522915Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":714,"event":"request_completed","http_status":200,"id":"log_4N_bkrNdl__wgpDQ8vk9FX3S","instance_id":"instance_ZGIrP2xupJEPrnNEEV2KOzVB","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_dN912ufWTNzGvIn9bfkKiSwh","time":"2026-10-31T14:18:20.523471Z"}
+{"app_version":"0.4.19","duration_ms":660,"event":"request_completed","http_status":200,"id":"log_fzYzM5bOKz6pNAHWOGlZEFMH","instance_id":"instance_ZGIrP2xupJEPrnNEEV2KOzVB","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_6detD-ICIG12m574VQoJSvlW","time":"2026-10-31T14:18:22.262533Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_Uz1XbX54MMbo9OKXzWskkkAh","instance_id":"instance_ZGIrP2xupJEPrnNEEV2KOzVB","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:22.26446Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_QSL6B6U-u0oIPr3OQ4Ua2Yn3","instance_id":"instance_ZGIrP2xupJEPrnNEEV2KOzVB","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-10-31T14:18:22.274259Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_P8_HtJ8mm7D2EBLBTIShGcBa","instance_id":"instance_ZGIrP2xupJEPrnNEEV2KOzVB","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-10-31T14:18:22.282386Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_P-Nv8zZheIjJ68agj2UzODE4","instance_id":"instance_ZGIrP2xupJEPrnNEEV2KOzVB","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:23.313905Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessSettingsActualSDKOrdinarySharedRecognizeKeys (3.71s)
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:m-team.cc:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:m-team.cc:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:m-team.cc:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:m-team.cc:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:m-team.cc:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:rousi.pro:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:rousi.pro:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:rousi.pro:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:rousi.pro:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:rousi.pro:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:52pt.site:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:52pt.site:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:52pt.site:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:52pt.site:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:52pt.site:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:cspt.top:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:cspt.top:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:cspt.top:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:cspt.top:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:cspt.top:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pandapt.net:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pandapt.net:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pandapt.net:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pandapt.net:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pandapt.net:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:raingfh.top:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:raingfh.top:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:raingfh.top:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:raingfh.top:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:raingfh.top:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:btschool.club:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:btschool.club:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:btschool.club:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:btschool.club:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:btschool.club:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:1ptba.com:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:1ptba.com:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:1ptba.com:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:1ptba.com:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:1ptba.com:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xingyungept.org:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xingyungept.org:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xingyungept.org:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xingyungept.org:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xingyungept.org:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hhanclub.net:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hhanclub.net:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hhanclub.net:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hhanclub.net:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hhanclub.net:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xloli.cc:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xloli.cc:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xloli.cc:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xloli.cc:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xloli.cc:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pttime.org:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pttime.org:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pttime.org:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pttime.org:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pttime.org:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdfans.org:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdfans.org:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdfans.org:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdfans.org:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdfans.org:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:ubits.club:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:ubits.club:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:ubits.club:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:ubits.club:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:ubits.club:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:carpt.net:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:carpt.net:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:carpt.net:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:carpt.net:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:carpt.net:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:musopia.vip:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:musopia.vip:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:musopia.vip:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:musopia.vip:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:musopia.vip:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdhome.org:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdhome.org:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdhome.org:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdhome.org:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdhome.org:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:joined:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:joined:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:joined:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:joined:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:joined:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:null_delimiter:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:null_delimiter:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:null_delimiter:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:null_delimiter:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:null_delimiter:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:integer_join_ID:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:integer_join_ID:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:integer_join_ID:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:integer_join_ID:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:integer_join_ID:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_values:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_values:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_values:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_values:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_values:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_field:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_field:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_field:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_field:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_field:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:missing_id:None
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:missing_id:
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:missing_id:401,404
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:missing_id:404,_402
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:missing_id:unknown
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/MTorrentSpider/0
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/MTorrentSpider/1
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/MTorrentSpider/2
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/MTorrentSpider/3
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/MTorrentSpider/4
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/RousiSpider/0
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/RousiSpider/1
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/RousiSpider/2
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/RousiSpider/3
+=== RUN   TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/RousiSpider/4
+--- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials (0.03s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:m-team.cc:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:m-team.cc: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:m-team.cc:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:m-team.cc:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:m-team.cc:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:rousi.pro:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:rousi.pro: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:rousi.pro:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:rousi.pro:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:rousi.pro:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:52pt.site:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:52pt.site: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:52pt.site:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:52pt.site:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:52pt.site:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:cspt.top:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:cspt.top: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:cspt.top:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:cspt.top:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:cspt.top:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pandapt.net:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pandapt.net: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pandapt.net:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pandapt.net:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pandapt.net:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:raingfh.top:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:raingfh.top: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:raingfh.top:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:raingfh.top:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:raingfh.top:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:btschool.club:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:btschool.club: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:btschool.club:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:btschool.club:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:btschool.club:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:1ptba.com:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:1ptba.com: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:1ptba.com:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:1ptba.com:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:1ptba.com:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xingyungept.org:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xingyungept.org: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xingyungept.org:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xingyungept.org:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xingyungept.org:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hhanclub.net:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hhanclub.net: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hhanclub.net:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hhanclub.net:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hhanclub.net:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xloli.cc:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xloli.cc: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xloli.cc:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xloli.cc:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:xloli.cc:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pttime.org:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pttime.org: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pttime.org:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pttime.org:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:pttime.org:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdfans.org:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdfans.org: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdfans.org:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdfans.org:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdfans.org:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:ubits.club:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:ubits.club: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:ubits.club:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:ubits.club:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:ubits.club:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:carpt.net:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:carpt.net: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:carpt.net:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:carpt.net:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:carpt.net:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:musopia.vip:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:musopia.vip: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:musopia.vip:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:musopia.vip:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:musopia.vip:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdhome.org:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdhome.org: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdhome.org:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdhome.org:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/actual:hdhome.org:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:joined:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:joined: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:joined:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:joined:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:joined:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:null_delimiter:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:null_delimiter: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:null_delimiter:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:null_delimiter:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:null_delimiter:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:integer_join_ID:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:integer_join_ID: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:integer_join_ID:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:integer_join_ID:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:integer_join_ID:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_values:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_values: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_values:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_values:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_values:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_field:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_field: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_field:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_field:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:falsey_field:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:missing_id:None (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:missing_id: (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:missing_id:401,404 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:missing_id:404,_402 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/synthetic:missing_id:unknown (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/MTorrentSpider/0 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/MTorrentSpider/1 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/MTorrentSpider/2 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/MTorrentSpider/3 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/MTorrentSpider/4 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/RousiSpider/0 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/RousiSpider/1 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/RousiSpider/2 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/RousiSpider/3 (0.00s)
+    --- PASS: TestOriginalHostBusinessCategoriesFixedSourceBlockAndSpecials/RousiSpider/4 (0.00s)
+=== RUN   TestOriginalHostBusinessCategoriesActualSDKNativeQuery
+{"app_version":"0.4.19","event":"login","id":"log_4MzaDRZuzILAa0u3dyd2UTz3","instance_id":"instance_cvxKCVjbblOfUoYjotDkawKW","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:24.357199Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":783,"event":"request_completed","http_status":200,"id":"log_i7Yf3WUtXkU24g-QT-1R4clq","instance_id":"instance_cvxKCVjbblOfUoYjotDkawKW","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_CQtXwWjHWO8VXGaP3DV5tcrK","time":"2026-10-31T14:18:24.357769Z"}
+{"app_version":"0.4.19","duration_ms":439,"event":"request_completed","http_status":200,"id":"log_vNxTCAmCjrz3V4mPgT7tzWMC","instance_id":"instance_cvxKCVjbblOfUoYjotDkawKW","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_ErZ_PuPL4Tap54s_uX8vTacc","time":"2026-10-31T14:18:25.878046Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_lkCvqpjFHrixIEh1ef9MAZx2","instance_id":"instance_cvxKCVjbblOfUoYjotDkawKW","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:25.882396Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_KxmNgN_0hnbQJZXEiXbErOYs","instance_id":"instance_cvxKCVjbblOfUoYjotDkawKW","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-10-31T14:18:25.887109Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_mju0ngdYihxZXB0lKyf6ObGt","instance_id":"instance_cvxKCVjbblOfUoYjotDkawKW","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:26.930723Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessCategoriesActualSDKNativeQuery (3.58s)
+=== RUN   TestOriginalHostBusinessCategoriesActualSDKSpecialNativeQueries
+=== RUN   TestOriginalHostBusinessCategoriesActualSDKSpecialNativeQueries/mteam
+{"app_version":"0.4.19","event":"login","id":"log_4mCboXrrNxXz6AIdBswgyqlA","instance_id":"instance_vK0gk8whIS_43Xzgs6IlP-Hz","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:27.822174Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":698,"event":"request_completed","http_status":200,"id":"log_TUU6d5s2nWKPgR0Il8-NtmCJ","instance_id":"instance_vK0gk8whIS_43Xzgs6IlP-Hz","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_pLjmE31CDqeZYSJMVgPeZ1Nc","time":"2026-10-31T14:18:27.822703Z"}
+{"app_version":"0.4.19","duration_ms":498,"event":"request_completed","http_status":200,"id":"log_SEx06G6B_fB2wgcOSQib01_r","instance_id":"instance_vK0gk8whIS_43Xzgs6IlP-Hz","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_1H2h6eAoyscw_XbQzS6iyCFy","time":"2026-10-31T14:18:29.403751Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_0l01EorhfvySWszHN2a4phHA","instance_id":"instance_vK0gk8whIS_43Xzgs6IlP-Hz","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:29.405791Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_UhBjnacCoeLNnNRJifqf_MoS","instance_id":"instance_vK0gk8whIS_43Xzgs6IlP-Hz","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-10-31T14:18:29.409858Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_NgGcPLeDMBd7WWE-YHKc0_WV","instance_id":"instance_vK0gk8whIS_43Xzgs6IlP-Hz","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:30.427162Z","workflow_id":""}
+=== RUN   TestOriginalHostBusinessCategoriesActualSDKSpecialNativeQueries/rousi
+{"app_version":"0.4.19","event":"login","id":"log_gbFEN3NyvFunO4G8Dv0KdtbZ","instance_id":"instance_9GyP8xrKRXHIZCMQFz7SbMaR","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:31.398277Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":702,"event":"request_completed","http_status":200,"id":"log_8UIA05pwjDML4HRZu34QXkKs","instance_id":"instance_9GyP8xrKRXHIZCMQFz7SbMaR","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_ekilqHDA4sD7j-8buOMLMRMC","time":"2026-10-31T14:18:31.398939Z"}
+{"app_version":"0.4.19","duration_ms":416,"event":"request_completed","http_status":200,"id":"log_dmN-2DQiiCDi6lGaXad78Z1_","instance_id":"instance_9GyP8xrKRXHIZCMQFz7SbMaR","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_tqBO1X75t3sIQD-zwyGHrug8","time":"2026-10-31T14:18:32.904922Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_py6XlF_GU8RiBq2H47iUvq3H","instance_id":"instance_9GyP8xrKRXHIZCMQFz7SbMaR","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:32.906821Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_qIzIT1hth_Qm9619CPt_r0Oe","instance_id":"instance_9GyP8xrKRXHIZCMQFz7SbMaR","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-10-31T14:18:32.910663Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_F3Ss-bQbmQicbeAKRZlGPA_Y","instance_id":"instance_9GyP8xrKRXHIZCMQFz7SbMaR","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:33.935794Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessCategoriesActualSDKSpecialNativeQueries (7.01s)
+    --- PASS: TestOriginalHostBusinessCategoriesActualSDKSpecialNativeQueries/mteam (3.49s)
+    --- PASS: TestOriginalHostBusinessCategoriesActualSDKSpecialNativeQueries/rousi (3.52s)
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/valid
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/truncated_xml
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/mismatched_close
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/bare_ampersand
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/whitespace_title
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/namespace_legacy
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/duplicate_title
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/external_entity_disabled
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/undeclared_entity
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/predefined_entity
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/cdata_title
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/mixed_title_text
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/comment_title_tail
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/unescaped_attribute
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/internal_entity_attribute
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/unicode_decimal_size
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/non_decimal_digit_size
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/large_integer_size
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/date_rfc1123
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/date_iso_offset
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/date_naive
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/date_invalid
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/date_relative_rejected
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/expired_literal
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/not_xml
+=== RUN   TestOriginalHostBusinessRSSRecoverFixedLXML611Source/empty
+--- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source (1.42s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/valid (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/truncated_xml (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/mismatched_close (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/bare_ampersand (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/whitespace_title (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/namespace_legacy (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/duplicate_title (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/external_entity_disabled (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/undeclared_entity (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/predefined_entity (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/cdata_title (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/mixed_title_text (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/comment_title_tail (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/unescaped_attribute (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/internal_entity_attribute (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/unicode_decimal_size (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/non_decimal_digit_size (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/large_integer_size (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/date_rfc1123 (1.36s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/date_iso_offset (0.03s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/date_naive (0.01s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/date_invalid (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/date_relative_rejected (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/expired_literal (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/not_xml (0.00s)
+    --- PASS: TestOriginalHostBusinessRSSRecoverFixedLXML611Source/empty (0.00s)
+=== RUN   TestOriginalHostBusinessSiteAccessFixedSourceReplay
+=== RUN   TestOriginalHostBusinessSiteAccessFixedSourceReplay/new_success_without_seconds
+=== RUN   TestOriginalHostBusinessSiteAccessFixedSourceReplay/new_success_zero
+=== RUN   TestOriginalHostBusinessSiteAccessFixedSourceReplay/new_failure
+=== RUN   TestOriginalHostBusinessSiteAccessFixedSourceReplay/existing_success_without_seconds
+=== RUN   TestOriginalHostBusinessSiteAccessFixedSourceReplay/same_second_replaces_note
+=== RUN   TestOriginalHostBusinessSiteAccessFixedSourceReplay/eleventh_note_uses_original_denominator
+=== RUN   TestOriginalHostBusinessSiteAccessFixedSourceReplay/failure_preserves_note
+--- PASS: TestOriginalHostBusinessSiteAccessFixedSourceReplay (0.00s)
+    --- PASS: TestOriginalHostBusinessSiteAccessFixedSourceReplay/new_success_without_seconds (0.00s)
+    --- PASS: TestOriginalHostBusinessSiteAccessFixedSourceReplay/new_success_zero (0.00s)
+    --- PASS: TestOriginalHostBusinessSiteAccessFixedSourceReplay/new_failure (0.00s)
+    --- PASS: TestOriginalHostBusinessSiteAccessFixedSourceReplay/existing_success_without_seconds (0.00s)
+    --- PASS: TestOriginalHostBusinessSiteAccessFixedSourceReplay/same_second_replaces_note (0.00s)
+    --- PASS: TestOriginalHostBusinessSiteAccessFixedSourceReplay/eleventh_note_uses_original_denominator (0.00s)
+    --- PASS: TestOriginalHostBusinessSiteAccessFixedSourceReplay/failure_preserves_note (0.00s)
+=== RUN   TestOriginalHostBusinessSitesActualSDKHistoryCloneAndAccess
+{"app_version":"0.4.19","event":"login","id":"log_s6GTBy8NmePZeXgeVFONXBsP","instance_id":"instance_a2xl_FCR7lTNlZJlJHOpgz3c","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:36.253997Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":699,"event":"request_completed","http_status":200,"id":"log_4uQATzb7S5U41oEW3kvl09n2","instance_id":"instance_a2xl_FCR7lTNlZJlJHOpgz3c","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_nfnpmOE2twPm10z5GJ2xynJc","time":"2026-10-31T14:18:36.254533Z"}
+{"app_version":"0.4.19","duration_ms":475,"event":"request_completed","http_status":200,"id":"log_KEOJtoPd1Cc-TlMcM0Lm851k","instance_id":"instance_a2xl_FCR7lTNlZJlJHOpgz3c","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_4vQRcYsOWSHzUmrs8CeDB03Y","time":"2026-10-31T14:18:37.821526Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_OQKifz8uBUN6V_m3BkNdcYvE","instance_id":"instance_a2xl_FCR7lTNlZJlJHOpgz3c","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:37.823662Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_AR_nuvJrItWDlW91UJCYRww3","instance_id":"instance_a2xl_FCR7lTNlZJlJHOpgz3c","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-10-31T14:18:37.827475Z","workflow_id":""}
+{"app_version":"0.4.19","event":"register_services_failed","id":"log_PfcNmhvZvgaShZ2QDkrUSYRG","instance_id":"instance_a2xl_FCR7lTNlZJlJHOpgz3c","job_id":"","level":"ERROR","message":"读取插件定时服务失败","module":"plugins","time":"2026-10-31T14:18:38.666385Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":1927,"event":"request_completed","http_status":200,"id":"log_M6Fd_2y3BaiuOF--NQTBpe5s","instance_id":"instance_a2xl_FCR7lTNlZJlJHOpgz3c","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_7IBDG4gQgAZVEeQO58Tz_qbd","time":"2026-10-31T14:18:39.815824Z"}
+{"app_version":"0.4.19","event":"stopped","id":"log_TjdpZG9RFZ1wKcFLprnmHjUc","instance_id":"instance_a2xl_FCR7lTNlZJlJHOpgz3c","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:41.843286Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessSitesActualSDKHistoryCloneAndAccess (6.48s)
+=== RUN   TestOriginalHostBusinessSitesActualSDKBrowseRSSMaterialAndFailures
+{"app_version":"0.4.19","event":"login","id":"log_rAvoWajbPw2BvqQ0Nx_zWy5D","instance_id":"instance_uCA-CudcYHzHX_KRmZ7C4EOo","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:42.737069Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":706,"event":"request_completed","http_status":200,"id":"log_1DeuGHYLbVv_X671Wd5b5fVL","instance_id":"instance_uCA-CudcYHzHX_KRmZ7C4EOo","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_yrBvIjb8wfiAmKreQSYJ1Gwa","time":"2026-10-31T14:18:42.737606Z"}
+{"app_version":"0.4.19","duration_ms":477,"event":"request_completed","http_status":200,"id":"log_5CZWU_yf_qUvgwWqm4m8KCsu","instance_id":"instance_uCA-CudcYHzHX_KRmZ7C4EOo","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_3JVGz_aymGYZuPM6VWlpz16m","time":"2026-10-31T14:18:44.303334Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_rMZ-eXaPzdIaIpXd8HaUmE0V","instance_id":"instance_uCA-CudcYHzHX_KRmZ7C4EOo","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:44.305344Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_bmOGfz-P_QM3q3N1fqeAcv-r","instance_id":"instance_uCA-CudcYHzHX_KRmZ7C4EOo","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-10-31T14:18:44.308889Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_u5HscRIulYzmo574dmglsCa0","instance_id":"instance_uCA-CudcYHzHX_KRmZ7C4EOo","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:45.889388Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessSitesActualSDKBrowseRSSMaterialAndFailures (4.05s)
+=== RUN   TestOriginalHostBusinessSitesActualSDKRefreshAtomicDailyAndSourceFailure
+{"app_version":"0.4.19","event":"login","id":"log_SW6XkrlEkq5ySAenx18yHsOS","instance_id":"instance_DFQSmyE4P0pibC5r_D-YcfcO","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:46.792415Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":695,"event":"request_completed","http_status":200,"id":"log_69moB90FLw8qxyCHC4mCr5vU","instance_id":"instance_DFQSmyE4P0pibC5r_D-YcfcO","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_EOSvGkySKhiAnCVd3A431x60","time":"2026-10-31T14:18:46.792939Z"}
+{"app_version":"0.4.19","duration_ms":1045,"event":"request_completed","http_status":200,"id":"log_9eRZ2zg6itXHXbq2NBY9_7my","instance_id":"instance_DFQSmyE4P0pibC5r_D-YcfcO","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_qPYuidbahrjs9yGsPP68V8_G","time":"2026-10-31T14:18:48.929255Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_2u5QjudRmfWfDx1K0HeAs7LU","instance_id":"instance_DFQSmyE4P0pibC5r_D-YcfcO","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:48.931257Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_BECvyFTsMYtz5JtVKfPy7CKm","instance_id":"instance_DFQSmyE4P0pibC5r_D-YcfcO","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-10-31T14:18:48.935149Z","workflow_id":""}
+{"app_version":"0.4.19","event":"userdata_refreshed","id":"log_KeRb5y56aSYyC2W6FK3h6KOt","instance_id":"instance_DFQSmyE4P0pibC5r_D-YcfcO","job_id":"","level":"INFO","message":"站点用户数据刷新完成：ok","module":"site","time":"2026-10-31T14:18:48.98737Z","workflow_id":""}
+{"app_version":"0.4.19","event":"userdata_refreshed","id":"log_uQqU1-IR6tX3Ox6tUf3pc880","instance_id":"instance_DFQSmyE4P0pibC5r_D-YcfcO","job_id":"","level":"INFO","message":"站点用户数据刷新完成：failed","module":"site","time":"2026-10-31T14:18:49.010131Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_OLG-EZMsB5bJh3EGu3ge-4p4","instance_id":"instance_DFQSmyE4P0pibC5r_D-YcfcO","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:50.022113Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessSitesActualSDKRefreshAtomicDailyAndSourceFailure (4.13s)
+=== RUN   TestOriginalHostBusinessSitesActualSDKListAndPriorityAreDistinct
+{"app_version":"0.4.19","event":"login","id":"log_mMrP3sb2pMSkFX1LURzzcQbC","instance_id":"instance_C2yQTf0q9qbEbFLHKj_D3d83","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:50.971073Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":700,"event":"request_completed","http_status":200,"id":"log_60MtW8gZ5NVFx6wu-k4cpvRr","instance_id":"instance_C2yQTf0q9qbEbFLHKj_D3d83","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_hUFazVrbTDFp4Q6FymnjKW7H","time":"2026-10-31T14:18:50.971556Z"}
+{"app_version":"0.4.19","duration_ms":449,"event":"request_completed","http_status":200,"id":"log_h6Ty4zR08DFPvBqZ5cvSlCKh","instance_id":"instance_C2yQTf0q9qbEbFLHKj_D3d83","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_m8qtTZmK7q57nYf5Dj0LiWpk","time":"2026-10-31T14:18:52.503793Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_syDKfsbJIG1rogVz3YFUphKz","instance_id":"instance_C2yQTf0q9qbEbFLHKj_D3d83","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:52.50584Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_yMJ2UYMK9ZzCJ9GpDDrNKvS-","instance_id":"instance_C2yQTf0q9qbEbFLHKj_D3d83","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-10-31T14:18:52.511155Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_KEXGgrCbsmeOZMi8J_ZxETxa","instance_id":"instance_C2yQTf0q9qbEbFLHKj_D3d83","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:53.543302Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessSitesActualSDKListAndPriorityAreDistinct (3.52s)
+=== RUN   TestOriginalHostBusinessSubscriptionActualSDKExplicitNullAndNativeFormReset
+{"app_version":"0.4.19","event":"login","id":"log_S15wzU1McduWYsG-M71d3bQh","instance_id":"instance_8cu59CkjPlHwUqdVrLi_A4gx","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:54.446463Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":696,"event":"request_completed","http_status":200,"id":"log_duc0HWrfNRyNHHVnoy5VrI7R","instance_id":"instance_8cu59CkjPlHwUqdVrLi_A4gx","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_UYvwwkuC5R6gfo_IHs1TT3lJ","time":"2026-10-31T14:18:54.447001Z"}
+{"app_version":"0.4.19","duration_ms":1074,"event":"request_completed","http_status":200,"id":"log_s91hHCy332_OrH4aPqB6pDRY","instance_id":"instance_8cu59CkjPlHwUqdVrLi_A4gx","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_FcQym2XyaEvBK0B9V3RfsKPQ","time":"2026-10-31T14:18:56.615471Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_ekWDNj_GBXt-R1g9_uV1MtfG","instance_id":"instance_8cu59CkjPlHwUqdVrLi_A4gx","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:18:56.6174Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_YWUNiRvE8SbF-m5K_4tPglud","instance_id":"instance_8cu59CkjPlHwUqdVrLi_A4gx","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-10-31T14:18:56.621897Z","workflow_id":""}
+{"app_version":"0.4.19","event":"saved","id":"log_cZrwK2hl2qRACeRZjuYy6-vB","instance_id":"instance_8cu59CkjPlHwUqdVrLi_A4gx","job_id":"","level":"INFO","message":"订阅与更新周期已保存","module":"subscriptions","time":"2026-10-31T14:18:56.652327Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":8,"event":"request_completed","http_status":200,"id":"log_b2QRVpBJJWmoqc_TKvQmXc4A","instance_id":"instance_8cu59CkjPlHwUqdVrLi_A4gx","level":"INFO","message":"API 请求处理完成","method":"PUT","module":"http.subscriptions","request_id":"req_J5cnvu47EenSdFrecQIGn4Re","time":"2026-10-31T14:18:56.654307Z"}
+{"app_version":"0.4.19","event":"stopped","id":"log_syMVzT7o_VHAy9-_MuNDrmgO","instance_id":"instance_8cu59CkjPlHwUqdVrLi_A4gx","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:18:57.676931Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessSubscriptionActualSDKExplicitNullAndNativeFormReset (4.13s)
+=== RUN   TestOriginalHostBusinessSubscriptionActualSDKPatchPreservesFields
+{"app_version":"0.4.19","event":"login","id":"log_GSlAauclE3T8qaobUPH6CD82","instance_id":"instance_dSzoHXbvn25Vgw17OfpU5YMf","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:18:58.572287Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":695,"event":"request_completed","http_status":200,"id":"log_X8yfB_BTDOqNVVRaPY3WPWcW","instance_id":"instance_dSzoHXbvn25Vgw17OfpU5YMf","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_arj3ndnk1rLJF0TInd-sYf0h","time":"2026-10-31T14:18:58.572809Z"}
+{"app_version":"0.4.19","duration_ms":498,"event":"request_completed","http_status":200,"id":"log_1oiMxdnVwTCVuesJ5ssCbb4e","instance_id":"instance_dSzoHXbvn25Vgw17OfpU5YMf","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_vJKlKi-q9io3elv90MSJz0ch","time":"2026-10-31T14:19:00.156029Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_pZWXnDVoYf5gi6wySb0bvpjU","instance_id":"instance_dSzoHXbvn25Vgw17OfpU5YMf","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:19:00.157988Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_0gyMlPs8JTQezoAhcveWlRj-","instance_id":"instance_dSzoHXbvn25Vgw17OfpU5YMf","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-10-31T14:19:00.161644Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_RbOogTNniWakmp9ltWEBDSUs","instance_id":"instance_dSzoHXbvn25Vgw17OfpU5YMf","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:19:01.255794Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessSubscriptionActualSDKPatchPreservesFields (3.59s)
+=== RUN   TestOriginalHostBusinessSettingsActualSDKLiveParserAndColdPersistence
+{"app_version":"0.4.19","event":"login","id":"log_AzIGxwi_7Sgkk9LkPl3Wzw44","instance_id":"instance_f9p2M_NTKbSubpwQQ5ZrlaO9","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-31T14:19:02.157672Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":696,"event":"request_completed","http_status":200,"id":"log_JjTpoHsKHElJKDBo_jGhSF4f","instance_id":"instance_f9p2M_NTKbSubpwQQ5ZrlaO9","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_qFSgRXF5dvOnVEn4U8LFlCIB","time":"2026-10-31T14:19:02.158226Z"}
+{"app_version":"0.4.19","duration_ms":489,"event":"request_completed","http_status":200,"id":"log_31t8yQ5pIShyZFYQUPkJuPYb","instance_id":"instance_f9p2M_NTKbSubpwQQ5ZrlaO9","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_OaFziNhjBNUUj-9pccAk3i-_","time":"2026-10-31T14:19:03.740562Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_2cpqFYYn4rQRyFweN_ggT9S6","instance_id":"instance_f9p2M_NTKbSubpwQQ5ZrlaO9","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:19:03.742434Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_3dSo30xDKWYh1qTbbFGzLwQy","instance_id":"instance_f9p2M_NTKbSubpwQQ5ZrlaO9","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:19:04.782525Z","workflow_id":""}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_1hnUimtR5_iOYCXhfoSYVdWY","instance_id":"instance_Hg2dWKLivc35gfiHvz3l7u6s","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-10-31T14:19:05.001064Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_444ZGF1bpvxTofPvNRP2VX_b","instance_id":"instance_Hg2dWKLivc35gfiHvz3l7u6s","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:19:06.02109Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessSettingsActualSDKLiveParserAndColdPersistence (4.76s)
+=== RUN   TestOriginalHostBusinessSubscriptionCanceledScopeDoesNotWrite
+{"app_version":"0.4.19","event":"stopped","id":"log_V5sRV2GS4x5fpCEfFRHvo_xZ","instance_id":"instance_kHOLAVKXr-SWMAbiKl0co9mR","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-31T14:19:06.220355Z","workflow_id":""}
+--- PASS: TestOriginalHostBusinessSubscriptionCanceledScopeDoesNotWrite (0.19s)
+PASS
+ok  	light-media/internal/app	89.802s
+=== RUN   TestSubscriptionHostPatchNullOmittedAndUnknownColumns
+--- PASS: TestSubscriptionHostPatchNullOmittedAndUnknownColumns (0.00s)
+PASS
+ok  	light-media/internal/plugins	1.609s

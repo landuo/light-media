@@ -37,23 +37,23 @@ type concurrentHostCall struct {
 
 type concurrentClient struct {
 	transportClose bool
-	client       *Client
-	transport    *concurrentTransport
-	proposal     concurrentProposal
-	mu           sync.Mutex
-	calls        map[string]*concurrentHostCall
-	terminal     error
-	stopping     bool
-	draining     bool
-	shutdownDone chan struct{}
-	shutdownErr  error
-	cleanupGate  chan struct{}
-	expectedEOF  bool
-	stopDone     chan struct{}
-	stopErr      error
-	readerDone   chan struct{}
-	hosts        sync.WaitGroup
-	writes       sync.WaitGroup
+	client         *Client
+	transport      *concurrentTransport
+	proposal       concurrentProposal
+	mu             sync.Mutex
+	calls          map[string]*concurrentHostCall
+	terminal       error
+	stopping       bool
+	draining       bool
+	shutdownDone   chan struct{}
+	shutdownErr    error
+	cleanupGate    chan struct{}
+	expectedEOF    bool
+	stopDone       chan struct{}
+	stopErr        error
+	readerDone     chan struct{}
+	hosts          sync.WaitGroup
+	writes         sync.WaitGroup
 }
 
 func newConcurrentClient(c *Client, proposal concurrentProposal) *concurrentClient {
@@ -110,7 +110,9 @@ func (m *concurrentClient) readLoop() {
 			expected := m.expectedEOF
 			m.mu.Unlock()
 			if !expected || !errors.Is(err, io.EOF) {
-				if errors.Is(err, io.EOF) { err = failure("worker_io_failed") }
+				if errors.Is(err, io.EOF) {
+					err = failure("worker_io_failed")
+				}
 				m.abort(err)
 			}
 			return
@@ -380,15 +382,7 @@ func (m *concurrentClient) callStarted(ctx context.Context, method string, paylo
 		if notify {
 			go func() {
 				defer m.writes.Done()
-				<-call.sent
-				m.mu.Lock()
-				live := m.calls[id] == call && !m.stopping && (!m.draining || cleanup) && m.terminal == nil
-				m.mu.Unlock()
-				if live {
-					if _, e := m.transport.write(Frame{Protocol: ProtocolVersion, ID: id, Type: "call", Identity: m.client.binding.Identity, Method: "transport.cancel", Payload: json.RawMessage(`null`)}, nil); e != nil {
-						m.abort(e)
-					}
-				}
+				m.notifyCancellation(call)
 			}()
 		}
 		return out, failure("execution_canceled")
@@ -414,6 +408,27 @@ func (m *concurrentClient) callStarted(ctx context.Context, method string, paylo
 	}
 	out.Result = outcome.frame.Result
 	return out, nil
+}
+
+func (m *concurrentClient) notifyCancellation(call *concurrentHostCall) {
+	<-call.sent
+	superseded := false
+	_, err := m.transport.write(Frame{Protocol: ProtocolVersion, ID: call.id, Type: "call", Identity: m.client.binding.Identity, Method: "transport.cancel", Payload: json.RawMessage(`null`)}, func(concurrentWireCount) error {
+		// This check must run under the transport writer lock. A queued cancel
+		// can otherwise overtake its earlier live check, then write after Stop
+		// has received its final reply and the worker has closed the pipe.
+		m.mu.Lock()
+		live := m.calls[call.id] == call && !m.stopping && (!m.draining || call.cleanup) && m.terminal == nil
+		m.mu.Unlock()
+		if !live {
+			superseded = true
+			return failure("execution_canceled")
+		}
+		return nil
+	})
+	if err != nil && !superseded {
+		m.abort(err)
+	}
 }
 
 func invocationContext(parent context.Context, options CallOptions) (context.Context, context.CancelFunc, *runnerBudget) {

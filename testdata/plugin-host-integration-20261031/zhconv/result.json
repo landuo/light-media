@@ -1,0 +1,29 @@
+{
+  "status": "component_passed_not_S11_acceptance",
+  "source": "MoviePilot fixed app/utils/zhconv.py -> zhconv-rs 0.4.1",
+  "go_scope": "zh-hans only; complete 4685 table and default wikitext semantics",
+  "actual_pinned_wheel_cases": 6278,
+  "source_panic_to_go_error": 15,
+  "fixed_tmdb_ast_cases": 20,
+  "adaptations": [
+    "Rust PanicException maps to Go error at the conversion boundary",
+    "D description HashMap clauses use deterministic order, clause contents preserved"
+  ],
+  "evidence": {
+    "testdata/plugin-host-integration-20261031/zhconv/source.json": "b54000304a565faa91fe78e99c2f13ee06a994dfba701566731dc94bb4ee33b8",
+    "testdata/plugin-host-integration-20261031/zhconv/go-r1.log": "a483b80900c4342d25c4d5e57d5c194d5d8a1290d64f045ee943dc70223011de",
+    "testdata/plugin-host-integration-20261031/zhconv/go-r2.log": "a0f60c02e12014cb6c84496f48ce90452ce6707fc68fd41d09e3ac37ec2732ad",
+    "testdata/plugin-host-integration-20261031/zhconv/go-race.log": "0f731119ff0eae1e2019eb0fdcfd6b2ea92e4277132b79a8c32acd009e8ee24b",
+    "testdata/plugin-host-integration-20261031/zhconv/title-go-r1.log": "6dac10cb4f856eb14dc55c9cc12eb5cb18fdeda02f236aa9d7e4edd31b393250",
+    "testdata/plugin-host-integration-20261031/zhconv/title-oracle.json": "38664c6f15e97af001424f59b7eb7f77d5e9a67541fedea9b64205cf5e596bfe",
+    "testdata/plugin-host-integration-20261031/zhconv/benchmark.log": "a1856603817a8967110377b52c8a7a8e640f723e26348e44b535151001ee5a42",
+    "internal/sourcezhconv/testdata/oracle.json": "ed48a4910e4c6915157e966533ff7e733715a009f999ea211d913cd9561ca983",
+    "testdata/plugin-host-integration-20261031/zhconv/title-locale-go.log": "c007e7b03b0976b2a0efdf51426fe0d4ce9d25d6dcbcb0ee9a4b3ec2cfba6b66",
+    "testdata/plugin-host-business-20261031/zhconv-independent-review.json": "3d88811eb756a96e0cb38d97f6e8b052c129dcd12b34af1ac3cdddb3a6ec7678"
+  },
+  "limitations": [
+    "Standalone converter/model and independent source review passed; S11 source search/cache/provider integration acceptance remains pending.",
+    "No Python runtime dependency or production change."
+  ],
+  "locale_guard_cases": 7
+}

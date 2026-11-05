@@ -1,0 +1,96 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "scope": "S11 AniList complete native media recognize branch; central matrix owns acceptance",
+  "source_locations": [
+    "app/chain/__init__.py:225-235,260-284,377-414,586-635,637-710",
+    "app/modules/anilist/__init__.py:_source_enabled,_media_type,_matches_meta,_enrich_people,recognize_media,_match_by_meta",
+    "app/modules/anilist/anilist.py:_extract_response,_invoke,_disable_proxy,_translation_map,_inject_chinese,detail,search,_page_medias",
+    "app/core/context.py:get_anilist_media_type,_anilist_date,_anilist_chinese_title,set_anilist_info"
+  ],
+  "oracle": "oracle.json actual fixed AST MediaInfo/module/API with owned HTTP boundaries; dispatch-oracle.json actual Chain selection and exception catcher/handler",
+  "counts": {
+    "model_cases": 35,
+    "module_api_cases": 21,
+    "native_http_cases": 18,
+    "chain_id_cases": 8,
+    "additional_actual_sdk_cases": [
+      "default source anilist + meta",
+      "source malformed characters becomes None + AniList system failure diagnostic"
+    ]
+  },
+  "current_result": {
+    "race": "verification/anilist-race-r8.log.gz",
+    "status": "passed",
+    "app_seconds": 30.262,
+    "normal": "verification/anilist-r4.log.gz",
+    "normal_app_seconds": 16.62,
+    "chain_selection_normal": "verification/anilist-dispatch-r7.log.gz",
+    "chain_selection_seconds": 1.23
+  },
+  "execution": {
+    "classification": "Mac actual App with real SQLite + installed standard out-of-process Go SDK worker; real finite HTTPS origins connected to owned TLS server with private test CA and hostname verification; synthetic source HTTP bodies; no live AniList/provider service",
+    "python_oracle_version": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "test_commands": [
+      "python3 testdata/plugin-host-business-20261031/anilist-source/oracle.py",
+      "python3 testdata/plugin-host-business-20261031/anilist-source/dispatch_oracle.py",
+      "OWNED_HOST_SERVICES_FIXTURE_BINARY=<owned standard worker> TMPDIR=<owned work/tmp> go test -race ./internal/app -run ^TestOriginalHostMediaAniList -count=1 -v"
+    ],
+    "worker_sha256": "44fddfc85977681dd7a79a003975151e2e0ad7c886da8a1c3ffc740696627620",
+    "all_go_build_inputs_seal": "not this selected dependency binding; final real Linux cmd/server/worker full input seal and process/browser owned by services/root"
+  },
+  "red_history": {
+    "anilist-r1": "test-owned TLS transport installed before fixture download incorrectly denied owned artifact origin; test transport installed after actual plugin install, no product change",
+    "anilist-r2": "typed nil meta map in interface admitted empty-meta search; finite AniList nil map guard fixed",
+    "anilist-race-r5": "new test incorrectly expected module exception to escape source Chain; fixed source AST proves caught -> None + diagnostic",
+    "anilist-race-r6": "new real fault assertion detected hardcoded generic system message title; root corrected shared native dispatcher to source module name, verified r8"
+  },
+  "necessary_adaptations": [
+    "Finite typed Go SDK preserves source model JSON and forwards no Python code; existing proxy/transport policy and standard host UA reused",
+    "Configured PROXY state fingerprint/restart replaces source CONFIG_WATCH process client recreation; Chinese-proxy fallback flag and loaded translation dictionary remain per host client lifetime even cache=false",
+    "Original Python traceback/exception text replaced by existing safe Go diagnostic code envelope; source module identity/title, SystemError publication and None control flow retained",
+    "Source parser oracle has explicitly declared Owned/S02/S00 parser outputs, while Go target uses actual existing legacy parser; no source full parser execution claim",
+    "SDK 16MiB payload limit is the actual response transport bound, no arbitrary episode-count truncation; nonfinite JSON cannot cross typed SDK"
+  ],
+  "production_writes": 0,
+  "old_service_changes": 0,
+  "target_and_oracle_selected_hashes": {
+    "internal/app/plugin_original_host_media_anilist.go": "823116c301f0d192d72170460a5735b13bffeb1623833e3d51063aa91f6d0203",
+    "internal/app/plugin_original_host_media_anilist_test.go": "bce88e9531fd1a3b71f1b49b018bdb7b6e369382e455dbfaf2ae17f50a786d03",
+    "internal/catalog/source_plugin_anilist.go": "b56257af9e24ceb440dc402de2e3a4f6d45bcd16760680904fd76f757ccadbe4",
+    "internal/app/plugin_original_host_media.go": "f860122b8619a255dfbc378c95e7aa61abbb42e21de8ef1bd09696d070d7af0d",
+    "internal/app/plugin_original_catalog_recognize.go": "9972c90dbeeaadda584f7d702a7ee261c7ceb69e2b060dc58fb67277545380c2",
+    "internal/app/plugin_original_host_media_sources.go": "03e53b337c78e4b0e9f02586896fb1cad393c8f5ee5289385fc6ba0d0f92dceb",
+    "internal/app/plugin_original_host_media_douban.go": "95e74902e3027a38a5c9bc1d0847c8e6311c276cde068b9401be601d1a0d7af6",
+    "internal/app/plugin_original_host_media_provider_cache.go": "481a081f2c828cea863b4bbf508c56b7726b2395c0ee68eb95829ac71609143c",
+    "cmd/plugin-host-services-fixture/main.go": "32e4f2f0eaed769f5df6bbf9e390460185e63b333b3c78453cba16e74094ea53",
+    "internal/plugins/media_host.go": "902b3b901c4e943d47c93dbd4ec772f839c26266a012b192b7401a5d61f7e781",
+    "testdata/plugin-host-business-20261031/anilist-source/dispatch_oracle.py": "78beaf2a9eb61be7d44f4489db82d982399b5c42334f03f9f65a3ac5f8e8cc27",
+    "testdata/plugin-host-business-20261031/anilist-source/oracle.py": "a6be61e4e860916742efc40bbf7eccb25c1a331d80cdc2fae84c62ab42313471",
+    "testdata/plugin-host-business-20261031/anilist-source/queries.json": "79d03c7a261311da8a484e938ed3d77cdda9f6920e99a63e0ab90752ff532d8f",
+    "testdata/plugin-host-business-20261031/anilist-source/oracle.json": "534edf2e840ee3bf643ec97437f719a43f682c4bf07484a6c738d967661089bc",
+    "testdata/plugin-host-business-20261031/anilist-source/dispatch-oracle.json": "8baf5dd02ecdc98a474221c3d11a88c59fec8b059aeee5b53b1721d2037b547c",
+    "testdata/plugin-host-business-20261031/anilist-source/native-cases.json": "1e9ab9a26e1784fd1723cbb7088f26c099ffb7f7138abd7a0ef14faa6c9ebc2f",
+    "internal/catalog/explore.go": "5e7096fdc47efa4d5a09e1cb84e0dcf1dd31561fe18eeceeb01ceaca33ba42bb",
+    "internal/catalog/explore_sources.go": "4531b40a4895ebe4a85bfad7b9c08eda09db5aed87530de6945c69b58a9a0f18",
+    "testdata/plugin-host-business-20261031/anilist-source/README.md": "43e818f8362550ffd2eba70c4031a0f5133d0ba578d16ed88171f7ebfb12e175"
+  },
+  "archived_log_hashes": {
+    "testdata/plugin-host-business-20261031/anilist-source/verification/anilist-r1.log.gz": "57f3e6260c5e74e1ecb9b504c382d505e675150fc8c09b2047e5c9475d43dc41",
+    "testdata/plugin-host-business-20261031/anilist-source/verification/anilist-r2.log.gz": "7f0be2202eab70b3dea4f7942ca9d81d19adc51f6648947544cd724b22ace3b5",
+    "testdata/plugin-host-business-20261031/anilist-source/verification/anilist-r3.log.gz": "06f16ddc79cf8318f3bfb9fe0d4f61629653e53a54dffb4b8f4cadd8335d2e65",
+    "testdata/plugin-host-business-20261031/anilist-source/verification/anilist-r4.log.gz": "1a4e90f9960a11b2c2638a3dc9d29892c7f8064a560a4cbc25622d09a7d4f26c",
+    "testdata/plugin-host-business-20261031/anilist-source/verification/anilist-race-r5.log.gz": "fcf34f607aee5995abaf486c3139769b72aad6fff34553fb56349c9b750c3192",
+    "testdata/plugin-host-business-20261031/anilist-source/verification/anilist-race-r6.log.gz": "79b45a29a4d6fd03e43a5e14c50ba5512e26f3dae1434843f0868225265cd12c",
+    "testdata/plugin-host-business-20261031/anilist-source/verification/anilist-dispatch-r7.log.gz": "ae26d46b58b5c4a6b982ae989883110727459daed9b32b9b170f1e290f8dadce",
+    "testdata/plugin-host-business-20261031/anilist-source/verification/anilist-race-r8.log.gz": "7101aeb004aabb4dba3f9cbe6e7a25856d9ea0183d0c7ef4679ddd4447caebda"
+  },
+  "verified_exec_exit_codes": {
+    "normal_r4": 0,
+    "race_r5": 1,
+    "race_r6": 1,
+    "chain_selection_r7": 0,
+    "race_r8": 0
+  }
+}

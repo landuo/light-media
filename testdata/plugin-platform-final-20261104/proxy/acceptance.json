@@ -1,0 +1,538 @@
+{
+  "feature_id": "S19",
+  "status": "ready_for_independent_root_acceptance",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_locations": [
+    "app/core/config.py:1069-1098 (PROXY; PROXY_SERVER is a distinct S16 helper)",
+    "app/utils/http.py:397 and requests Session merge_environment_settings",
+    "installed mergemessagenotify own-URL ordinary POST getter callsites, independently inventoried in settings source artifacts"
+  ],
+  "current_runtime_target_files": {
+    "internal/plugins/network_proxy_host.go": "2be2e4f533e4a2506fe61d8af40650234b1553371795e1e2eacdaa73289d9991",
+    "internal/app/plugin_original_host_proxy.go": "fb1a8175a1d5c51b355c165c6b506d3ab111b8c84a3e9e22dc4c288d74bf52dd",
+    "internal/app/plugin_original_resources.go": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b",
+    "internal/networkproxy/proxy.go": "4d10eca0826992fc4528c6f428940f65974de4152173eedb23963b27bc6c57fd",
+    "internal/networkproxy/requests_cancel.go": "bab3e9b740990d73a40b24033554b9d005ab23e38234e22c6b15982b3c589be7",
+    "internal/networkproxy/requests_content.go": "99d628ec3324ef6b746a9ca8d6cb12a58c79a12c0f1d828b8552a277f6463c96",
+    "internal/networkproxy/requests_env.go": "22d79755751a445593f25c8edc741d3931c5a94c18295b760a967efc47ca056c",
+    "internal/networkproxy/requests_merge.go": "a0380ec024b78daef35ab0eb637d4c9cdd9ad842d656bbd45a9c80e1c3f29fc5",
+    "internal/networkproxy/requests_timeout.go": "bbcf3b438f39161af610a0284ac894213c4900ccc5105fe591b7bdc075d0289b",
+    "internal/networkproxy/requests_transport.go": "1e409eb302e28902c2719e10a9e830f80e2a510cc3285a029e3a344d9c7b1f97"
+  },
+  "other_target_and_tests": {
+    "internal/app/plugin_original_host_proxy_test.go": "8f08c844cac01e184cc76beb9088500bb713574ddfd4bca9f317c67e9338cea9",
+    "internal/app/plugin_original_host_proxy_sdk_test.go": "c1e69da7397982dc4a0399c30ebbf687717c535d2f500fde872ed2b229983820",
+    "cmd/plugin-host-proxy-fixture/main.go": "f9154102efbc6fd976641c67cfe50bbe612bb92720e556901d3d83f5bd9e05d6"
+  },
+  "source_evidence": {
+    "settings/proxy-settings-independent-source-oracle.json": "4910a433596bf1b0343e62213ab08db7758a3687686ef6b9f6dfec0d614c5ffd",
+    "proxy-root-race.jsonl": "88f62e331c839d2015c420527d7d95b24695e10a56d35f169011225a48f30859"
+  },
+  "runtime_binding": {
+    "path": "../browser-ocr/product-r9-build-inputs.json",
+    "sha256": "6dbb01ab6aa4f2ce507bb49185430c7bb17c568f4ebbc97fdc98ee01a5921f38",
+    "server_sha256": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+    "input_count": 1818,
+    "input_differences": []
+  },
+  "worker_binding": {
+    "path": "worker-build-inputs.json",
+    "sha256": "6e1e7e054db7396cfca18de55a5e1fa58f3178f154dd36ba7578f09d37a4b3cb",
+    "input_count": 137,
+    "input_differences": [],
+    "binaries": {
+      "worker-linux": "ff511d7f3ece730711b0c729fa4b1675845ba65d502e6053b7f9fe81b18b885e",
+      "worker-v2-linux": "2eb53ad19a3add81051c277ea576e6e9f2560400e5035519dca00fbebce242d7"
+    }
+  },
+  "tests": [
+    {
+      "file": "sdk-normal.jsonl",
+      "roots": 2,
+      "status": "passed",
+      "seconds": 4.657
+    },
+    {
+      "file": "sdk-race.jsonl",
+      "roots": 2,
+      "status": "passed",
+      "seconds": 30.495
+    }
+  ],
+  "contracts": {
+    "private_snapshot": "Only explicitly granted current standard SDK object may read source PROXY nullable http/https map plus filtered proxy/CGI environment; raw URI/auth kept in trusted worker memory. Every case-insensitive *_proxy and exact REQUEST_METHOD preserved including empty values/host-specific keys; unrelated environment not copied.",
+    "native_io": "Native trusted Go worker consumes a fresh host snapshot after worker process start, constructs ordinary net/http POST using existing networkproxy Requests merge/timeout transport. No new action/session/workflow/executor framework, no notification business implementation.",
+    "scope_and_privacy": "Parent source/getter/privacy/current-scope/config-change tests plus actual SDK source/clone and revoked/stopped old calls; no automatic public getter. Trusted worker can explicitly serialize secrets if malicious; this is not an OS/network sandbox."
+  },
+  "source_and_native_routing": {
+    "getter_oracle_cases": 17,
+    "native_cases": [
+      "configured authenticated proxy remains explicit despite NO_PROXY=*",
+      "source PROXY getter uppercase nonempty priority",
+      "environment-only lower-case priority",
+      "CGI ignores uppercase HTTP_PROXY and falls back ALL_PROXY",
+      "host-specific environment route wins",
+      "NO_PROXY=* removes environment additions and native request goes direct"
+    ],
+    "classifications": "all six cases ran with real authenticated proxy/target on macOS SDK and actual Linux App+independent worker; full Linux cmd/server/UI uses configured authenticated proxy + NO_PROXY explicit route"
+  },
+  "linux": {
+    "status": "passed",
+    "classification": "actual Linux cmd/server and separately compiled standard SDK; native Go HTTP POST through owned authenticated proxy using private host snapshot; no messenger/business service or existing data modified",
+    "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "bindings": {
+      "server": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+      "worker": "ff511d7f3ece730711b0c729fa4b1675845ba65d502e6053b7f9fe81b18b885e",
+      "worker_v2": "2eb53ad19a3add81051c277ea576e6e9f2560400e5035519dca00fbebce242d7",
+      "driver": "671e779a28810315e8ea8a94d94e9ff0f9baf049285cee630a01364bd9495780"
+    },
+    "observations": [
+      {
+        "case": "private-snapshot-authenticated-native-post-and-public-boundary",
+        "proxy_authenticated": true,
+        "no_proxy_does_not_remove_explicit_host_proxy": true,
+        "native_result": {
+          "status": 200,
+          "body": "owned-native:private proxy CLI",
+          "configured_proxy": true,
+          "environment_count": 1
+        },
+        "public_proxy_endpoint_redacted": true
+      },
+      {
+        "case": "source-clone-config-data-isolation-and-failure-recovery",
+        "source": {
+          "calls": [
+            {
+              "status": 200,
+              "body": "owned-native:private proxy CLI",
+              "configured_proxy": true,
+              "environment_count": 1
+            },
+            {
+              "status": 200,
+              "body": "owned-native:CLI source",
+              "configured_proxy": true,
+              "environment_count": 1
+            }
+          ],
+          "config": {
+            "body": "CLI source",
+            "run_once": false,
+            "url": "http://owned-native.invalid/owned-native"
+          },
+          "pid": 1597919,
+          "version": "1.0"
+        },
+        "clone": {
+          "calls": [
+            {
+              "status": 200,
+              "body": "owned-native:CLI clone",
+              "configured_proxy": true,
+              "environment_count": 1
+            }
+          ],
+          "config": {
+            "body": "CLI clone",
+            "run_once": false,
+            "url": "http://owned-native.invalid/owned-native"
+          },
+          "pid": 1597935,
+          "version": "1.0"
+        },
+        "native_failure_no_request": true
+      },
+      {
+        "case": "actual-update-and-cold-no-replay",
+        "before": {
+          "OwnedHostProxy": {
+            "calls": [
+              {
+                "status": 200,
+                "body": "owned-native:private proxy CLI",
+                "configured_proxy": true,
+                "environment_count": 1
+              },
+              {
+                "status": 200,
+                "body": "owned-native:CLI source",
+                "configured_proxy": true,
+                "environment_count": 1
+              }
+            ],
+            "config": {
+              "body": "CLI source",
+              "run_once": false,
+              "url": "http://owned-native.invalid/owned-native"
+            },
+            "pid": 1597950,
+            "version": "2.0"
+          },
+          "OwnedHostProxycopy": {
+            "calls": [
+              {
+                "status": 200,
+                "body": "owned-native:CLI clone",
+                "configured_proxy": true,
+                "environment_count": 1
+              }
+            ],
+            "config": {
+              "body": "CLI clone",
+              "run_once": false,
+              "url": "http://owned-native.invalid/owned-native"
+            },
+            "pid": 1597935,
+            "version": "1.0"
+          }
+        },
+        "after": {
+          "OwnedHostProxy": {
+            "calls": [
+              {
+                "status": 200,
+                "body": "owned-native:private proxy CLI",
+                "configured_proxy": true,
+                "environment_count": 1
+              },
+              {
+                "status": 200,
+                "body": "owned-native:CLI source",
+                "configured_proxy": true,
+                "environment_count": 1
+              }
+            ],
+            "config": {
+              "body": "CLI source",
+              "run_once": false,
+              "url": "http://owned-native.invalid/owned-native"
+            },
+            "pid": 1597967,
+            "version": "2.0"
+          },
+          "OwnedHostProxycopy": {
+            "calls": [
+              {
+                "status": 200,
+                "body": "owned-native:CLI clone",
+                "configured_proxy": true,
+                "environment_count": 1
+              }
+            ],
+            "config": {
+              "body": "CLI clone",
+              "run_once": false,
+              "url": "http://owned-native.invalid/owned-native"
+            },
+            "pid": 1597973,
+            "version": "1.0"
+          }
+        },
+        "wire_count_unchanged": true
+      },
+      {
+        "case": "browser-writes-cold-no-replay",
+        "before": {
+          "OwnedHostProxy": {
+            "calls": [
+              {
+                "status": 200,
+                "body": "owned-native:private proxy CLI",
+                "configured_proxy": true,
+                "environment_count": 1
+              },
+              {
+                "status": 200,
+                "body": "owned-native:CLI source",
+                "configured_proxy": true,
+                "environment_count": 1
+              },
+              {
+                "status": 200,
+                "body": "owned-native:browser S19 source",
+                "configured_proxy": true,
+                "environment_count": 1
+              },
+              {
+                "status": 200,
+                "body": "owned-native:browser S19 recovered",
+                "configured_proxy": true,
+                "environment_count": 1
+              }
+            ],
+            "config": {
+              "body": "browser S19 recovered",
+              "run_once": false,
+              "url": "http://owned-native.invalid/owned-native"
+            },
+            "pid": 1597967,
+            "version": "2.0"
+          },
+          "OwnedHostProxycopy": {
+            "calls": [
+              {
+                "status": 200,
+                "body": "owned-native:CLI clone",
+                "configured_proxy": true,
+                "environment_count": 1
+              },
+              {
+                "status": 200,
+                "body": "owned-native:browser S19 clone",
+                "configured_proxy": true,
+                "environment_count": 1
+              }
+            ],
+            "config": {
+              "body": "browser S19 clone",
+              "run_once": false,
+              "url": "http://owned-native.invalid/owned-native"
+            },
+            "pid": 1597973,
+            "version": "1.0"
+          }
+        },
+        "after": {
+          "OwnedHostProxy": {
+            "calls": [
+              {
+                "status": 200,
+                "body": "owned-native:private proxy CLI",
+                "configured_proxy": true,
+                "environment_count": 1
+              },
+              {
+                "status": 200,
+                "body": "owned-native:CLI source",
+                "configured_proxy": true,
+                "environment_count": 1
+              },
+              {
+                "status": 200,
+                "body": "owned-native:browser S19 source",
+                "configured_proxy": true,
+                "environment_count": 1
+              },
+              {
+                "status": 200,
+                "body": "owned-native:browser S19 recovered",
+                "configured_proxy": true,
+                "environment_count": 1
+              }
+            ],
+            "config": {
+              "body": "browser S19 recovered",
+              "run_once": false,
+              "url": "http://owned-native.invalid/owned-native"
+            },
+            "pid": 1617967,
+            "version": "2.0"
+          },
+          "OwnedHostProxycopy": {
+            "calls": [
+              {
+                "status": 200,
+                "body": "owned-native:CLI clone",
+                "configured_proxy": true,
+                "environment_count": 1
+              },
+              {
+                "status": 200,
+                "body": "owned-native:browser S19 clone",
+                "configured_proxy": true,
+                "environment_count": 1
+              }
+            ],
+            "config": {
+              "body": "browser S19 clone",
+              "run_once": false,
+              "url": "http://owned-native.invalid/owned-native"
+            },
+            "pid": 1617973,
+            "version": "1.0"
+          }
+        },
+        "wire_unchanged": true
+      }
+    ],
+    "wire": [
+      {
+        "body": "private proxy CLI",
+        "method": "POST",
+        "private_proxy_header_absent": true
+      },
+      {
+        "body": "CLI source",
+        "method": "POST",
+        "private_proxy_header_absent": true
+      },
+      {
+        "body": "CLI clone",
+        "method": "POST",
+        "private_proxy_header_absent": true
+      },
+      {
+        "body": "browser S19 source",
+        "method": "POST",
+        "private_proxy_header_absent": true
+      },
+      {
+        "body": "browser S19 recovered",
+        "method": "POST",
+        "private_proxy_header_absent": true
+      },
+      {
+        "body": "browser S19 clone",
+        "method": "POST",
+        "private_proxy_header_absent": true
+      }
+    ],
+    "proxy_events": [
+      {
+        "method": "POST",
+        "body": "private proxy CLI",
+        "authentication_verified": true
+      },
+      {
+        "method": "POST",
+        "body": "CLI source",
+        "authentication_verified": true
+      },
+      {
+        "method": "POST",
+        "body": "CLI clone",
+        "authentication_verified": true
+      },
+      {
+        "method": "POST",
+        "body": "browser S19 source",
+        "authentication_verified": true
+      },
+      {
+        "method": "POST",
+        "body": "browser S19 recovered",
+        "authentication_verified": true
+      },
+      {
+        "method": "POST",
+        "body": "browser S19 clone",
+        "authentication_verified": true
+      }
+    ],
+    "uninstalled_api404": true,
+    "stopped": true
+  },
+  "post_browser_cold": {
+    "status": "passed",
+    "checks": [
+      {
+        "instance": "OwnedHostProxy",
+        "expected": "browser S19 recovered",
+        "calls": 4,
+        "pid_changed": true,
+        "config_and_data_equal": true
+      },
+      {
+        "instance": "OwnedHostProxycopy",
+        "expected": "browser S19 clone",
+        "calls": 2,
+        "pid_changed": true,
+        "config_and_data_equal": true
+      }
+    ],
+    "all_six_proxy_authentications_verified": true,
+    "no_proxy_authorization_at_target": true,
+    "failed_browser_body_never_sent": true,
+    "main_cold_no_http_replay": true,
+    "no_private_proxy_material_in_public_data_or_logs": true
+  },
+  "browser": {
+    "classification": "actual Chrome via supported CUA on owned Linux R9 main LAN relay; real native Go POST/authenticated owned proxy, not mock",
+    "browser": "Chrome extension session S19 Proxy, tab368189633 closed successfully",
+    "runtime_sha256": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+    "actions": [
+      "Source v2 configuration initially CLI source; changed body browser S19 source and checked run once; save succeeded, actual page showed third200 nativePOST row.",
+      "Source changed URL to not-a-valid-target, body browser S19 must not send, checked runonce; save failed with request id, form values and checkbox retained.",
+      "Same retained draft URL restored to owned-native.invalid/owned-native, body browser S19 recovered; save succeeded and page showed source fourth200 row.",
+      "Clone v1 configuration still CLI clone (source modification did not overwrite it); changed only clone body browser S19 clone and checked runonce, save succeeded. Clone actual page had exactly its own two rows and no source/recovered body."
+    ],
+    "failures_retained": [
+      {
+        "type": "automation locator",
+        "detail": "First exact username locator omitted duplicate Vuetify accessible name; observed DOM then used full accessible name, no product change."
+      },
+      {
+        "type": "automation transition",
+        "detail": "An immediate clone menu click after dialog close raced transition; fresh DOM showed menu closed, opened semantically after state check."
+      },
+      {
+        "type": "external automation interruption",
+        "detail": "Final whole-page reload was blocked by another Chrome extension UI. No workaround attempted. Reload is not claimed as executed. All core UI writes/data views above were already completed; independent full host cold follows separately."
+      }
+    ],
+    "cleanup": {
+      "created_tab_closed": true,
+      "viewport_override_used": false
+    },
+    "evidence": {
+      "source-post.jpg": "abbca5576e25e44ee4106b148d619d118e89ccb4e76c7a7938efa732c21669c5",
+      "source-recovered.dom.txt": "dcf127c93db70f88f6a1f01168a1a3733cf4391ddb8dd7aab655c3b433dc4b2b",
+      "clone-before.dom.txt": "6070d62dd769861a128e7729281503277155eb68d8599fca546f212458a03087",
+      "clone-post.dom.txt": "95b02960b019cc86b1477d878f0b3ba23c0628e7dfea48b46db58dc95b5465d1",
+      "clone-post.jpg": "7db77969099a0fcb1b9dc6cda41c7a1c7d2fc345f8e92a38f6b359ba5ff9d3b0",
+      "source-post.dom.txt": "ace0cfc697d4eb2e4350548ee40abc7bd30b497668d671425224fafee5111fd8",
+      "failure.jpg": "71ea0a78b1bcd80c277cf668ff5c96b2bda55147a182e330742fc2a27de8e590",
+      "source-recovered.jpg": "593ea5843835e785cfe8bc24391b1f3489c8b5dcf35180b67855ada6384e2dec",
+      "failure.dom.txt": "c119fc877481071cf55d8db426267606e13856a38ec6900c9be2d4224a8cfc1b"
+    },
+    "recorded_utc": "2026-11-04T17:59:47.488915+00:00"
+  },
+  "browser_restart_relation": "The Chrome login and source/clone pages were opened after the first actual full main cold restart, showing preserved CLI configuration/data. After browser writes a second full main cold produced exact equal configuration/data, changed PIDs and zero repeated POST. The final optional Chrome whole-page reload was externally blocked and is retained, never counted as executed.",
+  "cleanup": {
+    "status": "passed",
+    "owned_root_removed": true,
+    "owned_server_worker_pids": [],
+    "relay_stopped": true,
+    "chrome_created_tab_closed": true,
+    "scope": "only exact /home/admin/light-media-proxy-20261105.xeCMPw; no /vol2/Docker/production changes",
+    "relay_ssh_session_exit": 255,
+    "relay_ssh_session_note": "Relay was deliberately SIGTERM-stopped; the waiting SSH session ended255. Independent /proc check confirmed its exact PID gone before deleting only the owned directory; main lifecycle driver itself exited0."
+  },
+  "no_business_plugin_development": true,
+  "no_commit_push_deploy": true,
+  "whole_platform_acceptance": "Root maintains unique matrix/ledger and final full-platform decision. This is a slice handoff, not a claim that every platform item is complete.",
+  "evidence_files": {
+    "owned_lan_relay.py": "3fb5e84e8905e663b8dfcb6a5072600a95cc8da0ddf16cc09c69a970a7b4dd44",
+    "native-sdk-linux.log": "948bdd37401b49c60d26240f18a23fb49b33e2d7b8e27f6e3c6e1df67cf9319c",
+    "native-sdk-linux.json": "a8e433f7189d16979299f62d57da92b0ca308184906054a5f6a0a7d118e3ca64",
+    "sdk-normal.jsonl": "7ccfdca1a434b20f4b90c8aa6dd7f35fd26ea9c3ea5af00e1a5ad0f6b8199faa",
+    "cleanup.json": "0b7978519071273c58fbf6ed86070dbdf06053aa356a9e95eb2c84b33b719b23",
+    "linux-driver.log": "6164f2f543dfd27aaac6705c4ded2de9723a47674648f7da02997179806e79e3",
+    "run_process.py": "671e779a28810315e8ea8a94d94e9ff0f9baf049285cee630a01364bd9495780",
+    "sdk-race.jsonl": "5b599314a76d62772311b6c6a7300fb72d151654942c894581d779ce82edae36",
+    "worker-build-inputs.json": "6e1e7e054db7396cfca18de55a5e1fa58f3178f154dd36ba7578f09d37a4b3cb",
+    "browser/source-post.jpg": "abbca5576e25e44ee4106b148d619d118e89ccb4e76c7a7938efa732c21669c5",
+    "browser/observation.json": "d62e832f19e616bb6ef63c31ce3835bb5bea059f28aae34e40e5e696b20092bc",
+    "browser/source-recovered.dom.txt": "dcf127c93db70f88f6a1f01168a1a3733cf4391ddb8dd7aab655c3b433dc4b2b",
+    "browser/clone-before.dom.txt": "6070d62dd769861a128e7729281503277155eb68d8599fca546f212458a03087",
+    "browser/clone-post.dom.txt": "95b02960b019cc86b1477d878f0b3ba23c0628e7dfea48b46db58dc95b5465d1",
+    "browser/clone-post.jpg": "7db77969099a0fcb1b9dc6cda41c7a1c7d2fc345f8e92a38f6b359ba5ff9d3b0",
+    "browser/source-post.dom.txt": "ace0cfc697d4eb2e4350548ee40abc7bd30b497668d671425224fafee5111fd8",
+    "browser/failure.jpg": "71ea0a78b1bcd80c277cf668ff5c96b2bda55147a182e330742fc2a27de8e590",
+    "browser/source-recovered.jpg": "593ea5843835e785cfe8bc24391b1f3489c8b5dcf35180b67855ada6384e2dec",
+    "browser/failure.dom.txt": "c119fc877481071cf55d8db426267606e13856a38ec6900c9be2d4224a8cfc1b",
+    "linux/result.json": "8f1c66a3ae50d7a23dbccce8b6d3a32ba959a820d044260f0717edd928bef9b8",
+    "linux/server.log": "540b5674f199c008677ef71cad2c17c5e8141d3f9cac05d4bccdaa6403ffbce8",
+    "linux/browser-cold-assertions.json": "eceb407d5b8d3dceef48b5578c134c54228a37b166ae8d750a2a750ee804caa6"
+  },
+  "reused_requests_transport_source": {
+    "classification": "synthetic frozen-source AST oracle for requests2.34.2 merge; distinct from actual getter17 execution and actual macOS/Linux native network tests",
+    "scope": "empty Session.proxies, request mode, trust_env=true, no null-valued explicit entries",
+    "provenance": "utils.py matched installed source; sessions/types use official2.34.2 source, installed hashes not asserted",
+    "files": {
+      "testdata/plugins/auto-signin-proxy-routing/frozen-source.json": "fcc0510e8ca782b6468a516ef655053494321f6bf6083000e6cd6fd40b18c335",
+      "testdata/plugins/auto-signin-proxy-routing/oracle.json": "c8cf2181132c25f966abd7d14a375515ea5d2aa907a4b28e000fdab99994e2c9"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "classification": "actual browser + installed standard worker on owned Linux cmd/server; synthetic OCR peer, no real CAPTCHA solved",
+  "server_sha256": "4e02a46f5594f0c08e39245e08b7979c0c02c88c3c8cfbfdadcb0a264be9e9d1",
+  "observations": [
+    "source config save with run_once executes OCR and displays ABC123",
+    "unconfigured image URL rejected with error and form retained; corrected base64 save succeeds",
+    "settings.read RMT_MEDIAEXT from actual host displays [1,null,true]",
+    "clone config remains OCR after source changed to settings.read; own OCR execution returns ABC123",
+    "browser reload preserves source RMT data and source marker; run_once false"
+  ],
+  "limits": [
+    "browser reload distinct from server restart, latter in Linux process driver",
+    "later shared decoder edge fix tested in separate source/component/Linux increment"
+  ]
+}

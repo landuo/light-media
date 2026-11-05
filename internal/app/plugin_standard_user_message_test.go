@@ -32,13 +32,25 @@ func TestStandardUserMessageActualSDKSourceCloneFailure(t *testing.T) {
 	setOwnedEventFixtureConfig(t, a, cookie, clone, true, false)
 	setOwnedEventFixtureConfig(t, a, cookie, ownedEventFixtureID, true, true)
 	for i, sample := range source.Cases {
+		expected := sample.Events[0].Data
+		if sample.Text == " /noai： ordinary escaped " {
+			// Retain the fixed-source oracle. Its model-routing escape is outside
+			// the current user scope, so only this case's text stays unmodified;
+			// all trusted identity and ordinary event fields still come from source.
+			var fields map[string]json.RawMessage
+			if json.Unmarshal(expected, &fields) != nil {
+				t.Fatal("invalid fixed model-prefix source event")
+			}
+			fields["text"], _ = json.Marshal(sample.Text)
+			expected, _ = json.Marshal(fields)
+		}
 		body, _ := json.Marshal(map[string]any{"text": sample.Text, "images": sample.Images, "userid": "forged", "source": "forged", "channel": "Telegram", "chat_id": "forged"})
 		r = callTest(t, a.Handler(), "POST", "/api/v1/message/web", string(body), cookie, "")
 		assertOriginalRegistrySuccess(t, r.Code, r.Body.Bytes())
 		for _, id := range []string{ownedEventFixtureID, clone} {
 			events := requireBusinessEventCount(t, a, id, "user.message", i+1)
-			if !originalBaseJSONEqual(events[i].Data, sample.Events[0].Data) {
-				t.Fatal("actual source/clone ordinary UserMessage fields", id, string(events[i].Data), string(sample.Events[0].Data))
+			if !originalBaseJSONEqual(events[i].Data, expected) {
+				t.Fatal("actual source/clone ordinary UserMessage fields", id, string(events[i].Data), string(expected))
 			}
 		}
 	}

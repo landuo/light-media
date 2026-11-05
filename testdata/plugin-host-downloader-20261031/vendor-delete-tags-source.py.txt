@@ -1,0 +1,20 @@
+def torrents_delete_tags(
+        self,
+        tags: str | Iterable[str] | None = None,
+        **kwargs: APIKwargsT,
+    ) -> None:
+        """
+        Delete one or more tags.
+
+        This method was introduced with qBittorrent v4.2.0 (Web API v2.3.0).
+
+        :param tags: tag name or list of tags
+        """
+        data = {"tags": self._list2string(tags, ",")}
+        self._post(
+            _name=APINames.Torrents,
+            _method="deleteTags",
+            data=data,
+            version_introduced="2.3.0",
+            **kwargs,
+        )

@@ -1,0 +1,45 @@
+{
+  "status": "passed",
+  "classification": "real Linux cmd/server + separately installed compiled standard SDK + actual browser writes; synthetic channel messages, no external messenger service",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "browser_persisted_source": {
+    "info": {
+      "userid": "browser-user",
+      "channel": "飞书",
+      "source": "Owned",
+      "text": "browser ordinary recovered"
+    }
+  },
+  "browser_persisted_clone": {
+    "info": {
+      "userid": "browser-clone-user",
+      "channel": "飞书",
+      "source": "OwnedClone",
+      "text": "browser clone independent"
+    }
+  },
+  "before_worker_pids": {
+    "OwnedHostMessage": 1494762,
+    "OwnedHostMessagecopy": 1494769
+  },
+  "cold_worker_pids": {
+    "OwnedHostMessage": 1504417,
+    "OwnedHostMessagecopy": 1504423
+  },
+  "cold_trace_and_config_equal": true,
+  "zero_one_shot_replay": true,
+  "parser_failure_segments": [
+    {
+      "instance": "OwnedHostMessage",
+      "parse_index": 19,
+      "segment_size": 0
+    }
+  ],
+  "safe_error_log_count": 4,
+  "initial_driver_interruption": "intentional control handoff; original failed/KeyboardInterrupt record retained, not relabeled as passed",
+  "uninstalled_api404": [
+    "OwnedHostMessagecopy",
+    "OwnedHostMessage"
+  ],
+  "stopped": true
+}

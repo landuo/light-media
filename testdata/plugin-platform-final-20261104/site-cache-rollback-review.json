@@ -1,0 +1,25 @@
+{
+  "classification": "test fixture isolation correction; actual App/HTTP/SQLite failure trigger under race",
+  "status": "passed",
+  "source_expectation": "Site config/mapping/cache delete in one transaction; SQL failure retains original cache; retry removes cache. Original product expectations retained.",
+  "cause": "The successful creation publishes asynchronous SiteUpdated, whose ordinary core consumer refreshes site_connection. Actual failed log records userdata_refreshed between sentinel insertion and failing delete. It replaced the synthetic map with a real snapshot.",
+  "retracted_assumptions": [
+    "Invalid synthetic schema at Store.Get: incorrect; reader just decrypts and JSON-decodes destination.",
+    "Physical ciphertext can be compared without waiting pending source event: incorrect in presence of concurrent refresh."
+  ],
+  "fix": "Wait existing App work after create, before inserting sentinel. Preserve original Store.Get and ErrNoRows assertions, add exact owned synthetic value assertion; no product logic changed.",
+  "actual_result": {
+    "repeats": 10,
+    "failed": 0,
+    "elapsed_seconds": 14.022
+  },
+  "artifacts": {
+    "testdata/plugin-platform-final-20261104/site-cache-rollback-sentinel-regression.jsonl": "4b597bb86d9a458b22888397c8139103dbff1b33213c8985107d144fc5149129",
+    "testdata/plugin-platform-final-20261104/site-cache-rollback-sentinel-compile-failure.jsonl": "ba3be64d7f334e42bee96337d67cb81c9455356cfbd885d880b7a8faa884e80d",
+    "testdata/plugin-platform-final-20261104/site-cache-rollback-concurrent-writer-red.jsonl": "00f78d7f4226c34dfe823b4b17014bfa69dd95a1f41953b1c621ed4779720150",
+    "testdata/plugin-platform-final-20261104/site-cache-rollback-sentinel-final.jsonl": "a3401d3a7deeffedebca04ac19696e3a1c66bef405f2919025728e678581455a"
+  },
+  "target_files": {
+    "internal/app/native_site_identity_test.go": "d7d7c870bd49ea5972b5da65d1282979826dcb6b4876168f91557c93a62f8bab"
+  }
+}

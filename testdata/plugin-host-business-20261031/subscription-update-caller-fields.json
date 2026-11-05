@@ -1,0 +1,94 @@
+{
+  "classification": "read-only original installed plugin AST field/dataflow review",
+  "captured_sha256": "06870f20e39237e4a69c9615ce005411feaa5e1a97cad50fd3b7b0645bead383",
+  "local_sha256": "06870f20e39237e4a69c9615ce005411feaa5e1a97cad50fd3b7b0645bead383",
+  "source_file": "testdata/plugins/subscribe-group-parser/upstream-2.8.7.py",
+  "callers": [
+    {
+      "method": "subscribe_notice",
+      "update_calls": [
+        214
+      ],
+      "assigned_fields": [
+        {
+          "line": 192,
+          "key": "include"
+        },
+        {
+          "line": 194,
+          "key": "exclude"
+        },
+        {
+          "line": 196,
+          "key": "sites"
+        },
+        {
+          "line": 198,
+          "key": "filter_groups"
+        },
+        {
+          "line": 200,
+          "key": "resolution"
+        },
+        {
+          "line": 202,
+          "key": "quality"
+        },
+        {
+          "line": 204,
+          "key": "effect"
+        },
+        {
+          "line": 209,
+          "key": "save_path"
+        },
+        {
+          "line": 211,
+          "key": "save_path"
+        }
+      ]
+    },
+    {
+      "method": "download_notice",
+      "update_calls": [
+        343
+      ],
+      "assigned_fields": [
+        {
+          "line": 329,
+          "key": "include"
+        },
+        {
+          "line": 336,
+          "key": "sites"
+        },
+        {
+          "line": 298,
+          "key": "resolution"
+        },
+        {
+          "line": 307,
+          "key": "quality"
+        },
+        {
+          "line": 316,
+          "key": "effect"
+        }
+      ]
+    }
+  ],
+  "actual_field_union": [
+    "effect",
+    "exclude",
+    "filter_groups",
+    "include",
+    "quality",
+    "resolution",
+    "save_path",
+    "sites"
+  ],
+  "sdk_extra_native_field": [
+    "keyword"
+  ],
+  "note": "Fixed Base.update accepts arbitrary setattr keys; finite SDK is an actual ordinary plugin-use contract, not full generic Subscribe ORM update compatibility. All explicit SubscribeOper.update calls in bound77file raw AST are these two; no claim of arbitrary dynamic runtime calls."
+}

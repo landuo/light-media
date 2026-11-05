@@ -1,0 +1,21 @@
+def torrents_reannounce(
+        self,
+        torrent_hashes: str | Iterable[str] | None = None,
+        **kwargs: APIKwargsT,
+    ) -> None:
+        """
+        Reannounce a torrent.
+
+        This method was introduced with qBittorrent v4.1.2 (Web API v2.0.2).
+
+        :param torrent_hashes: single torrent hash or list of torrent hashes.
+            Or ``all`` for all torrents.
+        """
+        data = {"hashes": self._list2string(torrent_hashes, "|")}
+        self._post(
+            _name=APINames.Torrents,
+            _method="reannounce",
+            data=data,
+            version_introduced="2.0.2",
+            **kwargs,
+        )

@@ -13,3 +13,11 @@ internal/plugins/brushflow/frontend/assets/remoteEntry.js whitespace=-blank-at-e
 testdata/plugins/custom-hosts-source/python-hosts-*.py whitespace=-blank-at-eol
 # The installed clone source keeps its original final blank line and byte hash.
 testdata/plugins/instance-framework/reference/clone_plugin.py whitespace=-blank-at-eof
+
+# Fixed-source GraphQL queries preserve whitespace inside their raw strings.
+internal/catalog/source_plugin_anilist.go whitespace=-blank-at-eol
+# Accepted protocol/build evidence keeps its exact bytes and captured trailing spaces.
+testdata/plugin-host-*/** -text whitespace=-blank-at-eol
+testdata/plugin-platform-final-20261104/** -text whitespace=-blank-at-eol
+# Keep the upstream license byte-identical to the reviewed native runtime input.
+third_party/browser-runtime/*.txt -text whitespace=cr-at-eol

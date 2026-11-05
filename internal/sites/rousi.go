@@ -31,7 +31,14 @@ func (c *Client) rousiAPI(ctx context.Context, path string, query url.Values) (m
 }
 
 func (c *Client) searchRousi(ctx context.Context, query string, page int) (SearchResult, error) {
+	return c.searchRousiWithCategory(ctx, query, page, "")
+}
+
+func (c *Client) searchRousiWithCategory(ctx context.Context, query string, page int, category string) (SearchResult, error) {
 	params := url.Values{"page": {strconv.Itoa(page)}, "page_size": {"100"}}
+	if category != "" {
+		params.Set("category", category)
+	}
 	if query != "" {
 		params.Set("keyword", query)
 	}

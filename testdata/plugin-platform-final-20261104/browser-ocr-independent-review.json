@@ -1,0 +1,306 @@
+{
+  "status": "S15_S16_independent_incremental_acceptance_passed_final_platform50_pending",
+  "reviewer": "/root/settings_scope, separate from /root/browser_ocr implementation",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/helper/browser.py": "cb455ffadc75b32fa0fe151242b7c4162233e525d35257ac3a71e1dda1316f29",
+    "app/helper/ocr.py": "736e7a078b22fe0ac5ac611d58be6a8d742f7d768d582abfed605fafe65a550c",
+    "app/plugins/__init__.py": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+    "app/core/plugin.py": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+    "app/helper/display.py": "375f96ff40b18ecb262482a868ec26f939f9cae3542b52176284d2e21ddf3742",
+    "docker/Dockerfile": "d49416c84c9348ff629c01075e9167831d23f95feedbbd38d7844ab0e0155963",
+    "requirements.in": "060c85ee9a2023df9216f255b0a8deac5771b304ef2705950f694045be99aab1",
+    "app/helper/cookie.py": "cdd2d5ebe45c9e7565dc8a69f2096bbe2a11d865b2d67db6eb2d6b50389232a8",
+    "app/chain/site.py": "06358a8fd070d46ab254015a2f8c7a34f07c35dd240bd2b3fef38cbf219252fa"
+  },
+  "frozen_target_checks": {
+    "Dockerfile": "eaee033a2e2418bab7c95a1140c0639dde4965c0319563ef57c49f7f2919c1bc",
+    "scripts/install-browser-runtime.sh": "f466555fc7af22388ff5964438f05e4c6ac9e31b017e262b8b8b462144e2d1ad",
+    "third_party/browser-runtime/NOTICE.md": "cb4fc548fe4420b28c133924e96286cff155b5f8bb75ee62c31891f115d3cf56",
+    "third_party/browser-runtime/CLOAKBROWSER-MIT.txt": "93a9c5b5542faf5ff6c7956406b56930fde10bd4d3e8dc7b89f01a88a8d2b29b",
+    "third_party/browser-runtime/PLAYWRIGHT-APACHE-2.0.txt": "45873d00a0dd243596deb4aa23b2493b3d1f0671921bf2538ea431d7380220eb",
+    "go.mod": "681eeca54f22c5147908bd54e7437072152d963e063b97a21b5f09326818b855",
+    "go.sum": "2f13bc137f132267884ed80873907c473c01146b47db100f128d929d281b0712",
+    "internal/browserrender/render.go": "05e755891983bfb2eb33989b1725e6d3e2726428c89755fed3eff15bbcd3a9a9",
+    "internal/browserrender/display.go": "d2351e84d0f73f2da1b189093f0545f9310132e03edd01e959383c565aae9b9c",
+    "internal/browserrender/native.go": "c4994f6fcc6336b04ab7be4024175161266575deba990189c58155dd2e338e8e",
+    "internal/browserrender/proxy.go": "830999dc9790027ee851de64ceb55746c6e3eeed32acafa433bde3a23004b6a4",
+    "internal/browserrender/flags.go": "82837ca4adb4a254092b73e43bc50b50102e076f5df8ae4959150057836ddbe5",
+    "internal/browserrender/source_http_test.go": "0c5c5416b766474c87c65ea1376768ab5e9bba42eb576ab46b8c2b98e7529e01",
+    "internal/browserrender/flaresolverr.go": "77d68d46a9623d03b433c4968bb765482310247b4ebdb66cd0adcc4d5b015a29",
+    "internal/browserrender/render_test.go": "af94eaf0cd6312db19fd0adf99967dc1f682ce4d83ba41c9313ab69938083bd6",
+    "internal/app/plugin_original_host_ocr_test.go": "fe9666fb6a539539d02cbf2c0332af5f8a61c031a669fb494d7f9cc23df80d51",
+    "internal/app/plugin_original_host_ocr.go": "e7199fdf185e36778b85b1a8094b7d94871ba6f6fa4ec575d898263e831c5898",
+    "internal/app/plugin_original_host_browser_test.go": "e9839dbb9b7f649a426fa0f275c99982e8d6d9f1e4e0e3004c1e3c70e939eef9",
+    "internal/app/plugin_original_host_browser.go": "e981632dedfc6897aa45712d698e508bbdc30fa8a3fb0217aec894ca9f789538",
+    "internal/plugins/browser_host.go": "dc933914faa0e08857ed1666389dcd27a5a99e1d35a37543bc0a70784b1dec3d",
+    "internal/plugins/ocr_host.go": "f854c582e02a11f1c8bd5fcd0e1e090c74892d89cb8b4c5cb1c2a738f8acd68f",
+    "cmd/plugin-host-browser-fixture/main.go": "bb6306baf30d438fd8ff01135e6f9cd6b4ee481a5739dcd5cb9dade5371440df",
+    "cmd/plugin-host-business-fixture/main.go": "7f7dca539be14afa80c613a9d6da29d80e49cde3bd30f5dc58815f140b09e6cd",
+    "internal/app/plugin_original_host_ocr_redirect_test.go": "b20f8311e54422894680845346b6a1095a8365af8da5d8e1fec66bf9785f26bb",
+    "internal/browserrender/proxy_test.go": "fd367868e068ba9c3a1d123c97fa39eed644ce40893446656776e40bd3ec719d",
+    "internal/plugins/concurrent_session.go": "c3f79283e113a669737cc44d1cdc23dc47cc5cd346e7ec02339ea9d6b838cdd6"
+  },
+  "reviewed_source_contract": [
+    "Complete OcrHelper normalization/data URL/padding/image optional fetch/falsey fallback/non200 image bytes/OCR result JSON exception paths.",
+    "Fixed RequestUtils cookies, user agent, content decoding and scalar inactivity semantics; complete-helper five redirect traces use actual requests/urllib3 in isolated source execution.",
+    "Ordinary PlaywrightHelper.get_page_source default headed cloak context; actual goto then networkidle and full document serialization, None/empty distinction.",
+    "FlareSolverr truthy solution response returned directly; falsey/failed call falls back to real native rendering; authenticated proxy session creation and finally destruction.",
+    "Source wrapper async updater replaced by pinned signed native browser at image build, using Go CDP and Linux per-call Xvfb/profile/process cleanup. No Python runtime or Agent/browser action/session extension added.",
+    "Ordinary action(callback) is not classified as AI: fixed CookieHelper325->SiteChain.update_cookie1369 implements site-login/2FA business; not PluginBase/PluginManager and absent all77 bound installed-plugin calls. Get_page_source3 callsites are retained."
+  ],
+  "typed_and_security_adaptations": [
+    "Configured site handles and relative source path replace arbitrary per-call private cookie/proxy objects; credential host binding and scope revalidation retained.",
+    "Source verify=False is not copied; existing target TLS verification boundary and authenticated proxy confinement stay enforced.",
+    "Payload/error/HTML ceilings use existing Go SDK bounds; safe typed errors replace Python traceback and avoid leaking remote/private content.",
+    "Runtime supports Linux amd64 actual execution; signed arm64 asset provision is recorded without claiming ARM hardware validation."
+  ],
+  "reviewed_evidence": {
+    "testdata/plugin-platform-final-20261104/browser-ocr/review.md": "1ecc6b96909065bf7d2dfb61b0b358487b2c3c94a9eeccfb901c4a4790016337",
+    "testdata/plugin-platform-final-20261104/browser-ocr/source-target-bindings.json": "1e6db588f91cad0332cc71efe2bb0716d76d9fa7b937f18208da865959b7e1f2",
+    "testdata/plugin-platform-final-20261104/browser-ocr/browser-callsite-scope.json": "52c0fd1ea5e86f0aec835d2f7fdd1e7db80ea6342c4e2a1a4f0e97de4e4c1a7a",
+    "testdata/plugin-platform-final-20261104/browser-ocr/ocr-redirect-source-oracle.json": "b18c05284aeb581a90628e8f84f845177f8329fcac2568ce9d05643fd14b2185",
+    "testdata/plugin-platform-final-20261104/browser-ocr/final-product-state.json": "87685974d56b921f7a1e8ceef7dbafa9a8951e6bc84f9a0ca18696c46a714ce9",
+    "testdata/plugin-platform-final-20261104/browser-ocr/product-image-build-r3.log": "473cb8e6cac3c0cfe141842ed53000b5d52b9a375f91609891fa46d7dd4a2995"
+  },
+  "independent_actual_protocol_test": {
+    "log": "testdata/plugin-platform-final-20261104/settings/browser-independent-source-race.jsonl",
+    "sha256": "4a5b9699abde077482f7bbb496f4ebb4d85582084c12bac2368ea5e5ce97e701",
+    "roots_pass": 4,
+    "subcases_pass": 4,
+    "failures": 0,
+    "skips": 0,
+    "seconds": 2.855,
+    "cases": "FlareSolverr source branches/cookie fixed oracle/real TLS CONNECT authentication+cleanup and rejection; no native browser requested in this small independent run"
+  },
+  "pending": [
+    "Root final555/current full source-test binding/source-evidence-index and final50 integration signature; slice product and real execution acceptance is complete."
+  ],
+  "prior_failures": "R1 missing frontend internal/plugins COPY, OCR redirect-cookie/limit first red, R3 actual App111-byte profile residual, and hiddenCDP20s vs paired180s launch-delay first red are retained; intermediate images are never substituted for final R5.",
+  "changes": "Read-only review and independent protocol execution; no product edits, commit, push or deployment.",
+  "full_product_source_context": {
+    "path": "testdata/plugin-platform-final-20261104/browser-ocr/product-r3-source-inputs.json",
+    "sha256": "d5c224fe3f52e3212249c0e7adec514e6e711b53601d6b61736cdb7908758fe4",
+    "total_recorded_files": 12326,
+    "current_code_and_dependency_files_checked": 2400,
+    "mismatches": [],
+    "latest_shared_sdk_sha256": "c3f79283e113a669737cc44d1cdc23dc47cc5cd346e7ec02339ea9d6b838cdd6",
+    "test_and_evidence_metadata_not_used_as_production_input_equivalence": true,
+    "classification": "Historical R3 full build context was independently checked at its freeze point; native.go and new cleanup.go changes are subsequently covered by final R5 compile closure and affected runtime proof."
+  },
+  "observed_pending_acceptance_failure": {
+    "status": "resolved_profile_cleanup_delta_causally_tested_and_complete_R9_App_native_lifecycle_passed",
+    "log": "testdata/plugin-platform-final-20261104/browser-ocr/browser-product-linux-final-r2-driver.log",
+    "sha256": "7ac84890221d5900c7704ef66434d139d90407237ac3362841909d620a355272",
+    "observation": "Actual final product driver sees a remaining owned browser profile after clone call and fails clean_profiles assertion. Native Linux package PASS does not prove this host-chain cleanup. No assumption yet whether late native writes or a concurrent fixture operation caused the residual.",
+    "fixed_source_cleanup_reference": "testdata/plugin-platform-final-20261104/browser-ocr/playwright-cleanup-source.json",
+    "source_cleanup_reference_sha256": "58015ce660e244f5cb456ef1c6adf3cd3c1a5b2b82c5a780255bc142d3491e4c",
+    "review_policy": "Keep both failed runs intact; require actual diagnosed fix/fixture correction and new complete final image host/browser gate, not a relabeled retry.",
+    "diagnosis": "Observed111-byte Chromium late temporary Preferences write left ENOTEMPTY after initial recursive removal; fixed bounded paired-source retry and preserved original error chain. Final current source/runtime and causal regression pass; complete App/browser cleanup still pending.",
+    "final_evidence": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json"
+  },
+  "frozen_target_checks_classification": "Historical pre-cleanup/launch-budget frozen snapshot; intentionally retained, not relabeled as the final R5 source. Final current executable closure is separately bound below.",
+  "historical_full_product_build_r3": {
+    "image": "sha256:b7016b2bd460beade564f5830c5fa82a9213ad8a8566e7522e4c0cad97d14569",
+    "image_tag": "light-media-plugin-browser-acceptance-final:20261104",
+    "build_exit": 0,
+    "Dockerfile_sha256": "eaee033a2e2418bab7c95a1140c0639dde4965c0319563ef57c49f7f2919c1bc",
+    "frozen_target_files_unchanged": true,
+    "code_base_commit": "97476582910dc4b696f7ccd5010f28d823812d40",
+    "delivery": "uncommitted working branch; not pushed or deployed"
+  },
+  "final_r5_delta_review": {
+    "current_targets": {
+      "internal/browserrender/native.go": "07b055cd32aa3434fcfe326468ed3e8cd74d70d040e73caa7a6c82d3f569cdcd",
+      "internal/browserrender/cleanup.go": "b5b620646e301374cecf96af8310c8cd60348db762786bb764e352211f8ffc56",
+      "internal/browserrender/cleanup_test.go": "52fd9c61b86114b15f901473d48c5b5d4fcaa6898408c628fe3e23b538582fc5",
+      "internal/browserrender/render_test.go": "1907f7fb852e29f5527fbebdbfc89e10ed623c5be34b620993f94abdd0ec2ca8",
+      "internal/browserrender/startup_test.go": "7bc833d4415dfc8ca8a23bf5c783d2cf2dbae160e88877de886f82bc45409fa0"
+    },
+    "source_references": {
+      "testdata/plugin-platform-final-20261104/browser-ocr/playwright-launch-timeout-source.json": "f10b07b0f24ae1c2b9d5f3345ff1b106d78949ae53224d7bad92a4779b5e26e5",
+      "testdata/plugin-platform-final-20261104/browser-ocr/playwright-timeout-source.json": "c14d5c56da72f8db64825cc63b036752778ba769a3a3cbdd79d0b788afe32215",
+      "testdata/plugin-platform-final-20261104/browser-ocr/playwright-cleanup-source.json": "58015ce660e244f5cb456ef1c6adf3cd3c1a5b2b82c5a780255bc142d3491e4c"
+    },
+    "review": [
+      "Paired Playwright1.62 coreBundle independently read: DEFAULT_PLAYWRIGHT_LAUNCH_TIMEOUT=3*60*1000, navigation/default timeout=30000; launch fallback uses that constant. Fixed ordinary helper does not override launch budget. Explicit Go WSURLReadTimeout180s corrects the hidden CDP20s startup limit.",
+      "Actual21s delayed native executable red preserved and final Linux passed23.53s; this is separate from per-navigation/networkidle timeout.",
+      "Paired removeFolders uses fs.rm recursive/force/maxRetries10. Owned Go profile cleanup retries same recoverable filesystem error set with Node default100ms linear delay, permanent EIO is returned.",
+      "Named native result retains captured HTML; errors.Join preserves prior GuardError/cause and adds safe cleanup diagnostic. ClosePage, allocator, proxy/display defers precede profile removal."
+    ],
+    "not_a_relabel": "R5 is a new final cross-compiled executable thin layer over exact successful R3 Debian/native runtime; R3 complete root-Dockerfile build does not contain the later native delta."
+  },
+  "final_linux_native": {
+    "path": "testdata/plugin-platform-final-20261104/browser-ocr/native-linux-product-r5-normal-final.log",
+    "sha256": "abdcf6c7b6f2ac9c81a04921ebb82d012e942a68ab4e10375e9bfa5167366d4a",
+    "roots_pass": 14,
+    "failures": 0,
+    "skips": 0,
+    "classification": "Actual Linux final product runtime native browser, JS/headed/proxy/TLS/FlareSolverr, startup21s and profile/display/process behavior; not sufficient alone for App/UI acceptance."
+  },
+  "root_host_bridge_race": {
+    "path": "testdata/plugin-platform-final-20261104/browser-host-stable-race.jsonl",
+    "sha256": "34526eea7256c56975cade3e9a85c1e8a0ad84963c91bd9b928fd9671c90a37e",
+    "roots_pass": 2,
+    "failures": 0,
+    "skips": 0,
+    "seconds": 30.902
+  },
+  "independent_cleanup_causal_race": {
+    "path": "testdata/plugin-platform-final-20261104/settings/browser-cleanup-independent-final-race.jsonl",
+    "sha256": "cbc756b959e0a998cd3d68e8b95728cc2a53156d07590ae2d9d74ce97f9b52d5",
+    "roots_pass": 3,
+    "failures": 0,
+    "skips": 0,
+    "classification": "Actual owned file late-write retry boundary, permanent EIO retention, joined GuardError chain; browser process execution is separately in final Linux native gate."
+  },
+  "historical_r5_executable_closure_at_review_checkpoint": {
+    "path": "testdata/plugin-platform-final-20261104/browser-ocr/product-r5-build-inputs.json",
+    "sha256": "3c247acd187f66d7510a3f111ffba8f303439990c963a1bcb7ac8c8fb4392bf6",
+    "checked_compile_input_files": 1812,
+    "mismatches": [],
+    "classification": "new final R5 image layers exact R3 production runtime with final current-source Go executable; not a renamed predecessor digest",
+    "runtime_image": "sha256:b7016b2bd460beade564f5830c5fa82a9213ad8a8566e7522e4c0cad97d14569",
+    "final_image": "sha256:19089e55e48b6e54595c380b6d64cb9f66d29453b8500e15cd34d79cbf2fdf29",
+    "server_sha256": "5ef2ae77451fb6539983d9151383844d5cf0f65c9ebf3fbc9a163cfc3ddc6cb8",
+    "runtime_full_build_compiler": "go1.26.10",
+    "final_executable_cross_compiler": "go1.26.2",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "embedded_frontend": "actual existing worktree-built frontend included by current compile_input_files; no claim that R3 full-build artifact supplies it",
+    "classification_after_new_display_gap": "All1812 inputs matched when independently checked before display.go600s correction; R5 is preserved incremental evidence and cannot cover later display or S18 central routing changes."
+  },
+  "display_readiness_source_gap": {
+    "status": "source600s_corrected_causal_old_red_and_actual_R9_12s_Xvfb_and_cold_headed_App_passed",
+    "source_evidence": "testdata/plugin-platform-final-20261104/browser-ocr/virtual-display-source.json",
+    "source_evidence_sha256": "20741117d76bbcc4542586ef964251ada4fa7d07213caae7c5206fb429a1b795",
+    "paired_original_module_sha256": "9535a5489f278dd763be20b98b07193839990f0b466402d3bc121921f370a307",
+    "observation": "R5 actual cold headed call failed browser_display_failed after10.2s. Previous Go nativeDisplay artificially limited readiness to10s. Paired PyVirtualDisplay3.0 _wait_for_pipe_text has600s eternal-hang bound; fixed DisplayHelper supplies no timeout override.",
+    "source_review": "Independently read captured select.select0.1s loop, is_alive check, newline pipe readiness and>=600s XStartTimeoutError condition. Current Go time.After600s retains caller cancellation and immediate child-pipe EOF errors.",
+    "current_target": "internal/browserrender/display.go",
+    "current_target_sha256": "371cf054cd2ca95f1679ef737dae9daa1af5d2dda5e4d5421393054d99f0ca17",
+    "required_causal_test": "Real Xvfb delayed12s first red under old10s and pass with corrected source600s, plus caller cancellation/cleanup; next image actual cold headed full App/UI proof.",
+    "reviewed_delta_files": {
+      "internal/browserrender/display.go": "371cf054cd2ca95f1679ef737dae9daa1af5d2dda5e4d5421393054d99f0ca17",
+      "internal/browserrender/display_test.go": "f7da772eeb2b781b7ab5b7a9beb0602e80534e5131fd08231f5af48aba29b445"
+    },
+    "causal_evidence": {
+      "testdata/plugin-platform-final-20261104/browser-ocr/display-source-budget-red.log": "47203fb2aa09f7e74c0582e709234e4ccd0248fb06aa824c1dc13674a4c545a6",
+      "testdata/plugin-platform-final-20261104/browser-ocr/display-source-budget-green.log": "9313bafe56276305c35b91f896c4b4ef923df3fb804d0889cd28ddefae3fc632"
+    },
+    "causal_review": "Test injects a real executable wrapper delaying12s before exec actual Xvfb, checks source600s recorded budget, real displayfd ready, >=12s elapsed and actual process ESRCH after cleanup. Old10s code red then fixed600s15.39s pass; no fake ready frame. Caller deadline branch remains intact."
+  },
+  "root_test_only_sentinel_correction": {
+    "target": "internal/app/native_site_identity_test.go",
+    "target_sha256": "d7d7c870bd49ea5972b5da65d1282979826dcb6b4876168f91557c93a62f8bab",
+    "evidence": "testdata/plugin-platform-final-20261104/site-cache-rollback-sentinel-final.jsonl",
+    "sha256": "a3401d3a7deeffedebca04ac19696e3a1c66bef405f2919025728e678581455a",
+    "roots_pass": 10,
+    "failures": 0,
+    "skips": 0,
+    "seconds": 14.022,
+    "actual_cause": "Successful site creation asynchronously dispatches SiteUpdated core account refresh that can overwrite site_connection after injecting test sentinel. Actual userdata_refreshed failure trace identified this race. Prior schema-rejection and ciphertext-reseal assumptions were disproved and withdrawn.",
+    "correction": "Wait for existing asynchronous creation tasks before Store.Put sentinel; retain original Store.Get success and delete-success sql.ErrNoRows checks, add exact owned=synthetic value retention. Only test schedule isolation changes; no product/source expected behavior changes.",
+    "historical_failure_logs_retained": [
+      "browser-cleanup-independent-race.jsonl",
+      "site-cache-rollback-sentinel-regression.jsonl",
+      "site-cache-rollback-sentinel-compile-failure.jsonl"
+    ],
+    "independent_review": "Read current Store.Get/GCM generic JSON decoder, settings same-transaction cache delete/rollback and final two-line test correction. No claim that map was invalid account schema."
+  },
+  "final_current_R9": {
+    "image": "sha256:7c9ef884baa3c750d5c08fc128bc29fcb9a244f30d95623f0b8b749892cdc77c",
+    "server_sha256": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+    "compile_inputs_checked": 1818,
+    "before_after_current_mismatches": [],
+    "current_slice_targets": {
+      "Dockerfile": "eaee033a2e2418bab7c95a1140c0639dde4965c0319563ef57c49f7f2919c1bc",
+      "cmd/plugin-host-browser-fixture/main.go": "bb6306baf30d438fd8ff01135e6f9cd6b4ee481a5739dcd5cb9dade5371440df",
+      "cmd/plugin-host-business-fixture/main.go": "7f7dca539be14afa80c613a9d6da29d80e49cde3bd30f5dc58815f140b09e6cd",
+      "go.mod": "681eeca54f22c5147908bd54e7437072152d963e063b97a21b5f09326818b855",
+      "go.sum": "2f13bc137f132267884ed80873907c473c01146b47db100f128d929d281b0712",
+      "internal/app/plugin_original_host_browser.go": "0904b1316f1f03c46f6d85fadad3b30f8eb6d9979b3c4b8c315c08d1701988e7",
+      "internal/app/plugin_original_host_browser_proxy_test.go": "fd23a9dbfb8d3a0407b1c11877466f1b230655655be540a2a3c54f7dd96e8330",
+      "internal/app/plugin_original_host_browser_test.go": "e9839dbb9b7f649a426fa0f275c99982e8d6d9f1e4e0e3004c1e3c70e939eef9",
+      "internal/app/plugin_original_host_ocr.go": "e7199fdf185e36778b85b1a8094b7d94871ba6f6fa4ec575d898263e831c5898",
+      "internal/app/plugin_original_host_ocr_redirect_test.go": "b20f8311e54422894680845346b6a1095a8365af8da5d8e1fec66bf9785f26bb",
+      "internal/app/plugin_original_host_ocr_test.go": "fe9666fb6a539539d02cbf2c0332af5f8a61c031a669fb494d7f9cc23df80d51",
+      "internal/browserrender/cleanup.go": "b5b620646e301374cecf96af8310c8cd60348db762786bb764e352211f8ffc56",
+      "internal/browserrender/cleanup_test.go": "52fd9c61b86114b15f901473d48c5b5d4fcaa6898408c628fe3e23b538582fc5",
+      "internal/browserrender/display.go": "371cf054cd2ca95f1679ef737dae9daa1af5d2dda5e4d5421393054d99f0ca17",
+      "internal/browserrender/display_test.go": "f7da772eeb2b781b7ab5b7a9beb0602e80534e5131fd08231f5af48aba29b445",
+      "internal/browserrender/flags.go": "82837ca4adb4a254092b73e43bc50b50102e076f5df8ae4959150057836ddbe5",
+      "internal/browserrender/flaresolverr.go": "80e3b1d96864bcb143b708be5df369a37d8b293671fa3273ea8e8ea41021199a",
+      "internal/browserrender/native.go": "837720cbf454b3d36d81fa24918b8edbcee1a6bb538bedfe7b2ea4917160d5f6",
+      "internal/browserrender/proxy.go": "830999dc9790027ee851de64ceb55746c6e3eeed32acafa433bde3a23004b6a4",
+      "internal/browserrender/proxy_test.go": "426a7d0b4c1bb90a65698c1c4d46e475fa26838460bd3aa344a5e22fd8155c0a",
+      "internal/browserrender/render.go": "57b6b02762cff82d09b2bfbe24e41335ab151cf264410a8e2757d1ee2c0ee92f",
+      "internal/browserrender/render_test.go": "1907f7fb852e29f5527fbebdbfc89e10ed623c5be34b620993f94abdd0ec2ca8",
+      "internal/browserrender/source_http_test.go": "0c5c5416b766474c87c65ea1376768ab5e9bba42eb576ab46b8c2b98e7529e01",
+      "internal/browserrender/source_proxy.go": "7b822341166899e365ebb42cafb29fed2d0ecc1c9763fbb37c20b607ceda43ad",
+      "internal/browserrender/source_proxy_test.go": "ee296ab2220a8499648b48602cd8513a4af26b7537f5f75480f8c8827cead11e",
+      "internal/browserrender/source_socks_probe_test.go": "fab6c9bc2f93bd0574eeaf0913293c0974cf66b53a377e1d4c38c7ac15bb066f",
+      "internal/browserrender/startup_test.go": "7bc833d4415dfc8ca8a23bf5c783d2cf2dbae160e88877de886f82bc45409fa0",
+      "internal/plugins/browser_host.go": "dc933914faa0e08857ed1666389dcd27a5a99e1d35a37543bc0a70784b1dec3d",
+      "internal/plugins/concurrent_session.go": "c3f79283e113a669737cc44d1cdc23dc47cc5cd346e7ec02339ea9d6b838cdd6",
+      "internal/plugins/ocr_host.go": "f854c582e02a11f1c8bd5fcd0e1e090c74892d89cb8b4c5cb1c2a738f8acd68f",
+      "scripts/install-browser-runtime.sh": "f466555fc7af22388ff5964438f05e4c6ac9e31b017e262b8b8b462144e2d1ad",
+      "third_party/browser-runtime/CLOAKBROWSER-MIT.txt": "93a9c5b5542faf5ff6c7956406b56930fde10bd4d3e8dc7b89f01a88a8d2b29b",
+      "third_party/browser-runtime/NOTICE.md": "cb4fc548fe4420b28c133924e96286cff155b5f8bb75ee62c31891f115d3cf56",
+      "third_party/browser-runtime/PLAYWRIGHT-APACHE-2.0.txt": "45873d00a0dd243596deb4aa23b2493b3d1f0671921bf2538ea431d7380220eb"
+    },
+    "native_actual_Linux_roots_pass": 19,
+    "real_browser_App_observations": 5,
+    "real_OCR_App_observations": 4,
+    "owned_integrity_boundaries": 174,
+    "integrity_missing_or_changed": 0,
+    "actual_runtime_cleanup": {
+      "both_instances_uninstalled_each_App": true,
+      "subsequent_custom_API404_each_instance": true,
+      "worker_Chrome_Xvfb_after_uninstall": 0,
+      "temp_profiles": 0,
+      "both_owned_containers_absent": true,
+      "owned_root_retained_until_evidence_and_independent_review": true
+    },
+    "final_owned_roots_removed": true,
+    "provenance": "Exact full R3 Dockerfile Debian/native runtime b7016b2... plus current unchanged-before/after Go1.26.2 R9 executable layer; R3 compiler1.26.10 is historical only.",
+    "evidence_sha256": {
+      "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json": "04bf3f44a6a736728ff466f7b1bfed5a041fa2742ee2ba8ee150f1b65fdb3895",
+      "testdata/plugin-platform-final-20261104/browser-ocr/final-evidence-manifest.json": "3e6508d8a1ce408d758c2bf0c380be5fe45a20ef501328098b080c054cd9e00a",
+      "testdata/plugin-platform-final-20261104/browser-ocr/product-r9-build-inputs.json": "6dbb01ab6aa4f2ce507bb49185430c7bb17c568f4ebbc97fdc98ee01a5921f38",
+      "testdata/plugin-platform-final-20261104/browser-ocr/source-target-r9-bindings.json": "e3c35fbdcebc7b113d2224317f898524fc9f6150f1acfc82e68e1ee98042cf0e",
+      "testdata/plugin-platform-final-20261104/browser-ocr/ui-reuse-r9.json": "79624510b229e5d774365e4c80b0d95ccd359038518b1dbe74c7a413ed75a335",
+      "testdata/plugin-platform-final-20261104/five-slice-independent-review.json": "11acc73d8f927d0246e702a3f3d2f13b910e36fbf1ae65e9b1f29e846080a00d"
+    }
+  },
+  "final_UI_review": {
+    "actually_viewed": [
+      "browser-ocr/ui/browser-source-success.png",
+      "browser-ocr/ui/ocr-source-success.png",
+      "proxy/browser/failure.jpg",
+      "proxy/browser/clone-post.jpg"
+    ],
+    "observed": "Real rendered DOM contains asynchronously fetched actual-native-js-restored marker; OCR fixture shows owned protocol result ABC123; currentR9 proxy failure keeps invalidURL/body/run_once draft and clone displays only its two own native POST rows.",
+    "version_boundary": "S15/S16 actual R6 captures are reused on136 byte-identical embedded frontend files; R9 current backend host chains are separately actually executed. S18 R8 UI similarly retained as that binary. CurrentR9 S19 Chrome write/failure/recovery/clone/cold proof is separate; no screenshots relabeled."
+  },
+  "final_proxy_scope_and_adapter": {
+    "source": "FixedPROXY_SERVER onlyexplicitPROXY_HOST; actual paired wrapperNone never consumes environment; percent-literal source credentials preserved forFS/native/CONNECT and inline-vs-option loopback follows paired architecture mode.",
+    "actual_native": "19 Linux roots include2 live JS proxy routes, literal-percent TLS CONNECT,21sChrome/12sXvfb readiness, defaultheaded timeout/scope/profile/process cleanup.",
+    "necessary_safety_difference": "Actual Node malformedIPv6 normalizer yields http://http; target returns safeNone/error without dialing unrelated derived host. ConfiguredFS receives exact source malformed server. No claim that original Node threw.",
+    "source_evidence": [
+      "cloakbrowser-proxy-none-source-oracle.json",
+      "cloakbrowser-proxy-semantics-source-oracle.json",
+      "proxy-settings-independent-source-oracle.json"
+    ],
+    "scope": "No AI Agent, workflow, persistent action/session framework, ordinary site-login business or notification business migrated."
+  },
+  "R8_parent_directory_incident": {
+    "status": "historical_failed_uncompleted_run_retained_unknown_cause_not_external_attribution",
+    "current_evidence": "FreshR9 exclusive roots have174 observed sentinel/tool/data continuity boundaries plus explicit exact-root removal after actual lifecycle; earlier deletion actor remains unknown.",
+    "completion_interpretation": "Current product/runs passed under observed conditions; no invented incident cause or hidden replacement of failed old evidence."
+  },
+  "final_pass_claim": "Ordinary S15/S16 slice source/target/runtime/UI/error/cold/clone/update/uninstall and cleanup accepted. This is not final whole-platform50 approval or publication."
+}

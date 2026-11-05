@@ -1,0 +1,37 @@
+{
+  "classification": "preserved development/verification issues; not silently omitted or relabeled as passed",
+  "scope_regressions": [
+    {
+      "test": "TestOriginalWebCommandActualSDKIngress/AI_branch_not_fabricated",
+      "observed": "root full scoped regression expected obsolete501 but ordinary unknown slash now correctly200 with command.excute only",
+      "resolution": "removed AI-only initial rejection expectation; /AI explicitly covered as ordinary unknown command later; actual3-root Web regression passed"
+    },
+    {
+      "test": "TestOriginalWebCommandMediaTextRoutingActualSDK/image-with-ai-command",
+      "observed": "root full scoped regression expected obsolete501",
+      "resolution": "treat raw text as ordinary unknown slash;200 and one extra command.excute observer, no declared plugin event or image fetch; actual regression passed"
+    },
+    {
+      "test": "TestStandardUserMessageActualSDKSourceCloneFailure",
+      "observed": "root full scoped regression compared historical /noai text rewriting against raw current text",
+      "resolution": "fixed-source oracle remains unchanged; only the one model-prefix historical sample text is adjusted for user-excluded routing; all other source fields remain strict; actual double-ended race passed"
+    }
+  ],
+  "harness_issues": [
+    {
+      "where": "first copied seal_build.py",
+      "cause": "new nested testdata directory needed parents[3], old script used parents[2]",
+      "resolution": "corrected only test driver, rebuilt4436-source closure with no drift; no product change"
+    },
+    {
+      "where": "IAB URL localhost tunnel",
+      "cause": "NAS SSH disallows TCP forwarding (administratively prohibited); existing remote server remained healthy",
+      "resolution": "no sshd/security changes; owned LAN-only relay to owned loopback test service, actual browser passed, relay removed"
+    },
+    {
+      "where": "original run_process.py --hold during final browser-written cold verification",
+      "cause": "original driver supports only done+uninstall, no restart signal",
+      "resolution": "intentional KeyboardInterrupt control handoff retained failure record plus5 completed stage observations; separate finalize_linux.py does actual cold PID/config/trace/uninstall gate passed; do not present original interrupted driver as successful whole gate"
+    }
+  ]
+}

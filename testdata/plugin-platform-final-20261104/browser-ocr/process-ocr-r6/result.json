@@ -1,0 +1,1056 @@
+{
+  "status": "passed",
+  "classification": "actual cmd/server + installed out-of-process standard SDK worker on owned SQLite; source expected ordinary OCR/RMT protocol and synthetic PNG; no live site/OCR challenge/provider",
+  "bindings": {
+    "server": "01d59568214458843ef5565414ae6eea098e317e5ee1cb8aea2e2c680ae77465",
+    "worker": "41467e9c730c3006b33b2d5850ea67be6f18301a2fd9502241b9a2793db76970",
+    "driver": "63a7d1d500f9ece642ecf63b5b34c4703d509de25df14c7eb61e30b5b76241c4",
+    "rmt_oracle": "777f3e1edc4babd124b7a1c2d56f0d22a14882947d182b119a794d1b987271f6",
+    "large_png": "c133b2ccc93d9a329f0333c37e12ba596f7aafd276510f7c8cae4737beb6d9ec",
+    "large_oracle": "b88c01adac064d64c141cc53290f91b8cf63ae5ff705c860f843a112b53d117f",
+    "full_redirect_source_oracle": "b18c05284aeb581a90628e8f84f845177f8329fcac2568ce9d05643fd14b2185",
+    "wire_headers_source_oracle": "6c48937135ffad154c7cdb35d9a992edcd85d2943640964fa3767d06471745cc",
+    "cookie_source_oracle": "73fe563ef0b01d2253f53d712647efe31fbe983e478a2302800689b00c706ddc",
+    "timeout_source_oracle": "8fcb7ae299f4ac84ede74c7cfd49f6712589d528b783faa0a45294b3a84e0e48",
+    "worker_update": "7a1c34095c76a17ad28356459b8cee86e60974b0c63b88eb8ea48c27dab7c563"
+  },
+  "observations": [
+    {
+      "phase": "actual-cookie-parse-source-wire",
+      "source_oracle_sha256": "73fe563ef0b01d2253f53d712647efe31fbe983e478a2302800689b00c706ddc",
+      "duplicate_overwrite_ascii_percent_and_order": true,
+      "header_matches_actual_source_http": true
+    },
+    {
+      "phase": "actual-sdk-20s-read-inactivity-not-total",
+      "elapsed_seconds": 21.039375368040055,
+      "source_timeout_oracle_sha256": "8fcb7ae299f4ac84ede74c7cfd49f6712589d528b783faa0a45294b3a84e0e48",
+      "result": "ABC123"
+    },
+    {
+      "phase": "actual-product-full-fixed-OCR-redirect-source",
+      "source_sha256": "b18c05284aeb581a90628e8f84f845177f8329fcac2568ce9d05643fd14b2185",
+      "cases": [
+        {
+          "kind": "image",
+          "redirects": 1,
+          "result": "OWNED",
+          "actual_trace": [
+            {
+              "method": "GET",
+              "step": 0,
+              "cookie": "owned=initial; other=yes"
+            },
+            {
+              "method": "GET",
+              "step": 1,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "POST",
+              "step": 0,
+              "cookie": null,
+              "body": {
+                "base64_img": "b3duZWQtaW1hZ2U="
+              }
+            }
+          ]
+        },
+        {
+          "kind": "image",
+          "redirects": 30,
+          "result": "OWNED",
+          "actual_trace": [
+            {
+              "method": "GET",
+              "step": 0,
+              "cookie": "owned=initial; other=yes"
+            },
+            {
+              "method": "GET",
+              "step": 1,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 2,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 3,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 4,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 5,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 6,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 7,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 8,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 9,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 10,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 11,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 12,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 13,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 14,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 15,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 16,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 17,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 18,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 19,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 20,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 21,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 22,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 23,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 24,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 25,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 26,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 27,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 28,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 29,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 30,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "POST",
+              "step": 0,
+              "cookie": null,
+              "body": {
+                "base64_img": "b3duZWQtaW1hZ2U="
+              }
+            }
+          ]
+        },
+        {
+          "kind": "image",
+          "redirects": 31,
+          "result": "OWNED",
+          "actual_trace": [
+            {
+              "method": "GET",
+              "step": 0,
+              "cookie": "owned=initial; other=yes"
+            },
+            {
+              "method": "GET",
+              "step": 1,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 2,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 3,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 4,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 5,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 6,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 7,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 8,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 9,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 10,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 11,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 12,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 13,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 14,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 15,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 16,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 17,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 18,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 19,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 20,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 21,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 22,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 23,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 24,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 25,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 26,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 27,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 28,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 29,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "GET",
+              "step": 30,
+              "cookie": "owned=initial; other=yes; owned=redirect"
+            },
+            {
+              "method": "POST",
+              "step": 0,
+              "cookie": null,
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            }
+          ]
+        },
+        {
+          "kind": "post",
+          "redirects": 30,
+          "result": "OWNED",
+          "actual_trace": [
+            {
+              "method": "POST",
+              "step": 0,
+              "cookie": null,
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 1,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 2,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 3,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 4,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 5,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 6,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 7,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 8,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 9,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 10,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 11,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 12,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 13,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 14,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 15,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 16,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 17,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 18,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 19,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 20,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 21,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 22,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 23,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 24,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 25,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 26,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 27,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 28,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 29,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 30,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            }
+          ]
+        },
+        {
+          "kind": "post",
+          "redirects": 31,
+          "result": "",
+          "actual_trace": [
+            {
+              "method": "POST",
+              "step": 0,
+              "cookie": null,
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 1,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 2,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 3,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 4,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 5,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 6,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 7,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 8,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 9,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 10,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 11,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 12,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 13,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 14,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 15,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 16,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 17,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 18,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 19,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 20,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 21,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 22,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 23,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 24,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 25,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 26,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 27,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 28,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 29,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            },
+            {
+              "method": "POST",
+              "step": 30,
+              "cookie": "owned=redirect",
+              "body": {
+                "base64_img": "ZmFsbGJhY2s="
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase": "real-ocr-rmt",
+      "default_extensions": [
+        ".mp4",
+        ".mkv",
+        ".ts",
+        ".iso",
+        ".rmvb",
+        ".avi",
+        ".mov",
+        ".mpeg",
+        ".mpg",
+        ".wmv",
+        ".3gp",
+        ".asf",
+        ".m4v",
+        ".flv",
+        ".m2ts",
+        ".strm",
+        ".tp",
+        ".f4v"
+      ],
+      "observed_initial_extensions": [
+        ".startup-env"
+      ],
+      "raw_mixed_extensions": [
+        ".runtime",
+        1,
+        null,
+        true
+      ],
+      "observed_cold_extensions": [
+        ".late-env"
+      ],
+      "startup_environment_snapshot": true,
+      "readonly_write_rejected": true,
+      "source_pid": 16,
+      "clone_pid": 31,
+      "updated_pid": 36,
+      "cold_pid": 17,
+      "image_cookie_ua_retained": true,
+      "ocr_receives_no_site_credentials": true,
+      "large_png_bytes": 270448,
+      "large_base64_bytes": 360600,
+      "compressed_image_decoded": true,
+      "source_falsey_and_exception_paths": true,
+      "configuration_init_run_once_calls_sdk": true,
+      "counts": {
+        "image": 67,
+        "ocr": 77
+      }
+    }
+  ],
+  "ocr_post_observations": [
+    {
+      "base64_bytes": 8,
+      "base64_sha256": "db3eaf9a79dc18d098e632573be3e3bf8467688e271dfcb77b2a6c584d422ae4",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 360600,
+      "base64_sha256": "c7007b059bc7c483b127ccc77e60184c2c0348ef3611dcecea6befd8533f75c5",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 360600,
+      "base64_sha256": "c7007b059bc7c483b127ccc77e60184c2c0348ef3611dcecea6befd8533f75c5",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 360600,
+      "base64_sha256": "c7007b059bc7c483b127ccc77e60184c2c0348ef3611dcecea6befd8533f75c5",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 360600,
+      "base64_sha256": "c7007b059bc7c483b127ccc77e60184c2c0348ef3611dcecea6befd8533f75c5",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 4,
+      "base64_sha256": "35d95694d3f160215db293c7899daa5907837838fb4b8119ed713e32446c1266",
+      "cookie_absent": true,
+      "authorization_absent": true
+    },
+    {
+      "base64_bytes": 8,
+      "base64_sha256": "856cb515df2a4d029b84f2711b13f99fcb709c1321a218f05f9820a7921f65ce",
+      "cookie_absent": true,
+      "authorization_absent": true
+    }
+  ]
+}

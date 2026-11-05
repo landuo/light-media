@@ -16,6 +16,7 @@ import (
 	"light-media/internal/noticetemplate"
 	"light-media/internal/priorityrules"
 	"light-media/internal/releasemeta"
+	"light-media/internal/sourcezhconv"
 	"light-media/internal/subscriptiondefaults"
 	"math/big"
 	"reflect"
@@ -414,6 +415,10 @@ func sourceImagePath(path any, domain string) (any, error) {
 }
 
 func sourceTMDBMediaInfo(raw json.RawMessage, kind, domain, category string) (json.RawMessage, error) {
+	return sourceTMDBMediaInfoLocale(raw, kind, domain, category, "zh")
+}
+
+func sourceTMDBMediaInfoLocale(raw json.RawMessage, kind, domain, category, locale string) (json.RawMessage, error) {
 	value, e := decodeSourceJSON(raw)
 	if e != nil || sourceMap(value) == nil || kind != "movie" && kind != "tv" {
 		return nil, bad("SOURCE_MEDIA_PROJECTION_UNSUPPORTED", "未获取原TMDB媒体详情")
@@ -466,16 +471,25 @@ func sourceTMDBMediaInfo(raw json.RawMessage, kind, domain, category string) (js
 	if !sourceSubscriptionTruth(info["sg_title"]) {
 		info["sg_title"] = original
 	}
-	if !sourceHasChinese(sourceText(info[titleKey])) {
+	if (locale == "zh" || locale == "zh-CN") && !sourceHasChinese(sourceText(info[titleKey])) {
+		foundCN := false
 		for _, row := range sourceRows(sourceMap(info["alternative_titles"])[alternativeKey]) {
 			item := sourceMap(row)
 			if item["iso_3166_1"] == "CN" && sourceHasChinese(sourceText(item["title"])) {
-				// This source branch uses full zhconv phrase rules. Never replace
-				// it with a character-only guess or silently skip the CN alias.
-				return nil, bad("SOURCE_MEDIA_CONVERSION_PENDING", "原TMDB中文别名需要完整简繁转换规则，当前未接入")
+				title := sourceText(item["title"])
+				converted, err := sourcezhconv.Hans(title)
+				if err != nil {
+					return nil, bad("SOURCE_MEDIA_CONVERSION_FAILED", "原TMDB中文别名转换失败")
+				}
+				// Source accepts an already-simplified CN alias; it does not
+				// replace a traditional alias with its converted value.
+				if converted == title {
+					info[titleKey], foundCN = title, true
+					break
+				}
 			}
 		}
-		if sourceHasChinese(sourceText(info["sg_title"])) && info["sg_title"] != info[titleKey] {
+		if !foundCN && sourceHasChinese(sourceText(info["sg_title"])) && info["sg_title"] != info[titleKey] {
 			info[titleKey] = info["sg_title"]
 		}
 	}

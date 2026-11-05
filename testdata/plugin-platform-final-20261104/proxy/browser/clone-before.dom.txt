@@ -1,0 +1,96 @@
+- complementary:
+  - link "光影 LIGHT MEDIA":
+    - /url: "#discover"
+    - text: 光影
+    - generic: LIGHT MEDIA
+  - navigation:
+    - link "搜索结果":
+      - /url: "#search"
+      - text: 搜索结果
+    - generic: 发现
+    - link "推荐":
+      - /url: "#discover"
+      - text: 推荐
+    - link "探索":
+      - /url: "#explore"
+      - text: 探索
+    - link "仪表板":
+      - /url: "#dashboard"
+      - text: 仪表板
+    - generic: 订阅
+    - link "电影":
+      - /url: "#subscriptions?type=movie"
+      - text: 电影
+    - link "电视剧":
+      - /url: "#subscriptions?type=tv"
+      - text: 电视剧
+    - link "日历":
+      - /url: "#calendar"
+      - text: 日历
+    - generic: 整理
+    - link "下载管理":
+      - /url: "#downloads"
+      - text: 下载管理
+    - link "整理历史":
+      - /url: "#history"
+      - text: 整理历史
+    - link "文件管理":
+      - /url: "#files"
+      - text: 文件管理
+    - generic: 系统
+    - link "站点管理":
+      - /url: "#sites"
+      - text: 站点管理
+    - link "插件":
+      - /url: "#plugins"
+      - text: 插件
+    - link "任务队列":
+      - /url: "#jobs"
+      - text: 任务队列
+    - link "日志":
+      - /url: "#logs"
+      - text: 日志
+    - link "设置":
+      - /url: "#settings"
+      - text: 设置
+- banner:
+  - search:
+    - button "搜索影视":
+    - textbox "搜索电影、剧集":
+      - /placeholder: 搜索电影、剧集…
+    - generic: ⌘K
+  - button "用户界面设置":
+  - button "捷径":
+  - button "通知中心":
+  - button "退出登录":
+- main:
+  - tablist:
+    - tab "我的插件" [selected]:
+      - generic: 我的插件
+    - tab "插件市场":
+      - generic: 插件市场
+  - button "搜索插件":
+  - button "筛选已安装插件":
+  - button "排序插件":
+  - generic "宿主代理平台验收 v2.0":
+    - generic: 宿主代理平台验收 v2.0
+  - button "宿主代理平台验收操作":
+  - generic "宿主代理平台验收 v1.0":
+    - generic: 宿主代理平台验收 v1.0
+  - button "宿主代理平台验收操作":
+  - button "新建文件夹":
+- status
+- dialog:
+  - generic: 宿主代理平台验收 - 插件配置
+  - button "关闭配置":
+  - separator
+  - textbox "独占测试目标URL 独占测试目标URL": http://owned-native.invalid/owned-native
+  - generic: 独占测试目标URL
+  - textbox "测试POST正文 测试POST正文": CLI clone
+  - generic: 测试POST正文
+  - checkbox "保存后POST一次"
+  - generic: 保存后POST一次
+  - button "查看数据":
+    - generic: 查看数据
+  - button "保存":
+    - generic: 保存

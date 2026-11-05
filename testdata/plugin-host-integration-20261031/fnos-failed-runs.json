@@ -1,0 +1,21 @@
+{
+  "classification": "actual NAS new temporary fnOS library + local cmd/server/installed SDK; failures, not passes",
+  "runs": [
+    {
+      "id": 1,
+      "failure": "first probe=true HTTP502, no underlying code captured; same app data/binaries later probe=false/true both succeeded at7libraries"
+    },
+    {
+      "id": 2,
+      "failure": "probe succeeds, partial refresh502 with trailing slash path rejected by preexisting servicePath(false)"
+    },
+    {
+      "id": 3,
+      "failure": "probe succeeds, canonical partial refresh still502; underlying error not observable through SDK response"
+    }
+  ],
+  "cleanup": "all3scoped experiment cleanup reports cleaned with original7library baseline unchanged; own files hashes verified before removal",
+  "next": "stop blind retries; inspect fixed safe fnos.ServiceError code in plugin log before changing behavior",
+  "server_sha256": "8a23c7d844a6f6ccbae97ff1f396a52aa47188d3eca345aa0e7c4309e224b45a",
+  "worker_sha256": "9bae6582503911433876a22e79846d7f8ed21ac055f164e0541189530643c98a"
+}

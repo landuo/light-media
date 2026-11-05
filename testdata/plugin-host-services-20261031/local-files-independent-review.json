@@ -1,0 +1,43 @@
+{
+  "reviewer": "independent child /root/host_storage_manager_resources; did not implement reviewed slice",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_contract": [
+    "app/plugins/__init__.py:get_data_path",
+    "testdata/plugins/torrent-transfer-1.10.3/torrenttransfer.py:785,825,836,844,857 (installed business reference only)"
+  ],
+  "scope": "S02 platform access to explicit readonly backup directory and own instance temporary files; excludes business transfer/fastresume parsing algorithms",
+  "reviewed_files": {
+    "cmd/owned-local-files-fixture/main.go": "60f673e5750ad7838f72cbc31077bd6c460b9a33d1ad5f299831fa1c6f6106f7",
+    "internal/app/plugin_original_host_local_files_test.go": "e2237d24bec872318fc2535c24a638eeab85ccffe685a22caedd8ebe28a2130c",
+    "internal/app/plugin_original_base.go": "989020d5ae77a79b4d3cba80048144cb50534cc7a65b2afbce2632e5e680effb",
+    "testdata/plugin-host-local-files-20261031/source_oracle.py": "180c4ff4adea2fe39012752dbd18a5d00b7580f2ce45f91c8dab5e8804cc9313",
+    "testdata/plugin-host-local-files-20261031/run_process.py": "943476c90ae6d5bf76dc9220bff7616c12c808de11c216caa0426da948d430f4",
+    "testdata/plugin-host-local-files-20261031/evidence/source-oracle.json": "be82405fb347565b086853d03ef850ba438b48ce959258126bef54e800c92e2c",
+    "testdata/plugin-host-local-files-20261031/evidence/linux-result.json": "2f0fe3fc3302cccf46bc96c5da14f3e0410bc3405ad365b1153b1677e9eda0a0",
+    "testdata/plugin-host-local-files-20261031/evidence/browser.json": "e2245f780c31dd7929005f213b4d787b620427449dbc9cdd3d59883177b45e15",
+    "testdata/plugin-host-services-20261031/local-files-independent-review.log": "b55f0620bef7ee0cd50ac23370b751be33a311dffd41d94ff8079ca38166f970",
+    "testdata/plugin-host-local-files-20261031/evidence/linux-run-process.py": "5dd6f59977ed0e816c4e799cd88949f87073f7e7717ce668240d35a351e3c432",
+    "testdata/plugin-host-local-files-20261031/evidence/linux-artifact-sha256.txt": "e0e7f9fac9d18db9398fc1231067c3f25cfeb725d47ccf255b3d2f08818acfcc"
+  },
+  "independent_execution": {
+    "command": "env TMPDIR=/Users/accidia/projects/light-media/work/plugin-host-services-20261031/tmp OWNED_LOCAL_FILES_FIXTURE_BINARY=/Users/accidia/projects/light-media/work/plugin-host-resources-20261031/local-files-worker go test ./internal/app -run ^TestOriginalHostLocalFilesActualSDKMountAndClone$ -count=1 -v",
+    "exit_code": 0,
+    "elapsed_seconds": 2.961,
+    "classification": "actual App and separately compiled SDK worker, real filesystem; synthetic backup bytes; macOS"
+  },
+  "findings": [
+    {
+      "severity": "evidence_binding",
+      "status": "resolved_with_archived_actual_driver",
+      "detail": "Current run_process.py reports phase actual_process_lifecycle/platform, whereas Linux result records actual_linux_lifecycle. Archive exact Linux driver and hash or rerun final driver; do not bind old execution to current changed driver.",
+      "resolution": "Coordinator archived the exact Linux driver and remote artifact hash record; independently verified its sha256 matches recorded run_process.py hash.",
+      "driver_sha256": "5dd6f59977ed0e816c4e799cd88949f87073f7e7717ce668240d35a351e3c432"
+    }
+  ],
+  "conclusion": "Reviewed platform design and independently rerun SDK chain pass; original Linux driver binding finding resolved by exact archived driver SHA. S02 platform chain can be accepted with coordinator final Linux/browser evidence. This does not assert production mounts are configured or fastresume transfer business has been tested.",
+  "limitations": [
+    "Linux/browser execution inspected from provided raw evidence; independent rerun was App/SDK/filesystem on macOS.",
+    "Current production NAS backup mount not accessed or changed.",
+    "Executable plugins retain ordinary OS filesystem access as original Python plugins did; namespace/data-path isolation does not imply an OS filesystem sandbox."
+  ]
+}

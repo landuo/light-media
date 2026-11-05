@@ -1,0 +1,24 @@
+{
+  "classification": "test-source-only explicit-field vet fix, no product/oracle/expected value change",
+  "path": "internal/app/plugin_original_host_site_http_test.go",
+  "prior_test_sha256": "89008f73666143d9d8f8a80b80856cf90a06902e2f9646db6fafb9bee717d481",
+  "current_test_sha256": "b1906b30f265bcb880c2b5a3c10121b9baea4f17342d11e3a429bc989ecea987",
+  "change": "five external SiteHTTPPairV1 composite literals now explicitly name Name and Value; order/repeated keys/Unicode/value strings/expected source traces unchanged",
+  "first_vet_exit": 1,
+  "first_diagnostics": [
+    "127:43 unkeyed fields",
+    "127:62 unkeyed fields",
+    "127:81 unkeyed fields",
+    "127:100 unkeyed fields",
+    "140:43 unkeyed fields"
+  ],
+  "corrected_vet": {
+    "command": "go vet ./...",
+    "exit": 0
+  },
+  "runtime_impact": "none: file ends _test.go, absent from all1818 R9 compile inputs; final real Linux main remains exact ded7eae5...",
+  "prior_acceptance_policy": "immutable S18 manifests retain historical test SHA; this supplement and final complete regression bind the explicit-field version",
+  "interrupted_run": "current-final-vet-interrupted/result.json;137 pass0fail, Ctrl-C130, not full acceptance",
+  "new_full_regression": "current-final-platform/ (pending results)",
+  "recorded_utc": "2026-11-05T01:06:44.742470+00:00"
+}

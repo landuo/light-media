@@ -1,0 +1,9 @@
+=== RUN   TestPairedNativeSocksSchemeSourceProbe
+=== RUN   TestPairedNativeSocksSchemeSourceProbe/socks5
+    source_socks_probe_test.go:36: SOURCE_NATIVE scheme=socks5 proxy_handshakes=5 navigate_error=page load error net::ERR_SOCKS_CONNECTION_FAILED
+=== RUN   TestPairedNativeSocksSchemeSourceProbe/socks5h
+    source_socks_probe_test.go:36: SOURCE_NATIVE scheme=socks5h proxy_handshakes=0 navigate_error=page load error net::ERR_NO_SUPPORTED_PROXIES
+--- PASS: TestPairedNativeSocksSchemeSourceProbe (26.35s)
+    --- PASS: TestPairedNativeSocksSchemeSourceProbe/socks5 (22.29s)
+    --- PASS: TestPairedNativeSocksSchemeSourceProbe/socks5h (3.79s)
+PASS

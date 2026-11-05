@@ -1,0 +1,20 @@
+This Go implementation follows the zh-hans behavior used by MoviePilot commit
+8a83efeacd3e26b82be495e17d50146e31c96a60 app/utils/zhconv.py. That dependency is
+zhconv-rs 0.4.1, tag v0.4.1, commit 00e1e97fcf49865b49166c302651e419289fb3d1.
+Source: https://github.com/Gowee/zhconv-rs/tree/00e1e97fcf49865b49166c302651e419289fb3d1
+The conversion algorithm and markup parser are ported under the MIT license;
+the upstream copyright and license are retained in LICENSE-MIT.
+
+hans.tsv is the complete ZH_TO_HANS table, including identity phrases, extracted
+by upstream's build.rs parse_mediawiki/sort_and_dedup algorithm from MediaWiki
+includes/languages/data/ZhConversion.php at ecf4342132cf089ac0c42436827e9038a738bb6f
+(SHA-256 5cb0019b32bb39ec5c6e662029f90bd166f7a844efb3bc877f9be41fdd511bf2).
+This MediaWiki data is licensed under GNU GPL version 2 or later; see LICENSE-GPL.
+No OpenCC data, Rust runtime, Python runtime, or external conversion service is used.
+
+Source binding and development-only extraction/oracle tools:
+testdata/plugin-host-integration-20261031/zhconv/.
+Only the zh-hans target used by the plugin recognition host is implemented.
+Inline description (D) clauses use a deterministic order because the upstream
+Rust HashMap order is randomized. Clause contents and all other conversion
+semantics, including quirks of global removal and depth limiting, are retained.

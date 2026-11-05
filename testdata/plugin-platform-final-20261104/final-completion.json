@@ -1,0 +1,68 @@
+{
+  "status": "约定范围内的插件模块迁移完成",
+  "accepted": 65,
+  "total_in_scope": 65,
+  "excluded": [
+    "22 official auth levels/RSA",
+    "44/45/46 AI/workflow"
+  ],
+  "source_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "current_runtime": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+  "current_full_regression": {
+    "phase": "tests",
+    "mode": "normal",
+    "exit": 0,
+    "packages": [
+      "./internal/app"
+    ],
+    "roots": {
+      "pass": 555,
+      "fail": 0,
+      "skip": 0
+    },
+    "failed": [],
+    "skipped": []
+  },
+  "input_closure": {
+    "all_files": 2937,
+    "differences": [],
+    "before": "pre-inputs.json.gz",
+    "after": "post-inputs.json.gz",
+    "R9_runtime_inputs_current": 1818,
+    "R9_runtime_input_differences": [],
+    "R9_server_sha256": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e"
+  },
+  "input_closure_boundary": "2937 snapshot covers the listed selected Go/implementation/build files, not every frontend .mjs test. All120 explicit targets independently bound; P13 web/tests/plugin-log-dialog.test.mjs is proven by its current target hash plus unchanged R3 full source context and prior556 frontend tests, while136 embedded UI files match R9. Original source-oracle inputs/older actual SDK/frontend results retain their separately reviewed immutable manifests.",
+  "scope": "Go backend/current frontend, Linux/local/single-user plugin platform; business plugins paused; no workflow or AI extension system",
+  "evidence": {
+    "testdata/plugin-platform-final-20261104/current-final-platform/binding.json": "5bbaeca5107cd80f5014a1e858cd016ac50cd9db8bb44b30a810a74a2f4b08c7",
+    "testdata/plugin-platform-final-20261104/current-final-platform/source-evidence-index.json": "7f4885de794fe2d4a23761275bea32c71fad70c26da708eba4d474b2418040e1",
+    "testdata/plugin-platform-final-20261104/final-independent-review.json": "199f129995671b9584edc23692d965da24b8489b289de89e84a040859fa55943",
+    "testdata/plugin-platform-final-20261104/five-slice-independent-review.json": "11acc73d8f927d0246e702a3f3d2f13b910e36fbf1ae65e9b1f29e846080a00d",
+    "testdata/plugin-platform-final-20261104/root-final-binary-cleanup.json": "3e8fe9bb1e3f005da444ddf613b9cc6d9da66796394ad673acb3b63a8cab710b",
+    "testdata/plugin-platform-final-20261104/message-audit-final-cleanup.json": "d20f8a7ddfc7d527a704d775c8f5f8d698644d94a5d5886f798177c0a2d99bbc",
+    "testdata/plugin-platform-final-20261104/root-retained-slice-binary-cleanup.json": "74abf88fcf761dd6e5f9dd34698ec3d022fd588306fa12da0e8cdc5cba277f13",
+    "testdata/plugin-platform-final-20261104/scoped-ledger-integrity.json": "36b248a1307c135b40d5210a1f33afde66011e5a120c79c61a239b38001ad489",
+    "testdata/plugin-platform-final-20261104/closing-documentation-lineage.json": "b7cb94147760ab455a8f90cd7a2af2ca156ea7e2de0fccb7821032491e6bac71"
+  },
+  "known_adaptations": "Every leaf difference/necessary Go/security/pinned-runtime adaptation recorded in the fixed source/evidence index and unique matrix; strict origin/TLS, typed trusted private IPC, prebuilt Go artifacts, browser native pin and malformed IPv6 no derived-host credential forwarding are explicit.",
+  "unverified_in_scope": [],
+  "unexplained_differences": [],
+  "blocking_findings": [],
+  "delivery": {
+    "working_tree": "/Users/accidia/projects/light-media",
+    "branch": "codex/plugin-host-resources-20261031",
+    "baseline_HEAD": "97476582910dc4b696f7ccd5010f28d823812d40",
+    "remote_main_observed": "97476582910dc4b696f7ccd5010f28d823812d40",
+    "committed_this_round": false,
+    "pushed": false,
+    "merged": false,
+    "production_deployed": false,
+    "status": "local uncommitted functionality, not main delivery"
+  },
+  "historical_other_ledger_sections_unchanged": true,
+  "metadata_closing_rule": "Final row50/header/ledger close after independent review of frozen64-leaf index and current actual test results; neither index nor review recursively hashes this completion file.",
+  "recorded_utc": "2026-11-05T01:31:52.815522+00:00",
+  "documentation_closing_lineage": "testdata/plugin-platform-final-20261104/closing-documentation-lineage.json"
+}

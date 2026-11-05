@@ -120,7 +120,7 @@ func TestOriginalWebCommandActualSDKIngress(t *testing.T) {
 		{"cross-origin", "/api/v1/message/web", `{"text":"/owned_command"}`, "https://elsewhere.invalid", "", cookie, 403},
 		{"cross-site", "/api/message/web", `{"text":"/owned_command"}`, "", "cross-site", cookie, 403},
 		{"ordinary text publishes UserMessage", "/api/message/web", `{"text":"hello"}`, "", "", cookie, 200},
-		{"AI branch not fabricated", "/api/message/web", `{"text":"/AI question"}`, "", "", cookie, 501},
+		{"unsupported callback", "/api/message/web", `{"text":"CALLBACK:owned"}`, "", "", cookie, 501},
 		{"preset not fabricated", "/api/message/web", `{"text":"/restart"}`, "", "", cookie, 501},
 		{"arbitrary event not accepted", "/api/message/web", `{"event":"owned.command","data":{"action":"not_a_method"}}`, "", "", cookie, 501},
 		{"invalid text", "/api/message/web", `{"text":{"cmd":"/owned_command"}}`, "", "", cookie, 400},
@@ -188,7 +188,7 @@ func TestOriginalWebCommandActualSDKIngress(t *testing.T) {
 		`{"text":"/owned_noaction"}`,
 		`{"text":"/owned_nodata"}`,
 		`{"text":"/owned_hidden"}`,
-		`{"text":" /NOAI： /owned_command second"}`,
+		`{"text":"/owned_command second"}`,
 	} {
 		response := callTest(t, h, "POST", "/api/message/web", body, cookie, "")
 		if response.Code != 200 || !strings.Contains(response.Body.String(), `"accepted":true`) {
@@ -198,7 +198,7 @@ func TestOriginalWebCommandActualSDKIngress(t *testing.T) {
 	}
 	got = ownedCommandRead(t, object)
 	if len(got.Events) != 5 || len(got.Ingress) != 5 || got.Calls["event"] != 10 {
-		t.Fatal("non-action/None/hidden/escaped command lost", got)
+		t.Fatal("non-action/None/hidden/ordinary argument command lost", got)
 	}
 	if !strings.Contains(string(got.Events[1]), `"arg_str":"preset"`) {
 		t.Fatal("empty args erased declared arg_str", string(got.Events[1]))
@@ -211,7 +211,7 @@ func TestOriginalWebCommandActualSDKIngress(t *testing.T) {
 	if got := ownedCommandRead(t, object); len(got.Events) != 6 || !strings.Contains(string(got.Events[5]), `"arg_str":"query argument"`) {
 		t.Fatal("source query text path missing", got)
 	}
-	for _, command := range []string{"/not_registered", "/OWNED_COMMAND"} {
+	for _, command := range []string{"/not_registered", "/OWNED_COMMAND", "/AI"} {
 		body, _ := json.Marshal(map[string]string{"text": command})
 		unknown := callTest(t, h, "POST", "/api/message/web", string(body), cookie, "")
 		if unknown.Code != 200 || !strings.Contains(unknown.Body.String(), `"accepted":false`) {
@@ -240,19 +240,19 @@ func TestOriginalWebCommandActualSDKIngress(t *testing.T) {
 	}
 }
 
-func TestOriginalWebCommandTextSourceRules(t *testing.T) {
+func TestOriginalWebCommandTextOrdinaryScope(t *testing.T) {
 	for _, test := range []struct {
 		input, text string
 		command     bool
 	}{
 		{"/owned x", "/owned x", true},
 		{" /owned x", " /owned x", false},
-		{" /NOAI： /owned x \n", "/owned x", true},
-		{"/noai\u001c/owned", "/owned", true},
-		{"/noai", "", false},
+		{" /NOAI： /owned x \n", " /NOAI： /owned x \n", false},
+		{"/noai\u001c/owned", "/noai\u001c/owned", true},
+		{"/noai", "/noai", true},
 		{"/noaix", "/noaix", true},
-		{"/AI", "/AI", false},
-		{"/airport", "/airport", false},
+		{"/AI", "/AI", true},
+		{"/airport", "/airport", true},
 	} {
 		text, command := originalWebCommandText(test.input)
 		if text != test.text || command != test.command {

@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "instance": "OwnedHostProxy",
+      "expected": "browser S19 recovered",
+      "calls": 4,
+      "pid_changed": true,
+      "config_and_data_equal": true
+    },
+    {
+      "instance": "OwnedHostProxycopy",
+      "expected": "browser S19 clone",
+      "calls": 2,
+      "pid_changed": true,
+      "config_and_data_equal": true
+    }
+  ],
+  "all_six_proxy_authentications_verified": true,
+  "no_proxy_authorization_at_target": true,
+  "failed_browser_body_never_sent": true,
+  "main_cold_no_http_replay": true,
+  "no_private_proxy_material_in_public_data_or_logs": true
+}

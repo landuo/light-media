@@ -1,0 +1,107 @@
+{
+  "status": "fixed_source_fence_verified_final_integration_pending",
+  "source_contract": [
+    "fixed MoviePilot app/core/plugin.py:156 stop and :619 __stop_plugin/:641 reload",
+    "Go process adapter owns bounded cancellation/cleanup; successful stop must not turn into a late canceled-phase pipe error"
+  ],
+  "root_cause": "Cancellation sender checked live under manager mutex before waiting on transport.writeMu. Stop could then fence/serialize its final cleanup and worker exit before the queued cancellation reached the pipe. Its stale write failed, aborting the entire session and converting successful cleanup to worker_io_failed. Actual temporary stack diagnosis shows failing iterations first abort at callStarted cancellation goroutine, not reader EOF.",
+  "diagnostic_red": "Temporary stack-only host diagnostic added to abort then removed; separate50-repeat normal worker/host-race run failed3/pass47; preexisting root100-repeat run failed14/pass86 retained separately. No diagnosis logs entered product.",
+  "fix": "The manager liveness check now executes as the cancellation write charge callback while transport.writeMu is held. Stop/shutdown/completed phases suppress only that obsolete control notification before any byte is written; unrelated/live I/O errors still abort. Transport protocol, negotiated limits, admission and method authority unchanged.",
+  "causal_test": "Hold actual writeMu, observe cancellation goroutine already queued in concurrentTransport.write via runtime.Stack (not a timing sleep), apply stop/shutdown/completed fence, release mutex. Assert zero physical writes/no terminal abort. A live cleanup notification under draining still writes and a real closed-pipe error remains terminal. No production test hook added.",
+  "mutation": "Restore the exact old pre-lock live-check sequence within factored notifyCancellation via go overlay; all3 controlled fence cases fail with one real writer attempt/worker_io_failed. Current20 repetitions pass.",
+  "target_sha256": {
+    "internal/plugins/concurrent_session.go": "c3f79283e113a669737cc44d1cdc23dc47cc5cd346e7ec02339ea9d6b838cdd6",
+    "internal/plugins/concurrent_cancel_fence_test.go": "9248437808ea2633b95a69a5a29a9ab0aed48382d84cd34f4dd85470899d431c",
+    "internal/plugins/concurrent_transport.go": "eced9e86ea677124c4d87622ebb3c2432dd45f22bb5c34770149130a0819094c",
+    "internal/plugins/concurrent_worker.go": "419698b304e20018d836d5a95acc198608c61973f088053e511008254e232150",
+    "internal/plugins/pending_call_test.go": "d0deec4570c989e966beeb6ba07bf1751024c8ec8176a2c32710e18656cc09ed",
+    "cmd/owned-concurrent-fixture/main.go": "7520fc5513ad5c9201332896a0fe0d9fc941da9ad18876bbc235587b11e6d34e"
+  },
+  "evidence": {
+    "pending-admission-diagnostic-red.jsonl": {
+      "sha256": "6abfe61ea932960e659e6b5fdc899f89973afce6e32cfd0bdf9cdc5ad043625b",
+      "roots": {
+        "pass": 47,
+        "fail": 3,
+        "skip": 0
+      },
+      "subcases": {
+        "pass": 0,
+        "fail": 0,
+        "skip": 0
+      }
+    },
+    "pending-admission-fixed-normal-worker.jsonl": {
+      "sha256": "fa7c35d0b273eb2bd82b9e65aba272cdb94880b4c275bc133f7627f28016beef",
+      "roots": {
+        "pass": 100,
+        "fail": 0,
+        "skip": 0
+      },
+      "subcases": {
+        "pass": 0,
+        "fail": 0,
+        "skip": 0
+      }
+    },
+    "cancel-fence-causal-green.jsonl": {
+      "sha256": "284e5e45b46ea3a1c1f7611118a29ce6b5b2d98347499a6855814300ce4230a6",
+      "roots": {
+        "pass": 40,
+        "fail": 0,
+        "skip": 0
+      },
+      "subcases": {
+        "pass": 60,
+        "fail": 0,
+        "skip": 0
+      }
+    },
+    "cancel-fence-causal-prelock-red.jsonl": {
+      "sha256": "511b01409f8271dd0221d23e52920159d60b8a255b618a3394e54a9abe58a96c",
+      "roots": {
+        "pass": 0,
+        "fail": 1,
+        "skip": 0
+      },
+      "subcases": {
+        "pass": 0,
+        "fail": 3,
+        "skip": 0
+      }
+    },
+    "cancel-fence-concurrent-regression-normal-worker.jsonl": {
+      "sha256": "9c8737ad6c27c692931977d6e40b9516282932540308fd05e816a80ba9c94514",
+      "roots": {
+        "pass": 54,
+        "fail": 0,
+        "skip": 0
+      },
+      "subcases": {
+        "pass": 9,
+        "fail": 0,
+        "skip": 0
+      }
+    },
+    "cancel-fence-pending-both-race.jsonl": {
+      "sha256": "3de28050a024c5712439b19dbbda1fc65a31a1f3a0e4ed5894d3abe63138da1f",
+      "roots": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 0
+      }
+    }
+  },
+  "mutation_body_sha256": "4e84aa9a7656cfa42d6f3d3da7aca8d551917118f5b324c03e7afc53a412571d",
+  "fixture_normal_observed_sha256": "e9013cfb32400ac96c26f157b4238c5d1b969a3defdab6ff4ac4f18764f762e9",
+  "fixture_race_observed_sha256": "53d380a61313f901b24a505dbd9e76092bec5ba7890d874a7c62d4ae39919d6a",
+  "freeze": "Product changes complete; coordinator independently reviewed charge lock order and is rebuilding final server/worker dependency closure. Only evidence will be amended after this point.",
+  "impact": "Shared host SDK package input changed: old executable build manifests remain historical evidence. New final server and all acceptance workers must be rebuilt/resealed, then final platform/SDK/actual Linux/browser gates executed. No old acceptance SHA silently rewritten.",
+  "delivery": "No commit/push/production deployment; no worker business or production endpoint touched.",
+  "independent_code_review": {
+    "reviewer": "/root (coordinator, not author of this SDK fix)",
+    "source": "explicit collaboration review message in this task",
+    "observation": "transport.write先持writeMu再charge，过期校验与实际取消帧序列化绑定，Stop不能越过已验证写入；superseded仅由当前check明确标记，live I/O仍abort；没有吞一般worker_io_failed。新因果测试20轮+mutation证据满足有意义验证。",
+    "status": "passed"
+  }
+}

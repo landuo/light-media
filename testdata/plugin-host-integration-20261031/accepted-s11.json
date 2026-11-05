@@ -1,0 +1,43 @@
+{
+  "accepted": [
+    "S11"
+  ],
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/__init__.py:586–710",
+    "app/core/context.py:604–858",
+    "app/modules/themoviedb/__init__.py",
+    "app/modules/douban/__init__.py",
+    "app/modules/bangumi/__init__.py",
+    "app/modules/anilist/__init__.py"
+  ],
+  "target": [
+    "internal/app/plugin_original_host_media*.go",
+    "internal/catalog/source_plugin_*.go",
+    "internal/sourcezhconv",
+    "internal/app/plugin_original_catalog_recognize.go"
+  ],
+  "final_server_sha256": "6d7d57f4e6388a7ec1870e36a8ba295bd154477f10e578d494b67a493d92d568",
+  "evidence": {
+    "testdata/plugin-host-services-20261031/evidence-manifest.json": "a7e971934482cb10a0357db246cf8c9980841aaefc3616a4501a18480c808c00",
+    "testdata/plugin-host-services-20261031/native-linux-final/result.json": "43a479d9490fd63521a7ccfd97bb1e186669c1a5c9ee6d1bd59fa2fc683a9a34",
+    "testdata/plugin-host-services-20261031/lifecycle-linux-final/result.json": "4967237f63db3cc77029614b7a730942e7c0692da5cbb67185fd6b89371f704b",
+    "testdata/plugin-host-services-20261031/root-models-independent-review.json": "f676dd66f841d70bc76cc89a05e6c06cac352d44c82df5d4444f0fa05b5a47ef",
+    "testdata/plugin-host-business-20261031/anilist-source/evidence.json": "647660e3da208e0fa5e0f208210e55d1fd98ae01b10b66474a653934beeb6edc",
+    "testdata/plugin-host-integration-20261031/source-models/root-components.json": "9c42c353015e0cae77fee4362ab5d23b35cc23df701ae52e4862f71f8a709e65",
+    "testdata/plugin-host-integration-20261031/source-models/root-component-increment-r7.json": "d684e3e42dfceb5a57f597f3ab741c951827b45e2e2eed7c134e3a678de9e980",
+    "testdata/plugin-host-integration-20261031/native-browser/result.json": "3051072090b7193b85454f064f791e0b63556580467d4d3c94fa61c3451c90dc",
+    "testdata/plugin-host-integration-20261031/zhconv/result.json": "4250d77fca3633975d15867acc10c421b53f7b1b4f6aa1f411f43b79f210c418",
+    "testdata/plugin-host-integration-20261031/shared-host-final-regression.json": "39a387dfebaacbc43f39be56832ab057545fc3fbb49d0997bcbfdbf53491b0c8"
+  },
+  "verification": {
+    "manifest_files_checked": 73,
+    "independently_reviewed_target_files": 9,
+    "linux": "53 fixed-source cases; actual HTTPS through owned CONNECT and CA; cache/fresh/errors/startup4 readonly and17 process IDs",
+    "browser": "Actual IAB sourcev3/clonev2 cold results, independent config saves, browser reload; no claim form saves invoke recognition",
+    "source_models": "Douban33/Bangumi23/AniList35 full model cases; TMDB/limit/group/share/cache source contracts separately bound",
+    "classification": "Actual cmd/server/SDK/browser with owned synthetic provider protocol; fixed-source AST replay. Public providers not live-tested and business plugins not migrated."
+  },
+  "necessary_adaptations": "Source-backed finite JSON/Go transport, source module system.error metadata, strict existing TLS/credential boundaries, payload budget, positive persisted/negative memory cache and cancellation; detailed differences retained in linked component reports. No AI/workflow or official auth.",
+  "delivery": "local uncommitted codex/plugin-host-resources-20261031; production and main unchanged"
+}

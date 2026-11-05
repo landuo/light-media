@@ -1,0 +1,1168 @@
+{
+  "status": "five_in_scope_leaf_incremental_acceptances_passed_final50_current555_pending",
+  "reviewer": "/root/settings_scope, independent source/target/evidence reviewer",
+  "accepted_leaf_ids": [
+    "S07",
+    "S15",
+    "S16",
+    "S18",
+    "S19"
+  ],
+  "authoritative_status_source": "docs/plugin-module-parity-matrix.md; this is evidence, not a competing feature count",
+  "source_commits": {
+    "backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "frontend": "2829e3b08214348f05ff2f5beae644882eccad58"
+  },
+  "fixed_source_sha256": {
+    "app/helper/browser.py": "cb455ffadc75b32fa0fe151242b7c4162233e525d35257ac3a71e1dda1316f29",
+    "app/helper/ocr.py": "736e7a078b22fe0ac5ac611d58be6a8d742f7d768d582abfed605fafe65a550c",
+    "app/core/config.py": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+    "app/utils/http.py": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "app/db/site_oper.py": "08e202eb3fc97c7fe5d67d7253867334ada9bdd1747eb23b2d3cbe26da7f0cf0",
+    "app/db/models/site.py": "5cda6b9eb37de3cc25c66abfd41832341ea5270bc73971a24425bd00ef63c8e4",
+    "app/utils/system.py": "3477c8585dd955bcb42f7180e5fabaae05c528af8ddb0cbae0935dbdb0c031db",
+    "version.py": "eee2f1420ca9ab7af63226cfaaf4f7eea4de246c2ae422d0a527feff3b5bcb31"
+  },
+  "source_positions": {
+    "S07": [
+      "app/core/config.py:959–963",
+      "app/db/systemconfig_oper.py:27,92",
+      "app/utils/http.py:329–432"
+    ],
+    "S15": [
+      "app/helper/ocr.py:8–75",
+      "app/utils/http.py:329–464,560–594"
+    ],
+    "S16": [
+      "app/helper/browser.py:852–1102",
+      "app/core/config.py:1134–1152"
+    ],
+    "S18": [
+      "app/db/site_oper.py:26–42,92–96",
+      "app/db/models/site.py:26–34",
+      "app/utils/http.py:329–464,560–594"
+    ],
+    "S19": [
+      "app/core/config.py:1069–1098",
+      "app/utils/http.py:397–421"
+    ]
+  },
+  "runtime": {
+    "image": "sha256:7c9ef884baa3c750d5c08fc128bc29fcb9a244f30d95623f0b8b749892cdc77c",
+    "server_sha256": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+    "current_project_compile_inputs": 1818,
+    "before_after_current_mismatches": [],
+    "slice_targets": {
+      "Dockerfile": "eaee033a2e2418bab7c95a1140c0639dde4965c0319563ef57c49f7f2919c1bc",
+      "cmd/plugin-host-browser-fixture/main.go": "bb6306baf30d438fd8ff01135e6f9cd6b4ee481a5739dcd5cb9dade5371440df",
+      "cmd/plugin-host-business-fixture/main.go": "7f7dca539be14afa80c613a9d6da29d80e49cde3bd30f5dc58815f140b09e6cd",
+      "go.mod": "681eeca54f22c5147908bd54e7437072152d963e063b97a21b5f09326818b855",
+      "go.sum": "2f13bc137f132267884ed80873907c473c01146b47db100f128d929d281b0712",
+      "internal/app/plugin_original_host_browser.go": "0904b1316f1f03c46f6d85fadad3b30f8eb6d9979b3c4b8c315c08d1701988e7",
+      "internal/app/plugin_original_host_browser_proxy_test.go": "fd23a9dbfb8d3a0407b1c11877466f1b230655655be540a2a3c54f7dd96e8330",
+      "internal/app/plugin_original_host_browser_test.go": "e9839dbb9b7f649a426fa0f275c99982e8d6d9f1e4e0e3004c1e3c70e939eef9",
+      "internal/app/plugin_original_host_ocr.go": "e7199fdf185e36778b85b1a8094b7d94871ba6f6fa4ec575d898263e831c5898",
+      "internal/app/plugin_original_host_ocr_redirect_test.go": "b20f8311e54422894680845346b6a1095a8365af8da5d8e1fec66bf9785f26bb",
+      "internal/app/plugin_original_host_ocr_test.go": "fe9666fb6a539539d02cbf2c0332af5f8a61c031a669fb494d7f9cc23df80d51",
+      "internal/browserrender/cleanup.go": "b5b620646e301374cecf96af8310c8cd60348db762786bb764e352211f8ffc56",
+      "internal/browserrender/cleanup_test.go": "52fd9c61b86114b15f901473d48c5b5d4fcaa6898408c628fe3e23b538582fc5",
+      "internal/browserrender/display.go": "371cf054cd2ca95f1679ef737dae9daa1af5d2dda5e4d5421393054d99f0ca17",
+      "internal/browserrender/display_test.go": "f7da772eeb2b781b7ab5b7a9beb0602e80534e5131fd08231f5af48aba29b445",
+      "internal/browserrender/flags.go": "82837ca4adb4a254092b73e43bc50b50102e076f5df8ae4959150057836ddbe5",
+      "internal/browserrender/flaresolverr.go": "80e3b1d96864bcb143b708be5df369a37d8b293671fa3273ea8e8ea41021199a",
+      "internal/browserrender/native.go": "837720cbf454b3d36d81fa24918b8edbcee1a6bb538bedfe7b2ea4917160d5f6",
+      "internal/browserrender/proxy.go": "830999dc9790027ee851de64ceb55746c6e3eeed32acafa433bde3a23004b6a4",
+      "internal/browserrender/proxy_test.go": "426a7d0b4c1bb90a65698c1c4d46e475fa26838460bd3aa344a5e22fd8155c0a",
+      "internal/browserrender/render.go": "57b6b02762cff82d09b2bfbe24e41335ab151cf264410a8e2757d1ee2c0ee92f",
+      "internal/browserrender/render_test.go": "1907f7fb852e29f5527fbebdbfc89e10ed623c5be34b620993f94abdd0ec2ca8",
+      "internal/browserrender/source_http_test.go": "0c5c5416b766474c87c65ea1376768ab5e9bba42eb576ab46b8c2b98e7529e01",
+      "internal/browserrender/source_proxy.go": "7b822341166899e365ebb42cafb29fed2d0ecc1c9763fbb37c20b607ceda43ad",
+      "internal/browserrender/source_proxy_test.go": "ee296ab2220a8499648b48602cd8513a4af26b7537f5f75480f8c8827cead11e",
+      "internal/browserrender/source_socks_probe_test.go": "fab6c9bc2f93bd0574eeaf0913293c0974cf66b53a377e1d4c38c7ac15bb066f",
+      "internal/browserrender/startup_test.go": "7bc833d4415dfc8ca8a23bf5c783d2cf2dbae160e88877de886f82bc45409fa0",
+      "internal/plugins/browser_host.go": "dc933914faa0e08857ed1666389dcd27a5a99e1d35a37543bc0a70784b1dec3d",
+      "internal/plugins/concurrent_session.go": "c3f79283e113a669737cc44d1cdc23dc47cc5cd346e7ec02339ea9d6b838cdd6",
+      "internal/plugins/ocr_host.go": "f854c582e02a11f1c8bd5fcd0e1e090c74892d89cb8b4c5cb1c2a738f8acd68f",
+      "scripts/install-browser-runtime.sh": "f466555fc7af22388ff5964438f05e4c6ac9e31b017e262b8b8b462144e2d1ad",
+      "third_party/browser-runtime/CLOAKBROWSER-MIT.txt": "93a9c5b5542faf5ff6c7956406b56930fde10bd4d3e8dc7b89f01a88a8d2b29b",
+      "third_party/browser-runtime/NOTICE.md": "cb4fc548fe4420b28c133924e96286cff155b5f8bb75ee62c31891f115d3cf56",
+      "third_party/browser-runtime/PLAYWRIGHT-APACHE-2.0.txt": "45873d00a0dd243596deb4aa23b2493b3d1f0671921bf2538ea431d7380220eb"
+    },
+    "full_Dockerfile_runtime_origin": "R3 full Dockerfile build b7016b2... Debian/native runtime and separate R9 Go1.26.2 current executable layer. R3 compiler1.26.10 is not relabeled as R9 compiler.",
+    "native_Linux_roots_passed": 19,
+    "browser_App_observations": 5,
+    "OCR_App_observations": 4,
+    "S18_current_main_HTTP_observations": 3,
+    "S18_current_main_HTTP_rows": 8,
+    "S19_main_browser_update_and_two_cold": "Actual source v2/clone v1, source4/clone2 native POST rows, private auth only at proxy, failed draft preserved and never sent, exact config/data after cold, changed PIDs and no replay."
+  },
+  "primary_manifest_hash_checks": [
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/browser-final-proxy-all-mac-race.log",
+      "expected": "b3dea9fa8c86dd2cb6f6e9ba1e2507d7d4824cdfb8fca7c074902422ae443594",
+      "actual": "b3dea9fa8c86dd2cb6f6e9ba1e2507d7d4824cdfb8fca7c074902422ae443594",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/browser-product-linux-r9-final-driver.log",
+      "expected": "bf5fd9c6487532400e8896ffc728a2266585fecc7ded92559d8fce6eb005dc8b",
+      "actual": "bf5fd9c6487532400e8896ffc728a2266585fecc7ded92559d8fce6eb005dc8b",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/browser-source-proxy-server-causal-red.log",
+      "expected": "71bc5670015b0fe001432de050b0b8f37019176834cdd13a6d00c984e8888cc9",
+      "actual": "71bc5670015b0fe001432de050b0b8f37019176834cdd13a6d00c984e8888cc9",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/browser-source-proxy-server-green-race-r2.log",
+      "expected": "f68ce953ea2c835b3215ebdacf0571634108b343b9fdb5053e241bc7361d9654",
+      "actual": "f68ce953ea2c835b3215ebdacf0571634108b343b9fdb5053e241bc7361d9654",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/cloakbrowser-proxy-none-source-oracle.json",
+      "expected": "e2b39ed98e837c1c1e84193bd5a86d255f7226af3f3e15f05a1fd60e8848f8d4",
+      "actual": "e2b39ed98e837c1c1e84193bd5a86d255f7226af3f3e15f05a1fd60e8848f8d4",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/cloakbrowser-proxy-semantics-source-oracle.json",
+      "expected": "a50eaa57b51dbed3b9da94cf0dfee062beb83ac88bd1a76c32b1a532a50f9360",
+      "actual": "a50eaa57b51dbed3b9da94cf0dfee062beb83ac88bd1a76c32b1a532a50f9360",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/fresh-root-sentinel.json",
+      "expected": "393d0b841873401735d92e435da2b3a78c7344901f413925969c23000c123091",
+      "actual": "393d0b841873401735d92e435da2b3a78c7344901f413925969c23000c123091",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/native-linux-product-r9-final.log",
+      "expected": "4f4b01f61493963d97796cc328cd9f66292d315449d94c113f79760fe642bb0b",
+      "actual": "4f4b01f61493963d97796cc328cd9f66292d315449d94c113f79760fe642bb0b",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ocr-all-final-sdk-race.log",
+      "expected": "f6efd951fd6302b78966437f81db9ace844406da067e1bfe1cb8ba4d0798e416",
+      "actual": "f6efd951fd6302b78966437f81db9ace844406da067e1bfe1cb8ba4d0798e416",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ocr-product-linux-r9-final-driver.log",
+      "expected": "16b4dd59116c0fd57833e45a886740560292d71822781b56c5688fdd01aff977",
+      "actual": "16b4dd59116c0fd57833e45a886740560292d71822781b56c5688fdd01aff977",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ocr-redirect-final-sdk-race.log",
+      "expected": "097702d9d682fcd667b5f3e0818648746360b1c380c077337d9fd7f64e8ff998",
+      "actual": "097702d9d682fcd667b5f3e0818648746360b1c380c077337d9fd7f64e8ff998",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ocr-redirect-source-oracle.json",
+      "expected": "b18c05284aeb581a90628e8f84f845177f8329fcac2568ce9d05643fd14b2185",
+      "actual": "b18c05284aeb581a90628e8f84f845177f8329fcac2568ce9d05643fd14b2185",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/paired-native-socks-scheme-source-probe.log",
+      "expected": "c799c84382fd2f7af2c1af50c158c2c763390875f3539e49d429c36347d5951c",
+      "actual": "c799c84382fd2f7af2c1af50c158c2c763390875f3539e49d429c36347d5951c",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/process-browser-r9/result.json",
+      "expected": "6056e46f35a6a26e49209a8649172bc71378c7c23d8449ff99418c58e989e28f",
+      "actual": "6056e46f35a6a26e49209a8649172bc71378c7c23d8449ff99418c58e989e28f",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/process-browser-r9/server.log",
+      "expected": "78cc2ba9529aff26f49eabf1d5575ad91c3ca0654eaa7c82c9a34e2bb6f405d7",
+      "actual": "78cc2ba9529aff26f49eabf1d5575ad91c3ca0654eaa7c82c9a34e2bb6f405d7",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/process-ocr-r6/cleanup-supplement.json",
+      "expected": "6c55e47755cc29396fefc7a832239ea3c84239571dcc1cf9928992ac69f89ac2",
+      "actual": "6c55e47755cc29396fefc7a832239ea3c84239571dcc1cf9928992ac69f89ac2",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/process-ocr-r9/result.json",
+      "expected": "3df19ef67fe4e4d7b10e9b0c7d0994b0beb2401741e686f6b65cd06dcfcf243b",
+      "actual": "3df19ef67fe4e4d7b10e9b0c7d0994b0beb2401741e686f6b65cd06dcfcf243b",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/process-ocr-r9/server.log",
+      "expected": "3424e9390745e50e85a0e952491c3d333fa93edb14c2380d56abcf9a7266d367",
+      "actual": "3424e9390745e50e85a0e952491c3d333fa93edb14c2380d56abcf9a7266d367",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/product-image-build-r9.log",
+      "expected": "536adf55525da4e51c7695c7cfcdf5ba28afea98fab4746db81098d24c0476b4",
+      "actual": "536adf55525da4e51c7695c7cfcdf5ba28afea98fab4746db81098d24c0476b4",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/product-r9-build-inputs.json",
+      "expected": "6dbb01ab6aa4f2ce507bb49185430c7bb17c568f4ebbc97fdc98ee01a5921f38",
+      "actual": "6dbb01ab6aa4f2ce507bb49185430c7bb17c568f4ebbc97fdc98ee01a5921f38",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/r8-environment-incident-system.log",
+      "expected": "de83365ba5b5465cca07d7c83bdd1a58eba3fd560d7d3b675dbf90415dc05c88",
+      "actual": "de83365ba5b5465cca07d7c83bdd1a58eba3fd560d7d3b675dbf90415dc05c88",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/clone-config.ax.txt",
+      "expected": "3597fe3a2db4fc13d9cf64c77844b09de6f0adaed4acdbcff2afc07bbd544c05",
+      "actual": "3597fe3a2db4fc13d9cf64c77844b09de6f0adaed4acdbcff2afc07bbd544c05",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/clone-config.png",
+      "expected": "ab1f493d61dc45c2b999e96c7c733c99ee07bbf0782c9c48f17782ec4ef745b7",
+      "actual": "ab1f493d61dc45c2b999e96c7c733c99ee07bbf0782c9c48f17782ec4ef745b7",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/clone-data.ax.txt",
+      "expected": "0131dd8751d3fa16e75284d94a4d58f9f517f6617284653aa3a2b5b9b9188ef1",
+      "actual": "0131dd8751d3fa16e75284d94a4d58f9f517f6617284653aa3a2b5b9b9188ef1",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/clone-data.png",
+      "expected": "1fa1f2bbb7f46635bd494185f86390a8bf0e530e818f886137803888a604ca13",
+      "actual": "1fa1f2bbb7f46635bd494185f86390a8bf0e530e818f886137803888a604ca13",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/observation.json",
+      "expected": "72f6e01955a173539b3490b89d1ad9e46353fdc048cf1c292878cd9b3f186128",
+      "actual": "72f6e01955a173539b3490b89d1ad9e46353fdc048cf1c292878cd9b3f186128",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/source-config.ax.txt",
+      "expected": "983a996f86c33f9d3acda32b09e200c764402e55a8033105dce7a871aa41b7af",
+      "actual": "983a996f86c33f9d3acda32b09e200c764402e55a8033105dce7a871aa41b7af",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/source-config.png",
+      "expected": "2eaae89e52aa67c658e62b4d4a6416b850bda47d01995a3b0a54ae329f7cc31d",
+      "actual": "2eaae89e52aa67c658e62b4d4a6416b850bda47d01995a3b0a54ae329f7cc31d",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/source-data.ax.txt",
+      "expected": "8b75ad227d7fff9f302a538306eed9f70364080e7d28d817147afa1d4629c4b7",
+      "actual": "8b75ad227d7fff9f302a538306eed9f70364080e7d28d817147afa1d4629c4b7",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/source-data.png",
+      "expected": "9d08ff1f3e18cccd49d06d157bc5aedb3a667c7d6a1c1b1f5bcb167dff6d7e15",
+      "actual": "9d08ff1f3e18cccd49d06d157bc5aedb3a667c7d6a1c1b1f5bcb167dff6d7e15",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ui/clone.ax.txt",
+      "expected": "418aee3d87290b7a315deb4191678dfeb8a58cfda7d7cc7d16012e2b0f813837",
+      "actual": "418aee3d87290b7a315deb4191678dfeb8a58cfda7d7cc7d16012e2b0f813837",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ui/clone.png",
+      "expected": "54170b6d035ecc9e1851cecc7dd1b58c10cae8572ed5f55b185354c5e9dc476a",
+      "actual": "54170b6d035ecc9e1851cecc7dd1b58c10cae8572ed5f55b185354c5e9dc476a",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ui/observation.json",
+      "expected": "dd469737fe2e6a08fffcd913fc5808478206e0d4a1c8ec895c1bb9b51c45d289",
+      "actual": "dd469737fe2e6a08fffcd913fc5808478206e0d4a1c8ec895c1bb9b51c45d289",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ui/source.ax.txt",
+      "expected": "bde98171cca0f25a4e4bd4b80e74f016598eac371a1e8e563de2ee7bdcc0fd25",
+      "actual": "bde98171cca0f25a4e4bd4b80e74f016598eac371a1e8e563de2ee7bdcc0fd25",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/root-ui/source.png",
+      "expected": "4de2dce6f889e389d6540395abcb438b2d3e7180a2329cb9cd16913fd23217d2",
+      "actual": "4de2dce6f889e389d6540395abcb438b2d3e7180a2329cb9cd16913fd23217d2",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/source-target-r9-bindings.json",
+      "expected": "e3c35fbdcebc7b113d2224317f898524fc9f6150f1acfc82e68e1ee98042cf0e",
+      "actual": "e3c35fbdcebc7b113d2224317f898524fc9f6150f1acfc82e68e1ee98042cf0e",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui-reuse-r9.json",
+      "expected": "79624510b229e5d774365e4c80b0d95ccd359038518b1dbe74c7a413ed75a335",
+      "actual": "79624510b229e5d774365e4c80b0d95ccd359038518b1dbe74c7a413ed75a335",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/browser-clone-reload-pending.ax.txt",
+      "expected": "c014a89f1b4a73addc9e33c24cdb302268b30ffa59fa860450f06fbe478966a2",
+      "actual": "c014a89f1b4a73addc9e33c24cdb302268b30ffa59fa860450f06fbe478966a2",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/browser-clone-reload-pending.png",
+      "expected": "7419356a484e2b8d983ffd4fd5fa8e9a81da0594c8a5e5703d2918bba3d5e2c4",
+      "actual": "7419356a484e2b8d983ffd4fd5fa8e9a81da0594c8a5e5703d2918bba3d5e2c4",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/browser-clone-reload-success.ax.txt",
+      "expected": "c555749cdcfdab762dc02a317987a2001ba7ba824258a294251782371a997406",
+      "actual": "c555749cdcfdab762dc02a317987a2001ba7ba824258a294251782371a997406",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/browser-clone-reload-success.png",
+      "expected": "b763ca246ba26f779d8dbfb9087af5a9633c99282c0726d9cad91236846265ca",
+      "actual": "b763ca246ba26f779d8dbfb9087af5a9633c99282c0726d9cad91236846265ca",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/browser-source-failure.ax.txt",
+      "expected": "f74c50512d6522ec947e6d4079671888247085027e51e43378c65881fc5da253",
+      "actual": "f74c50512d6522ec947e6d4079671888247085027e51e43378c65881fc5da253",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/browser-source-failure.png",
+      "expected": "e0d307dcdbb61433e657dcfec02aefe0ec0e9f6c07cb67be9716c8e9ba56b7ce",
+      "actual": "e0d307dcdbb61433e657dcfec02aefe0ec0e9f6c07cb67be9716c8e9ba56b7ce",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/browser-source-recovered.ax.txt",
+      "expected": "8c774f60aebb1fe20cd3275e7c4699a0249267c1c3c39f4223db911e842861ef",
+      "actual": "8c774f60aebb1fe20cd3275e7c4699a0249267c1c3c39f4223db911e842861ef",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/browser-source-success.ax.txt",
+      "expected": "ab4ca1a7f69b5815e2e2484e5cea102e1fc597795064893f7877d0bdee832da8",
+      "actual": "ab4ca1a7f69b5815e2e2484e5cea102e1fc597795064893f7877d0bdee832da8",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/browser-source-success.png",
+      "expected": "ea8ac895b6f9defd7497327eee53df7c34dd8da57fa37400ace8cb993f41694e",
+      "actual": "ea8ac895b6f9defd7497327eee53df7c34dd8da57fa37400ace8cb993f41694e",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/ocr-clone-config-reset.ax.txt",
+      "expected": "27bf63f68849f7d36f24a475e5e9ab746da56bae9e852df0ff547dbe54b230f0",
+      "actual": "27bf63f68849f7d36f24a475e5e9ab746da56bae9e852df0ff547dbe54b230f0",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/ocr-clone-config-reset.png",
+      "expected": "ab1f493d61dc45c2b999e96c7c733c99ee07bbf0782c9c48f17782ec4ef745b7",
+      "actual": "ab1f493d61dc45c2b999e96c7c733c99ee07bbf0782c9c48f17782ec4ef745b7",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/ocr-clone-reload-success.ax.txt",
+      "expected": "498d2074bcdd8379f3df895876ee8aabd26a80f81935b2f0b0e1fba225a2089f",
+      "actual": "498d2074bcdd8379f3df895876ee8aabd26a80f81935b2f0b0e1fba225a2089f",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/ocr-clone-reload-success.png",
+      "expected": "1fa1f2bbb7f46635bd494185f86390a8bf0e530e818f886137803888a604ca13",
+      "actual": "1fa1f2bbb7f46635bd494185f86390a8bf0e530e818f886137803888a604ca13",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/ocr-source-failure.ax.txt",
+      "expected": "47904274b0b898057c5bb1218784c232906811e7ac052d12e3d2c8d34897493b",
+      "actual": "47904274b0b898057c5bb1218784c232906811e7ac052d12e3d2c8d34897493b",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/ocr-source-failure.png",
+      "expected": "5a99997af98548ad2079cb1077f9ebebba5d5bf1e4784de7f77edac3c05cdbf8",
+      "actual": "5a99997af98548ad2079cb1077f9ebebba5d5bf1e4784de7f77edac3c05cdbf8",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/ocr-source-recovered.ax.txt",
+      "expected": "550016046238d600ec96bd01bda1e83693793cbda987ee8f978a25d9a47cca67",
+      "actual": "550016046238d600ec96bd01bda1e83693793cbda987ee8f978a25d9a47cca67",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/ocr-source-success.ax.txt",
+      "expected": "2f5ce3f7b4d86609c65027129f3b03ae7b78715e4bf7131882fbe9a021274bda",
+      "actual": "2f5ce3f7b4d86609c65027129f3b03ae7b78715e4bf7131882fbe9a021274bda",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/ui/ocr-source-success.png",
+      "expected": "3702c822b840ccef993fa9e6f17184772845fccee6c500e785cacb5524ab16d2",
+      "actual": "3702c822b840ccef993fa9e6f17184772845fccee6c500e785cacb5524ab16d2",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/final-evidence-manifest.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json",
+      "expected": "04bf3f44a6a736728ff466f7b1bfed5a041fa2742ee2ba8ee150f1b65fdb3895",
+      "actual": "04bf3f44a6a736728ff466f7b1bfed5a041fa2742ee2ba8ee150f1b65fdb3895",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/final-evidence-manifest.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/r9-after-App-parent-tools.json",
+      "expected": "3f2e724c55fd70694eb7f9d8e7b8275f226ef49f5eceda08c9d52f09ade4ed60",
+      "actual": "3f2e724c55fd70694eb7f9d8e7b8275f226ef49f5eceda08c9d52f09ade4ed60",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/final-evidence-manifest.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/final-owned-root-cleanup.json",
+      "expected": "0cff4bbbce30c7f3af27c61e621df46d8c9a341c208bfa4eb4590ffcb9f16747",
+      "actual": "0cff4bbbce30c7f3af27c61e621df46d8c9a341c208bfa4eb4590ffcb9f16747",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/final-evidence-manifest.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/old-incident-root-cleanup.json",
+      "expected": "0eb84a30480ab8f02f12130085f06861cb8f1b03a85c690c106ad9e017e7e3aa",
+      "actual": "0eb84a30480ab8f02f12130085f06861cb8f1b03a85c690c106ad9e017e7e3aa",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/final-evidence-manifest.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/created-orphan-r6-r4-cleanup.json",
+      "expected": "5238546a920de344019ec66dfae2a427ba7d3482d90b2c12b39028d7e79ea679",
+      "actual": "5238546a920de344019ec66dfae2a427ba7d3482d90b2c12b39028d7e79ea679",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/final-evidence-manifest.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/intermediate-image-cleanup.json",
+      "expected": "e21c6a3f122464d49de135d215847528df06ff572641020b3a3e2920ab1d7fef",
+      "actual": "e21c6a3f122464d49de135d215847528df06ff572641020b3a3e2920ab1d7fef",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/browser-ocr/final-evidence-manifest.json",
+      "group": "evidence_sha256",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/review.md",
+      "expected": "144d39c7c40ab367105115c3245e5ba90587552b89b9bead8452b7bbc1f4acc6",
+      "actual": "144d39c7c40ab367105115c3245e5ba90587552b89b9bead8452b7bbc1f4acc6",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "current_target_files",
+      "path": "internal/plugins/site_http_host.go",
+      "expected": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+      "actual": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "current_target_files",
+      "path": "internal/app/plugin_original_host_site_http.go",
+      "expected": "726a0f353eab7311262f247f80fe24f934ec6a8da91ad324590d525dd25e4399",
+      "actual": "726a0f353eab7311262f247f80fe24f934ec6a8da91ad324590d525dd25e4399",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "current_target_files",
+      "path": "internal/app/plugin_original_host_site_http_json.go",
+      "expected": "cdf90011d2d6acaea407241063d6da4377b952bf65e1fa44fbbb00a42b0f8ddc",
+      "actual": "cdf90011d2d6acaea407241063d6da4377b952bf65e1fa44fbbb00a42b0f8ddc",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "current_target_files",
+      "path": "internal/app/plugin_original_resources.go",
+      "expected": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b",
+      "actual": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "current_target_files",
+      "path": "internal/app/plugin_original_host_site_http_test.go",
+      "expected": "89008f73666143d9d8f8a80b80856cf90a06902e2f9646db6fafb9bee717d481",
+      "actual": "b1906b30f265bcb880c2b5a3c10121b9baea4f17342d11e3a429bc989ecea987",
+      "match": false,
+      "resolution": "site-http/vet-test-literal-lineage.json; unchanged runtime/oracle/assertions, new explicit-field current555 gate"
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "current_target_files",
+      "path": "cmd/plugin-host-site-http-fixture/main.go",
+      "expected": "614f2a8ade51fd7e708166e49592ef1143b14fdc8cdded7148c3821335c8648d",
+      "actual": "614f2a8ade51fd7e708166e49592ef1143b14fdc8cdded7148c3821335c8648d",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "source_oracles",
+      "path": "testdata/plugin-platform-final-20261104/settings/site-http-independent-source-oracle.json",
+      "expected": "82f75be7d32516af85984b42ada1f12e938e68e79adfe18a171b5094a005998b",
+      "actual": "82f75be7d32516af85984b42ada1f12e938e68e79adfe18a171b5094a005998b",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "source_oracles",
+      "path": "testdata/plugin-platform-final-20261104/settings/site-http-cookie-independent-source-oracle.json",
+      "expected": "e00ea624fb59abe2f22e49d99df985fe7f0a8be06ecd6a77ab9e4678f6788d8c",
+      "actual": "e00ea624fb59abe2f22e49d99df985fe7f0a8be06ecd6a77ab9e4678f6788d8c",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "source_oracles",
+      "path": "testdata/plugin-platform-final-20261104/settings/site-http-useragent-independent-source-oracle.json",
+      "expected": "b9efe3ca4c24b739aa5ace1fa8c5d553501e5d5974fdfc5f305728b73e7e72ff",
+      "actual": "b9efe3ca4c24b739aa5ace1fa8c5d553501e5d5974fdfc5f305728b73e7e72ff",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "source_oracles",
+      "path": "testdata/plugin-platform-final-20261104/settings/site-http-installed-metadata-source-inventory.json",
+      "expected": "3505221dba43589f88c808284b7c887f610522e63df5ecffaad1f370b36cc097",
+      "actual": "3505221dba43589f88c808284b7c887f610522e63df5ecffaad1f370b36cc097",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "source_oracles",
+      "path": "testdata/plugin-platform-final-20261104/settings/site-http-dynamic-metadata-source-supplement.json",
+      "expected": "36572b7045538dadce63a6496440a1c9f54e1e2c98f97bd0a56c2bf92404ddba",
+      "actual": "36572b7045538dadce63a6496440a1c9f54e1e2c98f97bd0a56c2bf92404ddba",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "source_oracles",
+      "path": "testdata/plugin-platform-final-20261104/network-post-scope-observation.json",
+      "expected": "30a7528bdb82bde729665c0dc95eda22f6aa833e70795522ff659cd79e8837a4",
+      "actual": "30a7528bdb82bde729665c0dc95eda22f6aa833e70795522ff659cd79e8837a4",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/site-http/acceptance.json",
+      "expected": "fc8e272693214e766974a5f0adc9754b8032bff22c38bf8d54e1b60588ab63ff",
+      "actual": "fc8e272693214e766974a5f0adc9754b8032bff22c38bf8d54e1b60588ab63ff",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/site-http/full-sdk-linux.json",
+      "expected": "51f132c1c8e08de92098ff77bcfc420a08331fcc4955092f457f8c6528f7266b",
+      "actual": "51f132c1c8e08de92098ff77bcfc420a08331fcc4955092f457f8c6528f7266b",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/site-http/reserved-credentials-fix.json",
+      "expected": "83277a63dd370b2795985ca59a93fd64fa384ceca3502636c1f82f19094fc54b",
+      "actual": "83277a63dd370b2795985ca59a93fd64fa384ceca3502636c1f82f19094fc54b",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/site-http/linux-r9-acceptance.json",
+      "expected": "287efca4212ed9baae10f743df076cae3c151925007ee79c5e65989d25ffd7ab",
+      "actual": "287efca4212ed9baae10f743df076cae3c151925007ee79c5e65989d25ffd7ab",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "current_runtime_target_files",
+      "path": "internal/plugins/network_proxy_host.go",
+      "expected": "2be2e4f533e4a2506fe61d8af40650234b1553371795e1e2eacdaa73289d9991",
+      "actual": "2be2e4f533e4a2506fe61d8af40650234b1553371795e1e2eacdaa73289d9991",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "current_runtime_target_files",
+      "path": "internal/app/plugin_original_host_proxy.go",
+      "expected": "fb1a8175a1d5c51b355c165c6b506d3ab111b8c84a3e9e22dc4c288d74bf52dd",
+      "actual": "fb1a8175a1d5c51b355c165c6b506d3ab111b8c84a3e9e22dc4c288d74bf52dd",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "current_runtime_target_files",
+      "path": "internal/app/plugin_original_resources.go",
+      "expected": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b",
+      "actual": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "current_runtime_target_files",
+      "path": "internal/networkproxy/proxy.go",
+      "expected": "4d10eca0826992fc4528c6f428940f65974de4152173eedb23963b27bc6c57fd",
+      "actual": "4d10eca0826992fc4528c6f428940f65974de4152173eedb23963b27bc6c57fd",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "current_runtime_target_files",
+      "path": "internal/networkproxy/requests_cancel.go",
+      "expected": "bab3e9b740990d73a40b24033554b9d005ab23e38234e22c6b15982b3c589be7",
+      "actual": "bab3e9b740990d73a40b24033554b9d005ab23e38234e22c6b15982b3c589be7",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "current_runtime_target_files",
+      "path": "internal/networkproxy/requests_content.go",
+      "expected": "99d628ec3324ef6b746a9ca8d6cb12a58c79a12c0f1d828b8552a277f6463c96",
+      "actual": "99d628ec3324ef6b746a9ca8d6cb12a58c79a12c0f1d828b8552a277f6463c96",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "current_runtime_target_files",
+      "path": "internal/networkproxy/requests_env.go",
+      "expected": "22d79755751a445593f25c8edc741d3931c5a94c18295b760a967efc47ca056c",
+      "actual": "22d79755751a445593f25c8edc741d3931c5a94c18295b760a967efc47ca056c",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "current_runtime_target_files",
+      "path": "internal/networkproxy/requests_merge.go",
+      "expected": "a0380ec024b78daef35ab0eb637d4c9cdd9ad842d656bbd45a9c80e1c3f29fc5",
+      "actual": "a0380ec024b78daef35ab0eb637d4c9cdd9ad842d656bbd45a9c80e1c3f29fc5",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "current_runtime_target_files",
+      "path": "internal/networkproxy/requests_timeout.go",
+      "expected": "bbcf3b438f39161af610a0284ac894213c4900ccc5105fe591b7bdc075d0289b",
+      "actual": "bbcf3b438f39161af610a0284ac894213c4900ccc5105fe591b7bdc075d0289b",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "current_runtime_target_files",
+      "path": "internal/networkproxy/requests_transport.go",
+      "expected": "1e409eb302e28902c2719e10a9e830f80e2a510cc3285a029e3a344d9c7b1f97",
+      "actual": "1e409eb302e28902c2719e10a9e830f80e2a510cc3285a029e3a344d9c7b1f97",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "other_target_and_tests",
+      "path": "internal/app/plugin_original_host_proxy_test.go",
+      "expected": "8f08c844cac01e184cc76beb9088500bb713574ddfd4bca9f317c67e9338cea9",
+      "actual": "8f08c844cac01e184cc76beb9088500bb713574ddfd4bca9f317c67e9338cea9",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "other_target_and_tests",
+      "path": "internal/app/plugin_original_host_proxy_sdk_test.go",
+      "expected": "c1e69da7397982dc4a0399c30ebbf687717c535d2f500fde872ed2b229983820",
+      "actual": "c1e69da7397982dc4a0399c30ebbf687717c535d2f500fde872ed2b229983820",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "other_target_and_tests",
+      "path": "cmd/plugin-host-proxy-fixture/main.go",
+      "expected": "f9154102efbc6fd976641c67cfe50bbe612bb92720e556901d3d83f5bd9e05d6",
+      "actual": "f9154102efbc6fd976641c67cfe50bbe612bb92720e556901d3d83f5bd9e05d6",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/owned_lan_relay.py",
+      "expected": "3fb5e84e8905e663b8dfcb6a5072600a95cc8da0ddf16cc09c69a970a7b4dd44",
+      "actual": "3fb5e84e8905e663b8dfcb6a5072600a95cc8da0ddf16cc09c69a970a7b4dd44",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/native-sdk-linux.log",
+      "expected": "948bdd37401b49c60d26240f18a23fb49b33e2d7b8e27f6e3c6e1df67cf9319c",
+      "actual": "948bdd37401b49c60d26240f18a23fb49b33e2d7b8e27f6e3c6e1df67cf9319c",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/native-sdk-linux.json",
+      "expected": "a8e433f7189d16979299f62d57da92b0ca308184906054a5f6a0a7d118e3ca64",
+      "actual": "a8e433f7189d16979299f62d57da92b0ca308184906054a5f6a0a7d118e3ca64",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/sdk-normal.jsonl",
+      "expected": "7ccfdca1a434b20f4b90c8aa6dd7f35fd26ea9c3ea5af00e1a5ad0f6b8199faa",
+      "actual": "7ccfdca1a434b20f4b90c8aa6dd7f35fd26ea9c3ea5af00e1a5ad0f6b8199faa",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/cleanup.json",
+      "expected": "0b7978519071273c58fbf6ed86070dbdf06053aa356a9e95eb2c84b33b719b23",
+      "actual": "0b7978519071273c58fbf6ed86070dbdf06053aa356a9e95eb2c84b33b719b23",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/linux-driver.log",
+      "expected": "6164f2f543dfd27aaac6705c4ded2de9723a47674648f7da02997179806e79e3",
+      "actual": "6164f2f543dfd27aaac6705c4ded2de9723a47674648f7da02997179806e79e3",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/run_process.py",
+      "expected": "671e779a28810315e8ea8a94d94e9ff0f9baf049285cee630a01364bd9495780",
+      "actual": "671e779a28810315e8ea8a94d94e9ff0f9baf049285cee630a01364bd9495780",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/sdk-race.jsonl",
+      "expected": "5b599314a76d62772311b6c6a7300fb72d151654942c894581d779ce82edae36",
+      "actual": "5b599314a76d62772311b6c6a7300fb72d151654942c894581d779ce82edae36",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/worker-build-inputs.json",
+      "expected": "6e1e7e054db7396cfca18de55a5e1fa58f3178f154dd36ba7578f09d37a4b3cb",
+      "actual": "6e1e7e054db7396cfca18de55a5e1fa58f3178f154dd36ba7578f09d37a4b3cb",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/browser/source-post.jpg",
+      "expected": "abbca5576e25e44ee4106b148d619d118e89ccb4e76c7a7938efa732c21669c5",
+      "actual": "abbca5576e25e44ee4106b148d619d118e89ccb4e76c7a7938efa732c21669c5",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/browser/observation.json",
+      "expected": "d62e832f19e616bb6ef63c31ce3835bb5bea059f28aae34e40e5e696b20092bc",
+      "actual": "d62e832f19e616bb6ef63c31ce3835bb5bea059f28aae34e40e5e696b20092bc",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/browser/source-recovered.dom.txt",
+      "expected": "dcf127c93db70f88f6a1f01168a1a3733cf4391ddb8dd7aab655c3b433dc4b2b",
+      "actual": "dcf127c93db70f88f6a1f01168a1a3733cf4391ddb8dd7aab655c3b433dc4b2b",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/browser/clone-before.dom.txt",
+      "expected": "6070d62dd769861a128e7729281503277155eb68d8599fca546f212458a03087",
+      "actual": "6070d62dd769861a128e7729281503277155eb68d8599fca546f212458a03087",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/browser/clone-post.dom.txt",
+      "expected": "95b02960b019cc86b1477d878f0b3ba23c0628e7dfea48b46db58dc95b5465d1",
+      "actual": "95b02960b019cc86b1477d878f0b3ba23c0628e7dfea48b46db58dc95b5465d1",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/browser/clone-post.jpg",
+      "expected": "7db77969099a0fcb1b9dc6cda41c7a1c7d2fc345f8e92a38f6b359ba5ff9d3b0",
+      "actual": "7db77969099a0fcb1b9dc6cda41c7a1c7d2fc345f8e92a38f6b359ba5ff9d3b0",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/browser/source-post.dom.txt",
+      "expected": "ace0cfc697d4eb2e4350548ee40abc7bd30b497668d671425224fafee5111fd8",
+      "actual": "ace0cfc697d4eb2e4350548ee40abc7bd30b497668d671425224fafee5111fd8",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/browser/failure.jpg",
+      "expected": "71ea0a78b1bcd80c277cf668ff5c96b2bda55147a182e330742fc2a27de8e590",
+      "actual": "71ea0a78b1bcd80c277cf668ff5c96b2bda55147a182e330742fc2a27de8e590",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/browser/source-recovered.jpg",
+      "expected": "593ea5843835e785cfe8bc24391b1f3489c8b5dcf35180b67855ada6384e2dec",
+      "actual": "593ea5843835e785cfe8bc24391b1f3489c8b5dcf35180b67855ada6384e2dec",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/browser/failure.dom.txt",
+      "expected": "c119fc877481071cf55d8db426267606e13856a38ec6900c9be2d4224a8cfc1b",
+      "actual": "c119fc877481071cf55d8db426267606e13856a38ec6900c9be2d4224a8cfc1b",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/linux/result.json",
+      "expected": "8f1c66a3ae50d7a23dbccce8b6d3a32ba959a820d044260f0717edd928bef9b8",
+      "actual": "8f1c66a3ae50d7a23dbccce8b6d3a32ba959a820d044260f0717edd928bef9b8",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/linux/server.log",
+      "expected": "540b5674f199c008677ef71cad2c17c5e8141d3f9cac05d4bccdaa6403ffbce8",
+      "actual": "540b5674f199c008677ef71cad2c17c5e8141d3f9cac05d4bccdaa6403ffbce8",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+      "group": "evidence_files",
+      "path": "testdata/plugin-platform-final-20261104/proxy/linux/browser-cold-assertions.json",
+      "expected": "eceb407d5b8d3dceef48b5578c134c54228a37b166ae8d750a2a750ee804caa6",
+      "actual": "eceb407d5b8d3dceef48b5578c134c54228a37b166ae8d750a2a750ee804caa6",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json",
+      "group": "current_target_files",
+      "path": "internal/app/plugin_original_host_settings.go",
+      "expected": "d5070bca96fa25c833c3dfde951246d443c757f03eadd5226f7ff99ff438626f",
+      "actual": "d5070bca96fa25c833c3dfde951246d443c757f03eadd5226f7ff99ff438626f",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json",
+      "group": "current_target_files",
+      "path": "internal/app/plugin_original_command_ingress.go",
+      "expected": "08abe1f47eec52ed2b833abb58037f96ce7d6acf42a9d4a461f33053f449f606",
+      "actual": "08abe1f47eec52ed2b833abb58037f96ce7d6acf42a9d4a461f33053f449f606",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json",
+      "group": "current_target_files",
+      "path": "internal/app/plugin_original_host_site_http.go",
+      "expected": "726a0f353eab7311262f247f80fe24f934ec6a8da91ad324590d525dd25e4399",
+      "actual": "726a0f353eab7311262f247f80fe24f934ec6a8da91ad324590d525dd25e4399",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json",
+      "group": "current_target_files",
+      "path": "internal/plugins/settings_host.go",
+      "expected": "b9b500ac565ef98f98d8e32b5c2285cdc7fa869a5be6df8be2199846bcc78137",
+      "actual": "b9b500ac565ef98f98d8e32b5c2285cdc7fa869a5be6df8be2199846bcc78137",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json",
+      "group": "current_target_files",
+      "path": "internal/plugins/site_http_host.go",
+      "expected": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+      "actual": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json",
+      "group": "related_evidence",
+      "path": "testdata/plugin-platform-final-20261104/settings/settings-complete-scope-review.json",
+      "expected": "442008286ed059e8a223fbcf89089637d581dc08cf900e7fa0961da638605a69",
+      "actual": "442008286ed059e8a223fbcf89089637d581dc08cf900e7fa0961da638605a69",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json",
+      "group": "related_evidence",
+      "path": "testdata/plugin-platform-final-20261104/settings/site-http-useragent-independent-source-oracle.json",
+      "expected": "b9efe3ca4c24b739aa5ace1fa8c5d553501e5d5974fdfc5f305728b73e7e72ff",
+      "actual": "b9efe3ca4c24b739aa5ace1fa8c5d553501e5d5974fdfc5f305728b73e7e72ff",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json",
+      "group": "related_evidence",
+      "path": "testdata/plugin-platform-final-20261104/settings/s18-independent-review.json",
+      "expected": "3da65166ed277782f86d4c1e8c7790bfe2ad58c917a5e492d915b0f080cface9",
+      "actual": "3da65166ed277782f86d4c1e8c7790bfe2ad58c917a5e492d915b0f080cface9",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json",
+      "group": "related_evidence",
+      "path": "testdata/plugin-platform-final-20261104/site-http/linux-r9-acceptance.json",
+      "expected": "287efca4212ed9baae10f743df076cae3c151925007ee79c5e65989d25ffd7ab",
+      "actual": "287efca4212ed9baae10f743df076cae3c151925007ee79c5e65989d25ffd7ab",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json",
+      "group": "related_evidence",
+      "path": "testdata/plugin-platform-final-20261104/site-http/current-evidence.json",
+      "expected": "4a0c3fe0e6ce249b11c3b2290034d657405c4b97100a63f5fa2cd706a8d3adc8",
+      "actual": "4a0c3fe0e6ce249b11c3b2290034d657405c4b97100a63f5fa2cd706a8d3adc8",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json",
+      "group": "related_evidence",
+      "path": "testdata/plugin-platform-final-20261104/site-http/vet-test-literal-lineage.json",
+      "expected": "c64b520cbc859eb52dcb8fabf71b77ec05e49844a1669b994a1e1bc132615542",
+      "actual": "c64b520cbc859eb52dcb8fabf71b77ec05e49844a1669b994a1e1bc132615542",
+      "match": true
+    },
+    {
+      "manifest": "testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json",
+      "group": "related_evidence",
+      "path": "testdata/plugin-platform-final-20261104/browser-ocr/product-r9-build-inputs.json",
+      "expected": "6dbb01ab6aa4f2ce507bb49185430c7bb17c568f4ebbc97fdc98ee01a5921f38",
+      "actual": "6dbb01ab6aa4f2ce507bb49185430c7bb17c568f4ebbc97fdc98ee01a5921f38",
+      "match": true
+    }
+  ],
+  "evidence_sha256": {
+    "testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json": "04bf3f44a6a736728ff466f7b1bfed5a041fa2742ee2ba8ee150f1b65fdb3895",
+    "testdata/plugin-platform-final-20261104/browser-ocr/final-evidence-manifest.json": "3e6508d8a1ce408d758c2bf0c380be5fe45a20ef501328098b080c054cd9e00a",
+    "testdata/plugin-platform-final-20261104/browser-ocr/product-r9-build-inputs.json": "6dbb01ab6aa4f2ce507bb49185430c7bb17c568f4ebbc97fdc98ee01a5921f38",
+    "testdata/plugin-platform-final-20261104/browser-ocr/source-target-r9-bindings.json": "e3c35fbdcebc7b113d2224317f898524fc9f6150f1acfc82e68e1ee98042cf0e",
+    "testdata/plugin-platform-final-20261104/browser-ocr/ui-reuse-r9.json": "79624510b229e5d774365e4c80b0d95ccd359038518b1dbe74c7a413ed75a335",
+    "testdata/plugin-platform-final-20261104/site-http/current-evidence.json": "4a0c3fe0e6ce249b11c3b2290034d657405c4b97100a63f5fa2cd706a8d3adc8",
+    "testdata/plugin-platform-final-20261104/proxy/acceptance.json": "49353cd9aa25aa85e3023cb6cfb924149b27343b5378985473d5ff615732b2f5",
+    "testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json": "e600e6cbb0dc7aa357110c539539496ad1de20972023d2f00b7bc113d0441f39",
+    "testdata/plugin-platform-final-20261104/site-http/vet-test-literal-lineage.json": "c64b520cbc859eb52dcb8fabf71b77ec05e49844a1669b994a1e1bc132615542",
+    "testdata/plugin-platform-final-20261104/settings/s18-independent-review.json": "3da65166ed277782f86d4c1e8c7790bfe2ad58c917a5e492d915b0f080cface9",
+    "testdata/plugin-platform-final-20261104/settings/s19-independent-review.json": "9c53a08a2f1ff7324c7e7bfec208b85c943cae0ac9b3c54e18a4218808ae2185",
+    "testdata/plugin-platform-final-20261104/settings/settings-complete-scope-review.json": "442008286ed059e8a223fbcf89089637d581dc08cf900e7fa0961da638605a69"
+  },
+  "actually_viewed_UI_and_DOM_sha256": {
+    "testdata/plugin-platform-final-20261104/proxy/browser/failure.jpg": "71ea0a78b1bcd80c277cf668ff5c96b2bda55147a182e330742fc2a27de8e590",
+    "testdata/plugin-platform-final-20261104/proxy/browser/clone-post.jpg": "7db77969099a0fcb1b9dc6cda41c7a1c7d2fc345f8e92a38f6b359ba5ff9d3b0",
+    "testdata/plugin-platform-final-20261104/proxy/browser/source-recovered.dom.txt": "dcf127c93db70f88f6a1f01168a1a3733cf4391ddb8dd7aab655c3b433dc4b2b",
+    "testdata/plugin-platform-final-20261104/proxy/browser/clone-post.dom.txt": "95b02960b019cc86b1477d878f0b3ba23c0628e7dfea48b46db58dc95b5465d1",
+    "testdata/plugin-platform-final-20261104/browser-ocr/ui/browser-source-success.png": "ea8ac895b6f9defd7497327eee53df7c34dd8da57fa37400ace8cb993f41694e",
+    "testdata/plugin-platform-final-20261104/browser-ocr/ui/ocr-source-success.png": "3702c822b840ccef993fa9e6f17184772845fccee6c500e785cacb5524ab16d2"
+  },
+  "UI_version_boundary": "S15/S16 actual R6 IAB writes/read-only screenshots reused only with136 exactly equal embedded frontend files; actual R9 native/backend host paths re-executed. S18 R8 complete UI retained as that binary; R9 current host cases/new reserved guard independently exercised. S19 actual Chrome UI is current R9. No screenshot relabeling.",
+  "test_only_lineage": {
+    "path": "internal/app/plugin_original_host_site_http_test.go",
+    "old_sha256": "89008f73666143d9d8f8a80b80856cf90a06902e2f9646db6fafb9bee717d481",
+    "current_sha256": "b1906b30f265bcb880c2b5a3c10121b9baea4f17342d11e3a429bc989ecea987",
+    "independently_reconstructed_prior_bytes_match": true,
+    "exactly5_literal_field_names_added": true,
+    "oracle_expected_product_unchanged": true,
+    "final_new_555_required": true
+  },
+  "s07_lineage": {
+    "old_acceptance_unchanged": true,
+    "old_settings_target": "4ec65e11af79caf51ec70509705c3970acc555070c315e3f3e429dcef382cb0c",
+    "current_settings_target": "d5070bca96fa25c833c3dfde951246d443c757f03eadd5226f7ff99ff438626f",
+    "new_R9_readonly_getter_and_suffix_proof": {
+      "main_sha256": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+      "evidence": "site-http/linux-r9-acceptance.json#result.observations[0]",
+      "observed_getter": "MoviePilot/2.15.7 (Linux 6.18.18.c1168-trim; x86_64)",
+      "readonly_set_denied": true,
+      "host_suffix_verified": true
+    },
+    "prior_RMT_SystemConfig_evidence_retained": true
+  },
+  "all20_settings_scope": "77 original files exact SHA/110 direct+1 dynamic/20 keys, no unresolved aliases/dynamic namespace. Ordinary USER_AGENT and global proxy dependencies are now real typed current SDK/host capabilities. Category/path/TZ/API_TOKEN/PORT and SQLite-vs-PostgreSQL boundaries have explicit source/runtime ownership. No new business migration counted.",
+  "source_behavior_and_security_adaptations": [
+    "Private typed trusted Go IPC restores raw site fields and proxy inputs needed for own-memory algorithms; no credential expression/session framework, no OS sandbox claim, no public raw credential/proxy endpoints.",
+    "S16 PROXY_SERVER uses explicit configured setting only, source percent-literal credentials and source native inline/loopback modes. Source malformed IPv6 reaches configured FS unchanged; actual paired Node normalizes it to unrelated http://http, so native safe None/error prevents unrelated credential forwarding. Do not claim original Node threw an error.",
+    "Original verify=False becomes existing target TLS/origin safety; bounded payloads and safe errors replace unbounded Python objects/tracebacks. OCR malformed JSON/type errors propagate, while ordinary failure/no result empty-string behavior remains source-derived.",
+    "S18 Go automatic idempotent POST replay was causally demonstrated, source always one receipt/None; reserved credential-header bypass now rejected via shared policy with8 actual SDK negative conditions.",
+    "Actual Linux/Go subprocess/SQLite/HTTP/Chrome effects are distinct from owned synthetic OCR/FS/provider response semantics. No public OCR recognition/challenge success or ARM hardware execution claimed."
+  ],
+  "historical_incident_disposition": "R8 owned parent-directory disappearance remains unexplained, failed/uncompleted evidence retained without external attribution. R9 fresh exclusive roots had174 sentinel/tool/data checks with zero loss plus actual update/cold/uninstall and final exact-root cleanup. This accepts the current observed runs; it does not invent the earlier deletion cause.",
+  "current_product_blockers": [],
+  "required_before_final50": [
+    "New final555-root platform regression after keyed-literal test-only correction; current source/test full closure binding and source-evidence index",
+    "Root final go vet/diff/cleanup completion and publication status; no commit/push/merge/deploy authorized"
+  ],
+  "delivery": {
+    "branch": "codex/plugin-host-resources-20261031",
+    "head": "97476582910dc4b696f7ccd5010f28d823812d40",
+    "current_changes_committed": false,
+    "pushed": false,
+    "production_deployed": false
+  }
+}

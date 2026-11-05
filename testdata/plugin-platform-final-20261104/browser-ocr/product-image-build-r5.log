@@ -1,0 +1,33 @@
+#1 [internal] load remote build context
+#1 sha256:1e815a7358a126d0cc6aef99be0d97c99db2b0e844ed9dfbff70cc1f3af7673c
+#1 DONE 0.0s
+
+#2 copy /context /
+#2 sha256:b416a18e9f53ab80c72720c55a8a5f35538fe2ac99a2c9b77152277b0578d4d0
+#2 DONE 0.6s
+
+#3 [internal] load metadata for docker.io/library/light-media-plugin-browser-acceptance-final:20261104
+#3 sha256:29be399f5e46f728185f7fee47d32fe243dc5b0996b4cd418f48e13a0a07b845
+#3 DONE 0.0s
+
+#4 [1/2] FROM docker.io/library/light-media-plugin-browser-acceptance-final:20261104
+#4 sha256:6913706e3a8d248ffd97856e734a823c21b5be2fa24c411a426cdbd4bad7ae5e
+#4 DONE 0.0s
+
+#4 [1/2] FROM docker.io/library/light-media-plugin-browser-acceptance-final:20261104
+#4 sha256:6913706e3a8d248ffd97856e734a823c21b5be2fa24c411a426cdbd4bad7ae5e
+#4 CACHED
+
+#5 [2/2] COPY light-media /usr/local/bin/light-media
+#5 sha256:c017186e2b06e4a56c0c831c58a0758499dfc09418ae2803921245a0bbdb9645
+#5 DONE 4.0s
+
+#6 exporting to image
+#6 sha256:ea071e22f67285fab019be7be5e0f9a999f15b26dcb825667136423b40c9d84f
+#6 exporting layers
+#6 exporting layers 0.8s done
+#6 writing image sha256:19089e55e48b6e54595c380b6d64cb9f66d29453b8500e15cd34d79cbf2fdf29 0.0s done
+#6 naming to docker.io/library/light-media-plugin-browser-acceptance-runtime-r5:20261104 0.1s done
+#6 DONE 1.0s
+
+Use 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them

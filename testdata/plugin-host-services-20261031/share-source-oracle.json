@@ -1,0 +1,127 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "classification": "isolated pinned source method replay, no external sharing",
+  "sources": {
+    "app/schemas/types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+    "app/utils/media.py": "1b1931d0d392ea7a8893a70068af583945a52bdddc892353e3892f06cd2084ed",
+    "app/helper/server.py": "d71d14373d8984390c6b7a6669ce6f6ffc4258fcf5f163ee189c52c8d3b0d47f"
+  },
+  "queries": [
+    {
+      "meta": {
+        "original_name": " Owned.Raw.Title ",
+        "name": "Owned",
+        "type": "电影",
+        "year": "2025"
+      },
+      "mtype": null,
+      "result": {
+        "keyword": "Owned.Raw.Title",
+        "type": "movie",
+        "year": "2025"
+      }
+    },
+    {
+      "meta": {
+        "name": "Owned TV",
+        "begin_season": 0,
+        "begin_episode": 1,
+        "year": 2024
+      },
+      "mtype": null,
+      "result": {
+        "keyword": "Owned TV",
+        "type": "tv",
+        "year": "2024",
+        "season": 0
+      }
+    },
+    {
+      "meta": {
+        "name": "Owned Unknown"
+      },
+      "mtype": null,
+      "result": {
+        "keyword": "Owned Unknown"
+      }
+    },
+    {
+      "meta": {
+        "name": "",
+        "original_name": ""
+      },
+      "mtype": null,
+      "result": null
+    }
+  ],
+  "reports": [
+    {
+      "meta": {
+        "original_name": " Original.Title ",
+        "name": "Owned",
+        "type": "电视剧",
+        "begin_season": 0,
+        "year": "2024"
+      },
+      "info": {
+        "type": "电视剧",
+        "title": "Recognized",
+        "year": "2025",
+        "season": 2,
+        "source": "themoviedb",
+        "media_id": "123",
+        "tmdb_id": 123
+      },
+      "result": {
+        "keyword": "Original.Title",
+        "type": "tv",
+        "title": "Recognized",
+        "year": "2024",
+        "season": 0,
+        "tmdbid": 123,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "123"
+      }
+    },
+    {
+      "meta": {
+        "name": "Owned",
+        "type": "电影"
+      },
+      "info": {
+        "type": "电影",
+        "title": "",
+        "year": "2026",
+        "tmdb_id": 123
+      },
+      "result": {
+        "keyword": "Owned",
+        "type": "movie",
+        "title": "Owned",
+        "year": "2026",
+        "season": null,
+        "tmdbid": 123,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "123"
+      }
+    },
+    {
+      "meta": {
+        "name": "Owned",
+        "type": "电影"
+      },
+      "info": {
+        "type": "电影",
+        "source": "douban",
+        "tmdb_id": 123
+      },
+      "result": null
+    }
+  ]
+}

@@ -1,0 +1,1484 @@
+{
+  "classification": "Read-only stdlib AST of exact previously bound77 installed plugin files; no imports, settings, DB, credential or runtime accesses; arbitrary literals omitted.",
+  "files": [
+    {
+      "file": "categoryeditor/__init__.py",
+      "expected_sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+      "sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "torrenttransfer/__init__.py",
+      "expected_sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "sitestatistic/__init__.py",
+      "expected_sha256": "763a88be85185a94082a2f131ed1c80d8306abe24b10ebe9ae95447cfe5da17d",
+      "sha256": "763a88be85185a94082a2f131ed1c80d8306abe24b10ebe9ae95447cfe5da17d",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "removelink/__init__.py",
+      "expected_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+      "sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "mpserverstatus/__init__.py",
+      "expected_sha256": "63583e9706aeee31a181b2fefa4e80c793ae4f2b9a76c9efea5956f8b0043d90",
+      "sha256": "63583e9706aeee31a181b2fefa4e80c793ae4f2b9a76c9efea5956f8b0043d90",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 197,
+          "targets": [
+            "response"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "MPServerStatus._request_server_status"
+        },
+        {
+          "line": 199,
+          "targets": [
+            "response"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "MPServerStatus._request_server_status"
+        }
+      ]
+    },
+    {
+      "file": "pluginuninstall/__init__.py",
+      "expected_sha256": "2210e9dea47eeccdc46208d515e45ce1222dcadf50dbfc63cbeb41f94e470487",
+      "sha256": "2210e9dea47eeccdc46208d515e45ce1222dcadf50dbfc63cbeb41f94e470487",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "autosignin/__init__.py",
+      "expected_sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+      "sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 1890,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "AutoSignIn.__signin_base"
+        },
+        {
+          "line": 1980,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "AutoSignIn.__login_base"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/result.py",
+      "expected_sha256": "7a2a49fd8aafe084c6a9a482ca6883cbee8505f443ae5e9741af25161bb458b2",
+      "sha256": "7a2a49fd8aafe084c6a9a482ca6883cbee8505f443ae5e9741af25161bb458b2",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "autosignin/sites/52pt.py",
+      "expected_sha256": "88d1fb315d2272097f8e124eb8245aa952fd1933f7685005118e9c875528d2fb",
+      "sha256": "88d1fb315d2272097f8e124eb8245aa952fd1933f7685005118e9c875528d2fb",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 128,
+          "targets": [
+            "sign_res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "Pt52.__signin"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/__init__.py",
+      "expected_sha256": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d",
+      "sha256": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 79,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "_ISiteSigninHandler.get_page_source"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/btschool.py",
+      "expected_sha256": "efc63422cc4b2c3e18c35324f358b4d9899a58cffbf8099c4efc533cc5b48bcd",
+      "sha256": "efc63422cc4b2c3e18c35324f358b4d9899a58cffbf8099c4efc533cc5b48bcd",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "autosignin/sites/chdbits.py",
+      "expected_sha256": "d1f745f0b69b167e0f51038a3f09b495806096f44587889bca585e6782b5eb89",
+      "sha256": "d1f745f0b69b167e0f51038a3f09b495806096f44587889bca585e6782b5eb89",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 128,
+          "targets": [
+            "sign_res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "CHDBits.__signin"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/haidan.py",
+      "expected_sha256": "d68586c83b5721a495e7af5172e7642cbe6cf74d7c555eab8a3c3153ba281461",
+      "sha256": "d68586c83b5721a495e7af5172e7642cbe6cf74d7c555eab8a3c3153ba281461",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "autosignin/sites/hares.py",
+      "expected_sha256": "27d5be0a5c313b3cbadb50a029cc4fa627e3f4aa393503e330f5c56be48ad0e2",
+      "sha256": "27d5be0a5c313b3cbadb50a029cc4fa627e3f4aa393503e330f5c56be48ad0e2",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 70,
+          "targets": [
+            "sign_res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "Hares.signin"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/hdarea.py",
+      "expected_sha256": "6046dd7626ad9f071a073dc142b86f204aa491bcfabe9e20cb4197eee4d5e630",
+      "sha256": "6046dd7626ad9f071a073dc142b86f204aa491bcfabe9e20cb4197eee4d5e630",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 49,
+          "targets": [
+            "html_res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "HDArea.signin"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/hdchina.py",
+      "expected_sha256": "dec9063410d6601c885df2de60844feacf2fb143d4aa662eba47fcad27948731",
+      "sha256": "dec9063410d6601c885df2de60844feacf2fb143d4aa662eba47fcad27948731",
+      "matches": true,
+      "attributes": [
+        {
+          "line": 78,
+          "attribute": "encoding",
+          "expression": "html_res.encoding",
+          "context": "Store",
+          "owner": "HDChina.signin",
+          "parent_type": "Assign",
+          "assigned_encoding": "utf-8"
+        }
+      ],
+      "http_assignments": [
+        {
+          "line": 61,
+          "targets": [
+            "html_res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "HDChina.signin"
+        },
+        {
+          "line": 102,
+          "targets": [
+            "sign_res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "HDChina.signin"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/hdcity.py",
+      "expected_sha256": "b13a4af9d4df371b1fb5c74323ddb532ff016fe53d36caf7c36bcacdb7148475",
+      "sha256": "b13a4af9d4df371b1fb5c74323ddb532ff016fe53d36caf7c36bcacdb7148475",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "autosignin/sites/hdsky.py",
+      "expected_sha256": "a2f272ff66d9ade5106942f3e577fd12a967b7375d516c92dc189b9672fa7a70",
+      "sha256": "a2f272ff66d9ade5106942f3e577fd12a967b7375d516c92dc189b9672fa7a70",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 73,
+          "targets": [
+            "image_res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "HDSky.signin"
+        },
+        {
+          "line": 122,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "HDSky.signin"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/hdupt.py",
+      "expected_sha256": "eb8e2c96088fdf956a0cb1efb58ac69716d89ebfd4d3240089eb53fa0c0e55f3",
+      "sha256": "eb8e2c96088fdf956a0cb1efb58ac69716d89ebfd4d3240089eb53fa0c0e55f3",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "autosignin/sites/mteam.py",
+      "expected_sha256": "5bac7c23743fd226ce546e0ddf2794aca2aebaecbe4fa945c4a5e728ae9f4fd4",
+      "sha256": "5bac7c23743fd226ce546e0ddf2794aca2aebaecbe4fa945c4a5e728ae9f4fd4",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 55,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "MTorrent.signin"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/nexushd.py",
+      "expected_sha256": "cbfdac17f522880b502ea9f0546d6c486846c0016280c86b234ad248fba5b2bf",
+      "sha256": "cbfdac17f522880b502ea9f0546d6c486846c0016280c86b234ad248fba5b2bf",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 50,
+          "targets": [
+            "html_res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "NexusHD.signin"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/opencd.py",
+      "expected_sha256": "30045d631f459d7a04fdd068a1cab48bcd6dcb7cc21ebb0fb8fbac5bf0d32b2b",
+      "sha256": "30045d631f459d7a04fdd068a1cab48bcd6dcb7cc21ebb0fb8fbac5bf0d32b2b",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 116,
+          "targets": [
+            "sign_res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "Opencd.signin"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/pterclub.py",
+      "expected_sha256": "3cd559c4ef3510180da4f57db19595de2de75dcd85519430a9aa1ee4dadfd3d3",
+      "sha256": "3cd559c4ef3510180da4f57db19595de2de75dcd85519430a9aa1ee4dadfd3d3",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "autosignin/sites/pttime.py",
+      "expected_sha256": "e1e8e5a446ed15802774eda142c57b22a8482ddee511d49aff256a5a8089bb7b",
+      "sha256": "e1e8e5a446ed15802774eda142c57b22a8482ddee511d49aff256a5a8089bb7b",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "autosignin/sites/ptzone.py",
+      "expected_sha256": "fc2eb9921e388dfaeaee789e94524865be24f0a58d74c1af1d3c7651d269dc90",
+      "sha256": "fc2eb9921e388dfaeaee789e94524865be24f0a58d74c1af1d3c7651d269dc90",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 34,
+          "targets": [
+            "response"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "PTZone.signin"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/rousipro.py",
+      "expected_sha256": "5d5fb642d99651df42caf36cd465f6992d9bcfd7d893d35f5be531860b68e0b0",
+      "sha256": "5d5fb642d99651df42caf36cd465f6992d9bcfd7d893d35f5be531860b68e0b0",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 94,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "RousiPro.signin"
+        },
+        {
+          "line": 113,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "RousiPro.signin"
+        },
+        {
+          "line": 165,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "RousiPro.login"
+        },
+        {
+          "line": 177,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "RousiPro.login"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/tjupt.py",
+      "expected_sha256": "ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0",
+      "sha256": "ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 103,
+          "targets": [
+            "captcha_img_res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "Tjupt.signin"
+        },
+        {
+          "line": 207,
+          "targets": [
+            "sign_in_res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "Tjupt.__signin"
+        },
+        {
+          "line": 152,
+          "targets": [
+            "db_res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "Tjupt.signin"
+        },
+        {
+          "line": 169,
+          "targets": [
+            "answer_img_res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "Tjupt.signin"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/ttg.py",
+      "expected_sha256": "4cc08e4951e89348e02164990ab66a63ff6917b98d2d86cfbaaf7e21d859d51b",
+      "sha256": "4cc08e4951e89348e02164990ab66a63ff6917b98d2d86cfbaaf7e21d859d51b",
+      "matches": true,
+      "attributes": [
+        {
+          "line": 90,
+          "attribute": "encoding",
+          "expression": "sign_res.encoding",
+          "context": "Store",
+          "owner": "TTG.signin",
+          "parent_type": "Assign",
+          "assigned_encoding": "utf-8"
+        }
+      ],
+      "http_assignments": [
+        {
+          "line": 81,
+          "targets": [
+            "sign_res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "TTG.signin"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/u2.py",
+      "expected_sha256": "787e2e2752b8d35029e3fe4066303b23149152f29f40759e16114873f141fdd5",
+      "sha256": "787e2e2752b8d35029e3fe4066303b23149152f29f40759e16114873f141fdd5",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 141,
+          "targets": [
+            "sign_res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "U2.signin"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/yema.py",
+      "expected_sha256": "bafababa5790f9ed3b2d6a581b472fbcd2f202ff78854acf2c463eed0e65307b",
+      "sha256": "bafababa5790f9ed3b2d6a581b472fbcd2f202ff78854acf2c463eed0e65307b",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 39,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "YemaPT.signin"
+        },
+        {
+          "line": 66,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "YemaPT.login"
+        }
+      ]
+    },
+    {
+      "file": "autosignin/sites/zhuque.py",
+      "expected_sha256": "69301edf86db5f68d2e3fb720841b03a4d1489e90b37ec3384a0fbbc764a0563",
+      "sha256": "69301edf86db5f68d2e3fb720841b03a4d1489e90b37ec3384a0fbbc764a0563",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 76,
+          "targets": [
+            "skill_res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "ZhuQue.signin"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/__init__.py",
+      "expected_sha256": "d3df56cb08a826968c00376a93643090fe982eb6742862286bb53aacdb561d68",
+      "sha256": "d3df56cb08a826968c00376a93643090fe982eb6742862286bb53aacdb561d68",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "mergemessagenotify/channel/__init__.py",
+      "expected_sha256": "7af2e408176c9ad0ddb36e612273d8f0996a38893f1a7b7e6033fb0a4b3da786",
+      "sha256": "7af2e408176c9ad0ddb36e612273d8f0996a38893f1a7b7e6033fb0a4b3da786",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/__init__.py",
+      "expected_sha256": "a75f952e969211e2eb8e4ef08fce79dca2c6ea6a360191776f7838d56d701200",
+      "sha256": "a75f952e969211e2eb8e4ef08fce79dca2c6ea6a360191776f7838d56d701200",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/apprise.py",
+      "expected_sha256": "6402ae7e95765340a1001191d8c0f3120f1283eb1d4cf7305e96b28b82c6f409",
+      "sha256": "6402ae7e95765340a1001191d8c0f3120f1283eb1d4cf7305e96b28b82c6f409",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/bark.py",
+      "expected_sha256": "b0acbfff184ccbc59ace73ac0ac68d3740d59b49d1c88b82328153fca20b5182",
+      "sha256": "b0acbfff184ccbc59ace73ac0ac68d3740d59b49d1c88b82328153fca20b5182",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 637,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "BarkChannel.send_message"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/chanify.py",
+      "expected_sha256": "984709b8b40e9b5f0fd9b2ec05a3844deb202c7e5e068f75d847c75b36bbf2db",
+      "sha256": "984709b8b40e9b5f0fd9b2ec05a3844deb202c7e5e068f75d847c75b36bbf2db",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 115,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "ChanifyChannel.send_message"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/dingtalkrobot.py",
+      "expected_sha256": "dbdb5877b9b9924aa7c3dc46aa3df1143eb85d8fa73cebcfcdeab8deab415119",
+      "sha256": "dbdb5877b9b9924aa7c3dc46aa3df1143eb85d8fa73cebcfcdeab8deab415119",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 241,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "DingtalkRobotChannel.send_message"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/email.py",
+      "expected_sha256": "dd10781fe8cf50d243a5c35c150b34c627bbeedd5348002b7ce4379b9608a079",
+      "sha256": "dd10781fe8cf50d243a5c35c150b34c627bbeedd5348002b7ce4379b9608a079",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/feishubot.py",
+      "expected_sha256": "2c43e28fb204c4efc73a79edde7414b61ea67995fc21626182009daee3bb463f",
+      "sha256": "2c43e28fb204c4efc73a79edde7414b61ea67995fc21626182009daee3bb463f",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 245,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "FeishuBotChannel.send_message"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/gotify.py",
+      "expected_sha256": "aab017f3fc443e6437ed32eea055ea16378d41e2599c7119ec90c7a7fd004bb5",
+      "sha256": "aab017f3fc443e6437ed32eea055ea16378d41e2599c7119ec90c7a7fd004bb5",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 168,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "GotifyChannel.send_message"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/http.py",
+      "expected_sha256": "7044472eb88a47e9e702ada4e779b97a31dc7353a247f5a758b8bcac2886db08",
+      "sha256": "7044472eb88a47e9e702ada4e779b97a31dc7353a247f5a758b8bcac2886db08",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 328,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.request",
+          "owner": "HttpChannel.send_message"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/iyuu.py",
+      "expected_sha256": "8111e9ebfb36976a3cca405a533df2d8d4fc2b58093976ef71845b9d1087b371",
+      "sha256": "8111e9ebfb36976a3cca405a533df2d8d4fc2b58093976ef71845b9d1087b371",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 104,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "IYUUChannel.send_message"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/ntfy.py",
+      "expected_sha256": "91e5c3cae2c2fa463c29f8deccdf9380a9e8a1c0a3bb028abff666242a1d5aa3",
+      "sha256": "91e5c3cae2c2fa463c29f8deccdf9380a9e8a1c0a3bb028abff666242a1d5aa3",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 256,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "NtfyChannel.send_message"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/onebot11.py",
+      "expected_sha256": "bd934d5435c58138d5edf5f69e181d43e94c2463cb227cdc7a392d014640ad70",
+      "sha256": "bd934d5435c58138d5edf5f69e181d43e94c2463cb227cdc7a392d014640ad70",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 246,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "OneBot11Channel.__send_msg"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/pushdeer.py",
+      "expected_sha256": "5fea750dc7a830a41d87be2fd65f604042fcfd2960af34db182f8eb9fe7ff5e1",
+      "sha256": "5fea750dc7a830a41d87be2fd65f604042fcfd2960af34db182f8eb9fe7ff5e1",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 152,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "PushDeerChannel.send_message"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/pushme.py",
+      "expected_sha256": "2360359561eee9b6ddede5e27b995359f66cf5bbb4d9888c2f5b3143183beb65",
+      "sha256": "2360359561eee9b6ddede5e27b995359f66cf5bbb4d9888c2f5b3143183beb65",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 229,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "PushMeChannel.send_message"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/pushover.py",
+      "expected_sha256": "936a067840ced5d54bbcc7f87ebf7c78345df17fdb8ccebfbb15abdb558d0e9d",
+      "sha256": "936a067840ced5d54bbcc7f87ebf7c78345df17fdb8ccebfbb15abdb558d0e9d",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 291,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "PushoverChannel.send_message"
+        },
+        {
+          "line": 270,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.get",
+          "owner": "PushoverChannel.__download_image_to_base64"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/pushplus.py",
+      "expected_sha256": "1aab9addfdb5e48536b5babf2b1ec84de2634daa9f5f0998b2cb15d7e378eb40",
+      "sha256": "1aab9addfdb5e48536b5babf2b1ec84de2634daa9f5f0998b2cb15d7e378eb40",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 150,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "PushPlusChannel.send_message"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/qiyeweixinbot.py",
+      "expected_sha256": "b3127509a677081d93cfaa5c90c2f22dac64127d647d1e8d9776b4a582cff2bb",
+      "sha256": "b3127509a677081d93cfaa5c90c2f22dac64127d647d1e8d9776b4a582cff2bb",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 193,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "QiyeWeixinBotChannel.send_message"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/channel/custom/serverchan.py",
+      "expected_sha256": "0e5180e3375d77760045b1cf6ed3006c1db966ed114500577db67253686b906d",
+      "sha256": "0e5180e3375d77760045b1cf6ed3006c1db966ed114500577db67253686b906d",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 172,
+          "targets": [
+            "res"
+          ],
+          "callee": "requests.post",
+          "owner": "ServerChanChannel.send_message"
+        }
+      ]
+    },
+    {
+      "file": "mergemessagenotify/module.py",
+      "expected_sha256": "70aabde52e8b579555c551966a8e095cefc038a1a3b69b0291e6160cb3ccc2f1",
+      "sha256": "70aabde52e8b579555c551966a8e095cefc038a1a3b69b0291e6160cb3ccc2f1",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "mergemessagenotify/util.py",
+      "expected_sha256": "071405330d6c90fd87d1dceccd4111aeafad896347e73dcc2b10459af8c47981",
+      "sha256": "071405330d6c90fd87d1dceccd4111aeafad896347e73dcc2b10459af8c47981",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "iyuuautoseed/__init__.py",
+      "expected_sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+      "sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+      "matches": true,
+      "attributes": [
+        {
+          "line": 1398,
+          "attribute": "encoding",
+          "expression": "res.encoding",
+          "context": "Store",
+          "owner": "IYUUAutoSeed.__get_download_url.__get_gpw_torrent_url_from_page",
+          "parent_type": "Assign",
+          "assigned_encoding": "UTF-8"
+        },
+        {
+          "line": 1400,
+          "attribute": "encoding",
+          "expression": "res.encoding",
+          "context": "Store",
+          "owner": "IYUUAutoSeed.__get_download_url.__get_gpw_torrent_url_from_page",
+          "parent_type": "Assign",
+          "assigned_encoding": "<dynamic-or-non-encoding-literal>"
+        },
+        {
+          "line": 1516,
+          "attribute": "encoding",
+          "expression": "res.encoding",
+          "context": "Store",
+          "owner": "IYUUAutoSeed.__get_torrent_url_from_page",
+          "parent_type": "Assign",
+          "assigned_encoding": "UTF-8"
+        },
+        {
+          "line": 1518,
+          "attribute": "encoding",
+          "expression": "res.encoding",
+          "context": "Store",
+          "owner": "IYUUAutoSeed.__get_torrent_url_from_page",
+          "parent_type": "Assign",
+          "assigned_encoding": "<dynamic-or-non-encoding-literal>"
+        }
+      ],
+      "http_assignments": [
+        {
+          "line": 1347,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "IYUUAutoSeed.__get_download_url.__get_mteam_enclosure"
+        },
+        {
+          "line": 1509,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "IYUUAutoSeed.__get_torrent_url_from_page"
+        },
+        {
+          "line": 1386,
+          "targets": [
+            "res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "IYUUAutoSeed.__get_download_url.__get_gpw_torrent_url_from_page"
+        }
+      ]
+    },
+    {
+      "file": "iyuuautoseed/iyuu_helper.py",
+      "expected_sha256": "74f0cbde2789eab6a6c0d0edcc6fe3364a5e4ccceb909b5c8842492dc11cdcf0",
+      "sha256": "74f0cbde2789eab6a6c0d0edcc6fe3364a5e4ccceb909b5c8842492dc11cdcf0",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 34,
+          "targets": [
+            "ret"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "IyuuHelper.__request_iyuu"
+        },
+        {
+          "line": 39,
+          "targets": [
+            "ret"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "IyuuHelper.__request_iyuu"
+        }
+      ]
+    },
+    {
+      "file": "systemprocess/__init__.py",
+      "expected_sha256": "d0c8c6f1e034f46ce8b7d3c1bcd0cddc0e2d6455b2a6b35daa4b8002cd39f6ac",
+      "sha256": "d0c8c6f1e034f46ce8b7d3c1bcd0cddc0e2d6455b2a6b35daa4b8002cd39f6ac",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "mediaserverrefresh/__init__.py",
+      "expected_sha256": "ea92f39a852aa0333cb625885e0fbf7b2a679f4f7449463bb6126afe6694a3fc",
+      "sha256": "ea92f39a852aa0333cb625885e0fbf7b2a679f4f7449463bb6126afe6694a3fc",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "remoteidentifiers/__init__.py",
+      "expected_sha256": "14ec7f5f2964ebd1674305d5294ffa56fb61e2cd1021ea31e50d9675813891a4",
+      "sha256": "14ec7f5f2964ebd1674305d5294ffa56fb61e2cd1021ea31e50d9675813891a4",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 106,
+          "targets": [
+            "response"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "RemoteIdentifiers.__get_response_text"
+        }
+      ]
+    },
+    {
+      "file": "subscribegroup/__init__.py",
+      "expected_sha256": "06870f20e39237e4a69c9615ce005411feaa5e1a97cad50fd3b7b0645bead383",
+      "sha256": "06870f20e39237e4a69c9615ce005411feaa5e1a97cad50fd3b7b0645bead383",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "autobackup/__init__.py",
+      "expected_sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+      "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "brushflowlanduo/__init__.py",
+      "expected_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "matches": true,
+      "attributes": [
+        {
+          "line": 929,
+          "attribute": "url",
+          "expression": "site.url",
+          "context": "Load",
+          "owner": "BrushFlowLanduo._refresh_promotion_from_site",
+          "parent_type": "BoolOp"
+        },
+        {
+          "line": 994,
+          "attribute": "url",
+          "expression": "site.url",
+          "context": "Load",
+          "owner": "BrushFlowLanduo._refresh_mteam_promotion",
+          "parent_type": "BoolOp"
+        }
+      ],
+      "http_assignments": [
+        {
+          "line": 2989,
+          "targets": [
+            "request"
+          ],
+          "callee": "RequestUtils",
+          "owner": "BrushFlowLanduo.__get_redict_url"
+        },
+        {
+          "line": 936,
+          "targets": [
+            "response"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "BrushFlowLanduo._refresh_promotion_from_site"
+        },
+        {
+          "line": 998,
+          "targets": [
+            "response"
+          ],
+          "callee": "RequestUtils().post_res",
+          "owner": "BrushFlowLanduo._refresh_mteam_promotion"
+        },
+        {
+          "line": 3097,
+          "targets": [
+            "response"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "BrushFlowLanduo.__download"
+        },
+        {
+          "line": 3073,
+          "targets": [
+            "response"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "BrushFlowLanduo.__download"
+        }
+      ]
+    },
+    {
+      "file": "brushflowlanduo/models.py",
+      "expected_sha256": "4b292809c13557614c5ac2448936e7c8f774e22e9f866dd2d3fe53e56b7ebaa7",
+      "sha256": "4b292809c13557614c5ac2448936e7c8f774e22e9f866dd2d3fe53e56b7ebaa7",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "brushflowlanduo/promotion_guard.py",
+      "expected_sha256": "bd6d8618f6a39f3fc8c2844efe1c71e49b0eea10ceb23efe605c82329469085c",
+      "sha256": "bd6d8618f6a39f3fc8c2844efe1c71e49b0eea10ceb23efe605c82329469085c",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "mergesiteswitch/__init__.py",
+      "expected_sha256": "52d798421eabe57a88f3d0fc448289309fdfc8ecd6ea50d98cd5436d93289ab0",
+      "sha256": "52d798421eabe57a88f3d0fc448289309fdfc8ecd6ea50d98cd5436d93289ab0",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "torrenttransfermusic/__init__.py",
+      "expected_sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "scrapefileclean/__init__.py",
+      "expected_sha256": "c14c36e17112605e6c856614e88ea425530be2462123126a85e1adfea009a3af",
+      "sha256": "c14c36e17112605e6c856614e88ea425530be2462123126a85e1adfea009a3af",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "larkmessager/__init__.py",
+      "expected_sha256": "d9f6a1078706b03dc97247450a8084a8c67f07dbfccb675235fc0e1b91b18372",
+      "sha256": "d9f6a1078706b03dc97247450a8084a8c67f07dbfccb675235fc0e1b91b18372",
+      "matches": true,
+      "attributes": [
+        {
+          "line": 1673,
+          "attribute": "url",
+          "expression": "request.url",
+          "context": "Load",
+          "owner": "LarkMessager._webhook_endpoint",
+          "parent_type": "Attribute",
+          "header_name": "not-a-whitelisted-static-http-metadata-header"
+        },
+        {
+          "line": 1667,
+          "attribute": "headers",
+          "expression": "request.headers",
+          "context": "Load",
+          "owner": "LarkMessager._webhook_endpoint",
+          "parent_type": "Attribute"
+        },
+        {
+          "line": 1744,
+          "attribute": "headers",
+          "expression": "request.headers",
+          "context": "Load",
+          "owner": "LarkMessager._webhook_endpoint",
+          "parent_type": "Attribute",
+          "header_name": "not-a-whitelisted-static-http-metadata-header"
+        },
+        {
+          "line": 1745,
+          "attribute": "headers",
+          "expression": "request.headers",
+          "context": "Load",
+          "owner": "LarkMessager._webhook_endpoint",
+          "parent_type": "Attribute",
+          "header_name": "not-a-whitelisted-static-http-metadata-header"
+        },
+        {
+          "line": 1746,
+          "attribute": "headers",
+          "expression": "request.headers",
+          "context": "Load",
+          "owner": "LarkMessager._webhook_endpoint",
+          "parent_type": "Attribute",
+          "header_name": "not-a-whitelisted-static-http-metadata-header"
+        }
+      ],
+      "http_assignments": [
+        {
+          "line": 2405,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.get",
+          "owner": "LarkMessager._fetch_chats_endpoint"
+        }
+      ]
+    },
+    {
+      "file": "larkmessager/client.py",
+      "expected_sha256": "28ac4a3dae4879a86bba956f493b60121948fb2ca5e631d81c4868c604468654",
+      "sha256": "28ac4a3dae4879a86bba956f493b60121948fb2ca5e631d81c4868c604468654",
+      "matches": true,
+      "attributes": [
+        {
+          "line": 540,
+          "attribute": "headers",
+          "expression": "resp.headers",
+          "context": "Load",
+          "owner": "LarkClient.download_image_bytes",
+          "parent_type": "Attribute",
+          "header_name": "Content-Type"
+        },
+        {
+          "line": 555,
+          "attribute": "headers",
+          "expression": "resp.headers",
+          "context": "Load",
+          "owner": "LarkClient.download_file_bytes",
+          "parent_type": "Attribute",
+          "header_name": "Content-Type"
+        },
+        {
+          "line": 573,
+          "attribute": "headers",
+          "expression": "resp.headers",
+          "context": "Load",
+          "owner": "LarkClient.download_message_resource_bytes",
+          "parent_type": "Attribute",
+          "header_name": "Content-Type"
+        },
+        {
+          "line": 1198,
+          "attribute": "headers",
+          "expression": "resp.headers",
+          "context": "Load",
+          "owner": "LarkClient._upload_remote_image",
+          "parent_type": "Attribute",
+          "header_name": "Content-Type"
+        },
+        {
+          "line": 1280,
+          "attribute": "headers",
+          "expression": "resp.headers",
+          "context": "Load",
+          "owner": "LarkClient.download_image",
+          "parent_type": "Attribute",
+          "header_name": "Content-Type"
+        }
+      ],
+      "http_assignments": [
+        {
+          "line": 55,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.post",
+          "owner": "LarkClient._get_tenant_access_token"
+        },
+        {
+          "line": 136,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.post",
+          "owner": "LarkClient._send_message"
+        },
+        {
+          "line": 165,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.post",
+          "owner": "LarkClient._reply_message"
+        },
+        {
+          "line": 1278,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.get",
+          "owner": "LarkClient.download_image"
+        },
+        {
+          "line": 1310,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.get",
+          "owner": "LarkClient.download_file_bytes_raw"
+        },
+        {
+          "line": 1321,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.get",
+          "owner": "LarkClient.get_user_info"
+        },
+        {
+          "line": 1346,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.post",
+          "owner": "LarkClient.batch_get_id"
+        },
+        {
+          "line": 478,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.patch",
+          "owner": "LarkClient.edit_message"
+        },
+        {
+          "line": 501,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.post",
+          "owner": "LarkClient.add_message_reaction"
+        },
+        {
+          "line": 518,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.delete",
+          "owner": "LarkClient.delete_message_reaction"
+        },
+        {
+          "line": 537,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.get",
+          "owner": "LarkClient.download_image_bytes"
+        },
+        {
+          "line": 552,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.get",
+          "owner": "LarkClient.download_file_bytes"
+        },
+        {
+          "line": 570,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.get",
+          "owner": "LarkClient.download_message_resource_bytes"
+        },
+        {
+          "line": 926,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.post",
+          "owner": "LarkClient._create_streaming_card"
+        },
+        {
+          "line": 1053,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.put",
+          "owner": "LarkClient._update_streaming_card_content"
+        },
+        {
+          "line": 1077,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.patch",
+          "owner": "LarkClient.close_streaming_card"
+        },
+        {
+          "line": 1194,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.get",
+          "owner": "LarkClient._upload_remote_image"
+        },
+        {
+          "line": 1255,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.post",
+          "owner": "LarkClient.upload_image"
+        },
+        {
+          "line": 1269,
+          "targets": [
+            "resp"
+          ],
+          "callee": "requests.post",
+          "owner": "LarkClient.upload_file"
+        }
+      ]
+    },
+    {
+      "file": "larkmessager/crypto.py",
+      "expected_sha256": "8867ad8e0f7fedd59cc0c3b64058d8d76b1e851459188688dbd35904b11e9529",
+      "sha256": "8867ad8e0f7fedd59cc0c3b64058d8d76b1e851459188688dbd35904b11e9529",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "larkmessager/schemas.py",
+      "expected_sha256": "701b1bda58ea5ccc4eda6e71b173813c9e3b340716748086f68abfd0bd5234c4",
+      "sha256": "701b1bda58ea5ccc4eda6e71b173813c9e3b340716748086f68abfd0bd5234c4",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "cleaninvalidseed/__init__.py",
+      "expected_sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+      "sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "seedrescue/__init__.py",
+      "expected_sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+      "sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "seedrescue/core.py",
+      "expected_sha256": "db94a30635ed122fe37ffd617509ffc106a1e0612931bde951334f5cf7e44095",
+      "sha256": "db94a30635ed122fe37ffd617509ffc106a1e0612931bde951334f5cf7e44095",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "seedrescue/detail.py",
+      "expected_sha256": "02055b2fad2b0aef8ed8a6ba9cda2e19e8ede7f7604ae31d27b24e7f49d915eb",
+      "sha256": "02055b2fad2b0aef8ed8a6ba9cda2e19e8ede7f7604ae31d27b24e7f49d915eb",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "seedrescue/models.py",
+      "expected_sha256": "73fab2672ef27474614311c213ebc69f4a3a896c3a2cccf2161f910d50cfff99",
+      "sha256": "73fab2672ef27474614311c213ebc69f4a3a896c3a2cccf2161f910d50cfff99",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    },
+    {
+      "file": "cloudflarespeedtest/__init__.py",
+      "expected_sha256": "2e4549b9181e8714c401f18f1b082f539d1d8c20fa32c9675b994b6277b106f1",
+      "sha256": "2e4549b9181e8714c401f18f1b082f539d1d8c20fa32c9675b994b6277b106f1",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": [
+        {
+          "line": 464,
+          "targets": [
+            "version_res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "CloudflareSpeedTest.__get_release_version"
+        },
+        {
+          "line": 451,
+          "targets": [
+            "response"
+          ],
+          "callee": "requests.get",
+          "owner": "CloudflareSpeedTest.__get_windows_cloudflarest"
+        },
+        {
+          "line": 467,
+          "targets": [
+            "version_res"
+          ],
+          "callee": "RequestUtils().get_res",
+          "owner": "CloudflareSpeedTest.__get_release_version"
+        }
+      ]
+    },
+    {
+      "file": "customhosts/__init__.py",
+      "expected_sha256": "9c68f52c4e045180f92e9a2e223a15b681bfa5016082ee00e2015220430035fc",
+      "sha256": "9c68f52c4e045180f92e9a2e223a15b681bfa5016082ee00e2015220430035fc",
+      "matches": true,
+      "attributes": [],
+      "http_assignments": []
+    }
+  ],
+  "status": "passed",
+  "original_container_unchanged": true,
+  "original_state_before": {
+    "Pid": 1778027,
+    "StartedAt": "2026-10-28T11:43:10.979716372Z",
+    "Running": true,
+    "Restarting": false
+  },
+  "original_state_after": {
+    "Pid": 1778027,
+    "StartedAt": "2026-10-28T11:43:10.979716372Z",
+    "Running": true,
+    "Restarting": false
+  },
+  "bound_source_snapshot_sha256": "e3c924eb8d6efc70582d9af1a974c12231377b6a764abc68cf52df557bef106f",
+  "driver_sha256": "d6de33dc9e21a6b49780ca91329a1c83f9c19076bb29f15843df138eaac0b54b",
+  "program_sha256": "2012c708bb534cd37259234e695cde449352e7e22c6fe82187d39fb3b5ac38ab"
+}

@@ -54,7 +54,7 @@ func verifyOwnedProductionUserMessages(t *testing.T, request func(string, string
 	defer success("DELETE", "/api/plugins/"+clone, nil)
 	success("PUT", "/api/plugins/"+clone, map[string]any{"enabled": true, "fail_event": false})
 	texts := []string{" ordinary \u001cmessage ", "after failure", " /noai： ordinary escaped ", "ordinary image text"}
-	expected := []string{texts[0], texts[1], "ordinary escaped", texts[3]}
+	expected := append([]string(nil), texts...)
 	pids := map[string]int{}
 	for i, text := range texts {
 		var ack struct {
@@ -103,5 +103,5 @@ func verifyOwnedProductionUserMessages(t *testing.T, request func(string, string
 	if pids[manifest.PluginID] == pids[clone] {
 		t.Fatal("user-message source/clone shares SDK process")
 	}
-	t.Logf("actual Linux ordinary user.message: 4 real Web submissions preserve source text/explicit escape/image text and trusted six fields; source PID%d callback fails after real Base SaveData while clone PID%d receives every event and subsequent message; no AI/media/business parser or image retrieval", pids[manifest.PluginID], pids[clone])
+	t.Logf("actual Linux ordinary user.message: 4 real Web submissions preserve raw text/image text and trusted six fields; source PID%d callback fails after real Base SaveData while clone PID%d receives every event and subsequent message; no model-specific prefix rewriting/media parser or image retrieval", pids[manifest.PluginID], pids[clone])
 }

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/vol2/1000/docker/light-media-browser-20261101-pCMPM7Bo/run_browser_process.py", line 81, in <module>
+    success('PUT','/api/plugins/'+clone,dict(id='owned-browser-site',path='/page',headless=True,timeout_seconds=3));assert call(instance=clone)['success'];clean_profiles()
+                                                                                                                                                           ^^^^^^^^^^^^^^^^
+  File "/vol2/1000/docker/light-media-browser-20261101-pCMPM7Bo/run_browser_process.py", line 68, in clean_profiles
+    entries=list((data/'work'/'browser').glob('*'));assert not entries,entries
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [PosixPath('/vol2/1000/docker/light-media-browser-20261101-pCMPM7Bo/browser-final-r2/data/work/browser/light-media-browser-1135379705')]

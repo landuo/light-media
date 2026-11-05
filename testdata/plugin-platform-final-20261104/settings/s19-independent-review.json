@@ -1,0 +1,79 @@
+{
+  "status": "independent_source_target_3root17cases_and_actual_native_POST_2root6cases_dual_race_passed_final_Linux_browser_pending",
+  "reviewer": "/root/settings_scope, separate from /root implementation",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_location": "app/core/config.py:1069–1098",
+  "source_oracle_cases": 17,
+  "current_targets": {
+    "internal/plugins/network_proxy_host.go": "2be2e4f533e4a2506fe61d8af40650234b1553371795e1e2eacdaa73289d9991",
+    "internal/app/plugin_original_host_proxy.go": "fb1a8175a1d5c51b355c165c6b506d3ab111b8c84a3e9e22dc4c288d74bf52dd",
+    "internal/app/plugin_original_host_proxy_test.go": "8f08c844cac01e184cc76beb9088500bb713574ddfd4bca9f317c67e9338cea9",
+    "internal/app/plugin_original_resources.go": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b",
+    "internal/networkproxy/requests_merge.go": "a0380ec024b78daef35ab0eb637d4c9cdd9ad842d656bbd45a9c80e1c3f29fc5",
+    "internal/networkproxy/requests_env.go": "22d79755751a445593f25c8edc741d3931c5a94c18295b760a967efc47ca056c"
+  },
+  "evidence_sha256": {
+    "testdata/plugin-platform-final-20261104/settings/proxy-settings-independent-source-oracle.json": "4910a433596bf1b0343e62213ab08db7758a3687686ef6b9f6dfec0d614c5ffd",
+    "testdata/plugin-platform-final-20261104/settings/proxy_settings_source_oracle.py": "7ba5c9cad092adedce91f10508a5d976536253c4d2a0daee2982240ae755737d",
+    "testdata/plugin-platform-final-20261104/settings/s19-independent-source-scope-race.jsonl": "aca71518f9947899c21e9d9084ec886401ec0e9de0697143edec05d2e51e7c2a",
+    "testdata/plugin-platform-final-20261104/settings/s19-independent-source-scope-build-red.jsonl": "4a079ebc8a3e53af108046437a9c4e840976d2203723eddc1fa160d19c7f4dbe",
+    "testdata/plugin-platform-final-20261104/settings/settings-complete-scope-review.json": "442008286ed059e8a223fbcf89089637d581dc08cf900e7fa0961da638605a69"
+  },
+  "independent_test": {
+    "roots_pass": 3,
+    "subcases_pass": 17,
+    "failures": 0,
+    "skips": 0,
+    "seconds": 2.852,
+    "names": [
+      "TestOriginalHostProxyFixedSourceGetter",
+      "TestOriginalHostProxyPrivateEnvironmentBoundary",
+      "TestOriginalHostProxyCurrentScopeAndChanges"
+    ]
+  },
+  "reviewed_contract": [
+    "Nullable PROXY mapping from original exact getter; explicit Python strip first; uppercase nonempty preferred to lowercase; independent scheme fallback; no URL parsing or accidental ALL_PROXY inclusion in property.",
+    "Proxy environment only *_proxy spellings and REQUEST_METHOD, retaining case, empty values, host-specific keys, and exact environment ordering. Unrelated secrets excluded. Caller can apply existing requests-compatible transport in trusted Go code.",
+    "Real current object/app and plugin scope required, input strict empty object, scope before/after, configured ProxyHost and filtered environment checked again before return; bounded private JSON result.",
+    "Private result contains credential-bearing proxy values only for trusted SDK process memory/stdin. String/GoStringer convenience redacts whole object; no claim of forcing trusted worker to zero memory or preventing its native IO.",
+    "No PROXY_SERVER conflation: browser-specific explicit-only snapshot/caller is a separate S16 helper. No notification business implementation or arbitrary expression/session framework added."
+  ],
+  "historical_red": "Independent source/scope command initially could not compile because in-progress browser test placed Proxy on embedded sites.Config; original compile failure is retained, later owner fixed test field placement. This was not a proxy product failure and was not hidden.",
+  "pending": [
+    "Final current combined source compilation closure and actual Linux/server/browser acceptance",
+    "Final owned test process/tunnel/container/temp cleanup"
+  ],
+  "actual_private_sdk_native_go_post": {
+    "command": "TMPDIR=<own0700> OWNED_HOST_PROXY_FIXTURE_BINARY=<new independent race worker> go test -race ./internal/app -run ^TestOriginalHostProxyActualSDK(NativePostRoutes|CloneRevocationAndPublicBoundary)$ -count=1 -json",
+    "worker_build": [
+      "go",
+      "build",
+      "-race",
+      "-o",
+      "work/plugin-platform-final-20261104/settings/proxy-independent-worker",
+      "./cmd/plugin-host-proxy-fixture"
+    ],
+    "worker_sha256": "3dd5a6ff097736825caa41d0327934b4c9a24ac7729a5f169044ec3844d7de9a",
+    "relevant_before_and_after_sha256": {
+      "internal/plugins/network_proxy_host.go": "2be2e4f533e4a2506fe61d8af40650234b1553371795e1e2eacdaa73289d9991",
+      "internal/app/plugin_original_host_proxy.go": "fb1a8175a1d5c51b355c165c6b506d3ab111b8c84a3e9e22dc4c288d74bf52dd",
+      "internal/app/plugin_original_resources.go": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b",
+      "internal/app/plugin_original_host_proxy_sdk_test.go": "c1e69da7397982dc4a0399c30ebbf687717c535d2f500fde872ed2b229983820",
+      "internal/networkproxy/requests_merge.go": "a0380ec024b78daef35ab0eb637d4c9cdd9ad842d656bbd45a9c80e1c3f29fc5",
+      "internal/networkproxy/requests_env.go": "22d79755751a445593f25c8edc741d3931c5a94c18295b760a967efc47ca056c",
+      "cmd/plugin-host-proxy-fixture/main.go": "f9154102efbc6fd976641c67cfe50bbe612bb92720e556901d3d83f5bd9e05d6"
+    },
+    "changed_inputs": [],
+    "roots_pass": 2,
+    "subcases_pass": 6,
+    "failures": 0,
+    "skips": 0,
+    "seconds": 34.444,
+    "log": "testdata/plugin-platform-final-20261104/settings/s19-independent-current-sdk-race.jsonl",
+    "sha256": "c49de99a8d0b11cb29c91460ce6418b6405f2b6e30759c13e10f0e7fcfa09275",
+    "cases": "configured authenticated proxy despite NO_PROXY; source getter upper-case preference vs requests lower-case preference; CGI suppression; host-specific proxy; no_proxy direct; actual Go POST bytes reach owned real target exactly once and auth does not reach target; clone/stale/stopped scope and public404",
+    "classification": "Actual separately compiled and installed Go SDK worker + real App public/SDK calls + ordinary native worker HTTP; external services are owned HTTP peers, host is macOS. Actual final Linux/browser proof separate.",
+    "own_worker_removed": true,
+    "own_0700_tmp_empty": true
+  }
+}

@@ -1,0 +1,1163 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "classification": "fixed RequestUtils AST with actual vendor HTTP in disposable network-none image; owned loopback only",
+  "requests": "2.34.2",
+  "urllib3": "2.7.0",
+  "traces": [
+    {
+      "case": "/plain",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/gzip",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/br",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/500",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/invalid",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/progress",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=1",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=2",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=3",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=4",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=5",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=6",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=7",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=8",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=9",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=10",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=11",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=12",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=13",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=14",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=15",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=16",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=17",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=18",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=19",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=20",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=21",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=22",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=23",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=24",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=25",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=26",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=27",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=28",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=29",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-30?step=30",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=1",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=2",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=3",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=4",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=5",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=6",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=7",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=8",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=9",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=10",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=11",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=12",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=13",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=14",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=15",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=16",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=17",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=18",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=19",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=20",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=21",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=22",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=23",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=24",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=25",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=26",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=27",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=28",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=29",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    },
+    {
+      "case": "/redirect-31?step=30",
+      "headers": {
+        "User-Agent": "python-urllib3/2.7.0",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "75",
+        "Cookie": "owned_redirect=one"
+      },
+      "json": {
+        "cmd": "request.get",
+        "url": "https://owned.invalid/",
+        "maxTimeout": 3000
+      }
+    }
+  ],
+  "cases": [
+    {
+      "case": "plain",
+      "result": {
+        "status": "ok",
+        "solution": {
+          "response": "owned"
+        }
+      },
+      "elapsed_seconds": 0.018
+    },
+    {
+      "case": "gzip",
+      "result": {
+        "status": "ok",
+        "solution": {
+          "response": "owned"
+        }
+      },
+      "elapsed_seconds": 0.003
+    },
+    {
+      "case": "br",
+      "result": {
+        "status": "ok",
+        "solution": {
+          "response": "owned"
+        }
+      },
+      "elapsed_seconds": 0.004
+    },
+    {
+      "case": "500",
+      "result": null,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "case": "invalid",
+      "result": null,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "case": "progress",
+      "result": {
+        "status": "ok",
+        "solution": {
+          "response": "owned"
+        }
+      },
+      "elapsed_seconds": 0.253
+    }
+  ],
+  "redirects": [
+    {
+      "redirect_count": 30,
+      "result": {
+        "status": "ok",
+        "solution": {
+          "response": "owned"
+        }
+      },
+      "actual_http_requests": 31,
+      "second_request_cookie": "owned_redirect=one"
+    },
+    {
+      "redirect_count": 31,
+      "result": null,
+      "actual_http_requests": 31,
+      "second_request_cookie": "owned_redirect=one"
+    }
+  ],
+  "capture_driver_sha256": "8a5c52c81997fae9ca72d10643d74cbec15453e5108fb806a1f365994a96758f",
+  "executed_driver_sha256": "67579d687e9c612fbc1e8164a89fd4ab96d2d5702aba2aa48ccc02d2aa36db5f",
+  "dependency_image": "33354456e8e19c65193b9ca471e45450a620c541759cc42e76cf00a03b025881"
+}

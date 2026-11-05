@@ -1,0 +1,166 @@
+{
+  "status": "passed",
+  "classification": "exact owned S18/S19 compiled executable cleanup only; original source/scripts/evidence/old manifests kept",
+  "authorization": "root explicitly allowed previously sealed artifacts and confirmed-own unused tools with cleanup-time hashes; latter are not backfilled test bindings",
+  "removed": [
+    {
+      "path": "/Users/accidia/projects/light-media/work/plugin-platform-final-20261104/site-http/worker-linux",
+      "bytes": 5239431,
+      "sha256": "6ab7ae0041677fe909de5b06d23ca45308df7e5071cf319a1fe6c9dd6543c845",
+      "go_main_package": "light-media/cmd/plugin-host-site-http-fixture",
+      "active_pid_count_at_delete": 0,
+      "prior_evidence": [
+        "testdata/plugin-platform-final-20261104/site-http/linux-r9-acceptance.json",
+        "testdata/plugin-platform-final-20261104/site-http/acceptance.json",
+        "testdata/plugin-platform-final-20261104/site-http/reserved-credentials-fix.json",
+        "testdata/plugin-platform-final-20261104/site-http/full-sdk-linux.json",
+        "testdata/plugin-platform-final-20261104/site-http/linux/result.json",
+        "testdata/plugin-platform-final-20261104/site-http/linux-r9/result.json"
+      ],
+      "hash_classification": "previously sealed SHA",
+      "ownership": "created by message_audit during this S18/S19 task, corroborated by exact own work path and Go main package",
+      "removed": true
+    },
+    {
+      "path": "/Users/accidia/projects/light-media/work/plugin-platform-final-20261104/site-http/worker-v2-linux",
+      "bytes": 5239487,
+      "sha256": "67afde3baee75a6a0d2fe54871c97c1504b8b25c66c297d617af4a9845038ce1",
+      "go_main_package": "light-media/cmd/plugin-host-site-http-fixture",
+      "active_pid_count_at_delete": 0,
+      "prior_evidence": [
+        "testdata/plugin-platform-final-20261104/site-http/linux-r9-acceptance.json",
+        "testdata/plugin-platform-final-20261104/site-http/acceptance.json",
+        "testdata/plugin-platform-final-20261104/site-http/linux/result.json",
+        "testdata/plugin-platform-final-20261104/site-http/linux-r9/result.json"
+      ],
+      "hash_classification": "previously sealed SHA",
+      "ownership": "created by message_audit during this S18/S19 task, corroborated by exact own work path and Go main package",
+      "removed": true
+    },
+    {
+      "path": "/Users/accidia/projects/light-media/work/plugin-platform-final-20261104/site-http/worker",
+      "bytes": 5057746,
+      "sha256": "5782d56c1f38b7101ba8e1c1aaf86777447f570ed244568e2da7648a09762f12",
+      "go_main_package": "light-media/cmd/plugin-host-site-http-fixture",
+      "active_pid_count_at_delete": 0,
+      "prior_evidence": [],
+      "hash_classification": "cleanup-time hash only; not an original test/compile binding",
+      "ownership": "created by message_audit during this S18/S19 task, corroborated by exact own work path and Go main package",
+      "removed": true
+    },
+    {
+      "path": "/Users/accidia/projects/light-media/work/plugin-platform-final-20261104/site-http/worker-race",
+      "bytes": 6206562,
+      "sha256": "ce0ac65450dab9a9aea08ea0bc1685a4ba99ecdaed86f69af3030dd4f9cfe583",
+      "go_main_package": "light-media/cmd/plugin-host-site-http-fixture",
+      "active_pid_count_at_delete": 0,
+      "prior_evidence": [],
+      "hash_classification": "cleanup-time hash only; not an original test/compile binding",
+      "ownership": "created by message_audit during this S18/S19 task, corroborated by exact own work path and Go main package",
+      "removed": true
+    },
+    {
+      "path": "/Users/accidia/projects/light-media/work/plugin-platform-final-20261104/proxy/worker-linux",
+      "bytes": 10450545,
+      "sha256": "ff511d7f3ece730711b0c729fa4b1675845ba65d502e6053b7f9fe81b18b885e",
+      "go_main_package": "light-media/cmd/plugin-host-proxy-fixture",
+      "active_pid_count_at_delete": 0,
+      "prior_evidence": [
+        "testdata/plugin-platform-final-20261104/proxy/native-sdk-linux.json",
+        "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+        "testdata/plugin-platform-final-20261104/proxy/worker-build-inputs.json",
+        "testdata/plugin-platform-final-20261104/proxy/linux/result.json"
+      ],
+      "hash_classification": "previously sealed SHA",
+      "ownership": "created by message_audit during this S18/S19 task, corroborated by exact own work path and Go main package",
+      "removed": true
+    },
+    {
+      "path": "/Users/accidia/projects/light-media/work/plugin-platform-final-20261104/proxy/worker-v2-linux",
+      "bytes": 10450593,
+      "sha256": "2eb53ad19a3add81051c277ea576e6e9f2560400e5035519dca00fbebce242d7",
+      "go_main_package": "light-media/cmd/plugin-host-proxy-fixture",
+      "active_pid_count_at_delete": 0,
+      "prior_evidence": [
+        "testdata/plugin-platform-final-20261104/proxy/acceptance.json",
+        "testdata/plugin-platform-final-20261104/proxy/worker-build-inputs.json",
+        "testdata/plugin-platform-final-20261104/proxy/linux/result.json"
+      ],
+      "hash_classification": "previously sealed SHA",
+      "ownership": "created by message_audit during this S18/S19 task, corroborated by exact own work path and Go main package",
+      "removed": true
+    },
+    {
+      "path": "/Users/accidia/projects/light-media/work/plugin-platform-final-20261104/proxy/native-sdk-linux.test",
+      "bytes": 87191134,
+      "sha256": "7f5368cede3a6970d63a44989b6c255952f89eaf61169e30c1f25ce258a84760",
+      "go_main_package": "light-media/internal/app.test",
+      "active_pid_count_at_delete": 0,
+      "prior_evidence": [
+        "testdata/plugin-platform-final-20261104/proxy/native-sdk-linux.json",
+        "testdata/plugin-platform-final-20261104/site-http/reserved-credentials-fix.json",
+        "testdata/plugin-platform-final-20261104/site-http/full-sdk-linux.json"
+      ],
+      "hash_classification": "previously sealed SHA",
+      "ownership": "created by message_audit during this S18/S19 task, corroborated by exact own work path and Go main package",
+      "removed": true
+    },
+    {
+      "path": "/Users/accidia/projects/light-media/work/plugin-platform-final-20261104/proxy/worker",
+      "bytes": 9956626,
+      "sha256": "848a08724c90dc877d2cf2c8aaa13269465451e47d4863525653d07297425779",
+      "go_main_package": "light-media/cmd/plugin-host-proxy-fixture",
+      "active_pid_count_at_delete": 0,
+      "prior_evidence": [],
+      "hash_classification": "cleanup-time hash only; not an original test/compile binding",
+      "ownership": "created by message_audit during this S18/S19 task, corroborated by exact own work path and Go main package",
+      "removed": true
+    },
+    {
+      "path": "/Users/accidia/projects/light-media/work/plugin-platform-final-20261104/proxy/worker-race",
+      "bytes": 12136738,
+      "sha256": "3dd5a6ff097736825caa41d0327934b4c9a24ac7729a5f169044ec3844d7de9a",
+      "go_main_package": "light-media/cmd/plugin-host-proxy-fixture",
+      "active_pid_count_at_delete": 0,
+      "prior_evidence": [
+        "testdata/plugin-platform-final-20261104/settings/s19-independent-review.json"
+      ],
+      "hash_classification": "previously sealed SHA",
+      "ownership": "created by message_audit during this S18/S19 task, corroborated by exact own work path and Go main package",
+      "removed": true
+    }
+  ],
+  "total_files": 9,
+  "total_bytes": 151928862,
+  "previously_sealed": 6,
+  "cleanup_time_only": 3,
+  "watched_source_and_old_manifest_hashes_before": {
+    "testdata/plugin-platform-final-20261104/browser-ocr/intermediate-image-cleanup.json": "e21c6a3f122464d49de135d215847528df06ff572641020b3a3e2920ab1d7fef",
+    "testdata/plugin-platform-final-20261104/browser-ocr/final-evidence-manifest.json": "3e6508d8a1ce408d758c2bf0c380be5fe45a20ef501328098b080c054cd9e00a",
+    "internal/app/plugin_original_host_site_http.go": "726a0f353eab7311262f247f80fe24f934ec6a8da91ad324590d525dd25e4399",
+    "internal/plugins/site_http_host.go": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+    "internal/app/plugin_original_host_proxy.go": "fb1a8175a1d5c51b355c165c6b506d3ab111b8c84a3e9e22dc4c288d74bf52dd",
+    "internal/plugins/network_proxy_host.go": "2be2e4f533e4a2506fe61d8af40650234b1553371795e1e2eacdaa73289d9991",
+    "cmd/plugin-host-site-http-fixture/main.go": "614f2a8ade51fd7e708166e49592ef1143b14fdc8cdded7148c3821335c8648d",
+    "cmd/plugin-host-proxy-fixture/main.go": "f9154102efbc6fd976641c67cfe50bbe612bb92720e556901d3d83f5bd9e05d6"
+  },
+  "watched_source_and_old_manifest_hashes_after": {
+    "testdata/plugin-platform-final-20261104/browser-ocr/intermediate-image-cleanup.json": "e21c6a3f122464d49de135d215847528df06ff572641020b3a3e2920ab1d7fef",
+    "testdata/plugin-platform-final-20261104/browser-ocr/final-evidence-manifest.json": "3e6508d8a1ce408d758c2bf0c380be5fe45a20ef501328098b080c054cd9e00a",
+    "internal/app/plugin_original_host_site_http.go": "726a0f353eab7311262f247f80fe24f934ec6a8da91ad324590d525dd25e4399",
+    "internal/plugins/site_http_host.go": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+    "internal/app/plugin_original_host_proxy.go": "fb1a8175a1d5c51b355c165c6b506d3ab111b8c84a3e9e22dc4c288d74bf52dd",
+    "internal/plugins/network_proxy_host.go": "2be2e4f533e4a2506fe61d8af40650234b1553371795e1e2eacdaa73289d9991",
+    "cmd/plugin-host-site-http-fixture/main.go": "614f2a8ade51fd7e708166e49592ef1143b14fdc8cdded7148c3821335c8648d",
+    "cmd/plugin-host-proxy-fixture/main.go": "f9154102efbc6fd976641c67cfe50bbe612bb92720e556901d3d83f5bd9e05d6"
+  },
+  "watched_unchanged": true,
+  "not_touched": [
+    "work/current-final*",
+    "work/combined-platform",
+    "other work directories",
+    "NAS /home/admin directories already cleaned",
+    "source/fixtures/old acceptance/old manifests"
+  ],
+  "ended_utc": "2026-11-05T01:13:17.965109+00:00"
+}

@@ -1,0 +1,75 @@
+def torrents_info(
+        self,
+        status_filter: TorrentStatusesT | None = None,
+        category: str | None = None,
+        sort: str | None = None,
+        reverse: bool | None = None,
+        limit: str | int | None = None,
+        offset: str | int | None = None,
+        torrent_hashes: str | Iterable[str] | None = None,
+        tag: str | None = None,
+        private: bool | None = None,
+        include_trackers: bool | None = None,
+        include_files: bool | None = None,
+        **kwargs: APIKwargsT,
+    ) -> TorrentInfoList:
+        """
+        Retrieves list of info for torrents.
+
+        :param status_filter: Filter list by torrent status:
+
+            * Original options: ``all``, ``downloading``, ``seeding``, ``completed``,
+              ``paused``, ``active``, ``inactive``, ``resumed``, ``errored``
+            * Added in Web API v2.4.1: ``stalled``, ``stalled_uploading``, and
+              ``stalled_downloading``
+            * Added in Web API v2.8.4: ``checking``
+            * Added in Web API v2.8.18: ``moving``
+            * Added in Web API v2.11.0: ``stopped`` (replaced ``paused``), ``running``
+              (replaced ``resumed``)
+        :param category: Filter list by category
+        :param sort: Sort list by any property returned
+        :param reverse: Reverse sorting
+        :param limit: Limit length of list
+        :param offset: Start of list (if < 0, offset from end of list)
+        :param torrent_hashes: Filter list by hash (separate multiple hashes with a '|')
+            (added in Web API v2.0.1)
+        :param tag: Filter list by tag (empty string means "untagged"; no "tag" parameter
+            means "any tag"; added in Web API v2.8.3)
+        :param private: Filter list by private flag - use None to ignore; (added in
+            Web API v2.11.1)
+        :param include_trackers: Include trackers in response; default False; (added in
+            Web API v2.11.4)
+        :param include_files: Include files in response; default False; (added in Web API v2.11.7)
+        """  # noqa: E501
+        # convert filter for pre- and post-v2.11.0
+        if status_filter in {"stopped", "paused", "running", "resumed"}:
+            is_post_2_11 = v(self.app_web_api_version()) >= v("2.11.0")
+            status_filter = {
+                ("stopped", False): "paused",
+                ("paused", True): "stopped",
+                ("running", False): "resumed",
+                ("resumed", True): "running",
+            }.get((status_filter, is_post_2_11), status_filter)  # type:ignore[assignment]
+
+        data = {
+            "filter": status_filter,
+            "category": category,
+            "sort": sort,
+            "reverse": None if reverse is None else bool(reverse),
+            "limit": limit,
+            "offset": offset,
+            "hashes": self._list2string(torrent_hashes, "|"),
+            "tag": tag,
+            "private": None if private is None else bool(private),
+            "includeTrackers": (
+                None if include_trackers is None else bool(include_trackers)
+            ),
+            "includeFiles": None if include_files is None else bool(include_files),
+        }
+        return self._post_cast(
+            _name=APINames.Torrents,
+            _method="info",
+            data=data,
+            response_class=TorrentInfoList,
+            **kwargs,
+        )

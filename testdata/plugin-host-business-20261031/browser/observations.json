@@ -1,0 +1,40 @@
+{
+  "classification": "actual CUA in-app browser, macOS cmd/server/standard installed SDK; synthetic site protocol and database seeds are separate from actual browser actions",
+  "origin": "http://127.0.0.1:62280",
+  "tab": "iab:4",
+  "source_worker_pid": 23158,
+  "clone_worker_pid": 23156,
+  "actions": [
+    {
+      "action": "source settings.read via run_once then save",
+      "observed": "data page CustomIdentifiers=[Owned => Renamed], changed=null; run_once false on reopening"
+    },
+    {
+      "action": "settings.write via source configuration form",
+      "observed": "CustomIdentifiers=[Browser => Renamed], changed=true, same source worker pid"
+    },
+    {
+      "action": "write unsupported OwnedUnknownKey",
+      "observed": "save failure shown with request req_LevvP8ct3F0jpdzQM89idJBh; form remains editable"
+    },
+    {
+      "action": "restore valid key and original Owned => Renamed value in same form",
+      "observed": "save succeeds, changed=true, original PID retained"
+    },
+    {
+      "action": "open clone data page",
+      "observed": "independent pid23156 and unchanged read observation, changed=null"
+    }
+  ],
+  "screenshots": [
+    "settings-read.jpg",
+    "settings-write.jpg",
+    "unknown-setting-error.jpg",
+    "recovery.jpg",
+    "clone-data.jpg"
+  ],
+  "notes": [
+    "Browser-tested binary predates final native site recursion guard patch; agent binds its actual binary separately.",
+    "No production service edited."
+  ]
+}

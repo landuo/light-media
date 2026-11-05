@@ -1,0 +1,19 @@
+{
+  "classification": "supplement to unchanged raw R6 result from exact executed driver assertions and successful exit, plus actual post-process container/profile observation; no fabricated raw HTTP payload",
+  "result_sha256": "223f204e849d0df672fedd4e2c1a0e79837b28efdfc6237c2c1bfa8e013c0c60",
+  "executed_driver_sha256": "63a7d1d500f9ece642ecf63b5b34c4703d509de25df14c7eb61e30b5b76241c4",
+  "executed_wrapper_sha256": "01d59568214458843ef5565414ae6eea098e317e5ee1cb8aea2e2c680ae77465",
+  "driver_exit": 0,
+  "cleanup_assertions_in_executed_driver": {
+    "instances": [
+      "OwnedHostBusinesstwin",
+      "OwnedHostBusiness"
+    ],
+    "uninstall_success": true,
+    "subsequent_custom_API_status": 404,
+    "stop_wait_exit_code": 0
+  },
+  "actual_post_process_snapshot": "r6-post-process-cleanup.log",
+  "snapshot_sha256": "9f54b4ed24b61b4a302acf57d380aa67171cceb050ee57c3fb564d20102c5adb",
+  "R7_followup": "record actual uninstall response objects,API404 responses,owned-container runtime/absence and process/profile observations directly in new result; final owned root removal is separately observed after evidence capture"
+}

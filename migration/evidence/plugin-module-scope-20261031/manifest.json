@@ -1,0 +1,149 @@
+{
+  "date": "2026-10-31",
+  "scope": "plugin module only",
+  "phase": "inventory only, implementation not started",
+  "source_commits": {
+    "backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "frontend": "2829e3b08214348f05ff2f5beae644882eccad58"
+  },
+  "target_head": "97476582910dc4b696f7ccd5010f28d823812d40",
+  "observed_remote_main": "97476582910dc4b696f7ccd5010f28d823812d40",
+  "old_ledger_source_preserved": {
+    "remote": "attachment:mp-plugins-handoff-20261029.zip",
+    "commit": "4419c3ad9fd78f9f8bf90811a5779e6bb3f85417",
+    "provenance": "Read-only NAS-installed static source handoff. This is a newly created local content baseline, NOT an upstream commit.",
+    "archive_sha256": "44703b6523509ee82ea60d841b1a42256f54a4476a64f2efbd8b056d0d040183",
+    "external_inputs": []
+  },
+  "all_existing_top_level_values_preserved": true,
+  "prior_ledger_sha256": "5bada1072c9ee8c990f236842b1632cd5987d947a2065026b8a9ac11ce1461d6",
+  "source_tree_nodes": {
+    "backend": 1029,
+    "frontend": 565
+  },
+  "classification": {
+    "backend": {
+      "support": 789,
+      "excluded": 169,
+      "behavior": 71
+    },
+    "frontend": {
+      "support": 472,
+      "behavior": 74,
+      "excluded": 19
+    }
+  },
+  "scope_implementation_groups": 13,
+  "new_implementation_or_runtime_accepted_features": 0,
+  "independent_reviewers": [
+    "/root/mp_modules_source_inventory",
+    "/root/mp_business_entry_inventory"
+  ],
+  "reconciliation": {
+    "backend_support_bindings_added": 9,
+    "frontend_support_bindings_added": 31,
+    "official_auth_ui_correction": "UserAuthDialog excluded; ordinary plugin auth is src/pages/login.vue:208/249 + app/core/auth.py",
+    "scope_note": "31 built-in modules are dependency reference only, no business-plugin implementation now."
+  },
+  "checks": [
+    {
+      "name": "backend",
+      "command": [
+        "python3",
+        "/Users/accidia/.codex/skills/migrate-project-faithfully/scripts/check_ledger.py",
+        "/Users/accidia/projects/light-media/work/mp-v2-module-inventory-20261031/planning-section.json",
+        "--source-repo",
+        "/Users/accidia/projects/MoviePilot",
+        "--target-repo",
+        "/Users/accidia/projects/light-media"
+      ],
+      "exit_code": 0,
+      "duration_s": 0.091,
+      "stdout": "0 structural/integrity issue(s). This is NOT semantic equivalence certification.\n",
+      "stderr": "",
+      "claim": "non-final structural/integrity check only; no runtime equivalence"
+    },
+    {
+      "name": "frontend",
+      "command": [
+        "python3",
+        "/Users/accidia/.codex/skills/migrate-project-faithfully/scripts/check_ledger.py",
+        "/Users/accidia/projects/light-media/work/mp-v2-module-inventory-20261031/frontend-planning-view.json",
+        "--source-repo",
+        "/Users/accidia/projects/MoviePilot-Frontend",
+        "--target-repo",
+        "/Users/accidia/projects/light-media"
+      ],
+      "exit_code": 0,
+      "duration_s": 0.082,
+      "stdout": "0 structural/integrity issue(s). This is NOT semantic equivalence certification.\n",
+      "stderr": "",
+      "claim": "non-final structural/integrity check only; no runtime equivalence"
+    }
+  ],
+  "product_diff_exit_code": 0,
+  "artifacts": [
+    {
+      "path": "migration/evidence/plugin-module-scope-20261031/planning-section.json.gz",
+      "sha256": "7785d9a1985a7c5fa3d9510c31f5eddfd47ef42a6b0813008caead88e172de3a",
+      "uncompressed_sha256": "92822e885456b47a176c82075177b94fdc9822ee79579c6243bca4b1946cc775"
+    },
+    {
+      "path": "migration/evidence/plugin-module-scope-20261031/frontend-planning-view.json.gz",
+      "sha256": "974ca8619d011b8ce68f4ad30e509616d7f6bc32ee550173b5d510200f6e8e60",
+      "uncompressed_sha256": "ac8215a8c5c6ad971dae2752d3b71a54caaec9370e33be4d1a81b251a52f907b"
+    },
+    {
+      "path": "migration/evidence/plugin-module-scope-20261031/checks.json.gz",
+      "sha256": "b4a6b7609f69ede5183028081a98cb4fb83364754ef0dcccf53dad414e75bd13",
+      "uncompressed_sha256": "7263ff8aa72c7cdbab7cdf1555db9a63060b1391f962a2015793f7c174d46aa8"
+    },
+    {
+      "path": "migration/evidence/plugin-module-scope-20261031/backend-symbol-candidates.json.gz",
+      "sha256": "0a90c9cfa021057577214aba7c20398c9aa29e9e407fdae9307ad51bca02a6e0",
+      "uncompressed_sha256": "696a2420993e7b6faba2993410ce7774ffc595d4597edd5847e40f785c964ec6"
+    },
+    {
+      "path": "migration/evidence/plugin-module-scope-20261031/backend-mixed-dependencies.json.gz",
+      "sha256": "61ae85df8ccfd3051faef7fffe29d3fec7a165f78297944b8da1013aaa4f3f3e",
+      "uncompressed_sha256": "406a4a5ed0a6a54fad891e394bfd825266faf01f049acf97de42b4ce95733bce"
+    },
+    {
+      "path": "migration/evidence/plugin-module-scope-20261031/target-entry-symbols.json.gz",
+      "sha256": "2b698a7e543f57705d12ff07932d02e68d7359608a56b8b4929ac7382e2e89c5",
+      "uncompressed_sha256": "5ef7829124a12f9c57e6f3e8af2781c6816544786f095ea714ccec510dcc2914"
+    },
+    {
+      "path": "migration/evidence/plugin-module-scope-20261031/source-independent--plugin-platform-independent.json.gz",
+      "sha256": "709c0d5b793affe6b496aa3d0efa485503d2cf7689bb7817162db2b87ecb1c67",
+      "uncompressed_sha256": "4add84bfd12bbd2b6a422817505c3340710cf8287de4532b4aeddd89831279b1"
+    },
+    {
+      "path": "migration/evidence/plugin-module-scope-20261031/source-independent--plugin-platform-independent.md.gz",
+      "sha256": "3ae701678264534e06c5cd4b09ce90a27f507022c0cd6094ff44ed9d27c4697e",
+      "uncompressed_sha256": "10864fdfdf5a793de0e456889a1badccd68200f090a83a9f5c3a6dcce3794eca"
+    },
+    {
+      "path": "migration/evidence/plugin-module-scope-20261031/entry-independent--plugin-independent-discovery.json.gz",
+      "sha256": "b3728f2d77a284473b1778234b671fb02adb476f10add44fc56399ea92ff4df1",
+      "uncompressed_sha256": "2aa0e25a47ca5be38491c89db2daa2560fb0d7ab83c7711cc8db018823ad2a1c"
+    },
+    {
+      "path": "migration/evidence/plugin-module-scope-20261031/entry-independent--plugin-index-reconciliation.json.gz",
+      "sha256": "f657c056454cff79e72db640b4c89fc2245d69c64054ae678f0a6bfe490e2142",
+      "uncompressed_sha256": "3c028ee247389e9dc86d26784da2aaba7682f1582e33e71ade35400f767165b6"
+    },
+    {
+      "path": "migration/evidence/plugin-module-scope-20261031/entry-independent--plugin-summary.md.gz",
+      "sha256": "8488c925d8ce1e9c625badadd91f4f5af862654a010306460fef427b7b80c854",
+      "uncompressed_sha256": "a17539f3580cf88e37839c3dfbddd756698a9d5334676b96a669b678952409eb"
+    }
+  ],
+  "limits": [
+    "getattr/属性/动态factory和全部可选依赖不能仅由静态索引证明闭合。",
+    "固定平台app/plugins只含基类，实际插件依赖取自单独固定的安装版快照。",
+    "必要外部站点普通资源的精确制品/源版本与目标差异仍须核实。",
+    "本轮未运行旧版/目标/浏览器等价验收。"
+  ],
+  "delivery": "local documentation/evidence only, uncommitted, not pushed or deployed"
+}

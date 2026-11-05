@@ -99,7 +99,7 @@ func TestOriginalWebCommandMediaTextRoutingActualSDK(t *testing.T) {
 		{"image-only-empty-text", "", true, 501},
 		{"image-only-null-text", nil, true, 501},
 		{"image-with-non-command", "ordinary message", true, 200},
-		{"image-with-ai-command", "/ai describe", true, 501},
+		{"image-with-ordinary-unknown-command", "/ai describe", true, 200},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			body := map[string]any{"image": ref}
@@ -115,8 +115,8 @@ func TestOriginalWebCommandMediaTextRoutingActualSDK(t *testing.T) {
 	}
 	a.wg.Wait()
 	got := ownedCommandRead(t, object)
-	if len(got.Events) != len(cases) || len(got.Ingress) != len(cases)+1 {
-		t.Fatal("unknown/media-only/AI request executed a declared command", got)
+	if len(got.Events) != len(cases) || len(got.Ingress) != len(cases)+2 {
+		t.Fatal("unknown/media-only request executed a declared command", got)
 	}
 	if mediaHits.Load() != 0 {
 		t.Fatal("command ingress fetched media", mediaHits.Load())

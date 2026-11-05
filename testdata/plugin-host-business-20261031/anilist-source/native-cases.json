@@ -1,0 +1,5117 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "initial_condition": "fresh_process=true resets AniList client; consecutive false retains source proxy/translation state; cache=false only bypasses recognition/provider value cache",
+  "cases": [
+    {
+      "case": "anilist_id",
+      "request": {
+        "source": "anilist",
+        "anilistid": 151,
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 151,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Owned",
+                  "native": "Original",
+                  "romaji": "Romaji",
+                  "english": "English"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": [
+            {
+              "id": 151,
+              "title": "Owned",
+              "synonyms": [
+                "Alias",
+                "Translated"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_id_meta_override",
+      "request": {
+        "source": "anilist",
+        "anilistid": 151,
+        "meta": {
+          "en_name": "Owned",
+          "type": "电视剧",
+          "year": "1990",
+          "begin_season": 0
+        },
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 151,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Owned S02"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": [
+            {
+              "id": 151,
+              "title": "Owned",
+              "synonyms": [
+                "Alias",
+                "Translated"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": 0,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": null,
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "Alias",
+          "Translated"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_search",
+      "request": {
+        "source": "anilist",
+        "meta": {
+          "en_name": "Owned",
+          "type": "电视剧",
+          "year": "2026"
+        },
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Page": {
+                "media": [
+                  {
+                    "id": 151,
+                    "idMal": 26,
+                    "title": {
+                      "chinese": "Owned",
+                      "native": "Original",
+                      "romaji": "Romaji",
+                      "english": "English"
+                    },
+                    "format": "TV",
+                    "status": "FINISHED",
+                    "description": " <b>Hello</b><br>World &amp; all ",
+                    "startDate": {
+                      "year": 2026,
+                      "month": 10,
+                      "day": 31
+                    },
+                    "endDate": {
+                      "year": 2026,
+                      "month": 11,
+                      "day": 1
+                    },
+                    "seasonYear": 2026,
+                    "episodes": 3,
+                    "duration": 24,
+                    "countryOfOrigin": "JP",
+                    "coverImage": {
+                      "extraLarge": "https://s4.anilist.co/cover.jpg",
+                      "large": "fallback"
+                    },
+                    "bannerImage": "https://s4.anilist.co/banner.jpg",
+                    "genres": [
+                      "Drama"
+                    ],
+                    "synonyms": [
+                      "Alias",
+                      "Alias"
+                    ],
+                    "averageScore": 86.5,
+                    "popularity": 17,
+                    "isAdult": false,
+                    "studios": {
+                      "nodes": [
+                        {
+                          "name": "Studio"
+                        }
+                      ]
+                    },
+                    "actors": [
+                      {
+                        "id": 9,
+                        "name": "Actor"
+                      }
+                    ],
+                    "directors": [
+                      {
+                        "id": 10,
+                        "name": "Director"
+                      }
+                    ],
+                    "externalLinks": [
+                      {
+                        "site": "AniDB",
+                        "url": "https://anidb.net/anime/456"
+                      }
+                    ],
+                    "characters": {
+                      "edges": [
+                        {
+                          "node": {
+                            "name": {
+                              "full": "Character",
+                              "native": "角色"
+                            }
+                          },
+                          "voiceActors": [
+                            {
+                              "id": 9,
+                              "name": {
+                                "full": "Actor",
+                                "native": "声优"
+                              },
+                              "image": {
+                                "large": "https://s4.anilist.co/actor.jpg"
+                              },
+                              "siteUrl": "https://anilist.co/staff/9"
+                            },
+                            {
+                              "id": 99,
+                              "name": {
+                                "full": "Ignored"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "staff": {
+                      "edges": [
+                        {
+                          "role": "Chief Director",
+                          "node": {
+                            "id": 10,
+                            "name": {
+                              "full": "Director"
+                            },
+                            "image": {
+                              "large": "https://s4.anilist.co/director.jpg"
+                            },
+                            "siteUrl": "https://anilist.co/staff/10"
+                          }
+                        },
+                        {
+                          "role": "director",
+                          "node": {
+                            "name": {
+                              "full": "Ignored"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "request_body": {
+            "query": "\n            query ($search: String!, $count: Int!) {\n              Page(page: 1, perPage: $count) {\n                media(search: $search, type: ANIME, sort: SEARCH_MATCH) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     }\n              }\n            }\n        ",
+            "variables": {
+              "search": "Owned",
+              "count": 20
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": [
+            {
+              "id": 151,
+              "title": "Owned",
+              "synonyms": [
+                "Alias",
+                "Translated"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_ordered_filter",
+      "request": {
+        "source": "anilist",
+        "meta": {
+          "en_name": "Owned",
+          "type": "电视剧",
+          "year": "2026"
+        },
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Page": {
+                "media": [
+                  {
+                    "id": 151,
+                    "idMal": 26,
+                    "title": {
+                      "chinese": "Owned",
+                      "native": "Original",
+                      "romaji": "Romaji",
+                      "english": "English"
+                    },
+                    "format": "MOVIE",
+                    "status": "FINISHED",
+                    "description": " <b>Hello</b><br>World &amp; all ",
+                    "startDate": {
+                      "year": 2026,
+                      "month": 10,
+                      "day": 31
+                    },
+                    "endDate": {
+                      "year": 2026,
+                      "month": 11,
+                      "day": 1
+                    },
+                    "seasonYear": 2026,
+                    "episodes": 3,
+                    "duration": 24,
+                    "countryOfOrigin": "JP",
+                    "coverImage": {
+                      "extraLarge": "https://s4.anilist.co/cover.jpg",
+                      "large": "fallback"
+                    },
+                    "bannerImage": "https://s4.anilist.co/banner.jpg",
+                    "genres": [
+                      "Drama"
+                    ],
+                    "synonyms": [
+                      "Alias",
+                      "Alias"
+                    ],
+                    "averageScore": 86.5,
+                    "popularity": 17,
+                    "isAdult": false,
+                    "studios": {
+                      "nodes": [
+                        {
+                          "name": "Studio"
+                        }
+                      ]
+                    },
+                    "actors": [
+                      {
+                        "id": 9,
+                        "name": "Actor"
+                      }
+                    ],
+                    "directors": [
+                      {
+                        "id": 10,
+                        "name": "Director"
+                      }
+                    ],
+                    "externalLinks": [
+                      {
+                        "site": "AniDB",
+                        "url": "https://anidb.net/anime/456"
+                      }
+                    ],
+                    "characters": {
+                      "edges": [
+                        {
+                          "node": {
+                            "name": {
+                              "full": "Character",
+                              "native": "角色"
+                            }
+                          },
+                          "voiceActors": [
+                            {
+                              "id": 9,
+                              "name": {
+                                "full": "Actor",
+                                "native": "声优"
+                              },
+                              "image": {
+                                "large": "https://s4.anilist.co/actor.jpg"
+                              },
+                              "siteUrl": "https://anilist.co/staff/9"
+                            },
+                            {
+                              "id": 99,
+                              "name": {
+                                "full": "Ignored"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "staff": {
+                      "edges": [
+                        {
+                          "role": "Chief Director",
+                          "node": {
+                            "id": 10,
+                            "name": {
+                              "full": "Director"
+                            },
+                            "image": {
+                              "large": "https://s4.anilist.co/director.jpg"
+                            },
+                            "siteUrl": "https://anilist.co/staff/10"
+                          }
+                        },
+                        {
+                          "role": "director",
+                          "node": {
+                            "name": {
+                              "full": "Ignored"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": 151,
+                    "idMal": 26,
+                    "title": {
+                      "chinese": "Owned",
+                      "native": "Original",
+                      "romaji": "Romaji",
+                      "english": "English"
+                    },
+                    "format": "TV",
+                    "status": "FINISHED",
+                    "description": " <b>Hello</b><br>World &amp; all ",
+                    "startDate": {
+                      "year": 2025,
+                      "month": 10,
+                      "day": 31
+                    },
+                    "endDate": {
+                      "year": 2026,
+                      "month": 11,
+                      "day": 1
+                    },
+                    "seasonYear": 2026,
+                    "episodes": 3,
+                    "duration": 24,
+                    "countryOfOrigin": "JP",
+                    "coverImage": {
+                      "extraLarge": "https://s4.anilist.co/cover.jpg",
+                      "large": "fallback"
+                    },
+                    "bannerImage": "https://s4.anilist.co/banner.jpg",
+                    "genres": [
+                      "Drama"
+                    ],
+                    "synonyms": [
+                      "Alias",
+                      "Alias"
+                    ],
+                    "averageScore": 86.5,
+                    "popularity": 17,
+                    "isAdult": false,
+                    "studios": {
+                      "nodes": [
+                        {
+                          "name": "Studio"
+                        }
+                      ]
+                    },
+                    "actors": [
+                      {
+                        "id": 9,
+                        "name": "Actor"
+                      }
+                    ],
+                    "directors": [
+                      {
+                        "id": 10,
+                        "name": "Director"
+                      }
+                    ],
+                    "externalLinks": [
+                      {
+                        "site": "AniDB",
+                        "url": "https://anidb.net/anime/456"
+                      }
+                    ],
+                    "characters": {
+                      "edges": [
+                        {
+                          "node": {
+                            "name": {
+                              "full": "Character",
+                              "native": "角色"
+                            }
+                          },
+                          "voiceActors": [
+                            {
+                              "id": 9,
+                              "name": {
+                                "full": "Actor",
+                                "native": "声优"
+                              },
+                              "image": {
+                                "large": "https://s4.anilist.co/actor.jpg"
+                              },
+                              "siteUrl": "https://anilist.co/staff/9"
+                            },
+                            {
+                              "id": 99,
+                              "name": {
+                                "full": "Ignored"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "staff": {
+                      "edges": [
+                        {
+                          "role": "Chief Director",
+                          "node": {
+                            "id": 10,
+                            "name": {
+                              "full": "Director"
+                            },
+                            "image": {
+                              "large": "https://s4.anilist.co/director.jpg"
+                            },
+                            "siteUrl": "https://anilist.co/staff/10"
+                          }
+                        },
+                        {
+                          "role": "director",
+                          "node": {
+                            "name": {
+                              "full": "Ignored"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": 151,
+                    "idMal": 26,
+                    "title": {
+                      "chinese": "Owned",
+                      "native": "Original",
+                      "romaji": "Romaji",
+                      "english": "English"
+                    },
+                    "format": "TV",
+                    "status": "FINISHED",
+                    "description": " <b>Hello</b><br>World &amp; all ",
+                    "startDate": {
+                      "year": 2026,
+                      "month": 10,
+                      "day": 31
+                    },
+                    "endDate": {
+                      "year": 2026,
+                      "month": 11,
+                      "day": 1
+                    },
+                    "seasonYear": 2026,
+                    "episodes": 3,
+                    "duration": 24,
+                    "countryOfOrigin": "JP",
+                    "coverImage": {
+                      "extraLarge": "https://s4.anilist.co/cover.jpg",
+                      "large": "fallback"
+                    },
+                    "bannerImage": "https://s4.anilist.co/banner.jpg",
+                    "genres": [
+                      "Drama"
+                    ],
+                    "synonyms": [
+                      "Alias",
+                      "Alias"
+                    ],
+                    "averageScore": 86.5,
+                    "popularity": 17,
+                    "isAdult": false,
+                    "studios": {
+                      "nodes": [
+                        {
+                          "name": "Studio"
+                        }
+                      ]
+                    },
+                    "actors": [
+                      {
+                        "id": 9,
+                        "name": "Actor"
+                      }
+                    ],
+                    "directors": [
+                      {
+                        "id": 10,
+                        "name": "Director"
+                      }
+                    ],
+                    "externalLinks": [
+                      {
+                        "site": "AniDB",
+                        "url": "https://anidb.net/anime/456"
+                      }
+                    ],
+                    "characters": {
+                      "edges": [
+                        {
+                          "node": {
+                            "name": {
+                              "full": "Character",
+                              "native": "角色"
+                            }
+                          },
+                          "voiceActors": [
+                            {
+                              "id": 9,
+                              "name": {
+                                "full": "Actor",
+                                "native": "声优"
+                              },
+                              "image": {
+                                "large": "https://s4.anilist.co/actor.jpg"
+                              },
+                              "siteUrl": "https://anilist.co/staff/9"
+                            },
+                            {
+                              "id": 99,
+                              "name": {
+                                "full": "Ignored"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "staff": {
+                      "edges": [
+                        {
+                          "role": "Chief Director",
+                          "node": {
+                            "id": 10,
+                            "name": {
+                              "full": "Director"
+                            },
+                            "image": {
+                              "large": "https://s4.anilist.co/director.jpg"
+                            },
+                            "siteUrl": "https://anilist.co/staff/10"
+                          }
+                        },
+                        {
+                          "role": "director",
+                          "node": {
+                            "name": {
+                              "full": "Ignored"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "request_body": {
+            "query": "\n            query ($search: String!, $count: Int!) {\n              Page(page: 1, perPage: $count) {\n                media(search: $search, type: ANIME, sort: SEARCH_MATCH) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     }\n              }\n            }\n        ",
+            "variables": {
+              "search": "Owned",
+              "count": 20
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": [
+            {
+              "id": 151,
+              "title": "Owned",
+              "synonyms": [
+                "Alias",
+                "Translated"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_no_match",
+      "request": {
+        "source": "anilist",
+        "meta": {
+          "en_name": "Owned",
+          "type": "电视剧",
+          "year": "1990"
+        },
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Page": {
+                "media": [
+                  {
+                    "id": 151,
+                    "idMal": 26,
+                    "title": {
+                      "chinese": "Owned",
+                      "native": "Original",
+                      "romaji": "Romaji",
+                      "english": "English"
+                    },
+                    "format": "TV",
+                    "status": "FINISHED",
+                    "description": " <b>Hello</b><br>World &amp; all ",
+                    "startDate": {
+                      "year": 2026,
+                      "month": 10,
+                      "day": 31
+                    },
+                    "endDate": {
+                      "year": 2026,
+                      "month": 11,
+                      "day": 1
+                    },
+                    "seasonYear": 2026,
+                    "episodes": 3,
+                    "duration": 24,
+                    "countryOfOrigin": "JP",
+                    "coverImage": {
+                      "extraLarge": "https://s4.anilist.co/cover.jpg",
+                      "large": "fallback"
+                    },
+                    "bannerImage": "https://s4.anilist.co/banner.jpg",
+                    "genres": [
+                      "Drama"
+                    ],
+                    "synonyms": [
+                      "Alias",
+                      "Alias"
+                    ],
+                    "averageScore": 86.5,
+                    "popularity": 17,
+                    "isAdult": false,
+                    "studios": {
+                      "nodes": [
+                        {
+                          "name": "Studio"
+                        }
+                      ]
+                    },
+                    "actors": [
+                      {
+                        "id": 9,
+                        "name": "Actor"
+                      }
+                    ],
+                    "directors": [
+                      {
+                        "id": 10,
+                        "name": "Director"
+                      }
+                    ],
+                    "externalLinks": [
+                      {
+                        "site": "AniDB",
+                        "url": "https://anidb.net/anime/456"
+                      }
+                    ],
+                    "characters": {
+                      "edges": [
+                        {
+                          "node": {
+                            "name": {
+                              "full": "Character",
+                              "native": "角色"
+                            }
+                          },
+                          "voiceActors": [
+                            {
+                              "id": 9,
+                              "name": {
+                                "full": "Actor",
+                                "native": "声优"
+                              },
+                              "image": {
+                                "large": "https://s4.anilist.co/actor.jpg"
+                              },
+                              "siteUrl": "https://anilist.co/staff/9"
+                            },
+                            {
+                              "id": 99,
+                              "name": {
+                                "full": "Ignored"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "staff": {
+                      "edges": [
+                        {
+                          "role": "Chief Director",
+                          "node": {
+                            "id": 10,
+                            "name": {
+                              "full": "Director"
+                            },
+                            "image": {
+                              "large": "https://s4.anilist.co/director.jpg"
+                            },
+                            "siteUrl": "https://anilist.co/staff/10"
+                          }
+                        },
+                        {
+                          "role": "director",
+                          "node": {
+                            "name": {
+                              "full": "Ignored"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "request_body": {
+            "query": "\n            query ($search: String!, $count: Int!) {\n              Page(page: 1, perPage: $count) {\n                media(search: $search, type: ANIME, sort: SEARCH_MATCH) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     }\n              }\n            }\n        ",
+            "variables": {
+              "search": "Owned",
+              "count": 20
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": [
+            {
+              "id": 151,
+              "title": "Owned",
+              "synonyms": [
+                "Alias",
+                "Translated"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": null,
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_lowercase_format_type_difference",
+      "request": {
+        "source": "anilist",
+        "meta": {
+          "en_name": "Owned",
+          "type": "电视剧",
+          "year": "2026"
+        },
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Page": {
+                "media": [
+                  {
+                    "id": 151,
+                    "idMal": 26,
+                    "title": {
+                      "chinese": "Owned",
+                      "native": "Original",
+                      "romaji": "Romaji",
+                      "english": "English"
+                    },
+                    "format": "movie",
+                    "status": "FINISHED",
+                    "description": " <b>Hello</b><br>World &amp; all ",
+                    "startDate": {
+                      "year": 2026,
+                      "month": 10,
+                      "day": 31
+                    },
+                    "endDate": {
+                      "year": 2026,
+                      "month": 11,
+                      "day": 1
+                    },
+                    "seasonYear": 2026,
+                    "episodes": 3,
+                    "duration": 24,
+                    "countryOfOrigin": "JP",
+                    "coverImage": {
+                      "extraLarge": "https://s4.anilist.co/cover.jpg",
+                      "large": "fallback"
+                    },
+                    "bannerImage": "https://s4.anilist.co/banner.jpg",
+                    "genres": [
+                      "Drama"
+                    ],
+                    "synonyms": [
+                      "Alias",
+                      "Alias"
+                    ],
+                    "averageScore": 86.5,
+                    "popularity": 17,
+                    "isAdult": false,
+                    "studios": {
+                      "nodes": [
+                        {
+                          "name": "Studio"
+                        }
+                      ]
+                    },
+                    "actors": [
+                      {
+                        "id": 9,
+                        "name": "Actor"
+                      }
+                    ],
+                    "directors": [
+                      {
+                        "id": 10,
+                        "name": "Director"
+                      }
+                    ],
+                    "externalLinks": [
+                      {
+                        "site": "AniDB",
+                        "url": "https://anidb.net/anime/456"
+                      }
+                    ],
+                    "characters": {
+                      "edges": [
+                        {
+                          "node": {
+                            "name": {
+                              "full": "Character",
+                              "native": "角色"
+                            }
+                          },
+                          "voiceActors": [
+                            {
+                              "id": 9,
+                              "name": {
+                                "full": "Actor",
+                                "native": "声优"
+                              },
+                              "image": {
+                                "large": "https://s4.anilist.co/actor.jpg"
+                              },
+                              "siteUrl": "https://anilist.co/staff/9"
+                            },
+                            {
+                              "id": 99,
+                              "name": {
+                                "full": "Ignored"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "staff": {
+                      "edges": [
+                        {
+                          "role": "Chief Director",
+                          "node": {
+                            "id": 10,
+                            "name": {
+                              "full": "Director"
+                            },
+                            "image": {
+                              "large": "https://s4.anilist.co/director.jpg"
+                            },
+                            "siteUrl": "https://anilist.co/staff/10"
+                          }
+                        },
+                        {
+                          "role": "director",
+                          "node": {
+                            "name": {
+                              "full": "Ignored"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "request_body": {
+            "query": "\n            query ($search: String!, $count: Int!) {\n              Page(page: 1, perPage: $count) {\n                media(search: $search, type: ANIME, sort: SEARCH_MATCH) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     }\n              }\n            }\n        ",
+            "variables": {
+              "search": "Owned",
+              "count": 20
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": [
+            {
+              "id": 151,
+              "title": "Owned",
+              "synonyms": [
+                "Alias",
+                "Translated"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电影",
+        "title": "Owned",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "seasons": {},
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_proxy_http_fallback",
+      "request": {
+        "source": "anilist",
+        "anilistid": 151,
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 503,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 151,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Owned",
+                  "native": "Original",
+                  "romaji": "Romaji",
+                  "english": "English"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "graphql.anilist.co",
+          "method": "POST",
+          "path": "/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 151,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Owned",
+                  "native": "Original",
+                  "romaji": "Romaji",
+                  "english": "English"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": [
+            {
+              "id": 151,
+              "title": "Owned",
+              "synonyms": [
+                "Alias",
+                "Translated"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_proxy_graphql_fallback",
+      "request": {
+        "source": "anilist",
+        "anilistid": 151,
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "errors": [
+              {
+                "message": "owned GraphQL error"
+              }
+            ]
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "graphql.anilist.co",
+          "method": "POST",
+          "path": "/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 151,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Owned",
+                  "native": "Original",
+                  "romaji": "Romaji",
+                  "english": "English"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": [
+            {
+              "id": 151,
+              "title": "Owned",
+              "synonyms": [
+                "Alias",
+                "Translated"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_translation_empty",
+      "request": {
+        "source": "anilist",
+        "anilistid": 151,
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 151,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Owned",
+                  "native": "Original",
+                  "romaji": "Romaji",
+                  "english": "English"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": []
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_nested_translation",
+      "request": {
+        "source": "anilist",
+        "anilistid": 151,
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 151,
+                "idMal": 26,
+                "title": {
+                  "chinese": "かな",
+                  "native": "Original"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "中文标题"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": [
+            {
+              "id": 151,
+              "title": "かな",
+              "synonyms": [
+                "中文标题",
+                "中文标题"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "中文标题",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "Original",
+          "Alias"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "中文标题 (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_missing_people",
+      "request": {
+        "source": "anilist",
+        "anilistid": 151,
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 151,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Owned",
+                  "native": "Original",
+                  "romaji": "Romaji",
+                  "english": "English"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {},
+                "staff": {}
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": [
+            {
+              "id": 151,
+              "title": "Owned",
+              "synonyms": [
+                "Alias",
+                "Translated"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [],
+        "actors": [],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_no_meta",
+      "request": {
+        "source": "anilist",
+        "cache": false
+      },
+      "replies": [],
+      "expected": null,
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_source_inferred_from_id",
+      "request": {
+        "anilistid": 151,
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 151,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Owned",
+                  "native": "Original",
+                  "romaji": "Romaji",
+                  "english": "English"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": [
+            {
+              "id": 151,
+              "title": "Owned",
+              "synonyms": [
+                "Alias",
+                "Translated"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_explicit_anilist_over_other_ids",
+      "request": {
+        "source": "anilist",
+        "anilistid": 151,
+        "cache": false,
+        "tmdbid": 999
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 151,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Owned",
+                  "native": "Original",
+                  "romaji": "Romaji",
+                  "english": "English"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": [
+            {
+              "id": 151,
+              "title": "Owned",
+              "synonyms": [
+                "Alias",
+                "Translated"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_lifetime_proxy_first",
+      "request": {
+        "source": "anilist",
+        "anilistid": 151,
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 503,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 151,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Owned",
+                  "native": "Original",
+                  "romaji": "Romaji",
+                  "english": "English"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "graphql.anilist.co",
+          "method": "POST",
+          "path": "/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 151,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Owned",
+                  "native": "Original",
+                  "romaji": "Romaji",
+                  "english": "English"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": [
+            {
+              "id": 151,
+              "title": "Owned",
+              "synonyms": [
+                "Alias",
+                "Translated"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_lifetime_proxy_second",
+      "request": {
+        "source": "anilist",
+        "anilistid": 152,
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "graphql.anilist.co",
+          "method": "POST",
+          "path": "/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 152,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Second",
+                  "native": "Original",
+                  "romaji": "Romaji",
+                  "english": "English"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 152
+            }
+          }
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "152",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Second",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 152,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/152",
+        "title_year": "Second (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": false
+    },
+    {
+      "case": "anilist_lifetime_empty_translation_first",
+      "request": {
+        "source": "anilist",
+        "anilistid": 151,
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 151,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Owned",
+                  "native": "Original",
+                  "romaji": "Romaji",
+                  "english": "English"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 151
+            }
+          }
+        },
+        {
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json",
+          "status": 200,
+          "body": null
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "151",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 151,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/151",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": true
+    },
+    {
+      "case": "anilist_lifetime_empty_translation_second",
+      "request": {
+        "source": "anilist",
+        "anilistid": 152,
+        "cache": false
+      },
+      "replies": [
+        {
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/",
+          "status": 200,
+          "body": {
+            "data": {
+              "Media": {
+                "id": 152,
+                "idMal": 26,
+                "title": {
+                  "chinese": "Second",
+                  "native": "Original",
+                  "romaji": "Romaji",
+                  "english": "English"
+                },
+                "format": "TV",
+                "status": "FINISHED",
+                "description": " <b>Hello</b><br>World &amp; all ",
+                "startDate": {
+                  "year": 2026,
+                  "month": 10,
+                  "day": 31
+                },
+                "endDate": {
+                  "year": 2026,
+                  "month": 11,
+                  "day": 1
+                },
+                "seasonYear": 2026,
+                "episodes": 3,
+                "duration": 24,
+                "countryOfOrigin": "JP",
+                "coverImage": {
+                  "extraLarge": "https://s4.anilist.co/cover.jpg",
+                  "large": "fallback"
+                },
+                "bannerImage": "https://s4.anilist.co/banner.jpg",
+                "genres": [
+                  "Drama"
+                ],
+                "synonyms": [
+                  "Alias",
+                  "Alias"
+                ],
+                "averageScore": 86.5,
+                "popularity": 17,
+                "isAdult": false,
+                "studios": {
+                  "nodes": [
+                    {
+                      "name": "Studio"
+                    }
+                  ]
+                },
+                "actors": [
+                  {
+                    "id": 9,
+                    "name": "Actor"
+                  }
+                ],
+                "directors": [
+                  {
+                    "id": 10,
+                    "name": "Director"
+                  }
+                ],
+                "externalLinks": [
+                  {
+                    "site": "AniDB",
+                    "url": "https://anidb.net/anime/456"
+                  }
+                ],
+                "characters": {
+                  "edges": [
+                    {
+                      "node": {
+                        "name": {
+                          "full": "Character",
+                          "native": "角色"
+                        }
+                      },
+                      "voiceActors": [
+                        {
+                          "id": 9,
+                          "name": {
+                            "full": "Actor",
+                            "native": "声优"
+                          },
+                          "image": {
+                            "large": "https://s4.anilist.co/actor.jpg"
+                          },
+                          "siteUrl": "https://anilist.co/staff/9"
+                        },
+                        {
+                          "id": 99,
+                          "name": {
+                            "full": "Ignored"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "staff": {
+                  "edges": [
+                    {
+                      "role": "Chief Director",
+                      "node": {
+                        "id": 10,
+                        "name": {
+                          "full": "Director"
+                        },
+                        "image": {
+                          "large": "https://s4.anilist.co/director.jpg"
+                        },
+                        "siteUrl": "https://anilist.co/staff/10"
+                      }
+                    },
+                    {
+                      "role": "director",
+                      "node": {
+                        "name": {
+                          "full": "Ignored"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "request_body": {
+            "query": "query ($id: Int!) { Media(id: $id, type: ANIME) { \n        \n        id\n        idMal\n        title { romaji english native }\n        format\n        status\n        description(asHtml: false)\n        startDate { year month day }\n        endDate { year month day }\n        season\n        seasonYear\n        episodes\n        duration\n        countryOfOrigin\n        coverImage { extraLarge large }\n        bannerImage\n        genres\n        synonyms\n        averageScore\n        popularity\n        isAdult\n        siteUrl\n        studios(isMain: true) { nodes { name } }\n    \n        staff(perPage: 25, sort: [RELEVANCE]) {\n          edges { role node { id name { full native } image { large } siteUrl } }\n        }\n        characters(perPage: 25, sort: [ROLE, RELEVANCE]) {\n          edges {\n            role\n            node { id name { full native } image { large } siteUrl }\n            voiceActors(language: JAPANESE, sort: [RELEVANCE]) {\n              id\n              name { full native alternative }\n              image { large medium }\n              siteUrl\n            }\n          }\n        }\n        externalLinks { site url type }\n     } }",
+            "variables": {
+              "id": 152
+            }
+          }
+        }
+      ],
+      "expected": {
+        "source": "anilist",
+        "media_id": "152",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Second",
+        "en_title": "English",
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": null,
+        "anilist_id": 152,
+        "anidb_id": 456,
+        "collection_id": null,
+        "original_language": "ja",
+        "original_title": "Original",
+        "release_date": "2026-10-31",
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "logo_path": null,
+        "vote_average": 8.7,
+        "overview": "Hello\nWorld &amp; all",
+        "genre_ids": [],
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "id": 10,
+            "name": "Director",
+            "job": "Chief Director",
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "actors": [
+          {
+            "id": 9,
+            "name": "Actor",
+            "character": "Character",
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": "2026-10-31",
+        "homepage": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "vote_count": null,
+        "popularity": 17,
+        "runtime": 24,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://anilist.co/anime/152",
+        "title_year": "Second (2026)",
+        "mediaid_prefix": "anilist"
+      },
+      "fresh_process": false
+    }
+  ]
+}

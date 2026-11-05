@@ -1,0 +1,1421 @@
+{
+  "status": "complete_settings_source_discovery_and_scope_audit_known_implementation_and_acceptance_gaps_remain",
+  "reviewer": "/root/settings_scope",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_config_source_sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+  "source_inventory": {
+    "files": 77,
+    "all_raw_sha_match": true,
+    "original_container_unchanged": true,
+    "direct_attribute_refs": 110,
+    "distinct_keys": 20,
+    "additional_dynamic_getattr_refs": 1,
+    "total_known_refs": 111,
+    "dynamic_key": "PROXY",
+    "unresolved_dynamic_settings_keys": [],
+    "namespace_or_dump_operations": [],
+    "simple_and_module_import_aliases_included": true
+  },
+  "entries": {
+    "USER_AGENT": {
+      "status": "source_gap_implemented_pending_final_S07_S18_acceptance",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          959,
+          963
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "iyuuautoseed/__init__.py",
+          "sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+          "line": 1346,
+          "key": "USER_AGENT",
+          "owner": "IYUUAutoSeed.__get_download_url.__get_mteam_enclosure",
+          "context": "Load"
+        },
+        {
+          "file": "iyuuautoseed/__init__.py",
+          "sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+          "line": 1188,
+          "key": "USER_AGENT",
+          "owner": "IYUUAutoSeed.__download_torrent",
+          "context": "Load"
+        },
+        {
+          "file": "iyuuautoseed/__init__.py",
+          "sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+          "line": 1511,
+          "key": "USER_AGENT",
+          "owner": "IYUUAutoSeed.__get_torrent_url_from_page",
+          "context": "Load"
+        },
+        {
+          "file": "iyuuautoseed/__init__.py",
+          "sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+          "line": 1388,
+          "key": "USER_AGENT",
+          "owner": "IYUUAutoSeed.__get_download_url.__get_gpw_torrent_url_from_page",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 937,
+          "key": "USER_AGENT",
+          "owner": "BrushFlowLanduo._refresh_promotion_from_site",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 999,
+          "key": "USER_AGENT",
+          "owner": "BrushFlowLanduo._refresh_mteam_promotion",
+          "context": "Load"
+        },
+        {
+          "file": "seedrescue/__init__.py",
+          "sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+          "line": 1481,
+          "key": "USER_AGENT",
+          "owner": "SeedRescue._fetch_source_detail",
+          "context": "Load"
+        },
+        {
+          "file": "seedrescue/__init__.py",
+          "sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+          "line": 901,
+          "key": "USER_AGENT",
+          "owner": "SeedRescue._create_job",
+          "context": "Load"
+        },
+        {
+          "file": "seedrescue/__init__.py",
+          "sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+          "line": 1487,
+          "key": "USER_AGENT",
+          "owner": "SeedRescue._detail_torrent",
+          "context": "Load"
+        },
+        {
+          "file": "seedrescue/__init__.py",
+          "sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+          "line": 1532,
+          "key": "USER_AGENT",
+          "owner": "SeedRescue._start_source",
+          "context": "Load"
+        },
+        {
+          "file": "seedrescue/__init__.py",
+          "sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+          "line": 762,
+          "key": "USER_AGENT",
+          "owner": "SeedRescue._run_scan",
+          "context": "Load"
+        },
+        {
+          "file": "seedrescue/__init__.py",
+          "sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+          "line": 1068,
+          "key": "USER_AGENT",
+          "owner": "SeedRescue._target_source",
+          "context": "Load"
+        },
+        {
+          "file": "seedrescue/__init__.py",
+          "sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+          "line": 1083,
+          "key": "USER_AGENT",
+          "owner": "SeedRescue._target_source",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/plugin_original_server_user_agent.go",
+        "internal/app/plugin_original_host_settings.go",
+        "internal/app/plugin_original_host_site_http.go"
+      ],
+      "evidence": [
+        "testdata/plugin-platform-final-20261104/settings/site-http-useragent-independent-source-oracle.json"
+      ],
+      "scope_or_adaptation": "Fixed runtime project/version/OS/arch identity now has finite readonly key and host-UA selection. RequestUtils only appends per-plugin caller suffix on default headers with UA equal host identity; ordinary browser UA and explicit headers unchanged. Product identity text necessarily identifies light-media; actual current source/clone SDK/Linux proof pending.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/plugin_original_server_user_agent.go": "5700b9fddf4410a10946c86da75dff3dbc437d9542689de93ced280503b6330f",
+        "internal/app/plugin_original_host_settings.go": "d5070bca96fa25c833c3dfde951246d443c757f03eadd5226f7ff99ff438626f",
+        "internal/app/plugin_original_host_site_http.go": "a6acef41897fbd1e1e0ff93a119e378b9e27c6ddbee40368e8cbac70e9a36306"
+      }
+    },
+    "PROXY": {
+      "status": "S19_source_target_and_independent3root17case_review_passed_actual_SDK_Linux_pending",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          1069,
+          1087
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "autosignin/__init__.py",
+          "sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+          "line": 1869,
+          "key": "PROXY",
+          "owner": "AutoSignIn.__signin_base",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/__init__.py",
+          "sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+          "line": 1961,
+          "key": "PROXY",
+          "owner": "AutoSignIn.__login_base",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/52pt.py",
+          "sha256": "88d1fb315d2272097f8e124eb8245aa952fd1933f7685005118e9c875528d2fb",
+          "line": 130,
+          "key": "PROXY",
+          "owner": "Pt52.__signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/__init__.py",
+          "sha256": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d",
+          "line": 80,
+          "key": "PROXY",
+          "owner": "_ISiteSigninHandler.get_page_source",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/chdbits.py",
+          "sha256": "d1f745f0b69b167e0f51038a3f09b495806096f44587889bca585e6782b5eb89",
+          "line": 130,
+          "key": "PROXY",
+          "owner": "CHDBits.__signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/hares.py",
+          "sha256": "27d5be0a5c313b3cbadb50a029cc4fa627e3f4aa393503e330f5c56be48ad0e2",
+          "line": 72,
+          "key": "PROXY",
+          "owner": "Hares.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/hdarea.py",
+          "sha256": "6046dd7626ad9f071a073dc142b86f204aa491bcfabe9e20cb4197eee4d5e630",
+          "line": 42,
+          "key": "PROXY",
+          "owner": "HDArea.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/hdchina.py",
+          "sha256": "dec9063410d6601c885df2de60844feacf2fb143d4aa662eba47fcad27948731",
+          "line": 42,
+          "key": "PROXY",
+          "owner": "HDChina.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/hdsky.py",
+          "sha256": "a2f272ff66d9ade5106942f3e577fd12a967b7375d516c92dc189b9672fa7a70",
+          "line": 78,
+          "key": "PROXY",
+          "owner": "HDSky.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/hdsky.py",
+          "sha256": "a2f272ff66d9ade5106942f3e577fd12a967b7375d516c92dc189b9672fa7a70",
+          "line": 125,
+          "key": "PROXY",
+          "owner": "HDSky.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/mteam.py",
+          "sha256": "5bac7c23743fd226ce546e0ddf2794aca2aebaecbe4fa945c4a5e728ae9f4fd4",
+          "line": 60,
+          "key": "PROXY",
+          "owner": "MTorrent.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/nexushd.py",
+          "sha256": "cbfdac17f522880b502ea9f0546d6c486846c0016280c86b234ad248fba5b2bf",
+          "line": 42,
+          "key": "PROXY",
+          "owner": "NexusHD.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/opencd.py",
+          "sha256": "30045d631f459d7a04fdd068a1cab48bcd6dcb7cc21ebb0fb8fbac5bf0d32b2b",
+          "line": 118,
+          "key": "PROXY",
+          "owner": "Opencd.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/ptzone.py",
+          "sha256": "fc2eb9921e388dfaeaee789e94524865be24f0a58d74c1af1d3c7651d269dc90",
+          "line": 38,
+          "key": "PROXY",
+          "owner": "PTZone.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/rousipro.py",
+          "sha256": "5d5fb642d99651df42caf36cd465f6992d9bcfd7d893d35f5be531860b68e0b0",
+          "line": 88,
+          "key": "PROXY",
+          "owner": "RousiPro.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/rousipro.py",
+          "sha256": "5d5fb642d99651df42caf36cd465f6992d9bcfd7d893d35f5be531860b68e0b0",
+          "line": 159,
+          "key": "PROXY",
+          "owner": "RousiPro.login",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/tjupt.py",
+          "sha256": "ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0",
+          "line": 105,
+          "key": "PROXY",
+          "owner": "Tjupt.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/tjupt.py",
+          "sha256": "ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0",
+          "line": 209,
+          "key": "PROXY",
+          "owner": "Tjupt.__signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/ttg.py",
+          "sha256": "4cc08e4951e89348e02164990ab66a63ff6917b98d2d86cfbaaf7e21d859d51b",
+          "line": 83,
+          "key": "PROXY",
+          "owner": "TTG.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/u2.py",
+          "sha256": "787e2e2752b8d35029e3fe4066303b23149152f29f40759e16114873f141fdd5",
+          "line": 143,
+          "key": "PROXY",
+          "owner": "U2.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/yema.py",
+          "sha256": "bafababa5790f9ed3b2d6a581b472fbcd2f202ff78854acf2c463eed0e65307b",
+          "line": 42,
+          "key": "PROXY",
+          "owner": "YemaPT.signin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/yema.py",
+          "sha256": "bafababa5790f9ed3b2d6a581b472fbcd2f202ff78854acf2c463eed0e65307b",
+          "line": 69,
+          "key": "PROXY",
+          "owner": "YemaPT.login",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/zhuque.py",
+          "sha256": "69301edf86db5f68d2e3fb720841b03a4d1489e90b37ec3384a0fbbc764a0563",
+          "line": 78,
+          "key": "PROXY",
+          "owner": "ZhuQue.signin",
+          "context": "Load"
+        },
+        {
+          "file": "mergemessagenotify/channel/custom/bark.py",
+          "sha256": "b0acbfff184ccbc59ace73ac0ac68d3740d59b49d1c88b82328153fca20b5182",
+          "line": 636,
+          "key": "PROXY",
+          "owner": "BarkChannel.send_message",
+          "context": "Load"
+        },
+        {
+          "file": "mergemessagenotify/channel/custom/gotify.py",
+          "sha256": "aab017f3fc443e6437ed32eea055ea16378d41e2599c7119ec90c7a7fd004bb5",
+          "line": 167,
+          "key": "PROXY",
+          "owner": "GotifyChannel.send_message",
+          "context": "Load"
+        },
+        {
+          "file": "mergemessagenotify/channel/custom/http.py",
+          "sha256": "7044472eb88a47e9e702ada4e779b97a31dc7353a247f5a758b8bcac2886db08",
+          "line": 326,
+          "key": "PROXY",
+          "owner": "HttpChannel.send_message",
+          "context": "Load"
+        },
+        {
+          "file": "mergemessagenotify/channel/custom/ntfy.py",
+          "sha256": "91e5c3cae2c2fa463c29f8deccdf9380a9e8a1c0a3bb028abff666242a1d5aa3",
+          "line": 255,
+          "key": "PROXY",
+          "owner": "NtfyChannel.send_message",
+          "context": "Load"
+        },
+        {
+          "file": "mergemessagenotify/channel/custom/onebot11.py",
+          "sha256": "bd934d5435c58138d5edf5f69e181d43e94c2463cb227cdc7a392d014640ad70",
+          "line": 282,
+          "key": "PROXY",
+          "owner": "OneBot11Channel.send_message",
+          "context": "Load"
+        },
+        {
+          "file": "mergemessagenotify/channel/custom/pushdeer.py",
+          "sha256": "5fea750dc7a830a41d87be2fd65f604042fcfd2960af34db182f8eb9fe7ff5e1",
+          "line": 151,
+          "key": "PROXY",
+          "owner": "PushDeerChannel.send_message",
+          "context": "Load"
+        },
+        {
+          "file": "mergemessagenotify/channel/custom/pushme.py",
+          "sha256": "2360359561eee9b6ddede5e27b995359f66cf5bbb4d9888c2f5b3143183beb65",
+          "line": 228,
+          "key": "PROXY",
+          "owner": "PushMeChannel.send_message",
+          "context": "Load"
+        },
+        {
+          "file": "mergemessagenotify/channel/custom/pushover.py",
+          "sha256": "936a067840ced5d54bbcc7f87ebf7c78345df17fdb8ccebfbb15abdb558d0e9d",
+          "line": 290,
+          "key": "PROXY",
+          "owner": "PushoverChannel.send_message",
+          "context": "Load"
+        },
+        {
+          "file": "iyuuautoseed/__init__.py",
+          "sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+          "line": 1512,
+          "key": "PROXY",
+          "owner": "IYUUAutoSeed.__get_torrent_url_from_page",
+          "context": "Load"
+        },
+        {
+          "file": "iyuuautoseed/__init__.py",
+          "sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+          "line": 1389,
+          "key": "PROXY",
+          "owner": "IYUUAutoSeed.__get_download_url.__get_gpw_torrent_url_from_page",
+          "context": "Load"
+        },
+        {
+          "file": "remoteidentifiers/__init__.py",
+          "sha256": "14ec7f5f2964ebd1674305d5294ffa56fb61e2cd1021ea31e50d9675813891a4",
+          "line": 107,
+          "key": "PROXY",
+          "owner": "RemoteIdentifiers.__get_response_text",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 3048,
+          "key": "PROXY",
+          "owner": "BrushFlowLanduo.__download",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 939,
+          "key": "PROXY",
+          "owner": "BrushFlowLanduo._refresh_promotion_from_site",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 1000,
+          "key": "PROXY",
+          "owner": "BrushFlowLanduo._refresh_mteam_promotion",
+          "context": "Load"
+        },
+        {
+          "file": "seedrescue/__init__.py",
+          "sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+          "dynamic": true,
+          "line": 1481,
+          "operation": "getattr",
+          "key": "PROXY",
+          "owner": "SeedRescue._fetch_source_detail"
+        },
+        {
+          "file": "cloudflarespeedtest/__init__.py",
+          "sha256": "2e4549b9181e8714c401f18f1b082f539d1d8c20fa32c9675b994b6277b106f1",
+          "line": 377,
+          "key": "PROXY",
+          "owner": "CloudflareSpeedTest.__os_install",
+          "context": "Load"
+        },
+        {
+          "file": "cloudflarespeedtest/__init__.py",
+          "sha256": "2e4549b9181e8714c401f18f1b082f539d1d8c20fa32c9675b994b6277b106f1",
+          "line": 467,
+          "key": "PROXY",
+          "owner": "CloudflareSpeedTest.__get_release_version",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/networkproxy/requests_merge.go",
+        "internal/networkproxy/requests_env.go",
+        "internal/app/plugin_original_host_site_http.go",
+        "internal/app/plugin_original_host_network.go",
+        "internal/plugins/network_proxy_host.go",
+        "internal/app/plugin_original_host_proxy.go"
+      ],
+      "evidence": [
+        "testdata/plugin-platform-final-20261104/settings/proxy-settings-independent-source-oracle.json",
+        "testdata/plugin-platform-final-20261104/settings/s19-independent-source-scope-race.jsonl"
+      ],
+      "scope_or_adaptation": "39 direct plus1 dynamic original settings reads. Existing configured-site and finite GET transports cover their own request families but do not provide global proxy material for ordinary plugin-owned notification POST URLs. Add explicit trusted private typed Network.ProxySettings; no notification business implementation. Preserve nullable source PROXY mapping, environment case/empty values, requests merge semantics and source snapshot guards; source caller can use ordinary Go IO.",
+      "target_at_scope_audit_sha256": {
+        "internal/networkproxy/requests_merge.go": "a0380ec024b78daef35ab0eb637d4c9cdd9ad842d656bbd45a9c80e1c3f29fc5",
+        "internal/networkproxy/requests_env.go": "22d79755751a445593f25c8edc741d3931c5a94c18295b760a967efc47ca056c",
+        "internal/app/plugin_original_host_site_http.go": "a6acef41897fbd1e1e0ff93a119e378b9e27c6ddbee40368e8cbac70e9a36306",
+        "internal/app/plugin_original_host_network.go": "9ab1e8d9aa7a5c8ab74db24edf892a7356dc1efa02995480ad53c04c0da5815d",
+        "internal/plugins/network_proxy_host.go": "2be2e4f533e4a2506fe61d8af40650234b1553371795e1e2eacdaa73289d9991",
+        "internal/app/plugin_original_host_proxy.go": "fb1a8175a1d5c51b355c165c6b506d3ab111b8c84a3e9e22dc4c288d74bf52dd"
+      }
+    },
+    "PROXY_SERVER": {
+      "status": "confirmed_renderer_env_only_gap_fix_in_progress",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          1134,
+          1152
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "autosignin/__init__.py",
+          "sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+          "line": 1870,
+          "key": "PROXY_SERVER",
+          "owner": "AutoSignIn.__signin_base",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/__init__.py",
+          "sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+          "line": 1962,
+          "key": "PROXY_SERVER",
+          "owner": "AutoSignIn.__login_base",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/__init__.py",
+          "sha256": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d",
+          "line": 66,
+          "key": "PROXY_SERVER",
+          "owner": "_ISiteSigninHandler.get_page_source",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/plugin_original_host_browser.go",
+        "internal/browserrender/native.go",
+        "internal/browserrender/proxy.go"
+      ],
+      "evidence": [
+        "testdata/plugin-platform-final-20261104/settings/proxy-settings-independent-source-oracle.json",
+        "testdata/plugin-platform-final-20261104/browser-ocr/cloakbrowser-proxy-none-source-oracle.json"
+      ],
+      "scope_or_adaptation": "Source nullable dict(server/username/password) only from explicit PROXY_HOST, never environment-only fallback. Actual paired wrapper0.5.6/Playwright1.62 _resolve_proxy_config(None) source execution returns ({},[]) despite uppercase/lowercase proxy environment; target general a.proxyConfig includes env and is a confirmed source mismatch. Slice owner is correcting explicit-only route and source/SDK FS payload verification. Percent-encoded source credential strings and IPv6 source formatting are separately captured; target input validation differences must be explicit.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/plugin_original_host_browser.go": "e981632dedfc6897aa45712d698e508bbdc30fa8a3fb0217aec894ca9f789538",
+        "internal/browserrender/native.go": "07b055cd32aa3434fcfe326468ed3e8cd74d70d040e73caa7a6c82d3f569cdcd",
+        "internal/browserrender/proxy.go": "830999dc9790027ee851de64ceb55746c6e3eeed32acafa433bde3a23004b6a4"
+      }
+    },
+    "TZ": {
+      "status": "covered_native_environment_with_actual_current_SDK_proof",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          70,
+          70
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "torrenttransfer/__init__.py",
+          "sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+          "line": 117,
+          "key": "TZ",
+          "owner": "TorrentTransfer.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "torrenttransfer/__init__.py",
+          "sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+          "line": 126,
+          "key": "TZ",
+          "owner": "TorrentTransfer.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "sitestatistic/__init__.py",
+          "sha256": "763a88be85185a94082a2f131ed1c80d8306abe24b10ebe9ae95447cfe5da17d",
+          "line": 77,
+          "key": "TZ",
+          "owner": "SiteStatistic.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "sitestatistic/__init__.py",
+          "sha256": "763a88be85185a94082a2f131ed1c80d8306abe24b10ebe9ae95447cfe5da17d",
+          "line": 79,
+          "key": "TZ",
+          "owner": "SiteStatistic.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/__init__.py",
+          "sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+          "line": 271,
+          "key": "TZ",
+          "owner": "AutoSignIn._get_random_schedule",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/__init__.py",
+          "sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+          "line": 120,
+          "key": "TZ",
+          "owner": "AutoSignIn.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/__init__.py",
+          "sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+          "line": 123,
+          "key": "TZ",
+          "owner": "AutoSignIn.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "mergemessagenotify/channel/custom/email.py",
+          "sha256": "dd10781fe8cf50d243a5c35c150b34c627bbeedd5348002b7ce4379b9608a079",
+          "line": 213,
+          "key": "TZ",
+          "owner": "EmailChannel.__build_message",
+          "context": "Load"
+        },
+        {
+          "file": "iyuuautoseed/__init__.py",
+          "sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+          "line": 153,
+          "key": "TZ",
+          "owner": "IYUUAutoSeed.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "iyuuautoseed/__init__.py",
+          "sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+          "line": 159,
+          "key": "TZ",
+          "owner": "IYUUAutoSeed.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "remoteidentifiers/__init__.py",
+          "sha256": "14ec7f5f2964ebd1674305d5294ffa56fb61e2cd1021ea31e50d9675813891a4",
+          "line": 61,
+          "key": "TZ",
+          "owner": "RemoteIdentifiers.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "remoteidentifiers/__init__.py",
+          "sha256": "14ec7f5f2964ebd1674305d5294ffa56fb61e2cd1021ea31e50d9675813891a4",
+          "line": 65,
+          "key": "TZ",
+          "owner": "RemoteIdentifiers.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "line": 101,
+          "key": "TZ",
+          "owner": "AutoBackup.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "line": 104,
+          "key": "TZ",
+          "owner": "AutoBackup.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 1113,
+          "key": "TZ",
+          "owner": "BrushFlowLanduo._next_promotion_expiry",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 822,
+          "key": "TZ",
+          "owner": "BrushFlowLanduo._promotion_expiry_from_diff",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 840,
+          "key": "TZ",
+          "owner": "BrushFlowLanduo._promotion_expiry_at",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 842,
+          "key": "TZ",
+          "owner": "BrushFlowLanduo._promotion_expiry_at",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 1037,
+          "key": "TZ",
+          "owner": "BrushFlowLanduo._refresh_mteam_promotion",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 956,
+          "key": "TZ",
+          "owner": "BrushFlowLanduo._refresh_promotion_from_site",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 1148,
+          "key": "TZ",
+          "owner": "BrushFlowLanduo._check_promotion_expiry",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 833,
+          "key": "TZ",
+          "owner": "BrushFlowLanduo._promotion_expiry_at",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 1078,
+          "key": "TZ",
+          "owner": "BrushFlowLanduo.__parse_site_promotion_deadline",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 1079,
+          "key": "TZ",
+          "owner": "BrushFlowLanduo.__parse_site_promotion_deadline",
+          "context": "Load"
+        },
+        {
+          "file": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "line": 1675,
+          "key": "TZ",
+          "owner": "BrushFlowLanduo._next_run_at",
+          "context": "Load"
+        },
+        {
+          "file": "torrenttransfermusic/__init__.py",
+          "sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+          "line": 119,
+          "key": "TZ",
+          "owner": "TorrentTransfermusic.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "torrenttransfermusic/__init__.py",
+          "sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+          "line": 128,
+          "key": "TZ",
+          "owner": "TorrentTransfermusic.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "cleaninvalidseed/__init__.py",
+          "sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+          "line": 104,
+          "key": "TZ",
+          "owner": "CleanInvalidSeed.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "cleaninvalidseed/__init__.py",
+          "sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+          "line": 109,
+          "key": "TZ",
+          "owner": "CleanInvalidSeed.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "cloudflarespeedtest/__init__.py",
+          "sha256": "2e4549b9181e8714c401f18f1b082f539d1d8c20fa32c9675b994b6277b106f1",
+          "line": 87,
+          "key": "TZ",
+          "owner": "CloudflareSpeedTest.init_plugin",
+          "context": "Load"
+        },
+        {
+          "file": "cloudflarespeedtest/__init__.py",
+          "sha256": "2e4549b9181e8714c401f18f1b082f539d1d8c20fa32c9675b994b6277b106f1",
+          "line": 90,
+          "key": "TZ",
+          "owner": "CloudflareSpeedTest.init_plugin",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/plugins/protocol.go",
+        "internal/plugins/schedule/trigger.go"
+      ],
+      "evidence": [
+        "testdata/plugin-platform-final-20261104/settings/timezone-sdk-probe-binding.json",
+        "testdata/plugin-platform-final-20261104/settings/timezone-sdk-probe-result.json"
+      ],
+      "scope_or_adaptation": "Dynamic host TZ is inherited by real standard SDK process; absent TZ uses fixed source constant Asia/Shanghai in ordinary plugin Go code. Actual race-built worker3 cases unset/default/custom passed and all stopped child PIDs exited. Explicit schedule timezone remains typed and is covered by existing platform scheduling acceptance. This is native process exposure, not a fake settings getter.",
+      "target_at_scope_audit_sha256": {
+        "internal/plugins/protocol.go": "4dd45fba68965bed4255ecd4382036914b40f45945da6313fbe9ea46c8119454",
+        "internal/plugins/schedule/trigger.go": "12b4448dd12600e105a12013f926e1cce1a5a426a2f67273fba33d80bbb95a96"
+      }
+    },
+    "API_TOKEN": {
+      "status": "covered_existing_private_typed_auth_and_message_ingress",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          108,
+          108
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "sitestatistic/__init__.py",
+          "sha256": "763a88be85185a94082a2f131ed1c80d8306abe24b10ebe9ae95447cfe5da17d",
+          "line": 1104,
+          "key": "API_TOKEN",
+          "owner": "SiteStatistic.refresh_by_domain",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/__init__.py",
+          "sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+          "line": 1791,
+          "key": "API_TOKEN",
+          "owner": "AutoSignIn.signin_by_domain",
+          "context": "Load"
+        },
+        {
+          "file": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "line": 134,
+          "key": "API_TOKEN",
+          "owner": "AutoBackup.api_backup",
+          "context": "Load"
+        },
+        {
+          "file": "larkmessager/__init__.py",
+          "sha256": "d9f6a1078706b03dc97247450a8084a8c67f07dbfccb675235fc0e1b91b18372",
+          "line": 773,
+          "key": "API_TOKEN",
+          "owner": "LarkMessager._forward_to_message_chain._run",
+          "context": "Load"
+        },
+        {
+          "file": "cloudflarespeedtest/__init__.py",
+          "sha256": "2e4549b9181e8714c401f18f1b082f539d1d8c20fa32c9675b994b6277b106f1",
+          "line": 778,
+          "key": "API_TOKEN",
+          "owner": "CloudflareSpeedTest.cloudflare_speedtest",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/plugin_custom_api.go",
+        "internal/plugins/api.go",
+        "internal/app/plugin_original_host_message_inbound.go"
+      ],
+      "evidence": [
+        "testdata/plugin-platform-final-20261104/message/acceptance.json",
+        "testdata/plugin-platform-final-20261104/message-independent-review.json"
+      ],
+      "scope_or_adaptation": "Four original plugin API comparisons map to API query api_key credential_matches bool, without public token exposure. Lark loopback token is eliminated by actual private ordinary Message.Receive chain; AI branch excluded in its own source split. This closes these five actual uses; no claim of arbitrary API_TOKEN secret reader.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/plugin_custom_api.go": "01bc2632d46992a315c112bab3a84ef9207c38e716c9b1d6c91bd4d39de0b274",
+        "internal/plugins/api.go": "b9e0d28b8a599bcb29299374688f71f6068dbe87369105fc9868f27558fc879c",
+        "internal/app/plugin_original_host_message_inbound.go": "6f6d8c4406d4bfa826f15c653d806a972a9943b2b076b388f8caaf5c0cd5c68a"
+      }
+    },
+    "PORT": {
+      "status": "covered_actual_private_message_ingress",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          74,
+          74
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "larkmessager/__init__.py",
+          "sha256": "d9f6a1078706b03dc97247450a8084a8c67f07dbfccb675235fc0e1b91b18372",
+          "line": 772,
+          "key": "PORT",
+          "owner": "LarkMessager._forward_to_message_chain._run",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/plugin_original_host_message_inbound.go",
+        "internal/plugins/message_inbound.go"
+      ],
+      "evidence": [
+        "testdata/plugin-platform-final-20261104/message/acceptance.json"
+      ],
+      "scope_or_adaptation": "Only original Lark loopback dispatch constructs local URL; actual ordinary host Message.Receive replaces HTTP loopback/token with private instance-bound call. No raw port getter needed.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/plugin_original_host_message_inbound.go": "6f6d8c4406d4bfa826f15c653d806a972a9943b2b076b388f8caaf5c0cd5c68a",
+        "internal/plugins/message_inbound.go": "9749c6aea2c086641d834793fba583161dce142109c6c33e2b6f81d16a108520"
+      }
+    },
+    "RMT_MEDIAEXT": {
+      "status": "covered_actual_source_and_SDK_Linux_browser",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          254,
+          275
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "removelink/__init__.py",
+          "sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+          "line": 1691,
+          "key": "RMT_MEDIAEXT",
+          "owner": "RemoveLink._find_storage_media_file",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/plugin_original_host_settings.go",
+        "internal/fileextensions/settings.go",
+        "internal/plugins/settings_host.go"
+      ],
+      "evidence": [
+        "testdata/plugin-host-integration-20261031/accepted-s07.json",
+        "testdata/plugin-platform-final-20261104/settings/independent-review.json"
+      ],
+      "scope_or_adaptation": "Finite readonly source-preserving list key already has full source/SDK/current Linux/browser mixed types/startup/environment/cold/clone evidence. Parent S07 row reopened for additional USER_AGENT only; existing RMT proof is retained unchanged.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/plugin_original_host_settings.go": "d5070bca96fa25c833c3dfde951246d443c757f03eadd5226f7ff99ff438626f",
+        "internal/fileextensions/settings.go": "72048424d76a07894d9028dc907cc9dab7ee6b31abba30cfc6d9082f2dd52e47",
+        "internal/plugins/settings_host.go": "b9b500ac565ef98f98d8e32b5c2285cdc7fa869a5be6df8be2199846bcc78137"
+      }
+    },
+    "GITHUB_HEADERS": {
+      "status": "covered_actual_finite_network_GET_with_recorded_origin_adapter",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          1155,
+          1164
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "remoteidentifiers/__init__.py",
+          "sha256": "14ec7f5f2964ebd1674305d5294ffa56fb61e2cd1021ea31e50d9675813891a4",
+          "line": 108,
+          "key": "GITHUB_HEADERS",
+          "owner": "RemoteIdentifiers.__get_response_text",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/plugin_original_host_network.go",
+        "internal/app/plugin_original_github_network.go",
+        "internal/plugins/network_host.go"
+      ],
+      "evidence": [
+        "testdata/plugin-host-network-20261031/linux-process-r2/result.json",
+        "testdata/plugin-platform-final-20261104/settings/independent-review.json"
+      ],
+      "scope_or_adaptation": "Only RemoteIdentifiers108 selects global GitHub headers. Actual finite GET preserves content/header/proxy/vendor/timeout behavior with official-origin credential confinement replacing insecure substring match. It does not claim to grant global token for arbitrary URLs.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/plugin_original_host_network.go": "9ab1e8d9aa7a5c8ab74db24edf892a7356dc1efa02995480ad53c04c0da5815d",
+        "internal/app/plugin_original_github_network.go": "9da712e31c2b568574ea77da5fcda544ddfe3ee7fdd7dfa391afa3cddc7e8633",
+        "internal/plugins/network_host.go": "1ac0fdb7bae5cea8fe9267ae96eb834c1a8c2df43e2a80dc55dcfc23e38b1cdb"
+      }
+    },
+    "CONFIG_PATH": {
+      "status": "covered_category_typed_resources_other_use_paused_backup_business",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          977,
+          984
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "categoryeditor/__init__.py",
+          "sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+          "line": 32,
+          "key": "CONFIG_PATH",
+          "owner": "CategoryEditor",
+          "context": "Load"
+        },
+        {
+          "file": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "line": 218,
+          "key": "CONFIG_PATH",
+          "owner": "AutoBackup.backup_file",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/plugin_categoryeditor_resources.go",
+        "internal/plugins/category_policy.go"
+      ],
+      "evidence": [
+        "testdata/plugin-platform-final-20261104/stable-platform/binding.json",
+        "docs/plugin-module-parity-matrix.md"
+      ],
+      "scope_or_adaptation": "CategoryEditor only reads packaged default category YAML and writes/reloads user policy; standard category.get_default/apply resources perform actual IO/cache updates and are included in accepted legacy platform/current SDK baseline. CONFIG_PATH AutoBackup use archives whole application settings/database, separately paused business; no general host config-directory grant, database backup UI/API or fake backup runtime is added.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/plugin_categoryeditor_resources.go": "1821eb85c8d1f5104ea709303a7cfa4fbeeee0349144ffa6491b7a0d554db9dd",
+        "internal/plugins/category_policy.go": "dd601bff6914b2151f043864b8edc2a640c2fdc0ba98f79565e03489328434b9"
+      }
+    },
+    "INNER_CONFIG_PATH": {
+      "status": "covered_category_typed_resources_other_use_paused_backup_business",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          973,
+          974
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "categoryeditor/__init__.py",
+          "sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+          "line": 33,
+          "key": "INNER_CONFIG_PATH",
+          "owner": "CategoryEditor",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/plugin_categoryeditor_resources.go",
+        "internal/plugins/category_policy.go"
+      ],
+      "evidence": [
+        "testdata/plugin-platform-final-20261104/stable-platform/binding.json",
+        "docs/plugin-module-parity-matrix.md"
+      ],
+      "scope_or_adaptation": "CategoryEditor only reads packaged default category YAML and writes/reloads user policy; standard category.get_default/apply resources perform actual IO/cache updates and are included in accepted legacy platform/current SDK baseline. CONFIG_PATH AutoBackup use archives whole application settings/database, separately paused business; no general host config-directory grant, database backup UI/API or fake backup runtime is added.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/plugin_categoryeditor_resources.go": "1821eb85c8d1f5104ea709303a7cfa4fbeeee0349144ffa6491b7a0d554db9dd",
+        "internal/plugins/category_policy.go": "dd601bff6914b2151f043864b8edc2a640c2fdc0ba98f79565e03489328434b9"
+      }
+    },
+    "ROOT_PATH": {
+      "status": "covered_actual_plugin_manager_uninstall",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          1001,
+          1002
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "pluginuninstall/__init__.py",
+          "sha256": "2210e9dea47eeccdc46208d515e45ce1222dcadf50dbfc63cbeb41f94e470487",
+          "line": 58,
+          "key": "ROOT_PATH",
+          "owner": "PluginUnInstall.init_plugin",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/plugin_original_host_manager.go",
+        "internal/app/plugin_original_uninstall.go",
+        "internal/plugins/plugin_host.go"
+      ],
+      "evidence": [
+        "testdata/plugin-host-services-20261031/evidence-manifest.json"
+      ],
+      "scope_or_adaptation": "Only PluginUnInstall58 computes original package deletion location. Actual Manager.Uninstall removes authenticated managed code/lifecycle state; filesystem layout is necessary Go adaptation, not raw source-root exposure.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/plugin_original_host_manager.go": "1d00c855cb8ca32344f3aa98008568f7fcfe5949e4dd0eabc367903b36c6169b",
+        "internal/app/plugin_original_uninstall.go": "2a146c5a88db609aadbd23adbb439f9cc60595ece976fd7023ffc7a7b7ca9eb3",
+        "internal/plugins/plugin_host.go": "a6dd03125735244a5ac7320104979196ff8375fd33885e8fdb2a4fd561e19412"
+      }
+    },
+    "TEMP_PATH": {
+      "status": "covered_actual_instance_data_path_and_native_Go_IO",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          987,
+          988
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "torrenttransfer/__init__.py",
+          "sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+          "line": 857,
+          "key": "TEMP_PATH",
+          "owner": "TorrentTransfer.transfer",
+          "context": "Load"
+        },
+        {
+          "file": "autosignin/sites/tjupt.py",
+          "sha256": "ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0",
+          "line": 37,
+          "key": "TEMP_PATH",
+          "owner": "Tjupt",
+          "context": "Load"
+        },
+        {
+          "file": "torrenttransfermusic/__init__.py",
+          "sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+          "line": 859,
+          "key": "TEMP_PATH",
+          "owner": "TorrentTransfermusic.transfer",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/plugin_original_base.go",
+        "internal/plugins/base.go"
+      ],
+      "evidence": [
+        "testdata/plugin-host-local-files-20261031/evidence/acceptance.json"
+      ],
+      "scope_or_adaptation": "TorrentTransfer/music and Tjupt temporary files use ordinary Go IO within actual instance data/temp path. Clone isolation and process failure/cold cleanup are already actually tested. No global temp filesystem namespace required.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/plugin_original_base.go": "989020d5ae77a79b4d3cba80048144cb50534cc7a65b2afbce2632e5e680effb",
+        "internal/plugins/base.go": "88d704b1249fd6af462f8dc8157586f1e30d579e4cc4719abf3289821f311aed"
+      }
+    },
+    "DB_TYPE": {
+      "status": "source_specific_PostgreSQL_backup_provisioning_business_not_platform_gap",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          114,
+          114
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "line": 230,
+          "key": "DB_TYPE",
+          "owner": "AutoBackup.backup_file",
+          "context": "Load"
+        },
+        {
+          "file": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "line": 237,
+          "key": "DB_TYPE",
+          "owner": "AutoBackup.backup_file",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/store.go",
+        "internal/app/plugin_original_backup.go"
+      ],
+      "evidence": [],
+      "scope_or_adaptation": "All9 original references are confined to AutoBackup backup_file/install_postgresql_client. Target platform is all-Go/local SQLite and does not use original PostgreSQL service, pg_dump or apt/Docker socket provisioning. User paused business plugins and forbids database backup/restore UI/public API. Plugin-code lifecycle backup is separate actual platform behavior. These are explained stack/business boundaries, not candidate host implementations or unresolved runtime keys.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/store.go": "6fb6dd17411a8733d10602d0af1c816a48c51017edaaa80e91b91644d7170d3b",
+        "internal/app/plugin_original_backup.go": "2d18b81fda7dc672d09ca8536a4dd91ca2f81796fb9026586695e54fe9199432"
+      }
+    },
+    "DB_POSTGRESQL_HOST": {
+      "status": "source_specific_PostgreSQL_backup_provisioning_business_not_platform_gap",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          134,
+          134
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "line": 239,
+          "key": "DB_POSTGRESQL_HOST",
+          "owner": "AutoBackup.backup_file",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/store.go",
+        "internal/app/plugin_original_backup.go"
+      ],
+      "evidence": [],
+      "scope_or_adaptation": "All9 original references are confined to AutoBackup backup_file/install_postgresql_client. Target platform is all-Go/local SQLite and does not use original PostgreSQL service, pg_dump or apt/Docker socket provisioning. User paused business plugins and forbids database backup/restore UI/public API. Plugin-code lifecycle backup is separate actual platform behavior. These are explained stack/business boundaries, not candidate host implementations or unresolved runtime keys.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/store.go": "6fb6dd17411a8733d10602d0af1c816a48c51017edaaa80e91b91644d7170d3b",
+        "internal/app/plugin_original_backup.go": "2d18b81fda7dc672d09ca8536a4dd91ca2f81796fb9026586695e54fe9199432"
+      }
+    },
+    "DB_POSTGRESQL_PORT": {
+      "status": "source_specific_PostgreSQL_backup_provisioning_business_not_platform_gap",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          136,
+          136
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "line": 240,
+          "key": "DB_POSTGRESQL_PORT",
+          "owner": "AutoBackup.backup_file",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/store.go",
+        "internal/app/plugin_original_backup.go"
+      ],
+      "evidence": [],
+      "scope_or_adaptation": "All9 original references are confined to AutoBackup backup_file/install_postgresql_client. Target platform is all-Go/local SQLite and does not use original PostgreSQL service, pg_dump or apt/Docker socket provisioning. User paused business plugins and forbids database backup/restore UI/public API. Plugin-code lifecycle backup is separate actual platform behavior. These are explained stack/business boundaries, not candidate host implementations or unresolved runtime keys.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/store.go": "6fb6dd17411a8733d10602d0af1c816a48c51017edaaa80e91b91644d7170d3b",
+        "internal/app/plugin_original_backup.go": "2d18b81fda7dc672d09ca8536a4dd91ca2f81796fb9026586695e54fe9199432"
+      }
+    },
+    "DB_POSTGRESQL_DATABASE": {
+      "status": "source_specific_PostgreSQL_backup_provisioning_business_not_platform_gap",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          138,
+          138
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "line": 241,
+          "key": "DB_POSTGRESQL_DATABASE",
+          "owner": "AutoBackup.backup_file",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/store.go",
+        "internal/app/plugin_original_backup.go"
+      ],
+      "evidence": [],
+      "scope_or_adaptation": "All9 original references are confined to AutoBackup backup_file/install_postgresql_client. Target platform is all-Go/local SQLite and does not use original PostgreSQL service, pg_dump or apt/Docker socket provisioning. User paused business plugins and forbids database backup/restore UI/public API. Plugin-code lifecycle backup is separate actual platform behavior. These are explained stack/business boundaries, not candidate host implementations or unresolved runtime keys.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/store.go": "6fb6dd17411a8733d10602d0af1c816a48c51017edaaa80e91b91644d7170d3b",
+        "internal/app/plugin_original_backup.go": "2d18b81fda7dc672d09ca8536a4dd91ca2f81796fb9026586695e54fe9199432"
+      }
+    },
+    "DB_POSTGRESQL_USERNAME": {
+      "status": "source_specific_PostgreSQL_backup_provisioning_business_not_platform_gap",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          140,
+          140
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "line": 242,
+          "key": "DB_POSTGRESQL_USERNAME",
+          "owner": "AutoBackup.backup_file",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/store.go",
+        "internal/app/plugin_original_backup.go"
+      ],
+      "evidence": [],
+      "scope_or_adaptation": "All9 original references are confined to AutoBackup backup_file/install_postgresql_client. Target platform is all-Go/local SQLite and does not use original PostgreSQL service, pg_dump or apt/Docker socket provisioning. User paused business plugins and forbids database backup/restore UI/public API. Plugin-code lifecycle backup is separate actual platform behavior. These are explained stack/business boundaries, not candidate host implementations or unresolved runtime keys.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/store.go": "6fb6dd17411a8733d10602d0af1c816a48c51017edaaa80e91b91644d7170d3b",
+        "internal/app/plugin_original_backup.go": "2d18b81fda7dc672d09ca8536a4dd91ca2f81796fb9026586695e54fe9199432"
+      }
+    },
+    "DB_POSTGRESQL_PASSWORD": {
+      "status": "source_specific_PostgreSQL_backup_provisioning_business_not_platform_gap",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          142,
+          142
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "line": 243,
+          "key": "DB_POSTGRESQL_PASSWORD",
+          "owner": "AutoBackup.backup_file",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/store.go",
+        "internal/app/plugin_original_backup.go"
+      ],
+      "evidence": [],
+      "scope_or_adaptation": "All9 original references are confined to AutoBackup backup_file/install_postgresql_client. Target platform is all-Go/local SQLite and does not use original PostgreSQL service, pg_dump or apt/Docker socket provisioning. User paused business plugins and forbids database backup/restore UI/public API. Plugin-code lifecycle backup is separate actual platform behavior. These are explained stack/business boundaries, not candidate host implementations or unresolved runtime keys.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/store.go": "6fb6dd17411a8733d10602d0af1c816a48c51017edaaa80e91b91644d7170d3b",
+        "internal/app/plugin_original_backup.go": "2d18b81fda7dc672d09ca8536a4dd91ca2f81796fb9026586695e54fe9199432"
+      }
+    },
+    "PROXY_HOST": {
+      "status": "source_specific_PostgreSQL_backup_provisioning_business_not_platform_gap",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          186,
+          186
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "line": 328,
+          "key": "PROXY_HOST",
+          "owner": "AutoBackup.install_postgresql_client",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/store.go",
+        "internal/app/plugin_original_backup.go"
+      ],
+      "evidence": [],
+      "scope_or_adaptation": "All9 original references are confined to AutoBackup backup_file/install_postgresql_client. Target platform is all-Go/local SQLite and does not use original PostgreSQL service, pg_dump or apt/Docker socket provisioning. User paused business plugins and forbids database backup/restore UI/public API. Plugin-code lifecycle backup is separate actual platform behavior. These are explained stack/business boundaries, not candidate host implementations or unresolved runtime keys.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/store.go": "6fb6dd17411a8733d10602d0af1c816a48c51017edaaa80e91b91644d7170d3b",
+        "internal/app/plugin_original_backup.go": "2d18b81fda7dc672d09ca8536a4dd91ca2f81796fb9026586695e54fe9199432"
+      }
+    },
+    "DOCKER_CLIENT_API": {
+      "status": "source_specific_PostgreSQL_backup_provisioning_business_not_platform_gap",
+      "fixed_source": "app/core/config.py",
+      "fixed_source_positions": [
+        [
+          590,
+          590
+        ]
+      ],
+      "installed_source_uses": [
+        {
+          "file": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "line": 348,
+          "key": "DOCKER_CLIENT_API",
+          "owner": "AutoBackup.install_postgresql_client",
+          "context": "Load"
+        }
+      ],
+      "target_paths": [
+        "internal/app/store.go",
+        "internal/app/plugin_original_backup.go"
+      ],
+      "evidence": [],
+      "scope_or_adaptation": "All9 original references are confined to AutoBackup backup_file/install_postgresql_client. Target platform is all-Go/local SQLite and does not use original PostgreSQL service, pg_dump or apt/Docker socket provisioning. User paused business plugins and forbids database backup/restore UI/public API. Plugin-code lifecycle backup is separate actual platform behavior. These are explained stack/business boundaries, not candidate host implementations or unresolved runtime keys.",
+      "target_at_scope_audit_sha256": {
+        "internal/app/store.go": "6fb6dd17411a8733d10602d0af1c816a48c51017edaaa80e91b91644d7170d3b",
+        "internal/app/plugin_original_backup.go": "2d18b81fda7dc672d09ca8536a4dd91ca2f81796fb9026586695e54fe9199432"
+      }
+    }
+  },
+  "known_remaining_scope_gaps": [
+    "USER_AGENT current implementation needs final actual SDK/Linux/source-clone proof and reopened S07 acceptance",
+    "S19 private ordinary proxy snapshot implementation and actual SDK/Linux/owned proxy request proof",
+    "PROXY_SERVER actual source-confirmed env-only renderer mismatch: explicit-only fix/source-SDK-owned-FS regression in progress, final native/App/UI combination validation required"
+  ],
+  "other_unexplained_runtime_keys": [],
+  "acceptance_policy": "This is complete20-key source discovery/ownership audit, not acceptance by static occurrence count. Each covered behavior points to actual previous runtime proof; changed/current key implementations require new source/SDK/Linux/browser evidence. Business-specific PostgreSQL/provisioning branches are explicitly explained and do not create new product placeholders.",
+  "input_sha256": {
+    "testdata/plugin-platform-final-20261104/settings/settings-source-complete-inventory.json": "e62206eaf2949ce0d11474bc675761376c461cf84edf50900e5ca9dea2ab8d45",
+    "testdata/plugin-platform-final-20261104/settings/settings_source_complete_inventory.py": "9dac656d820869dd3a135752546b2a95f702bb930770c01b236fe1c3797cf8a4",
+    "testdata/plugin-platform-final-20261104/settings/proxy-settings-independent-source-oracle.json": "4910a433596bf1b0343e62213ab08db7758a3687686ef6b9f6dfec0d614c5ffd",
+    "testdata/plugin-platform-final-20261104/settings/proxy_settings_source_oracle.py": "7ba5c9cad092adedce91f10508a5d976536253c4d2a0daee2982240ae755737d",
+    "testdata/plugin-platform-final-20261104/settings/timezone-sdk-probe-binding.json": "625c264c24ccccf56da89e5ce98759344d0786bbc3b1f525a1f0ba5f8710b1da",
+    "testdata/plugin-platform-final-20261104/settings/timezone-sdk-probe-result.json": "3656b8e1dba348846a017b15e2915aadb3b5caab19c5c6395d62a4e0f679c4b0",
+    "testdata/plugin-platform-final-20261104/settings/timezone_sdk_probe.go": "02d7d93b4307d10ff564c9234eea7234ef5309f63454583b016a12820d73f237",
+    "testdata/plugin-platform-final-20261104/browser-ocr/cloakbrowser-proxy-none-source-oracle.json": "e2b39ed98e837c1c1e84193bd5a86d255f7226af3f3e15f05a1fd60e8848f8d4"
+  },
+  "changes": "Source-only AST/oracle and actual owned SDK timezone probe. No product file edits. Probe binary removed and children joined.",
+  "target_binding_classification": "Target hashes are the discovery/review checkpoint identifying the source gap or existing typed surface, not a final current executable claim. Final S07/S16/S18/S19 acceptance must separately bind and execute corrected current source."
+}

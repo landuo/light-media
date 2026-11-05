@@ -1,0 +1,188 @@
+{
+  "status": "passed",
+  "platform": "linux-amd64",
+  "classification": "actual cmd/server and standard installed Go workers, real owned files; fnOS is loopback protocol replay; recognition uses actual plugin module override; no existing media/downloader data",
+  "binding": {
+    "server": "38933041070383f2ec35cd7ecd945561119602ec047d5e425642777200277002",
+    "worker": "b28297ab941bb16f0852d3e5cd7530664e3e77faa90220accc12308c4800563b",
+    "worker_v2": "c2b141b9a575e6a15510662266fc9f87c3f690a3be744aba83a52c4d43b036e5",
+    "driver": "bc638b254b7194a5b3473fc3bc18043616982aeaa2c687da10add3198cc325b9"
+  },
+  "observations": [
+    {
+      "phase": "actual_process_host_services",
+      "first": {
+        "config": null,
+        "last": null,
+        "pid": 3498898,
+        "version": "1.0"
+      },
+      "clone": {
+        "config": null,
+        "last": null,
+        "pid": 3498914,
+        "version": "1.0"
+      },
+      "reloaded": {
+        "config": null,
+        "last": true,
+        "pid": 3498943,
+        "version": "1.0"
+      },
+      "upgraded": {
+        "config": null,
+        "last": {
+          "accepted": true,
+          "completed": true,
+          "result": null
+        },
+        "pid": 3498972,
+        "version": "2.0"
+      },
+      "servers": [
+        {
+          "name": "fnos",
+          "type": "fnos",
+          "enabled": true,
+          "configured": true,
+          "connected": true,
+          "libraries": [
+            {
+              "id": "11111111111111111111111111111111",
+              "name": "Owned isolated library",
+              "directories": [
+                "/owned/library"
+              ]
+            }
+          ]
+        }
+      ],
+      "scans": [
+        {
+          "endpoint": "/v/api/v1/mdb/scan/11111111111111111111111111111111",
+          "body_bytes": 0
+        },
+        {
+          "endpoint": "/v/api/v1/mdb/scanall",
+          "body_bytes": 0
+        },
+        {
+          "endpoint": "/v/api/v1/mdb/scan/11111111111111111111111111111111",
+          "body_bytes": 0
+        }
+      ],
+      "recognized": {
+        "actors": [],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://www.themoviedb.org/movie/123",
+        "directors": [],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": null,
+        "names": [],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": null,
+        "overview": null,
+        "popularity": null,
+        "poster_path": null,
+        "production_companies": [],
+        "production_countries": [],
+        "release_date": null,
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": null,
+        "source": "themoviedb",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned process recognized",
+        "title_year": "Owned process recognized (2024)",
+        "tmdb_id": 123,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": null,
+        "vote_count": null,
+        "year": "2024"
+      },
+      "before_restart": {
+        "OwnedHostServices": {
+          "config": null,
+          "last": {
+            "accepted": true,
+            "completed": true,
+            "result": null
+          },
+          "pid": 3498972,
+          "version": "2.0"
+        },
+        "OwnedHostServicescopy": {
+          "config": null,
+          "last": true,
+          "pid": 3498943,
+          "version": "1.0"
+        }
+      },
+      "after_restart": {
+        "OwnedHostServices": {
+          "config": null,
+          "last": {
+            "accepted": true,
+            "completed": true,
+            "result": null
+          },
+          "pid": 3498987,
+          "version": "2.0"
+        },
+        "OwnedHostServicescopy": {
+          "config": null,
+          "last": true,
+          "pid": 3498994,
+          "version": "1.0"
+        }
+      },
+      "source_files_preserved": true,
+      "deleted_file_still_absent": true
+    },
+    {
+      "phase": "uninstall",
+      "apis_removed": true,
+      "retained_file_bytes": "6f776e6564206368696c64206279746573"
+    }
+  ]
+}

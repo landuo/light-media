@@ -1,0 +1,71 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "classification": "read-only fixed source and verified installed snapshot callsite ownership; no execution success claim",
+  "installed_inventory": {
+    "file_count": 77,
+    "all_hashes_match": true,
+    "snapshot_sha256": "e3c924eb8d6efc70582d9af1a974c12231377b6a764abc68cf52df557bef106f",
+    "get_page_source_calls": [
+      {
+        "file": "autosignin/__init__.py",
+        "sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+        "line": 1884,
+        "callee": "PlaywrightHelper().get_page_source",
+        "keyword_names": [
+          "url",
+          "cookies",
+          "ua",
+          "proxies",
+          "timeout"
+        ]
+      },
+      {
+        "file": "autosignin/__init__.py",
+        "sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+        "line": 1974,
+        "callee": "PlaywrightHelper().get_page_source",
+        "keyword_names": [
+          "url",
+          "cookies",
+          "ua",
+          "proxies",
+          "timeout"
+        ]
+      },
+      {
+        "file": "autosignin/sites/__init__.py",
+        "sha256": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d",
+        "line": 63,
+        "callee": "PlaywrightHelper().get_page_source",
+        "keyword_names": [
+          "url",
+          "cookies",
+          "ua",
+          "proxies",
+          "timeout"
+        ]
+      }
+    ],
+    "action_calls": 0,
+    "evidence_sha256": "89ea290cd2fac2c99962213d1e844cd78415c58ef1559a727d3c8a1ef0f9b8a8"
+  },
+  "platform_imports": [
+    {
+      "path": "app/plugins/__init__.py",
+      "sha256": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+      "browser_helper_references": []
+    },
+    {
+      "path": "app/core/plugin.py",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "browser_helper_references": []
+    }
+  ],
+  "ordinary_action": {
+    "source": "app/helper/cookie.py:325",
+    "consumer": "app/chain/site.py:1369 CookieHelper.get_site_cookie_ua",
+    "purpose": "site auto-login and 2FA cookie retrieval, unrelated to PluginBase/PluginManager extension contracts",
+    "scope": "ordinary site-login business, not required by installed plugins or plugin platform; not classified as AI",
+    "migration": "not adding callable callback/session/action framework"
+  }
+}

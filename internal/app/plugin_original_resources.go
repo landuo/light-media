@@ -17,11 +17,18 @@ func originalStandardCapabilityAllowed(contract, method string) bool {
 			return true
 		}
 	}
+	if contract == pluginResourcesSDKContract && (method == plugins.NetworkGetCapability || method == plugins.NetworkProxyReadCapability || method == plugins.SitesRequestCapability || method == plugins.SitesCredentialsCapability || method == plugins.SiteRenderCapability || method == plugins.MessageReceiveCapability || originalHostOCRCapability(method) || originalHostDownloaderCapability(method) || originalHostStorageCapability(method) || originalHostSubscriptionsCapability(method) || originalHostMediaCapability(method) || originalHostManagerCapability(method) || originalHostHistoryCapability(method) || originalHostSettingsCapability(method) || originalHostSitesCapability(method)) {
+		return true
+	}
 	return contract == pluginResourcesSDKContract && (method == plugins.BrushInventoryReadCapability || method == plugins.LogWriteCapability || method == plugins.DownloaderTasksReadCapability || method == plugins.BackgroundSubmitCapability || method == plugins.ServicesRefreshCapability || method == plugins.ServiceProgressCapability || method == plugins.AuthTicketCreateCapability || method == plugins.PostMessageCapability || method == plugins.EventSendCapability || method == plugins.EventCheckCapability || method == plugins.EventManageCapability || originalInputCapability(method) || categoryEditorCapability(method))
 }
 
 func originalResourceDecode(raw json.RawMessage, output any) error {
-	if len(raw) == 0 || len(raw) > 128<<10 || bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+	return originalResourceDecodeBounded(raw, output, 128<<10)
+}
+
+func originalResourceDecodeBounded(raw json.RawMessage, output any, limit int) error {
+	if len(raw) == 0 || len(raw) > limit || bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
 		return bad("INVALID_PLUGIN_VALUE", "插件资源参数必须为有界对象")
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
@@ -50,6 +57,51 @@ func (a *App) pluginOriginalResourceHost(ctx context.Context, scope originalBase
 		return nil, bad("PLUGIN_IDENTITY_MISMATCH", "插件执行身份不匹配")
 	}
 	ctx = withOriginalPluginLogContext(ctx, scope)
+	if method == plugins.NetworkProxyReadCapability {
+		return a.originalHostProxyResource(ctx, scope, raw)
+	}
+	if method == plugins.NetworkGetCapability {
+		return a.originalHostNetworkResource(ctx, scope, raw)
+	}
+	if method == plugins.SitesRequestCapability {
+		return a.originalHostSiteHTTPResource(ctx, scope, raw)
+	}
+	if method == plugins.SitesCredentialsCapability {
+		return a.originalHostSiteCredentialsResource(ctx, scope, raw)
+	}
+	if method == plugins.SiteRenderCapability {
+		return a.originalHostBrowserResource(ctx, scope, raw)
+	}
+	if method == plugins.MessageReceiveCapability {
+		return a.originalHostMessageInboundResource(ctx, scope, raw)
+	}
+	if originalHostOCRCapability(method) {
+		return a.originalHostOCRResource(ctx, scope, method, raw)
+	}
+	if originalHostDownloaderCapability(method) {
+		return a.originalHostDownloaderResource(ctx, scope, method, raw)
+	}
+	if originalHostStorageCapability(method) {
+		return a.originalHostStorageResource(ctx, scope, method, raw)
+	}
+	if originalHostSubscriptionsCapability(method) {
+		return a.originalHostSubscriptionsResource(ctx, scope, method, raw)
+	}
+	if originalHostMediaCapability(method) {
+		return a.originalHostMediaResource(ctx, scope, method, raw)
+	}
+	if originalHostManagerCapability(method) {
+		return a.originalHostManagerResource(ctx, scope, method, raw)
+	}
+	if originalHostHistoryCapability(method) {
+		return a.originalHostHistoryResource(ctx, scope, method, raw)
+	}
+	if originalHostSettingsCapability(method) {
+		return a.originalHostSettingsResource(ctx, scope, method, raw)
+	}
+	if originalHostSitesCapability(method) {
+		return a.originalHostSitesResource(ctx, scope, method, raw)
+	}
 	if categoryEditorCapability(method) {
 		return a.categoryEditorResource(ctx, scope, method, raw)
 	}

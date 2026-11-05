@@ -1,0 +1,576 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "isolated_source_method_replay",
+  "sources": {
+    "app/utils/system.py": "3477c8585dd955bcb42f7180e5fabaae05c528af8ddb0cbae0935dbdb0c031db",
+    "app/modules/filemanager/storages/local.py": "fdbe39789b31b508aa35c4e15e273ee4ed19fc92130aa31c33d0b74fc10bfdf4",
+    "app/modules/filemanager/__init__.py": "7a02d0f0107b76465a9f2c2ef99731e2f39aa11dee3b6a01d2c3dfbc6d7dd9ab",
+    "app/utils/media.py": "1b1931d0d392ea7a8893a70068af583945a52bdddc892353e3892f06cd2084ed",
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/modules/themoviedb/__init__.py": "383dee3ab7ae88a569b1b772cd86731a64d9f624b384c011338ef55d78ac44d6",
+    "app/modules/themoviedb/tmdbapi.py": "6606d2cee1c26780386e96798a0b2dd779dcde1d9b6c78c20ff69b95d6048585"
+  },
+  "cases": [
+    {
+      "case": "flat",
+      "items": [
+        {
+          "type": "dir",
+          "path": "nested"
+        },
+        {
+          "type": "file",
+          "path": "top.txt"
+        }
+      ]
+    },
+    {
+      "case": "recursive",
+      "items": [
+        {
+          "type": "file",
+          "path": "nested/child.txt"
+        },
+        {
+          "type": "file",
+          "path": "top.txt"
+        }
+      ]
+    },
+    {
+      "case": "file",
+      "items": [
+        {
+          "type": "file",
+          "path": "top.txt"
+        }
+      ]
+    },
+    {
+      "case": "missing",
+      "items": []
+    },
+    {
+      "case": "delete_file",
+      "returned": true,
+      "exists": false
+    },
+    {
+      "case": "delete_directory",
+      "returned": true,
+      "exists": false
+    },
+    {
+      "case": "delete_missing",
+      "returned": true,
+      "exists": false
+    }
+  ],
+  "recognition": [
+    {
+      "request": {
+        "tmdbid": 123,
+        "mtype": "电影",
+        "meta": {
+          "tmdbid": 999,
+          "media_source": "douban",
+          "media_id": "12345"
+        }
+      },
+      "kwargs": {
+        "meta": {
+          "tmdbid": 999,
+          "media_source": "douban",
+          "media_id": "12345"
+        },
+        "mtype": "电影",
+        "source": "douban",
+        "mediaid": "12345",
+        "tmdbid": null,
+        "doubanid": "12345",
+        "bangumiid": null,
+        "anilistid": null,
+        "episode_group": null,
+        "cache": true
+      }
+    },
+    {
+      "request": {
+        "source": "tmdb",
+        "mediaid": "456",
+        "tmdbid": 123,
+        "mtype": "电视剧",
+        "cache": false
+      },
+      "kwargs": {
+        "meta": null,
+        "mtype": "电视剧",
+        "source": "themoviedb",
+        "mediaid": "456",
+        "tmdbid": 456,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "episode_group": null,
+        "cache": false
+      }
+    },
+    {
+      "request": {
+        "tmdbid": 123,
+        "doubanid": "999"
+      },
+      "kwargs": {
+        "meta": null,
+        "mtype": null,
+        "source": "themoviedb",
+        "mediaid": null,
+        "tmdbid": 123,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "episode_group": null,
+        "cache": true
+      }
+    },
+    {
+      "request": {
+        "meta": {
+          "type": "电视剧",
+          "tmdbid": 0,
+          "doubanid": "42",
+          "episode_group": "group"
+        }
+      },
+      "kwargs": {
+        "meta": {
+          "type": "电视剧",
+          "tmdbid": 0,
+          "doubanid": "42",
+          "episode_group": "group"
+        },
+        "mtype": "电视剧",
+        "source": "douban",
+        "mediaid": null,
+        "tmdbid": null,
+        "doubanid": "42",
+        "bangumiid": null,
+        "anilistid": null,
+        "episode_group": "group",
+        "cache": true
+      }
+    },
+    {
+      "request": {
+        "source": "anilist",
+        "mediaid": "123",
+        "doubanid": "999"
+      },
+      "kwargs": {
+        "meta": null,
+        "mtype": null,
+        "source": "anilist",
+        "mediaid": "123",
+        "tmdbid": null,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": 123,
+        "episode_group": null,
+        "cache": true
+      }
+    }
+  ],
+  "disambiguation": [
+    {
+      "case": "no_meta_ambiguous",
+      "tv": {
+        "id": 123,
+        "name": "Television",
+        "original_name": "Television",
+        "first_air_date": "2024-01-01",
+        "media_type": "电视剧"
+      },
+      "movie": {
+        "id": 123,
+        "title": "Movie",
+        "original_title": "Movie",
+        "release_date": "2025-01-01",
+        "media_type": "电影"
+      },
+      "meta": null,
+      "mtype": null,
+      "lookup_order": [
+        "电视剧",
+        "电影"
+      ],
+      "selected_type": null
+    },
+    {
+      "case": "title_tv",
+      "tv": {
+        "id": 123,
+        "name": "Television",
+        "original_name": "Television",
+        "first_air_date": "2024-01-01",
+        "media_type": "电视剧"
+      },
+      "movie": {
+        "id": 123,
+        "title": "Movie",
+        "original_title": "Movie",
+        "release_date": "2025-01-01",
+        "media_type": "电影"
+      },
+      "meta": {
+        "cn_name": "Television",
+        "en_name": "",
+        "year": null,
+        "type": null
+      },
+      "mtype": null,
+      "lookup_order": [
+        "电视剧",
+        "电影"
+      ],
+      "selected_type": "电视剧"
+    },
+    {
+      "case": "year_movie",
+      "tv": {
+        "id": 123,
+        "name": "Television",
+        "original_name": "Television",
+        "first_air_date": "2024-01-01",
+        "media_type": "电视剧"
+      },
+      "movie": {
+        "id": 123,
+        "title": "Movie",
+        "original_title": "Movie",
+        "release_date": "2025-01-01",
+        "media_type": "电影"
+      },
+      "meta": {
+        "cn_name": "",
+        "en_name": "",
+        "year": "2025",
+        "type": null
+      },
+      "mtype": null,
+      "lookup_order": [
+        "电视剧",
+        "电影"
+      ],
+      "selected_type": "电影"
+    },
+    {
+      "case": "tie_type_tv",
+      "tv": {
+        "id": 123,
+        "name": "Television",
+        "original_name": "Television",
+        "first_air_date": "2024-01-01",
+        "media_type": "电视剧"
+      },
+      "movie": {
+        "id": 123,
+        "title": "Movie",
+        "original_title": "Movie",
+        "release_date": "2025-01-01",
+        "media_type": "电影"
+      },
+      "meta": {
+        "cn_name": "",
+        "en_name": "",
+        "year": null,
+        "type": "电视剧"
+      },
+      "mtype": null,
+      "lookup_order": [
+        "电视剧",
+        "电影"
+      ],
+      "selected_type": "电视剧"
+    },
+    {
+      "case": "tie_unknown",
+      "tv": {
+        "id": 123,
+        "name": "Television",
+        "original_name": "Television",
+        "first_air_date": "2024-01-01",
+        "media_type": "电视剧"
+      },
+      "movie": {
+        "id": 123,
+        "title": "Movie",
+        "original_title": "Movie",
+        "release_date": "2025-01-01",
+        "media_type": "电影"
+      },
+      "meta": {
+        "cn_name": "",
+        "en_name": "",
+        "year": null,
+        "type": null
+      },
+      "mtype": null,
+      "lookup_order": [
+        "电视剧",
+        "电影"
+      ],
+      "selected_type": null
+    },
+    {
+      "case": "tv_only",
+      "tv": {
+        "id": 123,
+        "name": "Television",
+        "original_name": "Television",
+        "first_air_date": "2024-01-01",
+        "media_type": "电视剧"
+      },
+      "movie": null,
+      "meta": null,
+      "mtype": null,
+      "lookup_order": [
+        "电视剧",
+        "电影"
+      ],
+      "selected_type": "电视剧"
+    },
+    {
+      "case": "movie_only",
+      "tv": null,
+      "movie": {
+        "id": 123,
+        "title": "Movie",
+        "original_title": "Movie",
+        "release_date": "2025-01-01",
+        "media_type": "电影"
+      },
+      "meta": null,
+      "mtype": null,
+      "lookup_order": [
+        "电视剧",
+        "电影"
+      ],
+      "selected_type": "电影"
+    },
+    {
+      "case": "explicit_movie",
+      "tv": {
+        "id": 123,
+        "name": "Television",
+        "original_name": "Television",
+        "first_air_date": "2024-01-01",
+        "media_type": "电视剧"
+      },
+      "movie": {
+        "id": 123,
+        "title": "Movie",
+        "original_title": "Movie",
+        "release_date": "2025-01-01",
+        "media_type": "电影"
+      },
+      "meta": null,
+      "mtype": "电影",
+      "lookup_order": [
+        "电影"
+      ],
+      "selected_type": "电影"
+    }
+  ],
+  "groups": [
+    {
+      "case": "explicit_group",
+      "selected": "selected",
+      "initial": {
+        "type": "电视剧",
+        "episode_groups": [
+          {
+            "id": "automatic",
+            "type": 6
+          }
+        ]
+      },
+      "provider_groups": [
+        {
+          "id": "season-x",
+          "order": 2,
+          "name": "Owned group",
+          "episodes": [
+            {
+              "id": 10,
+              "episode_number": 99,
+              "air_date": "2025-01-02"
+            },
+            {
+              "id": 11,
+              "episode_number": 102,
+              "air_date": "2025-01-03"
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "episodes": []
+        }
+      ],
+      "normalized_groups": [
+        {
+          "id": "season-x",
+          "order": 2,
+          "name": "Owned group",
+          "episodes": [
+            {
+              "id": 10,
+              "episode_number": 1,
+              "air_date": "2025-01-02"
+            },
+            {
+              "id": 11,
+              "episode_number": 2,
+              "air_date": "2025-01-03"
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "episodes": []
+        }
+      ],
+      "calls": [],
+      "result": {
+        "type": "电视剧",
+        "episode_groups": [
+          {
+            "id": "season-x",
+            "order": 2,
+            "name": "Owned group",
+            "episodes": [
+              {
+                "id": 10,
+                "episode_number": 1,
+                "air_date": "2025-01-02"
+              },
+              {
+                "id": 11,
+                "episode_number": 2,
+                "air_date": "2025-01-03"
+              }
+            ]
+          },
+          {
+            "order": 3,
+            "episodes": []
+          }
+        ],
+        "seasons": {
+          "2": [
+            1,
+            2
+          ]
+        },
+        "number_of_seasons": 1,
+        "season_info": [
+          {
+            "id": "season-x",
+            "order": 2,
+            "name": "Owned group",
+            "episodes": [
+              {
+                "id": 10,
+                "episode_number": 1,
+                "air_date": "2025-01-02"
+              },
+              {
+                "id": 11,
+                "episode_number": 2,
+                "air_date": "2025-01-03"
+              }
+            ]
+          }
+        ],
+        "season_years": {
+          "2": "2025"
+        },
+        "episode_group": "selected"
+      }
+    },
+    {
+      "case": "automatic_years",
+      "selected": null,
+      "initial": {
+        "type": "电视剧",
+        "episode_groups": [
+          {
+            "id": "automatic",
+            "type": 6
+          }
+        ]
+      },
+      "provider_groups": [
+        {
+          "id": "season-x",
+          "order": 2,
+          "name": "Owned group",
+          "episodes": [
+            {
+              "id": 10,
+              "episode_number": 99,
+              "air_date": "2025-01-02"
+            },
+            {
+              "id": 11,
+              "episode_number": 102,
+              "air_date": "2025-01-03"
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "episodes": []
+        }
+      ],
+      "normalized_groups": [
+        {
+          "id": "season-x",
+          "order": 2,
+          "name": "Owned group",
+          "episodes": [
+            {
+              "id": 10,
+              "episode_number": 1,
+              "air_date": "2025-01-02"
+            },
+            {
+              "id": 11,
+              "episode_number": 2,
+              "air_date": "2025-01-03"
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "episodes": []
+        }
+      ],
+      "calls": [
+        "automatic"
+      ],
+      "result": {
+        "type": "电视剧",
+        "episode_groups": [
+          {
+            "id": "automatic",
+            "type": 6
+          }
+        ],
+        "season_years": {
+          "2": "2025"
+        }
+      }
+    }
+  ]
+}

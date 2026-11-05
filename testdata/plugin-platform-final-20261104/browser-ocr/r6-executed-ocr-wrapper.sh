@@ -1,0 +1,2 @@
+#!/bin/sh
+exec docker run --rm -i --network host --tmpfs /tmp:rw,nosuid,nodev,size=128m --cap-drop ALL --security-opt no-new-privileges --pids-limit 256 --memory 1g --volume /vol2/1000/docker/light-media-browser-20261101-pCMPM7Bo:/vol2/1000/docker/light-media-browser-20261101-pCMPM7Bo --env OCR_HOST --env RMT_MEDIAEXT --env RMT_SUBEXT --env RMT_AUDIOEXT --entrypoint /usr/local/bin/light-media sha256:d149ea88987b4cd810462a7a5f0fbc84903e53ff0837f21cc9da598e84ec48d4 "$@"

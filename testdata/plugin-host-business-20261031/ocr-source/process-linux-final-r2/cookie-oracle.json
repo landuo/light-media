@@ -1,0 +1,179 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "requests": "2.34.2",
+  "urllib3": "2.7.0",
+  "classification": "fixed RequestUtils/cookie parser AST + actual installed requests/urllib3 over owned loopback HTTP; no app imports/config/DB/old service calls",
+  "cases": [
+    {
+      "case": "simple",
+      "cookie": "owned=1",
+      "ua": "Owned/OCR",
+      "parsed": {
+        "owned": "1"
+      },
+      "response_present": true,
+      "trace": [
+        {
+          "cookie": "owned=1",
+          "ua": "Owned/OCR",
+          "cookie_bytes_b64": "b3duZWQ9MQ==",
+          "ua_bytes_b64": "T3duZWQvT0NS"
+        }
+      ]
+    },
+    {
+      "case": "duplicates_ascii_percent",
+      "cookie": "dup=first;dup=last;value=%20A%2BB;empty=;flag;equal=a=b",
+      "ua": "Owned/OCR",
+      "parsed": {
+        "dup": "last",
+        "value": " A+B",
+        "empty": "",
+        "equal": "a=b"
+      },
+      "response_present": true,
+      "trace": [
+        {
+          "cookie": "dup=last; value= A+B; empty=; equal=a=b",
+          "ua": "Owned/OCR",
+          "cookie_bytes_b64": "ZHVwPWxhc3Q7IHZhbHVlPSBBK0I7IGVtcHR5PTsgZXF1YWw9YT1i",
+          "ua_bytes_b64": "T3duZWQvT0NS"
+        }
+      ]
+    },
+    {
+      "case": "invalid_escape_still_decodes_valid",
+      "cookie": "bad=%ZZ%20;plus=a+b",
+      "ua": "Owned/OCR",
+      "parsed": {
+        "bad": "%ZZ ",
+        "plus": "a+b"
+      },
+      "response_present": true,
+      "trace": [
+        {
+          "cookie": "bad=%ZZ ; plus=a+b",
+          "ua": "Owned/OCR",
+          "cookie_bytes_b64": "YmFkPSVaWiA7IHBsdXM9YSti",
+          "ua_bytes_b64": "T3duZWQvT0NS"
+        }
+      ]
+    },
+    {
+      "case": "nonascii_percent_preserved",
+      "cookie": "latin=%E9;utf8=%E4%B8%AD;mix=%20%E9",
+      "ua": "Owned/OCR",
+      "parsed": {
+        "latin": "%E9",
+        "utf8": "%E4%B8%AD",
+        "mix": "%20%E9"
+      },
+      "response_present": true,
+      "trace": [
+        {
+          "cookie": "latin=%E9; utf8=%E4%B8%AD; mix=%20%E9",
+          "ua": "Owned/OCR",
+          "cookie_bytes_b64": "bGF0aW49JUU5OyB1dGY4PSVFNCVCOCVBRDsgbWl4PSUyMCVFOQ==",
+          "ua_bytes_b64": "T3duZWQvT0NS"
+        }
+      ]
+    },
+    {
+      "case": "raw_latin1",
+      "cookie": "latin=é",
+      "ua": "Owned/OCR",
+      "parsed": {
+        "latin": "é"
+      },
+      "response_present": true,
+      "trace": [
+        {
+          "cookie": "latin=é",
+          "ua": "Owned/OCR",
+          "cookie_bytes_b64": "bGF0aW496Q==",
+          "ua_bytes_b64": "T3duZWQvT0NS"
+        }
+      ]
+    },
+    {
+      "case": "raw_unicode_raises",
+      "cookie": "word=中文%20",
+      "ua": "Owned/OCR",
+      "parsed": {
+        "word": "中文%20"
+      },
+      "error": "UnicodeEncodeError",
+      "trace": []
+    },
+    {
+      "case": "percent_crlf_network_none",
+      "cookie": "bad=%0A",
+      "ua": "Owned/OCR",
+      "parsed": {
+        "bad": "\n"
+      },
+      "error": "ValueError",
+      "trace": []
+    },
+    {
+      "case": "no_cookie",
+      "cookie": "",
+      "ua": "Owned/OCR",
+      "parsed": {},
+      "response_present": true,
+      "trace": [
+        {
+          "cookie": null,
+          "ua": "Owned/OCR",
+          "cookie_bytes_b64": "",
+          "ua_bytes_b64": "T3duZWQvT0NS"
+        }
+      ]
+    },
+    {
+      "case": "empty_name",
+      "cookie": "=value",
+      "ua": "Owned/OCR",
+      "parsed": {
+        "": "value"
+      },
+      "response_present": true,
+      "trace": [
+        {
+          "cookie": "=value",
+          "ua": "Owned/OCR",
+          "cookie_bytes_b64": "PXZhbHVl",
+          "ua_bytes_b64": "T3duZWQvT0NS"
+        }
+      ]
+    },
+    {
+      "case": "ua_latin1",
+      "cookie": "owned=1",
+      "ua": "Owned/é",
+      "parsed": {
+        "owned": "1"
+      },
+      "response_present": true,
+      "trace": [
+        {
+          "cookie": "owned=1",
+          "ua": "Owned/é",
+          "cookie_bytes_b64": "b3duZWQ9MQ==",
+          "ua_bytes_b64": "T3duZWQv6Q=="
+        }
+      ]
+    },
+    {
+      "case": "ua_nonlatin_raises",
+      "cookie": "owned=1",
+      "ua": "Owned/中",
+      "parsed": {
+        "owned": "1"
+      },
+      "error": "UnicodeEncodeError",
+      "trace": []
+    }
+  ]
+}

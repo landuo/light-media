@@ -1,0 +1,5331 @@
+{
+  "status": "passed",
+  "classification": "actual cmd/server HTTP API and installed standard SDK worker; fixed-origin HTTPS provider requests through owned configured CONNECT proxy and trusted owned CA; synthetic protocol responses, not live TMDB or other provider",
+  "binding": {
+    "server": "6d7d57f4e6388a7ec1870e36a8ba295bd154477f10e578d494b67a493d92d568",
+    "worker": "ed9cb6a6eb7a54cd577b98e5d69bdf48e53e98862c456cd768eb8b73769722be",
+    "driver": "7aa45921146bf4ed461a0d3f874905e134440f7c0f754d13dcd6f752547a7546",
+    "source_cases": {
+      "douban-native-cases.json": "9dbd6289e054aa55483982ceb92df56afa1e547a6a671bcbcd384db4a5cbe7dd",
+      "bangumi-native-cases.json": "6a63e787d7c795d0eceaf03bad8d5e65a4b57ad2af101a3e5f5f3563f40ea521",
+      "http-source-native-cases.json": "34cc125040b5df459ad5e057d43a7d2a0e1a84714d3fb51922cff4fe6804ab04",
+      "native-cases.json": "1e9ab9a26e1784fd1723cbb7088f26c099ffb7f7138abd7a0ef14faa6c9ebc2f"
+    }
+  },
+  "environment": {
+    "TMDB_LOCALE": "en-US",
+    "META_CACHE_EXPIRE": "48",
+    "BIG_MEMORY_MODE": true
+  },
+  "observations": [
+    {
+      "phase": "startup-ordinary-settings",
+      "values": {
+        "BIG_MEMORY_MODE": true,
+        "META_CACHE_EXPIRE": 48,
+        "TMDB_LOCALE": "en-US",
+        "RECOGNIZE_SOURCE": "themoviedb"
+      },
+      "worker_writes_rejected": true
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_id_movie",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://movie.douban.com/subject/901",
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "douban_id": "901",
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "901",
+        "mediaid_prefix": "douban",
+        "names": [
+          "Other",
+          "Alias(\u53f0\u6e7e)"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": null,
+        "overview": "owned intro",
+        "popularity": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "\u4e2d\u56fd\u5927\u9646",
+            "name": "\u4e2d\u56fd\u5927\u9646"
+          }
+        ],
+        "recognize_cache_hit": false,
+        "release_date": "2026-09-01",
+        "release_dates": [],
+        "runtime": 96,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": null,
+        "source": "douban",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 7.5,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_id_tv",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://movie.douban.com/subject/902",
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "douban_id": "902",
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "902",
+        "mediaid_prefix": "douban",
+        "names": [
+          "Other",
+          "Alias(\u53f0\u6e7e)"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": null,
+        "overview": "owned intro",
+        "popularity": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "\u4e2d\u56fd\u5927\u9646",
+            "name": "\u4e2d\u56fd\u5927\u9646"
+          }
+        ],
+        "recognize_cache_hit": false,
+        "release_date": "2026-09-01",
+        "release_dates": [],
+        "runtime": 96,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "douban",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 7.5,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_id_auto_fallback",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://movie.douban.com/subject/902",
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "douban_id": "902",
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "902",
+        "mediaid_prefix": "douban",
+        "names": [
+          "Other",
+          "Alias(\u53f0\u6e7e)"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": null,
+        "overview": "owned intro",
+        "popularity": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "\u4e2d\u56fd\u5927\u9646",
+            "name": "\u4e2d\u56fd\u5927\u9646"
+          }
+        ],
+        "recognize_cache_hit": false,
+        "release_date": "2026-09-01",
+        "release_dates": [],
+        "runtime": 96,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "douban",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 7.5,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_id_no_people",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "name": "Owned Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://movie.douban.com/subject/901",
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "douban_id": "901",
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "901",
+        "mediaid_prefix": "douban",
+        "names": [
+          "Other",
+          "Alias(\u53f0\u6e7e)"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": null,
+        "overview": "owned intro",
+        "popularity": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "\u4e2d\u56fd\u5927\u9646",
+            "name": "\u4e2d\u56fd\u5927\u9646"
+          }
+        ],
+        "recognize_cache_hit": false,
+        "release_date": "2026-09-01",
+        "release_dates": [],
+        "runtime": 96,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": null,
+        "source": "douban",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 7.5,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_name_movie",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://movie.douban.com/subject/901",
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "douban_id": "901",
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "901",
+        "mediaid_prefix": "douban",
+        "names": [
+          "Other",
+          "Alias(\u53f0\u6e7e)"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": null,
+        "overview": "owned intro",
+        "popularity": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "\u4e2d\u56fd\u5927\u9646",
+            "name": "\u4e2d\u56fd\u5927\u9646"
+          }
+        ],
+        "recognize_cache_hit": false,
+        "release_date": "2026-09-01",
+        "release_dates": [],
+        "runtime": 96,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": null,
+        "source": "douban",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 7.5,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_tv_default_season",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://movie.douban.com/subject/902",
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "douban_id": "902",
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "902",
+        "mediaid_prefix": "douban",
+        "names": [
+          "Other",
+          "Alias(\u53f0\u6e7e)"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": null,
+        "overview": "owned intro",
+        "popularity": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "\u4e2d\u56fd\u5927\u9646",
+            "name": "\u4e2d\u56fd\u5927\u9646"
+          }
+        ],
+        "recognize_cache_hit": false,
+        "release_date": "2026-09-01",
+        "release_dates": [],
+        "runtime": 96,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "douban",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 7.5,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_tv_season2",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://movie.douban.com/subject/902",
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "douban_id": "902",
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "902",
+        "mediaid_prefix": "douban",
+        "names": [
+          "Other",
+          "Alias(\u53f0\u6e7e)"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": null,
+        "overview": "owned intro",
+        "popularity": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "\u4e2d\u56fd\u5927\u9646",
+            "name": "\u4e2d\u56fd\u5927\u9646"
+          }
+        ],
+        "recognize_cache_hit": false,
+        "release_date": "2026-09-01",
+        "release_dates": [],
+        "runtime": 96,
+        "scrape_source": null,
+        "season": 2,
+        "season_info": [],
+        "season_years": {
+          "2": "2026"
+        },
+        "seasons": {
+          "2": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "douban",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned S02",
+        "title_year": "Owned S02 (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 7.5,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_year_strict",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_wrong_type_skip",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://movie.douban.com/subject/901",
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "douban_id": "901",
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "901",
+        "mediaid_prefix": "douban",
+        "names": [
+          "Other",
+          "Alias(\u53f0\u6e7e)"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": null,
+        "overview": "owned intro",
+        "popularity": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "\u4e2d\u56fd\u5927\u9646",
+            "name": "\u4e2d\u56fd\u5927\u9646"
+          }
+        ],
+        "recognize_cache_hit": false,
+        "release_date": "2026-09-01",
+        "release_dates": [],
+        "runtime": 96,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": null,
+        "source": "douban",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 7.5,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_no_name",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_not_found",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_names_order",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://movie.douban.com/subject/901",
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "douban_id": "901",
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "901",
+        "mediaid_prefix": "douban",
+        "names": [
+          "Other",
+          "Alias(\u53f0\u6e7e)"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": null,
+        "overview": "owned intro",
+        "popularity": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "\u4e2d\u56fd\u5927\u9646",
+            "name": "\u4e2d\u56fd\u5927\u9646"
+          }
+        ],
+        "recognize_cache_hit": false,
+        "release_date": "2026-09-01",
+        "release_dates": [],
+        "runtime": 96,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": null,
+        "source": "douban",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 7.5,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_numeric_year",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://movie.douban.com/subject/901",
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "douban_id": "901",
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "901",
+        "mediaid_prefix": "douban",
+        "names": [
+          "Other",
+          "Alias(\u53f0\u6e7e)"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": null,
+        "overview": "owned intro",
+        "popularity": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "\u4e2d\u56fd\u5927\u9646",
+            "name": "\u4e2d\u56fd\u5927\u9646"
+          }
+        ],
+        "recognize_cache_hit": false,
+        "release_date": "2026-09-01",
+        "release_dates": [],
+        "runtime": 96,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": null,
+        "source": "douban",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 7.5,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_query_python_strip",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_wrong_detail_shape",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_wrong_people_shape",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_id",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "career": [
+              "Owned Character"
+            ],
+            "id": 90,
+            "name": "First Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": 902,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "http://bgm.tv/subject/902",
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "902",
+        "mediaid_prefix": "bangumi",
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned original",
+        "overview": "owned summary",
+        "popularity": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2024-02-03",
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "bangumi",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2024)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 7.25,
+        "vote_count": null,
+        "year": "2024"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_meta_season_override",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "career": [
+              "Owned Character"
+            ],
+            "id": 90,
+            "name": "First Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": 902,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "http://bgm.tv/subject/902",
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "902",
+        "mediaid_prefix": "bangumi",
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned original",
+        "overview": "owned summary",
+        "popularity": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2024-02-03",
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": 5,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "bangumi",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2024)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 7.25,
+        "vote_count": null,
+        "year": "2024"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_search_first_match",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "career": [
+              "Owned Character"
+            ],
+            "id": 90,
+            "name": "First Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": 902,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "http://bgm.tv/subject/902",
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "902",
+        "mediaid_prefix": "bangumi",
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned original",
+        "overview": "owned summary",
+        "popularity": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2024-02-03",
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "bangumi",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2024)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 7.25,
+        "vote_count": null,
+        "year": "2024"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_search_movie_filter",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "career": [
+              "Owned Character"
+            ],
+            "id": 90,
+            "name": "First Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": 903,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "http://bgm.tv/subject/903",
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "903",
+        "mediaid_prefix": "bangumi",
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned original",
+        "overview": "owned summary",
+        "popularity": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2024-02-03",
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": null,
+        "source": "bangumi",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2024)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 7.25,
+        "vote_count": null,
+        "year": "2024"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_search_unknown_type",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": 902,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "http://bgm.tv/subject/902",
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "902",
+        "mediaid_prefix": "bangumi",
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned original",
+        "overview": "owned summary",
+        "popularity": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2024-02-03",
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "bangumi",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2024)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 7.25,
+        "vote_count": null,
+        "year": "2024"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_search_no_date_accept",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": 902,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "http://bgm.tv/subject/902",
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "902",
+        "mediaid_prefix": "bangumi",
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned original",
+        "overview": "owned summary",
+        "popularity": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": null,
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "bangumi",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 7.25,
+        "vote_count": null,
+        "year": null
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_skip_id_and_missing",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": 902,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "http://bgm.tv/subject/902",
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "902",
+        "mediaid_prefix": "bangumi",
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned original",
+        "overview": "owned summary",
+        "popularity": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2024-02-03",
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "bangumi",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2024)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 7.25,
+        "vote_count": null,
+        "year": "2024"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_first_ten_limit",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_id_missing",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_search_empty",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_numeric_year_mismatch",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_numeric_year_match",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": 902,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "http://bgm.tv/subject/902",
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "902",
+        "mediaid_prefix": "bangumi",
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned original",
+        "overview": "owned summary",
+        "popularity": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2024-02-03",
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "bangumi",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2024)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 7.25,
+        "vote_count": null,
+        "year": "2024"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_bad_actor",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_no_meta",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_wrong_detail_shape",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_wrong_characters_shape",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "bangumi_missing_character_id_skips_bad_cast",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": 902,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "http://bgm.tv/subject/902",
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "902",
+        "mediaid_prefix": "bangumi",
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned original",
+        "overview": "owned summary",
+        "popularity": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2024-02-03",
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "bangumi",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2024)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 7.25,
+        "vote_count": null,
+        "year": "2024"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_non_200_complete_json",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": {
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": null,
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://movie.douban.com/subject/901",
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "douban_id": "901",
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": "901",
+        "mediaid_prefix": "douban",
+        "names": [
+          "Other",
+          "Alias(\u53f0\u6e7e)"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": null,
+        "overview": "owned intro",
+        "popularity": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "\u4e2d\u56fd\u5927\u9646",
+            "name": "\u4e2d\u56fd\u5927\u9646"
+          }
+        ],
+        "recognize_cache_hit": false,
+        "release_date": "2026-09-01",
+        "release_dates": [],
+        "runtime": 96,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": null,
+        "source": "douban",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 7.5,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "douban_non_200_people_invalid_json",
+      "cold_process": false,
+      "server_pid": 3537356,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_id",
+      "cold_process": true,
+      "server_pid": 3537627,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_id_meta_override",
+      "cold_process": true,
+      "server_pid": 3537657,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "Alias",
+          "Translated"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": null,
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": 0,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_search",
+      "cold_process": true,
+      "server_pid": 3537710,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_ordered_filter",
+      "cold_process": true,
+      "server_pid": 3537739,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_no_match",
+      "cold_process": true,
+      "server_pid": 3537770,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_lowercase_format_type_difference",
+      "cold_process": true,
+      "server_pid": 3537798,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_proxy_http_fallback",
+      "cold_process": true,
+      "server_pid": 3537841,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_proxy_graphql_fallback",
+      "cold_process": true,
+      "server_pid": 3537883,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_translation_empty",
+      "cold_process": true,
+      "server_pid": 3537955,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_nested_translation",
+      "cold_process": true,
+      "server_pid": 3537986,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": null,
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "Original",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "\u4e2d\u6587\u6807\u9898",
+        "title_year": "\u4e2d\u6587\u6807\u9898 (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_missing_people",
+      "cold_process": true,
+      "server_pid": 3538037,
+      "result": {
+        "actors": [],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_no_meta",
+      "cold_process": true,
+      "server_pid": 3538089,
+      "result": null
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_source_inferred_from_id",
+      "cold_process": true,
+      "server_pid": 3538115,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_explicit_anilist_over_other_ids",
+      "cold_process": true,
+      "server_pid": 3538145,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_lifetime_proxy_first",
+      "cold_process": true,
+      "server_pid": 3538175,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias",
+          "Translated"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_lifetime_proxy_second",
+      "cold_process": false,
+      "server_pid": 3538175,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 152,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/152",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "152",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Second",
+        "title_year": "Second (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_lifetime_empty_translation_first",
+      "cold_process": true,
+      "server_pid": 3538207,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 151,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/151",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "151",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Owned",
+        "title_year": "Owned (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "source-provider-native",
+      "case": "anilist_lifetime_empty_translation_second",
+      "cold_process": false,
+      "server_pid": 3538207,
+      "result": {
+        "actors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/actor.jpg"
+            },
+            "character": "Character",
+            "id": 9,
+            "name": "Actor",
+            "url": "https://anilist.co/staff/9"
+          }
+        ],
+        "adult": false,
+        "anidb_id": 456,
+        "anilist_id": 152,
+        "anilist_info": null,
+        "backdrop_path": "https://s4.anilist.co/banner.jpg",
+        "bangumi_id": null,
+        "bangumi_info": null,
+        "category": "",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "detail_link": "https://anilist.co/anime/152",
+        "directors": [
+          {
+            "avatar": {
+              "large": "https://s4.anilist.co/director.jpg"
+            },
+            "id": 10,
+            "job": "Chief Director",
+            "name": "Director",
+            "url": "https://anilist.co/staff/10"
+          }
+        ],
+        "douban_id": null,
+        "douban_info": null,
+        "en_title": "English",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": "2026-10-31",
+        "genre_ids": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": "2026-11-01",
+        "logo_path": null,
+        "media_id": "152",
+        "mediaid_prefix": "anilist",
+        "names": [
+          "English",
+          "Romaji",
+          "Original",
+          "Alias"
+        ],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [
+          "JP"
+        ],
+        "original_language": "ja",
+        "original_name": null,
+        "original_title": "Original",
+        "overview": "Hello\nWorld &amp; all",
+        "popularity": 17,
+        "poster_path": "https://s4.anilist.co/cover.jpg",
+        "production_companies": [
+          {
+            "name": "Studio"
+          }
+        ],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2026-10-31",
+        "release_dates": [],
+        "runtime": 24,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "sg_title": null,
+        "source": "anilist",
+        "spoken_languages": [],
+        "status": "FINISHED",
+        "tagline": null,
+        "title": "Second",
+        "title_year": "Second (2026)",
+        "tmdb_id": null,
+        "tmdb_info": null,
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u89c6\u5267",
+        "vote_average": 8.7,
+        "vote_count": null,
+        "year": "2026"
+      }
+    },
+    {
+      "phase": "native-tmdb-cache",
+      "first": {
+        "actors": [],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": {},
+        "backdrop": "",
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": {},
+        "category": "\u5916\u8bed\u7535\u5f71",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "directors": [],
+        "douban_id": null,
+        "douban_info": {},
+        "en_title": "Owned Native",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": null,
+        "names": [],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned Native",
+        "overview": null,
+        "popularity": null,
+        "poster": "",
+        "poster_path": null,
+        "production_companies": [],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2024-01-01",
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": "Owned Native",
+        "source": "themoviedb",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned detail v1",
+        "title_year": "Owned detail v1 (2024)",
+        "tmdb_id": 123,
+        "tmdb_info": {
+          "content_rating": null,
+          "en_title": "Owned Native",
+          "genre_ids": [],
+          "hk_title": null,
+          "id": 123,
+          "media_type": "\u7535\u5f71",
+          "names": [],
+          "original_title": "Owned Native",
+          "release_date": "2024-01-01",
+          "sg_title": "Owned Native",
+          "title": "Owned detail v1",
+          "tw_title": null
+        },
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 0,
+        "vote_count": null,
+        "year": "2024"
+      },
+      "second": {
+        "actors": [],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": {},
+        "backdrop": "",
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": {},
+        "category": "\u5916\u8bed\u7535\u5f71",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "directors": [],
+        "douban_id": null,
+        "douban_info": {},
+        "en_title": "Owned Native",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": null,
+        "names": [],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned Native",
+        "overview": null,
+        "popularity": null,
+        "poster": "",
+        "poster_path": null,
+        "production_companies": [],
+        "production_countries": [],
+        "recognize_cache_hit": true,
+        "release_date": "2024-01-01",
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": "Owned Native",
+        "source": "themoviedb",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned detail v1",
+        "title_year": "Owned detail v1 (2024)",
+        "tmdb_id": 123,
+        "tmdb_info": {
+          "content_rating": null,
+          "en_title": "Owned Native",
+          "genre_ids": [],
+          "hk_title": null,
+          "id": 123,
+          "media_type": "\u7535\u5f71",
+          "names": [],
+          "original_title": "Owned Native",
+          "release_date": "2024-01-01",
+          "sg_title": "Owned Native",
+          "title": "Owned detail v1",
+          "tw_title": null
+        },
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 0,
+        "vote_count": null,
+        "year": "2024"
+      },
+      "fresh": {
+        "actors": [],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": {},
+        "backdrop": "",
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": {},
+        "category": "\u5916\u8bed\u7535\u5f71",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "directors": [],
+        "douban_id": null,
+        "douban_info": {},
+        "en_title": "Owned Native",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": null,
+        "names": [],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned Native",
+        "overview": null,
+        "popularity": null,
+        "poster": "",
+        "poster_path": null,
+        "production_companies": [],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2024-01-01",
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": "Owned Native",
+        "source": "themoviedb",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned detail v2",
+        "title_year": "Owned detail v2 (2024)",
+        "tmdb_id": 123,
+        "tmdb_info": {
+          "content_rating": null,
+          "en_title": "Owned Native",
+          "genre_ids": [],
+          "hk_title": null,
+          "id": 123,
+          "media_type": "\u7535\u5f71",
+          "names": [],
+          "original_title": "Owned Native",
+          "release_date": "2024-01-01",
+          "sg_title": "Owned Native",
+          "title": "Owned detail v2",
+          "tw_title": null
+        },
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 0,
+        "vote_count": null,
+        "year": "2024"
+      },
+      "after_restart": {
+        "actors": [],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": {},
+        "backdrop": "",
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": {},
+        "category": "\u5916\u8bed\u7535\u5f71",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "directors": [],
+        "douban_id": null,
+        "douban_info": {},
+        "en_title": "Owned Native",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": null,
+        "names": [],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned Native",
+        "overview": null,
+        "popularity": null,
+        "poster": "",
+        "poster_path": null,
+        "production_companies": [],
+        "production_countries": [],
+        "recognize_cache_hit": true,
+        "release_date": "2024-01-01",
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": "Owned Native",
+        "source": "themoviedb",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned detail v3",
+        "title_year": "Owned detail v3 (2024)",
+        "tmdb_id": 123,
+        "tmdb_info": {
+          "content_rating": null,
+          "en_title": "Owned Native",
+          "genre_ids": [],
+          "hk_title": null,
+          "id": 123,
+          "media_type": "\u7535\u5f71",
+          "names": [],
+          "original_title": "Owned Native",
+          "release_date": "2024-01-01",
+          "sg_title": "Owned Native",
+          "title": "Owned detail v3",
+          "tw_title": null
+        },
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 0,
+        "vote_count": null,
+        "year": "2024"
+      },
+      "recovered": {
+        "actors": [],
+        "adult": false,
+        "anidb_id": null,
+        "anilist_id": null,
+        "anilist_info": {},
+        "backdrop": "",
+        "backdrop_path": null,
+        "bangumi_id": null,
+        "bangumi_info": {},
+        "category": "\u5916\u8bed\u7535\u5f71",
+        "collection_id": null,
+        "content_rating": null,
+        "created_by": [],
+        "directors": [],
+        "douban_id": null,
+        "douban_info": {},
+        "en_title": "Owned Native",
+        "episode_group": null,
+        "episode_groups": [],
+        "episode_run_time": [],
+        "first_air_date": null,
+        "genre_ids": [],
+        "genres": [],
+        "hk_title": null,
+        "homepage": null,
+        "imdb_id": null,
+        "languages": [],
+        "last_air_date": null,
+        "logo_path": null,
+        "media_id": null,
+        "names": [],
+        "networks": [],
+        "next_episode_to_air": {},
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_language": null,
+        "original_name": null,
+        "original_title": "Owned Native",
+        "overview": null,
+        "popularity": null,
+        "poster": "",
+        "poster_path": null,
+        "production_companies": [],
+        "production_countries": [],
+        "recognize_cache_hit": false,
+        "release_date": "2024-01-01",
+        "release_dates": [],
+        "runtime": null,
+        "scrape_source": null,
+        "season": null,
+        "season_info": [],
+        "season_years": {},
+        "seasons": {},
+        "sg_title": "Owned Native",
+        "source": "themoviedb",
+        "spoken_languages": [],
+        "status": null,
+        "tagline": null,
+        "title": "Owned detail v3",
+        "title_year": "Owned detail v3 (2024)",
+        "tmdb_id": 123,
+        "tmdb_info": {
+          "content_rating": null,
+          "en_title": "Owned Native",
+          "genre_ids": [],
+          "hk_title": null,
+          "id": 123,
+          "media_type": "\u7535\u5f71",
+          "names": [],
+          "original_title": "Owned Native",
+          "release_date": "2024-01-01",
+          "sg_title": "Owned Native",
+          "title": "Owned detail v3",
+          "tw_title": null
+        },
+        "tvdb_id": null,
+        "tw_title": null,
+        "type": "\u7535\u5f71",
+        "vote_average": 0,
+        "vote_count": null,
+        "year": "2024"
+      },
+      "pid_before": 3537279,
+      "pid_after": 3537322,
+      "provider_trace": [
+        {
+          "operation": "search",
+          "name": "Owned Native"
+        },
+        {
+          "operation": "detail",
+          "revision": 1
+        },
+        {
+          "operation": "search",
+          "name": "Owned Native"
+        },
+        {
+          "operation": "detail",
+          "revision": 2
+        },
+        {
+          "operation": "search",
+          "name": "Owned Missing"
+        },
+        {
+          "operation": "search",
+          "name": "Owned Network"
+        },
+        {
+          "operation": "search",
+          "name": "Owned Network"
+        },
+        {
+          "operation": "search",
+          "name": "Owned Network"
+        },
+        {
+          "operation": "search",
+          "name": "Owned Network"
+        },
+        {
+          "operation": "search",
+          "name": "Owned Network"
+        },
+        {
+          "operation": "search",
+          "name": "Owned Network"
+        },
+        {
+          "operation": "search",
+          "name": "Owned Network"
+        },
+        {
+          "operation": "search",
+          "name": "Owned Network"
+        },
+        {
+          "operation": "detail",
+          "revision": 3
+        },
+        {
+          "operation": "search",
+          "name": "Owned Missing"
+        },
+        {
+          "operation": "detail",
+          "revision": 3
+        },
+        {
+          "operation": "search",
+          "name": "Owned Native"
+        },
+        {
+          "operation": "detail",
+          "revision": 3
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901/celebrities"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/tv/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/tv/902/celebrities"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/tv/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/tv/902/celebrities"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901/celebrities"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/search/weixin"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901/celebrities"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/search/weixin"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/tv/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/tv/902/celebrities"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/search/weixin"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/tv/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/tv/902/celebrities"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/search/weixin"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/search/weixin"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901/celebrities"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/999"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/tv/999"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/search/weixin"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/search/weixin"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/search/weixin"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901/celebrities"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/search/weixin"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901/celebrities"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/search/weixin"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901/celebrities"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/901"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/903"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/903/characters"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/901"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/910"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/911"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/912"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/913"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/914"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/915"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/916"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/917"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/918"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/919"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/904"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902"
+        },
+        {
+          "operation": "source-replay",
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901/celebrities"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901"
+        },
+        {
+          "operation": "source-replay",
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901/celebrities"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "graphql.anilist.co",
+          "method": "POST",
+          "path": "/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "graphql.anilist.co",
+          "method": "POST",
+          "path": "/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "graphql.anilist.co",
+          "method": "POST",
+          "path": "/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "graphql.anilist.co",
+          "method": "POST",
+          "path": "/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "source-replay",
+          "host": "raw.githubusercontent.com",
+          "method": "GET",
+          "path": "/soruly/anilist-chinese/master/anilist-chinese.json"
+        },
+        {
+          "operation": "source-replay",
+          "host": "trace.moe",
+          "method": "POST",
+          "path": "/anilist/"
+        },
+        {
+          "operation": "detail",
+          "revision": 3
+        }
+      ],
+      "negative_memory_only": true,
+      "network_none_retried": true,
+      "provider_memory_only": true,
+      "clone_host_cache_shared": true
+    }
+  ]
+}

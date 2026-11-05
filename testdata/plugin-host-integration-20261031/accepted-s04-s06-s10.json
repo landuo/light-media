@@ -1,0 +1,48 @@
+{
+  "status": "scoped_passed",
+  "reviewer": "root independent source and executed SDK tests",
+  "accepted_features": [
+    "S04",
+    "S06",
+    "S07",
+    "S08",
+    "S09",
+    "S10"
+  ],
+  "kept_pending": [
+    "S05 expanded native field patch",
+    "S11 native name search/cache",
+    "S12 complete supported catalog data integration"
+  ],
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "findings_fixed": [
+    "SiteOper.list default creation order versus explicit priority order",
+    "source systemconfig falsey deletion hot/cold distinction",
+    "history record-only deletion retains both physical sides",
+    "fnOS source task_running plus empty POST and immediate fallback",
+    "source Path.resolve/first match/unmatched/None short-circuit; root and Linux backslash",
+    "plugin manager read does not implicitly call get_state; installed authoritative order",
+    "lifecycle self-operation completes after current invocation; reports accepted versus completed"
+  ],
+  "necessary_adaptations": [
+    "Typed Go resources use existing native stable identities and encrypted credentials, not raw ORM/client handles",
+    "S07 allowlist is ordinary existing-host keys; AI/workflow and credential return are excluded",
+    "source fnOS root/fallback verified by actual SDK and owned protocol peer; real fnOS tested only explicit owned GUID to protect existing libraries",
+    "browser is actual Mac cmd/server; latest Linux lifecycle is separate evidence",
+    "self-stop/reload cannot synchronously destroy its own in-flight executable RPC; deferred outcome is explicit"
+  ],
+  "evidence_sha256": {
+    "testdata/plugin-host-integration-20261031/business-independent-review-r4.log": "cac8d2f605f452b36310c11cabfac3857b921ddb1a77c985ed58c62ebea4b285",
+    "testdata/plugin-host-business-20261031/process-linux-final/result.json": "06628130dc990684773f72dc16c71b03d597b61d4f49de475dc058e4c1c502be",
+    "testdata/plugin-host-business-20261031/browser/observations.json": "ce6ee2ce02ec60d63534e2b961b611c71e325e5f902e9fd67898a7cddafbd381",
+    "testdata/plugin-host-business-20261031/source-oracle.json": "4c2a8aed311b08e131c0511cd7d7fb596d32ca4a7e21171f18f0855ab2b6e4c0",
+    "testdata/plugin-host-integration-20261031/services-independent-review-r2.log": "a1f1eae42fe47100b4c8be4ac144f4aa5d0e3880c34f6428b0376e499adb37e3",
+    "testdata/plugin-host-services-20261031/linux-r2/result.json": "f4f351d840a2cd642652bedebee0fe98deac5f212c1b99656cb14eb520ba519b",
+    "testdata/plugin-host-services-20261031/browser/observations.json": "51e07fc588d4c772eb2f532fd189ea283a102f92bd0fc7674aacb34ccdbf49cd",
+    "testdata/plugin-host-integration-20261031/fnos-source-r5/manifest.json": "6d8abe6d64f3460515a2b415a44e9802f9a0ae0f99a3a1a1585f135296db891a"
+  },
+  "scope_limits": [
+    "Does not mark S05/S11/S12 complete",
+    "No production deployment or main delivery"
+  ]
+}

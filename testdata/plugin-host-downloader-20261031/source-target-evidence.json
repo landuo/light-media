@@ -1,0 +1,170 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "scope": "S01/S03/S13 evidence index only; authoritative status remains docs/plugin-module-parity-matrix.md",
+  "sources": {
+    "qbittorrent": {
+      "path": "app/modules/qbittorrent/qbittorrent.py",
+      "sha256": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+      "symbols": {
+        "get_torrents": 224,
+        "get_completed_torrents": 254,
+        "get_downloading_torrents": 291,
+        "delete_torrents_tag": 304,
+        "remove_torrents_tag": 321,
+        "set_torrents_tag": 336,
+        "__get_last_add_torrentid_by_tag": 367,
+        "get_torrent_id_by_tag": 383,
+        "add_torrent": 401,
+        "start_torrents": 477,
+        "stop_torrents": 490,
+        "delete_torrents": 503,
+        "recheck_torrents": 608,
+        "set_torrent_category": 686
+      }
+    },
+    "transmission": {
+      "path": "app/modules/transmission/transmission.py",
+      "sha256": "6fc20e208b86e9e68ada074643f82b88270c2e51749e460ad881b10f744cf676",
+      "symbols": {
+        "get_torrents": 102,
+        "get_completed_torrents": 136,
+        "get_downloading_torrents": 151,
+        "set_torrent_tag": 168,
+        "start_torrents": 227,
+        "stop_torrents": 240,
+        "delete_torrents": 253,
+        "recheck_torrents": 375,
+        "change_torrent": 388
+      }
+    }
+  },
+  "items": [
+    {
+      "matrix": "S01",
+      "behavior": "get_completed_torrents; exact/empty selection and tag/error ordering",
+      "source_symbols": [
+        "Qbittorrent.get_completed_torrents:254",
+        "Transmission.get_completed_torrents:136"
+      ],
+      "target": [
+        "internal/plugins/downloader_host.go:Completed",
+        "internal/app/plugin_original_host_downloader.go:originalHostDownloaderFiltered",
+        "internal/plugins/iyuuautoseed/native/plugin_host.go:PluginHostCompleted"
+      ],
+      "evidence": [
+        "source-oracle.json",
+        "final-enabled/real-qb-result.json",
+        "final-enabled/real-tr-result.json",
+        "browser/completed.jpg",
+        "browser/removed-empty.jpg",
+        "final-enabled/final-enabled-sdk-race.log.gz"
+      ]
+    },
+    {
+      "matrix": "S03",
+      "behavior": "add bytes/magnet/raw URL + optional cookies; initialization/control/recheck/task-only remove with bytes preserved",
+      "source_symbols": [
+        "Qbittorrent.add_torrent:401-475",
+        "Qbittorrent.start_torrents:477",
+        "Qbittorrent.stop_torrents:490",
+        "Qbittorrent.delete_torrents:503",
+        "Qbittorrent.recheck_torrents:608",
+        "Transmission.add_torrent:201-225",
+        "Transmission.start_torrents:227",
+        "Transmission.stop_torrents:240",
+        "Transmission.delete_torrents:253",
+        "Transmission.recheck_torrents:375"
+      ],
+      "target": [
+        "internal/plugins/downloader_host.go:Add/Control",
+        "internal/app/plugin_original_host_downloader.go:originalHostDownloaderAdd/originalHostDownloaderControl",
+        "internal/plugins/iyuuautoseed/native/plugin_host_material.go",
+        "internal/plugins/iyuuautoseed/native/plugin_host.go:PluginHostRemoveTasks"
+      ],
+      "evidence": [
+        "source-oracle.json",
+        "cookie-source-oracle.json",
+        "cpython-cookie-provenance.json",
+        "final-enabled/real-qb-result.json",
+        "final-enabled/real-tr-result.json",
+        "browser/result.json",
+        "final-enabled/final-enabled-sdk-race.log.gz"
+      ]
+    },
+    {
+      "matrix": "S13",
+      "behavior": "all-task list/downloading; tag append/remove/global definitions; category; source 9x3 second tag lookup; reannounce; exact TR speed limits; safe live tracker projection",
+      "source_symbols": [
+        "Qbittorrent.get_torrents:224",
+        "Qbittorrent.get_downloading_torrents:291",
+        "Qbittorrent.delete_torrents_tag:304",
+        "Qbittorrent.get_torrent_id_by_tag:383",
+        "Transmission.get_downloading_torrents:151",
+        "Transmission.set_torrent_tag:168",
+        "vendor+torrent field consumption in tracker-consumers.json"
+      ],
+      "target": [
+        "internal/plugins/downloader_host.go",
+        "internal/plugins/downloader_host_trackers.go",
+        "internal/app/plugin_original_host_downloader_trackers.go",
+        "internal/plugins/iyuuautoseed/native/plugin_host.go"
+      ],
+      "evidence": [
+        "installed-call-candidates.json",
+        "tracker-consumers.json",
+        "tracker-source-oracle.json",
+        "vendor-provenance.json",
+        "vendor-info-oracle.json",
+        "vendor-reannounce-oracle.json",
+        "vendor-delete-tags-oracle.json",
+        "final-enabled/real-qb-result.json",
+        "final-enabled/real-tr-result.json"
+      ]
+    },
+    {
+      "matrix": "S13",
+      "behavior": "delete_file=True for exact currently host-owned tasks; completed/seeding accepted; daemon-only deletion, host snapshots/reference guards and exact cancellation",
+      "source_symbols": [
+        "Qbittorrent.delete_torrents:503",
+        "Transmission.delete_torrents:253",
+        "BrushFlowLanduo._run_check:2155",
+        "BrushFlowLanduo._run_global_dynamic_delete:2788"
+      ],
+      "target": [
+        "internal/plugins/downloader_host_delete_files.go",
+        "internal/app/plugin_original_host_downloader_delete_files.go",
+        "internal/plugins/iyuuautoseed/native/plugin_host_delete_files.go"
+      ],
+      "evidence": [
+        "source-oracle.json",
+        "installed-call-candidates.json",
+        "final-enabled/real-qb-delete-result.json",
+        "final-enabled/real-tr-delete-result.json",
+        "delete-files/delete-files-sdk-shared.log.gz",
+        "delete-files/delete-files-sdk-final-race.log.gz"
+      ]
+    }
+  ],
+  "remaining_behavior_omissions_identified": [],
+  "explicit_adaptations": [
+    "Exact Go typed selectors; explicit empty hash array dispatches no request, source audited actual callers use omitted or nonempty exact selectors.",
+    "Downloader metadata resources retain128KiB ceiling; add materials reuse existing16MiB SDK envelope (~12MiB base64 raw metainfo).",
+    "Python import/object/False/None/tuple semantics become typed Go DTOs, errors and explicit unknown mutation receipts; no Python production dependency.",
+    "Tracker credentials and error messages stay in host memory; stable source-equivalent HMAC comparison keys and exact/strip match facts preserve consumer decisions.",
+    "delete_files admits only current host-owned tasks under authorized locally visible roots; rejects unknown/missing/symlink/hardlink/replaced/shared/in-use paths; arbitrary external or old MoviePilot tasks are not adopted.",
+    "Delete-files daemon acknowledgement and subsequent host cancellation outcome are separate; ambiguous/lost ACK is unknown and is never automatic retry proof.",
+    "Current scope/config guards and new per-call connection/version negotiation are necessary Go worker lifecycle adaptation; source retained Python client sessions are not reused.",
+    "All new public read/write operations require currently enabled configured downloaders, matching fixed ServiceBaseHelper. Host-internal shared-file protection alone includes disabled instances; preexisting exact Hash read contract is unchanged.",
+    "Actual transmission-rpc7.0.11 treats empty URL string as filename and rejects file URI / malformed Python urlparse authorities locally. Source runtime3.12.13 independently checked16constants; zero differences from capture. Different daemon/native result errors become explicit typed Go failure/unknown receipts."
+  ],
+  "independent_review": {
+    "reviewer": "parent /root",
+    "evidence": "independent-review.json"
+  },
+  "runtime_source_evidence": [
+    "disabled-source-oracle.json",
+    "transmission-vendor-add-oracle.json",
+    "transmission-vendor-python31213-oracle.json",
+    "transmission-rpc-7.0.11-source.json.gz"
+  ]
+}

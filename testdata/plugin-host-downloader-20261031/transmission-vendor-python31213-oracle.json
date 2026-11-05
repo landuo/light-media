@@ -1,0 +1,158 @@
+{
+  "python_version": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "classification": "stdlib-only urllib.parse; no business imports, no network",
+  "urllib_parse_sha256": "e6af7f475262f1de335bb2e41e26adb94d6103977cf5fe1ddc430dc6a3b1623f",
+  "cases": [
+    {
+      "content": "",
+      "input_type": "str",
+      "scheme": "",
+      "urlparse_accepted": true,
+      "parse_exception_type": null,
+      "vendor_gate_accepted": true,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": {
+        "bytes_hex": ""
+      },
+      "input_type": "bytes",
+      "scheme": "",
+      "urlparse_accepted": true,
+      "parse_exception_type": null,
+      "vendor_gate_accepted": false,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": {
+        "bytes_hex": "6f776e65642d6279746573"
+      },
+      "input_type": "bytes",
+      "scheme": "",
+      "urlparse_accepted": true,
+      "parse_exception_type": null,
+      "vendor_gate_accepted": true,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": "http://owned.invalid/a",
+      "input_type": "str",
+      "scheme": "http",
+      "urlparse_accepted": true,
+      "parse_exception_type": null,
+      "vendor_gate_accepted": true,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": "magnet:?xt=urn:btih:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "input_type": "str",
+      "scheme": "magnet",
+      "urlparse_accepted": true,
+      "parse_exception_type": null,
+      "vendor_gate_accepted": true,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": "file:///owned/a",
+      "input_type": "str",
+      "scheme": "file",
+      "urlparse_accepted": true,
+      "parse_exception_type": null,
+      "vendor_gate_accepted": false,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": "FILE:///owned/a",
+      "input_type": "str",
+      "scheme": "file",
+      "urlparse_accepted": true,
+      "parse_exception_type": null,
+      "vendor_gate_accepted": false,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": "not-a-url",
+      "input_type": "str",
+      "scheme": "",
+      "urlparse_accepted": true,
+      "parse_exception_type": null,
+      "vendor_gate_accepted": true,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": "http://owned.invalid/a\nhttp://owned.invalid/b",
+      "input_type": "str",
+      "scheme": "http",
+      "urlparse_accepted": true,
+      "parse_exception_type": null,
+      "vendor_gate_accepted": true,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": "http://[invalid]/a",
+      "input_type": "str",
+      "scheme": null,
+      "urlparse_accepted": false,
+      "parse_exception_type": "ValueError",
+      "vendor_gate_accepted": false,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": "http://[::1/a",
+      "input_type": "str",
+      "scheme": null,
+      "urlparse_accepted": false,
+      "parse_exception_type": "ValueError",
+      "vendor_gate_accepted": false,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": "http://[127.0.0.1]/a",
+      "input_type": "str",
+      "scheme": null,
+      "urlparse_accepted": false,
+      "parse_exception_type": "ValueError",
+      "vendor_gate_accepted": false,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": "http://[vF.owned]/a",
+      "input_type": "str",
+      "scheme": "http",
+      "urlparse_accepted": true,
+      "parse_exception_type": null,
+      "vendor_gate_accepted": true,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": "http://user:OWNED@host\uff1a80/a",
+      "input_type": "str",
+      "scheme": null,
+      "urlparse_accepted": false,
+      "parse_exception_type": "ValueError",
+      "vendor_gate_accepted": false,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": "http://host.invalid:bad/a",
+      "input_type": "str",
+      "scheme": "http",
+      "urlparse_accepted": true,
+      "parse_exception_type": null,
+      "vendor_gate_accepted": true,
+      "matches_captured_local_vendor_oracle": true
+    },
+    {
+      "content": "http://owned.invalid/%not-hex",
+      "input_type": "str",
+      "scheme": "http",
+      "urlparse_accepted": true,
+      "parse_exception_type": null,
+      "vendor_gate_accepted": true,
+      "matches_captured_local_vendor_oracle": true
+    }
+  ],
+  "wrapper_vendor_gate_note": "Vendor bytes bypass urlparse and require nonempty base64 metadata; strings call urlparse, reject file scheme, otherwise delegate raw filename. This combines actual stdlib results with the captured unchanged vendor branches.",
+  "oracle_differences": [],
+  "old_container_id": "d1fd69248ee9fca7ed18b34ac7c121d98f982b8979fce065eeb50968e7c27bba"
+}

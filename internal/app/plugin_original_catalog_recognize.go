@@ -198,7 +198,15 @@ func (a *App) originalCatalogRecognizeMethod(ctx context.Context, method string,
 		if ctx.Err() != nil {
 			return nil, ctx.Err()
 		}
-		a.reportOriginalPluginExecutionError(ctx, "system", "媒体识别模块发生了错误", map[string]any{"type": "module", "module_id": originalCatalogSystemModuleID(method), "module_name": originalCatalogSystemModuleName(method), "module_method": method}, err)
+		identity := method
+		if source, ok := ctx.Value(originalHostMediaNativeSourceKey{}).(string); ok {
+			switch source {
+			case "douban", "bangumi", "anilist":
+				identity = source
+			}
+		}
+		moduleName := originalCatalogSystemModuleName(identity)
+		a.reportOriginalPluginExecutionError(ctx, "system", moduleName+"发生了错误", map[string]any{"type": "module", "module_id": originalCatalogSystemModuleID(identity), "module_name": moduleName, "module_method": method}, err)
 		return nil, nil
 	}
 	if originalModuleResultEmpty(result) {

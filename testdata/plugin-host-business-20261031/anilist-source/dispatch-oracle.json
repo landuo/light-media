@@ -1,0 +1,144 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "classification": "fixed source AST: actual ChainBase selection and exception catcher, owned module fault boundary; no app imports, no production writes",
+  "source_hashes": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/utils/media.py": "1b1931d0d392ea7a8893a70068af583945a52bdddc892353e3892f06cd2084ed"
+  },
+  "cases": [
+    {
+      "case": "anilist_from_id",
+      "request": {
+        "anilistid": 151
+      },
+      "expected": [
+        "anilist",
+        null,
+        null,
+        null,
+        151
+      ]
+    },
+    {
+      "case": "tmdb_priority",
+      "request": {
+        "tmdbid": 999,
+        "anilistid": 151
+      },
+      "expected": [
+        "themoviedb",
+        999,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "case": "explicit_anilist",
+      "request": {
+        "source": "anilist",
+        "tmdbid": 999,
+        "anilistid": 151
+      },
+      "expected": [
+        "anilist",
+        null,
+        null,
+        null,
+        151
+      ]
+    },
+    {
+      "case": "explicit_other_discards_anilist",
+      "request": {
+        "source": "douban",
+        "anilistid": 151
+      },
+      "expected": [
+        "douban",
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "case": "mediaid_priority",
+      "request": {
+        "source": "anilist",
+        "mediaid": "152",
+        "anilistid": 151
+      },
+      "expected": [
+        "anilist",
+        null,
+        null,
+        null,
+        152
+      ]
+    },
+    {
+      "case": "no_ids_default_left_to_module",
+      "request": {},
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "case": "source_alias",
+      "request": {
+        "source": " TMDB ",
+        "tmdbid": 999
+      },
+      "expected": [
+        "themoviedb",
+        999,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "case": "unknown_source_kept",
+      "request": {
+        "source": "Owned",
+        "anilistid": 151
+      },
+      "expected": [
+        "owned",
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "module_error": {
+    "result": null,
+    "system_errors": [
+      {
+        "event": "system.error",
+        "data": {
+          "type": "module",
+          "module_id": "OwnedFailure",
+          "module_name": "AniList",
+          "module_method": "recognize_media",
+          "error": "owned absent characters mapping",
+          "traceback": "Traceback (most recent call last):\n  File \"8a83efeacd3e26b82be495e17d50146e31c96a60:app/chain/__init__.py\", line 393, in __execute_system_modules\n    _cleanups.append(cache.cache_clear)\n                         ^^^^^^^^^^^^^^\n  File \"/Users/accidia/projects/light-media/testdata/plugin-host-business-20261031/anilist-source/dispatch_oracle.py\", line 20, in recognize_media\n    def recognize_media(self,**kwargs):raise AttributeError('owned absent characters mapping')\n                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: owned absent characters mapping\n"
+        }
+      }
+    ],
+    "messages": [
+      {
+        "title": "AniList发生了错误",
+        "message": "owned absent characters mapping",
+        "role": "system"
+      }
+    ]
+  },
+  "target": "originalCatalogRecognitionCallKwargs / originalHostMediaRecognitionSource / originalCatalogRecognizeMethod"
+}

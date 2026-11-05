@@ -1,0 +1,39 @@
+{
+  "kind": "result",
+  "status": "passed",
+  "platform": "Linux-6.18.18.c1168-trim-x86_64-with-glibc2.36",
+  "executables": {
+    "sdk-linux.test": "2db98e08c0de8d7e98ae387667dd47c53a69c7463bfeeb50e008ec4a7b09d04e",
+    "concurrent-linux": "aa971555f591bd9d19e53d7bafeb0e6083b3b3d33af3794091732457b38d9827"
+  },
+  "results": [
+    {
+      "name": "admission-stress",
+      "command": [
+        "/home/admin/light-media-sdk-final-20261104.ztc9eWEO/sdk-linux.test",
+        "-test.run=^TestOwnedPendingCallActualAdmissionAndFullCapacity$",
+        "-test.count=100",
+        "-test.timeout=10m",
+        "-test.v"
+      ],
+      "exit": 0,
+      "passed_cases": 100,
+      "failed_cases": 0,
+      "sha256": "afa042febf9630c81ab7335f43c61184652a4527519269fac9c080fdb750f073"
+    },
+    {
+      "name": "concurrent-lifecycle",
+      "command": [
+        "/home/admin/light-media-sdk-final-20261104.ztc9eWEO/sdk-linux.test",
+        "-test.run=^TestOwned(Concurrent|Pending)",
+        "-test.count=1",
+        "-test.timeout=10m",
+        "-test.v"
+      ],
+      "exit": 0,
+      "passed_cases": 16,
+      "failed_cases": 0,
+      "sha256": "015e45880d7cfda864aaf3f7e14e4ec229b70b03ba0a9ceca980faf913524248"
+    }
+  ]
+}

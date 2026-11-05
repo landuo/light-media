@@ -1,0 +1,22 @@
+{
+  "operator": "root using mcp__cua_repl; child independently reads saved artifacts and actual Linux trace",
+  "classification": "actual browser against owned Linux cmd/server, synthetic test channel inputs; no external messenger/network send",
+  "actions": [
+    "source config saved with browser ordinary source verified and numeric userid9007199254740993; run_once cleared by actual init, data shows parse/begin/user.message/end",
+    "source body mode=fail admitted and one-shot cleared; parser failure retains prior data, not a config-save failure",
+    "source config restored to browser ordinary recovered",
+    "clone source remained OwnedClone and was independently saved/run with browser clone independent",
+    "source refreshed after clone save retains Owned/recovered/run_once=false"
+  ],
+  "post_browser_actual_http_checks": "../linux/before-cold.json, ../linux/after-cold.json and ../linux/result.json; exact body hashes reached matching parser, events persisted, failed parse has no user.message, cold configs/traces equal and worker PIDs changed",
+  "artifacts": {
+    "clone-data.ax.txt": "53a962f96a445fe2bd2551bd39b45d3d92f622711e91dd4a22af98ec2698b25f",
+    "clone-data.png": "6c02a209ddee4c87677476b83092931eab6a6348f851ba81aee03ba1ec7a7b69",
+    "failure-config.ax.txt": "1b2c9a478691031ce2a8c3bc95241a1cb93008d3cf8eda7f154761c9e9ac3edb",
+    "failure-config.png": "2d6886e9c51a96dcd48ff4c8389701fccb397772aa54952c7979789e0906e439",
+    "source-data.ax.txt": "da6b4409f327509168baa3bf2c21827148597e3c6682c9087353d7c290b94f44",
+    "source-data.png": "a29bedf520beb6c291fc7db4c79c718f9b7c94255872f695e1161503b74f230a",
+    "source-recovered-after-refresh.ax.txt": "fe3386d30ec4cbfae1410265b3c481e7b9cfa440863d00d6d1a0601a0f3f50d3",
+    "source-recovered-after-refresh.png": "a7be536f7e374025a7977abf06c9b44f82581a1413438de382c77884e4a0465d"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "controlled_global_user_agent": "OwnedHost/1 (Linux; owned)",
+  "requests": "2.34.2",
+  "urllib3": "2.7.0",
+  "cases": [
+    {
+      "module": "owned_source",
+      "mode": "global",
+      "wire_user_agent": "OwnedHost/1 (Linux; owned) Plugin/owned_source"
+    },
+    {
+      "module": "owned_source_clone",
+      "mode": "global",
+      "wire_user_agent": "OwnedHost/1 (Linux; owned) Plugin/owned_source_clone"
+    },
+    {
+      "module": "owned_source",
+      "mode": "browser",
+      "wire_user_agent": "OwnedBrowser/1"
+    },
+    {
+      "module": "owned_source",
+      "mode": "explicit",
+      "wire_user_agent": "OwnedHost/1 (Linux; owned)"
+    }
+  ],
+  "classification": "Fixed RequestUtils+get_caller AST with actual paired requests, controlled nonsecret global USER_AGENT, real plugin-named frame filenames for source/clone. No target implementation or business plugin executes.",
+  "dependency_image": "sha256:33354456e8e19c65193b9ca471e45450a620c541759cc42e76cf00a03b025881",
+  "driver_sha256": "b8538ebb85ae3e7772481fbbd3ab6e5956ff0b72b0e55832d301986d698ee6cf",
+  "selected_source_sha256": "8ab3362bcd37bf1bd1c547b57b09ef32d98acde30e5800854695964f37102f6c",
+  "program_sha256": "9b5cab8272712d325b3c6d0d1ca69a603c9e0c0c2c24fb4081dcf93fb114fd06"
+}

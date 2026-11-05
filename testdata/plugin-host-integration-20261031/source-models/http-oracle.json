@@ -1,0 +1,213 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/modules/douban/apiv2.py": "f085678f627dbbcd6955cdfd6f49c83f7812693bc3199ea5c297c16d7e3aec06",
+    "app/modules/bangumi/bangumi.py": "739f6fff6bc3e12738dccf4395d6d1849af6b407743303e0fc9cded51998081b",
+    "app/utils/http.py": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "app/modules/themoviedb/__init__.py": "383dee3ab7ae88a569b1b772cd86731a64d9f624b384c011338ef55d78ac44d6",
+    "app/modules/douban/__init__.py": "fe7f0f4dbf6e53761c0bceb939b06b7627ca55f876ad74a8a18e76a28a3ab0f8",
+    "app/modules/bangumi/__init__.py": "1f8affd239c51c0f7c0f13303787b2a2b95b38d8cae7811832670c1ad428f68d",
+    "app/modules/anilist/__init__.py": "aba67f40823d931f1cc5a9a4d5810516d39d8f590347dc4520516299b8268e35"
+  },
+  "kind": "fixed source methods; synthetic response/network exception boundaries, no public-provider success claim",
+  "responses": [
+    {
+      "source": "douban",
+      "status": 200,
+      "body": "{\"owned\":true}",
+      "expected": {
+        "owned": true
+      },
+      "error": null
+    },
+    {
+      "source": "douban",
+      "status": 200,
+      "body": "{",
+      "expected": null,
+      "error": "JSONDecodeError"
+    },
+    {
+      "source": "douban",
+      "status": 404,
+      "body": "{\"owned\":true}",
+      "expected": {
+        "owned": true
+      },
+      "error": null
+    },
+    {
+      "source": "douban",
+      "status": 404,
+      "body": "{",
+      "expected": null,
+      "error": "JSONDecodeError"
+    },
+    {
+      "source": "douban",
+      "status": 429,
+      "body": "{\"owned\":true}",
+      "expected": {
+        "owned": true
+      },
+      "error": null
+    },
+    {
+      "source": "douban",
+      "status": 429,
+      "body": "{",
+      "expected": null,
+      "error": "JSONDecodeError"
+    },
+    {
+      "source": "douban",
+      "status": 500,
+      "body": "{\"owned\":true}",
+      "expected": {
+        "owned": true
+      },
+      "error": null
+    },
+    {
+      "source": "douban",
+      "status": 500,
+      "body": "{",
+      "expected": null,
+      "error": "JSONDecodeError"
+    },
+    {
+      "source": "bangumi",
+      "status": 200,
+      "body": "{\"owned\":true}",
+      "expected": {
+        "owned": true
+      },
+      "error": null
+    },
+    {
+      "source": "bangumi",
+      "status": 200,
+      "body": "{",
+      "expected": null,
+      "error": null
+    },
+    {
+      "source": "bangumi",
+      "status": 404,
+      "body": "{\"owned\":true}",
+      "expected": null,
+      "error": null
+    },
+    {
+      "source": "bangumi",
+      "status": 404,
+      "body": "{",
+      "expected": null,
+      "error": null
+    },
+    {
+      "source": "bangumi",
+      "status": 429,
+      "body": "{\"owned\":true}",
+      "expected": null,
+      "error": null
+    },
+    {
+      "source": "bangumi",
+      "status": 429,
+      "body": "{",
+      "expected": null,
+      "error": null
+    },
+    {
+      "source": "bangumi",
+      "status": 500,
+      "body": "{\"owned\":true}",
+      "expected": null,
+      "error": null
+    },
+    {
+      "source": "bangumi",
+      "status": 500,
+      "body": "{",
+      "expected": null,
+      "error": null
+    }
+  ],
+  "retries": [
+    {
+      "failure": "ConnectionError",
+      "recovery": true,
+      "calls": 2,
+      "closed": 1,
+      "returned": true
+    },
+    {
+      "failure": "ConnectionError",
+      "recovery": false,
+      "calls": 2,
+      "closed": 1,
+      "returned": false
+    },
+    {
+      "failure": "ChunkedEncodingError",
+      "recovery": true,
+      "calls": 2,
+      "closed": 1,
+      "returned": true
+    },
+    {
+      "failure": "ChunkedEncodingError",
+      "recovery": false,
+      "calls": 2,
+      "closed": 1,
+      "returned": false
+    },
+    {
+      "failure": "ReadTimeout",
+      "recovery": true,
+      "calls": 2,
+      "closed": 1,
+      "returned": true
+    },
+    {
+      "failure": "ReadTimeout",
+      "recovery": false,
+      "calls": 2,
+      "closed": 1,
+      "returned": false
+    },
+    {
+      "failure": "RequestException",
+      "recovery": true,
+      "calls": 1,
+      "closed": 0,
+      "returned": false
+    },
+    {
+      "failure": "RequestException",
+      "recovery": false,
+      "calls": 1,
+      "closed": 0,
+      "returned": false
+    }
+  ],
+  "identities": {
+    "themoviedb": {
+      "module_id": "TheMovieDbModule",
+      "module_name": "TheMovieDb"
+    },
+    "douban": {
+      "module_id": "DoubanModule",
+      "module_name": "豆瓣"
+    },
+    "bangumi": {
+      "module_id": "BangumiModule",
+      "module_name": "Bangumi"
+    },
+    "anilist": {
+      "module_id": "AniListModule",
+      "module_name": "AniList"
+    }
+  }
+}

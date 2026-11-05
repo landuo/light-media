@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "matrix": "S02",
+  "source": "MoviePilot 8a83efeacd3e26b82be495e17d50146e31c96a60 _PluginBase.get_data_path; installed TorrentTransfer 785,835-857 ordinary file IO",
+  "implementation": [
+    "internal/plugins/base.go",
+    "internal/app/plugin_original_base.go",
+    "cmd/owned-local-files-fixture/main.go"
+  ],
+  "actual_linux_latest": "linux-final/result.json",
+  "server_build": "../../plugin-host-business-20261031/build-server-linux-final/build.json",
+  "worker_builds": [
+    "worker-linux-final/build.json",
+    "worker-v2-linux-final-r2/build.json"
+  ],
+  "evidence_sha256": {
+    "testdata/plugin-host-local-files-20261031/evidence/linux-final/result.json": "35180e396ce130612f05b83a2d25ffb63ca7ee7669c363c4e681b2c25296da0c",
+    "testdata/plugin-host-local-files-20261031/evidence/linux-final/actual-sha256.txt": "013bda2bee2eef3b9a2ff3ebc1c580895f25d9edd0b860254fe8e3fe1f859adb",
+    "testdata/plugin-host-local-files-20261031/evidence/real-qb-backup-result.json": "8a2c9fb17b924820769a77c97d4274b313a8fa35fe0a97d0adc82a85cab3586e",
+    "testdata/plugin-host-local-files-20261031/evidence/browser.json": "e2245f780c31dd7929005f213b4d787b620427449dbc9cdd3d59883177b45e15",
+    "testdata/plugin-host-local-files-20261031/evidence/source-oracle.json": "be82405fb347565b086853d03ef850ba438b48ce959258126bef54e800c92e2c",
+    "testdata/plugin-host-services-20261031/local-files-independent-review.json": "8fb84e2d544fa4b9803bbc0d7a5edef7695eaac0b01d3b6cf4082a5a978bf54f"
+  },
+  "coverage": [
+    "actual installed executable/config/run_once/error/recovery/stop/reload/update/cold/uninstall",
+    "source+clone namespace and physical tempfile isolation",
+    "ordinary Go bounded readonly access to actual isolated qB torrent/fastresume, original SHA retained",
+    "actual browser save/failure/recovery on Mac, Linux process lifecycle separately labeled"
+  ],
+  "adaptations": [
+    "Go executable uses native os.OpenRoot/file IO and platform instance path",
+    "No Python runtime, filesystem RPC, or claimed OS sandbox; backup mount must be explicitly configured",
+    "fastresume business parsing and NAS production mount configuration are outside this platform proof"
+  ],
+  "limitations": [
+    "Synthetic backup values in lifecycle run; actual qB backup files verified separately",
+    "Browser run is Mac; no NAS SSH forwarding available; no production backup accessed"
+  ],
+  "delivered": false
+}

@@ -1,0 +1,134 @@
+{
+  "requests_version": "2.34.2",
+  "urllib3_version": "2.7.0",
+  "requests_models_sha256": "d1bc0d990abf5d5ebee05f890911b4363fadf2d5264b686a963df47c529b6ace",
+  "urllib3_response_sha256": "f525f806491da0b82cc759deea1a6dfb93e772b9c3ccfcdea82d4369285273e3",
+  "classification": "actual requests GET and content decoding against own loopback HTTP in disposable network-none image; no old service execution",
+  "cases": [
+    {
+      "name": "single-whitespace",
+      "encoding": " gzip ",
+      "wire_b64": "H4sIAAAAAAACA8svz0tNUUhNSU8FAG4mrU0KAAAA",
+      "content_b64": "H4sIAAAAAAACA8svz0tNUUhNSU8FAG4mrU0KAAAA",
+      "exception": null,
+      "parsed_header": "gzip "
+    },
+    {
+      "name": "unknown-single",
+      "encoding": "unknown",
+      "wire_b64": "H4sIAAAAAAACA8svz0tNUUhNSU8FAG4mrU0KAAAA",
+      "content_b64": "H4sIAAAAAAACA8svz0tNUUhNSU8FAG4mrU0KAAAA",
+      "exception": null,
+      "parsed_header": "unknown"
+    },
+    {
+      "name": "unknown-gzip",
+      "encoding": "unknown, gzip",
+      "wire_b64": "H4sIAAAAAAACA6uYc1r/vLdvoIevpz8rg+ha5ssAuGNoWBIAAAA=",
+      "content_b64": "b3duZWQgZWRnZQ==",
+      "exception": null,
+      "parsed_header": "unknown, gzip"
+    },
+    {
+      "name": "gzip-unknown",
+      "encoding": "gzip, unknown",
+      "wire_b64": "eJyT7+ZgAAEm5tP65719Az18Pf1ZGfLU1vpyAUUBXkgGNA==",
+      "content_b64": "b3duZWQgZWRnZQ==",
+      "exception": null,
+      "parsed_header": "gzip, unknown"
+    },
+    {
+      "name": "unknown-broken",
+      "encoding": "gzip, unknown",
+      "wire_b64": "H4sIAAAAAAACA8svz0tNUUhNSU8FAG4mrU0KAAAA",
+      "content_b64": null,
+      "exception": "ContentDecodingError",
+      "parsed_header": null
+    },
+    {
+      "name": "too-many",
+      "encoding": "gzip,gzip,gzip,gzip,gzip,gzip",
+      "wire_b64": "H4sIAAAAAAACA8svz0tNUUhNSU8FAG4mrU0KAAAA",
+      "content_b64": null,
+      "exception": "ContentDecodingError",
+      "parsed_header": null
+    },
+    {
+      "name": "gzip-truncated",
+      "encoding": "gzip",
+      "wire_b64": "H4sIAAAAAAACA8svz0tNUUhNSU8FAG4mrU0=",
+      "content_b64": "b3duZWQgZWRnZQ==",
+      "exception": null,
+      "parsed_header": "gzip"
+    },
+    {
+      "name": "gzip-header-truncated",
+      "encoding": "gzip",
+      "wire_b64": "H4sIAAA=",
+      "content_b64": "",
+      "exception": null,
+      "parsed_header": "gzip"
+    },
+    {
+      "name": "gzip-trailing",
+      "encoding": "gzip",
+      "wire_b64": "H4sIAAAAAAACA8svz0tNUUhNSU8FAG4mrU0KAAAAbm90IGFub3RoZXIgZ3ppcA==",
+      "content_b64": "b3duZWQgZWRnZQ==",
+      "exception": null,
+      "parsed_header": "gzip"
+    },
+    {
+      "name": "gzip-concat",
+      "encoding": "gzip",
+      "wire_b64": "H4sIAAAAAAACA8svz0tNUUhNSU8FAG4mrU0KAAAAH4sIAAAAAAACA8svz0tNUUhNSU8FAG4mrU0KAAAA",
+      "content_b64": "b3duZWQgZWRnZW93bmVkIGVkZ2U=",
+      "exception": null,
+      "parsed_header": "gzip"
+    },
+    {
+      "name": "gzip-checksum",
+      "encoding": "gzip",
+      "wire_b64": "H4sIAAAAAAACA8svz0tNUUhNSU8FAGJhZCEKAAAA",
+      "content_b64": null,
+      "exception": "ContentDecodingError",
+      "parsed_header": null
+    },
+    {
+      "name": "deflate-truncated",
+      "encoding": "deflate",
+      "wire_b64": "eJzLL89LTVFITUlPBQAV",
+      "content_b64": "b3duZWQgZWRnZQ==",
+      "exception": null,
+      "parsed_header": "deflate"
+    },
+    {
+      "name": "br-truncated",
+      "encoding": "br",
+      "wire_b64": "iwSAb3duZWQgZWRnZQ==",
+      "content_b64": "b3duZWQgZWRnZQ==",
+      "exception": null,
+      "parsed_header": "br"
+    },
+    {
+      "name": "empty-gzip",
+      "encoding": "gzip",
+      "wire_b64": "",
+      "content_b64": "",
+      "exception": null,
+      "parsed_header": "gzip"
+    },
+    {
+      "name": "empty-br",
+      "encoding": "br",
+      "wire_b64": "",
+      "content_b64": "",
+      "exception": null,
+      "parsed_header": "br"
+    }
+  ],
+  "go_header_ows_adaptation": {
+    "content_b64": "b3duZWQgZWRnZQ==",
+    "parsed_header": "gzip"
+  },
+  "docker_image_sha256": "33354456e8e19c65193b9ca471e45450a620c541759cc42e76cf00a03b025881"
+}

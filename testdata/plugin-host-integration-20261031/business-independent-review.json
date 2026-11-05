@@ -1,0 +1,31 @@
+{
+  "kind": "independent source/code review and actual Go App/SDK tests, not standalone cmd/server or real PT site acceptance",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "reviewer": "root (not implementation agent)",
+  "reviewed": [
+    "S04 site list/account/access result/source success falsey average and active refresh existing pipeline",
+    "S05 stable IDs, exact filters, omitted/null/empty/equal patch, actual changed revision/job invalidation",
+    "S06 latest hash by created_at, first source/destination/ID and record-only deletion",
+    "S07 finite ordinary keys, falsey DB deletion/hot-cache/cold recovery and actual recognizer parser updates"
+  ],
+  "findings_resolved": [
+    "empty/equal subscription patch no longer increments revision or cancels pending job",
+    "explicit nullable source fields are preserved through SDK and projection; native form full replacement clears source null metadata"
+  ],
+  "test_log": "business-independent-review-r2.log",
+  "test_result": "PASS 9.037s",
+  "red_evidence": "business-independent-review-temp-root-red.log (system temp parent rejected; corrected TMPDIR to owned workspace directory)",
+  "current_sha256": {
+    "internal/app/plugin_original_host_subscriptions.go": "fabd59e30655b0b2adead64acb488bf6f0825eb6f69d147b2ed88b6bde3979fe",
+    "internal/plugins/subscription_host.go": "b43bff954ba7053e0137fda9dffde75b7834c369edf91ab79884d96dd0e49ca9",
+    "internal/app/plugin_original_host_sites.go": "b9ea71b618d68b0bf7144e0d8ab535983de61105423c62f53e798e8f5731f1c2",
+    "internal/app/plugin_original_host_history.go": "79c3651f884726d21a52a0c0ced4bbc1943da917cfbd8cd3abb305616a86221e",
+    "internal/app/plugin_original_host_settings.go": "ad22c789d8960100b42ad2f4168130219218b54c55367f9ac462d5a3b26c2d65",
+    "internal/app/subscription_quality_source.go": "01e8102e6e0c08bf766773d9ba3cb33412714e490974cab97de67f5ac5c8d2a3"
+  },
+  "remaining": [
+    "S12 RSS/categories independently in progress",
+    "Linux cmd/server current build binding and final inter-feature integration remain",
+    "No claim that loopback site protocol is real PT site network validation"
+  ]
+}

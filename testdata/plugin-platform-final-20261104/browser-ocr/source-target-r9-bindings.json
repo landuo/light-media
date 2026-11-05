@@ -1,0 +1,116 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "classification": "final frozen R9 S15/S16 product source and source-derived regression inputs; actual Linux image/main and combined host-chain proof bound separately",
+  "sources": [
+    {
+      "path": "app/helper/browser.py",
+      "blob": "fd1448bb3487ddc104525f6c0f189ffb75a2eb1d",
+      "sha256": "cb455ffadc75b32fa0fe151242b7c4162233e525d35257ac3a71e1dda1316f29"
+    },
+    {
+      "path": "app/helper/ocr.py",
+      "blob": "b92be11f2068c44776adc1e00152847bf683d01e",
+      "sha256": "736e7a078b22fe0ac5ac611d58be6a8d742f7d768d582abfed605fafe65a550c"
+    },
+    {
+      "path": "app/plugins/__init__.py",
+      "blob": "56761914f0dc71774c7571b5bf78ad0318557b2a",
+      "sha256": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f"
+    },
+    {
+      "path": "app/core/plugin.py",
+      "blob": "8fc8954d7e7df32b970f16f461efa244fa2f142c",
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7"
+    },
+    {
+      "path": "app/helper/display.py",
+      "blob": "3dd6eb76889696d249f82d417d51658aa6c7f0eb",
+      "sha256": "375f96ff40b18ecb262482a868ec26f939f9cae3542b52176284d2e21ddf3742"
+    },
+    {
+      "path": "docker/Dockerfile",
+      "blob": "6125c77d8ae25e0b70bad4a4d48d48545f6fdf8f",
+      "sha256": "d49416c84c9348ff629c01075e9167831d23f95feedbbd38d7844ab0e0155963"
+    },
+    {
+      "path": "requirements.in",
+      "blob": "36766b57fe76627fcbe4d2a1b0f0ebd939fbbdac",
+      "sha256": "060c85ee9a2023df9216f255b0a8deac5771b304ef2705950f694045be99aab1"
+    },
+    {
+      "path": "app/core/config.py",
+      "blob": "9590e02236b9d45adf2c9be146a75680a8a9a381",
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e"
+    },
+    {
+      "path": "app/utils/http.py",
+      "blob": "5c7e68f1be8447e1dd81f49d7d53d0e51b6c3711",
+      "sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27"
+    }
+  ],
+  "targets": {
+    "Dockerfile": "eaee033a2e2418bab7c95a1140c0639dde4965c0319563ef57c49f7f2919c1bc",
+    "cmd/plugin-host-browser-fixture/main.go": "bb6306baf30d438fd8ff01135e6f9cd6b4ee481a5739dcd5cb9dade5371440df",
+    "cmd/plugin-host-business-fixture/main.go": "7f7dca539be14afa80c613a9d6da29d80e49cde3bd30f5dc58815f140b09e6cd",
+    "go.mod": "681eeca54f22c5147908bd54e7437072152d963e063b97a21b5f09326818b855",
+    "go.sum": "2f13bc137f132267884ed80873907c473c01146b47db100f128d929d281b0712",
+    "internal/app/plugin_original_host_browser.go": "0904b1316f1f03c46f6d85fadad3b30f8eb6d9979b3c4b8c315c08d1701988e7",
+    "internal/app/plugin_original_host_browser_proxy_test.go": "fd23a9dbfb8d3a0407b1c11877466f1b230655655be540a2a3c54f7dd96e8330",
+    "internal/app/plugin_original_host_browser_test.go": "e9839dbb9b7f649a426fa0f275c99982e8d6d9f1e4e0e3004c1e3c70e939eef9",
+    "internal/app/plugin_original_host_ocr.go": "e7199fdf185e36778b85b1a8094b7d94871ba6f6fa4ec575d898263e831c5898",
+    "internal/app/plugin_original_host_ocr_redirect_test.go": "b20f8311e54422894680845346b6a1095a8365af8da5d8e1fec66bf9785f26bb",
+    "internal/app/plugin_original_host_ocr_test.go": "fe9666fb6a539539d02cbf2c0332af5f8a61c031a669fb494d7f9cc23df80d51",
+    "internal/browserrender/cleanup.go": "b5b620646e301374cecf96af8310c8cd60348db762786bb764e352211f8ffc56",
+    "internal/browserrender/cleanup_test.go": "52fd9c61b86114b15f901473d48c5b5d4fcaa6898408c628fe3e23b538582fc5",
+    "internal/browserrender/display.go": "371cf054cd2ca95f1679ef737dae9daa1af5d2dda5e4d5421393054d99f0ca17",
+    "internal/browserrender/display_test.go": "f7da772eeb2b781b7ab5b7a9beb0602e80534e5131fd08231f5af48aba29b445",
+    "internal/browserrender/flags.go": "82837ca4adb4a254092b73e43bc50b50102e076f5df8ae4959150057836ddbe5",
+    "internal/browserrender/flaresolverr.go": "80e3b1d96864bcb143b708be5df369a37d8b293671fa3273ea8e8ea41021199a",
+    "internal/browserrender/native.go": "837720cbf454b3d36d81fa24918b8edbcee1a6bb538bedfe7b2ea4917160d5f6",
+    "internal/browserrender/proxy.go": "830999dc9790027ee851de64ceb55746c6e3eeed32acafa433bde3a23004b6a4",
+    "internal/browserrender/proxy_test.go": "426a7d0b4c1bb90a65698c1c4d46e475fa26838460bd3aa344a5e22fd8155c0a",
+    "internal/browserrender/render.go": "57b6b02762cff82d09b2bfbe24e41335ab151cf264410a8e2757d1ee2c0ee92f",
+    "internal/browserrender/render_test.go": "1907f7fb852e29f5527fbebdbfc89e10ed623c5be34b620993f94abdd0ec2ca8",
+    "internal/browserrender/source_http_test.go": "0c5c5416b766474c87c65ea1376768ab5e9bba42eb576ab46b8c2b98e7529e01",
+    "internal/browserrender/source_proxy.go": "7b822341166899e365ebb42cafb29fed2d0ecc1c9763fbb37c20b607ceda43ad",
+    "internal/browserrender/source_proxy_test.go": "ee296ab2220a8499648b48602cd8513a4af26b7537f5f75480f8c8827cead11e",
+    "internal/browserrender/source_socks_probe_test.go": "fab6c9bc2f93bd0574eeaf0913293c0974cf66b53a377e1d4c38c7ac15bb066f",
+    "internal/browserrender/startup_test.go": "7bc833d4415dfc8ca8a23bf5c783d2cf2dbae160e88877de886f82bc45409fa0",
+    "internal/plugins/browser_host.go": "dc933914faa0e08857ed1666389dcd27a5a99e1d35a37543bc0a70784b1dec3d",
+    "internal/plugins/concurrent_session.go": "c3f79283e113a669737cc44d1cdc23dc47cc5cd346e7ec02339ea9d6b838cdd6",
+    "internal/plugins/ocr_host.go": "f854c582e02a11f1c8bd5fcd0e1e090c74892d89cb8b4c5cb1c2a738f8acd68f",
+    "scripts/install-browser-runtime.sh": "f466555fc7af22388ff5964438f05e4c6ac9e31b017e262b8b8b462144e2d1ad",
+    "third_party/browser-runtime/CLOAKBROWSER-MIT.txt": "93a9c5b5542faf5ff6c7956406b56930fde10bd4d3e8dc7b89f01a88a8d2b29b",
+    "third_party/browser-runtime/NOTICE.md": "cb4fc548fe4420b28c133924e96286cff155b5f8bb75ee62c31891f115d3cf56",
+    "third_party/browser-runtime/PLAYWRIGHT-APACHE-2.0.txt": "45873d00a0dd243596deb4aa23b2493b3d1f0671921bf2538ea431d7380220eb"
+  },
+  "ordinary_runtime_artifacts": {
+    "debian_multiarch_manifest": "sha256:99c0b25c46d0214d5a2091092e7908907dcaecd6a962cde0ac700acee222b6f3",
+    "linux-amd64": {
+      "version": "146.0.7680.177.5",
+      "tar_sha256": "4a12bcde95fa1bb1beef2b41ab5e5c27c36be78e3be3d0dac8c64d705216670e"
+    },
+    "linux-arm64": {
+      "version": "146.0.7680.177.3",
+      "tar_sha256": "8b71ce53b4fd131327331a31fba3835d71882d19bfaabde78dd0f5390bd16f45"
+    },
+    "hardware_execution": "Linux amd64 only"
+  },
+  "paired_dependency_sources": {
+    "playwright-cleanup-source.json": "58015ce660e244f5cb456ef1c6adf3cd3c1a5b2b82c5a780255bc142d3491e4c",
+    "playwright-launch-timeout-source.json": "f10b07b0f24ae1c2b9d5f3345ff1b106d78949ae53224d7bad92a4779b5e26e5",
+    "virtual-display-source.json": "20741117d76bbcc4542586ef964251ada4fa7d07213caae7c5206fb429a1b795",
+    "ocr-redirect-source-oracle.json": "b18c05284aeb581a90628e8f84f845177f8329fcac2568ce9d05643fd14b2185",
+    "cloakbrowser-proxy-none-source-oracle.json": "e2b39ed98e837c1c1e84193bd5a86d255f7226af3f3e15f05a1fd60e8848f8d4",
+    "cloakbrowser-proxy-semantics-source-oracle.json": "a50eaa57b51dbed3b9da94cf0dfee062beb83ac88bd1a76c32b1a532a50f9360",
+    "paired-native-socks-scheme-source-probe.log": "c799c84382fd2f7af2c1af50c158c2c763390875f3539e49d429c36347d5951c"
+  },
+  "test_executables": {
+    "browser-tests-linux": "f2d3b495812c759318bbf7bf6faea7a1602f9e599d8f4da3bc45f8c04815db1c",
+    "browser-worker-linux": "5b3faf0e34eaa2b8012b5f9bd677ae001230ed483ff41f6a4f9b0b636569f606",
+    "browser-worker-v2-linux": "b9deeed3cbb07e2860e725d55a6039aa78c86b009290a05f9efedc81fe8ed756",
+    "business-worker-linux": "41467e9c730c3006b33b2d5850ea67be6f18301a2fd9502241b9a2793db76970",
+    "business-worker-v2-linux": "7a1c34095c76a17ad28356459b8cee86e60974b0c63b88eb8ea48c27dab7c563",
+    "source-proxy-probe-linux": "5d93dbbbb15000e6b08a49ae7cf3bc0871f5f2c607460a12e7f24e9bfa648630"
+  }
+}

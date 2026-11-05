@@ -1,0 +1,246 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/modules/bangumi/bangumi.py": "739f6fff6bc3e12738dccf4395d6d1849af6b407743303e0fc9cded51998081b",
+    "app/modules/bangumi/__init__.py": "1f8affd239c51c0f7c0f13303787b2a2b95b38d8cae7811832670c1ad428f68d",
+    "app/modules/douban/apiv2.py": "f085678f627dbbcd6955cdfd6f49c83f7812693bc3199ea5c297c16d7e3aec06",
+    "app/modules/douban/__init__.py": "fe7f0f4dbf6e53761c0bceb939b06b7627ca55f876ad74a8a18e76a28a3ab0f8",
+    "app/utils/http.py": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "app/modules/themoviedb/__init__.py": "383dee3ab7ae88a569b1b772cd86731a64d9f624b384c011338ef55d78ac44d6",
+    "app/modules/anilist/__init__.py": "aba67f40823d931f1cc5a9a4d5810516d39d8f590347dc4520516299b8268e35"
+  },
+  "kind": "fixed Douban module and actual source response parsing; source native exception becomes None + ordinary system.error at fixed Chain module boundary",
+  "cases": [
+    {
+      "case": "douban_non_200_complete_json",
+      "request": {
+        "source": "douban",
+        "cache": false,
+        "doubanid": "901",
+        "mtype": "电影"
+      },
+      "replies": [
+        {
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901",
+          "status": 500,
+          "body": {
+            "id": "901",
+            "title": "Owned",
+            "subtype": "movie",
+            "year": "2026",
+            "rating": {
+              "value": 7.5
+            },
+            "pic": {
+              "large": "https://img1.doubanio.com/owned.jpg"
+            },
+            "pubdate": [
+              "2026-09-01(中国大陆)"
+            ],
+            "intro": "owned intro",
+            "genres": [
+              "Drama"
+            ],
+            "countries": [
+              "中国大陆"
+            ],
+            "durations": [
+              "96分钟"
+            ],
+            "aka": [
+              "Other(港译名)",
+              "Alias(台湾)"
+            ],
+            "actors": [
+              {
+                "name": "Owned Actor"
+              }
+            ],
+            "directors": [
+              {
+                "name": "Owned Director"
+              }
+            ]
+          }
+        },
+        {
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901/celebrities",
+          "status": 429,
+          "body": {
+            "directors": [
+              {
+                "name": "API Director"
+              }
+            ],
+            "actors": [
+              {
+                "name": "API Actor"
+              }
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "source": "douban",
+        "media_id": "901",
+        "scrape_source": null,
+        "type": "电影",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": "901",
+        "bangumi_id": null,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": null,
+        "release_date": "2026-09-01",
+        "backdrop_path": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.5,
+        "overview": "owned intro",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias(台湾)"
+        ],
+        "seasons": {},
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "中国大陆",
+            "name": "中国大陆"
+          }
+        ],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": 96,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://movie.douban.com/subject/901",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "douban"
+      },
+      "error": null
+    },
+    {
+      "case": "douban_non_200_people_invalid_json",
+      "request": {
+        "source": "douban",
+        "cache": false,
+        "doubanid": "901",
+        "mtype": "电影"
+      },
+      "replies": [
+        {
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901",
+          "status": 500,
+          "body": {
+            "id": "901",
+            "title": "Owned",
+            "subtype": "movie",
+            "year": "2026",
+            "rating": {
+              "value": 7.5
+            },
+            "pic": {
+              "large": "https://img1.doubanio.com/owned.jpg"
+            },
+            "pubdate": [
+              "2026-09-01(中国大陆)"
+            ],
+            "intro": "owned intro",
+            "genres": [
+              "Drama"
+            ],
+            "countries": [
+              "中国大陆"
+            ],
+            "durations": [
+              "96分钟"
+            ],
+            "aka": [
+              "Other(港译名)",
+              "Alias(台湾)"
+            ],
+            "actors": [
+              {
+                "name": "Owned Actor"
+              }
+            ],
+            "directors": [
+              {
+                "name": "Owned Director"
+              }
+            ]
+          }
+        },
+        {
+          "host": "frodo.douban.com",
+          "method": "GET",
+          "path": "/api/v2/movie/901/celebrities",
+          "status": 429,
+          "raw_body": "{"
+        }
+      ],
+      "expected": null,
+      "error": "JSONDecodeError"
+    }
+  ]
+}

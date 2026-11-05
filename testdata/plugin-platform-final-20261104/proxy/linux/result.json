@@ -1,0 +1,347 @@
+{
+  "status": "passed",
+  "classification": "actual Linux cmd/server and separately compiled standard SDK; native Go HTTP POST through owned authenticated proxy using private host snapshot; no messenger/business service or existing data modified",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "bindings": {
+    "server": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+    "worker": "ff511d7f3ece730711b0c729fa4b1675845ba65d502e6053b7f9fe81b18b885e",
+    "worker_v2": "2eb53ad19a3add81051c277ea576e6e9f2560400e5035519dca00fbebce242d7",
+    "driver": "671e779a28810315e8ea8a94d94e9ff0f9baf049285cee630a01364bd9495780"
+  },
+  "observations": [
+    {
+      "case": "private-snapshot-authenticated-native-post-and-public-boundary",
+      "proxy_authenticated": true,
+      "no_proxy_does_not_remove_explicit_host_proxy": true,
+      "native_result": {
+        "status": 200,
+        "body": "owned-native:private proxy CLI",
+        "configured_proxy": true,
+        "environment_count": 1
+      },
+      "public_proxy_endpoint_redacted": true
+    },
+    {
+      "case": "source-clone-config-data-isolation-and-failure-recovery",
+      "source": {
+        "calls": [
+          {
+            "status": 200,
+            "body": "owned-native:private proxy CLI",
+            "configured_proxy": true,
+            "environment_count": 1
+          },
+          {
+            "status": 200,
+            "body": "owned-native:CLI source",
+            "configured_proxy": true,
+            "environment_count": 1
+          }
+        ],
+        "config": {
+          "body": "CLI source",
+          "run_once": false,
+          "url": "http://owned-native.invalid/owned-native"
+        },
+        "pid": 1597919,
+        "version": "1.0"
+      },
+      "clone": {
+        "calls": [
+          {
+            "status": 200,
+            "body": "owned-native:CLI clone",
+            "configured_proxy": true,
+            "environment_count": 1
+          }
+        ],
+        "config": {
+          "body": "CLI clone",
+          "run_once": false,
+          "url": "http://owned-native.invalid/owned-native"
+        },
+        "pid": 1597935,
+        "version": "1.0"
+      },
+      "native_failure_no_request": true
+    },
+    {
+      "case": "actual-update-and-cold-no-replay",
+      "before": {
+        "OwnedHostProxy": {
+          "calls": [
+            {
+              "status": 200,
+              "body": "owned-native:private proxy CLI",
+              "configured_proxy": true,
+              "environment_count": 1
+            },
+            {
+              "status": 200,
+              "body": "owned-native:CLI source",
+              "configured_proxy": true,
+              "environment_count": 1
+            }
+          ],
+          "config": {
+            "body": "CLI source",
+            "run_once": false,
+            "url": "http://owned-native.invalid/owned-native"
+          },
+          "pid": 1597950,
+          "version": "2.0"
+        },
+        "OwnedHostProxycopy": {
+          "calls": [
+            {
+              "status": 200,
+              "body": "owned-native:CLI clone",
+              "configured_proxy": true,
+              "environment_count": 1
+            }
+          ],
+          "config": {
+            "body": "CLI clone",
+            "run_once": false,
+            "url": "http://owned-native.invalid/owned-native"
+          },
+          "pid": 1597935,
+          "version": "1.0"
+        }
+      },
+      "after": {
+        "OwnedHostProxy": {
+          "calls": [
+            {
+              "status": 200,
+              "body": "owned-native:private proxy CLI",
+              "configured_proxy": true,
+              "environment_count": 1
+            },
+            {
+              "status": 200,
+              "body": "owned-native:CLI source",
+              "configured_proxy": true,
+              "environment_count": 1
+            }
+          ],
+          "config": {
+            "body": "CLI source",
+            "run_once": false,
+            "url": "http://owned-native.invalid/owned-native"
+          },
+          "pid": 1597967,
+          "version": "2.0"
+        },
+        "OwnedHostProxycopy": {
+          "calls": [
+            {
+              "status": 200,
+              "body": "owned-native:CLI clone",
+              "configured_proxy": true,
+              "environment_count": 1
+            }
+          ],
+          "config": {
+            "body": "CLI clone",
+            "run_once": false,
+            "url": "http://owned-native.invalid/owned-native"
+          },
+          "pid": 1597973,
+          "version": "1.0"
+        }
+      },
+      "wire_count_unchanged": true
+    },
+    {
+      "case": "browser-writes-cold-no-replay",
+      "before": {
+        "OwnedHostProxy": {
+          "calls": [
+            {
+              "status": 200,
+              "body": "owned-native:private proxy CLI",
+              "configured_proxy": true,
+              "environment_count": 1
+            },
+            {
+              "status": 200,
+              "body": "owned-native:CLI source",
+              "configured_proxy": true,
+              "environment_count": 1
+            },
+            {
+              "status": 200,
+              "body": "owned-native:browser S19 source",
+              "configured_proxy": true,
+              "environment_count": 1
+            },
+            {
+              "status": 200,
+              "body": "owned-native:browser S19 recovered",
+              "configured_proxy": true,
+              "environment_count": 1
+            }
+          ],
+          "config": {
+            "body": "browser S19 recovered",
+            "run_once": false,
+            "url": "http://owned-native.invalid/owned-native"
+          },
+          "pid": 1597967,
+          "version": "2.0"
+        },
+        "OwnedHostProxycopy": {
+          "calls": [
+            {
+              "status": 200,
+              "body": "owned-native:CLI clone",
+              "configured_proxy": true,
+              "environment_count": 1
+            },
+            {
+              "status": 200,
+              "body": "owned-native:browser S19 clone",
+              "configured_proxy": true,
+              "environment_count": 1
+            }
+          ],
+          "config": {
+            "body": "browser S19 clone",
+            "run_once": false,
+            "url": "http://owned-native.invalid/owned-native"
+          },
+          "pid": 1597973,
+          "version": "1.0"
+        }
+      },
+      "after": {
+        "OwnedHostProxy": {
+          "calls": [
+            {
+              "status": 200,
+              "body": "owned-native:private proxy CLI",
+              "configured_proxy": true,
+              "environment_count": 1
+            },
+            {
+              "status": 200,
+              "body": "owned-native:CLI source",
+              "configured_proxy": true,
+              "environment_count": 1
+            },
+            {
+              "status": 200,
+              "body": "owned-native:browser S19 source",
+              "configured_proxy": true,
+              "environment_count": 1
+            },
+            {
+              "status": 200,
+              "body": "owned-native:browser S19 recovered",
+              "configured_proxy": true,
+              "environment_count": 1
+            }
+          ],
+          "config": {
+            "body": "browser S19 recovered",
+            "run_once": false,
+            "url": "http://owned-native.invalid/owned-native"
+          },
+          "pid": 1617967,
+          "version": "2.0"
+        },
+        "OwnedHostProxycopy": {
+          "calls": [
+            {
+              "status": 200,
+              "body": "owned-native:CLI clone",
+              "configured_proxy": true,
+              "environment_count": 1
+            },
+            {
+              "status": 200,
+              "body": "owned-native:browser S19 clone",
+              "configured_proxy": true,
+              "environment_count": 1
+            }
+          ],
+          "config": {
+            "body": "browser S19 clone",
+            "run_once": false,
+            "url": "http://owned-native.invalid/owned-native"
+          },
+          "pid": 1617973,
+          "version": "1.0"
+        }
+      },
+      "wire_unchanged": true
+    }
+  ],
+  "wire": [
+    {
+      "body": "private proxy CLI",
+      "method": "POST",
+      "private_proxy_header_absent": true
+    },
+    {
+      "body": "CLI source",
+      "method": "POST",
+      "private_proxy_header_absent": true
+    },
+    {
+      "body": "CLI clone",
+      "method": "POST",
+      "private_proxy_header_absent": true
+    },
+    {
+      "body": "browser S19 source",
+      "method": "POST",
+      "private_proxy_header_absent": true
+    },
+    {
+      "body": "browser S19 recovered",
+      "method": "POST",
+      "private_proxy_header_absent": true
+    },
+    {
+      "body": "browser S19 clone",
+      "method": "POST",
+      "private_proxy_header_absent": true
+    }
+  ],
+  "proxy_events": [
+    {
+      "method": "POST",
+      "body": "private proxy CLI",
+      "authentication_verified": true
+    },
+    {
+      "method": "POST",
+      "body": "CLI source",
+      "authentication_verified": true
+    },
+    {
+      "method": "POST",
+      "body": "CLI clone",
+      "authentication_verified": true
+    },
+    {
+      "method": "POST",
+      "body": "browser S19 source",
+      "authentication_verified": true
+    },
+    {
+      "method": "POST",
+      "body": "browser S19 recovered",
+      "authentication_verified": true
+    },
+    {
+      "method": "POST",
+      "body": "browser S19 clone",
+      "authentication_verified": true
+    }
+  ],
+  "uninstalled_api404": true,
+  "stopped": true
+}

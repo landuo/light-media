@@ -1,0 +1,638 @@
+{
+  "classification": "fixed64 in-scope leaf source→target→difference→actual evidence index, exported from unique matrix; final aggregate50 deliberately excluded to avoid self-reference",
+  "source_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "scope": "Go plugin platform only; Linux/local/single-user; ordinary events/commands/schedules retained; business plugins paused",
+  "accepted_leaf_count": 64,
+  "excluded_indices": [
+    "22",
+    "44",
+    "45",
+    "46"
+  ],
+  "excluded_note": "official authentication22 and AI/workflow44/45/46 explicitly excluded by user, not in65 total",
+  "leaf_rows": [
+    {
+      "id": "S01",
+      "index": "S01 · 43补充：标准插件枚举已完成下载任务",
+      "fixed_source_location_and_behavior": "固定 B `app/modules/qbittorrent/qbittorrent.py:254`、`app/modules/transmission/transmission.py:136`；业务调用参照 `testdata/plugins/torrent-transfer-1.10.3/torrenttransfer.py:690`",
+      "target_implementation": "SDK `downloader_host.go`；`plugin_original_host_downloader.go`；`iyuuautoseed/native/plugin_host.go`",
+      "difference_or_necessary_adaptation": "普通completed/downloading入口区分nil全量与显式空数组零项，沿用qB/TR原筛选；旧准确Hash接口保持。Connection以当前只读认证探测适配Python缓存client存在性，不能把Enabled当连接状态；无效配置/取消仍报错。",
+      "actual_evidence": "`testdata/plugin-host-integration-20261031/accepted-s01-s03-s13.json`：固定源/vendor、真实标准SDK、四个Linux qB/TR主门、连接增量及独立浏览器证据闭合；159基线/14增量证据及23当前目标哈希有效，root增量race17.121s通过。部分执行/撤销后的已确认或未知回执保留，禁止自动重发；不同二进制证据分开绑定。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S02",
+      "index": "S02 · 05/43补充：备份、fastresume 与临时文件",
+      "fixed_source_location_and_behavior": "业务参照同文件 `:785,835–857`；固定 B `_PluginBase.get_data_path`",
+      "target_implementation": "SDK `base.go`；`plugin_original_base.go`；`cmd/owned-local-files-fixture`；`plugin_original_host_local_files_test.go`",
+      "difference_or_necessary_adaptation": "复用普通Go文件IO与实例数据目录，不另造文件RPC；显式只读备份目录、clone独立temp。生产NAS备份挂载未修改，业务fastresume解析/迁移不属于本项。",
+      "actual_evidence": "`testdata/plugin-host-local-files-20261031/evidence/acceptance.json`：最新真实Linux安装/保存/错误/恢复/更新/冷启/卸载、Mac浏览器、隔离qB真实备份SHA及独立审查均绑定；必要Go IO/挂载适配已记录。 独立审查在旧acceptance封存后补了准确Linux driver归档，原旧review哈希不改写；明确补封与当前11个审查输入校验见 `testdata/plugin-platform-final-20261104/s02-evidence-lineage-supplement.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S03",
+      "index": "S03 · 43补充：标准插件通过宿主添加/校验/启动/只删任务",
+      "fixed_source_location_and_behavior": "固定 B qB wrapper `:401,477,503,608`、Transmission wrapper `:201,227,253,375`；业务参照同文件 `:638,661,891,899,976`",
+      "target_implementation": "SDK `downloader_host.go`；`plugin_original_host_downloader.go`；原生有限transport",
+      "difference_or_necessary_adaptation": "通过宿主连接完成bytes/magnet/URL及Cookie添加、校验、启停与仅删任务；不返回凭据。URL与版本边界按实际vendor核对；写后撤销或部分执行保留真实已确认/未知回执，不能因guard失败伪称未发生。",
+      "actual_evidence": "`testdata/plugin-host-integration-20261031/accepted-s01-s03-s13.json`：固定源/vendor、真实标准SDK、四个Linux qB/TR主门、连接增量及独立浏览器证据闭合；159基线/14增量证据及23当前目标哈希有效，root增量race17.121s通过。部分执行/撤销后的已确认或未知回执保留，禁止自动重发；不同二进制证据分开绑定。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S04",
+      "index": "S04 · 05/43补充：站点资料/结果/账户刷新",
+      "fixed_source_location_and_behavior": "B/app/db/site_oper.py:26,50,56,192,198,225,266；B/app/chain/site.py:66；I/autosignin:1837,1839、sitestatistic:372,402,1108",
+      "target_implementation": "SDK `site_host.go`；`plugin_original_host_sites.go`",
+      "difference_or_necessary_adaptation": "站点安全投影、账户历史/最新行、主动刷新及访问结果接宿主；默认列表按原创建顺序，显式优先级列表才排序；宿主保管凭据。",
+      "actual_evidence": "`testdata/plugin-host-business-20261031/`：固定SiteOper AST+实际SDK/SQL故障；最新完整12.627s、root独立9.037s及真实Mac cmd/server/浏览器已执行，最新Linux已通过。  源行为、最新Linux/实际SDK、浏览器及独立审查闭合见 `testdata/plugin-host-integration-20261031/accepted-s04-s06-s10.json`；实机与协议证据分型。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S05",
+      "index": "S05 · 43补充：宿主订阅查询/更新",
+      "fixed_source_location_and_behavior": "B/app/db/subscribe_oper.py:174,214,258,268；I/subscribegroup:182,214,269、brushflowlanduo:3319",
+      "target_implementation": "SDK `subscription_host.go`；`plugin_original_host_subscriptions.go`",
+      "difference_or_necessary_adaptation": "扩展30类既有宿主普通字段patch，稳定ID；空/等值patch不写库、不增revision、不取消job；显式null、SQLite四flag标量及原生消费已按真实ORM逐列验证；16项身份/单用户/宿主生成字段或既有宿主无业务实现的边界均明确记录；实际变更取消旧任务为宿主适配。",
+      "actual_evidence": "固定原ORM/SQLite35例、30列native消费、失败/冷热/无效值均过；最新Linux扩展进程包含源更新/分身/冷启/卸载；root实际SDK独审3.428s通过。模型边界与真实UI/协议分型见 `testdata/plugin-host-integration-20261031/accepted-s05-s12.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S06",
+      "index": "S06 · 43补充：下载/整理历史查询/删除",
+      "fixed_source_location_and_behavior": "B/app/db/downloadhistory_oper.py:19；B/app/db/transferhistory_oper.py:81,92,189；I/subscribegroup:253、removelink:1190,1193,2095、scrapefileclean:992–996",
+      "target_implementation": "SDK `history_host.go`；`plugin_original_host_history.go`",
+      "difference_or_necessary_adaptation": "按源日期/Hash及src/dest/ID查询，删除仅历史记录不删两端文件；不扩为媒体库管理。",
+      "actual_evidence": "同business固定源日期/Hash/src/dest差分；真实硬链接历史→查询→SQL失败→删除仅记录保双端文件→冷恢复；Mac cmd/server与root独立审查已执行，最新Linux已通过。  源行为、最新Linux/实际SDK、浏览器及独立审查闭合见 `testdata/plugin-host-integration-20261031/accepted-s04-s06-s10.json`；实机与协议证据分型。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S07",
+      "index": "S07 · 05/43补充：普通全局系统配置限定读写",
+      "fixed_source_location_and_behavior": "B/app/db/systemconfig_oper.py:27,92；I/remoteidentifiers:150,162、pluginuninstall:48,72；B/app/core/config.py:959–963（USER_AGENT）",
+      "target_implementation": "SDK `settings_host.go`；`plugin_original_host_settings.go`；`runtime.go`有限缓存",
+      "difference_or_necessary_adaptation": "限定普通键，新增固定config.py:959动态USER_AGENT只读；falsey删持久值而保留热缓存、冷启动null、等值返回None；识别词库接现有解析器，普通社区识别分享三键保留；AI/工作流键不开放。",
+      "actual_evidence": "原SystemConfig/RMT_MEDIAEXT源差分、旧Linux/浏览器与7根24子场独审保留；新增USER_AGENT getter/只读与来源后缀已在统一R9真实Linux执行，4条固定源UA oracle及当前6根双端race闭合。旧封存不改，见 `testdata/plugin-platform-final-20261104/s07-user-agent-lineage-supplement.json`；  统一555根回归0失败/0跳过；独立签审见 `testdata/plugin-platform-final-20261104/five-slice-independent-review.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S08",
+      "index": "S08 · 43补充：媒体服务器选择与刷新",
+      "fixed_source_location_and_behavior": "B/app/helper/mediaserver.py:8–18；B/app/helper/service.py:95,142,162；B/app/modules/trimemedia/trimemedia.py:366–413、api.py:312–338,508–583；I/mediaserverrefresh:62,69,137,242,245",
+      "target_implementation": "SDK `media_host.go`；`plugin_original_host_media.go`；`fnos/service_plugin_refresh.go`及`refresh.go`",
+      "difference_or_necessary_adaptation": "接既有fnOS；原root/items分别走task_running/空POST/匹配与失败fallback，nullable结果按源。显式GUID刷新为有限Go扩展且禁止fallback，用于只触自建库验收；旧P0目录Scan保持独立。",
+      "actual_evidence": "services固定源20例/Api.request空body oracle与SDK通过；integration/fnos-causal-probe保HTTP200/business -14，源preflight后仍拒绝。r4在刷新前user/info返回-2，未执行刷新，测试库/文件均已清理；只读再查login/user/task成功。r5同r4二进制先观察自建库已入库且任务空，再真实SDK explicit GUID刷新成功，卸载/清理/原7库不变；source-wide/fallback仅固定源与协议实测，最新Linux整链与独立复核通过。  源行为、最新Linux/实际SDK、浏览器及独立审查闭合见 `testdata/plugin-host-integration-20261031/accepted-s04-s06-s10.json`；实机与协议证据分型。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S09",
+      "index": "S09 · 43补充：插件主动执行受管存储操作",
+      "fixed_source_location_and_behavior": "B/app/chain/storage.py:46,88,100；I/removelink:1674,1679,1757",
+      "target_implementation": "SDK `storage_host.go`；`plugin_original_host_storage.go`",
+      "difference_or_necessary_adaptation": "主动宿主exists/list/delete已接模块链与本地授权根；递归仅files、边界/删除保留宿主检查。",
+      "actual_evidence": "services固定源7例+真实App/SDK/文件越界/symlink拒绝、clone/CloseNew/uninstall；Mac cmd/server/浏览器已取证；最新Linux与独立复核通过。  源行为、最新Linux/实际SDK、浏览器及独立审查闭合见 `testdata/plugin-host-integration-20261031/accepted-s04-s06-s10.json`；实机与协议证据分型。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S10",
+      "index": "S10 · 43补充：跨插件管理及关联调度更新",
+      "fixed_source_location_and_behavior": "B/app/core/plugin.py:121,634,815,825,836,1375；B/app/scheduler.py:1251,1338；I/pluginuninstall:54–66,193、mergesiteswitch:788,790、seedrescue:681",
+      "target_implementation": "SDK `plugin_host.go`；`plugin_original_host_manager.go`；`plugin_original_uninstall.go`共享卸载",
+      "difference_or_necessary_adaptation": "metadata枚举不再隐式调用get_state；IncludeState/States才显式执行，installed以权威配置顺序为准；真实init/stop/reload/uninstall/调度和强制配置数据删除。自操作延后当前调用结束返回accepted/completed，避免生命周期锁重入。",
+      "actual_evidence": "services实际SDK含跨clone/同步module回入/锁忙，新增有副作用get_state与顺序回归；中央旧reset/uninstall2.752s通过。Mac cmd/server/浏览器已有，最新Linux已通过。  源行为、最新Linux/实际SDK、浏览器及独立审查闭合见 `testdata/plugin-host-integration-20261031/accepted-s04-s06-s10.json`；实机与协议证据分型。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S11",
+      "index": "S11 · 43补充：插件主动请求宿主影视识别",
+      "fixed_source_location_and_behavior": "B/app/chain/__init__.py:637；I/subscribegroup:167、brushflowlanduo:3330",
+      "target_implementation": "SDK `media_host.go`；`plugin_original_host_media*.go`；`catalog/source_plugin_episode_groups.go`；`sourcezhconv`与`core_business_source_facts.go`",
+      "difference_or_necessary_adaptation": "普通模块识别、双类型消歧、episodegroup与普通共享识别已接；完整zhconv-rs0.4.1短语/默认wikitext改Go，异常转Go error，D描述无序条目改稳定顺序；名字搜索、源缓存/TTL与四源细节已按固定源码补齐。",
+      "actual_evidence": "`testdata/plugin-host-integration-20261031/accepted-s11.json`：四源完整模型/缓存/限流/普通分享/错误归属源对照；最终Linux6d7d57f4的53来源流程、17实际进程代次、共享4设置、失败/冷恢复及真实SDK；IAB读取sourcev3/clonev2并独立保存配置/刷新保持，截图与范围限制明确；源证据/目标/全部清单哈希核对。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S12",
+      "index": "S12 · 43补充：宿主站点浏览/RSS/种子获取",
+      "fixed_source_location_and_behavior": "B/app/chain/torrents.py:402,434；B/app/helper/torrent.py:66；I/brushflowlanduo:1803、seedrescue:898,1021,1402,1529、iyuuautoseed:1185",
+      "target_implementation": "SDK `site_host.go`；`plugin_original_host_sites.go`；`sites/plugin_host_resources.go`",
+      "difference_or_necessary_adaptation": "browse/RSS/opaque材料下载与加密私有enclosure已接；strict解析+源lxml恢复、编码、空title过滤、忽略description按源；expired False不触renew。分类已提取全部193条中既有宿主支持的165模板（114有分类），已核实Resources/NAS同SHA；未固定外部下载来源差异单列。",
+      "actual_evidence": "855 generic+10 special分类、165模板完整绑定及3种SDK查询通过；26 RSS恢复、最新Linux cmd/server browse→RSS→私有材料/502/冷恢复及实际Mac UI证据闭合。source/target/hash/独审和版本界限见 `testdata/plugin-host-integration-20261031/accepted-s05-s12.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S13",
+      "index": "S13 · 43补充：下载器附加查询/修改",
+      "fixed_source_location_and_behavior": "B/qB wrapper:304,336,383,490,686；B/TR wrapper:168,240,388；I/cleaninvalidseed:660,667、iyuuautoseed:1099、brushflowlanduo:1183,1231,2210,2784,3126",
+      "target_implementation": "SDK `downloader_host.go`；`plugin_original_host_downloader.go`；`iyuuautoseed/native/plugin_host.go`",
+      "difference_or_necessary_adaptation": "普通任务列表、状态过滤、标签/分类/限速、脱敏tracker及显式删文件接口按原wrapper/vendor适配。Tracker使用稳定不透明标识；DeleteFiles为独立能力并保留受管归属、其他任务引用/硬链接/符号链接安全检查和实际删除回执。",
+      "actual_evidence": "`testdata/plugin-host-integration-20261031/accepted-s01-s03-s13.json`：固定源/vendor、真实标准SDK、四个Linux qB/TR主门、连接增量及独立浏览器证据闭合；159基线/14增量证据及23当前目标哈希有效，root增量race17.121s通过。部分执行/撤销后的已确认或未知回执保留，禁止自动重发；不同二进制证据分开绑定。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S14",
+      "index": "S14 · 复用宿主代理及GitHub认证的有限GET",
+      "fixed_source_location_and_behavior": "B/app/utils/http.py:329–560；B/app/core/config.py:1069–1087,1155–1164；I/remoteidentifiers:105–120，SHA见host-residual-review",
+      "target_implementation": "`internal/plugins/network_host.go`；`internal/app/plugin_original_host_network*.go`；`internal/networkproxy/requests_merge.go`",
+      "difference_or_necessary_adaptation": "只传状态和有界解压后bytes，凭据留宿主；原substring认证改为精确官方HTTPS源，不引通用方法/任意headers，不迁移词库业务。",
+      "actual_evidence": "固定RequestUtils/实际requests-urllib3源与wire/encoding/timeout oracle，Linux5770c6a3的35观察/80HTTP实际链及独立浏览器、当前SDK race与独立transport/decoder审查闭合；见 `testdata/plugin-host-network-20261031/README.md` 和 `testdata/plugin-platform-final-20261104/settings/independent-review.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S15",
+      "index": "S15 · 普通验证码OCR宿主辅助",
+      "fixed_source_location_and_behavior": "B/app/helper/ocr.py:8–75；B/app/core/config.py:347；I/autosignin/sites/hdsky:102、opencd:97",
+      "target_implementation": "SDK `ocr_host.go`；`plugin_original_host_ocr.go`；有限OCR配置与实际验收fixture",
+      "difference_or_necessary_adaptation": "普通HTTP验证码辅助不属于AI模型/Agent系统；站点Cookie/UA与OCR_HOST留宿主，只测独占合成图，不迁移签到业务。",
+      "actual_evidence": "完整固定helper34例及完整RequestUtils五条重定向轨迹、实际SDK/race、统一R9 Linux主程序安装/保存/初始化/失败恢复/来源分身/更新/冷启/卸载清理均已执行。独占合成HTTP OCR服务与真实主程序分开标注，见 `testdata/plugin-platform-final-20261104/browser-ocr/acceptance-r9.json`；  统一555根回归0失败/0跳过；独立签审见 `testdata/plugin-platform-final-20261104/five-slice-independent-review.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S16",
+      "index": "S16 · 普通网页JavaScript渲染",
+      "fixed_source_location_and_behavior": "B/app/helper/browser.py:852–1102；I/autosignin:1884,1974及sites/__init__:63",
+      "target_implementation": "SDK `browser_host.go`；`plugin_original_host_browser.go`；`internal/browserrender`；产品Dockerfile普通Chromium/Xvfb运行库",
+      "difference_or_necessary_adaptation": "纯Go CDP与签名原生浏览器替代Python/Node driver；按源区别显式PROXY_SERVER与普通PROXY，保留percent原字串和inline代理loopback模式。原版坏IPv6被Playwright派生为无关http主机，目标安全返回None/错误且不转发凭据；必要适配见review.md。不迁移普通核心自动登录action调用者或AI/session/action系统。",
+      "actual_evidence": "统一R9的19项Linux运行验证包括真实原生浏览器JS/Xvfb/认证代理/21秒启动/12秒显示/清理；实际安装/配置/失败恢复/分身/更新/冷启/卸载API404均完成，见同目录 `acceptance-r9.json`、`ui-reuse-r9.json`。R6实际UI仅在136个字节一致前端文件上复用；R8未知父目录事故保红，R9共174边界工具完整且无残留。  统一555根回归0失败/0跳过；独立签审见 `testdata/plugin-platform-final-20261104/five-slice-independent-review.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S17",
+      "index": "S17 · 普通渠道入站消息链",
+      "fixed_source_location_and_behavior": "B/app/api/endpoints/message.py；B/app/chain/message.py；I/larkmessager:767–781",
+      "target_implementation": "SDK `message_inbound.go`；`plugin_original_host_message_inbound.go`；普通Web入口和事件/输入/模块桥",
+      "difference_or_necessary_adaptation": "原始bytes/可重复参数经当前对象调用，使用非持久后台租约；普通parser→输入双检查→history→processing→command/user.message/插件回调；不保留AI前缀特例。其他内建业务助手不在本轮开发。",
+      "actual_evidence": "固定source AST/当前独立源审查、实际SDK正常/race、Linux安装/升级/双实例、真实浏览器失败恢复与配置保存，浏览器写入后冷启PID变化且配置/轨迹逐字保持、零重放，卸载API404及清理通过；见 `testdata/plugin-platform-final-20261104/message/acceptance.json`、`message-independent-review.json`。最终共享SDK稳定门归50单独封存，不混称旧Linux二进制。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S18",
+      "index": "S18 · 43补充：使用宿主站点凭据的普通HTTP请求",
+      "fixed_source_location_and_behavior": "B `app/db/site_oper.py:26,38,92`、`app/db/models/site.py:26–34` 与 `app/utils/http.py:RequestUtils.request/post_res`；安装版16个普通POST调用见 `testdata/plugin-platform-final-20261104/network-post-scope-observation.json`",
+      "target_implementation": "SDK `site_http_host.go`；`plugin_original_host_site_http*.go`；真实验收插件",
+      "difference_or_necessary_adaptation": "Sites.Read保留普通安全投影；显式私有SDK Credentials按当前对象/站点读取四个typed字段，恢复源可信插件的任意内存计算/分支，不经公共配置/UI/日志。普通Request补配置站点handle GET/POST、逐跳同源守卫与私有响应Cookie值；不引入凭据表达式/变换框架，暂停签到业务。",
+      "actual_evidence": "固定源6种wire、8种Cookie、4种UA与真正307/EOF单次POST因果已对照；当前6根独立双端race、Linux完整SDK及统一R9主程序通过。R8实际浏览器写入/失败保留/恢复/分身与两次冷恢复，R9新主程序另验并准确分版本。见 `testdata/plugin-platform-final-20261104/site-http/current-evidence.json`；五个test literal显式字段名补丁由 `site-http/vet-test-literal-lineage.json` 保留谱系，  统一555根回归0失败/0跳过；独立签审见 `testdata/plugin-platform-final-20261104/five-slice-independent-review.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "S19",
+      "index": "S19 · 普通Go网络访问所需私有宿主代理快照",
+      "fixed_source_location_and_behavior": "B `app/core/config.py:1069–1098` PROXY、`app/utils/http.py:397` requests环境合并；I/mergemessagenotify 自有URL通知POST的9处依赖，20-key复核与17条真实getter源oracle见 `testdata/plugin-platform-final-20261104/settings/proxy-settings-independent-source-oracle.json`",
+      "target_implementation": "SDK `network_proxy_host.go`；`plugin_original_host_proxy.go`；现有 `networkproxy` requests transport",
+      "difference_or_necessary_adaptation": "显式私有SDK返回源PROXY nullable map及仅代理环境/CGI存在性；保大小写、空值及host-specific *_proxy，不复制无关环境。可信Go worker可发自身协议请求，不迁移通知通道业务，不引入通用执行器；代理凭据不进入公共配置/UI/日志。PROXY_SERVER仅用于S16源行为核对，不把它伪作PROXY map或env fallback。",
+      "actual_evidence": "固定源17例、guard/环境边界、独立双端race与6种真实Go POST路由通过；统一R9真实Linux主程序及浏览器认证代理/失败恢复/来源分身/更新/双冷启零重放/卸载404与清理均完成。见 `testdata/plugin-platform-final-20261104/proxy/acceptance.json`；额外Chrome刷新受扩展阻止如实保留，首次冷启后实际打开页面及浏览器写入后的完整main冷启另有证据，  统一555根回归0失败/0跳过；独立签审见 `testdata/plugin-platform-final-20261104/five-slice-independent-review.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "01",
+      "index": "01 · 1.1 代码 配置 数据和运行对象各放在哪里",
+      "fixed_source_location_and_behavior": "`B/app/core/plugin.py:40`<br>`B/app/db/models/systemconfig.py:8`<br>`B/app/db/models/plugindata.py:14`<br>`B/app/core/config.py:1005`",
+      "target_implementation": "`plugin_store.go`; `plugin_original_lifecycle.go`",
+      "difference_or_necessary_adaptation": "Go 制品、独立长期 worker、SQLite 配置/KV 与本地 plugin-data 目录分别承载原版代码/运行对象/持久数据；不执行 Python。",
+      "actual_evidence": "Linux 真实 cmd/server 四轮生命周期验证，含 init 创建独立数据目录、KV/配置重启恢复、重置及分身卸载保留 owned-file.txt；断言在 `plugin_module_process_test.go:235–336`，日志见 [本轮证据](validation/plugin-module-scoped-20261025.json)。",
+      "status": "验收通过"
+    },
+    {
+      "id": "02",
+      "index": "02 · 1.2 安装后的代码怎样变成可调用的插件",
+      "fixed_source_location_and_behavior": "`B/app/core/plugin.py:195`<br>`B/app/core/plugin.py:72`",
+      "target_implementation": "`plugin_original_lifecycle.go`; `plugins/worker.go`",
+      "difference_or_necessary_adaptation": "原 Python 导入与类实例适配为已校验 Go 制品、握手和同一 worker；API/服务从实际对象 getter 注册。",
+      "actual_evidence": "Linux 实际 HTTP 安装后观察独立进程 PID、init_count=1、API 可调用；真实时钟与手动 tick 都进入同一对象；重载换 PID，重启恢复，初始化失败和分身隔离均实测。见 [本轮证据](validation/plugin-module-scoped-20261025.json)。 2026-11-04最终集成重开：32个已进入宿主回调的调用撤销后Stop有14/100概率误报worker_io_failed；首红见 `testdata/plugin-platform-final-20261104/pending-admission-normal-worker.jsonl`。已修复取消通知在停止后写入管道的竞态；当前Linux真实SDK压力100/100、并发/停止16项均通过，117根双端SDK race通过；原失败保留，见 `testdata/plugin-platform-final-20261104/linux-sdk/binding.json`、`settings/concurrent-cancel-fence-review.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "03",
+      "index": "03 · 1.3 保存设置为什么能改变正在运行的插件",
+      "fixed_source_location_and_behavior": "`B/app/api/endpoints/plugin.py:975`<br>`B/app/core/plugin.py:121`<br>`B/app/api/endpoints/plugin.py:223`<br>`B/app/db/systemconfig_oper.py:30`",
+      "target_implementation": "`plugin_original_config.go`; `plugin_original_registry.go`",
+      "difference_or_necessary_adaptation": "保留同一 Go worker 对象重新 init；删去 AI 缓存副作用。",
+      "actual_evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "04",
+      "index": "04 · 1.4 重载为什么能运行刚换上的代码",
+      "fixed_source_location_and_behavior": "`B/app/core/plugin.py:156`<br>`B/app/core/plugin.py:619`<br>`B/app/core/plugin.py:641`<br>`B/app/api/endpoints/plugin.py:560`",
+      "target_implementation": "`plugin_original_manager_http.go`; `plugin_original_lifecycle.go`",
+      "difference_or_necessary_adaptation": "Go/JSON 进程边界及现有单用户前端适配；本行行为已由真实宿主入口验证。",
+      "actual_evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "05",
+      "index": "05 · 1.5 插件怎样读写配置 记录和文件",
+      "fixed_source_location_and_behavior": "`B/app/plugins/__init__.py:239`<br>`B/app/db/plugindata_oper.py:12`<br>`B/app/db/systemconfig_oper.py:101`",
+      "target_implementation": "`plugin_original_base.go`; `plugins/base.go`",
+      "difference_or_necessary_adaptation": "Go Base RPC 替代 Python/async 直接方法调用；配置为全量替换，缓存与 DB 删除分开，KV 保留稳定行号及显式命名空间；数据目录保留现有路径安全边界。",
+      "actual_evidence": "固定源码 Base/PluginData/SystemConfig 对照；真实 Linux cmd/server 经 HTTP 进入实际 SDK，覆盖 True/None、false/0/大整数、同键 upsert 行号、单键/空键删除、未安装命名空间、分身数据/文件隔离、空配置缓存与重启恢复、重置/卸载。见 `plugin_module_process_base_test.go`、`testdata/plugin-module-no-official-auth-20261026/process-before-config-events.log.gz`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "06",
+      "index": "06 · 2.1 仓库设置：保存的是来源清单，不是立即安装一批插件",
+      "fixed_source_location_and_behavior": "`F/src/components/dialog/PluginMarketSettingDialog.vue:39`<br>`F/src/components/dialog/PluginMarketSettingDialog.vue:191`<br>`F/src/components/dialog/PluginMarketSettingDialog.vue:111`<br>`B/app/api/endpoints/system.py:892`<br>`B/app/core/config.py:859`<br>`B/app/core/config.py:904`<br>`F/src/views/plugin/PluginCardListView.vue:925`<br>`B/app/core/plugin.py:1572`<br>`B/app/core/config.py:873`<br>`F/src/components/dialog/PluginMarketSettingDialog.vue:124`",
+      "target_implementation": "`plugin_original_markets.go`; `PluginMarketSettingDialog.vue`",
+      "difference_or_necessary_adaptation": "Go 制品索引 URL 保留具体路径；outlined 文本框遵守项目输入规范。市场弹窗只管理来源，热加载/本地路径/统计开关归设置→系统（AccountSettingSystem）。环境覆盖时只读。",
+      "actual_evidence": "真实Linux生产进程来源保存与重启恢复门通过：`plugin_module_process_market_test.go`；浏览器已实际操作增删/去重、行编辑、拖动排序、文本错误禁存和顺序保存、重开及刷新恢复，系统字段独立保存与无效路径错误不覆盖来源。PID/init/config保持，未安装其他插件。截图、状态和日志见 [本轮证据](validation/plugin-module-no-official-auth-20261026.json)。",
+      "status": "验收通过"
+    },
+    {
+      "id": "07",
+      "index": "07 · 2.2 从 Wiki 同步仓库：立即合并保存，不是一个未提交的预览",
+      "fixed_source_location_and_behavior": "`F/src/components/dialog/PluginMarketSettingDialog.vue:142`<br>`B/app/api/endpoints/system.py:847`<br>`B/app/api/endpoints/system.py:122`<br>`B/app/helper/market.py:6`<br>`B/app/helper/market.py:51`<br>`B/app/helper/market.py:84`<br>`B/app/api/endpoints/system.py:816`<br>`B/app/api/endpoints/system.py:835`<br>`B/app/helper/market.py:17`",
+      "target_implementation": "`plugin_original_market_wiki.go`; `PluginMarketSettingDialog.vue`",
+      "difference_or_necessary_adaptation": "Wiki固定URL、标记边界/回退、规范化与去重沿固定helper；保留Go索引具体路径作为必要适配。复用已有宿主PROXY；安全边界额外拒绝URL凭据/查询/片段及越界重定向，响应不返回远程正文。",
+      "actual_evidence": "真实Linux+浏览器：故障CONNECT代理只访问raw.githubusercontent.com:443，失败保留3来源；使用宿主代理访问真实Wiki、端到端TLS验证，未点击全局保存即落库97；重复同步97不变，原3个Go索引顺序保留，新增94条及顺序与固定helper AST对同一公开文档的提取结果相同。非法URL不变更清单，匿名401；测试代理已清除、恢复3来源。源码回放含标记正常/缺失/重复/逆序/空文档。见 `wiki-live-verdict.json.gz`、截图及 [证据](validation/plugin-module-no-official-auth-20261026.json)。",
+      "status": "验收通过"
+    },
+    {
+      "id": "08",
+      "index": "08 · 2.3 市场列表：后端把索引加工成卡片，前端再做搜索和筛选",
+      "fixed_source_location_and_behavior": "`F/src/views/plugin/PluginCardListView.vue:788`<br>`F/src/views/plugin/PluginCardListView.vue:813`<br>`B/app/core/plugin.py:1725`<br>`B/app/helper/plugin.py:487`<br>`B/app/core/plugin.py:1608`<br>`B/app/core/plugin.py:1375`<br>`B/app/api/endpoints/plugin.py:343`<br>`F/src/views/plugin/PluginCardListView.vue:827`<br>`B/app/core/plugin.py:1640`<br>`B/app/core/plugin.py:1526`",
+      "target_implementation": "`plugin_original_markets.go`; `plugin_original_market_cards.go`; `plugins/artifacts/python_metadata.go`; `plugins/artifacts/labels.go`; `sourcejson/string.go`; `Plugins.vue`; `PluginSearchDialog.vue`; `plugin-market.ts`",
+      "difference_or_necessary_adaptation": "复用Go已校验制品/单用户宿主。原版显示数组splice适配既有不可变Go卡片数组及20条分页；非空批次ok/空批次empty，市场/统计/筛选变化重置20条与容器。仓库标签本地路径/GitHub去前缀，作者标签选项跨刷新保留。搜索弹窗名称/说明各自匹配，市场按源码拼接。分身搜索显示逻辑版本。Python索引仅明确不可安装的显示元数据；Go依赖/兼容判断归13，不伪装可运行。",
+      "actual_evidence": "固定前端TS AST11组+固定标签AST12组；同一Linux捕获索引→固定_process_plugin_info AST逐项比较23卡/13字段。199管理/151 SDK/448前端、构建/vet/全包编译通过。真实cmd/server门1083.27s含两次重启、25卡/设置/统计一致；浏览器20→25、作者多选/标签/仓库交集、空结果、本地优先、原版排序菜单/Enter、失败在线仅保留真实本地/重试恢复、同数量刷新20→25、搜索分身9.7→实际SDK get_page仅分身1次/来源0次且PID/config/KV不变。详见当前报告中process-market-menu-final-browser.log、linux-market-fixed-card-verdict.json、market-pagination-refreshed20/reappended25、market-search-clone-v97等证据。  固定报告：[版本与原始证据](validation/plugin-module-no-official-auth-20261026.json)；实际运行日志 `testdata/plugin-module-no-official-auth-20261026/process-market-menu-final-browser.log.gz`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "09",
+      "index": "09 · 2.4 多来源选版本：版本优先，相同版本才看来源顺序",
+      "fixed_source_location_and_behavior": "`B/app/api/endpoints/plugin.py:363`<br>`B/app/core/plugin.py:1558`<br>`B/app/core/plugin.py:1566`<br>`B/app/core/plugin.py:1592`<br>`B/app/utils/string.py:808`<br>`B/app/core/plugin.py:1701`<br>`F/src/components/cards/PluginCard.vue:232`<br>`B/app/core/plugin.py:1652`<br>`B/app/core/plugin.py:720`",
+      "target_implementation": "`plugin_original_markets.go`; `plugin_original_market_cache.go`",
+      "difference_or_necessary_adaptation": "沿用固定StringUtils比较规则（非SemVer）；版本优先、同版本在线优先于本地，再按设置顺序。Go制品按完整manifest、平台与内容哈希适配，无Python依赖。",
+      "actual_evidence": "固定源码回放 `testdata/standard-market/market-oracle.json`；真实Linux多仓库及重启门、浏览器拖动和文本重排后实际安装2.0，标签与来源一致；本地高版本/在线同版本/在线来源顺序真实宿主验证见 `testdata/standard-market/verify_linux_local_selection.py` 和 `linux-local-selection.json.gz`，SDK PID/init/config未变。见 [证据](validation/plugin-module-no-official-auth-20261026.json)。",
+      "status": "验收通过"
+    },
+    {
+      "id": "10",
+      "index": "10 · 2.5 刷新市场：刷新的是索引，不是把插件升级一遍",
+      "fixed_source_location_and_behavior": "`F/src/views/plugin/PluginCardListView.vue:931`<br>`B/app/scheduler.py:488`<br>`B/app/scheduler.py:707`<br>`B/app/helper/plugin.py:487`<br>`B/app/helper/plugin.py:387`<br>`B/app/core/plugin.py:1725`<br>`F/src/views/plugin/PluginCardListView.vue:827`<br>`B/app/core/plugin.py:1543`<br>`B/app/core/plugin.py:1785`<br>`B/app/core/cache.py:1125`<br>`B/app/core/cache.py:1240`<br>`B/app/core/cache.py:1294`",
+      "target_implementation": "`plugin_original_market_refresh.go`; `Plugins.vue`",
+      "difference_or_necessary_adaptation": "强制失败只返回本次失败，不替换成旧索引；不修改仍有效的旧缓存，之后普通读取可继续命中。删除旧 stale 回退及标志。市场不再被5秒状态轮询覆盖；30分钟元数据任务保留。",
+      "actual_evidence": "固定同步/异步cached源码AST回放+实际HTTP缓存/空成功/失败及race；真实Linux cmd/server与浏览器验证强制失败候选消失、后续普通读取仍命中原缓存、错误不被轮询覆盖且可重试。真实30分钟ticker于03:52:45更新缓存，普通读取的原TTL仍有效到04:05，来源时间戳提前变化，SDK PID/init/config/KV不变。完整进程门PASS（1878.68秒），见 `scheduler-real-tick-verdict.json.gz`、`linux-cache-final.log.gz` 和 [证据](validation/plugin-module-no-official-auth-20261026.json)。",
+      "status": "验收通过"
+    },
+    {
+      "id": "11",
+      "index": "11 · 2.6 安装：先把代码放好，再登记和创建运行实例",
+      "fixed_source_location_and_behavior": "`F/src/components/dialog/PluginMarketDetailDialog.vue:100`<br>`B/app/api/endpoints/plugin.py:576`<br>`B/app/helper/plugin.py:620`<br>`B/app/helper/plugin.py:2805`<br>`B/app/api/endpoints/plugin.py:614`<br>`B/app/core/plugin.py:641`<br>`B/app/core/plugin.py:72`<br>`B/app/api/endpoints/plugin.py:223`<br>`B/app/core/plugin.py:104`<br>`B/app/api/endpoints/plugin.py:621`",
+      "target_implementation": "`plugin_original_install.go`; `plugins/artifacts/acquire.go`",
+      "difference_or_necessary_adaptation": "Python 导入适配为校验后的 Go SDK 制品与长期 worker；业务插件暂停。",
+      "actual_evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "12",
+      "index": "12 · 2.7 Release 与历史：更新日志、可下载资产和指定版本是三件事",
+      "fixed_source_location_and_behavior": "`F/src/components/dialog/PluginVersionHistoryDialog.vue:48`<br>`F/src/components/dialog/PluginVersionHistoryDialog.vue:102`<br>`B/app/api/endpoints/plugin.py:428`<br>`B/app/helper/plugin.py:418`<br>`B/app/helper/plugin.py:678`<br>`B/app/api/endpoints/plugin.py:591`<br>`B/app/api/endpoints/plugin.py:440`<br>`B/app/api/endpoints/plugin.py:462`<br>`B/app/api/endpoints/plugin.py:295`<br>`B/app/core/plugin.py:1375`<br>`F/src/components/misc/VersionHistory.vue:1`<br>`B/app/api/endpoints/plugin.py:91`",
+      "target_implementation": "`plugin_original_history.go`; `plugin_original_class_registry.go`; `plugin_original_release_cache.go`; `plugins/artifacts/history.go`; `PluginVersionHistoryDialog.vue`; `plugin-history-markdown.ts`",
+      "difference_or_necessary_adaptation": "固定前端只显示history与可选“更新到最新版本”，全src未调用releases/release_version，不新增旧版本选择器。Go可安装版本由含平台/哈希的索引制品代替Python源码ZIP；历史与Release分开缓存，force有旧Release缓存先返回旧表、后台刷新；历史无repo_url覆盖并按精确ID查询，失败回退本地版本/空说明。",
+      "actual_evidence": "固定缓存/端点/类getter AST回放 + 真实HTTP独立Release后台刷新；最新版Linux cmd/server、实际Go制品、浏览器作者顺序2.0/1.0/0.1和Markdown、更新503旧PID/config/KV不变、原弹窗重试2.0换PID保留数据。无仓库版本null、本地Release不支持、缺失类404、init失败类仍返回版本、分身逻辑版本与每源get_state均实测。见 [当前证据](validation/plugin-module-no-official-auth-20261026.json) 的 linux-class-final.log、linux-class-release-cache.json、history-class-verdict.json/截图及class-oracle.json。",
+      "status": "验收通过"
+    },
+    {
+      "id": "13",
+      "index": "13 · 2.8 兼容性与依赖：判断能否安装，以及让代码具备运行条件",
+      "fixed_source_location_and_behavior": "`B/app/helper/plugin.py:160`<br>`B/app/helper/plugin.py:903`<br>`B/app/core/plugin.py:1652`<br>`B/app/helper/plugin.py:697`<br>`F/src/components/cards/PluginCard.vue:222`<br>`B/app/helper/plugin.py:2842`<br>`B/app/helper/plugin.py:1762`<br>`B/app/helper/plugin.py:1494`<br>`B/app/core/plugin.py:106`<br>`B/app/helper/plugin.py:2847`<br>`B/app/helper/plugin.py:1576`<br>`B/app/helper/plugin.py:1642`<br>`B/app/core/config.py:1154`<br>`B/app/core/config.py:1166`<br>`B/version.py:1`<br>`B/requirements.in:71`<br>`F/src/views/setting/AccountSettingSystem.vue:1101`<br>`F/src/views/setting/AccountSettingSystem.vue:2081`",
+      "target_implementation": "`plugins/artifacts/system_version.go`; `plugins/artifacts/inspect.go`; `plugin_original_github_network.go`; `plugin_original_network.go`; `plugin_original_markets.go`; `PluginSystemSettings.vue`; `plugin_original_market_cards.go`",
+      "difference_or_necessary_adaptation": "Python/pip依赖适配为已构建Go制品、SDK/平台/SHA校验；不引入Python。system_version按PEP44026.2核实，插件兼容面为固定MoviePilot v2.15.7，应用版本保持独立；显式旧Release跳过当前范围。凭据普通查询只给标志、事件值不泄漏，镜像不转发PAT（项目凭据域约束优先）。必要适配及Go依赖固定提交见任务说明；18/19的DEV监控独立待核对。",
+      "actual_evidence": "固定源码AST `testdata/standard-market/github-network-oracle.json`（头9/路由8）及`system-version-oracle.json`1251例；真实HTTP/实际SDK兼容性拒绝与旧Release根通过。Linux `process-github-local-version-linux.log`10.35s PASS：严格TLS受控源、镜像→坏配置代理→环境路径、API跳过镜像、制品实际运行、失败保留PID/config/KV、冷恢复。浏览器门779.17s PASS：基础/高级/开发保存、空保留/显式清除、错误保留草稿、两次真实重启、兼容性禁装→恢复；证据 `github-browser-final-verdict.json`/`github-market-incompatible.png`/`github-settings-cold-developer.ax.txt`，当前报告记录全部路径/哈希。204管理根为203全量通过+已纠正1实际重跑；176 SDK/网络、7宿主race、451前端、构建/vet/全包编译通过。原版/测试协议回放/真实Linux及浏览器证据分开标明。",
+      "status": "验收通过"
+    },
+    {
+      "id": "14",
+      "index": "14 · 2.9 更新：原 ID 原目录替换，再让同一个配置驱动新代码",
+      "fixed_source_location_and_behavior": "`F/src/components/cards/PluginCard.vue:222`<br>`F/src/views/plugin/PluginCardListView.vue:827`<br>`B/app/helper/plugin.py:2805`<br>`B/app/api/endpoints/plugin.py:602`<br>`B/app/core/plugin.py:654`<br>`B/app/core/plugin.py:776`<br>`B/app/core/plugin.py:619`<br>`F/src/components/cards/PluginCard.vue:242`<br>`B/app/core/plugin.py:104`<br>`B/app/api/endpoints/plugin.py:591`",
+      "target_implementation": "`plugin_original_install.go`; `plugin_original_lifecycle.go`",
+      "difference_or_necessary_adaptation": "Go已校验制品替换源码目录；分身逻辑版本参与比较，实际可执行版本继续由签名/哈希制品绑定。精确分身ID更新后替换类名称/说明/图标/逻辑版本，保留宿主来源与配置/KV。",
+      "actual_evidence": "旧生命周期/失败证据保留；发现自定义版本遗漏后重开并修正。新增最新版Linux真实生产链：9.7不提示较低2.0更新；force精确ID替换进程及类属性，配置/KV和来源PID不变，重启恢复。浏览器实际创建9.7分身，更新后自动显示Owned exact class v2.0；503保留与重试已验证。见 [当前证据](validation/plugin-module-no-official-auth-20261026.json) 的linux-class-final.log、linux-browser-clone-update.json、clone-class-9.7.png、clone-class-updated.png。 **2026-10-27重开：固定B _modify_federation_files:2140与_rename_federation_assets:2201要求更新分身同步派生JS/CSS和顶层资源名，当前仅字节复制；旧后端版本/配置证据保留，待集中派生接入后复验。**  r3集中前端派生补证：真实auto ticker10.07s/DEV10.11s，精确clone2.0更新/前端资源热更/坏包保留与恢复/冷恢复均读取真实JS/CSS/文件名及SDK PID；详见 `docs/validation/plugin-clone-frontend-r3-20261027/result.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "15",
+      "index": "15 · 2.10 分身 怎样让同一份插件变成两份独立实例",
+      "fixed_source_location_and_behavior": "`B/app/api/endpoints/plugin.py:933`<br>`B/app/core/plugin.py:1905`<br>`B/app/core/plugin.py:2061`<br>`B/app/core/plugin.py:2139`",
+      "target_implementation": "`plugin_instances.go`; `plugins/artifacts/installed.go`",
+      "difference_or_necessary_adaptation": "平台统一改写分身身份并复制制品和配置；不复制数据库运行数据；各自 init 的副作用独立。  2026-10-27重开：B endpoint936/clone_plugin只验证suffix非空，F UI为alnum≤20；目标将UI限制施加全部API，额外拒绝underscore和安全21+后缀；既有Go总ID≤96/ASCII是独立契约边界，不能用它解释20限制。",
+      "actual_evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。 **2026-10-27重开：固定B plugin.py:2044/2140–2232分身文本与资源名改写遗漏。源码9树oracle已取得；需平台统一处理初建、分身的分身、更新、前端更新与重启库存，不由各插件自行实现。**  集中JS/CSS字面替换与顶层重命名按固定源码9树回放；真实clone/grandclone/API CSS17px/runtime source区别、clone精确更新/DEV/frontend-only/cold独立实证补齐，详见 `docs/validation/plugin-clone-frontend-r3-20261027/result.json`。 原分身/前端派生/DEV双ticker证据保留；固定Python3.12源码28条件/23派生树、真实platform7 Linux3.50s验证26复制实例中11可调用/15成功但未加载、两类卸载与配置/代码保留、全installed=false及cold新PID。Linux255字节/分隔符控制符安全边界与Go进程适配明示；补证见docs/validation/plugin-clone-suffix15-20261027/result.json。",
+      "status": "验收通过"
+    },
+    {
+      "id": "16",
+      "index": "16 · 2.11 重置 怎样清除设置和运行记录但保留插件",
+      "fixed_source_location_and_behavior": "`B/app/api/endpoints/plugin.py:739`<br>`B/app/schemas/event.py:67`<br>`B/app/core/plugin.py:815`",
+      "target_implementation": "`plugin_original_config.go`; `plugin_original_manager_http.go`",
+      "difference_or_necessary_adaptation": "Go/JSON 进程边界及现有单用户前端适配；本行行为已由真实宿主入口验证。",
+      "actual_evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "17",
+      "index": "17 · 2.12 卸载 怎样让插件退出系统以及为什么还有残留文件",
+      "fixed_source_location_and_behavior": "`B/app/api/endpoints/plugin.py:992`<br>`B/app/core/plugin.py:634`<br>`B/app/api/endpoints/plugin.py:183`",
+      "target_implementation": "`plugin_original_uninstall.go`",
+      "difference_or_necessary_adaptation": "Go/JSON 进程边界及现有单用户前端适配；本行行为已由真实宿主入口验证。",
+      "actual_evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "18",
+      "index": "18 · 2.13 本地仓库：开发目录也是一种明确的安装来源",
+      "fixed_source_location_and_behavior": "`F/src/views/setting/AccountSettingSystem.vue:2358`<br>`F/src/views/setting/AccountSettingSystem.vue:681`<br>`B/app/api/endpoints/system.py:731`<br>`B/app/helper/plugin.py:209`<br>`B/app/helper/plugin.py:252`<br>`B/app/core/plugin.py:1462`<br>`B/app/helper/plugin.py:313`<br>`B/app/helper/plugin.py:725`<br>`B/app/helper/plugin.py:747`<br>`B/app/core/plugin.py:289`<br>`B/app/helper/plugin.py:323`<br>`B/app/helper/plugin.py:729`<br>`B/app/core/plugin.py:1574`",
+      "target_implementation": "`plugin_original_local_repositories.go`; `plugin_original_markets.go`; `plugins/artifacts/local.go`; `PluginSystemSettings.vue`",
+      "difference_or_necessary_adaptation": "Go制品/索引替代Python源码目录，预编译后发布；不运行Python/pip。保存未来目录、重复和顺序、英文逗号、home/链接/父路径按固定源码；不凭保存宣称发现可用；实际读取仍校验边界和摘要。相对目录以Go服务工作目录作应用根；无效OS路径/循环链接拒绝是必要路径适配。",
+      "actual_evidence": "固定路径AST `local-paths-oracle.json`11输入+4真实文件系统场景，原版目录保存无存在性/32数量门；Go真实HTTP保存35项含重复/未来根，发现明确失败。真实Linux实际SDK本地安装/更新/失败保留/分身/重启，浏览器门2219.51s PASS：设置→实际本地安装/配置/宿主分身→发布v2仅主进程变化，损坏发布保留/合法恢复；未来目录保存但发现失败/重复根2且状态getter主2分身1、关闭监控保留代码、卸载。证据`local-browser-*.json/.png/.ax.txt`/`process-local-dev-browser.log`；206管理根组合、452前端、9race、构建/vet/全包编译通过，路径/哈希见当前报告。  固定报告：[版本与原始证据](validation/plugin-module-no-official-auth-20261026.json)；实际运行日志 `testdata/plugin-module-no-official-auth-20261026/process-local-dev-browser.log.gz`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "19",
+      "index": "19 · 2.14 源码热重载：文件事件触发复制与重新导入",
+      "fixed_source_location_and_behavior": "`F/src/views/setting/AccountSettingSystem.vue:2383`<br>`B/app/core/plugin.py:289`<br>`B/app/core/plugin.py:335`<br>`B/app/core/plugin.py:582`<br>`B/app/core/plugin.py:543`<br>`B/app/core/plugin.py:641`<br>`B/app/core/plugin.py:363`<br>`B/app/core/plugin.py:320`<br>`B/app/core/plugin.py:421`",
+      "target_implementation": "`plugin_original_local_repositories.go`; `plugin_original_install.go`; `plugin_original_lifecycle.go`; `plugins/artifacts/resource_sync.go`",
+      "difference_or_necessary_adaptation": "DEV或自动开关；仅可信本地DEV监控跳过system_version。Go监测已构建索引/制品，替代.py修改与pip；运行代码变化须重建并校验发布，不信任裸运行目录改写。同执行文件SHA/宿主契约/规范manifest的资源及索引变化只同步，保留worker、cwd/执行文件inode、DB代次/回调/配置/KV；资源失败回滚，变更后端实际重载。",
+      "actual_evidence": "固定watcher AST7分支及monitor/candidate4组合；真实SDK纯索引变更无init/close/stop及注册getter副作用。Linux实际一秒ticker7.37s通过资源/坏包/恢复/后端2/冷重启/分身；浏览器真实one→two→坏包保留→three→backend2，源PID1945859及init2在资源变化中保留，分身1946807保持one；旧源URL409，新资源可用。真实服务重启1944403→1952387恢复源2/分身1配置/资源/独立PID；浏览器卸载和清空设置确认。208管理、178 SDK、3宿主race+1文件系统race及vet/编译通过。见当前报告process-resources-linux.log、process-resources-browser.log、resource-browser-*及local-resources-*。  固定报告：[版本与原始证据](validation/plugin-module-no-official-auth-20261026.json)；实际运行日志 `testdata/plugin-module-no-official-auth-20261026/process-resources-browser.log.gz`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "20",
+      "index": "20 · 2.15 启动修复：先尽量启动现有插件，再后台补齐和更新",
+      "fixed_source_location_and_behavior": "`B/app/startup/lifecycle.py:73`<br>`B/app/startup/lifecycle.py:41`<br>`B/app/core/plugin.py:690`<br>`B/app/core/plugin.py:1495`<br>`B/app/startup/plugins_initializer.py:6`<br>`B/app/startup/lifecycle.py:49`<br>`B/app/core/plugin.py:712`<br>`B/app/core/plugin.py:755`<br>`B/app/startup/lifecycle.py:45`<br>`B/app/startup/lifecycle.py:106`<br>`B/app/startup/plugins_initializer.py:35`",
+      "target_implementation": "`plugin_original_sync.go`; `cmd/server/main.go`",
+      "difference_or_necessary_adaptation": "先恢复/加载现有Go对象和API，再异步同步已安装缺失/落后且兼容候选；成功后整体重新init并注册API/普通服务/命令。依赖已链接进校验制品，无pip/运行时依赖安装；五个同步worker仍受现有制品发布锁串行保护。",
+      "actual_evidence": "固定startup async函数AST5分支；真实Linux cmd/server3.67s：仓库确实阻塞时现有源1/分身1独立SDK/API先可用，释放后源2/分身1整体换PID；当前版本不重新下载，缺失代码/坏SHA明确失败且保留成员及配置/KV，分身可用；实际CLI安全模式跳过SDK/仓库，合法冷重启修复成功。原版sync force删除语义不伪造成旧代码恢复。初始化/注册顺序另有实际SDK回归和6宿主race；浏览器实际冷恢复见19 resource-browser-cold。证据process-startup-wait-linux.log、startup-oracle.json、startup-backup-host-race.jsonl。  固定报告：[版本与原始证据](validation/plugin-module-no-official-auth-20261026.json)；实际运行日志 `testdata/plugin-module-no-official-auth-20261026/process-startup-wait-linux.log.gz`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "21",
+      "index": "21 · 2.16 备份与复原：安装失败保护和 Docker 持久备份用途不同",
+      "fixed_source_location_and_behavior": "`B/app/helper/plugin.py:918`<br>`B/app/helper/plugin.py:1738`<br>`B/app/helper/plugin.py:939`<br>`B/app/api/endpoints/plugin.py:602`<br>`B/app/helper/plugin.py:967`<br>`B/app/chain/system.py:59`<br>`B/app/chain/system.py:53`<br>`B/app/chain/system.py:109`<br>`B/app/startup/lifecycle.py:89`<br>`B/app/helper/plugin.py:993`<br>`B/app/helper/plugin.py:1773`<br>`B/app/chain/system.py:132`",
+      "target_implementation": "`plugin_original_backup.go`; `plugins/artifacts/backup.go`; `plugin_module_process_backup_test.go`",
+      "difference_or_necessary_adaptation": "普通安装临时备份/force失败删除与Docker持久快照分开；安装刷新、关闭跳过已有快照、启动后消费快照（含单项失败）。Go代码已在持久DataDir，现有包保持权威，仅缺失副本恢复，替代原Nginx镜像reset标记/覆盖运行副本；哈希/身份校验拒绝损坏代码。仅插件代码，不含数据库/配置/KV备份接口或页面；不安装Python依赖。",
+      "actual_evidence": "固定实际源码文件系统AST5场景，原安装失败/force及持久刷新等制品回归；2实际SDK恢复/分身根及6宿主race通过。真正独占Docker scratch、network none、无挂载测试2.72s：安装即刷新、SIGTERM关闭备份来源/分身、删除仅自有运行代码、启动先恢复后实际SDK init1/config/KV独立；启动消费快照，坏分身SHA拒绝/404/明确日志而来源可用。非Docker Linux启动不执行Docker恢复。见backup-oracle.json、backup-consumption-oracle-final-tests.jsonl、process-backup-consumed-docker-linux.log及当前报告。  固定报告：[版本与原始证据](validation/plugin-module-no-official-auth-20261026.json)；实际运行日志 `testdata/plugin-module-no-official-auth-20261026/process-backup-consumed-docker-linux.log.gz`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "22",
+      "index": "22 · 2.17 官方授权等级：决定某插件是否可见、是否被创建实例",
+      "fixed_source_location_and_behavior": "`B/app/core/plugin.py:1852`<br>`B/app/api/endpoints/plugin.py:577`<br>`B/app/core/plugin.py:98`<br>`B/app/core/plugin.py:1676`<br>`B/app/core/plugin.py:1375`<br>`B/app/core/plugin.py:1876`<br>`B/app/utils/crypto.py:49`<br>`B/app/scheduler.py:1528`<br>`B/app/core/plugin.py:1890`",
+      "target_implementation": "`plugin_original_lifecycle.go`; `plugin_original_markets.go`",
+      "difference_or_necessary_adaptation": "2026-10-26 用户答复“不需要认证”：官方 SitesHelper 等级、私钥匹配和可见/加载门禁排除；不影响本应用登录、插件 API 认证与第47项 provider。旧索引/manifest 的 level/key 仅作被动兼容元数据。",
+      "actual_evidence": "不计入验收总数、未完成项或阻塞；实际 SDK 已验证等级元数据不影响安装初始化、列表及版本选择；Linux cmd/server 以 level=2/99 的实际制品完成生命周期，匿名管理请求仍401。",
+      "status": "按用户要求排除"
+    },
+    {
+      "id": "23",
+      "index": "23 · 2.18 安装统计：安装事件上报，列表查询汇总后展示",
+      "fixed_source_location_and_behavior": "`F/src/views/setting/AccountSettingSystem.vue:1805`<br>`F/src/views/plugin/PluginCardListView.vue:858`<br>`F/src/views/plugin/PluginCardListView.vue:903`<br>`B/app/api/endpoints/plugin.py:598`<br>`B/app/helper/server.py:549`<br>`B/app/helper/server.py:51`<br>`B/app/helper/server.py:326`<br>`B/app/helper/server.py:1440`<br>`B/app/helper/server.py:473`<br>`B/app/helper/server.py:485`<br>`B/app/core/config.py:441`<br>`B/app/helper/server.py:564`<br>`B/app/api/endpoints/plugin.py:608`<br>`F/src/components/cards/PluginAppCard.vue:223`<br>`B/app/utils/system.py:997`<br>`B/app/core/config.py:426`<br>`B/app/core/config.py:959`",
+      "target_implementation": "`plugin_original_server.go`; `plugin_original_server_uid.go`; `plugin_original_server_user_agent.go`; `Plugins.vue`; `Settings.vue`",
+      "difference_or_necessary_adaptation": "固定Linux根设备/inode→MAC回退UID和uname/CPU UA；中心缺省与显式空分开持久化。保留源HTTP200回执行为但不将其当真实副作用证据。Go现有TLS验证及同源重定向边界保留，复用宿主代理。",
+      "actual_evidence": "固定客户端35场景、UID6分支/CPU12场景；真实Linux SDK安装/统计/开关/503恢复/全局回执/冷重启/分身独立；浏览器2033.88s通过，最终默认页404.35s证明清空后新PID仍为空。官方GET实际2272项，未向官方写入；自建聚合标为合成。212管理/178 SDK/8 host race通过，原始日志与SHA见[当前证据](validation/plugin-module-no-official-auth-20261026.json)。",
+      "status": "验收通过"
+    },
+    {
+      "id": "24",
+      "index": "24 · 2.19 插件评分：后端有接口，当前前端没有已接通的评分控件",
+      "fixed_source_location_and_behavior": "`B/app/api/endpoints/plugin.py:495`<br>`F/src/components/cards/PluginAppCard.vue:223`<br>`B/app/schemas/plugin.py:98`<br>`B/app/api/endpoints/plugin.py:531`<br>`B/app/helper/server.py:532`<br>`B/app/helper/server.py:425`<br>`B/app/helper/server.py:85`<br>`B/app/api/endpoints/plugin.py:551`<br>`B/app/schemas/plugin.py:109`<br>`B/app/helper/server.py:497`<br>`B/app/api/endpoints/plugin.py:555`<br>`F/src/api/index.ts:8`",
+      "target_implementation": "`plugin_original_server.go`; `plugin_original_rating_values.go`; `plugin_original_manager_http.go`",
+      "difference_or_necessary_adaptation": "固定评分Pydantic缺省/数字字符串/布尔/大整数/0.1浮点算法保留；框架错误封装适配现有Go API。保留原版未接通评分控件，未新增UI。",
+      "actual_evidence": "固定schema实际45场景，与校验过SHA的Pydantic-core2.46.4算法对照；真实cmd/server→自建协议peer写读评分、默认/缺失/503/Unicode路径/重复参数/代理/同源重定向，SDK PID/init/config/KV无变化。浏览器确认原菜单无评分控件；官方只读未投票。源码与日志见[当前证据](validation/plugin-module-no-official-auth-20261026.json)。",
+      "status": "验收通过"
+    },
+    {
+      "id": "25",
+      "index": "25 · 3.1 卡片列表：页面显示的插件来自哪里",
+      "fixed_source_location_and_behavior": "`F/src/components/cards/PluginCard.vue:278`<br>`F/src/views/plugin/PluginCardListView.vue:789`<br>`B/app/api/endpoints/plugin.py:343`<br>`F/src/components/cards/PluginCard.vue:359`",
+      "target_implementation": "`plugin_original_local_cards.go`; `plugin_original_market_cards.go`; `plugin_original_markets.go`; `Plugins.vue`; `PluginManageCard.vue`",
+      "difference_or_necessary_adaptation": "全Go已导入类替代Python类注册表，制品身份与分身逻辑显示版本分别保持。state=installed只读本地类（包含初始化失败类），按plugin_order排序；all按本地已安装+市场候选返回，保留同ID本地/更新两条记录。不再凭旧内建目录名生成空卡片。UI先本地、市场、统计、分组，按原版无额外5秒轮询。",
+      "actual_evidence": "固定core/plugin.py:get_local_plugins与endpoints/plugin.py:all_plugins对照；195管理根/41市场组织回归通过。Linux真实cmd/server默认all强刷返回1.0本地后跟2.0更新；本地清单在仓库故障时零元数据请求，失败初始化类仍可见/state=false。浏览器市场仅2个真实未安装候选、3源失败清空/重试恢复、返回我的插件读取2.0；idle12s状态调用数/PID/init/config/KV不变。见 [当前证据](validation/plugin-module-no-official-auth-20261026.json) 的process-all-class-final.log、linux-list-final.log、linux-installed-list-idle.json及market-real-candidates/market-list-force-failed/installed-list-return-v2截图。",
+      "status": "验收通过"
+    },
+    {
+      "id": "26",
+      "index": "26 · 3.2 搜索、筛选与排序：多数操作发生在浏览器内",
+      "fixed_source_location_and_behavior": "`F/src/views/plugin/PluginCardListView.vue:718`<br>`F/src/views/plugin/PluginCardListView.vue:877`<br>`F/src/views/plugin/PluginCardListView.vue:560`<br>`B/app/api/endpoints/user.py:125`<br>`B/app/core/plugin.py:86`<br>`F/src/composables/useKeepAliveRefresh.ts:31`<br>`F/src/views/plugin/PluginCardListView.vue:1012`",
+      "target_implementation": "`plugin-organization.ts`; `plugin-market.ts`; `Plugins.vue`; `App.vue`; `plugin_organization_compat.go`",
+      "difference_or_necessary_adaptation": "单用户偏好复用既有SQLite；旧接口保留原JSON值，Vue读模型使用现有envelope/list。原名称/快捷条件优先级、全局/分组独立位置、KeepAlive保留与返回刷新、首次激活跳过及排序时不刷新均保留。",
+      "actual_evidence": "固定前端28分支既有回放+本轮7函数场景、32实际ASGI场景；Linux真实生产/SDK与浏览器1531.67s验证名称/运行/更新组合、条件清除保留、混合拖拽、分组内排序、离开返回保留文件夹与文本，首次与返回加载门有实际组件测试。463前端、13相关host/race通过，证据见[当前报告](validation/plugin-module-no-official-auth-20261026.json)。",
+      "status": "验收通过"
+    },
+    {
+      "id": "27",
+      "index": "27 · 3.3 文件夹：保存的是分组字典，不是磁盘目录",
+      "fixed_source_location_and_behavior": "`F/src/views/plugin/PluginCardListView.vue:1120`<br>`F/src/views/plugin/PluginCardListView.vue:630`<br>`F/src/views/plugin/PluginCardListView.vue:1386`<br>`B/app/api/endpoints/plugin.py:842`<br>`F/src/components/cards/PluginMixedSortCard.vue:114`<br>`B/app/api/endpoints/plugin.py:1041`<br>`B/app/api/endpoints/plugin.py:1092`",
+      "target_implementation": "`plugin_organization.go`; `plugin_organization_order.go`; `plugin_instances.go`; `plugin-organization.ts`; `Plugins.vue`; `PluginFolderDialog.vue`",
+      "difference_or_necessary_adaptation": "分组是有序JSON字典，不是磁盘目录；原任意字典/旧数组、页面归一化/外观字段、混合与小数顺序、首组分身归属、首个重复移除、失败本地mutation、重命名/删除后旧order保留。原框架错误映射到现有Go脱敏envelope，配置/KV与代码权限不由分组授予。",
+      "actual_evidence": "源码7前端+32ASGI+3成员辅助函数回放；Linux真实2.21s+浏览器1531.67s完成创建/移动/组内及全局排序/移出/外观/重命名/真实SQLite拒写与表单重试/新PID冷恢复/删除分组插件仍可用/卸载清理。来源/分身独立PID且操作间init/config/KV不变；新进程读取同一字典。13host+13race通过，全部原始证据/SHA见[当前报告](validation/plugin-module-no-official-auth-20261026.json)。",
+      "status": "验收通过"
+    },
+    {
+      "id": "28",
+      "index": "28 · 3.4 打开设置：默认 model 与已保存 config 怎样合成",
+      "fixed_source_location_and_behavior": "`B/app/api/endpoints/plugin.py:648`<br>`B/app/core/plugin.py:783`<br>`F/src/components/dialog/PluginConfigDialog.vue:86`",
+      "target_implementation": "`plugin_original_view_adapter.go`; `PluginConfigDialog.vue`",
+      "difference_or_necessary_adaptation": "Go/JSON 进程边界及现有单用户前端适配；本行行为已由真实宿主入口验证。",
+      "actual_evidence": "Linux 真实 cmd/server 生命周期 + 浏览器实际安装/配置/更新/分身/重置/卸载；固定源码对应断言与状态快照见 [本轮证据](validation/plugin-module-scoped-20261025.json)、`testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz`。 SDK 表单默认值与保存值合并回归、浏览器重新打开配置显示已保存值。",
+      "status": "验收通过"
+    },
+    {
+      "id": "29",
+      "index": "29 · 3.5 JSON 表单递归渲染，以及点击保存后真正发生的事",
+      "fixed_source_location_and_behavior": "`F/src/components/render/FormRender.vue:16`<br>`F/src/components/render/FormRender.vue:114`<br>`F/src/components/dialog/PluginConfigDialog.vue:120`<br>`B/app/api/endpoints/plugin.py:975`<br>`F/src/components/cards/PluginCard.vue:161`",
+      "target_implementation": "`PluginFormRenderer.vue`; `plugin-forms.ts`; `plugin_original_config.go`",
+      "difference_or_necessary_adaptation": "Go/JSON 进程边界及现有单用户前端适配；原行为仍需验证。",
+      "actual_evidence": "JSON484.12s + Vue分支2009.81s及f37新Linux/browser163.36s：固定Form13例/Page事件3步、递归/Ace/插槽/中文键/真SQL失败重试/分身冷启；新动态SVG/完整utility/rawCSS/配置init2/真实POST KV/503恢复已实证。详细source→target→SHA见 `docs/validation/plugin-render29-30-parity-20261027.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "30",
+      "index": "30 · 3.6 详情页：数据先变成组件树，按钮再调用插件接口",
+      "fixed_source_location_and_behavior": "`B/app/api/endpoints/plugin.py:680`<br>`F/src/components/dialog/PluginDataDialog.vue:79`<br>`F/src/components/render/PageRender.vue:35`",
+      "target_implementation": "`PluginDataDialog.vue`; `plugin_original_view_adapter.go`",
+      "difference_or_necessary_adaptation": "沿用同系列 Vuetify 动态树；按钮按原版 GET query/其他方法 POST body，来源前缀绑定当前分身。进度弹窗对齐固定 ProgressDialog；按项目错误可见要求增加错误提示。",
+      "actual_evidence": "JSON484.12s + Vue分支2009.81s及f37新Linux/browser163.36s：固定Form13例/Page事件3步、递归/Ace/插槽/中文键/真SQL失败重试/分身冷启；新动态SVG/完整utility/rawCSS/配置init2/真实POST KV/503恢复已实证。详细source→target→SHA见 `docs/validation/plugin-render29-30-parity-20261027.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "31",
+      "index": "31 · 3.7 Vue federation：宿主从插件目录装入已构建的前端模块",
+      "fixed_source_location_and_behavior": "`B/app/core/plugin.py:1051`<br>`B/app/api/endpoints/plugin.py:764`<br>`F/src/utils/federationLoader.ts:45`<br>`F/src/components/dialog/PluginConfigDialog.vue:188`<br>`F/src/pages/plugin-app.vue:14`",
+      "target_implementation": "`plugin_original_frontend_http.go`; `plugin-federation.ts`",
+      "difference_or_necessary_adaptation": "Go/JSON 进程边界及现有单用户前端适配；原行为仍需验证。",
+      "actual_evidence": "固定发现/重试/共享依赖/Config/Page/AppPage候选与静态边界核实；实际Vue2009.81s、源/分身native sidebar、API35第三Page回退和r3取消恢复，前端派生双ticker实证补齐。完整映射及不同构建证据见 `docs/validation/plugin-ui31-33-r3-20261027.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "32",
+      "index": "32 · 3.8 首页仪表板：发现可选组件与选择展示是两次独立动作",
+      "fixed_source_location_and_behavior": "`B/app/core/plugin.py:1191`<br>`F/src/pages/dashboard.vue:662`<br>`F/src/pages/dashboard.vue:733`<br>`F/src/components/misc/DashboardElement.vue:207`<br>`F/src/components/render/DashboardRender.vue:11`",
+      "target_implementation": "`plugin_original_dashboard_meta.go`; `PluginDashboard.vue`",
+      "difference_or_necessary_adaptation": "Go/JSON 进程边界及现有单用户前端适配；原行为仍需验证。",
+      "actual_evidence": "固定元信息/调用参数/三项tuple及默认值回放；真实Linux1894.49s+r3浏览器，平板w4h25/移动w1h28/desktopw8h22独立保存读回，五偏好冷恢复/新PID，真实SQL ABORT失败local-first→显示错误→刷新server覆盖→移除故障后保存成功；旧drag/resize和15次轮询弹窗保持补证。source/target/SHA见 `docs/validation/plugin-ui31-33-r3-20261027.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "33",
+      "index": "33 · 3.9 侧栏导航和 App 快捷访问：两个不同的数据来源",
+      "fixed_source_location_and_behavior": "`B/app/core/plugin.py:1133`<br>`F/src/stores/pluginSidebarNav.ts:22`<br>`F/src/utils/pluginSidebarNav.ts:15`<br>`F/src/layouts/components/DefaultLayout.vue:233`<br>`F/src/layouts/components/QuickAccess.vue:159`<br>`F/src/composables/useRecentPlugins.ts:58`<br>`F/src/composables/usePWA.ts:62`",
+      "target_implementation": "`plugin_navigation.go`; `PluginQuickAccess.vue`; `App.vue`",
+      "difference_or_necessary_adaptation": "Go/JSON 进程边界及现有单用户前端适配；原行为仍需验证。",
+      "actual_evidence": "真实native侧栏source/clone四链接→AppPage身份、Chrome触屏模拟四实例独立PID、最近3项/cold、真实图标取色、pull开/swipe关/短拉/弹窗防叠加/更多Apps入口，均核对固定源码；没有物理手机证据。详见 `docs/validation/plugin-ui31-33-r3-20261027.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "34",
+      "index": "34 · 3.10 插件日志：读文件、SSE 推送、浏览器过滤和下载各做什么",
+      "fixed_source_location_and_behavior": "`B/app/log.py:372`<br>`B/app/log.py:494`<br>`F/src/components/dialog/PluginLogDialog.vue:38`<br>`F/src/views/system/LoggingView.vue:398`<br>`F/src/views/system/LoggingView.vue:537`<br>`B/app/api/endpoints/system.py:953`<br>`B/app/api/endpoints/system.py:398`<br>`B/app/api/endpoints/system.py:360`",
+      "target_implementation": "`plugin_log_projection.go`; `plugin_log_rotation.go`; `plugin_original_logs.go`; `PluginLogDialog.vue`; `plugin-logs.ts`",
+      "difference_or_necessary_adaptation": "复用Go唯一writer/队列/脱敏，独立每实例5MiB/10备份，环境整数/零负语义按源；native有界SSE代替源0.5s轮询，ID/重连/gap明示。Go可信同步ctx代替Python栈，typed字符串/格式/UTC扩展ZIP时间差异明确。",
+      "actual_evidence": "固定formatter/parser/物理逆序/ZIP/CPython轮转/Pydantic实际回放；真实Linux独立文件轮转/ZIP内容元数据/失败/冷启，浏览器382.37s验证续行、SSE、筛选、暂停补读、text新窗口、ZIP点击、分身与冷重连。22个实际允许SDK方法可达日志逐一核对，source/clone/native匿名ctx专项/race通过；详见 `docs/validation/plugin-logs34-parity-20261027.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "35",
+      "index": "35 · 3.11 自定义 API 怎样把浏览器请求送到插件方法",
+      "fixed_source_location_and_behavior": "`B/app/core/security.py:254`<br>`B/app/core/plugin.py:873`<br>`B/app/api/endpoints/plugin.py:130`<br>`B/app/api/endpoints/plugin.py:183`<br>`B/app/api/endpoints/plugin.py:253`<br>`B/app/api/endpoints/plugin.py:764`",
+      "target_implementation": "`plugin_original_api_methods.go`; `plugin_custom_api.go`; `plugin_original_static_http.go`; `plugins/artifacts/package_resource.go`; `plugin-remote-api.ts`",
+      "difference_or_necessary_adaptation": "Go SDK声明/原始体/二进制IPC；单用户Cookie适配原JWT；严格同源凭据与不可变代码边界已记录。串行RPC取消后按既有预算排空，不重启实例；并发单调用取消保持。",
+      "actual_evidence": "固定注册9例/静态8例、真实Linux及Vue/API旧证据保留；f37完整Axios callable/config/global/absolute/baseURL/peer/host/binary/raw/file/cold，21cb前端派生与真实取消失败保留；r3最终1479.27s真实Linux+Chrome导航取消2694.78 net::ERR_ABORTED后back恢复，同PID2528604/init1/config、卸载API/文件404通过。新增原静态别名6 filename ASGI/真实platform7 Linux9.38s：Latin1 rawE9保留、中文/emoji原500；Go pinned ABI无Disposition保持200，契约分开。补证docs/validation/plugin-api35-static-filename-20261027/result.json；完整source→target→版本/SHA/原证据见 `docs/validation/plugin-api35-r3-20261027/result.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "36",
+      "index": "36 · 4.1 广播事件：某件事已经发生，请感兴趣的插件各自处理",
+      "fixed_source_location_and_behavior": "`B/app/chain/download.py:1020`<br>`B/app/core/event.py:176`<br>`B/app/core/event.py:433`<br>`B/app/core/event.py:753` `B/app/api/endpoints/subscribe.py:231`<br>`B/app/api/endpoints/subscribe.py:855`<br>`B/app/schemas/event.py:620`<br>`B/app/db/models/subscribe.py:11`",
+      "target_implementation": "`plugin_original_event_queue.go`; `plugin_original_event_registry.go`; `plugin_standard_business_events.go` `plugin_standard_subscription_events.go`; `subscription_runtime.go`; `subscription_quality_source.go`",
+      "difference_or_necessary_adaptation": "普通广播/同步可变Chain的注册、顺序、异常后mutation、启停/重载类身份、来源/分身隔离及宿主输入/输出/副作用已按固定源实现。工作流/AI排除；缺少独立业务宿主的生产方保留源码适用性记录，不伪造执行。必要Go DTO/UUID/持久恢复适配见对应报告。",
+      "actual_evidence": "44份固定源SHA/92调用/10普通消费者逐条复核，适用宿主的源码→目标→Linux/浏览器证据见 `testdata/plugin-module-no-official-auth-20261026/events36-37-scope-audit.json` 与 `validation/plugin-events-final-20261028.json`。最终SDK核心回归12.852s；目录/metadata批次与普通删除事件由main36–47实机增量闭合，全部旧初红保留。仅范围内事件平台与既有宿主认领通过，未新建独立业务宿主。",
+      "status": "验收通过"
+    },
+    {
+      "id": "37",
+      "index": "37 · 4.2 同步 Chain 事件：业务先问一圈，再使用被修改的输入",
+      "fixed_source_location_and_behavior": "`B/app/core/event.py:375`<br>`B/app/chain/download.py:824`<br>`B/app/chain/download.py:1186`",
+      "target_implementation": "`plugin_original_chain_event.go`; `plugin_original_mutable_event.go`  `plugin_standard_subscription_events.go`; `subscription_quality_completion_run.go`",
+      "difference_or_necessary_adaptation": "普通广播/同步可变Chain的注册、顺序、异常后mutation、启停/重载类身份、来源/分身隔离及宿主输入/输出/副作用已按固定源实现。工作流/AI排除；缺少独立业务宿主的生产方保留源码适用性记录，不伪造执行。必要Go DTO/UUID/持久恢复适配见对应报告。",
+      "actual_evidence": "44份固定源SHA/92调用/10普通消费者逐条复核，适用宿主的源码→目标→Linux/浏览器证据见 `testdata/plugin-module-no-official-auth-20261026/events36-37-scope-audit.json` 与 `validation/plugin-events-final-20261028.json`。最终SDK核心回归12.852s；目录/metadata批次与普通删除事件由main36–47实机增量闭合，全部旧初红保留。仅范围内事件平台与既有宿主认领通过，未新建独立业务宿主。",
+      "status": "验收通过"
+    },
+    {
+      "id": "38",
+      "index": "38 · 4.3 插件定时服务：把一个真实函数交给系统时钟",
+      "fixed_source_location_and_behavior": "`B/app/core/plugin.py:905`<br>`B/app/scheduler.py:1338`<br>`B/app/scheduler.py:975`",
+      "target_implementation": "`plugin_original_services.go`; `plugin_services.go`; `plugins/schedule`",
+      "difference_or_necessary_adaptation": "Go普通触发器规格、类型化进程参数/真实异步RPC适配；保留同逻辑ID重注册旧结果影响新任务的源缺陷。日历/interval/date/coalesce/misfire/max_instances/jitter公式及进度TLRU已核实；Go随机流、时间范围及既有中文语言适配见报告。",
+      "actual_evidence": "实际APScheduler/ProgressHelper/MemoryTLRU固定源码回放；真实Linux最终79d52d门4.22s验证clock max1/2、sync/async、取消旧SDK、副作用/clone/cold/移除；同步浏览器1105.21s验证运行首位/nullnext/非阻塞提交/重复点击仅一次实际执行/失败进度与源UI等待/分身/重启。24h仅受控时钟+真实SDK验证并明确计证。完整映射/原始日志/SHA见 `testdata/plugin-module-no-official-auth-20261026/services38-result.json` 与归档manifest。",
+      "status": "验收通过"
+    },
+    {
+      "id": "39",
+      "index": "39 · 4.4 手动运行服务：立即走同一个运行入口，不另造一套任务",
+      "fixed_source_location_and_behavior": "`B/app/api/endpoints/system.py:1343`<br>`B/app/scheduler.py:774`<br>`B/app/scheduler.py:808`",
+      "target_implementation": "`plugin_original_service_progress.go`; `PluginServices.vue`",
+      "difference_or_necessary_adaptation": "Go普通触发器规格、类型化进程参数/真实异步RPC适配；保留同逻辑ID重注册旧结果影响新任务的源缺陷。日历/interval/date/coalesce/misfire/max_instances/jitter公式及进度TLRU已核实；Go随机流、时间范围及既有中文语言适配见报告。",
+      "actual_evidence": "实际APScheduler/ProgressHelper/MemoryTLRU固定源码回放；真实Linux最终79d52d门4.22s验证clock max1/2、sync/async、取消旧SDK、副作用/clone/cold/移除；同步浏览器1105.21s验证运行首位/nullnext/非阻塞提交/重复点击仅一次实际执行/失败进度与源UI等待/分身/重启。24h仅受控时钟+真实SDK验证并明确计证。完整映射/原始日志/SHA见 `testdata/plugin-module-no-official-auth-20261026/services38-result.json` 与归档manifest。",
+      "status": "验收通过"
+    },
+    {
+      "id": "40",
+      "index": "40 · 4.5 插件命令：把“/daily”转换成插件自己的业务事件",
+      "fixed_source_location_and_behavior": "`B/app/core/plugin.py:844`<br>`B/app/command.py:156`<br>`B/app/command.py:269`<br>`B/app/chain/message.py:349`",
+      "target_implementation": "`plugin_original_commands.go`; `plugin_original_command_ingress.go`",
+      "difference_or_necessary_adaptation": "普通命令保留；外部命令平台 provider 是否可用需单独证明。",
+      "actual_evidence": "固定命令/输入源码完整scope审计、AST/SDK/race与真实79d门4.22s（provider503→204/失败后恢复/clone/到期/cold），f37浏览器772.59s普通消息入口/trim/Enter/失败保留重试→实际SDK/输入消费与cancel/历史/冷恢复通过。typed Go进程与通用key必要适配已记录；不声明新Telegram或媒体preset业务。详细映射/原始证据/SHA见 `testdata/plugin-module-no-official-auth-20261026/services40-result.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "41",
+      "index": "41 · 4.6 插件输入交互：把用户的下一条回复交回提问的插件",
+      "fixed_source_location_and_behavior": "`B/app/helper/interaction.py:498`<br>`B/app/helper/interaction.py:589`<br>`B/app/chain/message.py:482`",
+      "target_implementation": "`plugin_original_input.go`; `plugininput`",
+      "difference_or_necessary_adaptation": "用户输入回调、取消、过期与分身归属需验证。",
+      "actual_evidence": "固定命令/输入源码完整scope审计、AST/SDK/race与真实79d门4.22s（provider503→204/失败后恢复/clone/到期/cold），f37浏览器772.59s普通消息入口/trim/Enter/失败保留重试→实际SDK/输入消费与cancel/历史/冷恢复通过。typed Go进程与通用key必要适配已记录；不声明新Telegram或媒体preset业务。详细映射/原始证据/SHA见 `testdata/plugin-module-no-official-auth-20261026/services40-result.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "42",
+      "index": "42 · 4.7 通知：构造消息之后，还要经过路由、时段和渠道发送",
+      "fixed_source_location_and_behavior": "`B/app/chain/__init__.py:1631`<br>`B/app/chain/__init__.py:63`<br>`B/app/helper/message.py:710`",
+      "target_implementation": "`plugin_original_notice.go`; `plugin_notice_delivery.go`; `plugin_original_web_history.go`; `ShortcutMessageDialog.vue`",
+      "difference_or_necessary_adaptation": "复用现有通知路由、时段、加密存量与真实Go模块；source user队列缺陷及Notification忽略note均保留，不新增渠道业务。",
+      "actual_evidence": "固定来源/目标/回放/实际SDK与HTTP发送/冷恢复/匿名拒绝，加f37浏览器772.59s：真实命令/input回调、发送失败保留恢复、23条真实SDK通知分页20→30→empty、image/Markdown/link、冷Cookie/ID/新SDK无重投；证据分型/SHA及限制见 `docs/validation/plugin-web-message42-parity-20261027.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "43",
+      "index": "43 · 4.8 模块覆盖：宿主准备做某件事时，优先询问插件的实现",
+      "fixed_source_location_and_behavior": "`B/app/core/plugin.py:933`；`B/app/chain/__init__.py:224,298,470`；231处直接调用和MessageQueue间接post_message逐处见封存审计",
+      "target_implementation": "`plugin_original_modules.go`及现有catalog/resources/download/transfer/storage/notice/command/category桥；完整目标逐方法列于审计",
+      "difference_or_necessary_adaptation": "保留197方法/231调用索引；68个既有宿主方法与间接post_message实际接入；113个无对应业务宿主、源守卫拒绝或system-only方法逐处解释边界，未伪造接口；16个AI专用调用方法按用户要求排除（32处调用）。Go制品/数据类型、已有本地文件操作与单用户适配均记录。",
+      "actual_evidence": "固定529文件重新核对；源码签名/kwargs/反向调用/守卫、目标与实际证据逐处见 `testdata/standard-module-host/modules56-final-host-audit.json.gz`。全部transfer/storage/catalog等增量与Linux/IAB绑定在 `validation/plugin-module-host43-final-20261029.json`；413平台根回归、29目录影视根和192 SDK根、556前端，失败与修复保留。最后目录方式Linux1.64s/IAB93 242.55s含保存、错误、重启及分身隔离。",
+      "status": "验收通过"
+    },
+    {
+      "id": "44",
+      "index": "44 · 4.9 工作流动作：工作流节点直接调用一个插件函数",
+      "fixed_source_location_and_behavior": "`B/app/core/plugin.py:958`<br>`B/app/workflow/actions/invoke_plugin.py:48`<br>`B/app/schemas/workflow.py:74`",
+      "target_implementation": "`—`",
+      "difference_or_necessary_adaptation": "专用接口、动作桥、Agent 工具缓存和测试已从当前迁移代码移除；普通事件/命令/调度保留。",
+      "actual_evidence": "不计验收总数；范围门检查不存在专属入口与运行依赖。",
+      "status": "按用户要求排除"
+    },
+    {
+      "id": "45",
+      "index": "45 · 4.10 Agent 自定义工具：插件把可实例化的工具类交给 AI",
+      "fixed_source_location_and_behavior": "`B/app/core/plugin.py:990`<br>`B/app/agent/tools/factory.py:271`<br>`B/app/agent/tools/manager.py:270`<br>`B/app/agent/tools/base.py:351`",
+      "target_implementation": "`—`",
+      "difference_or_necessary_adaptation": "专用接口、动作桥、Agent 工具缓存和测试已从当前迁移代码移除；普通事件/命令/调度保留。",
+      "actual_evidence": "不计验收总数；范围门检查不存在专属入口与运行依赖。",
+      "status": "按用户要求排除"
+    },
+    {
+      "id": "46",
+      "index": "46 · 4.11 内建 AI 插件管理工具：AI 操作插件平台，不是插件贡献的能力",
+      "fixed_source_location_and_behavior": "`B/app/agent/tools/factory.py:166`<br>`B/app/agent/tools/factory.py:260`<br>`B/app/agent/tools/impl/update_plugin_config.py:64`<br>`B/app/agent/tools/impl/_plugin_tool_utils.py:68`",
+      "target_implementation": "`—`",
+      "difference_or_necessary_adaptation": "专用接口、动作桥、Agent 工具缓存和测试已从当前迁移代码移除；普通事件/命令/调度保留。",
+      "actual_evidence": "不计验收总数；范围门检查不存在专属入口与运行依赖。",
+      "status": "按用户要求排除"
+    },
+    {
+      "id": "47",
+      "index": "47 · 4.12 认证 provider：插件验证外部身份，核心兑换系统登录",
+      "fixed_source_location_and_behavior": "`B/app/core/plugin.py:1098`<br>`B/app/core/auth.py:32`<br>`B/app/api/endpoints/auth.py:54`<br>`F/src/pages/login.vue:206`<br>`B/app/api/endpoints/plugin.py:253`",
+      "target_implementation": "`plugin_original_auth.go`; `plugin_original_auth_ticket.go`; `PluginAuthLogin.vue`",
+      "difference_or_necessary_adaptation": "复用单管理员Cookie与Go可信host ticket替代原多用户身份；provider/一次性票据/匿名组件资源图/浮点120sTTL按源，禁止新增多用户权限系统。测试HMAC身份仅验平台，不冒充第三方真实认证。",
+      "actual_evidence": "固定provider/auth AST回放、11真实SDK/HTTP根、真实121秒过期门122.25s；Linux浏览器403.41s证明匿名组件拒绝/接受→真实Cookie/受保护列表、冷Cookie保持、来源停用仅分身入口、分身独立登录。重放/并发一次/冷票据丢失/资产隔离/卸载CLI实测；详见 `docs/validation/plugin-auth47-parity-20261027.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "48",
+      "index": "48 · 5.1 从安装到升级 实际改变的是哪一层",
+      "fixed_source_location_and_behavior": "综合索引，见差异列",
+      "target_implementation": "`plugin_original_install.go`; `plugin_original_config.go`; `plugin_original_lifecycle.go`",
+      "difference_or_necessary_adaptation": "综合验证索引，沿用 1.1–2.16 的固定源码；无独立原版函数。",
+      "actual_evidence": "同一真实主程序完整生命周期已有基线；main64532ab6新Linux752.75s与IAB47精确补齐来源2.0重置→来源KV/配置2→0、分身1.0两行与PID/init保持，两个实例代码/文件hash保持；冷启动新PID3809911/3809916保持上述状态，实际卸载/目录清理通过。源码/目标/分型和原始证据见 `validation/plugin-composite48-49-evidence-audit-20261027.json`、`testdata/plugin-module-no-official-auth-20261026/platform10-runtime/manifest.json`。",
+      "status": "验收通过"
+    },
+    {
+      "id": "49",
+      "index": "49 · 5.2 最容易混淆的五组操作",
+      "fixed_source_location_and_behavior": "综合索引；固定F `PluginCardListView.vue:560`、B `core/plugin.py:933`、`core/event.py:139`，其余具体源沿用06/08/09/13/29/35/38–42",
+      "target_implementation": "`plugin_organization_order.go`; `plugin_original_registry.go`; `plugin_original_chain_event.go`; `Plugins.vue`；其余沿用相关生命周期/仓库/表单实现",
+      "difference_or_necessary_adaptation": "工作流/AI部分按用户要求排除；普通五组分别核实，不将注册视为执行，不据本行认领43全部模块。",
+      "actual_evidence": "五组已有源码/目标/实机映射见 `validation/plugin-composite48-49-evidence-audit-20261027.json`。新增同main1cbf浏览器680.10s：分身第四→首位真实拖动；来源/分身PID3745993/3747431与init9/4不变；真实Add同event_id中来源默认值→分身观察来源marker，证明显示排序未改变执行顺序；冷启排序保持、事件15/6无重放。原始53份证据/SHA见 `testdata/plugin-module-no-official-auth-20261026/download-context-20261028/runtime/manifest.json`。",
+      "status": "验收通过"
+    }
+  ],
+  "incremental_independent_review": {
+    "path": "testdata/plugin-platform-final-20261104/five-slice-independent-review.json",
+    "sha256": "11acc73d8f927d0246e702a3f3d2f13b910e36fbf1ae65e9b1f29e846080a00d"
+  },
+  "final_current_regression": {
+    "path": "testdata/plugin-platform-final-20261104/current-final-platform/binding.json",
+    "sha256": "5bbaeca5107cd80f5014a1e858cd016ac50cd9db8bb44b30a810a74a2f4b08c7"
+  },
+  "no_matrix_ledger_or_final50_hash_self_reference": true,
+  "delivery": "local codex/plugin-host-resources-20261031, uncommitted/unpushed/unmerged/not deployed to production"
+}

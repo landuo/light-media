@@ -1,0 +1,162 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "requests": "2.34.2",
+  "urllib3": "2.7.0",
+  "cases": [
+    {
+      "name": "ordered-repeated-form",
+      "response": {
+        "status": 200,
+        "body": "owned-response"
+      },
+      "trace": [
+        {
+          "method": "POST",
+          "path": "/form",
+          "body": "second=x+y&choice%5B%5D=1&choice%5B%5D=2&first=%E4%B8%AD%E6%96%87",
+          "headers": {
+            "user-agent": "OwnedPlugin/1",
+            "accept-encoding": "gzip, deflate, br",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "referer": "<owned-origin>/from",
+            "cookie": "owned=initial; other=a=b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "json-default-header",
+      "response": {
+        "status": 200,
+        "body": "owned-response"
+      },
+      "trace": [
+        {
+          "method": "POST",
+          "path": "/json",
+          "body": "{\"z\": 1, \"a\": \"\\u4e2d\"}",
+          "headers": {
+            "user-agent": "python-urllib3/2.7.0",
+            "accept-encoding": "gzip, deflate, br",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "json-explicit-headers",
+      "response": {
+        "status": 200,
+        "body": "owned-response"
+      },
+      "trace": [
+        {
+          "method": "POST",
+          "path": "/json",
+          "body": "{\"z\": 1, \"a\": \"\\u4e2d\"}",
+          "headers": {
+            "user-agent": "python-requests/2.34.2",
+            "accept-encoding": "gzip, deflate, br",
+            "accept": "*/*",
+            "connection": "keep-alive",
+            "content-type": "application/json",
+            "x-owned": "yes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "raw-body-non2xx",
+      "response": {
+        "status": 503,
+        "body": "owned-response"
+      },
+      "trace": [
+        {
+          "method": "POST",
+          "path": "/raw?status=503",
+          "body": "owned=%2B&x=raw",
+          "headers": {
+            "user-agent": "python-urllib3/2.7.0",
+            "accept-encoding": "gzip, deflate, br",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "post-302",
+      "response": {
+        "status": 200,
+        "body": "owned-response"
+      },
+      "trace": [
+        {
+          "method": "POST",
+          "path": "/redirect?status=302",
+          "body": "key=one",
+          "headers": {
+            "user-agent": "python-urllib3/2.7.0",
+            "accept-encoding": "gzip, deflate, br",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "owned=initial"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/final",
+          "body": "",
+          "headers": {
+            "user-agent": "python-urllib3/2.7.0",
+            "accept-encoding": "gzip, deflate, br",
+            "connection": "keep-alive",
+            "cookie": "owned=initial; owned=redirect"
+          }
+        }
+      ]
+    },
+    {
+      "name": "post-307",
+      "response": {
+        "status": 200,
+        "body": "owned-response"
+      },
+      "trace": [
+        {
+          "method": "POST",
+          "path": "/redirect?status=307",
+          "body": "key=one",
+          "headers": {
+            "user-agent": "python-urllib3/2.7.0",
+            "accept-encoding": "gzip, deflate, br",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "owned=initial"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/final",
+          "body": "key=one",
+          "headers": {
+            "user-agent": "python-urllib3/2.7.0",
+            "accept-encoding": "gzip, deflate, br",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "owned=initial; owned=redirect"
+          }
+        }
+      ]
+    }
+  ],
+  "classification": "Fixed source AST + actual paired requests/urllib3 in disposable readonly network-none container; only owned loopback HTTP. No target code or business plugin executes.",
+  "dependency_image": "sha256:33354456e8e19c65193b9ca471e45450a620c541759cc42e76cf00a03b025881",
+  "driver_sha256": "fa28dd691150ff2c58412f2052695ed19f2179b5e145358d5df06491cef3347e",
+  "selected_source_sha256": "eadd593f7910410992a6abcd4fbdd61553b839f3cfbf73e10c938fed10256932",
+  "program_sha256": "b9fcf6c2a17dce63e4ba4d859b8d0597065ffe3413660c7f648f08e88b2e1b09"
+}

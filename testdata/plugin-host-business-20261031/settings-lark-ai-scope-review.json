@@ -1,0 +1,47 @@
+{
+  "classification": "read-only bound installed plugin AST scope disposition; no runtime or old-service writes",
+  "source_file": "testdata/plugins/lark-messager-0.9.1/input/_lark_messager_port/reference/source/__init__.py",
+  "sha256": "d9f6a1078706b03dc97247450a8084a8c67f07dbfccb675235fc0e1b91b18372",
+  "function": "_sync_admin_to_notification_config",
+  "lines": [
+    2557,
+    2626
+  ],
+  "calls": [
+    {
+      "line": 2574,
+      "callee": "self.systemconfig.get",
+      "arguments": [
+        "SystemConfigKey.Notifications"
+      ]
+    },
+    {
+      "line": 2620,
+      "callee": "self.systemconfig.set",
+      "arguments": [
+        "SystemConfigKey.Notifications",
+        "configs"
+      ]
+    },
+    {
+      "line": 2593,
+      "callee": "self.systemconfig.set",
+      "arguments": [
+        "SystemConfigKey.Notifications",
+        "configs"
+      ]
+    }
+  ],
+  "source_purpose": "将解析后的管理员 Open ID 写回 SYSTEMCONFIG.Notifications 中名为配置源\n（self._msg_source，即 \"Lark\"）的通知配置。\n\n关键点：AI 智能助手的渠道管理员判定\n（app/agent/tools/base.py 的 _has_channel_admin_permission）只读取\nSYSTEMCONFIG.Notifications 里 NotificationConf.config[\"FEISHU_ADMINS\"]，\n并按发送者 Open ID 精确比对；它并不会解析邮箱，也不会读取插件\n自身的 plugin.LarkMessager 配置。因此必须把 Open ID 写到\nNotifications 才会生效。\n\n为避免干扰通知子系统，该条配置使用非标准 type（larkmessager）\n且 enabled=False——智能助手读取时不区分 type/enabled，照常命中；\n而通知服务枚举（按 type+enabled 过滤）会忽略它。",
+  "source_effects": {
+    "key": "SystemConfigKey.Notifications",
+    "selection": "first dictionary with name=self._msg_source (Lark)",
+    "payload": "FEISHU_ADMINS comma-sorted IDs, optional FEISHU_OPEN_ID",
+    "new_row_type": "larkmessager",
+    "new_row_enabled": false,
+    "ordinary_notifications": "source doc explicitly says ignored by normal type+enabled enumeration",
+    "consumer": "app/agent/tools/base.py _has_channel_admin_permission"
+  },
+  "disposition": "按用户要求排除：AI渠道管理员权限专用耦合，不新增Notifications/AI兼容SDK；不是普通插件事件/命令/调度",
+  "existing_host_location": "internal/app/notification_channels.go (historical encrypted notification snapshot store); internal/plugins/larkmessager/plugin.go:260 SyncNotificationConfig (historical built-in business code, not invoked or changed by this plugin-platform migration)"
+}

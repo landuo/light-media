@@ -1,0 +1,53 @@
+{
+  "classification": "actual paired wrapper proxy resolution plus actual extracted Playwright Node proxy normalizer; no native browser launched and no old service/config executed",
+  "wrapper_version": "0.5.6",
+  "playwright_version": "1.62.0",
+  "wrapper_module_sha256": "e3d32302b4a4e9ec95131b394c22e9a1b86599a638d068706d6c1f80b69c43b7",
+  "core_bundle_sha256": "3258d1cf334c6afc95f22aa9c292436cb976b391e0437f1359c83b84f0cb9d66",
+  "proxy_resolver_source": "def _resolve_proxy_config(\n    proxy: str | ProxySettings | None,\n    browser_version: str | None = None,\n    license_key: str | None = None,\n    release_channel: str | None = None,\n) -> tuple[dict[str, Any], list[str]]:\n    \"\"\"Resolve proxy into Playwright kwargs and Chrome args.\n\n    Proxies with credentials (SOCKS5 always; HTTP/HTTPS only on binaries that\n    support inline proxy auth) are passed via Chrome's --proxy-server flag with\n    inline credentials, bypassing Playwright's CDP auth interceptor which breaks\n    on some proxies and Google domains (#182). HTTP/HTTPS creds on older binaries\n    fall back to Playwright's proxy dict.\n\n    Returns:\n        (proxy_kwargs, extra_chrome_args) \u2014 one or both will be empty.\n    \"\"\"\n    if proxy is None:\n        return {}, []\n\n    if _is_socks_proxy(proxy):\n        # SOCKS5: bypass Playwright, pass directly to Chrome via --proxy-server.\n        # Chrome handles SOCKS5 auth natively from the URL.\n        if isinstance(proxy, dict):\n            url = _reconstruct_socks_url(proxy)\n            extra_args = [f\"--proxy-server={url}\"]\n            bypass = proxy.get(\"bypass\")\n            if bypass:\n                extra_args.append(f\"--proxy-bypass-list={bypass}\")\n            return {}, extra_args\n        # String URL \u2014 re-encode creds to work around Chromium parser truncating\n        # passwords at '=' and other special chars (#157).\n        return {}, [f\"--proxy-server={_normalize_socks_string_url(proxy)}\"]\n\n    # HTTP/HTTPS with credentials, only on binaries that ship inline proxy auth:\n    # use Chrome's native proxy authentication path instead of Playwright's CDP\n    # auth interceptor (#182). Older binaries (free macOS/linux-arm64) can't parse\n    # inline credentials, so they fall through to the Playwright proxy dict below.\n    if _has_credentials(proxy) and binary_supports_http_proxy_inline_auth(license_key, browser_version, release_channel):\n        if isinstance(proxy, dict):\n            url = _reconstruct_http_url(proxy)\n            extra_args = [f\"--proxy-server={url}\"]\n            bypass = proxy.get(\"bypass\")\n            if bypass:\n                extra_args.append(f\"--proxy-bypass-list={bypass}\")\n            return {}, extra_args\n        return {}, [f\"--proxy-server={_normalize_http_string_url(proxy)}\"]\n\n    # HTTP/HTTPS without credentials: use Playwright's proxy dict\n    if isinstance(proxy, dict):\n        return {\"proxy\": proxy}, []\n    return {\"proxy\": _parse_proxy_url(proxy)}, []\n",
+  "http_reconstructor_source": "def _reconstruct_http_url(proxy: ProxySettings) -> str:\n    \"\"\"Reconstruct an HTTP(S) proxy URL with inline credentials from a Playwright proxy dict.\"\"\"\n    server = proxy.get(\"server\", \"\")\n    username = proxy.get(\"username\", \"\")\n    password = proxy.get(\"password\", \"\")\n    if not username:\n        return server\n    parsed = urlparse(_ensure_proxy_scheme(server))\n    enc_user = quote(username, safe=\"\")\n    enc_pass = quote(password, safe=\"\") if password else None\n    return _assemble_proxy_url(\n        parsed.scheme, parsed.hostname or \"\", parsed.port,\n        enc_user, enc_pass, parsed.path,\n    )\n",
+  "playwright_native_proxy_args_source": "\n        const commandLine = this._defaultArgs(options, socketName).join(\" \");\n        debug3(\"pw:android\")(\"Starting\", pkg, commandLine);\n        await progress2.race(this._backend.runCommand(`shell:echo \"${Buffer.from(commandLine).toString(\"base64\")}\" | base64 -d > /data/local/tmp/chrome-command-line`));\n        await progress2.race(this._backend.runCommand(`shell:am start -a android.intent.action.VIEW -d about:blank ${pkg}`));\n        const browserContext = await this._connectToBrowser(progress2, socketName, options);\n        try {\n          await progress2.race(this._backend.runCommand(`shell:rm /data/local/tmp/chrome-command-line`));\n          return browserContext;\n        } catch (error) {\n          await browserContext.close(progress2, { reason: \"Failed to launch\" }).catch(() => {\n          });\n          throw error;\n        }\n      }\n      _defaultArgs(options, socketName) {\n        const chromeArguments = [\n          \"_\",\n          \"--disable-fre\",\n          \"--no-default-browser-check\",\n          `--remote-debugging-socket-name=${socketName}`,\n          ...chromiumSwitches({ android: true }),\n          ...this._innerDefaultArgs(options)\n        ];\n        return chromeArguments;\n      }\n      _innerDefaultArgs(options) {\n        const { args = [], proxy } = options;\n        const chromeArguments = [];\n        if (proxy) {\n          chromeArguments.push(`--proxy-server=${proxy.server}`);\n          const proxyBypassRules = [];\n          if (proxy.bypass)\n            proxyBypassRules.push(...proxy.bypass.split(\",\").map((t) => t.trim()).map((t) => t.startsWith(\".\") ? \"*\" + t : t));\n          if (shouldProxyLoopback(proxy.bypass))\n            proxyBypassRules.push(\"<-loopback>\");\n          if (proxyBypassRules.length > 0)\n            chromeArguments.push(`--proxy-bypass-list=${proxyBypassRules.join(\";\")}`);\n        }\n        chromeArguments.push(...args);\n        return chromeArguments;\n      }\n      async connectToWebView(progress2, socketName) {\n        const webView = this._webViews.get(socketName);\n        if (!webView)\n          throw new Error(\"WebView has been closed\");\n        return await this._con",
+  "playwright_normalizer_source": "function normalizeProxySettings(proxy) {\n  let { server, bypass } = proxy;\n  let url3;\n  try {\n    url3 = new URL(server);\n    if (!url3.host || !url3.protocol)\n      url3 = new URL(\"http://\" + server);\n  } catch (e) {\n    url3 = new URL(\"http://\" + server);\n  }\n  if (url3.protocol === \"socks4:\" && (proxy.username || proxy.password))\n    throw new Error(`Socks4 proxy protocol does not support authentication`);\n  if (url3.protocol === \"socks5:\" && (proxy.username || proxy.password))\n    throw new Error(`Browser does not support socks5 proxy authentication`);\n  server = url3.protocol + \"//\" + url3.host;\n  if (bypass)\n    bypass = bypass.split(\",\").map((t) => t.trim()).join(\",\");\n  return { ...proxy, server, bypass };\n}",
+  "cases": [
+    {
+      "case": "explicit-encoded-auth",
+      "proxy_host": "http://owned%40name:synthetic%3Avalue@Proxy.Example:3128",
+      "source_proxy_server": {
+        "server": "http://proxy.example:3128",
+        "username": "owned%40name",
+        "password": "synthetic%3Avalue"
+      },
+      "actual_paired_launch_proxy": [
+        {},
+        [
+          "--proxy-server=http://owned%2540name:synthetic%253Avalue@proxy.example:3128"
+        ]
+      ],
+      "actual_playwright_normalizer": null
+    },
+    {
+      "case": "explicit-ipv6",
+      "proxy_host": "http://[::1]:3128",
+      "source_proxy_server": {
+        "server": "http://::1:3128"
+      },
+      "actual_paired_launch_proxy": [
+        {
+          "proxy": {
+            "server": "http://::1:3128"
+          }
+        },
+        []
+      ],
+      "actual_playwright_normalizer": {
+        "result": {
+          "server": "http://http"
+        }
+      }
+    }
+  ],
+  "dependency_image": "sha256:33354456e8e19c65193b9ca471e45450a620c541759cc42e76cf00a03b025881",
+  "source_getter_oracle_sha256": "4910a433596bf1b0343e62213ab08db7758a3687686ef6b9f6dfec0d614c5ffd",
+  "driver_sha256": "a1e8f407d54a689bdc19914e9ae7f05525665120a86128bac974bbb44d7e08fb",
+  "program_sha256": "ca902649e78acaf3d47b4ce42e6331205572422f7fd89034a3dc497102bad887"
+}

@@ -1,0 +1,41 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/core/config.py",
+  "source_sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+  "positions": {
+    "META_CACHE_EXPIRE": 182,
+    "RECOGNIZE_SOURCE": 207,
+    "TMDB_LOCALE": 219,
+    "BIG_MEMORY_MODE": 487
+  },
+  "kind": "fixed source field AST, direct configured values; environment validation separately tested; no production or secrets",
+  "cases": [
+    {
+      "name": "fixed_defaults",
+      "values": {
+        "BIG_MEMORY_MODE": false,
+        "META_CACHE_EXPIRE": 0,
+        "TMDB_LOCALE": "zh",
+        "RECOGNIZE_SOURCE": "themoviedb"
+      }
+    },
+    {
+      "name": "configured_raw",
+      "values": {
+        "BIG_MEMORY_MODE": true,
+        "META_CACHE_EXPIRE": 2,
+        "TMDB_LOCALE": "en-US",
+        "RECOGNIZE_SOURCE": "douban"
+      }
+    },
+    {
+      "name": "empty_and_large_raw",
+      "values": {
+        "BIG_MEMORY_MODE": false,
+        "META_CACHE_EXPIRE": 99999999999999999999999999999,
+        "TMDB_LOCALE": "",
+        "RECOGNIZE_SOURCE": " owned-unrecognized "
+      }
+    }
+  ]
+}

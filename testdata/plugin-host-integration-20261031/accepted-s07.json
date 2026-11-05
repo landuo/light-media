@@ -1,0 +1,54 @@
+{
+  "accepted": [
+    "S07"
+  ],
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/core/config.py:Settings.generic_type_validator/update_setting",
+    "app/db/systemconfig_oper.py:27,92",
+    "installed RemoveLink RMT_MEDIAEXT reads; host-residual-review source SHA"
+  ],
+  "target": [
+    "internal/app/plugin_original_host_settings.go",
+    "internal/plugins/settings_host.go",
+    "internal/fileextensions/settings.go",
+    "internal/fileextensions/defaults.json",
+    "internal/app/runtime.go:New startup field projection"
+  ],
+  "target_sha256": {
+    "internal/app/plugin_original_host_settings.go": "4ec65e11af79caf51ec70509705c3970acc555070c315e3f3e429dcef382cb0c",
+    "internal/plugins/settings_host.go": "b9b500ac565ef98f98d8e32b5c2285cdc7fa869a5be6df8be2199846bcc78137",
+    "internal/fileextensions/settings.go": "72048424d76a07894d9028dc907cc9dab7ee6b31abba30cfc6d9082f2dd52e47",
+    "internal/fileextensions/defaults.json": "0bf6a31e280fb537a7023a91f77e7ded6114bbf623a48abbf04bc2d1fa54586c"
+  },
+  "evidence": {
+    "testdata/plugin-host-business-20261031/host-residual-review/rmt-source-oracle.json": "777f3e1edc4babd124b7a1c2d56f0d22a14882947d182b119a794d1b987271f6",
+    "testdata/plugin-host-business-20261031/host-residual-review/rmt_source_oracle.py": "9f518d700a984ec056f3e46cb1d80b973974cb6fd2ed47bb9ca867b63c16e035",
+    "testdata/plugin-host-business-20261031/ocr-source/process-linux-final-r2/result.json": "e3b0788eed038573a464a7c8969e7f064802cbd7f49d4304a832e9d896985eae",
+    "testdata/plugin-host-business-20261031/ocr-source/process-linux-final-r2/run_ocr_process.py": "b8454d6faabc85de1b9d1f369cc1c5725a0e0843f120520b8640e7c84d3e7389",
+    "testdata/plugin-host-business-20261031/ocr-source/process-linux-final-r2/rmt-source-oracle.json": "777f3e1edc4babd124b7a1c2d56f0d22a14882947d182b119a794d1b987271f6",
+    "testdata/plugin-host-business-20261031/ocr-source/verification/rmt-startup-snapshot-race.log.gz": "71edfbda2bba5956996d27d3c337287ea7f40e94d8b711b17587f9e5e5197aea",
+    "testdata/plugin-host-network-20261031/build-server-r3/build.json": "10425d86139626f19e30b512e91ad02ea016030fdce74d4a5f6d57b2c1ada185",
+    "testdata/plugin-host-network-20261031/build-server-r3/inputs.json": "6228b5494bc9b4d080d1bcebb66e29fb347440a8e55d82b9e8dcf441126c8478",
+    "testdata/plugin-host-business-20261031/ocr-source/build-worker-linux-final/build.json": "f97428ac538d24c75a59613d6dfb635f58cc17af8cade65c6b46fa783b0ee31e",
+    "testdata/plugin-host-business-20261031/ocr-source/build-worker-linux-final-v2/build.json": "4c4f022b79b791c88a01f37d93b803a1e82bac7fb27be9eda729b6b2d19a1f31",
+    "testdata/plugin-host-integration-20261031/rmt-independent-race.jsonl": "205296a4420aeb6a28d7b8c05ee1b299274cbb9e3692b34010c30ba2b29c95a7",
+    "testdata/plugin-host-integration-20261031/ocr-browser/result.json": "2f13de791a440b956bf95cddfd1772988fc8f5c9cfab83b100dfa040040cef9c",
+    "testdata/plugin-host-integration-20261031/ocr-browser/rmt-mixed-types.png": "21d312f647c9edd910321ac27e73762c65792355449f5e6e3668d4d78fd5d34a",
+    "testdata/plugin-host-integration-20261031/ocr-browser/source-after-reload.png": "b3db61246bda02e22c6cb4ea0860d782e9495bf16180d80f61e50674ca9473cd",
+    "testdata/plugin-host-integration-20261031/accepted-s04-s06-s10.json": "71082f5715d71d9530474709f48d0bb0d4cf4de866956a667c434bd1fd76b926"
+  },
+  "verification": {
+    "source": "15 fixed converter cases and real BaseSettings startup/environment-change/live-update/cold sequence",
+    "independent_reviewer": "/root, separate from /root/host_site_subscription_resources implementation",
+    "independent_actual_sdk": "18 cases, race28.858s, no failure; App+installed SDK+actual settings HTTP API+clone+cold",
+    "linux": "5770c6a3c01f77bf2929937c45d82713cf8f7149b78e2fc427d9bedce12e46a0; stable4057input; startup .startup-env -> HTTP [.runtime,1,null,true] -> cold .late-env; read-only setter rejected; real update/clone/uninstall",
+    "browser": "actual RMT [1,null,true] displayed and preserved through refresh; source/clone distinct config. Earlier binary4e02a46f bound separately, not latest Linux binary"
+  },
+  "necessary_adaptations": [
+    "Finite readonly SDK setting; actual existing host settings API remains writer. No arbitrary environment exposure or config-file write.",
+    "Environment startup projected into independent native in-memory configuration once; later live API overrides until next startup. Existing string-only file classifier unchanged.",
+    "SystemConfig ordinary falsey hot/cold behavior acceptance retained from earlier S07 evidence."
+  ],
+  "delivery": "local working branch only; final integration50 pending"
+}

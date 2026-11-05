@@ -1,0 +1,2823 @@
+{
+  "cases": [
+    {
+      "case": "bangumi_id",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "bangumiid": 902
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902",
+          "status": 200,
+          "body": {
+            "id": 902,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2024-02-03",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters",
+          "status": 200,
+          "body": [
+            {
+              "id": 80,
+              "name": "Owned Character",
+              "actors": [
+                {
+                  "id": 90,
+                  "name": "First Actor"
+                },
+                {
+                  "id": 91,
+                  "name": "Ignored Actor"
+                }
+              ]
+            },
+            {
+              "id": 81,
+              "name": "No Cast",
+              "actors": []
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "bangumi",
+        "media_id": "902",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2024",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": 902,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": "Owned original",
+        "release_date": "2024-02-03",
+        "backdrop_path": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.25,
+        "overview": "owned summary",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "actors": [
+          {
+            "id": 90,
+            "name": "First Actor",
+            "career": [
+              "Owned Character"
+            ]
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": null,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "http://bgm.tv/subject/902",
+        "title_year": "Owned (2024)",
+        "mediaid_prefix": "bangumi"
+      },
+      "error": null
+    },
+    {
+      "case": "bangumi_meta_season_override",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "bangumiid": 902,
+        "meta": {
+          "name": "Owned",
+          "begin_season": 5
+        }
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902",
+          "status": 200,
+          "body": {
+            "id": 902,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2024-02-03",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters",
+          "status": 200,
+          "body": [
+            {
+              "id": 80,
+              "name": "Owned Character",
+              "actors": [
+                {
+                  "id": 90,
+                  "name": "First Actor"
+                },
+                {
+                  "id": 91,
+                  "name": "Ignored Actor"
+                }
+              ]
+            },
+            {
+              "id": 81,
+              "name": "No Cast",
+              "actors": []
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "bangumi",
+        "media_id": "902",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2024",
+        "season": 5,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": 902,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": "Owned original",
+        "release_date": "2024-02-03",
+        "backdrop_path": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.25,
+        "overview": "owned summary",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "actors": [
+          {
+            "id": 90,
+            "name": "First Actor",
+            "career": [
+              "Owned Character"
+            ]
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": null,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "http://bgm.tv/subject/902",
+        "title_year": "Owned (2024)",
+        "mediaid_prefix": "bangumi"
+      },
+      "error": null
+    },
+    {
+      "case": "bangumi_search_first_match",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "meta": {
+          "name": "Owned",
+          "year": "2024",
+          "type": "电视剧"
+        }
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned",
+          "status": 200,
+          "body": {
+            "list": [
+              {
+                "id": 901
+              },
+              {
+                "id": 902
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/901",
+          "status": 200,
+          "body": {
+            "id": 901,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2023-01-01",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902",
+          "status": 200,
+          "body": {
+            "id": 902,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2024-02-03",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters",
+          "status": 200,
+          "body": [
+            {
+              "id": 80,
+              "name": "Owned Character",
+              "actors": [
+                {
+                  "id": 90,
+                  "name": "First Actor"
+                },
+                {
+                  "id": 91,
+                  "name": "Ignored Actor"
+                }
+              ]
+            },
+            {
+              "id": 81,
+              "name": "No Cast",
+              "actors": []
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "bangumi",
+        "media_id": "902",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2024",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": 902,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": "Owned original",
+        "release_date": "2024-02-03",
+        "backdrop_path": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.25,
+        "overview": "owned summary",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "actors": [
+          {
+            "id": 90,
+            "name": "First Actor",
+            "career": [
+              "Owned Character"
+            ]
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": null,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "http://bgm.tv/subject/902",
+        "title_year": "Owned (2024)",
+        "mediaid_prefix": "bangumi"
+      },
+      "error": null
+    },
+    {
+      "case": "bangumi_search_movie_filter",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "meta": {
+          "name": "Owned",
+          "type": "电影"
+        }
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned",
+          "status": 200,
+          "body": {
+            "list": [
+              {
+                "id": 902
+              },
+              {
+                "id": 903
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902",
+          "status": 200,
+          "body": {
+            "id": 902,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2024-02-03",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/903",
+          "status": 200,
+          "body": {
+            "id": 903,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "Movie",
+            "date": "2024-02-03",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/903/characters",
+          "status": 200,
+          "body": [
+            {
+              "id": 80,
+              "name": "Owned Character",
+              "actors": [
+                {
+                  "id": 90,
+                  "name": "First Actor"
+                },
+                {
+                  "id": 91,
+                  "name": "Ignored Actor"
+                }
+              ]
+            },
+            {
+              "id": 81,
+              "name": "No Cast",
+              "actors": []
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "bangumi",
+        "media_id": "903",
+        "scrape_source": null,
+        "type": "电影",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2024",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": 903,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": "Owned original",
+        "release_date": "2024-02-03",
+        "backdrop_path": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.25,
+        "overview": "owned summary",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "seasons": {},
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "actors": [
+          {
+            "id": 90,
+            "name": "First Actor",
+            "career": [
+              "Owned Character"
+            ]
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": null,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "http://bgm.tv/subject/903",
+        "title_year": "Owned (2024)",
+        "mediaid_prefix": "bangumi"
+      },
+      "error": null
+    },
+    {
+      "case": "bangumi_search_unknown_type",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "meta": {
+          "name": "Owned",
+          "type": "未知"
+        }
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned",
+          "status": 200,
+          "body": {
+            "list": [
+              {
+                "id": 902
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902",
+          "status": 200,
+          "body": {
+            "id": 902,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2024-02-03",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters",
+          "status": 200,
+          "body": []
+        }
+      ],
+      "expected": {
+        "source": "bangumi",
+        "media_id": "902",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2024",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": 902,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": "Owned original",
+        "release_date": "2024-02-03",
+        "backdrop_path": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.25,
+        "overview": "owned summary",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "actors": [],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": null,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "http://bgm.tv/subject/902",
+        "title_year": "Owned (2024)",
+        "mediaid_prefix": "bangumi"
+      },
+      "error": null
+    },
+    {
+      "case": "bangumi_search_no_date_accept",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "meta": {
+          "name": "Owned",
+          "year": "1990"
+        }
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned",
+          "status": 200,
+          "body": {
+            "list": [
+              {
+                "id": 902
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902",
+          "status": 200,
+          "body": {
+            "id": 902,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": null,
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters",
+          "status": 200,
+          "body": []
+        }
+      ],
+      "expected": {
+        "source": "bangumi",
+        "media_id": "902",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": null,
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": 902,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": "Owned original",
+        "release_date": null,
+        "backdrop_path": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.25,
+        "overview": "owned summary",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "actors": [],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": null,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "http://bgm.tv/subject/902",
+        "title_year": "Owned",
+        "mediaid_prefix": "bangumi"
+      },
+      "error": null
+    },
+    {
+      "case": "bangumi_skip_id_and_missing",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "meta": {
+          "name": "Owned"
+        }
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned",
+          "status": 200,
+          "body": {
+            "list": [
+              {},
+              {
+                "id": 901
+              },
+              {
+                "id": 902
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/901",
+          "status": 404,
+          "body": {}
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902",
+          "status": 200,
+          "body": {
+            "id": 902,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2024-02-03",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters",
+          "status": 200,
+          "body": []
+        }
+      ],
+      "expected": {
+        "source": "bangumi",
+        "media_id": "902",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2024",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": 902,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": "Owned original",
+        "release_date": "2024-02-03",
+        "backdrop_path": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.25,
+        "overview": "owned summary",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "actors": [],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": null,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "http://bgm.tv/subject/902",
+        "title_year": "Owned (2024)",
+        "mediaid_prefix": "bangumi"
+      },
+      "error": null
+    },
+    {
+      "case": "bangumi_first_ten_limit",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "meta": {
+          "name": "Owned",
+          "year": "2024"
+        }
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned",
+          "status": 200,
+          "body": {
+            "list": [
+              {
+                "id": 910
+              },
+              {
+                "id": 911
+              },
+              {
+                "id": 912
+              },
+              {
+                "id": 913
+              },
+              {
+                "id": 914
+              },
+              {
+                "id": 915
+              },
+              {
+                "id": 916
+              },
+              {
+                "id": 917
+              },
+              {
+                "id": 918
+              },
+              {
+                "id": 919
+              },
+              {
+                "id": 920
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/910",
+          "status": 200,
+          "body": {
+            "id": 910,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2023-01-01",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/911",
+          "status": 200,
+          "body": {
+            "id": 911,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2023-01-01",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/912",
+          "status": 200,
+          "body": {
+            "id": 912,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2023-01-01",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/913",
+          "status": 200,
+          "body": {
+            "id": 913,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2023-01-01",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/914",
+          "status": 200,
+          "body": {
+            "id": 914,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2023-01-01",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/915",
+          "status": 200,
+          "body": {
+            "id": 915,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2023-01-01",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/916",
+          "status": 200,
+          "body": {
+            "id": 916,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2023-01-01",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/917",
+          "status": 200,
+          "body": {
+            "id": 917,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2023-01-01",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/918",
+          "status": 200,
+          "body": {
+            "id": 918,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2023-01-01",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/919",
+          "status": 200,
+          "body": {
+            "id": 919,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2023-01-01",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        }
+      ],
+      "expected": null,
+      "error": null
+    },
+    {
+      "case": "bangumi_id_missing",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "bangumiid": 904
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/904",
+          "status": 404,
+          "body": {}
+        }
+      ],
+      "expected": null,
+      "error": null
+    },
+    {
+      "case": "bangumi_search_empty",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "meta": {
+          "name": "Owned"
+        }
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned",
+          "status": 200,
+          "body": {
+            "list": []
+          }
+        }
+      ],
+      "expected": null,
+      "error": null
+    },
+    {
+      "case": "bangumi_numeric_year_mismatch",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "meta": {
+          "name": "Owned",
+          "year": 1990
+        }
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned",
+          "status": 200,
+          "body": {
+            "list": [
+              {
+                "id": 902
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902",
+          "status": 200,
+          "body": {
+            "id": 902,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2024-02-03",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        }
+      ],
+      "expected": null,
+      "error": null
+    },
+    {
+      "case": "bangumi_numeric_year_match",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "meta": {
+          "name": "Owned",
+          "year": 2024
+        }
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/search/subject/Owned",
+          "status": 200,
+          "body": {
+            "list": [
+              {
+                "id": 902
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902",
+          "status": 200,
+          "body": {
+            "id": 902,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2024-02-03",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters",
+          "status": 200,
+          "body": []
+        }
+      ],
+      "expected": {
+        "source": "bangumi",
+        "media_id": "902",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2024",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": 902,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": "Owned original",
+        "release_date": "2024-02-03",
+        "backdrop_path": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.25,
+        "overview": "owned summary",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "actors": [],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": null,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "http://bgm.tv/subject/902",
+        "title_year": "Owned (2024)",
+        "mediaid_prefix": "bangumi"
+      },
+      "error": null
+    },
+    {
+      "case": "bangumi_bad_actor",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "bangumiid": 902
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902",
+          "status": 200,
+          "body": {
+            "id": 902,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2024-02-03",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters",
+          "status": 200,
+          "body": [
+            {
+              "id": 1,
+              "actors": [
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": null,
+      "error": "AttributeError"
+    },
+    {
+      "case": "bangumi_no_meta",
+      "request": {
+        "source": "bangumi",
+        "cache": false
+      },
+      "replies": [],
+      "expected": null,
+      "error": null
+    },
+    {
+      "case": "bangumi_wrong_detail_shape",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "bangumiid": 902
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902",
+          "status": 200,
+          "body": [
+            {
+              "id": 902
+            }
+          ]
+        }
+      ],
+      "expected": null,
+      "error": "AttributeError"
+    },
+    {
+      "case": "bangumi_wrong_characters_shape",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "bangumiid": 902
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902",
+          "status": 200,
+          "body": {
+            "id": 902,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2024-02-03",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters",
+          "status": 200,
+          "body": {
+            "error": "owned"
+          }
+        }
+      ],
+      "expected": null,
+      "error": "AttributeError"
+    },
+    {
+      "case": "bangumi_missing_character_id_skips_bad_cast",
+      "request": {
+        "source": "bangumi",
+        "cache": false,
+        "bangumiid": 902
+      },
+      "replies": [
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902",
+          "status": 200,
+          "body": {
+            "id": 902,
+            "name": "Owned original",
+            "name_cn": "Owned",
+            "platform": "TV",
+            "date": "2024-02-03",
+            "rating": {
+              "score": 7.25
+            },
+            "images": {
+              "large": "https://lain.bgm.tv/owned.jpg"
+            },
+            "summary": "owned summary",
+            "total_episodes": 3,
+            "tags": [
+              {
+                "name": "Adventure"
+              },
+              {
+                "name": ""
+              }
+            ],
+            "infobox": [
+              {
+                "key": "别名",
+                "value": [
+                  {
+                    "v": "Other"
+                  },
+                  "Alias"
+                ]
+              },
+              {
+                "key": "动画制作",
+                "value": "Owned Studio"
+              },
+              {
+                "key": "导演",
+                "value": [
+                  {
+                    "v": "Owned Director"
+                  }
+                ]
+              }
+            ],
+            "actors": [
+              {
+                "id": 9,
+                "name": "Owned Actor"
+              }
+            ]
+          }
+        },
+        {
+          "host": "api.bgm.tv",
+          "method": "GET",
+          "path": "/v0/subjects/902/characters",
+          "status": 200,
+          "body": [
+            {
+              "actors": {
+                "bad": "owned"
+              }
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "source": "bangumi",
+        "media_id": "902",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2024",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": null,
+        "bangumi_id": 902,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": "Owned original",
+        "release_date": "2024-02-03",
+        "backdrop_path": null,
+        "poster_path": "https://lain.bgm.tv/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.25,
+        "overview": "owned summary",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "actors": [],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Adventure",
+            "name": "Adventure"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": 3,
+        "number_of_seasons": 1,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [
+          {
+            "name": "Owned Studio"
+          }
+        ],
+        "production_countries": [],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": null,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "http://bgm.tv/subject/902",
+        "title_year": "Owned (2024)",
+        "mediaid_prefix": "bangumi"
+      },
+      "error": null
+    }
+  ]
+}

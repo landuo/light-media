@@ -1,0 +1,39 @@
+{
+  "classification": "independent real CUA browser observation of actual isolated Linux cmd/server; OCR peer responses synthetic, not live challenge/model accuracy",
+  "observer": "/root",
+  "url": "http://192.168.8.129:33633/#plugins",
+  "source": {
+    "version": "1.1",
+    "worker_pid": 17,
+    "marker": "OCR UI source r6",
+    "image_base64": "YWJj",
+    "run_once": false,
+    "result": "ABC123"
+  },
+  "clone": {
+    "version": "1.0",
+    "worker_pid": 22,
+    "marker": "OCR UI clone r6",
+    "image_base64": "Y2xvbmU=",
+    "run_once": false,
+    "result": "ABC123"
+  },
+  "checks": [
+    "independent per-instance configuration",
+    "different actual worker PIDs",
+    "persisted actual SDK OCR results",
+    "run_once reset rather than startup replay",
+    "root performed no writes; owned tab closed"
+  ],
+  "artifacts": {
+    "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/clone-config.ax.txt": "3597fe3a2db4fc13d9cf64c77844b09de6f0adaed4acdbcff2afc07bbd544c05",
+    "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/clone-config.png": "ab1f493d61dc45c2b999e96c7c733c99ee07bbf0782c9c48f17782ec4ef745b7",
+    "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/clone-data.ax.txt": "0131dd8751d3fa16e75284d94a4d58f9f517f6617284653aa3a2b5b9b9188ef1",
+    "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/clone-data.png": "1fa1f2bbb7f46635bd494185f86390a8bf0e530e818f886137803888a604ca13",
+    "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/source-config.ax.txt": "983a996f86c33f9d3acda32b09e200c764402e55a8033105dce7a871aa41b7af",
+    "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/source-config.png": "2eaae89e52aa67c658e62b4d4a6416b850bda47d01995a3b0a54ae329f7cc31d",
+    "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/source-data.ax.txt": "8b75ad227d7fff9f302a538306eed9f70364080e7d28d817147afa1d4629c4b7",
+    "testdata/plugin-platform-final-20261104/browser-ocr/root-ocr-ui/source-data.png": "9d08ff1f3e18cccd49d06d157bc5aedb3a667c7d6a1c1b1f5bcb167dff6d7e15"
+  },
+  "target_binding": "R6 ff036cac image d149ea88; qualified historical central source in product-r6-binding-qualification.json; final combined S18 run pending."
+}

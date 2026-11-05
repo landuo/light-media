@@ -1,0 +1,61 @@
+{
+  "status": "passed",
+  "classification": "actual Linux product Dockerfile image, cmd/server -> installed standard SDK -> native pinned CloakBrowser; owned HTML/FS responses; external Python driver not product runtime",
+  "image_id": "sha256:d149ea88987b4cd810462a7a5f0fbc84903e53ff0837f21cc9da598e84ec48d4",
+  "driver_sha256": "91d6a58b9c95bb31c0e62a61c53249930da089e1ff8670cb2b6b47331c8baf9b",
+  "worker_sha256": "5b3faf0e34eaa2b8012b5f9bd677ae001230ed483ff41f6a4f9b0b636569f606",
+  "update_worker_sha256": "b9deeed3cbb07e2860e725d55a6039aa78c86b009290a05f9efedc81fe8ed756",
+  "observations": [
+    {
+      "phase": "actual-headed-native-js",
+      "source_pid": 16,
+      "mode": "source-default-headed-Xvfb",
+      "rendered_marker": true,
+      "networkidle_after_fetch": true,
+      "cleanup": {
+        "temp_profiles": 0,
+        "remaining_native_browser_processes": 0
+      }
+    },
+    {
+      "phase": "actual-native-networkidle-failure",
+      "result": null,
+      "cleanup": {
+        "temp_profiles": 0,
+        "remaining_native_browser_processes": 0
+      }
+    },
+    {
+      "phase": "actual-clone-update-cold",
+      "source_pid": 16,
+      "clone_pid": 251,
+      "updated_pid": 348,
+      "cold_pid": 17,
+      "source_update_keeps_clone_pid": true,
+      "cold_no_render_replay": true,
+      "config_and_last_persisted": true
+    },
+    {
+      "phase": "actual-FS-protocol-fallback",
+      "classification": "owned FS HTTP protocol responses; actual native fallback, not live challenge provider",
+      "commands": [
+        "request.get",
+        "request.get",
+        "request.get"
+      ],
+      "truthy_missing_response_preserves_none": true
+    }
+  ],
+  "http_counts": {
+    "page": 9,
+    "data": 9,
+    "pending": 0,
+    "external": 0
+  },
+  "runtime": "ff036cac2cc023eb83c17cdf473f502dafcc25aa6e24b4ae1cac44fcc7456f4c  /usr/local/bin/light-media\nChromium 146.0.7680.177 \nuid=1000(media) gid=1001(media) groups=1001(media)\n",
+  "cleanup": {
+    "instances_uninstalled": true,
+    "API404": true,
+    "container_absent": true
+  }
+}

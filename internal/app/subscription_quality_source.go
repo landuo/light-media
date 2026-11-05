@@ -44,6 +44,9 @@ func (a *App) subscriptionSourceProjectionReferences(ctx context.Context, q Plug
 	if s.Media.Year == 0 {
 		row["year"] = nil
 	}
+	if s.SourceYearText != nil {
+		row["year"] = *s.SourceYearText
+	}
 	row["keyword"], row["tmdbid"], row["imdbid"] = s.Keyword, s.Media.ID, s.Media.IMDbID
 	if s.Media.IMDbID == "" {
 		row["imdbid"] = nil
@@ -88,12 +91,48 @@ func (a *App) subscriptionSourceProjectionReferences(ctx context.Context, q Plug
 	}
 	row["best_version"], row["best_version_full"], row["current_priority"], row["episode_priority"] = flag(s.BestVersion), flag(s.BestVersionFull), s.CurrentPriority, s.EpisodePriority
 	row["save_path"], row["search_imdbid"], row["manual_total_episode"] = s.DownloadPath, flag(s.SourceSearchIMDb), flag(s.ManualTotalEpisode)
+	for key, value := range s.SourceFlagValues {
+		switch key {
+		case "best_version", "best_version_full", "search_imdbid", "manual_total_episode":
+			row[key] = value
+		}
+	}
 	words, e := a.subscriptionWordsFrom(ctx, q, s.ID)
 	if e != nil {
 		return nil, e
 	}
 	if words != "" {
 		row["custom_words"] = words
+	}
+	// Native string zero values can otherwise hide the difference between a
+	// source SQL NULL and a deliberately written empty string.
+	for _, key := range s.SourcePresentFields {
+		switch key {
+		case "include":
+			row[key] = s.Policy.Include
+		case "exclude":
+			row[key] = s.Policy.Exclude
+		case "quality":
+			row[key] = s.Policy.Source
+		case "resolution":
+			row[key] = s.Policy.Resolution
+		case "effect":
+			row[key] = s.Policy.HDR
+		case "custom_words":
+			row[key] = words
+		case "downloader":
+			if s.DownloaderID == "" {
+				row[key] = ""
+			}
+		case "imdbid":
+			row[key] = s.Media.IMDbID
+		case "season":
+			row[key] = s.Season
+		case "total_episode":
+			row[key] = s.TotalEpisodes
+		case "start_episode":
+			row[key] = s.StartEpisode
+		}
 	}
 	row["filter_groups"] = s.Policy.FilterGroups
 	if s.Policy.FilterGroups == nil {
@@ -112,6 +151,15 @@ func (a *App) subscriptionSourceProjectionReferences(ctx context.Context, q Plug
 			if field.value != nil {
 				row[field.key] = *field.value
 			}
+		}
+	}
+	// DB operator patches can explicitly store SQL/JSON null. Keep supported
+	// nullable ordinary columns distinct from an omitted or empty value;
+	// the native form's complete replacement save resets this metadata.
+	for _, key := range s.SourceNullFields {
+		switch key {
+		case "sites", "filter_groups", "resolution", "quality", "effect", "include", "exclude", "save_path", "keyword", "imdbid", "year", "poster", "backdrop", "vote", "description", "season", "total_episode", "start_episode", "lack_episode", "note", "downloader", "best_version", "best_version_full", "current_priority", "episode_priority", "search_imdbid", "manual_total_episode", "custom_words":
+			row[key] = nil
 		}
 	}
 	return mustCleanSeedJSON(row), nil

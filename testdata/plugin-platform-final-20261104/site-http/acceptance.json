@@ -1,0 +1,719 @@
+{
+  "feature_id": "S18",
+  "status": "ready_for_independent_root_acceptance",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_locations": [
+    "app/db/site_oper.py:26,38,92",
+    "app/db/models/site.py:26-34",
+    "app/utils/http.py:329-432,503-541,558-591",
+    "app/core/config.py:959-963"
+  ],
+  "target_files": {
+    "internal/plugins/site_http_host.go": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+    "internal/app/plugin_original_host_site_http.go": "a6acef41897fbd1e1e0ff93a119e378b9e27c6ddbee40368e8cbac70e9a36306",
+    "internal/app/plugin_original_host_site_http_json.go": "cdf90011d2d6acaea407241063d6da4377b952bf65e1fa44fbbb00a42b0f8ddc",
+    "internal/app/plugin_original_resources.go": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b",
+    "cmd/plugin-host-site-http-fixture/main.go": "614f2a8ade51fd7e708166e49592ef1143b14fdc8cdded7148c3821335c8648d",
+    "internal/app/plugin_original_host_site_http_test.go": "6a2d9e083d102d6a8c987d0cae5b2279118667e4f00e45eb2aafaa9feff19a68"
+  },
+  "source_oracles": {
+    "settings/site-http-independent-source-oracle.json": "82f75be7d32516af85984b42ada1f12e938e68e79adfe18a171b5094a005998b",
+    "settings/site-http-cookie-independent-source-oracle.json": "e00ea624fb59abe2f22e49d99df985fe7f0a8be06ecd6a77ab9e4678f6788d8c",
+    "settings/site-http-useragent-independent-source-oracle.json": "b9efe3ca4c24b739aa5ace1fa8c5d553501e5d5974fdfc5f305728b73e7e72ff",
+    "settings/site-http-installed-metadata-source-inventory.json": "3505221dba43589f88c808284b7c887f610522e63df5ecffaad1f370b36cc097",
+    "settings/site-http-dynamic-metadata-source-supplement.json": "36572b7045538dadce63a6496440a1c9f54e1e2c98f97bd0a56c2bf92404ddba",
+    "network-post-scope-observation.json": "30a7528bdb82bde729665c0dc95eda22f6aa833e70795522ff659cd79e8837a4"
+  },
+  "tests": [
+    {
+      "file": "sdk-final-normal.jsonl",
+      "roots": {
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      "seconds": 9.463
+    },
+    {
+      "file": "sdk-final-race.jsonl",
+      "roots": {
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      "seconds": 74.208
+    }
+  ],
+  "contracts": {
+    "sites.request": "current configured site, GET/POST; ordered/repeated form/query, explicit JSON/raw bytes, source header defaults/referer, current cookie/UA/proxy/optional raw credential header binding; private response bytes/ContentType/cookie dictionary. POST completed/unknown outcome survives post-request scope change. No automatic POST replay.",
+    "sites.credentials": "exact configured site ID/current real worker scope returns typed Cookie/UA/APIKey/Token privately in IPC/memory for trusted Go code; no implicit public route/config/log/DB projection. Fresh real stop_service cleanup grant remains valid; revoked old ordinary calls denied. Not an OS/network sandbox.",
+    "response_cookies": "private ordered name/value dictionary; nil CookieOverride uses configured cookie, pointer to empty pairs sends no cookie, nonempty replaces. Fixed Response-cookie8 source filtering retained; no new handle/session framework.",
+    "USER_AGENT": "readonly SystemSettings.Get USER_AGENT; UseHostUserAgent explicit mutual exclusion withUseSiteUserAgent; source caller suffix only default headers using global service UA, exact configured ordinary browserUA unchanged, custom headers can keep global agent withoutsuffix"
+  },
+  "necessary_adaptations": [
+    {
+      "source": "raw Python class/requests.Response and calls read fields directly",
+      "Go": "finite explicit typed private IPC; optional string DB null maps host native empty-string fields. Known actual callers use falsey/or-empty semantics. Normal Go handles arbitrary own-memory calculations, not a host template/signature framework."
+    },
+    {
+      "source": "RequestUtils defaults verify=False and may follow crossorigin or derived API hosts",
+      "Go": "existing configured canonical source and TLS validation retained on every outward hop; existing MTeam canonical API normalization is used, no credential forwarding exception/global TLS override."
+    },
+    {
+      "source": "Python library temporary Session/JSON objects",
+      "Go": "host reuses existing Requests proxy merge/inactivity timeout/content decode; precise fixed-source6 request wires,8 cookie cases,4 globalUA cases compared. Source arbitrary class identity/exceptions replaced with typed JSON and sanitized Go failure codes."
+    },
+    {
+      "source": "RequestException→None even after an external write",
+      "Go": "Response nil plus request_state unknown; after recognized POST outcome and stale config, scope_changed preserves completed/unknown factual result. No durable jobs, replay, workflow/action/session engine added."
+    },
+    {
+      "source": "full arbitrary response headers/url used by some plugins on their own URLs",
+      "Go": "only actual site-call needed ContentType plus decoded bytes/cookies exposed; source installed77 metadata static+dynamic inventory separates own-URL Server/Date/raw.version probes that use ordinary Go networking."
+    }
+  ],
+  "intermediate_failures": [
+    "sdk-normal.jsonl retained: Go synthesized Referer on302/307; fixed explicit originalReferer only before final6 wire pass",
+    "sdk-normal-r3.jsonl retained: assertion incorrectly treated existing editable/public UA as password; narrowed to actual sensitive Cookie/APIKey/Token, public UA editor unchanged",
+    "older opaque cookie/transform development variants were never accepted; removed in final trusted private IPC contract, prior logs retained as historical variants"
+  ],
+  "linux": {
+    "status": "passed",
+    "classification": "actual Linux cmd/server and separately compiled standard SDK; owned synthetic HTTP/cookies only, no real site/signin service or existing data modified",
+    "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "bindings": {
+      "server": "15c2b65397fd38af1f6e3ea44178157dec74e8210ae61b7f39f39728528e6df6",
+      "worker": "6ab7ae0041677fe909de5b06d23ca45308df7e5071cf319a1fe6c9dd6543c845",
+      "worker_v2": "67afde3baee75a6a0d2fe54871c97c1504b8b25c66c297d617af4a9845038ce1",
+      "driver": "82eb914b34662050904f946be3548de2658e44a0e4814c4702c09b15100d36c4"
+    },
+    "observations": [
+      {
+        "case": "actual-private-credentials-cookie-flow-host-agent",
+        "credentials_verified": true,
+        "cookie_flow_verified": true,
+        "user_agent": "MoviePilot/2.15.7 (Linux 6.18.18.c1168-trim; x86_64)",
+        "host_agent_suffix_verified": true,
+        "ua_write_denied": true
+      },
+      {
+        "case": "source-clone-config-data-isolation-and-failure-recovery",
+        "source": {
+          "calls": [
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6Y2hvaWNlJTVCJTVEPW9uZSZjaG9pY2UlNUIlNUQ9dHdv",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 503,
+                "content": "b3duZWQtaHR0cC1zdGF0dXM1MDM=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            },
+            {
+              "schema_version": 1,
+              "response": null,
+              "request_state": "unknown"
+            },
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrc291cmNl",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            }
+          ],
+          "config": {
+            "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI source\"}]}",
+            "run_once": false
+          },
+          "pid": 1572596,
+          "version": "1.0"
+        },
+        "clone": {
+          "calls": [
+            {
+              "schema_version": 1,
+              "response": {
+                "status_code": 200,
+                "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrY2xvbmU=",
+                "content_type": "text/plain; charset=utf-8",
+                "cookies": null
+              },
+              "request_state": "completed"
+            }
+          ],
+          "config": {
+            "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI clone\"}]}",
+            "run_once": false
+          },
+          "pid": 1572623,
+          "version": "1.0"
+        },
+        "non2xx_preserved": true,
+        "post_drop_unknown_no_retry": true
+      },
+      {
+        "case": "actual-update-and-cold-no-replay",
+        "before": {
+          "OwnedHostSiteHTTP": {
+            "calls": [
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6Y2hvaWNlJTVCJTVEPW9uZSZjaG9pY2UlNUIlNUQ9dHdv",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 503,
+                  "content": "b3duZWQtaHR0cC1zdGF0dXM1MDM=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": null,
+                "request_state": "unknown"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrc291cmNl",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              }
+            ],
+            "config": {
+              "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI source\"}]}",
+              "run_once": false
+            },
+            "pid": 1572633,
+            "version": "2.0"
+          },
+          "OwnedHostSiteHTTPcopy": {
+            "calls": [
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrY2xvbmU=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              }
+            ],
+            "config": {
+              "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI clone\"}]}",
+              "run_once": false
+            },
+            "pid": 1572623,
+            "version": "1.0"
+          }
+        },
+        "after": {
+          "OwnedHostSiteHTTP": {
+            "calls": [
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6Y2hvaWNlJTVCJTVEPW9uZSZjaG9pY2UlNUIlNUQ9dHdv",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 503,
+                  "content": "b3duZWQtaHR0cC1zdGF0dXM1MDM=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": null,
+                "request_state": "unknown"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrc291cmNl",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              }
+            ],
+            "config": {
+              "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI source\"}]}",
+              "run_once": false
+            },
+            "pid": 1572650,
+            "version": "2.0"
+          },
+          "OwnedHostSiteHTTPcopy": {
+            "calls": [
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrY2xvbmU=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              }
+            ],
+            "config": {
+              "request_json": "{\"id\": \"owned-site\", \"path\": \"/echo\", \"method\": \"POST\", \"form\": [{\"name\": \"message\", \"value\": \"CLI clone\"}]}",
+              "run_once": false
+            },
+            "pid": 1572657,
+            "version": "1.0"
+          }
+        },
+        "wire_count_unchanged": true
+      },
+      {
+        "case": "browser-writes-cold-no-replay",
+        "before": {
+          "OwnedHostSiteHTTP": {
+            "calls": [
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6Y2hvaWNlJTVCJTVEPW9uZSZjaG9pY2UlNUIlNUQ9dHdv",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 503,
+                  "content": "b3duZWQtaHR0cC1zdGF0dXM1MDM=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": null,
+                "request_state": "unknown"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrc291cmNl",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1icm93c2VyK1MxOCtzb3VyY2U=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1icm93c2VyK1MxOCtyZWNvdmVyZWQ=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              }
+            ],
+            "config": {
+              "request_json": "{\"id\":\"owned-site\",\"path\":\"/echo\",\"method\":\"POST\",\"form\":[{\"name\":\"message\",\"value\":\"browser S18 recovered\"}]}",
+              "run_once": false
+            },
+            "pid": 1572650,
+            "version": "2.0"
+          },
+          "OwnedHostSiteHTTPcopy": {
+            "calls": [
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrY2xvbmU=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1icm93c2VyK1MxOCtjbG9uZQ==",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              }
+            ],
+            "config": {
+              "request_json": "{\"id\":\"owned-site\",\"path\":\"/echo\",\"method\":\"POST\",\"form\":[{\"name\":\"message\",\"value\":\"browser S18 clone\"}]}",
+              "run_once": false
+            },
+            "pid": 1572657,
+            "version": "1.0"
+          }
+        },
+        "after": {
+          "OwnedHostSiteHTTP": {
+            "calls": [
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6Y2hvaWNlJTVCJTVEPW9uZSZjaG9pY2UlNUIlNUQ9dHdv",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 503,
+                  "content": "b3duZWQtaHR0cC1zdGF0dXM1MDM=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": null,
+                "request_state": "unknown"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrc291cmNl",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1icm93c2VyK1MxOCtzb3VyY2U=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1icm93c2VyK1MxOCtyZWNvdmVyZWQ=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              }
+            ],
+            "config": {
+              "request_json": "{\"id\":\"owned-site\",\"path\":\"/echo\",\"method\":\"POST\",\"form\":[{\"name\":\"message\",\"value\":\"browser S18 recovered\"}]}",
+              "run_once": false
+            },
+            "pid": 1576989,
+            "version": "2.0"
+          },
+          "OwnedHostSiteHTTPcopy": {
+            "calls": [
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1DTEkrY2xvbmU=",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              },
+              {
+                "schema_version": 1,
+                "response": {
+                  "status_code": 200,
+                  "content": "b3duZWQtcmVzcG9uc2U6bWVzc2FnZT1icm93c2VyK1MxOCtjbG9uZQ==",
+                  "content_type": "text/plain; charset=utf-8",
+                  "cookies": null
+                },
+                "request_state": "completed"
+              }
+            ],
+            "config": {
+              "request_json": "{\"id\":\"owned-site\",\"path\":\"/echo\",\"method\":\"POST\",\"form\":[{\"name\":\"message\",\"value\":\"browser S18 clone\"}]}",
+              "run_once": false
+            },
+            "pid": 1576995,
+            "version": "1.0"
+          }
+        },
+        "wire_unchanged": true
+      }
+    ],
+    "wire": [
+      {
+        "method": "POST",
+        "path": "/echo",
+        "body_sha256": "ca3c20d89098bf20c8be943ff7abb4d5a942512dd6230630d64e86a05985dfb3",
+        "body": "choice%5B%5D=one&choice%5B%5D=two",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": true,
+        "token_correct": true
+      },
+      {
+        "method": "GET",
+        "path": "/set-cookie",
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "body": "",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "POST",
+        "path": "/cookie-echo",
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "body": "",
+        "has_configured_cookie": false,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "GET",
+        "path": "/agent",
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "body": "",
+        "has_configured_cookie": true,
+        "has_configured_ua": false,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "GET",
+        "path": "/status",
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "body": "",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "POST",
+        "path": "/drop",
+        "body_sha256": "20fc7033a0d8a4026c1dc0b4851ddc81da204811deba995d274cccb57b28cf59",
+        "body": "owned-no-retry",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "body_sha256": "fd8f827a30bf1864d20fee6edad1b7234eda4d33352343258a63c173c221049e",
+        "body": "message=CLI+source",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "body_sha256": "825ba9ad38204feac9c57764770a03852c65eb19f4324e3b3f43a627c14fa26f",
+        "body": "message=CLI+clone",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "body_sha256": "bef45b09decbf32e4cc2e8b5afca373fa14aa632adbb9ba01d77dd9b81db980b",
+        "body": "message=browser+S18+source",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "body_sha256": "f7c2ec4d5ed4290b62e8a7831449ae4ad0e412bb8bb5da942b0ad1f9681ef269",
+        "body": "message=browser+S18+recovered",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "body_sha256": "946b2f2ba40b90f7bd6988cc7164cf782309fae128ebcf6b25005e9c37158e51",
+        "body": "message=browser+S18+clone",
+        "has_configured_cookie": true,
+        "has_configured_ua": true,
+        "api_key_correct": false,
+        "token_correct": false
+      }
+    ],
+    "uninstalled_api404": true,
+    "stopped": true
+  },
+  "no_business_plugin_development": true,
+  "no_commit_push_deploy": true,
+  "tested_runtime_target_files": {
+    "internal/plugins/site_http_host.go": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+    "internal/app/plugin_original_host_site_http.go": "a6acef41897fbd1e1e0ff93a119e378b9e27c6ddbee40368e8cbac70e9a36306",
+    "internal/app/plugin_original_host_site_http_json.go": "cdf90011d2d6acaea407241063d6da4377b952bf65e1fa44fbbb00a42b0f8ddc",
+    "internal/app/plugin_original_resources.go": "6c21dfc4fd78743ec723b21a890f6fa9984118a2cf2e4bfbdffa11508b4a1c31"
+  },
+  "current_target_files_observation_only": {
+    "internal/plugins/site_http_host.go": "003dbfe242e7be884793c20646e32369e78836b59eb2efcde80579250a715697",
+    "internal/app/plugin_original_host_site_http.go": "a6acef41897fbd1e1e0ff93a119e378b9e27c6ddbee40368e8cbac70e9a36306",
+    "internal/app/plugin_original_host_site_http_json.go": "cdf90011d2d6acaea407241063d6da4377b952bf65e1fa44fbbb00a42b0f8ddc",
+    "internal/app/plugin_original_resources.go": "a02785558301a6e0dc1233c472e6f61aefaab990c6fcaa26475d3c2f5411b17b",
+    "cmd/plugin-host-site-http-fixture/main.go": "614f2a8ade51fd7e708166e49592ef1143b14fdc8cdded7148c3821335c8648d",
+    "internal/app/plugin_original_host_site_http_test.go": "6a2d9e083d102d6a8c987d0cae5b2279118667e4f00e45eb2aafaa9feff19a68"
+  },
+  "runtime_binding": "../browser-ocr/product-r8-build-inputs.json",
+  "runtime_binding_sha256": "224652ffc0683899d13543c4d8520d64a01a6eb3f816b7c282ef3528e7787da1",
+  "post_browser_independent_assertions": {
+    "status": "passed",
+    "checks": [
+      {
+        "instance": "OwnedHostSiteHTTP",
+        "expected_text": "browser S18 recovered",
+        "calls": 6,
+        "cold_pid_changed": true,
+        "cold_state_equal": true
+      },
+      {
+        "instance": "OwnedHostSiteHTTPcopy",
+        "expected_text": "browser S18 clone",
+        "calls": 2,
+        "cold_pid_changed": true,
+        "cold_state_equal": true
+      }
+    ],
+    "all_wire_private_material_redacted": true
+  },
+  "cleanup": {
+    "owned_root_removed": true,
+    "server_worker_pids": [],
+    "relay_stop_sent": true,
+    "scope": "only exact /home/admin/light-media-site-http-20261105 owned root; no /vol2/Docker/production changes"
+  },
+  "browser": {
+    "operator": "root via actual IAB to owned Linux R8 instance",
+    "classification": "actual browser / compiled server / owned HTTP and synthetic credentials, no external PT or signin business",
+    "actions": [
+      "source POST browser S18 source created actual200 row and request body",
+      "DELETE init failure returned500 with form/one-shot draft retained, then corrected POST browser S18 recovered succeeded",
+      "clone changed CLI clone to browser S18 clone independently, only its two POST rows",
+      "reload source data preserved recovered body without clone body"
+    ],
+    "note": "Private site credentials and response cookies were consumed only in worker IPC/memory; public fixture data/API explicitly omit Cookies values. Existing editable UA remains ordinary settings metadata.",
+    "files": {
+      "root-ui/clone-post.ax.txt": "e0770bf445c2c5156d4c8b53488bd821b7cef617ad6299fe20d99a035b6a9151",
+      "root-ui/clone-post.png": "a1b7c3eca8ae539ac88db3a382a26302581504d9b60823aeadc58d5926b56641",
+      "root-ui/failure.ax.txt": "bd0eb7d62af173c7fb378ebf90dcc3ce82ceb92e1fa9f8ee0507b7670148be98",
+      "root-ui/failure.png": "de51dcf680b70d09b86b3fc3c9d9aafc75aa0de4a0cf2e2fc416d16622e79c75",
+      "root-ui/observation.json": "de853cb854021f054c3a4314d2a347bda269c65a714d5bb110e146a6e091c2d8",
+      "root-ui/recovered-after-refresh.ax.txt": "1a695ba2a0400fc79b35194ce54249affc5c782296613bbd1ba5481e6936154a",
+      "root-ui/recovered-after-refresh.png": "63abdf0924b4c687cd610e571e7275e9d52107757016328ab500c9f42490d4da",
+      "root-ui/source-post.ax.txt": "7ab5c36fe67497599a02d490522b5ea9cb6e45d54bd3dece959a7193bd5202b8",
+      "root-ui/source-post.png": "6c2ffbdd416a1d0d23c31e6e5fb0075652580cc6c496cf1a98ebf7a443ecdab9"
+    }
+  },
+  "evidence_files": {
+    "cleanup.json": "b08b735cb2cb19bdd8b9f661b12477e7c509480a8e7e97f22a239c73561e1c1c",
+    "linux/browser-cold-assertions.json": "dbf846e3f9f99b057a80b219d67b6e3fd0074032519539ccc51e00668023de8a",
+    "linux/result.json": "664fa8d0dd09978db398aff9ed4df99fa8c9d69416665cfd8a4c2f63b021ffe0",
+    "linux/server.log": "d029b5c5d431bd9bc49fb32a11c845e739dcb7327909ccd6310ca354b0fa0449",
+    "linux-driver.log": "4641107e55692948f1e1bc6c12700710cd0f3797993c2459ae657f59749a7be5",
+    "owned_lan_relay.py": "15239b0f3b29e3fd640ac2a934c77bf63869914bcf632f37a422c9525501e781",
+    "root-ui/clone-post.ax.txt": "e0770bf445c2c5156d4c8b53488bd821b7cef617ad6299fe20d99a035b6a9151",
+    "root-ui/clone-post.png": "a1b7c3eca8ae539ac88db3a382a26302581504d9b60823aeadc58d5926b56641",
+    "root-ui/failure.ax.txt": "bd0eb7d62af173c7fb378ebf90dcc3ce82ceb92e1fa9f8ee0507b7670148be98",
+    "root-ui/failure.png": "de51dcf680b70d09b86b3fc3c9d9aafc75aa0de4a0cf2e2fc416d16622e79c75",
+    "root-ui/observation.json": "de853cb854021f054c3a4314d2a347bda269c65a714d5bb110e146a6e091c2d8",
+    "root-ui/recovered-after-refresh.ax.txt": "1a695ba2a0400fc79b35194ce54249affc5c782296613bbd1ba5481e6936154a",
+    "root-ui/recovered-after-refresh.png": "63abdf0924b4c687cd610e571e7275e9d52107757016328ab500c9f42490d4da",
+    "root-ui/source-post.ax.txt": "7ab5c36fe67497599a02d490522b5ea9cb6e45d54bd3dece959a7193bd5202b8",
+    "root-ui/source-post.png": "6c2ffbdd416a1d0d23c31e6e5fb0075652580cc6c496cf1a98ebf7a443ecdab9",
+    "run_process.py": "82eb914b34662050904f946be3548de2658e44a0e4814c4702c09b15100d36c4",
+    "sdk-final-normal.jsonl": "a9d6ab42c9e1105b3c3b83df248f47730f9854540aa1f2b80e3b9ac8798d0cf5",
+    "sdk-final-race.jsonl": "15bba6817a6b7b1c8b5e87b4006c02f013aa1a285b4e09e9ce0be5b7325cba16",
+    "sdk-normal-final.jsonl": "505dc96dd34288a7e63455c3cdb1ebd26b927e1296fc46019982139be278d7d5",
+    "sdk-normal-r2.jsonl": "72ae0ebb3507d4589a197f00c9db6a3e6f67b72fd01b35e5c297e1859cfb3ccb",
+    "sdk-normal-r3.jsonl": "c81d565ee698b01e534aeb1039a66e74b1b110b39066c9b2a4abb3f13fa42deb",
+    "sdk-normal-r4.jsonl": "92330b53e9ea90218976ae30cdc2535bd9c412ee52d1cef006c817a27ab5ef01",
+    "sdk-normal.jsonl": "66f9abdad0ff542a4fd7f215eb2f5c69c50b778f29a93e512507e035e183461b"
+  },
+  "later_additions_not_claimed": "S19 private proxy getter/other later main changes are not covered by this R8binary observation; source/target bindings and final integration status are maintained by root.",
+  "later_supplements": {
+    "reserved-credentials-fix.json": "83277a63dd370b2795985ca59a93fd64fa384ceca3502636c1f82f19094fc54b",
+    "full-sdk-linux.json": "51f132c1c8e08de92098ff77bcfc420a08331fcc4955092f457f8c6528f7266b",
+    "linux-r9-acceptance.json": "287efca4212ed9baae10f743df076cae3c151925007ee79c5e65989d25ffd7ab"
+  },
+  "later_supplement_note": "R8 runtime facts retain historical binding. Reserved header fix, Linux SDK suite and current R9 main CLI each have separate exact evidence/bindings; R8 IAB is not relabeled R9 and whole-platform final integration remains root-owned."
+}

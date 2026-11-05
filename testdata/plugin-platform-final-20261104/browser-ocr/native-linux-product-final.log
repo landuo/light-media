@@ -1,0 +1,45 @@
+=== RUN   TestProxyActualHTTPSConnectAuthenticationAndCleanup
+--- PASS: TestProxyActualHTTPSConnectAuthenticationAndCleanup (0.01s)
+=== RUN   TestProxyCONNECTFailureDoesNotBecomeSuccess
+--- PASS: TestProxyCONNECTFailureDoesNotBecomeSuccess (0.00s)
+=== RUN   TestNativeOwnedJavaScriptHeadersAndCleanup
+    render_test.go:64: real browser: html=<nil> err=browser_launch_failed
+--- FAIL: TestNativeOwnedJavaScriptHeadersAndCleanup (7.19s)
+=== RUN   TestNativeOwnedTimeoutAndGuard
+    render_test.go:111: expected a real networkidle timeout, got browser_launch_failed
+--- FAIL: TestNativeOwnedTimeoutAndGuard (0.05s)
+=== RUN   TestNativeOwnedHeadedDefaultAndDisplayCleanup
+    render_test.go:135: source default headed browser failed: browser_launch_failed
+--- FAIL: TestNativeOwnedHeadedDefaultAndDisplayCleanup (5.14s)
+=== RUN   TestNativeOwnedConfiguredAuthenticatedProxy
+    render_test.go:192: actual proxy render failed: browser_launch_failed
+--- FAIL: TestNativeOwnedConfiguredAuthenticatedProxy (0.07s)
+=== RUN   TestFlareSolverrSourceBranches
+=== RUN   TestFlareSolverrSourceBranches/direct
+=== RUN   TestFlareSolverrSourceBranches/truthy-without-response
+=== RUN   TestFlareSolverrSourceBranches/authenticated
+=== RUN   TestFlareSolverrSourceBranches/create-fails-cleanup
+--- PASS: TestFlareSolverrSourceBranches (0.01s)
+    --- PASS: TestFlareSolverrSourceBranches/direct (0.00s)
+    --- PASS: TestFlareSolverrSourceBranches/truthy-without-response (0.00s)
+    --- PASS: TestFlareSolverrSourceBranches/authenticated (0.00s)
+    --- PASS: TestFlareSolverrSourceBranches/create-fails-cleanup (0.00s)
+=== RUN   TestCookieParseSourceLatinOneAndDuplicates
+--- PASS: TestCookieParseSourceLatinOneAndDuplicates (0.00s)
+=== RUN   TestFlareSolverrActualVendorHTTPOracle
+=== RUN   TestFlareSolverrActualVendorHTTPOracle/plain
+=== RUN   TestFlareSolverrActualVendorHTTPOracle/gzip
+=== RUN   TestFlareSolverrActualVendorHTTPOracle/br
+=== RUN   TestFlareSolverrActualVendorHTTPOracle/500
+=== RUN   TestFlareSolverrActualVendorHTTPOracle/invalid
+=== RUN   TestFlareSolverrActualVendorHTTPOracle/progress
+--- PASS: TestFlareSolverrActualVendorHTTPOracle (0.37s)
+    --- PASS: TestFlareSolverrActualVendorHTTPOracle/plain (0.00s)
+    --- PASS: TestFlareSolverrActualVendorHTTPOracle/gzip (0.00s)
+    --- PASS: TestFlareSolverrActualVendorHTTPOracle/br (0.01s)
+    --- PASS: TestFlareSolverrActualVendorHTTPOracle/500 (0.00s)
+    --- PASS: TestFlareSolverrActualVendorHTTPOracle/invalid (0.00s)
+    --- PASS: TestFlareSolverrActualVendorHTTPOracle/progress (0.30s)
+=== RUN   TestCookieParseFixedOracle
+--- PASS: TestCookieParseFixedOracle (0.03s)
+FAIL

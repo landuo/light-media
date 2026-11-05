@@ -1,0 +1,2081 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/modules/bangumi/bangumi.py": "739f6fff6bc3e12738dccf4395d6d1849af6b407743303e0fc9cded51998081b",
+    "app/modules/bangumi/__init__.py": "1f8affd239c51c0f7c0f13303787b2a2b95b38d8cae7811832670c1ad428f68d",
+    "app/modules/douban/apiv2.py": "f085678f627dbbcd6955cdfd6f49c83f7812693bc3199ea5c297c16d7e3aec06",
+    "app/modules/douban/__init__.py": "fe7f0f4dbf6e53761c0bceb939b06b7627ca55f876ad74a8a18e76a28a3ab0f8"
+  },
+  "kind": "fixed module/API/context AST; decorators removed here, rate-limit/retry independently tested; HTTP and title parser explicit owned boundaries",
+  "cases": [
+    {
+      "case": "id_movie",
+      "request": {
+        "doubanid": "901",
+        "mtype": "电影"
+      },
+      "search": {},
+      "details": {
+        "movie/901": {
+          "id": "901",
+          "title": "Owned",
+          "subtype": "movie",
+          "year": "2026",
+          "rating": {
+            "value": 7.5
+          },
+          "pic": {
+            "large": "https://img1.doubanio.com/owned.jpg"
+          },
+          "pubdate": [
+            "2026-09-01(中国大陆)"
+          ],
+          "intro": "owned intro",
+          "genres": [
+            "Drama"
+          ],
+          "countries": [
+            "中国大陆"
+          ],
+          "durations": [
+            "96分钟"
+          ],
+          "aka": [
+            "Other(港译名)",
+            "Alias(台湾)"
+          ],
+          "actors": [
+            {
+              "name": "Owned Actor"
+            }
+          ],
+          "directors": [
+            {
+              "name": "Owned Director"
+            }
+          ]
+        }
+      },
+      "people": {
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ]
+      },
+      "trace": [
+        {
+          "op": "detail",
+          "path": "/movie/901"
+        },
+        {
+          "op": "credits",
+          "path": "/movie/901/celebrities"
+        }
+      ],
+      "expected": {
+        "source": "douban",
+        "media_id": "901",
+        "scrape_source": null,
+        "type": "电影",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": "901",
+        "bangumi_id": null,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": null,
+        "release_date": "2026-09-01",
+        "backdrop_path": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.5,
+        "overview": "owned intro",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias(台湾)"
+        ],
+        "seasons": {},
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "中国大陆",
+            "name": "中国大陆"
+          }
+        ],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": 96,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://movie.douban.com/subject/901",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "douban"
+      },
+      "error": null
+    },
+    {
+      "case": "id_tv",
+      "request": {
+        "doubanid": "902",
+        "mtype": "电视剧"
+      },
+      "search": {},
+      "details": {
+        "tv/902": {
+          "id": "902",
+          "title": "Owned",
+          "subtype": "tv",
+          "year": "2026",
+          "rating": {
+            "value": 7.5
+          },
+          "pic": {
+            "large": "https://img1.doubanio.com/owned.jpg"
+          },
+          "pubdate": [
+            "2026-09-01(中国大陆)"
+          ],
+          "intro": "owned intro",
+          "genres": [
+            "Drama"
+          ],
+          "countries": [
+            "中国大陆"
+          ],
+          "durations": [
+            "96分钟"
+          ],
+          "aka": [
+            "Other(港译名)",
+            "Alias(台湾)"
+          ],
+          "actors": [
+            {
+              "name": "Owned Actor"
+            }
+          ],
+          "directors": [
+            {
+              "name": "Owned Director"
+            }
+          ],
+          "episodes_count": 3
+        }
+      },
+      "people": {
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ]
+      },
+      "trace": [
+        {
+          "op": "detail",
+          "path": "/tv/902"
+        },
+        {
+          "op": "credits",
+          "path": "/tv/902/celebrities"
+        }
+      ],
+      "expected": {
+        "source": "douban",
+        "media_id": "902",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": "902",
+        "bangumi_id": null,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": null,
+        "release_date": "2026-09-01",
+        "backdrop_path": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.5,
+        "overview": "owned intro",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias(台湾)"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "中国大陆",
+            "name": "中国大陆"
+          }
+        ],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": 96,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://movie.douban.com/subject/902",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "douban"
+      },
+      "error": null
+    },
+    {
+      "case": "id_auto_fallback",
+      "request": {
+        "doubanid": "902"
+      },
+      "search": {},
+      "details": {
+        "tv/902": {
+          "id": "902",
+          "title": "Owned",
+          "subtype": "tv",
+          "year": "2026",
+          "rating": {
+            "value": 7.5
+          },
+          "pic": {
+            "large": "https://img1.doubanio.com/owned.jpg"
+          },
+          "pubdate": [
+            "2026-09-01(中国大陆)"
+          ],
+          "intro": "owned intro",
+          "genres": [
+            "Drama"
+          ],
+          "countries": [
+            "中国大陆"
+          ],
+          "durations": [
+            "96分钟"
+          ],
+          "aka": [
+            "Other(港译名)",
+            "Alias(台湾)"
+          ],
+          "actors": [
+            {
+              "name": "Owned Actor"
+            }
+          ],
+          "directors": [
+            {
+              "name": "Owned Director"
+            }
+          ],
+          "episodes_count": 3
+        }
+      },
+      "people": {
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ]
+      },
+      "trace": [
+        {
+          "op": "detail",
+          "path": "/movie/902"
+        },
+        {
+          "op": "detail",
+          "path": "/tv/902"
+        },
+        {
+          "op": "credits",
+          "path": "/tv/902/celebrities"
+        }
+      ],
+      "expected": {
+        "source": "douban",
+        "media_id": "902",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": "902",
+        "bangumi_id": null,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": null,
+        "release_date": "2026-09-01",
+        "backdrop_path": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.5,
+        "overview": "owned intro",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias(台湾)"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "中国大陆",
+            "name": "中国大陆"
+          }
+        ],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": 96,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://movie.douban.com/subject/902",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "douban"
+      },
+      "error": null
+    },
+    {
+      "case": "id_no_people",
+      "request": {
+        "doubanid": "901",
+        "mtype": "电影"
+      },
+      "search": {},
+      "details": {
+        "movie/901": {
+          "id": "901",
+          "title": "Owned",
+          "subtype": "movie",
+          "year": "2026",
+          "rating": {
+            "value": 7.5
+          },
+          "pic": {
+            "large": "https://img1.doubanio.com/owned.jpg"
+          },
+          "pubdate": [
+            "2026-09-01(中国大陆)"
+          ],
+          "intro": "owned intro",
+          "genres": [
+            "Drama"
+          ],
+          "countries": [
+            "中国大陆"
+          ],
+          "durations": [
+            "96分钟"
+          ],
+          "aka": [
+            "Other(港译名)",
+            "Alias(台湾)"
+          ],
+          "actors": [
+            {
+              "name": "Owned Actor"
+            }
+          ],
+          "directors": [
+            {
+              "name": "Owned Director"
+            }
+          ]
+        }
+      },
+      "people": null,
+      "trace": [
+        {
+          "op": "detail",
+          "path": "/movie/901"
+        },
+        {
+          "op": "credits",
+          "path": "/movie/901/celebrities"
+        }
+      ],
+      "expected": {
+        "source": "douban",
+        "media_id": "901",
+        "scrape_source": null,
+        "type": "电影",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": "901",
+        "bangumi_id": null,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": null,
+        "release_date": "2026-09-01",
+        "backdrop_path": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.5,
+        "overview": "owned intro",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias(台湾)"
+        ],
+        "seasons": {},
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "Owned Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "Owned Actor"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "中国大陆",
+            "name": "中国大陆"
+          }
+        ],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": 96,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://movie.douban.com/subject/901",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "douban"
+      },
+      "error": null
+    },
+    {
+      "case": "name_movie",
+      "request": {
+        "meta": {
+          "name": "Owned",
+          "en_name": "Owned",
+          "type": "电影",
+          "year": "2026"
+        }
+      },
+      "search": {
+        "Owned 2026": {
+          "items": [
+            {
+              "type_name": "电影",
+              "target": {
+                "id": "901",
+                "title": "Owned",
+                "year": "2026"
+              }
+            }
+          ]
+        }
+      },
+      "details": {
+        "movie/901": {
+          "id": "901",
+          "title": "Owned",
+          "subtype": "movie",
+          "year": "2026",
+          "rating": {
+            "value": 7.5
+          },
+          "pic": {
+            "large": "https://img1.doubanio.com/owned.jpg"
+          },
+          "pubdate": [
+            "2026-09-01(中国大陆)"
+          ],
+          "intro": "owned intro",
+          "genres": [
+            "Drama"
+          ],
+          "countries": [
+            "中国大陆"
+          ],
+          "durations": [
+            "96分钟"
+          ],
+          "aka": [
+            "Other(港译名)",
+            "Alias(台湾)"
+          ],
+          "actors": [
+            {
+              "name": "Owned Actor"
+            }
+          ],
+          "directors": [
+            {
+              "name": "Owned Director"
+            }
+          ]
+        }
+      },
+      "people": {
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ]
+      },
+      "trace": [
+        {
+          "op": "search",
+          "query": "Owned 2026"
+        },
+        {
+          "op": "detail",
+          "path": "/movie/901"
+        },
+        {
+          "op": "credits",
+          "path": "/movie/901/celebrities"
+        }
+      ],
+      "expected": {
+        "source": "douban",
+        "media_id": "901",
+        "scrape_source": null,
+        "type": "电影",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": "901",
+        "bangumi_id": null,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": null,
+        "release_date": "2026-09-01",
+        "backdrop_path": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.5,
+        "overview": "owned intro",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias(台湾)"
+        ],
+        "seasons": {},
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "中国大陆",
+            "name": "中国大陆"
+          }
+        ],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": 96,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://movie.douban.com/subject/901",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "douban"
+      },
+      "error": null
+    },
+    {
+      "case": "tv_default_season",
+      "request": {
+        "meta": {
+          "name": "Owned",
+          "en_name": "Owned",
+          "type": "电视剧",
+          "year": "2026"
+        }
+      },
+      "search": {
+        "Owned 2026": {
+          "items": [
+            {
+              "type_name": "电视剧",
+              "target": {
+                "id": "902",
+                "title": "Owned",
+                "year": "2026"
+              }
+            }
+          ]
+        }
+      },
+      "details": {
+        "tv/902": {
+          "id": "902",
+          "title": "Owned",
+          "subtype": "tv",
+          "year": "2026",
+          "rating": {
+            "value": 7.5
+          },
+          "pic": {
+            "large": "https://img1.doubanio.com/owned.jpg"
+          },
+          "pubdate": [
+            "2026-09-01(中国大陆)"
+          ],
+          "intro": "owned intro",
+          "genres": [
+            "Drama"
+          ],
+          "countries": [
+            "中国大陆"
+          ],
+          "durations": [
+            "96分钟"
+          ],
+          "aka": [
+            "Other(港译名)",
+            "Alias(台湾)"
+          ],
+          "actors": [
+            {
+              "name": "Owned Actor"
+            }
+          ],
+          "directors": [
+            {
+              "name": "Owned Director"
+            }
+          ],
+          "episodes_count": 3
+        }
+      },
+      "people": {
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ]
+      },
+      "trace": [
+        {
+          "op": "search",
+          "query": "Owned 2026"
+        },
+        {
+          "op": "detail",
+          "path": "/tv/902"
+        },
+        {
+          "op": "credits",
+          "path": "/tv/902/celebrities"
+        }
+      ],
+      "expected": {
+        "source": "douban",
+        "media_id": "902",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": "902",
+        "bangumi_id": null,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": null,
+        "release_date": "2026-09-01",
+        "backdrop_path": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.5,
+        "overview": "owned intro",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias(台湾)"
+        ],
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "1": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "中国大陆",
+            "name": "中国大陆"
+          }
+        ],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": 96,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://movie.douban.com/subject/902",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "douban"
+      },
+      "error": null
+    },
+    {
+      "case": "tv_season2",
+      "request": {
+        "meta": {
+          "name": "Owned",
+          "en_name": "Owned",
+          "type": "电视剧",
+          "begin_season": 2
+        }
+      },
+      "search": {
+        "Owned": {
+          "items": [
+            {
+              "type_name": "电视剧",
+              "target": {
+                "id": "902",
+                "title": "Owned S02",
+                "year": "2026"
+              }
+            }
+          ]
+        }
+      },
+      "details": {
+        "tv/902": {
+          "id": "902",
+          "title": "Owned S02",
+          "subtype": "tv",
+          "year": "2026",
+          "rating": {
+            "value": 7.5
+          },
+          "pic": {
+            "large": "https://img1.doubanio.com/owned.jpg"
+          },
+          "pubdate": [
+            "2026-09-01(中国大陆)"
+          ],
+          "intro": "owned intro",
+          "genres": [
+            "Drama"
+          ],
+          "countries": [
+            "中国大陆"
+          ],
+          "durations": [
+            "96分钟"
+          ],
+          "aka": [
+            "Other(港译名)",
+            "Alias(台湾)"
+          ],
+          "actors": [
+            {
+              "name": "Owned Actor"
+            }
+          ],
+          "directors": [
+            {
+              "name": "Owned Director"
+            }
+          ],
+          "episodes_count": 3
+        }
+      },
+      "people": {
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ]
+      },
+      "trace": [
+        {
+          "op": "search",
+          "query": "Owned"
+        },
+        {
+          "op": "detail",
+          "path": "/tv/902"
+        },
+        {
+          "op": "credits",
+          "path": "/tv/902/celebrities"
+        }
+      ],
+      "expected": {
+        "source": "douban",
+        "media_id": "902",
+        "scrape_source": null,
+        "type": "电视剧",
+        "title": "Owned S02",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": 2,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": "902",
+        "bangumi_id": null,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": null,
+        "release_date": "2026-09-01",
+        "backdrop_path": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.5,
+        "overview": "owned intro",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias(台湾)"
+        ],
+        "seasons": {
+          "2": [
+            1,
+            2,
+            3
+          ]
+        },
+        "season_info": [],
+        "season_years": {
+          "2": "2026"
+        },
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "中国大陆",
+            "name": "中国大陆"
+          }
+        ],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": 96,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://movie.douban.com/subject/902",
+        "title_year": "Owned S02 (2026)",
+        "mediaid_prefix": "douban"
+      },
+      "error": null
+    },
+    {
+      "case": "year_strict",
+      "request": {
+        "meta": {
+          "name": "Owned",
+          "en_name": "Owned",
+          "type": "电影",
+          "year": "2026"
+        }
+      },
+      "search": {
+        "Owned 2026": {
+          "items": [
+            {
+              "type_name": "电影",
+              "target": {
+                "id": "901",
+                "title": "Owned",
+                "year": 2026
+              }
+            }
+          ]
+        }
+      },
+      "details": {
+        "movie/901": {
+          "id": "901",
+          "title": "Owned",
+          "subtype": "movie",
+          "year": "2026",
+          "rating": {
+            "value": 7.5
+          },
+          "pic": {
+            "large": "https://img1.doubanio.com/owned.jpg"
+          },
+          "pubdate": [
+            "2026-09-01(中国大陆)"
+          ],
+          "intro": "owned intro",
+          "genres": [
+            "Drama"
+          ],
+          "countries": [
+            "中国大陆"
+          ],
+          "durations": [
+            "96分钟"
+          ],
+          "aka": [
+            "Other(港译名)",
+            "Alias(台湾)"
+          ],
+          "actors": [
+            {
+              "name": "Owned Actor"
+            }
+          ],
+          "directors": [
+            {
+              "name": "Owned Director"
+            }
+          ]
+        }
+      },
+      "people": {
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ]
+      },
+      "trace": [
+        {
+          "op": "search",
+          "query": "Owned 2026"
+        }
+      ],
+      "expected": null,
+      "error": null
+    },
+    {
+      "case": "wrong_type_skip",
+      "request": {
+        "meta": {
+          "name": "Owned",
+          "en_name": "Owned",
+          "type": "电影"
+        }
+      },
+      "search": {
+        "Owned": {
+          "items": [
+            {
+              "type_name": "书籍",
+              "target": {
+                "id": "901",
+                "title": "Owned",
+                "year": "2026"
+              }
+            },
+            {
+              "type_name": "电视剧",
+              "target": {
+                "id": "902",
+                "title": "Owned",
+                "year": "2026"
+              }
+            },
+            {
+              "type_name": "电影",
+              "target": {
+                "id": "901",
+                "title": "Owned",
+                "year": "2026"
+              }
+            }
+          ]
+        }
+      },
+      "details": {
+        "movie/901": {
+          "id": "901",
+          "title": "Owned",
+          "subtype": "movie",
+          "year": "2026",
+          "rating": {
+            "value": 7.5
+          },
+          "pic": {
+            "large": "https://img1.doubanio.com/owned.jpg"
+          },
+          "pubdate": [
+            "2026-09-01(中国大陆)"
+          ],
+          "intro": "owned intro",
+          "genres": [
+            "Drama"
+          ],
+          "countries": [
+            "中国大陆"
+          ],
+          "durations": [
+            "96分钟"
+          ],
+          "aka": [
+            "Other(港译名)",
+            "Alias(台湾)"
+          ],
+          "actors": [
+            {
+              "name": "Owned Actor"
+            }
+          ],
+          "directors": [
+            {
+              "name": "Owned Director"
+            }
+          ]
+        }
+      },
+      "people": {
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ]
+      },
+      "trace": [
+        {
+          "op": "search",
+          "query": "Owned"
+        },
+        {
+          "op": "detail",
+          "path": "/movie/901"
+        },
+        {
+          "op": "credits",
+          "path": "/movie/901/celebrities"
+        }
+      ],
+      "expected": {
+        "source": "douban",
+        "media_id": "901",
+        "scrape_source": null,
+        "type": "电影",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": "901",
+        "bangumi_id": null,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": null,
+        "release_date": "2026-09-01",
+        "backdrop_path": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.5,
+        "overview": "owned intro",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias(台湾)"
+        ],
+        "seasons": {},
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "中国大陆",
+            "name": "中国大陆"
+          }
+        ],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": 96,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://movie.douban.com/subject/901",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "douban"
+      },
+      "error": null
+    },
+    {
+      "case": "no_name",
+      "request": {
+        "meta": {}
+      },
+      "search": {},
+      "details": {},
+      "people": [],
+      "trace": [],
+      "expected": null,
+      "error": null
+    },
+    {
+      "case": "not_found",
+      "request": {
+        "doubanid": "999"
+      },
+      "search": {},
+      "details": {},
+      "people": {
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ]
+      },
+      "trace": [
+        {
+          "op": "detail",
+          "path": "/movie/999"
+        },
+        {
+          "op": "detail",
+          "path": "/tv/999"
+        }
+      ],
+      "expected": null,
+      "error": null
+    },
+    {
+      "case": "names_order",
+      "request": {
+        "meta": {
+          "name": "龍",
+          "cn_name": "龍",
+          "en_name": "Owned",
+          "type": "电影"
+        }
+      },
+      "search": {
+        "龍": {
+          "items": []
+        },
+        "龙": {
+          "items": []
+        },
+        "Owned": {
+          "items": [
+            {
+              "type_name": "电影",
+              "target": {
+                "id": "901",
+                "title": "Owned",
+                "year": "2026"
+              }
+            }
+          ]
+        }
+      },
+      "details": {
+        "movie/901": {
+          "id": "901",
+          "title": "Owned",
+          "subtype": "movie",
+          "year": "2026",
+          "rating": {
+            "value": 7.5
+          },
+          "pic": {
+            "large": "https://img1.doubanio.com/owned.jpg"
+          },
+          "pubdate": [
+            "2026-09-01(中国大陆)"
+          ],
+          "intro": "owned intro",
+          "genres": [
+            "Drama"
+          ],
+          "countries": [
+            "中国大陆"
+          ],
+          "durations": [
+            "96分钟"
+          ],
+          "aka": [
+            "Other(港译名)",
+            "Alias(台湾)"
+          ],
+          "actors": [
+            {
+              "name": "Owned Actor"
+            }
+          ],
+          "directors": [
+            {
+              "name": "Owned Director"
+            }
+          ]
+        }
+      },
+      "people": {
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ]
+      },
+      "trace": [
+        {
+          "op": "search",
+          "query": "龍"
+        },
+        {
+          "op": "search",
+          "query": "龙"
+        },
+        {
+          "op": "search",
+          "query": "Owned"
+        },
+        {
+          "op": "detail",
+          "path": "/movie/901"
+        },
+        {
+          "op": "credits",
+          "path": "/movie/901/celebrities"
+        }
+      ],
+      "expected": {
+        "source": "douban",
+        "media_id": "901",
+        "scrape_source": null,
+        "type": "电影",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": "901",
+        "bangumi_id": null,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": null,
+        "release_date": "2026-09-01",
+        "backdrop_path": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.5,
+        "overview": "owned intro",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias(台湾)"
+        ],
+        "seasons": {},
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "中国大陆",
+            "name": "中国大陆"
+          }
+        ],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": 96,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://movie.douban.com/subject/901",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "douban"
+      },
+      "error": null
+    },
+    {
+      "case": "numeric_year",
+      "request": {
+        "meta": {
+          "name": "Owned",
+          "en_name": "Owned",
+          "type": "电影",
+          "year": 2026
+        }
+      },
+      "search": {
+        "Owned 2026": {
+          "items": [
+            {
+              "type_name": "电影",
+              "target": {
+                "id": "901",
+                "title": "Owned",
+                "year": 2026
+              }
+            }
+          ]
+        }
+      },
+      "details": {
+        "movie/901": {
+          "id": "901",
+          "title": "Owned",
+          "subtype": "movie",
+          "year": "2026",
+          "rating": {
+            "value": 7.5
+          },
+          "pic": {
+            "large": "https://img1.doubanio.com/owned.jpg"
+          },
+          "pubdate": [
+            "2026-09-01(中国大陆)"
+          ],
+          "intro": "owned intro",
+          "genres": [
+            "Drama"
+          ],
+          "countries": [
+            "中国大陆"
+          ],
+          "durations": [
+            "96分钟"
+          ],
+          "aka": [
+            "Other(港译名)",
+            "Alias(台湾)"
+          ],
+          "actors": [
+            {
+              "name": "Owned Actor"
+            }
+          ],
+          "directors": [
+            {
+              "name": "Owned Director"
+            }
+          ]
+        }
+      },
+      "people": {
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ]
+      },
+      "trace": [
+        {
+          "op": "search",
+          "query": "Owned 2026"
+        },
+        {
+          "op": "detail",
+          "path": "/movie/901"
+        },
+        {
+          "op": "credits",
+          "path": "/movie/901/celebrities"
+        }
+      ],
+      "expected": {
+        "source": "douban",
+        "media_id": "901",
+        "scrape_source": null,
+        "type": "电影",
+        "title": "Owned",
+        "en_title": null,
+        "hk_title": null,
+        "tw_title": null,
+        "sg_title": null,
+        "year": "2026",
+        "season": null,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "tvdb_id": null,
+        "douban_id": "901",
+        "bangumi_id": null,
+        "anilist_id": null,
+        "anidb_id": null,
+        "collection_id": null,
+        "original_language": null,
+        "original_title": null,
+        "release_date": "2026-09-01",
+        "backdrop_path": null,
+        "poster_path": "https://img1.doubanio.com/owned.jpg",
+        "logo_path": null,
+        "vote_average": 7.5,
+        "overview": "owned intro",
+        "genre_ids": [],
+        "names": [
+          "Other",
+          "Alias(台湾)"
+        ],
+        "seasons": {},
+        "season_info": [],
+        "season_years": {},
+        "category": "",
+        "tmdb_info": null,
+        "douban_info": null,
+        "bangumi_info": null,
+        "anilist_info": null,
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ],
+        "adult": false,
+        "created_by": [],
+        "episode_run_time": [],
+        "genres": [
+          {
+            "id": "Drama",
+            "name": "Drama"
+          }
+        ],
+        "first_air_date": null,
+        "homepage": null,
+        "languages": [],
+        "last_air_date": null,
+        "networks": [],
+        "number_of_episodes": null,
+        "number_of_seasons": null,
+        "origin_country": [],
+        "original_name": null,
+        "production_companies": [],
+        "production_countries": [
+          {
+            "id": "中国大陆",
+            "name": "中国大陆"
+          }
+        ],
+        "spoken_languages": [],
+        "release_dates": [],
+        "status": null,
+        "tagline": null,
+        "vote_count": null,
+        "popularity": null,
+        "runtime": 96,
+        "next_episode_to_air": {},
+        "content_rating": null,
+        "episode_groups": [],
+        "episode_group": null,
+        "detail_link": "https://movie.douban.com/subject/901",
+        "title_year": "Owned (2026)",
+        "mediaid_prefix": "douban"
+      },
+      "error": null
+    },
+    {
+      "case": "query_python_strip",
+      "request": {
+        "meta": {
+          "name": "\u001cOwned\u001d",
+          "en_name": "\u001cOwned\u001d",
+          "type": "电影"
+        }
+      },
+      "search": {
+        "Owned": {
+          "items": []
+        }
+      },
+      "details": {},
+      "people": [],
+      "trace": [
+        {
+          "op": "search",
+          "query": "Owned"
+        }
+      ],
+      "expected": null,
+      "error": null
+    },
+    {
+      "case": "wrong_detail_shape",
+      "request": {
+        "doubanid": "901",
+        "mtype": "电影"
+      },
+      "search": {},
+      "details": {
+        "movie/901": [
+          {
+            "id": "901"
+          }
+        ]
+      },
+      "people": {
+        "directors": [
+          {
+            "name": "API Director"
+          }
+        ],
+        "actors": [
+          {
+            "name": "API Actor"
+          }
+        ]
+      },
+      "trace": [
+        {
+          "op": "detail",
+          "path": "/movie/901"
+        }
+      ],
+      "expected": null,
+      "error": "AttributeError"
+    },
+    {
+      "case": "wrong_people_shape",
+      "request": {
+        "doubanid": "901",
+        "mtype": "电影"
+      },
+      "search": {},
+      "details": {
+        "movie/901": {
+          "id": "901",
+          "title": "Owned",
+          "subtype": "movie",
+          "year": "2026",
+          "rating": {
+            "value": 7.5
+          },
+          "pic": {
+            "large": "https://img1.doubanio.com/owned.jpg"
+          },
+          "pubdate": [
+            "2026-09-01(中国大陆)"
+          ],
+          "intro": "owned intro",
+          "genres": [
+            "Drama"
+          ],
+          "countries": [
+            "中国大陆"
+          ],
+          "durations": [
+            "96分钟"
+          ],
+          "aka": [
+            "Other(港译名)",
+            "Alias(台湾)"
+          ],
+          "actors": [
+            {
+              "name": "Owned Actor"
+            }
+          ],
+          "directors": [
+            {
+              "name": "Owned Director"
+            }
+          ]
+        }
+      },
+      "people": [
+        {
+          "id": "owned"
+        }
+      ],
+      "trace": [
+        {
+          "op": "detail",
+          "path": "/movie/901"
+        },
+        {
+          "op": "credits",
+          "path": "/movie/901/celebrities"
+        }
+      ],
+      "expected": null,
+      "error": "AttributeError"
+    }
+  ]
+}
