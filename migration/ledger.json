@@ -4020,7 +4020,7 @@
   "plugin_module_scope_plan_20261031": {
     "schema_version": 1,
     "request_date": "2026-11-04",
-    "phase": "verified_plugin_module_local_uncommitted",
+    "phase": "verified_plugin_module_pushed_main",
     "user_scope": "插件模块",
     "user_instruction": "2026-11-04: complete plugin-only migration at fixed backend/frontend commits; exclude all workflow/AI surfaces, official authorization; Go/Linux/local/single-user; preserve dirty work; no new business plugins; real source-bound process/browser acceptance. No current commit/push/merge/deploy authorization.",
     "source": {
@@ -9308,16 +9308,22 @@
     "target": {
       "remote": "https://github.com/landuo/light-media.git",
       "branch": "main",
-      "revision": "",
+      "revision": "f8af18cc25f06a73ecde7c3f2e4aea27ad74e269",
       "baseline_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-      "remote_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-      "delivery_mode": "local",
-      "delivery_reason": "约定范围65/65本地功能与实际验收完成；按本轮边界不提交/推送/合并/部署。main仍为9747658，target.revision留空，不把未提交工作伪称已保存Git提交。",
+      "remote_revision": "f8af18cc25f06a73ecde7c3f2e4aea27ad74e269",
+      "delivery_mode": "remote",
+      "delivery_reason": "用户于2026-11-05明确授权推送main；已验收产品提交已正常快进并推送，远端读回一致。本记录后的提交仅更新发布元数据，不改已验收实现或测试输入。",
       "metadata_paths": [
         "migration/ledger.json",
-        "docs/plugin-module-migration-scope-20261031.md"
+        "docs/plugin-module-migration-scope-20261031.md",
+        "docs/plugin-module-continuation-20261025.md",
+        "docs/plugin-module-parity-matrix.md",
+        "docs/plugin-test-quickstart.md",
+        "docs/development-worktrees.txt",
+        "docs/plugin-module-main-publish-20261105.json"
       ],
-      "working_branch": "codex/plugin-host-resources-20261031"
+      "working_branch": "main",
+      "remote_observed_utc": "2026-11-05T01:58:26.214992+00:00"
     },
     "inventory": [
       {
@@ -21747,15 +21753,15 @@
       }
     ],
     "resume": {
-      "stage": "completed_local_uncommitted",
+      "stage": "complete_pushed_main",
       "worktree": "/Users/accidia/projects/light-media",
-      "branch": "codex/plugin-host-resources-20261031",
+      "branch": "main",
       "baseline": "97476582910dc4b696f7ccd5010f28d823812d40",
-      "next": "本轮插件模块已完成；保持工作树与证据，不自动开始业务插件、不提交/推送/合并/生产部署。后续按用户新指令执行。",
+      "next": "插件模块已验收并推送远程main；不自动开发业务插件或部署生产，后续按用户新指令执行。",
       "workers": [],
       "prior_dirty": "all inventory/audit documentation and evidence retained",
       "blockers": [],
-      "delivery": "No new commit/push/deployment yet; main remains fixed delivery target",
+      "delivery": "Verified product f8af18cc25f06a73ecde7c3f2e4aea27ad74e269 pushed and read back on origin/main; no production deployment.",
       "request_date": "2026-11-04",
       "accepted": 65,
       "total": 65,
@@ -21766,11 +21772,12 @@
       "existing_plugin_status_matrix": "docs/plugin-module-parity-matrix.md",
       "no_competing_status_table": true,
       "not_a_completed_migration": false,
-      "completion_scope": "only agreed Go plugin platform; no AI/workflow/official levels/RSA or business plugin ports; local working-tree completion, not main delivery"
+      "completion_scope": "only agreed Go plugin platform; no AI/workflow/official levels/RSA or business plugin ports; local working-tree completion, not main delivery",
+      "delivery_record": "docs/plugin-module-main-publish-20261105.json"
     },
     "implementation_checkpoint": {
-      "branch": "codex/plugin-host-resources-20261031",
-      "delivered": false,
+      "branch": "main",
+      "delivered": true,
       "matrix": "docs/plugin-module-parity-matrix.md",
       "accepted_at_checkpoint": "65/65",
       "actual_evidence": [
@@ -21864,11 +21871,15 @@
         "remaining": "none within this agreed module scope"
       },
       "remote_observation_20261105": {
+        "product_commit": "f8af18cc25f06a73ecde7c3f2e4aea27ad74e269",
+        "remote_main_sha_observed": "f8af18cc25f06a73ecde7c3f2e4aea27ad74e269",
+        "observed_utc": "2026-11-05T01:58:26.214992+00:00",
         "branch": "main",
-        "actual_sha": "97476582910dc4b696f7ccd5010f28d823812d40",
+        "push_completed": true,
+        "force_push": false,
+        "production_deployment_performed": false,
         "command": "git ls-remote origin refs/heads/main",
-        "read_only": true,
-        "working_branch_uncommitted": true
+        "read_only": true
       },
       "historical_checkpoints_preserved": {
         "current_stable_platform_binding": "testdata/plugin-platform-final-20261104/stable-platform/binding.json",
@@ -21912,16 +21923,20 @@
       "final_source_evidence_index": "testdata/plugin-platform-final-20261104/current-final-platform/source-evidence-index.json",
       "final_independent_review": "testdata/plugin-platform-final-20261104/final-independent-review.json",
       "current_runtime_sha256": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
-      "local_implemented_and_accepted": true
+      "local_implemented_and_accepted": true,
+      "delivery_scope": "source code on remote main only; not production deployment",
+      "published_product_commit": "f8af18cc25f06a73ecde7c3f2e4aea27ad74e269",
+      "publication_record": "docs/plugin-module-main-publish-20261105.json"
     }
   },
   "active_request_20261031": {
-    "phase": "verified_local_plugin_module",
+    "phase": "verified_pushed_main",
     "scope": "plugin_module",
     "authority": "plugin_module_scope_plan_20261031",
-    "instruction": "按当前用户要求仅完成插件平台，全Go，无工作流/AI；业务插件暂停。本轮65/65验收完成，无提交/推送/合并或生产部署。",
-    "mode": "completed_local_uncommitted",
+    "instruction": "已验收插件模块已提交并推送main，本轮不部署生产，不合入其他业务插件分支。",
+    "mode": "complete_pushed_main",
     "authorization": "用户：使用 完整项目迁移 技能继续迁移插件模块",
-    "historical_scope_inventory_instruction": "用户要求先盘点，不开始迁移；旧resume的提交/下一业务插件指令本轮不得执行。"
+    "historical_scope_inventory_instruction": "用户要求先盘点，不开始迁移；旧resume的提交/下一业务插件指令本轮不得执行。",
+    "publication_authorization": "用户：推送到远程main分支"
   }
 }

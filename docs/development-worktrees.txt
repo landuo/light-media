@@ -59,3 +59,6 @@ work/go.mod 是跟踪的目录隔离标记，使 go test ./...、go vet ./... �
 2026-10-29 插件平台发布与远程分支清理
 用户本次明确授权将已验收平台推送main、删除远程除main之外全部分支并更新现有NAS光影容器。在原主工作树提交962fdf35，正常合并main既有UI修复得到产品提交b1d9381e并推送；远程21个非main分支删除前逐个保存原始提交到本地refs/archive/remote-deletion-20261029/<分支>，保留本地历史，未整批合入其他业务插件。当前检出main；未来任务按新任务范围创建codex/分支，本次删除授权不自动适用于未来分支。
 从已推送b1d9381e在原工作树交叉构建Linux程序，NAS现有light-media已更新且healthy；旧程序/一致数据库备份只保留NAS私有deployment-backups目录，不将密钥/数据库/原始inspect写入Git。后续仅部署记录/证据提交的实际编译与嵌入输入保持不变并核对二进制哈希；具体哈希、验证和回滚路径见docs/plugin-module-main-publish-20261029.json。
+
+2026-11-05 插件模块main发布
+用户在约定范围65/65验收完成后授权推送main。在原主工作树提交产品f8af18cc25f06a73ecde7c3f2e4aea27ad74e269，正常快进本地main并推送，实际远端main读回相同SHA；未合入其他业务插件/开发分支，也未执行NAS/生产部署。保留原有其他工作树和分支，不新增clone或release副本。当前复用原目录main，发布后的提交只补元数据；实现/测试输入及原始验收证据不变。详细记录见docs/plugin-module-main-publish-20261105.json。

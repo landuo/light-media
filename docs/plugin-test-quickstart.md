@@ -1,6 +1,6 @@
 # 新建、安装和使用一个 Go 测试插件
 
-当前插件平台已在本地 `codex/plugin-host-resources-20261031` 分支完成约定范围65/65验收，源码尚未提交、推送、合并或部署生产。旧main/NAS版本不能直接按新增能力验证。实际版本、源行为和适配见[唯一对照表](plugin-module-parity-matrix.md)与[本轮验收封存](../testdata/plugin-platform-final-20261104/final-completion.json)。
+当前插件平台已推送远程 `main`，产品提交 `f8af18cc`，约定范围65/65验收及555/555回归通过。新增宿主能力已随源码交付；本轮未执行生产部署。准确版本、提交与远程读回见[发布记录](plugin-module-main-publish-20261105.json)，源行为和必要适配见[唯一对照表](plugin-module-parity-matrix.md)。
 
 完整示例在 [`cmd/hello-test/main.go`](../cmd/hello-test/main.go)，打包工具在 [`examples/hello-test/build.mjs`](../examples/hello-test/build.mjs)。示例没有定时任务：只在点击“运行一次”时保存一句话并增加计数。
 

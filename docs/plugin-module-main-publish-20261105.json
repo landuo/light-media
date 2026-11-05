@@ -1,0 +1,109 @@
+{
+  "status": "verified_product_pushed_to_remote_main",
+  "authorization": "用户：推送到远程main分支",
+  "repository": "https://github.com/landuo/light-media",
+  "product_commit": "f8af18cc25f06a73ecde7c3f2e4aea27ad74e269",
+  "parent_baseline": "97476582910dc4b696f7ccd5010f28d823812d40",
+  "source_branch": "codex/plugin-host-resources-20261031",
+  "delivery_branch": "main",
+  "merge_method": "fast-forward only",
+  "push": {
+    "product_commit": "f8af18cc25f06a73ecde7c3f2e4aea27ad74e269",
+    "remote_main_sha_observed": "f8af18cc25f06a73ecde7c3f2e4aea27ad74e269",
+    "observed_utc": "2026-11-05T01:58:26.214992+00:00",
+    "branch": "main",
+    "push_completed": true,
+    "force_push": false,
+    "production_deployment_performed": false
+  },
+  "acceptance": {
+    "in_scope_passed": 65,
+    "total": 65,
+    "current_roots": {
+      "pass": 555,
+      "fail": 0,
+      "skip": 0
+    },
+    "source_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "source_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+    "actual_runtime": "ded7eae5e8375969fd8cea7870423dd3bca6c7f3dad633606adcafd475a0076e",
+    "commit_relation": "The exact reviewed working-tree implementation/test inputs were saved as the product commit without source changes. Tests were not unnecessarily rerun solely for Git publication. Actual runtime and historical evidence remain bound to their recorded versions.",
+    "evidence": {
+      "testdata/plugin-platform-final-20261104/final-completion.json": "13756dba3fd7c105f7ae442507fef3c6663279e3125c412b75f684dbd83e0d89",
+      "testdata/plugin-platform-final-20261104/current-final-platform/binding.json": "5bbaeca5107cd80f5014a1e858cd016ac50cd9db8bb44b30a810a74a2f4b08c7",
+      "testdata/plugin-platform-final-20261104/final-independent-review.json": "199f129995671b9584edc23692d965da24b8489b289de89e84a040859fa55943"
+    }
+  },
+  "publication_checks": {
+    "target120_differences": [],
+    "runtime1818_differences": [],
+    "selected2937_differences": [],
+    "staged_files": 1472,
+    "all_staged_blobs_match_working_bytes": true,
+    "staged_diff_check_exit": 0,
+    "large_files_over10MiB": [],
+    "added_executable_or_database_blobs": [],
+    "secret_pattern_scan": {
+      "files": 1471,
+      "private_key_or_provider_token_or_JWT_matches": 0,
+      "http_userinfo_match_files": 26,
+      "disposition": "Only independently captured synthetic proxy/URL-negative test vectors; no real service credentials added. Scanner is an explicit limited pattern scan, not a claim of exhaustive security certification."
+    },
+    "pre_push_generic_final_gate": {
+      "product_commit": "f8af18cc25f06a73ecde7c3f2e4aea27ad74e269",
+      "branch": "main",
+      "command": "check_ledger.check(scoped_copy_with_actual_product_commit, repo, fixed_source_repo, repo, final=True)",
+      "errors": [],
+      "passed": true,
+      "original_immutable_acceptance_records_unchanged": true,
+      "git_status_clean": true
+    }
+  },
+  "byte_preservation_adaptation": {
+    "path": ".gitattributes",
+    "reason": "Retain exact accepted evidence/GraphQL whitespace and the upstream license CRLF bytes on Git checkout; no runtime/test data altered to silence whitespace diagnostics."
+  },
+  "quickstart_delivery_metadata_lineage": {
+    "path": "docs/plugin-test-quickstart.md",
+    "saved_at_product_commit_sha256": "404fe81c7a2902538c8fc534c2f3e04bddf069fe2bb7b2d71063c86cfc4f7f49",
+    "published_status_sha256": "050670fe40b9d83c0cd9eeaf6eb344a74dd1e71b1a0f97e779158ade21480ca5",
+    "only_intro_changed": true,
+    "exact_reverse_intro_reconstructs_product_copy": true,
+    "SDK_usage_and_code_examples_unchanged": true
+  },
+  "post_product_metadata_paths": [
+    "migration/ledger.json",
+    "docs/plugin-module-migration-scope-20261031.md",
+    "docs/plugin-module-continuation-20261025.md",
+    "docs/plugin-module-parity-matrix.md",
+    "docs/plugin-test-quickstart.md",
+    "docs/development-worktrees.txt",
+    "docs/plugin-module-main-publish-20261105.json"
+  ],
+  "delivery_boundary": {
+    "production_deployment_performed": false,
+    "other_business_branches_merged": false,
+    "force_push": false,
+    "feature_branches_deleted": false
+  },
+  "record_convention": "product_commit and observed remote SHA refer to the actual successful product push. A later commit only carries this publication record and delivery-status metadata; its own SHA is reported after the final remote readback, without self-referential JSON hashes.",
+  "recorded_utc": "2026-11-05T01:59:15.380709+00:00",
+  "post_push_actual_ledger_final_gate": {
+    "passed": true,
+    "errors": [],
+    "command": "check_ledger.check(actual_nested_scope, repo, fixed_source_repo, repo, final=True)",
+    "tested_product_revision": "f8af18cc25f06a73ecde7c3f2e4aea27ad74e269",
+    "branch": "main",
+    "delivery_mode": "remote",
+    "remote_product_revision": "f8af18cc25f06a73ecde7c3f2e4aea27ad74e269",
+    "all_bound_inputs_saved_in_tested_revision": true,
+    "uncommitted_changes_are_metadata_only": [
+      "docs/development-worktrees.txt",
+      "docs/plugin-module-continuation-20261025.md",
+      "docs/plugin-module-parity-matrix.md",
+      "docs/plugin-test-quickstart.md",
+      "migration/ledger.json",
+      "docs/plugin-module-main-publish-20261105.json"
+    ]
+  }
+}
