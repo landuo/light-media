@@ -48,14 +48,14 @@ func parseRepository(body []byte) ([]Index, error) {
 	if err := decodeStrictIndex(body, &repository); err != nil {
 		return nil, err
 	}
-	if repository.SchemaVersion != 1 || repository.Plugins == nil || len(repository.Plugins) > 1024 {
+	if (repository.SchemaVersion != 1 && repository.SchemaVersion != 2) || repository.Plugins == nil || len(repository.Plugins) > 1024 {
 		return nil, errors.New("invalid Go repository schema or plugin list")
 	}
 	seen := map[string]bool{}
 	for _, index := range repository.Plugins {
 		key := strings.ToLower(index.PluginID)
-		if !idPattern.MatchString(index.PluginID) || seen[key] {
-			return nil, errors.New("invalid or duplicate repository plugin ID")
+		if index.SchemaVersion != repository.SchemaVersion || !idPattern.MatchString(index.PluginID) || seen[key] {
+			return nil, errors.New("invalid repository plugin schema or duplicate plugin ID")
 		}
 		seen[key] = true
 	}

@@ -104,6 +104,10 @@ func newOwnedGitHubProcessFixture(t *testing.T, dir string, repositoryURL string
 			http.Error(w, "owned origin failure", 503)
 			return
 		}
+		if r.Host == "raw.githubusercontent.com" && r.URL.Path == "/"+ownedGitHubRepoPath+"/main/"+artifacts.SourceIndexName {
+			http.NotFound(w, r)
+			return
+		}
 		if r.Host == "raw.githubusercontent.com" && r.URL.Path == "/"+ownedGitHubRepoPath+"/main/"+artifacts.IndexName {
 			_ = json.NewEncoder(w).Encode(copied)
 			return
@@ -125,6 +129,10 @@ func newOwnedGitHubProcessFixture(t *testing.T, dir string, repositoryURL string
 	origin.StartTLS()
 	mirror := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		record("mirror", r, "")
+		if r.Method == http.MethodGet && r.URL.Path == "/prefix/https://raw.githubusercontent.com/"+ownedGitHubRepoPath+"/main/"+artifacts.SourceIndexName {
+			http.NotFound(w, r)
+			return
+		}
 		if r.Method != http.MethodGet || r.URL.Path != "/prefix/https://raw.githubusercontent.com/"+ownedGitHubRepoPath+"/main/"+artifacts.IndexName {
 			t.Error("mirror used for API asset or unexpected request")
 			http.Error(w, "owned mirror request invalid", 400)
@@ -258,7 +266,9 @@ func verifyOwnedGitHubProductionNetwork(t *testing.T, f *ownedGitHubProcessFixtu
 	if json.Unmarshal(response, &installed) != nil || !installed.Data.Success {
 		t.Fatal("actual production GitHub install failed")
 	}
-	f.check(t, []string{"mirror", "configured-proxy", "environment-proxy", "official-origin", "configured-proxy", "environment-proxy", "official-origin"})
+	f.check(t, []string{"mirror", "configured-proxy", "environment-proxy", "official-origin",
+		"mirror", "configured-proxy", "environment-proxy", "official-origin",
+		"configured-proxy", "environment-proxy", "official-origin"})
 	// API assets skip the mirror, while per-repository PAT is sent only inside
 	// verified TLS to the exact origin. Actual worker API proves acquisition.
 	success("PUT", "/api/plugins/"+ownedStandardFixtureID, map[string]any{"enabled": true, "key": "owned-github-network-value"})
@@ -269,7 +279,7 @@ func verifyOwnedGitHubProductionNetwork(t *testing.T, f *ownedGitHubProcessFixtu
 	f.mirrorOK.Store(true)
 	f.resetRequests()
 	request("GET", "/api/plugins/history/"+ownedStandardFixtureID+"?force=true", nil, 200)
-	f.check(t, []string{"mirror"})
+	f.check(t, []string{"mirror", "configured-proxy", "environment-proxy", "official-origin", "mirror"})
 	f.mirrorOK.Store(false)
 	f.originFailed.Store(true)
 	f.resetRequests()
@@ -294,7 +304,8 @@ func verifyOwnedGitHubProductionNetwork(t *testing.T, f *ownedGitHubProcessFixtu
 	// The startup sync and this ordinary read share one source cache/pending
 	// fetch. Await it before checking the actual cold-process route sequence.
 	request("GET", "/api/plugins/market?details=true", nil, 200)
-	f.check(t, []string{"mirror", "configured-proxy", "environment-proxy", "official-origin"})
+	f.check(t, []string{"mirror", "configured-proxy", "environment-proxy", "official-origin",
+		"mirror", "configured-proxy", "environment-proxy", "official-origin"})
 	var coldWorker map[string]any
 	if json.Unmarshal(request("GET", "/api/v1/plugin/"+ownedStandardFixtureID+"/echo", nil, 200), &coldWorker) != nil || coldWorker["nonce"] == workerAfter["nonce"] || !originalBaseJSONEqual(mustCleanSeedJSON(coldWorker["config"]), mustCleanSeedJSON(workerBefore["config"])) || !originalBaseJSONEqual(mustCleanSeedJSON(coldWorker["value"]), mustCleanSeedJSON(workerBefore["value"])) {
 		t.Fatal("cold production SDK lost actual process/config/KV recovery")

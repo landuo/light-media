@@ -6,7 +6,7 @@ COPY web/ ./
 COPY internal/plugins /src/internal/plugins
 RUN npm run build
 
-FROM golang:1.26-alpine AS backend
+FROM golang:1.26.4-alpine AS backend
 WORKDIR /src
 COPY go.mod go.sum ./
 COPY third_party/go-dateparser ./third_party/go-dateparser
@@ -39,7 +39,9 @@ RUN sh /tmp/install-browser-runtime.sh /usr/local/lib/light-media/cloakbrowser "
     && apt-get purge -y --auto-remove curl \
     && rm -rf /var/lib/apt/lists/*
 ENV HOME=/home/media \
-    CLOAKBROWSER_BINARY_PATH=/usr/local/lib/light-media/cloakbrowser/chrome
+    CLOAKBROWSER_BINARY_PATH=/usr/local/lib/light-media/cloakbrowser/chrome \
+    PATH=/usr/local/go/bin:$PATH
+COPY --from=backend /usr/local/go /usr/local/go
 COPY --from=backend /server /usr/local/bin/light-media
 COPY --from=backend /src/third_party/go-dateparser/LICENSE /usr/share/licenses/light-media/go-dateparser.LICENSE
 COPY third_party/browser-runtime /usr/share/licenses/light-media/browser-runtime

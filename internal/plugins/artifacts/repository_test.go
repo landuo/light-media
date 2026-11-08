@@ -66,7 +66,8 @@ func TestRepositoryCatalogDiscoverSelectAcquireAndMalformedDocuments(t *testing.
 	}
 	for _, raw := range []string{
 		`{"schema_version":1,"plugins":null}`,
-		`{"schema_version":2,"plugins":[]}`,
+		`{"schema_version":3,"plugins":[]}`,
+		`{"schema_version":2,"plugins":[{"schema_version":1,"plugin_id":"Legacy"}]}`,
 		`{"schema_version":1,"plugin_id":"Mixed","plugins":[]}`,
 		`{"schema_version":1,"plugins":[{"schema_version":1,"plugin_id":"Same"},{"schema_version":1,"plugin_id":"same"}]}`,
 		`{"schema_version":1,"plugins":[{"schema_version":1,"plugin_id":"Nested","plugins":[]}]}`,

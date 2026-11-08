@@ -17,6 +17,8 @@ make build
 
 打开 `http://127.0.0.1:3120`，首次创建管理员。构建前端需要 Node；已构建程序启动时无需 Node。Docker 构建及挂载示例见 `Dockerfile` 和 `compose.yaml`，运行用户需具备配置盘与媒体目录的权限。
 
+插件市场优先读取 GitHub 仓库的 `go-plugins.v2.json`。该清单为每个版本声明固定源码提交、Go 入口及随包资源。点击安装或更新时，光影在 Linux amd64 或 arm64 上编译对应插件，成功后再替换旧代码。支持源码安装的 Docker 镜像自带 Go，直接运行二进制时须在 `PATH` 中提供满足插件 `go.mod` 的 Go 工具链。首次编译会从 Go 模块代理获取依赖，编译缓存保存在配置盘。旧仓库仍可通过 `go-plugins.v1.json` 安装其原有制品。
+
 首次配置入口：
 
 1. 在「站点管理」添加站点并填写 Cookie 或 API Key，可查看账户数据和历史统计。提供馒头、憨憨、UBits、家园与 1PTBA 原生适配，其他支持的站点复用通用 NexusPHP；允许多个实例，导入兼容 MoviePilot 顶层 JSON 数组。

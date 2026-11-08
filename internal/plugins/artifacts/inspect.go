@@ -103,6 +103,12 @@ func fetchIndexBody(ctx context.Context, repositoryURL string, client *http.Clie
 	} else {
 		address := repositoryURL
 		if resolved, ok := githubRepositoryFile(repositoryURL, IndexName); ok {
+			source, _ := githubRepositoryFile(repositoryURL, SourceIndexName)
+			body, err = download(ctx, client, source, MaxIndexBytes)
+			var status *downloadStatusError
+			if err == nil || !errors.As(err, &status) || status.Code != http.StatusNotFound {
+				return body, err
+			}
 			address = resolved
 		}
 		body, err = download(ctx, client, address, MaxIndexBytes)

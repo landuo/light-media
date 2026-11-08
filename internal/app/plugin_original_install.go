@@ -106,13 +106,23 @@ func (a *App) acquireOriginalImplementationForLocalWatch(ctx context.Context, id
 	return a.acquireOriginalImplementationMode(ctx, id, repository, "", false, a.pluginDeveloperMode && artifacts.IsLocalRepository(repository), true)
 }
 func (a *App) acquireOriginalImplementationMode(ctx context.Context, id, repository, release string, force, developerLocalWatch, localWatch bool) (bool, error) {
-	a.pluginImplementationMu.Lock()
-	defer a.pluginImplementationMu.Unlock()
 	// PluginHelper.install routes local URLs to install_local before examining
 	// release_version. A historical release query cannot change that candidate.
 	if artifacts.IsLocalRepository(repository) {
 		release = ""
 	}
+	client, err := a.originalPluginHTTPClient(0, true)
+	if err != nil {
+		return true, bad("INVALID_PROXY", "插件仓库代理配置无效")
+	}
+	defer client.CloseIdleConnections()
+	prepared, err := artifacts.Prepare(ctx, artifacts.Request{PreserveUnchangedRuntime: localWatch, DeveloperLocalWatch: developerLocalWatch, Root: a.pluginPackageRoot(), RepositoryURL: repository, LocalRoots: a.Settings().PluginLocalRepoPaths, PluginID: id, ReleaseVersion: release, Force: force, RefreshBackup: originalPluginDockerMode(), BackupRoot: a.pluginCodeBackupRoot(), Validate: validatePluginArtifactContract}, client)
+	if err != nil {
+		return true, err
+	}
+	defer prepared.Close()
+	a.pluginImplementationMu.Lock()
+	defer a.pluginImplementationMu.Unlock()
 
 	previous, readErr := a.pluginStore.Installation(ctx, id)
 	var cloneMeta PluginInstanceMetadata
@@ -133,12 +143,7 @@ func (a *App) acquireOriginalImplementationMode(ctx context.Context, id, reposit
 	if localWatch {
 		beforeCode, beforeErr = artifacts.ReadInstalled(a.pluginPackageRoot(), id, validatePluginArtifactContract)
 	}
-	client, err := a.originalPluginHTTPClient(0, true)
-	if err != nil {
-		return true, bad("INVALID_PROXY", "插件仓库代理配置无效")
-	}
-	defer client.CloseIdleConnections()
-	acquired, err := artifacts.Acquire(ctx, artifacts.Request{PreserveUnchangedRuntime: localWatch, DeveloperLocalWatch: developerLocalWatch, Root: a.pluginPackageRoot(), RepositoryURL: repository, LocalRoots: a.Settings().PluginLocalRepoPaths, PluginID: id, ReleaseVersion: release, Force: force, RefreshBackup: originalPluginDockerMode(), BackupRoot: a.pluginCodeBackupRoot(), Validate: validatePluginArtifactContract}, client)
+	acquired, err := prepared.Publish(ctx)
 	if err != nil {
 		return true, err
 	}

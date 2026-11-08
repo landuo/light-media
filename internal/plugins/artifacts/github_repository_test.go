@@ -1,8 +1,10 @@
 package artifacts
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -15,12 +17,42 @@ type repositoryReplayTransport func(*http.Request) (*http.Response, error)
 
 func (f repositoryReplayTransport) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
 
+func TestGitHubSourceCatalogDiscoveryUsesNoPlatformArtifacts(t *testing.T) {
+	req, _, index, _ := fixture(t, []byte("unused v1 worker"), "executable")
+	index.SchemaVersion = 2
+	release := &index.Releases[0]
+	contract := release.Artifacts[0].HostContract
+	release.Artifacts = nil
+	release.Source = &SourceBuild{Commit: strings.Repeat("a", 40), Package: "./cmd/owned",
+		LicenseFiles: []string{"LICENSE"}, HostContract: contract}
+	body, err := json.Marshal(RepositoryIndex{SchemaVersion: 2, Plugins: []Index{*index}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	const repo = "https://github.com/Owner/Repo"
+	client := &http.Client{Transport: repositoryReplayTransport(func(r *http.Request) (*http.Response, error) {
+		if r.URL.String() != "https://raw.githubusercontent.com/Owner/Repo/main/"+SourceIndexName {
+			t.Fatalf("source discovery fetched unexpected URL %s", r.URL)
+		}
+		return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(bytes.NewReader(body))}, nil
+	})}
+	for _, platform := range []string{"linux-amd64", "linux-arm64"} {
+		values, err := DiscoverRepository(context.Background(), repo, platform, req.Validate, client)
+		if err != nil || len(values) != 1 || values[0].UnavailableReason != "" ||
+			values[0].Current.Platform != platform || values[0].Current.HostContract != contract {
+			t.Fatalf("%s source discovery: %+v %v", platform, values, err)
+		}
+	}
+}
+
 func TestGitHubRepositoryRootSelectsGoIndexOrDisabledOriginalPackageMetadata(t *testing.T) {
 	req, _, index, _ := fixture(t, []byte("inert-owned-bytes"), "executable")
 	var mode, payloads, metadata atomic.Int32
 	var server *httptest.Server
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
+		case "/Owner/Repo/main/" + SourceIndexName:
+			http.NotFound(w, r)
 		case "/Owner/Repo/main/" + IndexName:
 			if mode.Load() != 0 {
 				http.NotFound(w, r)
