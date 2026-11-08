@@ -136,12 +136,17 @@ func convertTitle(v any) (any, error) {
 	if !ok {
 		return nil, SourceError{"AttributeError"}
 	}
+	return FilenameTitle(s), nil
+}
+
+// FilenameTitle applies MoviePilot's template title substitutions.
+func FilenameTitle(title string) string {
 	return strings.Map(func(r rune) rune {
 		if strings.ContainsRune(`\/:*?"<>|`, r) {
 			return r + 0xFEE0
 		}
 		return r
-	}, s), nil
+	}, title)
 }
 func seq(v any) ([]any, error) {
 	if v == nil {

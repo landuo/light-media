@@ -28,7 +28,7 @@ func TestExplicitSpecialsPartPublishesOneSourceAndScrapesActualEpisodeID(t *test
 				t.Fatalf("specials preview=%+v error=%v", plan, err)
 			}
 			file := plan.Files[0]
-			if file.Season != 0 || len(file.Episodes) != 1 || file.Episodes[0] != 3 || file.Part != "part1" || !strings.HasSuffix(file.Target, "S00E03-part1.mkv") {
+			if file.Season != 0 || len(file.Episodes) != 1 || file.Episodes[0] != 3 || file.Part != "part1" || !strings.HasSuffix(file.Target, "/Season 0/"+identity.Title+" - S00E03-part1 - 第 3 集.mkv") {
 				t.Fatalf("specials/part not actually reflected in plan: %+v", file)
 			}
 			job, err := a.executeImport(ctx, plan.ID, nil)

@@ -59,7 +59,7 @@ func TestManualOrganizeHTTPTypeFolderPublishesAndReorganizesSelectedDirectory(t 
 					}
 					folder := fmt.Sprintf("%s (%d)", identity.Title, identity.Year)
 					if kind == "tv" {
-						return filepath.Join(base, folder, "Season 2", identity.Title+" S02E03.mkv")
+						return filepath.Join(base, folder, "Season 2", identity.Title+" - S02E03 - 第 3 集.mkv")
 					}
 					return filepath.Join(base, folder, folder+".mkv")
 				}

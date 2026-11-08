@@ -3,8 +3,10 @@ package app
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"path/filepath"
 	"slices"
+	"strconv"
 	"strings"
 
 	"light-media/internal/catalog"
@@ -118,20 +120,61 @@ func (a *App) originalTransferContextWithMedia(ctx context.Context, identity cat
 	return out, nil
 }
 
-// Keep the host's ID fallback for missing years. Movie naming uses
+// Keep the host's movie ID fallback for missing years. Movie naming uses
 // MoviePilot's conditional videoFormat suffix after Part.
 const originalNativeMovieNaming = "{{title}}{% if year %} ({{year}}){% else %} (tmdb-{{tmdbid}}){% endif %}/{{title}}{% if year %} ({{year}}){% else %} (tmdb-{{tmdbid}}){% endif %}{% if part %}-{{part}}{% endif %}{% if videoFormat %} - {{videoFormat}}{% endif %}{{fileExt}}"
-const originalNativeTVNaming = "{{title}}{% if year %} ({{year}}){% else %} (tmdb-{{tmdbid}}){% endif %}/Season {{season}}/{{title}} {{season_episode}}{% if part %}-{{part}}{% endif %}{{fileExt}}"
+const originalNativeTVNaming = "{{title}}{% if year %} ({{year}}){% endif %}/Season {{season}}/{{title}} - {{season_episode}}{% if part %}-{{part}}{% endif %}{% if episode %} - 第 {{episode}} 集{% endif %}{{fileExt}}"
 
 func originalNativeTransferNaming(identity catalog.Media) string {
 	template := originalNativeMovieNaming
 	if identity.MediaType == "tv" {
-		template = originalNativeTVNaming
+		return originalNativeTVNaming
 	}
 	if providerNativeMedia(identity) {
 		template = strings.ReplaceAll(template, "tmdb-{{tmdbid}}", "{{media_source}}-{{media_id}}")
 	}
 	return template
+}
+
+// Use the same default as the module renderer when no plugin context is needed.
+func (a *App) originalTVImportTarget(ctx context.Context, identity catalog.Media, file PlanFile, base, metadataPath string) (string, error) {
+	year := any(identity.Year)
+	part := file.Part
+	if identity.Year <= 0 || part == "" {
+		parsed, err := a.originalTransferPathMeta(ctx, metadataPath)
+		if err != nil {
+			return "", err
+		}
+		if identity.Year <= 0 {
+			year = parsed.Get("year")
+		}
+		if part == "" {
+			part = parsed.Text("part")
+		}
+	}
+	seasonEpisode, episode := fmt.Sprintf("S%02d", file.Season), ""
+	if len(file.Episodes) > 0 {
+		first := file.Episodes[0]
+		seasonEpisode += fmt.Sprintf("E%02d", first)
+		episode = strconv.Itoa(first)
+		if len(file.Episodes) > 1 {
+			last := file.Episodes[len(file.Episodes)-1]
+			seasonEpisode += fmt.Sprintf("-E%02d", last)
+			episode += "-" + strconv.Itoa(last)
+		}
+	}
+	path, err := noticetemplate.RenderWithContext(ctx, originalNativeTVNaming, noticetemplate.Object{
+		"title": noticetemplate.FilenameTitle(identity.Title), "year": year, "season": file.Season,
+		"season_episode": seasonEpisode, "episode": episode, "part": part, "fileExt": filepath.Ext(file.Source),
+	})
+	if err != nil {
+		return "", err
+	}
+	target := filepath.Join(base, path)
+	if file.DirectoryDigest != "" {
+		target = filepath.Join(filepath.Dir(target), originalTransferDiscFolder(part, filepath.Base(file.Source)))
+	}
+	return target, nil
 }
 
 func (a *App) originalTransferNativeRename(ctx context.Context, identity catalog.Media, file PlanFile, base string, source originalTransferFileContext, episodes []catalog.Episode, observe ...bool) (string, error) {

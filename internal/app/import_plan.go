@@ -513,27 +513,18 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				baseDir = filepath.Join(baseDir, category)
 			}
 			targetDir := filepath.Join(baseDir, folder)
-			if request.MediaType == "tv" {
-				if file.DirectoryDigest == "" {
-					base = fmt.Sprintf("%s S%02dE%02d", title, file.Season, file.Episodes[0])
-					if len(file.Episodes) > 1 {
-						base += fmt.Sprintf("-E%02d", file.Episodes[len(file.Episodes)-1])
-					}
-				}
-				targetDir = filepath.Join(targetDir, fmt.Sprintf("Season %d", file.Season))
-			}
 			if file.Part != "" {
 				base += "-" + file.Part
 			}
 			renaming := importBool(request.Renaming, true)
 			hasTransferHandlers := a.originalTransferHasHandlers()
 			modulePreview := request.originalModulePreview && (hasTransferHandlers || file.MaterialKind != "" || file.DirectoryDigest != "")
-			transferContext := providerImport || hasTransferHandlers || file.MaterialKind != "" || requested.originalResolvedMeta != nil
+			transferContext := providerImport || hasTransferHandlers || modulePreview || file.MaterialKind != "" || requested.originalResolvedMeta != nil
+			metadataPath := file.Source
+			if requested.originalMetadataPath != "" {
+				metadataPath = requested.originalMetadataPath
+			}
 			if renaming && identity.MediaType == "movie" && !transferContext {
-				metadataPath := file.Source
-				if requested.originalMetadataPath != "" {
-					metadataPath = requested.originalMetadataPath
-				}
 				parsed, e := a.originalTransferPathMeta(ctx, metadataPath)
 				if e != nil {
 					return ImportPlan{}, e
@@ -547,12 +538,15 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				// MoviePilot keeps the original basename directly in the destination
 				// when smart naming is off, without title or Season subdirectories.
 				file.Target = filepath.Join(baseDir, filepath.Base(file.Source))
+			} else if identity.MediaType == "tv" && !transferContext {
+				file.Target, err = a.originalTVImportTarget(ctx, identity, file, baseDir, metadataPath)
+				if err != nil {
+					return ImportPlan{}, err
+				}
 			}
 			if transferContext {
 				metadataFile := file
-				if requested.originalMetadataPath != "" {
-					metadataFile.Source = requested.originalMetadataPath
-				}
+				metadataFile.Source = metadataPath
 				original, e := a.originalTransferContextWithMedia(ctx, identity, metadataFile, originalMedia, requested.originalResolvedMeta)
 				if e != nil {
 					return ImportPlan{}, e
@@ -579,7 +573,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					original.Episodes, _ = json.Marshal(rows)
 				}
 				meta.OriginalTransfer[file.ID] = original
-				if renaming && (!request.originalModulePreview || identity.MediaType == "movie" && !modulePreview) {
+				if renaming && !modulePreview {
 					var episodes []catalog.Episode
 					if season, exists := seasons[file.Season]; !providerImport && exists {
 						episodes = season.Episodes
@@ -626,7 +620,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				continue
 			}
 			inPlace := reorganize != nil && file.Target == reorganize.Asset.Path
-			if !within(root.Path, file.Target) || file.Source == file.Target && !inPlace || seenTargets[file.Target] {
+			if !importPath(file.Target) || !within(root.Path, file.Target) || file.Source == file.Target && !inPlace || seenTargets[file.Target] {
 				block("目标路径重复、重叠或逃逸")
 			} else {
 				seenTargets[file.Target] = true

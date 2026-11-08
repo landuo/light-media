@@ -7,7 +7,35 @@ import (
 	"path/filepath"
 	"reflect"
 	"testing"
+
+	"light-media/internal/catalog"
 )
+
+func TestTVDefaultNamingMatchesMoviePilotWithoutYear(t *testing.T) {
+	a, source, target := importTestApp(t)
+	ctx := context.Background()
+	series := catalog.Media{ID: 123, MediaType: "tv", Title: "Example: Series"}
+	file := PlanFile{Source: filepath.Join(source, "Example.Series.S00E03-E04.MKV"),
+		Season: 0, Episodes: []int{3, 4}, Part: "part1"}
+	importWrite(t, file.Source, []byte("synthetic special"))
+	media, err := sourceTMDBMediaInfo(json.RawMessage(`{"id":123,"name":"Example: Series","original_name":"Example: Series","genres":[],"credits":{"cast":[],"crew":[]},"external_ids":{}}`), "tv", "image.tmdb.org", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	projection, err := a.originalTransferContextWithMedia(ctx, series, file, media)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := filepath.Join(target, "Example： Series", "Season 0", "Example： Series - S00E03-E04-part1 - 第 3-4 集.MKV")
+	native, err := a.originalTVImportTarget(ctx, series, file, target, file.Source)
+	if err != nil || native != want {
+		t.Fatalf("ordinary naming = %q, want %q, error %v", native, want, err)
+	}
+	module, err := a.originalTransferNativeRename(ctx, series, file, target, projection, nil, false)
+	if err != nil || module != want {
+		t.Fatalf("module naming = %q, want %q, error %v", module, want, err)
+	}
+}
 
 // Fixed __handle_transfer chooses both storage operations, then calls transfer;
 // the native FileManager provider alone enters TransHandler naming. Source

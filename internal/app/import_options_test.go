@@ -52,7 +52,7 @@ func TestImportRenameScrapeAndTypeFolderOptionsPublishRealFiles(t *testing.T) {
 							folder := fmt.Sprintf("%s (%d)", identity.Title, identity.Year)
 							want = filepath.Join(base, folder, folder+".mkv")
 							if kind == "tv" {
-								want = filepath.Join(base, folder, "Season 2", identity.Title+" S02E03.mkv")
+								want = filepath.Join(base, folder, "Season 2", identity.Title+" - S02E03 - 第 3 集.MKV")
 							}
 						}
 						if plan.Files[0].Target != want {
