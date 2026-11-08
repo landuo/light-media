@@ -43,7 +43,8 @@ import MultiSeasonSubscribe from './MultiSeasonSubscribe.vue';
 import SubscriptionFilters from './SubscriptionFilters.vue';
 import { subscriptionFilterValue, setSubscriptionFilter } from '../features/subscription-filters';
 import { downloadDestination, downloadDirectoryPaths } from '../features/download-directories';
-const props = defineProps<{ view: string }>(),
+const emit = defineEmits<{ close: []; saved: [subscription: any] }>();
+const props = defineProps<{ view: string; editorOnly?: boolean }>(),
   subs = ref<any[]>([]),
   entries = ref<any[]>([]),
   editing = ref<any>(null),
@@ -361,11 +362,19 @@ async function openMulti() {
     multiSeason.value = true;
   });
 }
+function closeEditor() {
+  editing.value = null;
+  if (props.editorOnly) emit('close');
+}
+function subscriptionChanged(subscription: any) {
+  emit('saved', subscription);
+  return load();
+}
 function closeMulti(created: boolean) {
   multiSeason.value = false;
   if (created) {
-    editing.value = null;
-    if (props.view.includes('/new/')) go('subscriptions');
+    closeEditor();
+    if (!props.editorOnly && props.view.includes('/new/')) go('subscriptions');
   }
 }
 async function save() {
@@ -375,9 +384,12 @@ async function save() {
     return api('/subscriptions' + (s.id ? '/' + s.id : ''), s, s.id ? 'PUT' : 'POST');
   }, '订阅已保存');
   if (r) {
-    editing.value = null;
-    await load();
-    if (props.view.includes('/new/')) go('subscriptions');
+    emit('saved', r);
+    closeEditor();
+    if (!props.editorOnly) {
+      await load();
+      if (props.view.includes('/new/')) go('subscriptions');
+    }
   }
 }
 async function remove(s: any) {
@@ -446,7 +458,7 @@ onMounted(applyView);
 watch(() => props.view, applyView);
 </script>
 <template>
-  <div v-if="!isCalendar" class="subscription-actions">
+  <div v-if="!isCalendar && !editorOnly" class="subscription-actions">
     <button
       class="primary subscription-add"
       aria-label="新建订阅"
@@ -549,7 +561,7 @@ watch(() => props.view, applyView);
       <p v-if="!agendaDays.length && !loading" class="notice">没有更新安排。</p>
     </div>
   </template>
-  <template v-else>
+  <template v-else-if="!editorOnly">
     <div v-if="!typedView" class="toolbar">
       <input v-model="filterText" placeholder="搜索订阅" aria-label="搜索订阅" />
       <VSelect
@@ -736,14 +748,14 @@ watch(() => props.view, applyView);
   <div
     v-if="editing && !multiSeason"
     class="modal-backdrop subscription-editor-backdrop"
-    @click.self="editing = null"
+    @click.self="closeEditor"
   >
     <section
       class="modal subscription-dialog"
       role="dialog"
       aria-modal="true"
       :aria-labelledby="editorID + '-title'"
-      @keydown.esc="editing = null"
+      @keydown.esc="closeEditor"
     >
       <header class="subscription-dialog-header">
         <div class="subscription-dialog-title">
@@ -756,7 +768,7 @@ watch(() => props.view, applyView);
             </p>
           </div>
         </div>
-        <button class="icon-button" @click="editing = null" aria-label="关闭">
+        <button class="icon-button" @click="closeEditor" aria-label="关闭">
           <AppIcon name="close" />
         </button>
       </header>
@@ -1242,7 +1254,7 @@ watch(() => props.view, applyView);
     v-if="multiSeason && editing"
     :template="multiTemplate"
     :existing="subs"
-    @changed="load"
+    @changed="subscriptionChanged"
     @close="closeMulti"
   />
 </template>

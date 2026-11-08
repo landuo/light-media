@@ -4,7 +4,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { api, clone, errorText, image, toast } from '../api';
 import { submitSeasonBatch, type SeasonSubscriptionRow } from '../features/subscriptions';
 const props = defineProps<{ template: any; existing: any[] }>();
-const emit = defineEmits<{ close: [created: boolean]; changed: [] }>();
+const emit = defineEmits<{ close: [created: boolean]; changed: [subscription: any] }>();
 const rows = ref<SeasonSubscriptionRow[]>([]);
 const loading = ref(false),
   loadError = ref('');
@@ -89,7 +89,7 @@ async function submit() {
     base,
     async (body) => {
       const r = await api('/subscriptions', body);
-      emit('changed');
+      emit('changed', r);
       return r;
     },
     errorText,

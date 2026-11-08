@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import CatalogRelated from './CatalogRelated.vue';
+import { VBottomSheet } from 'vuetify/components/VBottomSheet';
+import { VBtn } from 'vuetify/components/VBtn';
+import { VCard, VCardActions, VCardItem, VCardText, VCardTitle } from 'vuetify/components/VCard';
+import { VDivider } from 'vuetify/components/VDivider';
+import { VIcon } from 'vuetify/components/VIcon';
+import { VImg } from 'vuetify/components/VImg';
+import { VList, VListItem } from 'vuetify/components/VList';
 import { VSelect } from 'vuetify/components/VSelect';
 import { VInfiniteScroll } from 'vuetify/components/VInfiniteScroll';
-import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { ref, shallowRef, onMounted, onDeactivated, onUnmounted, computed } from 'vue';
 import { api, action, go, image, date, ui, label, errorText } from '../api';
 import MediaCards from './MediaCards.vue';
+import Subscriptions from './Subscriptions.vue';
 import { startSearch, useExplicitSearch } from '../features/search-session';
+import { exploreSeasonRows, type ExploreSeasonRow } from '../features/explore-actions';
 import { mediaDetailSeasons } from '../features/subscriptions';
 let loadSeq = 0,
   seasonSeq = 0;
@@ -13,6 +22,13 @@ const creditsKind = ref('all'),
   creditsLimit = ref(24),
   creditsSort = ref('popularity');
 const props = defineProps<{ route: string }>();
+const subscriptionEditor = shallowRef<{ view: string; media: any } | null>(null);
+const subscriptionPicker = shallowRef<{
+  media: any;
+  seasons: ExploreSeasonRow[] | null;
+  error: string;
+} | null>(null);
+const subscriptionSeason = ref<number[]>([]);
 const [routePath, routeQuery] = props.route.split('?'),
   routeParams = new URLSearchParams(routeQuery),
   parts = routePath!.split('/'),
@@ -160,21 +176,54 @@ if (parts[0] === 'search') {
     return load();
   });
 }
-function subscribe() {
-  go(
-    'subscriptions/new/' +
-      kind.value +
-      '/' +
-      detail.value.id +
-      '?season=' +
-      season.value +
-      '&start_episode=1',
-  );
+function openSubscriptionEditor(media: any, selectedSeason?: number) {
+  subscriptionPicker.value = null;
+  const query = selectedSeason === undefined ? '' : `?season=${selectedSeason}&start_episode=1`;
+  subscriptionEditor.value = {
+    view: `subscriptions/new/${media.media_type}/${media.id}${query}`,
+    media,
+  };
+}
+async function openSubscription(media: any) {
+  if (media.media_type !== 'tv') {
+    openSubscriptionEditor(media);
+    return;
+  }
+  const picker = { media, seasons: null, error: '' };
+  subscriptionPicker.value = picker;
+  subscriptionSeason.value = [];
+  try {
+    const seasons = await api('/catalog/seasons?id=' + media.id);
+    if (subscriptionPicker.value !== picker) return;
+    const rows = exploreSeasonRows({ ...media, seasons }, []);
+    if (rows.length === 1) openSubscriptionEditor(media, rows[0]!.season);
+    else subscriptionPicker.value = { ...picker, seasons: rows };
+  } catch (e) {
+    if (subscriptionPicker.value === picker) {
+      subscriptionPicker.value = { ...picker, seasons: [], error: errorText(e) };
+    }
+  }
+}
+function confirmSubscriptionSeason() {
+  const picker = subscriptionPicker.value;
+  const selectedSeason = subscriptionSeason.value[0];
+  if (picker?.seasons?.some((row) => row.season === selectedSeason)) {
+    openSubscriptionEditor(picker.media, selectedSeason);
+  }
+}
+function subscriptionSaved(subscription: any) {
+  const media = subscriptionEditor.value?.media;
+  if (media && subscription?.id) media.subscription_id ||= subscription.id;
 }
 onMounted(() => {
   if (!['search', 'discover'].includes(parts[0]!)) void load();
 });
+onDeactivated(() => {
+  subscriptionEditor.value = null;
+  subscriptionPicker.value = null;
+});
 onUnmounted(() => {
+  subscriptionPicker.value = null;
   ++loadSeq;
   ++seasonSeq;
 });
@@ -235,7 +284,12 @@ onUnmounted(() => {
       <div v-if="loading && !visibleResults.length" class="skeleton-grid">
         <div v-for="i in 12" :key="i" class="skeleton"></div>
       </div>
-      <MediaCards v-else :items="visibleResults" :quick-actions="true" />
+      <MediaCards
+        v-else
+        :items="visibleResults"
+        :quick-actions="true"
+        @subscribe="openSubscription"
+      />
       <template #loading><span class="hint" role="status">正在加载…</span></template>
       <template #empty>
         <span class="hint" role="status">{{
@@ -255,7 +309,7 @@ onUnmounted(() => {
       <div v-for="i in 12" :key="i" class="skeleton"></div>
     </div>
     <template v-else
-      ><MediaCards :items="visibleResults" :quick-actions="true" />
+      ><MediaCards :items="visibleResults" :quick-actions="true" @subscribe="openSubscription" />
       <div v-if="!visibleResults.length && !error" class="empty-state">
         <span>⌕</span>
         <h3>{{ query ? '没有找到相关作品' : '暂无搜索结果' }}</h3>
@@ -320,13 +374,7 @@ onUnmounted(() => {
             :disabled="kind === 'tv' && (!seasonData || seasonLoading)"
           >
             ⌕ 搜索资源</button
-          ><button
-            class="detail-subscribe"
-            @click="subscribe"
-            :disabled="kind === 'tv' && (!seasonData || seasonLoading)"
-          >
-            ＋ 添加订阅
-          </button>
+          ><button class="detail-subscribe" @click="openSubscription(detail)">＋ 添加订阅</button>
         </div>
         <div class="tags">
           <span v-if="['present', 'managed', 'external'].includes(detail.library_state)"
@@ -420,8 +468,89 @@ onUnmounted(() => {
     </section></template
   >
   <div v-else-if="loading" class="panel loading-state">正在加载影视资料…</div>
+  <VBottomSheet
+    v-if="subscriptionPicker"
+    :model-value="true"
+    inset
+    scrollable
+    aria-label="选择订阅季度"
+    @update:model-value="!$event && (subscriptionPicker = null)"
+  >
+    <VCard class="subscription-season-picker">
+      <VCardItem>
+        <VCardTitle>订阅 {{ subscriptionPicker.media.title }}</VCardTitle>
+        <template #append>
+          <VBtn
+            icon="mdi-close"
+            variant="text"
+            aria-label="关闭"
+            @click="subscriptionPicker = null"
+          />
+        </template>
+      </VCardItem>
+      <VDivider />
+      <VCardText class="subscription-season-content">
+        <p v-if="!subscriptionPicker.seasons" role="status">正在加载季集信息…</p>
+        <VList
+          v-else-if="subscriptionPicker.seasons.length"
+          v-model:selected="subscriptionSeason"
+          select-strategy="single-independent"
+          color="primary"
+          lines="three"
+        >
+          <VListItem
+            v-for="row in subscriptionPicker.seasons"
+            :key="row.season"
+            :value="row.season"
+            :title="`第 ${row.season} 季`"
+            :subtitle="`${row.air_date || '播出日期待定'} · ${row.episode_count ? row.episode_count + ' 集' : '集数待定'}`"
+          >
+            <template #prepend>
+              <VImg
+                v-if="row.poster_path"
+                :src="image(row.poster_path, 'w185')"
+                width="60"
+                height="90"
+                class="me-3 rounded"
+                cover
+              />
+            </template>
+            <template #append="{ isSelected }">
+              <VIcon :icon="isSelected ? 'mdi-radiobox-marked' : 'mdi-radiobox-blank'" />
+            </template>
+          </VListItem>
+        </VList>
+        <template v-else>
+          <p role="status">{{ subscriptionPicker.error || '未查询到可订阅的季集信息。' }}</p>
+          <VBtn variant="text" @click="openSubscription(subscriptionPicker.media)">重试</VBtn>
+        </template>
+      </VCardText>
+      <VCardActions class="justify-center">
+        <VBtn
+          color="primary"
+          variant="flat"
+          :disabled="!subscriptionSeason.length"
+          @click="confirmSubscriptionSeason"
+        >
+          {{ subscriptionSeason.length ? '下一步' : '请选择订阅季度' }}
+        </VBtn>
+      </VCardActions>
+    </VCard>
+  </VBottomSheet>
+  <Teleport v-if="subscriptionEditor" to="body">
+    <Subscriptions
+      editor-only
+      :view="subscriptionEditor.view"
+      @close="subscriptionEditor = null"
+      @saved="subscriptionSaved"
+    />
+  </Teleport>
 </template>
 <style scoped>
+.subscription-season-content {
+  max-height: min(56vh, 420px);
+  overflow-y: auto;
+}
 .search-keyword {
   margin: 12px 16px 24px;
   color: var(--accent);

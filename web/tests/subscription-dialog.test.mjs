@@ -74,13 +74,15 @@ function text(node) {
   );
 }
 
-async function mount(t, { view = 'subscriptions', items = [subscription()] } = {}) {
+async function mount(t, { view = 'subscriptions', items = [subscription()], editorOnly = false } = {}) {
   const fixture = {
       items,
       before: copy(items),
       requests: [],
       toasts: [],
       confirmations: [],
+      events: [],
+      navigation: [],
       confirm: false,
       failSave: false,
     },
@@ -126,7 +128,7 @@ async function mount(t, { view = 'subscriptions', items = [subscription()] } = {
           api,
           ui: { settings, busy: 0 },
           image: () => '',
-          go: () => {},
+          go: (target) => fixture.navigation.push(target),
           action: async (callback, success) => {
             try {
               const result = await callback();
@@ -158,7 +160,10 @@ async function mount(t, { view = 'subscriptions', items = [subscription()] } = {
   );
   const scope = vue.effectScope();
   const render = scope.run(() =>
-    module.exports.default.setup({ view }, { expose() {}, emit() {} }),
+    module.exports.default.setup(
+      { view, editorOnly },
+      { expose() {}, emit: (...event) => fixture.events.push(event) },
+    ),
   );
   t.after(() => scope.stop());
   for (const callback of mounted) await callback();
@@ -373,6 +378,24 @@ test('a new TV subscription retains its starting episode for whole-season and mu
   assert.equal(saved.body.start_episode, 5);
   assert.equal(saved.body.target_scope, 'season');
   assert.deepEqual(saved.body.episodes, []);
+});
+
+test('the overlay editor saves its selected season and closes without changing the page', async (t) => {
+  const app = await mount(t, {
+    view: 'subscriptions/new/tv/42?season=2&start_episode=5',
+    editorOnly: true,
+  });
+  assert.ok(app.dialog());
+  assert.equal(app.label('新建订阅'), undefined);
+  assert.equal(app.label('编辑订阅 合成剧集'), undefined);
+  await app.click('保存');
+  const saved = app.fixture.requests.find((request) => request.method === 'POST');
+  assert.equal(saved.body.season, 2);
+  assert.equal(saved.body.start_episode, 5);
+  assert.equal(app.fixture.events[0][0], 'saved');
+  assert.deepEqual(app.fixture.events[1], ['close']);
+  assert.deepEqual(app.fixture.navigation, []);
+  assert.equal(app.dialog(), undefined);
 });
 
 test('save failures keep the editing dialog and draft without deleting the subscription', async (t) => {

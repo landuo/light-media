@@ -12,6 +12,7 @@ import MediaPoster from './MediaPoster.vue';
 import { exploreMediaKey } from '../features/explore-feed';
 import { exploreImage, exploreDetailRoute } from '../features/explore-media';
 const props = defineProps<{ items: any[]; quickActions?: boolean; originalActions?: boolean }>();
+const emit = defineEmits<{ subscribe: [media: any] }>();
 const actions = ref<InstanceType<typeof ExploreActions>>();
 const sourceLogos: Record<string, string> = {
   themoviedb: tmdbLogo,
@@ -34,7 +35,8 @@ function search(m: any) {
 }
 function subscribe(m: any) {
   if (props.originalActions) actions.value?.open(m, 'subscribe');
-  else go(m.subscription_id ? 'subscriptions' : 'subscriptions/new/' + m.media_type + '/' + m.id);
+  else if (m.subscription_id) go('subscriptions');
+  else emit('subscribe', m);
 }
 </script>
 <template>
