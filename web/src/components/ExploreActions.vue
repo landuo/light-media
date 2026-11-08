@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUnmounted, ref, shallowRef } from 'vue';
+import { computed, onDeactivated, onUnmounted, ref, shallowRef } from 'vue';
 import { useDisplay } from 'vuetify';
 import { VDialog } from 'vuetify/components/VDialog';
 import { VBottomSheet } from 'vuetify/components/VBottomSheet';
@@ -36,14 +36,18 @@ import {
   type ExploreSite,
 } from '../features/explore-actions';
 
-const emit = defineEmits<{ changed: [media: ExploreActionMedia] }>();
+type Action = ExploreAction | 'add-seasons';
+const emit = defineEmits<{
+  changed: [media: ExploreActionMedia];
+  singleSeason: [media: ExploreActionMedia, season: number];
+}>();
 const display = useDisplay();
 const visible = ref(false),
   phase = ref<'loading' | 'resolve' | 'sites' | 'seasons' | 'error'>('loading'),
   loading = ref(false),
   saving = ref(false),
   error = ref(''),
-  action = ref<ExploreAction>('search'),
+  action = ref<Action>('search'),
   original = shallowRef<ExploreActionMedia | null>(null),
   resolved = shallowRef<ExploreActionMedia | null>(null),
   candidates = ref<ExploreActionMedia[]>([]),
@@ -57,18 +61,27 @@ let cancelSeasonIDs: string[] | null = null;
 const pendingSeasons = computed(() =>
   seasons.value.filter((row) => row.selected && ['ready', 'failed'].includes(row.state)),
 );
+const showSeasonSheet = computed(
+  () =>
+    visible.value &&
+    (phase.value === 'seasons' ||
+      (action.value === 'add-seasons' && ['loading', 'error'].includes(phase.value))),
+);
 const title = computed(() =>
   phase.value === 'sites'
     ? '选择站点'
     : phase.value === 'resolve'
       ? '选择影视'
-      : action.value === 'subscribe'
+      : action.value !== 'search'
         ? `订阅 ${original.value?.title || ''}`
         : `搜索 ${original.value?.title || ''}`,
 );
 
 function close() {
   if (saving.value) return;
+  hide();
+}
+function hide() {
   generation++;
   visible.value = false;
   loading.value = false;
@@ -77,7 +90,7 @@ function updateSubscription() {
   if (!original.value) return;
   const season = Number(original.value.season);
   const subscription =
-    Number.isInteger(season) && season > 0
+    action.value !== 'add-seasons' && Number.isInteger(season) && season > 0
       ? existing.find((row) => Number(row.season) === season)
       : existing[0];
   original.value.subscription_id = subscription?.id || '';
@@ -88,7 +101,7 @@ function fail(cause: unknown, token: number) {
   error.value = errorText(cause);
   if (phase.value === 'loading') phase.value = 'error';
 }
-async function open(media: ExploreActionMedia, nextAction: ExploreAction) {
+async function open(media: ExploreActionMedia, nextAction: Action) {
   if (saving.value) return;
   const token = ++generation;
   original.value = media;
@@ -153,6 +166,24 @@ async function prepare(media: ExploreActionMedia, token: number) {
     sites.value = enabledExploreSites(response);
     selectedSites.value = selectedExploreSites(sites.value, ui.settings?.indexer_sites);
     phase.value = 'sites';
+    return;
+  }
+  if (action.value === 'add-seasons') {
+    const [response, rows] = await Promise.all([
+      api('/subscriptions'),
+      api('/catalog/seasons?' + new URLSearchParams({ id: String(media.id) })),
+    ]);
+    if (token !== generation) return;
+    existing = exploreSubscriptions(media, response);
+    seasons.value = exploreSeasonRows({ ...media, seasons: rows }, existing);
+    updateSubscription();
+    const soleSeason = seasons.value[0];
+    if (seasons.value.length === 1 && soleSeason?.state === 'ready' && original.value) {
+      emit('singleSeason', original.value, soleSeason.season);
+      hide();
+    } else {
+      phase.value = 'seasons';
+    }
     return;
   }
   const response = await api('/subscriptions');
@@ -262,6 +293,7 @@ function toggleSeason(row: ExploreSeasonRow) {
 }
 async function subscribeSeasons() {
   if (!resolved.value || saving.value || !pendingSeasons.value.length) return;
+  const token = generation;
   saving.value = true;
   error.value = '';
   try {
@@ -275,19 +307,32 @@ async function subscribeSeasons() {
       },
       errorText,
     );
+    if (token !== generation) return;
     const failed = seasons.value.filter((row) => row.state === 'failed').length;
+    const conflicts = seasons.value.filter(
+      (row) => row.selected && row.state === 'conflict',
+    ).length;
     const succeeded = seasons.value.filter((row) => row.state === 'success').length;
-    if (failed) error.value = `已成功 ${succeeded} 季，${failed} 季未成功，可重试未成功的季。`;
-    else {
+    if (failed || conflicts) {
+      error.value =
+        [
+          `已成功订阅 ${succeeded} 季`,
+          failed ? `${failed} 季失败，可重试` : '',
+          conflicts ? `${conflicts} 季已有订阅或发生冲突` : '',
+        ]
+          .filter(Boolean)
+          .join('，') + '。';
+    } else {
       toast('所选季度已订阅');
       visible.value = false;
     }
   } catch (cause) {
-    error.value = errorText(cause);
+    if (token === generation) error.value = errorText(cause);
   } finally {
     saving.value = false;
   }
 }
+onDeactivated(hide);
 onUnmounted(() => generation++);
 defineExpose({ open });
 </script>
@@ -295,14 +340,14 @@ defineExpose({ open });
 <template>
   <Teleport to="body"
     ><VProgressLinear
-      v-if="visible && phase === 'loading' && (loading || saving)"
+      v-if="visible && !showSeasonSheet && phase === 'loading' && (loading || saving)"
       class="explore-action-progress"
       indeterminate
       color="primary"
       aria-label="正在处理"
   /></Teleport>
   <VDialog
-    :model-value="visible && !['loading', 'seasons'].includes(phase)"
+    :model-value="visible && !showSeasonSheet && phase !== 'loading'"
     :persistent="saving"
     :fullscreen="!display.smAndUp.value"
     max-width="40rem"
@@ -423,10 +468,11 @@ defineExpose({ open });
     </VCard>
   </VDialog>
   <VBottomSheet
-    :model-value="visible && phase === 'seasons'"
+    :model-value="showSeasonSheet"
     :persistent="saving"
     inset
     scrollable
+    aria-label="选择订阅季度"
     @update:model-value="close"
   >
     <VCard class="explore-season-card">
@@ -441,10 +487,12 @@ defineExpose({ open });
             @click="close" /></template
       ></VCardItem>
       <VDivider />
-      <VProgressLinear v-if="saving" indeterminate color="primary" />
+      <VProgressLinear v-if="loading || saving" indeterminate color="primary" />
       <VCardText class="explore-season-content">
         <VAlert v-if="error" type="error" variant="tonal" class="mb-3">{{ error }}</VAlert>
-        <VList v-if="seasons.length" lines="three">
+        <p v-if="loading" role="status">正在加载季集信息…</p>
+        <VBtn v-else-if="phase === 'error'" variant="text" @click="retry">重试</VBtn>
+        <VList v-else-if="seasons.length" lines="three">
           <VListItem
             v-for="row in seasons"
             :key="row.season"
@@ -485,18 +533,26 @@ defineExpose({ open });
                 }}</VChip
               >
             </VListItemSubtitle>
-            <div v-if="row.state === 'failed'" class="season-error">{{ row.message }}</div>
+            <div
+              v-if="row.state === 'failed' || (row.state === 'conflict' && row.selected)"
+              class="season-error"
+            >
+              {{ row.message }}
+            </div>
             <template #append
               ><VSwitch
                 :model-value="row.selected || row.state === 'success' || row.state === 'conflict'"
                 :disabled="saving || row.state === 'success' || row.state === 'conflict'"
                 hide-details
-                aria-label="选择该季"
+                :aria-label="`选择第 ${row.season} 季`"
                 @click.stop="toggleSeason(row)"
             /></template>
           </VListItem>
         </VList>
-        <div v-else class="empty-action">未查询到可订阅的季集信息。</div>
+        <div v-else class="empty-action">
+          未查询到可订阅的季集信息。
+          <VBtn v-if="action === 'add-seasons'" variant="text" @click="retry">重试</VBtn>
+        </div>
       </VCardText>
       <VCardActions class="season-action-footer"
         ><VBtn
@@ -505,7 +561,11 @@ defineExpose({ open });
           :loading="saving"
           :disabled="!pendingSeasons.length || saving"
           @click="subscribeSeasons"
-          >{{ pendingSeasons.length ? '订阅所选季度' : '请选择季度' }}</VBtn
+          >{{
+            pendingSeasons.length
+              ? '提交订阅（' + pendingSeasons.length + ' 季）'
+              : '请选择订阅季度'
+          }}</VBtn
         ></VCardActions
       >
     </VCard>

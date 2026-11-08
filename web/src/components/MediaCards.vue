@@ -35,7 +35,7 @@ function search(m: any) {
 }
 function subscribe(m: any) {
   if (props.originalActions) actions.value?.open(m, 'subscribe');
-  else if (m.subscription_id) go('subscriptions');
+  else if (m.subscription_id && m.media_type !== 'tv') go('subscriptions');
   else emit('subscribe', m);
 }
 </script>
@@ -106,9 +106,21 @@ function subscribe(m: any) {
             class="icon-button"
             :class="{ subscribed: m.subscription_id }"
             :aria-label="
-              (m.subscription_id ? (originalActions ? '取消' : '查看') : '添加') + m.title + '订阅'
+              m.subscription_id && !originalActions && m.media_type === 'tv'
+                ? '选择' + m.title + '订阅季度'
+                : (m.subscription_id ? (originalActions ? '取消' : '查看') : '添加') +
+                  m.title +
+                  '订阅'
             "
-            :title="m.subscription_id ? (originalActions ? '取消订阅' : '查看订阅') : '添加订阅'"
+            :title="
+              m.subscription_id
+                ? originalActions
+                  ? '取消订阅'
+                  : m.media_type === 'tv'
+                    ? '选择订阅季度'
+                    : '查看订阅'
+                : '添加订阅'
+            "
             @click.stop="subscribe(m)"
           >
             <VIcon v-if="originalActions" icon="mdi-heart" size="20" /><AppIcon
