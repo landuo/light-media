@@ -37,6 +37,10 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 	if request.BrushOwnership != brush || brush && (!originalBrushSourceScope(ctx, scope) || scope.phase != "brush" && scope.phase != "check" && scope.phase != "promotion_expiry") {
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "刷流删除不在当前调用范围内")
 	}
+	pathAllowed := a.sourceAllowed
+	if brush {
+		pathAllowed = a.brushSourceAllowed
+	}
 	hashes, _ := (plugins.DownloaderTasksRequestV1{DownloaderID: request.DownloaderID, Hashes: request.Hashes}).CanonicalSelection()
 	a.downloadMu.Lock()
 	defer a.downloadMu.Unlock()
@@ -112,7 +116,7 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 			if err := checkOwnership(ctx, owned, hash, directory, tags, true); err != nil {
 				return nil, err
 			}
-			if !importPath(directory) || !a.sourceAllowed(directory) || browserInternal(directory) {
+			if !importPath(directory) || !pathAllowed(directory) || browserInternal(directory) {
 				return nil, bad("FILE_ROOT_REJECTED", "任务目录不在当前授权资源目录内")
 			}
 			files, err := reader.PluginHostFiles(ctx, hash)
@@ -125,7 +129,7 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 			fact := originalDownloaderDeleteFact{Hash: hash, Tags: tags, Directory: directory, Files: files, Manifests: map[string][]browserStamp{}}
 			for _, file := range files {
 				path := filepath.Join(directory, file.Path)
-				if !importPath(path) || !within(directory, path) || path == directory || !a.sourceAllowed(path) || browserInternal(path) {
+				if !importPath(path) || !within(directory, path) || path == directory || !pathAllowed(path) || browserInternal(path) {
 					return nil, bad("FILE_ROOT_REJECTED", "任务文件超出授权资源目录")
 				}
 				if err := a.browserMutationAllowed(ctx, path); err != nil {
@@ -178,11 +182,11 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 			if err := checkOwnership(ctx, owned, fact.Hash, fact.Directory, fact.Tags, false); err != nil {
 				return err
 			}
-			if !a.sourceAllowed(fact.Directory) || browserInternal(fact.Directory) {
+			if !pathAllowed(fact.Directory) || browserInternal(fact.Directory) {
 				return bad("FILE_ROOT_REJECTED", "资源目录授权已变化")
 			}
 			for path, manifest := range fact.Manifests {
-				if !a.sourceAllowed(path) {
+				if !pathAllowed(path) {
 					return bad("FILE_ROOT_REJECTED", "资源目录授权已变化")
 				}
 				if err := a.browserMutationAllowed(ctx, path); err != nil {

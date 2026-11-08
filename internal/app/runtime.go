@@ -71,6 +71,7 @@ type App struct {
 	safeMode                         bool               // Recovery startup skips automatic plugin and background execution.
 	pluginDeveloperMode              bool               // Immutable DEV startup option, scoped to plugin local monitoring.
 	pluginMarketOverride             *[]string          // Immutable process environment override; never persisted by the settings UI.
+	brushRoots                       []string           // Trusted mounts for brush file checks; never exposed as media roots.
 	pluginLogRotation                *PluginLogRotation // Source ordinary log environment overrides, fixed for this process.
 	resourceSearchPages              *big.Int           // Trusted ordinary SEARCH_RESOURCE_PAGES, normalized at main startup.
 	originalSearchKeywordMu          sync.Mutex
@@ -243,6 +244,10 @@ func New(opts Options) (*App, error) {
 	// The global default is fixed; explicit directory and manual choices remain independent.
 	a.config.AutoImportMode = "hardlink"
 	if e = mountedMediaRoots(&a.config, a.Dir, os.Getenv("LIGHT_MEDIA_MEDIA_ROOTS")); e != nil {
+		s.Close()
+		return nil, e
+	}
+	if a.brushRoots, e = mountedDirectoryRoots(a.Dir, os.Getenv("LIGHT_MEDIA_BRUSH_ROOTS"), "LIGHT_MEDIA_BRUSH_ROOTS"); e != nil {
 		s.Close()
 		return nil, e
 	}

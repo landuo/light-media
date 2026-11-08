@@ -35,3 +35,35 @@ func TestMountedMediaRootsAuthorizeExplicitVolumesAndRejectConfigOrHostRoot(t *t
 		t.Fatal("symlink mount root accepted")
 	}
 }
+
+func TestBrushMountAuthorizesOnlyBrushFileChecks(t *testing.T) {
+	base, err := filepath.EvalSymlinks(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	root, data := filepath.Join(base, "brushflow"), filepath.Join(base, "config")
+	if err = os.Mkdir(root, 0700); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("LIGHT_MEDIA_MEDIA_ROOTS", "")
+	t.Setenv("LIGHT_MEDIA_BRUSH_ROOTS", root)
+	a, err := New(Options{DataDir: data})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer a.Close()
+	file := filepath.Join(root, "torrent")
+	if err := a.originalBrushDestinationAllowed(root); err != nil || !a.brushSourceAllowed(file) {
+		t.Fatalf("brush path not allowed: %v", err)
+	}
+	if a.sourceAllowed(file) || a.brushSourceAllowed(root+"-other/torrent") {
+		t.Fatal("brush mount granted access outside its intended scope")
+	}
+	link := filepath.Join(root, "escape")
+	if err = os.Symlink(data, link); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.originalBrushDestinationAllowed(link); err == nil {
+		t.Fatal("brush path followed a symbolic link")
+	}
+}

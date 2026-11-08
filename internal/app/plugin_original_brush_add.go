@@ -210,7 +210,7 @@ func (a *App) originalBrushSourceAdd(ctx context.Context, scope originalBaseCall
 
 func (a *App) originalBrushDestinationAllowed(path string) error {
 	deny := bad("FILE_ROOT_REJECTED", "刷流保存目录不在授权本地范围内")
-	for a.sourceAllowed(path) && !browserInternal(path) {
+	for a.brushSourceAllowed(path) && !browserInternal(path) {
 		directory, err := importDir(path, false)
 		if err == nil {
 			return directory.Close()
@@ -222,6 +222,21 @@ func (a *App) originalBrushDestinationAllowed(path string) error {
 		path = parent
 	}
 	return deny
+}
+
+func (a *App) brushSourceAllowed(path string) bool {
+	if !importPath(path) {
+		return false
+	}
+	if a.sourceAllowed(path) {
+		return true
+	}
+	for _, root := range a.brushRoots {
+		if within(root, path) {
+			return true
+		}
+	}
+	return false
 }
 
 func originalBrushLimitKB(value *int64) *int64 {
