@@ -15,7 +15,6 @@ const props = defineProps<{
   busy?: boolean;
   sortable?: boolean;
   inFolder?: boolean;
-  count?: number;
 }>();
 const emit = defineEmits<{ action: [action: string, plugin: PluginCard] }>();
 const iconFailed = ref(false);
@@ -25,7 +24,18 @@ const displayVersion = computed(
   () => props.plugin.display_version ?? props.plugin.version,
 );
 const labels = computed(() => (props.plugin.plugin_label || '').split(',').map(label => label.trim()).filter(Boolean));
-const downloadCount = computed(() => props.count && props.count >= 1000 ? (props.count / 1000).toFixed(1) + 'k' : props.count?.toLocaleString() || '0');
+const authorNames = computed(() => (props.plugin.author || '').split(/[,，]/).map(name => name.trim()).filter(Boolean));
+const linkedAuthor = computed(() => {
+  const url = props.plugin.author_url;
+  if (props.sortable || !validPluginLink(url)) return;
+  if (authorNames.value.length === 1) return authorNames.value[0];
+
+  // A manifest has only one URL, so a group can link only its declared GitHub identity.
+  const profile = new URL(url);
+  if (profile.origin !== 'https://github.com' || profile.search || profile.hash) return;
+  const username = profile.pathname.match(/^\/([a-z0-9-]+)\/?$/i)?.[1].toLowerCase();
+  return authorNames.value.find(name => name.toLowerCase() === username);
+});
 const iconName = computed(() => {
   const name = sourceIconName.value;
   return !iconFailed.value &&
@@ -101,20 +111,24 @@ watch(sourceIcon, () => {
         {{ plugin.unavailable_reason || "插件暂不可用" }}
       </p>
       <p v-else-if="plugin.has_update && plugin.update_blocked_reason" role="status" class="pa-3 mb-0">{{ plugin.update_blocked_reason }}</p>
-      <VCardText class="plugin-card-footer">
-        <div class="plugin-author">
-          <VIcon class="author-avatar" icon="mdi-github" size="20" />
-          <span v-if="sortable || !validPluginLink(plugin.author_url)">{{ plugin.author }}</span>
-          <a
-            v-else
-            :href="plugin.author_url"
-            target="_blank"
-            rel="noopener noreferrer"
-            @click.stop
-            >{{ plugin.author }}</a
-          >
+      <VCardText class="plugin-card-footer" :class="{ 'has-menu': plugin.installed && !sortable }">
+        <div class="plugin-author" :title="plugin.author || undefined">
+          <VIcon v-if="authorNames.length" class="author-avatar" icon="mdi-github" size="20" />
+          <span class="plugin-author-names">
+            <template v-for="(author, index) in authorNames" :key="index">
+              <template v-if="index">, </template>
+              <a
+                v-if="author === linkedAuthor"
+                class="plugin-author-name"
+                :href="plugin.author_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                @click.stop
+              >{{ author }}</a>
+              <span v-else class="plugin-author-name">{{ author }}</span>
+            </template>
+          </span>
         </div>
-        <span v-if="count" class="plugin-download-count"><VIcon size="small" icon="mdi-download" />{{ downloadCount }}</span>
         <VBtn
           v-if="!plugin.installed"
           size="small"
@@ -256,7 +270,6 @@ watch(sourceIcon, () => {
 .plugin-card-cover:has(.plugin-card-labels) { height: 128px; }
 .plugin-card-cover:has(.plugin-card-labels) .plugin-card-description > span { -webkit-line-clamp: 2; line-clamp: 2; }
 .plugin-card-labels { padding: 0 16px 8px; white-space: nowrap; overflow: hidden; }
-.plugin-download-count { display: inline-flex; align-items: center; flex-shrink: 0; gap: 4px; font-size: 12px; }
 .plugin-card-title {
   padding: 12px 16px 0;
   height: 36px;
@@ -329,22 +342,22 @@ watch(sourceIcon, () => {
   align-items: center;
   justify-content: space-between;
   padding: 8px !important;
-  height: 40px;
   min-height: 40px;
   gap: 8px;
 }
 .plugin-author {
   display: flex;
   align-items: center;
+  flex: 1;
   min-width: 0;
-  padding-right: 32px;
   font-size: 14px;
 }
-.plugin-author a,
-.plugin-author > span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.plugin-card-footer.has-menu .plugin-author {
+  max-width: calc(100% - 32px);
+}
+.plugin-author-names {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .author-avatar {
   width: 24px;

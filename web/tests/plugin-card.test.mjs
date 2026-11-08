@@ -118,15 +118,12 @@ test('a failed icon switches both image and cover color to the original fallback
   assert.ok(app.cover().props.style.background.endsWith(colors[known[1]]));
 });
 
-test('actual card shows only supplied installation statistics and source label chips', (t) => {
+test('actual card keeps source label chips and hides installation statistics', (t) => {
   const app = mount(t, 'plugin.png');
   const counter = () => app.nodes().find(node => node.props?.class === 'plugin-download-count');
   assert.equal(counter(), undefined);
-  app.props.count = 0;
-  assert.equal(counter(), undefined);
   app.props.count = 12345;
-  assert.ok(counter());
-  assert.ok(counter().children.some(node => node.children?.includes('12.3k')));
+  assert.equal(counter(), undefined);
   app.props.plugin.plugin_label = ' tools, media , ';
   const chips = app.nodes().filter(node => node.type?.name === 'VChip');
   assert.deepEqual(chips.map(node => node.children.default()[0].children), ['tools', 'media']);
@@ -134,8 +131,8 @@ test('actual card shows only supplied installation statistics and source label c
 
 test('actual author links allow only HTTP(S) without credentials and retain invalid authors as text', (t) => {
   const app = mount(t, 'plugin.png');
-  const author = () => app.nodes().find(node => node.props?.class === 'plugin-author');
-  const link = () => author().children.find(node => node.type === 'a');
+  const link = () => app.nodes().find(node => node.props?.class === 'plugin-author-name' && node.type === 'a');
+  const text = () => app.nodes().find(node => node.props?.class === 'plugin-author-name' && node.type === 'span');
   for (const url of ['https://synthetic.invalid/author', 'http://synthetic.invalid/author']) {
     app.props.plugin.author_url = url;
     assert.equal(link().props.href, url);
@@ -157,11 +154,29 @@ test('actual author links allow only HTTP(S) without credentials and retain inva
   ]) {
     app.props.plugin.author_url = url;
     assert.equal(link(), undefined, String(url));
-    assert.equal(author().children.find(node => node.type === 'span').children, 'Fixture');
+    assert.equal(text().children, 'Fixture');
   }
   app.props.plugin.author_url = 'https://synthetic.invalid/author';
   assert.equal(link().props.href, app.props.plugin.author_url);
   app.props.sortable = true;
   assert.equal(link(), undefined);
-  assert.equal(author().children.find(node => node.type === 'span').children, 'Fixture');
+  assert.equal(text().children, 'Fixture');
+});
+
+test('actual cards retain each author name and link only the declared matching group member', (t) => {
+  const app = mount(t, 'plugin.png');
+  const names = () => app.nodes().filter(node => node.props?.class === 'plugin-author-name')
+    .map(node => [node.children, node.props.href]);
+  app.props.plugin.author = 'jxxghp,landuo';
+  app.props.plugin.author_url = 'https://github.com/landuo';
+  assert.deepEqual(names(), [['jxxghp', undefined], ['landuo', 'https://github.com/landuo']]);
+
+  app.props.plugin.author = 'jxxghp, Ckun';
+  app.props.plugin.author_url = 'https://github.com/CKun/';
+  assert.deepEqual(names(), [['jxxghp', undefined], ['Ckun', 'https://github.com/CKun/']]);
+
+  for (const url of ['https://example.invalid/CKun', 'https://github.com/other', 'https://github.com/CKun/repo']) {
+    app.props.plugin.author_url = url;
+    assert.deepEqual(names(), [['jxxghp', undefined], ['Ckun', undefined]]);
+  }
 });

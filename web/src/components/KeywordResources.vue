@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VTextField } from 'vuetify/components/VTextField';
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onActivated, onMounted, onUnmounted } from 'vue';
 import {
   api,
   action,
@@ -30,7 +30,8 @@ import {
 import Policy from './Policy.vue';
 import AppIcon from './AppIcon.vue';
 import ResourceFilterBar from './ResourceFilterBar.vue';
-import ResourceCard from './ResourceCard.vue';
+import ResourceSearchResults from './ResourceSearchResults.vue';
+import ResourceSearchProgress from './ResourceSearchProgress.vue';
 import AddDownloadDialog from './AddDownloadDialog.vue';
 import {
   interruptedSearch,
@@ -50,7 +51,7 @@ const query = ref(params.get('query') || ''),
   selectedSites = ref<string[]>([]),
   policy = ref(emptyPolicy()),
   filters = ref(emptyResourceFilters()),
-  view = ref('card'),
+  view = ref(localStorage.getItem('light-media.resource-view') || 'card'),
   sort = ref('default'),
   descending = ref(true),
   selected = ref<string[]>([]),
@@ -84,6 +85,11 @@ const eligible = computed(() =>
       eligible.value.length > 0 &&
       eligible.value.every((c) => selected.value.includes(candidateKey(c))),
   );
+function setView(value: string) {
+  view.value = value;
+  localStorage.setItem('light-media.resource-view', value);
+}
+onActivated(() => { view.value = localStorage.getItem('light-media.resource-view') || 'card'; });
 function options(key: string) {
   return [...new Set(candidates.value.map((c) => String(c.resource[key] || 'unknown')))].sort();
 }
@@ -265,9 +271,12 @@ onUnmounted(() => {
     </div>
   </section>
   <div v-if="error" class="error-box">{{ error }}</div>
-  <div v-if="loading" class="notice">
-    正在并行搜索 {{ selectedSites.length }} 个站点，结果将陆续显示…
-  </div>
+  <ResourceSearchProgress
+    v-if="loading"
+    :keyword="request?.query || query"
+    :site-ids="request?.site_ids || selectedSites"
+    :sites="output?.sites || []"
+  />
   <details
     v-if="
       output && (loading || searchOptionsOpen || output.sites.some((s: any) => s.status !== 'ok'))
@@ -291,8 +300,9 @@ onUnmounted(() => {
       >
     </div>
   </details>
-  <template v-if="output"
-    ><ResourceFilterBar
+  <template v-if="output || loading">
+    <ResourceFilterBar
+      v-if="candidates.length"
       :candidates="candidates"
       :count="filtered.length"
       :names="names"
@@ -305,46 +315,22 @@ onUnmounted(() => {
       <button class="small" @click="selectAll">全选 / 取消全选</button>
       <button class="small" @click="selected = []">取消选择</button>
     </div>
-    <button
-      class="resource-view-toggle"
-      :aria-label="view === 'card' ? '列表视图' : '卡片视图'"
-      :title="view === 'card' ? '列表视图' : '卡片视图'"
-      @click="view = view === 'card' ? 'list' : 'card'"
-    >
-      <AppIcon :name="view === 'card' ? 'menu' : 'jobs'" />
-    </button>
-    <div v-if="view === 'card'" class="release-grid">
-      <ResourceCard
-        v-for="g in groups"
-        :key="candidateKey(g[0]!)"
-        :candidates="g"
-        :names="names"
-        :downloads="downloaded"
-        :selected="selected"
-        :show-identity-review="false"
-        @download="open"
-        @select="select"
-      />
-    </div>
-    <div v-else class="resource-list">
-      <ResourceCard
-        v-for="c in filtered"
-        :key="candidateKey(c)"
-        layout="list"
-        :candidates="[c]"
-        :names="names"
-        :downloads="downloaded"
-        :selected="selected"
-        :show-identity-review="false"
-        @download="open"
-        @select="select"
-      />
-    </div>
-    <div v-if="!filtered.length" class="empty-state">
-      <h3>{{ candidates.length ? '没有符合条件的资源' : '没有搜索到资源' }}</h3>
-      <button v-if="candidates.length" @click="filters = emptyResourceFilters()">清空筛选</button>
-    </div>
-    <div class="pagination">
+    <ResourceSearchResults
+      :view="view"
+      :groups="groups"
+      :results="filtered"
+      :names="names"
+      :downloads="downloaded"
+      :selected="selected"
+      :show-identity-review="false"
+      :has-candidates="!!candidates.length"
+      :loading="loading"
+      @update:view="setView"
+      @download="open"
+      @select="select"
+      @clear="filters = emptyResourceFilters()"
+    />
+    <div v-if="output" class="pagination">
       <button
         :disabled="page <= 1 || loading"
         @click="
@@ -363,8 +349,8 @@ onUnmounted(() => {
       >
         搜索下一页
       </button>
-    </div></template
-  >
+    </div>
+  </template>
   <AddDownloadDialog
     v-if="active"
     :candidate="active"
@@ -375,10 +361,6 @@ onUnmounted(() => {
   />
 </template>
 <style scoped>
-.resource-list {
-  display: grid;
-  gap: 12px;
-}
 .resource-page-actions {
   display: flex;
   align-items: center;
@@ -405,24 +387,6 @@ onUnmounted(() => {
   font-size: 12px;
   color: var(--muted);
   padding: 4px;
-}
-.resource-view-toggle {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 48px;
-  height: 48px;
-  padding: 12px;
-  border: 0;
-  border-radius: 50%;
-  background: var(--accent);
-  color: white;
-  box-shadow: var(--shadow);
-  z-index: 5;
-}
-.resource-view-toggle svg {
-  width: 24px;
-  height: 24px;
 }
 
 .page-actions {
@@ -476,11 +440,6 @@ onUnmounted(() => {
 .filter-row select {
   flex: 1;
   min-width: 120px;
-}
-.release-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
-  gap: 16px;
 }
 .toolbar {
   gap: 12px;
@@ -569,7 +528,6 @@ onUnmounted(() => {
   margin-left: 12px;
 }
 @media (max-width: 650px) {
-  .release-grid,
   .identity-list {
     grid-template-columns: 1fr;
   }

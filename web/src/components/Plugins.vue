@@ -88,9 +88,8 @@ const PluginFolderDialog = defineAsyncComponent(
   () => import("./PluginFolderDialog.vue"),
 );
 
-const PluginConfigDialog = defineAsyncComponent(
-  () => import("./PluginConfigDialog.vue"),
-);
+const loadPluginConfigDialog = () => import("./PluginConfigDialog.vue");
+const PluginConfigDialog = defineAsyncComponent(loadPluginConfigDialog);
 const PluginDataDialog = defineAsyncComponent(
   () => import("./PluginDataDialog.vue"),
 );
@@ -661,6 +660,8 @@ async function confirmAction() {
 }
 onMounted(() => {
   load();
+  // Fetch the dialog code while the cards load; read the plugin configuration only on open.
+  void loadPluginConfigDialog().catch(() => {});
 });
 let activatedCount = 0;
 onActivated(() => {
@@ -917,7 +918,6 @@ onActivated(() => {
             <PluginManageCard
               v-else
               :plugin="element.plugin"
-              :count="marketStatistics[element.plugin.plugin_id]"
               :busy="busy || organizing"
               :sortable="sortMode"
               :in-folder="!!currentFolder"
@@ -933,7 +933,6 @@ onActivated(() => {
         v-for="plugin in visible"
         :key="plugin.instance_id"
         :plugin="plugin"
-        :count="marketStatistics[plugin.plugin_id]"
         :busy="busy"
         @action="cardAction"
       />

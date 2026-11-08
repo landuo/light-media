@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { VBtn } from 'vuetify/components/VBtn';
+import { VCard, VCardTitle, VCardText } from 'vuetify/components/VCard';
+import { VDialog } from 'vuetify/components/VDialog';
+import { VIcon } from 'vuetify/components/VIcon';
 import AppIcon from './AppIcon.vue';
 import { resourceTitleQuery } from '../features/keyword-search';
 import { bytes, date, friendly, label } from '../api';
@@ -13,6 +17,7 @@ import {
 } from '../features/resources';
 const props = defineProps<{
   layout?: string;
+  mediaTitle?: string;
   showIdentityReview?: boolean;
   candidates: Candidate[];
   names: Record<string, string>;
@@ -20,11 +25,19 @@ const props = defineProps<{
   selected: string[];
 }>();
 const first = computed(() => props.candidates[0]!);
-const title = computed(() => resourceTitleQuery(first.value.resource.title));
+const title = computed(() => props.mediaTitle || resourceTitleQuery(first.value.resource.title));
+const siteName = computed(() => props.names[first.value.resource.site_id] || first.value.resource.site_id);
+const siteIconFailed = ref(false);
+watch(() => first.value.resource.site_id, () => { siteIconFailed.value = false; });
+const moreSources = ref(false);
 const reviewReasons = computed(() =>
   resourceReviewReasons(props.candidates[0], props.showIdentityReview !== false),
 );
-defineEmits<{ download: [candidate: Candidate]; select: [candidate: Candidate] }>();
+const emit = defineEmits<{ download: [candidate: Candidate]; select: [candidate: Candidate] }>();
+function downloadSource(candidate: Candidate) {
+  moreSources.value = false;
+  emit('download', candidate);
+}
 function promotion(r: Record<string, any>) {
   const kind = promotionKind(r);
   return kind === 'free'
@@ -52,6 +65,7 @@ function relativeDate(value: string) {
     class="release-card"
     :class="{
       'is-selected': selected.includes(candidateKey(candidates[0]!)),
+      'is-downloaded': downloads[candidateKey(first)],
       'list-layout': layout === 'list',
     }"
     :tabindex="candidates[0]!.accepted || candidates[0]!.needs_confirmation ? 0 : -1"
@@ -88,22 +102,26 @@ function relativeDate(value: string) {
           :disabled="!first.accepted && !first.needs_confirmation"
           @change="$emit('select', first)"
       /></label>
-      <span class="site-name"
-        ><span class="site-avatar">{{
-          (names[first.resource.site_id] || first.resource.site_id).slice(0, 1)
-        }}</span
-        >{{ names[first.resource.site_id] || first.resource.site_id }}</span
-      >
-      <span class="green"
-        >↑ {{ first.resource.seeders >= 0 ? first.resource.seeders : '未知' }}</span
-      >
-      <span v-if="first.resource.leechers !== 0" class="peers"
-        >↓ {{ first.resource.leechers >= 0 ? first.resource.leechers : '未知' }}</span
-      >
+      <span class="site-name" :title="siteName">
+        <img
+          v-if="!siteIconFailed"
+          class="site-avatar"
+          :src="`/api/sites/manage/${encodeURIComponent(first.resource.site_id)}/icon`"
+          alt=""
+          loading="lazy"
+          @error="siteIconFailed = true"
+        />
+        <span v-else class="site-avatar" aria-hidden="true">{{ siteName.slice(0, 1) }}</span>
+        {{ siteName }}
+      </span>
+      <span class="release-counts">
+        <span class="green" title="做种人数"><VIcon icon="mdi-arrow-up" size="16" />{{ first.resource.seeders >= 0 ? first.resource.seeders : '未知' }}</span>
+        <span v-if="first.resource.leechers !== 0" class="peers" title="下载人数"><VIcon icon="mdi-arrow-down" size="16" />{{ first.resource.leechers >= 0 ? first.resource.leechers : '未知' }}</span>
+      </span>
     </div>
-    <p class="release-title">{{ first.resource.title }}</p>
-    <p v-if="first.resource.subtitle" class="release-description">{{ first.resource.subtitle }}</p>
-    <p class="hint"><AppIcon name="clock" />{{ relativeDate(first.resource.published_at) }}</p>
+    <p class="release-title" :title="first.resource.title">{{ first.resource.title }}</p>
+    <p v-if="first.resource.subtitle" class="release-description" :title="first.resource.subtitle">{{ first.resource.subtitle }}</p>
+    <p v-if="first.resource.published_at" class="hint"><AppIcon name="clock" />{{ relativeDate(first.resource.published_at) }}</p>
     <div class="tags">
       <span v-if="first.resource.source" class="quality-source">{{ first.resource.source }}</span>
       <span v-if="first.resource.resolution" class="quality-resolution">{{
@@ -112,7 +130,8 @@ function relativeDate(value: string) {
       <span v-if="first.resource.codec" class="quality-codec">{{ first.resource.codec }}</span>
       <span v-if="resourceGroup(first)" class="quality-group">{{ resourceGroup(first) }}</span>
       <span v-for="tag in first.resource.labels || []" :key="tag">{{ tag }}</span>
-      <span v-if="first.resource.promotion_end">{{
+      <span v-if="first.resource.hit_and_run" class="quality-hr">H&amp;R</span>
+      <span v-if="first.resource.promotion_end" class="quality-expiry">{{
         promotionRemaining(first.resource.promotion_end)
       }}</span>
       <span v-if="downloads[candidateKey(first)]" class="downloaded">{{
@@ -126,6 +145,15 @@ function relativeDate(value: string) {
       <p>{{ reviewReasons.map(friendly).join('；') }}</p>
     </details>
     <div class="release-actions" @click.stop @keydown.stop>
+      <VBtn
+        v-if="candidates.length > 1"
+        class="more-sources-button"
+        prepend-icon="mdi-chevron-down"
+        color="primary"
+        size="small"
+        variant="text"
+        @click="moreSources = true"
+      >更多来源 ({{ candidates.length - 1 }})</VBtn>
       <span class="release-size">{{
         first.resource.size > 0 ? bytes(first.resource.size) : '体积未知'
       }}</span>
@@ -140,22 +168,42 @@ function relativeDate(value: string) {
         ><AppIcon name="info"
       /></a>
     </div>
-    <details v-if="candidates.length > 1" class="more-sources" @click.stop @keydown.stop>
-      <summary>其他来源 · {{ candidates.length - 1 }}</summary>
-      <div v-for="c in candidates.slice(1)" :key="candidateKey(c)" class="source-row">
-        <span
-          >{{ names[c.resource.site_id] || c.resource.site_id }} · {{ promotion(c.resource)
-          }}<small> ↑ {{ c.resource.seeders >= 0 ? c.resource.seeders : '未知' }}</small></span
-        ><button
-          class="small"
-          :disabled="!c.accepted && !c.needs_confirmation"
-          @click="$emit('download', c)"
-        >
-          下载
-        </button>
-      </div>
-    </details>
   </article>
+  <VDialog v-if="moreSources" v-model="moreSources" max-width="25rem" aria-label="其他来源">
+    <VCard>
+      <VCardTitle class="source-heading">
+        <span>其他来源</span>
+        <VBtn icon="mdi-close" size="small" variant="text" aria-label="关闭其他来源" @click="moreSources = false" />
+      </VCardTitle>
+      <VCardText class="source-list">
+        <div v-for="candidate in candidates.slice(1)" :key="candidateKey(candidate)" class="source-row">
+          <span class="source-summary">
+            <strong>{{ names[candidate.resource.site_id] || candidate.resource.site_id }}</strong>
+            <small>
+              {{ promotion(candidate.resource) }} · {{ candidate.resource.size > 0 ? bytes(candidate.resource.size) : '体积未知' }}
+              · <VIcon icon="mdi-arrow-up" size="14" color="success" />{{ candidate.resource.seeders >= 0 ? candidate.resource.seeders : '未知' }}
+            </small>
+          </span>
+          <a
+            v-if="candidate.resource.details_url?.startsWith('https://')"
+            :href="candidate.resource.details_url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="release-link"
+            aria-label="站点详情"
+            title="站点详情"
+          ><VIcon icon="mdi-arrow-top-right" size="18" /></a>
+          <VBtn
+            color="primary"
+            size="small"
+            variant="text"
+            :disabled="!candidate.accepted && !candidate.needs_confirmation"
+            @click="downloadSource(candidate)"
+          >下载</VBtn>
+        </div>
+      </VCardText>
+    </VCard>
+  </VDialog>
 </template>
 <style scoped>
 .site-avatar {
@@ -163,6 +211,8 @@ function relativeDate(value: string) {
   place-items: center;
   width: 20px;
   height: 20px;
+  flex: none;
+  object-fit: contain;
   border-radius: 4px;
   background: var(--accent-soft);
   color: var(--accent);
@@ -170,9 +220,11 @@ function relativeDate(value: string) {
 }
 .list-layout.release-card {
   display: grid;
-  grid-template-columns: 72px minmax(0, 1fr) 150px;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
   gap: 4px 12px;
-  padding: 16px;
+  padding: 12px;
+  background: transparent;
+  border-radius: 8px;
 }
 .list-layout .release-heading {
   grid-column: 2;
@@ -191,30 +243,30 @@ function relativeDate(value: string) {
 }
 .list-layout .site-name {
   grid-column: 1;
-  grid-row: 1 / 6;
+  grid-row: 1 / span 4;
   flex-direction: column;
   justify-content: center;
-  width: 72px;
+  width: 56px;
+  margin: 0;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 .list-layout .site-avatar {
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
 }
-.list-layout .green {
-  position: absolute;
-  right: 80px;
-  top: 42px;
-}
-.list-layout .peers {
-  position: absolute;
-  right: 20px;
-  top: 42px;
+.list-layout .release-counts {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  margin-top: 22px;
 }
 .list-layout .release-actions {
   grid-column: 3;
-  grid-row: 2 / 6;
-  align-self: end;
+  grid-row: 2 / span 4;
+  align-self: start;
+  min-height: 0;
   border: 0;
   margin: 0;
   padding: 0;
@@ -224,27 +276,25 @@ function relativeDate(value: string) {
   left: 12px;
   top: 8px;
 }
-.list-layout .release-heading h3 {
-  font-size: 16px;
-}
 .list-layout:hover {
   transform: none;
   border-color: var(--accent-line);
 }
-@media (max-width: 650px) {
+@media (max-width: 600px) {
   .list-layout.release-card {
     grid-template-columns: 48px minmax(0, 1fr);
   }
   .list-layout .site-name {
     width: 48px;
   }
-  .list-layout .release-actions {
+  .list-layout .promo:not(.normal, .unknown) ~ .release-heading {
+    padding-inline-end: 48px;
+  }
+  .list-layout .release-actions,
+  .list-layout .release-counts {
     grid-column: 2;
     grid-row: auto;
-  }
-  .list-layout .green,
-  .list-layout .peers {
-    display: none;
+    margin-top: 0;
   }
 }
 
@@ -263,9 +313,17 @@ function relativeDate(value: string) {
 }
 .release-card:hover {
   transform: translateY(-4px);
+  border-color: var(--accent-line);
 }
 .release-card.is-selected {
   border-color: var(--accent);
+}
+.release-card.is-downloaded:not(.is-selected) {
+  border-color: var(--success);
+}
+.list-layout.is-downloaded:not(.is-selected) {
+  border-inline-start-width: 3px;
+  padding-inline-start: 10px;
 }
 .promo {
   position: absolute;
@@ -278,7 +336,7 @@ function relativeDate(value: string) {
   font-size: 14px;
 }
 .promo.free {
-  background: #8bc34a;
+  background: #4caf50;
 }
 .promo.discount {
   background: #ff5722;
@@ -293,6 +351,7 @@ function relativeDate(value: string) {
 .release-heading {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   margin: 0 56px 12px 8px;
   min-height: 28px;
@@ -321,12 +380,21 @@ h3 {
   gap: 12px;
   color: var(--muted);
 }
+.release-counts,
+.release-counts > span {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.release-counts { gap: 8px; }
+.release-counts > span { gap: 2px; font-weight: 600; }
 .site-name {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-right: auto;
   font-size: 14px;
+  font-weight: 600;
 }
 .site-name svg {
   width: 20px;
@@ -391,23 +459,25 @@ h3 {
   padding: 2px 6px;
   border: 0;
   border-radius: 2px;
-  background: #7360b5;
+  background: #5c6bc0;
   color: #fff;
   font-size: 10px;
   line-height: 16px;
 }
 .release-card .tags .quality-source {
-  background: #e95150;
+  background: #f44336;
 }
 .release-card .tags .quality-resolution {
   background: #7b1fa2;
 }
 .release-card .tags .quality-codec {
-  background: #f5ab49;
+  background: #ff9800;
 }
 .release-card .tags .quality-group {
-  background: #4c9693;
+  background: #00897b;
 }
+.release-card .tags .quality-hr { background: #212121; }
+.release-card .tags .quality-expiry { background: #7e57c2; }
 .release-review {
   margin: -8px 0 12px;
   padding: 0;
@@ -439,6 +509,7 @@ h3 {
   padding: 2px 8px;
   font-size: 10px;
 }
+.more-sources-button { margin-inline-end: auto; letter-spacing: 0; }
 .release-link {
   display: inline-flex;
   align-items: center;
@@ -451,19 +522,17 @@ h3 {
   width: 18px;
   height: 18px;
 }
-.more-sources {
-  margin: 0 -12px;
-  padding: 12px;
-  border: 0;
-  border-top: 1px solid var(--line);
-  font-size: 12px;
-}
+.source-heading { display: flex; align-items: center; justify-content: space-between; }
+.source-list { max-height: 60vh; overflow-y: auto; padding-block: 0; }
 .source-row {
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 10px;
+  align-items: center;
+  gap: 4px;
+  padding-block: 8px;
 }
+.source-row + .source-row { border-top: 1px solid var(--line); }
+.source-summary { display: grid; min-width: 0; flex: 1; overflow-wrap: anywhere; }
+.source-summary small { color: var(--muted); }
 @media (hover: none) {
   .selection {
     display: block;

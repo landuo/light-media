@@ -218,24 +218,48 @@ func readPackageFile(root string, f PackageFile) ([]byte, error) {
 	return b, nil
 }
 
+// ErrInstalledFrontendPackage identifies a failure verifying the whole package
+// before the requested frontend member is selected.
+var ErrInstalledFrontendPackage = errors.New("installed frontend package verification failed")
+
 // ReadFrontendAsset revalidates the entire installed package, exact content pin,
 // and requested inventory member under the same acquisition/clone lock. It does
 // not grant capabilities, initialize a worker, or serve arbitrary package files.
 func ReadFrontendAsset(root, codeID, packageSHA, relative string, validate func(plugins.Manifest, string) error) (FrontendAsset, error) {
-	operationMu.Lock()
-	defer operationMu.Unlock()
-	bad := func(err error) (FrontendAsset, error) {
+	if !validDigest(packageSHA) || packageSHA != strings.ToLower(packageSHA) || !plugins.ValidFrontendPath(relative) {
+		return FrontendAsset{}, errors.New("plugin frontend validation: invalid frontend pin or path")
+	}
+	asset, err := ReadInstalledFrontendAsset(root, codeID, relative, validate, func(installed Acquired) error {
+		if installed.PackageSHA256 != packageSHA {
+			return errors.New("frontend unavailable or content pin changed")
+		}
+		return nil
+	})
+	if err != nil {
 		return FrontendAsset{}, fmt.Errorf("plugin frontend validation: %w", err)
 	}
-	if !validDigest(packageSHA) || packageSHA != strings.ToLower(packageSHA) || !plugins.ValidFrontendPath(relative) {
-		return bad(errors.New("invalid frontend pin or path"))
+	return asset, nil
+}
+
+// ReadInstalledFrontendAsset verifies the whole package once and safely reads
+// the requested frontend member while holding the acquisition/clone lock.
+// check must bind the verified package to the caller's authority before reading
+// the member and must not call an artifact operation that takes the same lock.
+func ReadInstalledFrontendAsset(root, codeID, relative string, validate func(plugins.Manifest, string) error, check func(Acquired) error) (FrontendAsset, error) {
+	if !plugins.ValidFrontendPath(relative) || check == nil {
+		return FrontendAsset{}, errors.New("valid frontend path and package check required")
 	}
+	operationMu.Lock()
+	defer operationMu.Unlock()
 	installed, err := readInstalled(root, codeID, validate)
 	if err != nil {
-		return bad(err)
+		return FrontendAsset{}, fmt.Errorf("%w: %w", ErrInstalledFrontendPackage, err)
 	}
-	if installed.Manifest.Frontend == nil || installed.PackageSHA256 != packageSHA {
-		return bad(errors.New("frontend unavailable or content pin changed"))
+	if err = check(installed); err != nil {
+		return FrontendAsset{}, err
+	}
+	if installed.Manifest.Frontend == nil {
+		return FrontendAsset{}, errors.New("frontend unavailable or content pin changed")
 	}
 	name := path.Join(installed.Manifest.Frontend.Root, relative)
 	for _, f := range installed.Files {
@@ -244,15 +268,15 @@ func ReadFrontendAsset(root, codeID, packageSHA, relative string, validate func(
 		}
 		kind := frontendContentType(relative)
 		if kind == "" {
-			return bad(errors.New("unsupported frontend resource type"))
+			return FrontendAsset{}, errors.New("unsupported frontend resource type")
 		}
 		b, err := readPackageFile(installed.Command.Dir, f)
 		if err != nil {
-			return bad(err)
+			return FrontendAsset{}, err
 		}
 		return FrontendAsset{Data: b, SHA256: f.SHA256, ContentType: kind}, nil
 	}
-	return bad(os.ErrNotExist)
+	return FrontendAsset{}, os.ErrNotExist
 }
 
 func frontendContentType(name string) string {

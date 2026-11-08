@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"net/http"
 	"path"
 	"strconv"
@@ -53,38 +54,48 @@ func (a *App) serveOriginalPluginFrontend(w http.ResponseWriter, r *http.Request
 		return fail("NOT_FOUND", "插件界面资源不存在", 404)
 	}
 	a.pluginImplementationMu.RLock()
-	object, installed, err := a.originalFrontendLocked(r.Context(), instance)
-	if err != nil {
-		a.pluginImplementationMu.RUnlock()
-		a.writeError(w, r, err)
-		return true
-	}
-	if anonymous != nil && anonymous.PackageSHA256 != installed.PackageSHA256 {
-		a.pluginImplementationMu.RUnlock()
-		return fail("PLUGIN_FRONTEND_STALE", "插件界面版本已变化，请重新加载", 409)
-	}
 	if alias {
-		descriptor := frontendDescriptor(instance, installed)
+		_, installed, err := a.originalFrontendLocked(r.Context(), instance)
 		a.pluginImplementationMu.RUnlock()
-		target := "/api" + descriptor.EntryPath
+		if err != nil {
+			a.writeError(w, r, err)
+			return true
+		}
+		if anonymous != nil && anonymous.PackageSHA256 != installed.PackageSHA256 {
+			return fail("PLUGIN_FRONTEND_STALE", "插件界面版本已变化，请重新加载", 409)
+		}
+		target := "/api" + frontendDescriptor(instance, installed).EntryPath
 		if onHTTPSMount(r) {
 			target = httpsMountPath + target
 		}
 		http.Redirect(w, r, target, http.StatusTemporaryRedirect)
 		return true
 	}
-	if asset[0] != installed.PackageSHA256 {
+	object, err := a.originalFrontendObjectLocked(r.Context(), instance)
+	if err != nil {
 		a.pluginImplementationMu.RUnlock()
-		return fail("PLUGIN_FRONTEND_STALE", "插件界面版本已变化，请重新加载", 409)
+		a.writeError(w, r, err)
+		return true
 	}
-	resource, err := artifacts.ReadFrontendAsset(a.pluginPackageRoot(), instance, asset[0], asset[2], func(m plugins.Manifest, contract string) error {
-		if m.PluginID != installed.Manifest.PluginID || m.Version != installed.Manifest.Version || contract != installed.HostContract {
-			return bad("PLUGIN_IMPLEMENTATION_MISMATCH", "插件制品已变化")
+	resource, err := artifacts.ReadInstalledFrontendAsset(a.pluginPackageRoot(), instance, asset[2], object.validateFrontendManifest, func(installed artifacts.Acquired) error {
+		if !object.frontendPackageMatches(installed) {
+			return &APIError{"PLUGIN_FRONTEND_INVALID", "插件界面制品校验失败", 409}
 		}
-		return validatePluginArtifactContract(m, contract)
+		if (anonymous != nil && anonymous.PackageSHA256 != installed.PackageSHA256) || asset[0] != installed.PackageSHA256 {
+			return &APIError{"PLUGIN_FRONTEND_STALE", "插件界面版本已变化，请重新加载", 409}
+		}
+		return nil
 	})
 	stillLoaded := originalObjectStillLoaded(object)
 	a.pluginImplementationMu.RUnlock()
+	if errors.Is(err, artifacts.ErrInstalledFrontendPackage) {
+		return fail("PLUGIN_FRONTEND_INVALID", "插件界面制品校验失败", 409)
+	}
+	var bindingErr *APIError
+	if errors.As(err, &bindingErr) {
+		a.writeError(w, r, bindingErr)
+		return true
+	}
 	if !stillLoaded {
 		return fail("PLUGIN_FRONTEND_STALE", "插件界面对象已变化，请重新加载", 409)
 	}

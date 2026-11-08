@@ -28,9 +28,9 @@ type originalFrontendDescriptor struct {
 
 // Caller holds pluginImplementationMu.RLock. No worker method is called under
 // this lock: a pending updater must not cause a recursive RWMutex read deadlock.
-func (a *App) originalFrontendLocked(ctx context.Context, instance string) (*originalPluginInstance, artifacts.Acquired, error) {
-	missing := func() (*originalPluginInstance, artifacts.Acquired, error) {
-		return nil, artifacts.Acquired{}, &APIError{"PLUGIN_FRONTEND_UNAVAILABLE", "插件界面不存在或未加载", 404}
+func (a *App) originalFrontendObjectLocked(ctx context.Context, instance string) (*originalPluginInstance, error) {
+	missing := func() (*originalPluginInstance, error) {
+		return nil, &APIError{"PLUGIN_FRONTEND_UNAVAILABLE", "插件界面不存在或未加载", 404}
 	}
 	if !pluginStorageID.MatchString(instance) {
 		return missing()
@@ -45,19 +45,33 @@ func (a *App) originalFrontendLocked(ctx context.Context, instance string) (*ori
 	}
 	in, err := a.pluginStore.Installation(ctx, instance)
 	if err != nil {
-		return nil, artifacts.Acquired{}, err
+		return nil, err
 	}
 	bound := object.installation
 	if bound.InstanceID != instance || bound.PluginID != in.PluginID || bound.Version != in.Version || bound.Generation != in.Generation || !originalObjectStillLoaded(object) {
-		return nil, artifacts.Acquired{}, &APIError{"PLUGIN_FRONTEND_STALE", "插件界面版本已变化，请重新加载", 409}
+		return nil, &APIError{"PLUGIN_FRONTEND_STALE", "插件界面版本已变化，请重新加载", 409}
 	}
-	installed, err := artifacts.ReadInstalled(a.pluginPackageRoot(), instance, func(m plugins.Manifest, contract string) error {
-		if m.PluginID != in.PluginID || m.Version != in.Version || contract != object.hostContract || !reflect.DeepEqual(m, object.manifest) {
-			return bad("PLUGIN_IMPLEMENTATION_MISMATCH", "实例与实际插件制品不一致")
-		}
-		return validatePluginArtifactContract(m, contract)
-	})
-	if err != nil || installed.PackageSHA256 != object.frontendPackageHash() || !originalObjectStillLoaded(object) {
+	return object, nil
+}
+
+func (p *originalPluginInstance) validateFrontendManifest(m plugins.Manifest, contract string) error {
+	if m.PluginID != p.installation.PluginID || m.Version != p.installation.Version || contract != p.hostContract || !reflect.DeepEqual(m, p.manifest) {
+		return bad("PLUGIN_IMPLEMENTATION_MISMATCH", "实例与实际插件制品不一致")
+	}
+	return validatePluginArtifactContract(m, contract)
+}
+
+func (p *originalPluginInstance) frontendPackageMatches(installed artifacts.Acquired) bool {
+	return installed.PackageSHA256 == p.frontendPackageHash() && originalObjectStillLoaded(p)
+}
+
+func (a *App) originalFrontendLocked(ctx context.Context, instance string) (*originalPluginInstance, artifacts.Acquired, error) {
+	object, err := a.originalFrontendObjectLocked(ctx, instance)
+	if err != nil {
+		return nil, artifacts.Acquired{}, err
+	}
+	installed, err := artifacts.ReadInstalled(a.pluginPackageRoot(), instance, object.validateFrontendManifest)
+	if err != nil || !object.frontendPackageMatches(installed) {
 		// Do not publish filesystem paths or detailed validation errors to callers.
 		return nil, artifacts.Acquired{}, &APIError{"PLUGIN_FRONTEND_INVALID", "插件界面制品校验失败", 409}
 	}

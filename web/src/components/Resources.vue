@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { VSelect } from 'vuetify/components/VSelect';
 import { VTextField } from 'vuetify/components/VTextField';
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onActivated, onMounted, onUnmounted } from 'vue';
 import {
   api,
   action,
@@ -33,7 +33,8 @@ import AppIcon from './AppIcon.vue';
 import ResourceFilterBar from './ResourceFilterBar.vue';
 import { useExplicitSearch } from '../features/search-session';
 import MappingRules from './MappingRules.vue';
-import ResourceCard from './ResourceCard.vue';
+import ResourceSearchResults from './ResourceSearchResults.vue';
+import ResourceSearchProgress from './ResourceSearchProgress.vue';
 import AddDownloadDialog from './AddDownloadDialog.vue';
 import {
   interruptedSearch,
@@ -111,6 +112,7 @@ function setView(value: string) {
   view.value = value;
   localStorage.setItem('light-media.resource-view', value);
 }
+onActivated(() => { view.value = localStorage.getItem('light-media.resource-view') || 'card'; });
 function select(c: Candidate) {
   const key = candidateKey(c);
   selected.value = selected.value.includes(key)
@@ -349,6 +351,13 @@ onUnmounted(() => {
     无法加载已有季集映射：{{ mappingsError }} <button @click="loadMappings">重试</button>
   </div>
   <div v-if="error" class="error-box">{{ error }} <button @click="search">重试</button></div>
+  <ResourceSearchProgress
+    v-if="loading"
+    :title="media?.title"
+    :season="kind === 'tv' ? searchedRequest?.season : undefined"
+    :site-ids="searchedRequest?.site_ids || selectedSites"
+    :sites="output?.sites || []"
+  />
   <details
     v-if="loading || searchOptionsOpen || sitesProgress.some((s: any) => s.status !== 'ok')"
     class="search-progress-details"
@@ -379,8 +388,9 @@ onUnmounted(() => {
       </div>
     </div>
   </details>
-  <template v-if="output">
+  <template v-if="output || loading">
     <ResourceFilterBar
+      v-if="candidates.length"
       :candidates="candidates"
       :count="filtered.length"
       :names="names"
@@ -393,49 +403,22 @@ onUnmounted(() => {
       <button class="small" @click="selectVisible">全选 / 取消全选</button>
       <button class="small" @click="selected = []">取消选择</button>
     </div>
-    <button
-      class="resource-view-toggle"
-      :aria-label="view === 'card' ? '列表视图' : '卡片视图'"
-      :title="view === 'card' ? '列表视图' : '卡片视图'"
-      @click="setView(view === 'card' ? 'list' : 'card')"
-    >
-      <AppIcon :name="view === 'card' ? 'menu' : 'jobs'" />
-    </button>
-    <div v-if="view === 'card'" class="release-grid">
-      <ResourceCard
-        v-for="g in groups"
-        :key="candidateKey(g[0]!)"
-        :candidates="g"
-        :names="names"
-        :downloads="downloaded"
-        :selected="selected"
-        @download="openDownload"
-        @select="select"
-      />
-    </div>
-    <div v-else class="resource-list">
-      <ResourceCard
-        v-for="c in filtered"
-        :key="candidateKey(c)"
-        layout="list"
-        :candidates="[c]"
-        :names="names"
-        :downloads="downloaded"
-        :selected="selected"
-        @download="openDownload"
-        @select="select"
-      />
-    </div>
-    <div v-if="!filtered.length" class="empty-state">
-      <h3>{{ candidates.length ? '没有符合筛选条件的资源' : '没有搜索到资源' }}</h3>
-      <p>
-        {{
-          candidates.length ? '调整筛选条件或清空筛选。' : '查看站点状态，尝试其他季或稍后搜索。'
-        }}
-      </p>
-      <button v-if="candidates.length" @click="filters = emptyResourceFilters()">清空筛选</button>
-    </div>
-    <div class="pagination">
+    <ResourceSearchResults
+      :view="view"
+      :groups="groups"
+      :results="filtered"
+      :names="names"
+      :downloads="downloaded"
+      :selected="selected"
+      :media-title="media?.title"
+      :has-candidates="!!candidates.length"
+      :loading="loading"
+      @update:view="setView"
+      @download="openDownload"
+      @select="select"
+      @clear="filters = emptyResourceFilters()"
+    />
+    <div v-if="output" class="pagination">
       <button
         :disabled="page <= 1 || loading"
         @click="
@@ -472,10 +455,6 @@ onUnmounted(() => {
   />
 </template>
 <style scoped>
-.resource-list {
-  display: grid;
-  gap: 12px;
-}
 .resource-page-actions {
   display: flex;
   align-items: center;
@@ -502,24 +481,6 @@ onUnmounted(() => {
   font-size: 12px;
   color: var(--muted);
   padding: 4px;
-}
-.resource-view-toggle {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 48px;
-  height: 48px;
-  padding: 12px;
-  border: 0;
-  border-radius: 50%;
-  background: var(--accent);
-  color: white;
-  box-shadow: var(--shadow);
-  z-index: 5;
-}
-.resource-view-toggle svg {
-  width: 24px;
-  height: 24px;
 }
 
 .page-actions {
@@ -676,11 +637,6 @@ onUnmounted(() => {
 .resource-toolbar select {
   width: auto;
 }
-.release-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
-  gap: 16px;
-}
 .resource-title {
   min-width: 300px;
   max-width: 500px;
@@ -733,9 +689,6 @@ onUnmounted(() => {
   }
 }
 @media (max-width: 650px) {
-  .release-grid {
-    grid-template-columns: 1fr;
-  }
   .resource-context {
     gap: 12px;
   }
