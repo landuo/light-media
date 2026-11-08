@@ -376,6 +376,7 @@ type serviceNode struct {
 	ParentGUID   *string `json:"parent_guid"`
 	Type         string  `json:"type"`
 	Title        string  `json:"title"`
+	TrimID       string  `json:"trim_id"`
 	Season       *int    `json:"season_number"`
 	Episode      *int    `json:"episode_number"`
 }

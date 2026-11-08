@@ -6,14 +6,21 @@ import (
 	"math/big"
 	"slices"
 	"strconv"
+
+	"light-media/internal/fnos"
 )
 
 // An ordinary module observation is an existence fact, never ownership of a
 // local file. Keep its original DTO in the existing sealed completion input;
 // do not manufacture assets, slots, registrations or cleanup permissions.
 type originalSubscriptionExistence struct {
-	MediaInfo json.RawMessage
-	Result    json.RawMessage
+	MediaInfo    json.RawMessage
+	Result       json.RawMessage
+	FNOSEpisodes []int `json:",omitempty"`
+}
+
+func (observation *originalSubscriptionExistence) replacesLocal() bool {
+	return observation != nil && len(observation.Result) > 0
 }
 
 func (a *App) resolveOriginalSubscriptionExistence(ctx context.Context, s Subscription, resolved *standardSubscriptionRecognition) (*standardSubscriptionRecognition, error) {
@@ -22,7 +29,7 @@ func (a *App) resolveOriginalSubscriptionExistence(ctx context.Context, s Subscr
 		return resolved, err
 	}
 	if !originalModuleGroupsHaveMethod(groups, "media_exists") {
-		return resolved, nil
+		return a.resolveFNOSSubscriptionExistence(ctx, s, resolved)
 	}
 	if resolved == nil {
 		resolved, err = a.resolveStandardSubscriptionRecognition(ctx, s, nil)
@@ -41,7 +48,7 @@ func (a *App) resolveOriginalSubscriptionExistence(ctx context.Context, s Subscr
 		return nil, err
 	}
 	if originalModuleResultEmpty(result) {
-		return resolved, nil
+		return a.resolveFNOSSubscriptionExistence(ctx, s, resolved)
 	} // Native inventory fallback.
 	var list []json.RawMessage
 	if json.Unmarshal(result, &list) == nil && list != nil {
@@ -62,6 +69,39 @@ func (a *App) resolveOriginalSubscriptionExistence(ctx context.Context, s Subscr
 	}
 	resolved.Existence = observed
 	return resolved, nil
+}
+
+func (a *App) resolveFNOSSubscriptionExistence(ctx context.Context, s Subscription, resolved *standardSubscriptionRecognition) (*standardSubscriptionRecognition, error) {
+	config := a.Settings().FNOS
+	if !config.Enabled || resolved == nil || s.Media.MediaType != "tv" || providerNativeMedia(s.Media) || !validMedia("tv", s.Media.ID) {
+		return resolved, nil
+	}
+	if err := a.guardSubscriptionContext(ctx); err != nil {
+		return nil, err
+	}
+	service, err := fnos.NewService(fnos.Config{Host: config.Host, Username: config.Username, Password: config.Password})
+	if err != nil {
+		return nil, &APIError{"SUBSCRIPTION_FNOS_INVENTORY_UNAVAILABLE", err.Error(), 503}
+	}
+	episodes, err := service.EpisodeInventory(ctx, s.Media.Title, s.Media.ID, s.Season)
+	if ctx.Err() != nil {
+		return nil, ctx.Err()
+	}
+	if err != nil {
+		return nil, &APIError{"SUBSCRIPTION_FNOS_INVENTORY_UNAVAILABLE", err.Error(), 503}
+	}
+	if !sameHostMediaConfiguration(config, a.Settings().FNOS) {
+		return nil, &APIError{"SUBSCRIPTION_FNOS_INVENTORY_UNAVAILABLE", "飞牛影视配置已变化，稍后重新核对库存", 503}
+	}
+	if err := a.guardSubscriptionContext(ctx); err != nil {
+		return nil, err
+	}
+	if len(episodes) == 0 {
+		return resolved, nil
+	}
+	current := *resolved
+	current.Existence = &originalSubscriptionExistence{MediaInfo: resolved.Information.MediaInfo, FNOSEpisodes: episodes}
+	return &current, nil
 }
 
 func (a *App) originalNativeSubscriptionExistence(ctx context.Context, s Subscription) (json.RawMessage, error) {
@@ -102,6 +142,9 @@ func (a *App) originalNativeSubscriptionExistence(ctx context.Context, s Subscri
 func (observation *originalSubscriptionExistence) episodes(s Subscription) ([]int, error) {
 	if observation == nil {
 		return nil, nil
+	}
+	if !observation.replacesLocal() {
+		return observation.FNOSEpisodes, nil
 	}
 	value, err := decodeSourceJSON(observation.Result)
 	if err != nil {

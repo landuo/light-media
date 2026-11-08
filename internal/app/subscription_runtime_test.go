@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"slices"
 	"testing"
 	"time"
 
@@ -133,6 +134,25 @@ func TestSubscriptionCoverageSubtractsLibraryReservationsAndExclusions(t *testin
 		t.Fatalf("list %+v", result)
 	}
 }
+func TestSubscriptionCoverageKeepsLocalAndFNOSInventory(t *testing.T) {
+	a := subscriptionTestApp(t)
+	ctx := context.Background()
+	s := Subscription{
+		Media:  catalog.Media{ID: 101172, MediaType: "tv", Title: "吞噬星空"},
+		Season: 1, StartEpisode: 247, TotalEpisodes: 249,
+	}
+	if _, err := a.Store.DB.ExecContext(ctx, `INSERT INTO asset_slots VALUES(?,?,?,?)`, mediaKey(s.Media), 1, 247, "local-file"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.Store.DB.ExecContext(ctx, `INSERT INTO reservations VALUES(?,?,?,?)`, mediaKey(s.Media), 1, 248, "paused-duplicate"); err != nil {
+		t.Fatal(err)
+	}
+	coverage, err := a.subscriptionCoverageWithExistence(ctx, s, []int{247, 248, 249}, &originalSubscriptionExistence{FNOSEpisodes: []int{248}})
+	if err != nil || !slices.Equal(coverage.Library, []int{247, 248}) || !slices.Equal(coverage.Missing, []int{249}) || len(coverage.Reserved) != 0 {
+		t.Fatalf("existing episode must win over the duplicate reservation; coverage=%+v err=%v", coverage, err)
+	}
+}
+
 func TestCalendarPredictionsDoNotInventEpisodes(t *testing.T) {
 	a := subscriptionTestApp(t)
 	ctx := context.Background()

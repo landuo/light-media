@@ -90,11 +90,12 @@ func (a *App) refreshOrdinaryCompletionScopeResolved(ctx context.Context, s Subs
 		missing := 0
 		for _, episode := range state.Targets() {
 			var count int
-			if resolved.Existence != nil {
-				if slices.Contains(confirmed, episode) {
-					count = 1
-				}
-			} else if e = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=?`, mediaKey(s.Media), s.Season, episode).Scan(&count); e != nil {
+			if slices.Contains(confirmed, episode) {
+				count = 1
+			} else if !resolved.Existence.replacesLocal() {
+				e = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=?`, mediaKey(s.Media), s.Season, episode).Scan(&count)
+			}
+			if e != nil {
 				return s, nil, e
 			}
 			if count == 0 && !slices.Contains(state.Note, episode) {
@@ -155,11 +156,11 @@ func (a *App) ordinaryCompletionBasisWithExistence(ctx context.Context, q qualit
 		return nil, false, e
 	}
 	basis := &subscriptionCompletionOrdinaryBasis{Version: 1, SubscriptionSHA: tokenHash(string(mustCleanSeedJSON(s))), AcceptedSHA: tokenHash(string(mustCleanSeedJSON(accepted))), MediaKey: mediaKey(s.Media), Season: s.Season, Targets: targets, AcceptedEpisodes: downloaded, Inventory: []subscriptionCompletionInventory{}}
-	if existence != nil {
-		confirmed, err := existence.episodes(s)
-		if err != nil {
-			return nil, false, err
-		}
+	confirmed, err := existence.episodes(s)
+	if err != nil {
+		return nil, false, err
+	}
+	if existence.replacesLocal() {
 		basis.Version, basis.Existence = 2, existence
 		for _, ep := range targets {
 			if !slices.Contains(downloaded, ep) && !slices.Contains(confirmed, ep) {
@@ -168,9 +169,12 @@ func (a *App) ordinaryCompletionBasisWithExistence(ctx context.Context, q qualit
 		}
 		return basis, true, nil
 	}
+	if len(confirmed) > 0 {
+		basis.Version, basis.Existence = 3, existence
+	}
 	seen := map[string]int{}
 	for _, ep := range targets {
-		if slices.Contains(downloaded, ep) {
+		if slices.Contains(downloaded, ep) || slices.Contains(confirmed, ep) {
 			continue
 		}
 		rows, e := q.QueryContext(ctx, `SELECT asset_id FROM asset_slots WHERE media_key=? AND season=? AND episode=? ORDER BY asset_id`, mediaKey(s.Media), s.Season, ep)
@@ -251,7 +255,7 @@ func (p *PluginStore) validateOrdinaryCompletionInput(ctx context.Context, q sub
 		return completionEvidenceError()
 	}
 	basis := r.Input.Ordinary
-	if r.Input.Version != 2 || basis == nil || (basis.Version != 1 && basis.Version != 2) || basis.SubscriptionSHA != tokenHash(string(mustCleanSeedJSON(s))) || basis.AcceptedSHA != r.Identity.AcceptedSHA || basis.MediaKey != mediaKey(s.Media) || basis.Season != s.Season || !reflect.DeepEqual(basis.Targets, ordinaryCompletionTargets(s)) || len(basis.Targets) == 0 {
+	if r.Input.Version != 2 || basis == nil || (basis.Version != 1 && basis.Version != 2 && basis.Version != 3) || basis.SubscriptionSHA != tokenHash(string(mustCleanSeedJSON(s))) || basis.AcceptedSHA != r.Identity.AcceptedSHA || basis.MediaKey != mediaKey(s.Media) || basis.Season != s.Season || !reflect.DeepEqual(basis.Targets, ordinaryCompletionTargets(s)) || len(basis.Targets) == 0 {
 		return completionEvidenceError()
 	}
 	sealed, e := p.readSubscriptionCompletionSealed(ctx, q, "subscription_completion_ordinary", r.Identity.ID)
@@ -263,7 +267,7 @@ func (p *PluginStore) validateOrdinaryCompletionInput(ctx context.Context, q sub
 		return completionEvidenceError()
 	}
 	if basis.Version == 2 {
-		if basis.Existence == nil || len(basis.Inventory) != 0 {
+		if !basis.Existence.replacesLocal() || len(basis.Existence.FNOSEpisodes) != 0 || len(basis.Inventory) != 0 {
 			return completionEvidenceError()
 		}
 		confirmed, err := basis.Existence.episodes(s)
@@ -277,10 +281,20 @@ func (p *PluginStore) validateOrdinaryCompletionInput(ctx context.Context, q sub
 		}
 		return nil
 	}
-	if basis.Existence != nil {
+	if basis.Version == 1 && basis.Existence != nil {
 		return completionEvidenceError()
 	}
 	covered := append([]int{}, downloaded...)
+	if basis.Version == 3 {
+		if basis.Existence == nil || basis.Existence.replacesLocal() || len(basis.Existence.FNOSEpisodes) == 0 || s.Media.MediaType != "tv" || providerNativeMedia(s.Media) {
+			return completionEvidenceError()
+		}
+		for _, ep := range basis.Existence.FNOSEpisodes {
+			if slices.Contains(basis.Targets, ep) && !slices.Contains(covered, ep) {
+				covered = append(covered, ep)
+			}
+		}
+	}
 	seen := map[string]bool{}
 	for _, entry := range basis.Inventory {
 		asset, video := entry.Asset, entry.Video

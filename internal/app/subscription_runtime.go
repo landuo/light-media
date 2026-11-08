@@ -624,7 +624,7 @@ func (a *App) subscriptionCoverageWithExistence(ctx context.Context, s Subscript
 	reservedSet := map[int]bool{}
 	pendingImport := map[int]bool{}
 	excludedSet := map[int]bool{}
-	if existence == nil {
+	if !existence.replacesLocal() {
 		for _, query := range []struct {
 			sql  string
 			dest map[int]bool
@@ -653,7 +653,6 @@ func (a *App) subscriptionCoverageWithExistence(ctx context.Context, s Subscript
 		if err != nil {
 			return out, err
 		}
-		occupied = map[int]bool{}
 		for _, episode := range episodes {
 			occupied[episode] = true
 		}
@@ -909,6 +908,10 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	episodeScope := s
 	s, resolved, e := a.refreshOrdinaryCompletionScopeResolved(ctx, s)
 	if e != nil {
+		var apiErr *APIError
+		if errors.As(e, &apiErr) && apiErr.Code == "SUBSCRIPTION_FNOS_INVENTORY_UNAVAILABLE" {
+			_ = a.recordSubscriptionCheck(ctx, s, "飞牛影视库存暂不可用，稍后重新核对", nil, time.Time{})
+		}
 		return e
 	}
 	if provider && resolved == nil {

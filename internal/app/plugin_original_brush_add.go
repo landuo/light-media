@@ -111,6 +111,7 @@ func (a *App) originalBrushSourceAdd(ctx context.Context, scope originalBaseCall
 	}
 	content, magnet, expectedHash, err := a.originalBrushMaterial(ctx, scope, candidate, task.SkipTips)
 	if err != nil {
+		a.logOriginalPluginContext(ctx, "ERROR", "brush_download_material_failed", "刷流无法从当前站点取得有效种子，请检查站点访问状态")
 		return nil, err
 	}
 	out := plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Outcome: "rejected"}
@@ -121,9 +122,11 @@ func (a *App) originalBrushSourceAdd(ctx context.Context, scope originalBaseCall
 	spec := native.IYUUAddSpec{Torrent: content, Magnet: magnet, SavePath: task.SavePath, Category: &category, Tags: tags, IgnoreCategoryCheck: true}
 	destination, err := client.EffectiveAddDestination(ctx, spec)
 	if err != nil {
+		a.logOriginalPluginContext(ctx, "ERROR", "brush_download_destination_failed", "无法读取刷流下载器的保存目录，请检查下载器连接和分类设置")
 		return nil, err
 	}
 	if err := a.originalBrushDestinationAllowed(destination.EffectivePath); err != nil {
+		a.logOriginalPluginContext(ctx, "ERROR", "brush_download_destination_denied", "刷流保存目录不在光影已挂载的授权目录内，请检查容器挂载和目录设置")
 		return nil, err
 	}
 	a.downloadMu.Lock()
