@@ -771,7 +771,8 @@ func (a *App) cachedSeasonEpisodes(ctx context.Context, s Subscription) []int {
 	return out
 }
 func (a *App) subscriptionList(ctx context.Context) (any, error) {
-	raw, e := a.Store.List(ctx, "subscription", 500, 0)
+	raw, e := a.Store.listRecordPayloads(ctx, `SELECT payload FROM records WHERE kind='subscription'
+		AND json_extract(payload,'$.state') IS NOT 'cancelled' ORDER BY updated_at DESC,id LIMIT 500`)
 	if e != nil {
 		return nil, e
 	}

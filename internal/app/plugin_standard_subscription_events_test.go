@@ -137,6 +137,20 @@ func TestStandardSubscriptionMutationActualHTTPAndSDKCommitRollbackIsolation(t *
 	if response.Code != 200 {
 		t.Fatal("actual logical delete failed", response.Body.String())
 	}
+	response = callTest(t, a.Handler(), "GET", "/api/subscriptions", "", cookie, "")
+	var list struct {
+		Data struct {
+			Items []json.RawMessage
+			Total int
+		}
+	}
+	if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &list) != nil ||
+		list.Data.Items == nil || len(list.Data.Items) != 0 || list.Data.Total != 0 {
+		t.Fatal("deleted subscription remained in the public list", response.Body.String())
+	}
+	if err = a.Store.Get(ctx, "subscription", sub.ID, &saved); err != nil || saved.State != "cancelled" {
+		t.Fatal("logical deletion lost the persisted cancellation", saved.State, err)
+	}
 	deleted := requireBusinessEventCount(t, a, clone, "subscribe.deleted", 1)
 	var deletion struct {
 		ID   string                     `json:"subscribe_id"`

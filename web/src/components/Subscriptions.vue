@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { VMenu } from 'vuetify/components/VMenu';
 import { VSelect } from 'vuetify/components/VSelect';
 import { VTextField } from 'vuetify/components/VTextField';
 import { ref, onMounted, computed, watch, useId } from 'vue';
@@ -381,8 +382,13 @@ async function save() {
 }
 async function remove(s: any) {
   if (!confirm('删除《' + s.media.title + '》的订阅？已下载文件会保留。')) return false;
-  const r = await action(() => api('/subscriptions/' + s.id, undefined, 'DELETE'), '订阅已删除');
-  if (r === undefined) return false;
+  const removed = await action(async () => {
+    const result = await api('/subscriptions/' + s.id, undefined, 'DELETE');
+    if (!result?.cancelled) throw new Error('服务未确认删除订阅');
+    return true;
+  }, '订阅已删除');
+  if (!removed) return false;
+  subs.value = subs.value.filter((item) => item.id !== s.id);
   await load();
   return true;
 }
@@ -622,10 +628,24 @@ watch(() => props.view, applyView);
           </div>
           <span :class="['subscription-state', s.state]">{{ label(s.state) }}</span>
         </button>
-        <details class="subscription-menu">
-          <summary :aria-label="s.media.title + ' 更多操作'" title="更多操作">
-            <AppIcon name="more" />
-          </summary>
+        <VMenu
+          location="bottom end"
+          :transition="false"
+          :width="288"
+          max-width="calc(100vw - 32px)"
+          close-on-content-click
+        >
+          <template #activator="{ props: menuProps }">
+            <button
+              v-bind="menuProps"
+              type="button"
+              class="subscription-menu-trigger"
+              :aria-label="s.media.title + ' 更多操作'"
+              title="更多操作"
+            >
+              <AppIcon name="more" />
+            </button>
+          </template>
           <div class="subscription-menu-panel">
             <div class="subscription-menu-actions">
               <button @click="check(s)"><AppIcon name="refresh" />立即检查</button>
@@ -698,7 +718,7 @@ watch(() => props.view, applyView);
               </p>
             </div>
           </div>
-        </details>
+        </VMenu>
         <progress
           class="subscription-progress"
           :value="percent(s)"
@@ -1399,52 +1419,29 @@ watch(() => props.view, applyView);
 .subscription-progress::-moz-progress-bar {
   background: var(--success, #56ca00);
 }
-.subscription-menu {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
+.subscription-menu-trigger {
   position: absolute;
   top: 4px;
   right: 4px;
-  left: 4px;
   z-index: 2;
-  pointer-events: none;
-}
-.subscription-card:has(.subscription-menu[open]) {
-  z-index: 10;
-}
-.subscription-menu > summary {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 38px;
   height: 38px;
+  padding: 0;
+  border: 0;
   border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
   color: white;
-  cursor: pointer;
-  list-style: none;
-  margin-left: auto;
-  pointer-events: auto;
 }
-.subscription-menu[open] > summary {
-  margin-bottom: 0;
-}
-.subscription-menu > summary::-webkit-details-marker {
-  display: none;
-}
-.subscription-menu > summary:hover {
+.subscription-menu-trigger:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 .subscription-menu-panel {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  width: min(288px, 100%);
-  max-width: calc(100vw - 32px);
   max-height: min(560px, calc(100dvh - 140px));
   overflow: auto;
-  pointer-events: auto;
   padding: 8px;
   border: 1px solid var(--line);
   border-radius: 8px;

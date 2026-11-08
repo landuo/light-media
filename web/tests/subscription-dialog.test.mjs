@@ -6,6 +6,7 @@ import ts from 'typescript';
 import * as vue from 'vue';
 import * as realApi from '../src/api.ts';
 import * as subscriptions from '../src/features/subscriptions.ts';
+import * as exploreMedia from '../src/features/explore-media.ts';
 import * as subscriptionFilters from '../src/features/subscription-filters.ts';
 import * as calendar from '../src/features/subscription-calendar.ts';
 import * as directories from '../src/features/download-directories.ts';
@@ -104,7 +105,10 @@ async function mount(t, { view = 'subscriptions', items = [subscription()] } = {
       if (fixture.failSave) throw new Error('订阅保存失败，请稍后重试');
       return { ...copy(body), id: body.id || 'created-subscription' };
     }
-    if (path.startsWith('/subscriptions/') && method === 'DELETE') return {};
+    if (path.startsWith('/subscriptions/') && method === 'DELETE') {
+      fixture.items = fixture.items.filter((item) => path !== '/subscriptions/' + item.id);
+      return { cancelled: true };
+    }
     throw new Error('Unexpected request ' + path);
   };
   new Function('require', 'exports', 'confirm', source)(
@@ -134,10 +138,11 @@ async function mount(t, { view = 'subscriptions', items = [subscription()] } = {
           },
         };
       if (dependency === '../features/subscriptions') return subscriptions;
+      if (dependency === '../features/explore-media') return exploreMedia;
       if (dependency === '../features/subscription-filters') return subscriptionFilters;
       if (dependency === '../features/subscription-calendar') return calendar;
       if (dependency === '../features/download-directories') return directories;
-      if (/^vuetify\/components\/(VTextarea|VTextField|VSelect)$/.test(dependency)) {
+      if (/^vuetify\/components\/(VMenu|VTextarea|VTextField|VSelect)$/.test(dependency)) {
         const name = dependency.split('/').at(-1);
         return { [name]: { name } };
       }
@@ -334,6 +339,7 @@ test('closing discards edits while canceling a subscription requires confirmatio
   await app.click('取消订阅');
   assert.equal(app.fixture.confirmations.length, 1);
   assert.equal(app.fixture.requests.filter((request) => request.method === 'DELETE').length, 0);
+  assert.ok(app.label('编辑订阅 合成剧集'));
   assert.ok(app.dialog());
   app.fixture.confirm = true;
   await app.click('取消订阅');
@@ -341,7 +347,8 @@ test('closing discards edits while canceling a subscription requires confirmatio
     app.fixture.requests.filter((request) => request.method === 'DELETE'),
     [{ path: '/subscriptions/synthetic-subscription', body: undefined, method: 'DELETE' }],
   );
-  assert.deepEqual(app.fixture.items, app.fixture.before);
+  assert.equal(app.label('编辑订阅 合成剧集'), undefined);
+  assert.equal(app.dialog(), undefined);
 });
 
 test('a new TV subscription retains its starting episode for whole-season and multi-season creation', async (t) => {

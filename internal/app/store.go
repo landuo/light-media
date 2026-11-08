@@ -213,7 +213,10 @@ func (s *Store) List(ctx context.Context, kind string, limit, offset int) ([]jso
 	if offset < 0 {
 		offset = 0
 	}
-	rows, e := s.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind=? ORDER BY updated_at DESC,id LIMIT ? OFFSET ?`, kind, limit, offset)
+	return s.listRecordPayloads(ctx, `SELECT payload FROM records WHERE kind=? ORDER BY updated_at DESC,id LIMIT ? OFFSET ?`, kind, limit, offset)
+}
+func (s *Store) listRecordPayloads(ctx context.Context, query string, args ...any) ([]json.RawMessage, error) {
+	rows, e := s.DB.QueryContext(ctx, query, args...)
 	if e != nil {
 		return nil, e
 	}
