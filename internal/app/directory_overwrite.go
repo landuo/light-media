@@ -235,7 +235,7 @@ func (a *App) readDirectoryOverwrite(ctx context.Context, key, source, target, r
 			return op, e
 		}
 		if !policy.Policy.Known && len(candidates) > 0 {
-			return op, transferoverwrite.ErrDependency
+			return op, bad("REVIEW_OVERWRITE_POLICY", "目标目录已有同一影片的其他版本，请确认覆盖方式后重新整理")
 		}
 		if op.Decision.DeleteVersions {
 			paths = append(paths, candidates...)

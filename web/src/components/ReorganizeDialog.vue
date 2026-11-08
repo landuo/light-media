@@ -34,7 +34,7 @@ const props = defineProps<{
     [key: string]: any;
   };
 }>();
-const emit = defineEmits<{ close: []; done: [] }>();
+const emit = defineEmits<{ close: []; done: []; historyChanged: [] }>();
 const targetListID = 'organize-targets-' + useId();
 const storage = ref(props.initial?.target_path ? 'local' : ''),
   mode = ref(''),
@@ -291,6 +291,7 @@ async function organize(background: boolean) {
   } finally {
     busy.value = false;
     progress.value = '';
+    if (alive && totalJobs.value && error.value) emit('historyChanged');
   }
 }
 async function search() {

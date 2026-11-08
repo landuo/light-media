@@ -631,6 +631,7 @@ onUnmounted(() => {
       :history-ids="reorganizeItems.map((item) => item.id)"
       @close="reorganizeItems = []"
       @done="reorganized"
+      @history-changed="load(true)"
     />
     <div
       v-if="deleteItems.length"

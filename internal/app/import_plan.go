@@ -682,8 +682,17 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					var owner string
 					e := a.Store.DB.QueryRowContext(ctx, `SELECT intent_id FROM reservations WHERE media_key=? AND season=? AND episode=?`, mediaKey(identity), file.Season, episode).Scan(&owner)
 					if e == nil && owner != request.IntentID {
-						block("该影片或季集已有其他下载占用")
-						break
+						reusable := false
+						if request.IntentID == "" {
+							reusable, e = canReplaceFailedImportReservation(ctx, a.Store.DB, owner, mediaKey(identity), file, episode)
+							if e != nil {
+								return ImportPlan{}, e
+							}
+						}
+						if !reusable {
+							block("该影片或季集已有其他下载或整理占用")
+							break
+						}
 					}
 					if e != nil && !errors.Is(e, sql.ErrNoRows) {
 						return ImportPlan{}, e

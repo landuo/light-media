@@ -18,6 +18,7 @@ const compiled = ts.transpileModule(script.content, {
 
 function openDialog(t, initial = {}, options = {}) {
   const requests = [];
+  const events = [];
   const apiModule = {
     ui: {
       settings: {
@@ -59,7 +60,7 @@ function openDialog(t, initial = {}, options = {}) {
   const render = scope.run(() =>
     module.exports.default.setup(
       { paths: ['/downloads/Test.mkv'], initial },
-      { expose: () => {}, emit: () => {} },
+      { expose: () => {}, emit: (event) => events.push(event) },
     ),
   );
   t.after(() => scope.stop());
@@ -83,6 +84,7 @@ function openDialog(t, initial = {}, options = {}) {
   const previewButton = () => nodes().find((node) => node.props?.class === 'preview-action');
   return {
     requests,
+    events,
     nodes,
     pathInput,
     selects,
@@ -176,6 +178,11 @@ test('pinned per-task failure keeps successful siblings and updates the rendered
     'only the rejected subtitle has a row error',
   );
   assert.equal(dialog.requests.length, 2, 'one submission and actual job poll');
+  assert.deepEqual(
+    dialog.events,
+    ['historyChanged'],
+    'refresh history and keep the failed dialog open',
+  );
 });
 
 test('manual target can be edited and cleared without changing storage, mode, or explicit switches', async (t) => {

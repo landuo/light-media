@@ -243,7 +243,20 @@ func (a *App) importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, fi
 		err := tx.QueryRowContext(ctx, `SELECT intent_id FROM reservations WHERE media_key=? AND season=? AND episode=?`, mediaKey(plan.Media), file.Season, episode).Scan(&current)
 		if err == nil {
 			if current != owner {
-				return bad("IMPORT_CONFLICT", "影片或季集被其他任务占用")
+				reusable := false
+				if plan.IntentID == "" {
+					reusable, err = canReplaceFailedImportReservation(ctx, tx, current, mediaKey(plan.Media), file, episode)
+					if err != nil {
+						return err
+					}
+				}
+				if !reusable {
+					return bad("IMPORT_CONFLICT", "影片或季集被其他任务占用")
+				}
+				if _, err := tx.ExecContext(ctx, `UPDATE reservations SET intent_id=? WHERE media_key=? AND season=? AND episode=? AND intent_id=?`,
+					owner, mediaKey(plan.Media), file.Season, episode, current); err != nil {
+					return err
+				}
 			}
 			continue
 		}
@@ -318,8 +331,7 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 	if err != nil {
 		return err
 	}
-	plan.State = "running"
-	if err = a.Store.Put(ctx, "import_plan", plan.ID, plan); err != nil {
+	if err = a.startImportRun(ctx, job, &plan, indices); err != nil {
 		return err
 	}
 	var batchFailures []error
