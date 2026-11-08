@@ -525,13 +525,30 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			if file.Part != "" {
 				base += "-" + file.Part
 			}
+			renaming := importBool(request.Renaming, true)
+			hasTransferHandlers := a.originalTransferHasHandlers()
+			modulePreview := request.originalModulePreview && (hasTransferHandlers || file.MaterialKind != "" || file.DirectoryDigest != "")
+			transferContext := providerImport || hasTransferHandlers || file.MaterialKind != "" || requested.originalResolvedMeta != nil
+			if renaming && identity.MediaType == "movie" && !transferContext {
+				metadataPath := file.Source
+				if requested.originalMetadataPath != "" {
+					metadataPath = requested.originalMetadataPath
+				}
+				parsed, e := a.originalTransferPathMeta(ctx, metadataPath)
+				if e != nil {
+					return ImportPlan{}, e
+				}
+				if resolution := parsed.Text("resource_pix"); resolution != "" {
+					base += " - " + resolution
+				}
+			}
 			file.Target = filepath.Join(targetDir, base+strings.ToLower(filepath.Ext(file.Source)))
-			if !importBool(request.Renaming, true) {
+			if !renaming {
 				// MoviePilot keeps the original basename directly in the destination
 				// when smart naming is off, without title or Season subdirectories.
 				file.Target = filepath.Join(baseDir, filepath.Base(file.Source))
 			}
-			if providerImport || a.originalTransferHasHandlers() || file.MaterialKind != "" || requested.originalResolvedMeta != nil {
+			if transferContext {
 				metadataFile := file
 				if requested.originalMetadataPath != "" {
 					metadataFile.Source = requested.originalMetadataPath
@@ -562,7 +579,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					original.Episodes, _ = json.Marshal(rows)
 				}
 				meta.OriginalTransfer[file.ID] = original
-				if importBool(request.Renaming, true) && !request.originalModulePreview {
+				if renaming && (!request.originalModulePreview || identity.MediaType == "movie" && !modulePreview) {
 					var episodes []catalog.Episode
 					if season, exists := seasons[file.Season]; !providerImport && exists {
 						episodes = season.Episodes
@@ -577,7 +594,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					meta.OriginalNamingBases[file.ID] = baseDir
 				}
 			}
-			if request.originalModulePreview && (a.originalTransferHasHandlers() || file.MaterialKind != "" || file.DirectoryDigest != "") {
+			if modulePreview {
 				file.Method = request.Mode
 				if file.Method == "auto" {
 					file.Method = "hardlink"

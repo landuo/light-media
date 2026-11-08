@@ -44,6 +44,40 @@ func TestManualOrganizeJokerReleaseActuallyImportsWithoutNFO(t *testing.T) {
 	}
 }
 
+func TestMovieOrganizeMatchesMoviePilotResolutionSuffix(t *testing.T) {
+	a, source, target := importTestApp(t)
+	ctx := context.Background()
+	movie := catalog.Media{ID: 1423191, MediaType: "movie", Title: "生化危机：爆发夜", OriginalTitle: "Resident Evil", Year: 2026}
+	importCache(t, a, "media:movie:1423191", movie)
+	input := filepath.Join(source, "Resident.Evil.2026.2160p.MA.WEB-DL.DDP5.1.H.265-SPWEB.mkv")
+	importWrite(t, input, []byte("synthetic movie"))
+	want := filepath.Join(target, "生化危机：爆发夜 (2026)", "生化危机：爆发夜 (2026) - 2160p.mkv")
+	// Direct import has no pre-resolved source metadata or transfer plugins.
+	plan, err := a.previewImport(ctx, ImportRequest{TMDBID: movie.ID, MediaType: "movie", RootID: "root",
+		Mode: "hardlink", Files: []ImportFileRequest{{Path: input}}})
+	if err != nil || len(plan.Files) != 1 || plan.Files[0].Target != want {
+		t.Fatalf("direct import should use MoviePilot's target %q: %+v %v", want, plan.Files, err)
+	}
+	req := manualOrganizeRequest{Paths: []string{input}, TargetPath: target, TMDBID: movie.ID,
+		MediaType: "movie", Mode: "hardlink", Scraping: importFlag(false), Preview: true}
+	preview, err := a.manualOrganize(ctx, req)
+	if err != nil || len(preview.Items) != 1 || preview.Items[0].Target != want {
+		t.Fatalf("manual preview should show %q: %+v %v", want, preview.Items, err)
+	}
+	req.Preview = false
+	item := historyUpsertSubmit(t, a, req, false)
+	_, job := historyUpsertAttempt(t, a, item.JobID)
+	reorgRunJob(t, a, job)
+	sourceStat, err := os.Stat(input)
+	if err != nil {
+		t.Fatal(err)
+	}
+	targetStat, err := os.Stat(want)
+	if err != nil || !os.SameFile(sourceStat, targetStat) {
+		t.Fatalf("the execution should hardlink to the previewed path %q: %v", want, err)
+	}
+}
+
 func TestManualOrganizeFailureIsDurableHistoryButPreviewIsNot(t *testing.T) {
 	a, source, _ := importTestApp(t)
 	path := filepath.Join(source, "unknown.mkv")

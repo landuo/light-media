@@ -50,6 +50,18 @@ func (a *App) originalTransferContext(ctx context.Context, identity catalog.Medi
 	return a.originalTransferContextWithMedia(ctx, identity, file, nil)
 }
 
+func (a *App) originalTransferPathMeta(ctx context.Context, path string) (*releasemeta.MetaObject, error) {
+	options, err := a.globalRecognitionOptions(ctx)
+	if err != nil {
+		return nil, err
+	}
+	parser, err := releasemeta.NewMetaInfoParser(releasemeta.MetaInfoEnvironment{Options: options})
+	if err != nil {
+		return nil, err
+	}
+	return parser.ParsePath(path, nil)
+}
+
 func (a *App) originalTransferContextWithMedia(ctx context.Context, identity catalog.Media, file PlanFile, resolved json.RawMessage, parsed ...*releasemeta.MetaObject) (originalTransferFileContext, error) {
 	var out originalTransferFileContext
 	var meta *releasemeta.MetaObject
@@ -57,15 +69,8 @@ func (a *App) originalTransferContextWithMedia(ctx context.Context, identity cat
 		meta = parsed[0]
 	}
 	if meta == nil {
-		options, err := a.globalRecognitionOptions(ctx)
-		if err != nil {
-			return out, err
-		}
-		parser, err := releasemeta.NewMetaInfoParser(releasemeta.MetaInfoEnvironment{Options: options})
-		if err != nil {
-			return out, err
-		}
-		meta, err = parser.ParsePath(file.Source, nil)
+		var err error
+		meta, err = a.originalTransferPathMeta(ctx, file.Source)
 		if err != nil {
 			return out, err
 		}
@@ -113,10 +118,9 @@ func (a *App) originalTransferContextWithMedia(ctx context.Context, identity cat
 	return out, nil
 }
 
-// These are the host's existing naming formats expressed as templates. The
-// plugin platform supplies the source TemplateHelper context and callback order;
-// it does not replace the application's configured naming policy.
-const originalNativeMovieNaming = "{{title}}{% if year %} ({{year}}){% else %} (tmdb-{{tmdbid}}){% endif %}/{{title}}{% if year %} ({{year}}){% else %} (tmdb-{{tmdbid}}){% endif %}{% if part %}-{{part}}{% endif %}{{fileExt}}"
+// Keep the host's ID fallback for missing years. Movie naming uses
+// MoviePilot's conditional videoFormat suffix after Part.
+const originalNativeMovieNaming = "{{title}}{% if year %} ({{year}}){% else %} (tmdb-{{tmdbid}}){% endif %}/{{title}}{% if year %} ({{year}}){% else %} (tmdb-{{tmdbid}}){% endif %}{% if part %}-{{part}}{% endif %}{% if videoFormat %} - {{videoFormat}}{% endif %}{{fileExt}}"
 const originalNativeTVNaming = "{{title}}{% if year %} ({{year}}){% else %} (tmdb-{{tmdbid}}){% endif %}/Season {{season}}/{{title}} {{season_episode}}{% if part %}-{{part}}{% endif %}{{fileExt}}"
 
 func originalNativeTransferNaming(identity catalog.Media) string {

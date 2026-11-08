@@ -107,7 +107,9 @@ func qualityActualMovieWorkflow(t *testing.T, boundary string, completion ...fun
 		ownedExtensionConfig(a, []string{".mkv"}, []string{".srt"}, []string{".audio"})
 	}
 	var s Subscription
-	oldSource := filepath.Join(source, "测试影片 (2024) 1080p.mkv")
+	// The in-place replacement cases use the same resolution so MoviePilot's
+	// naming puts both releases at the same destination.
+	oldSource := filepath.Join(source, "测试影片 (2024) 2160p.WEBRip.mkv")
 	newName := "测试影片 (2024) 2160p.mkv"
 	newSource := filepath.Join(source, newName)
 	oldBytes, newBytes := bytes.Repeat([]byte{'l'}, 1024), bytes.Repeat([]byte{'h'}, 1024)

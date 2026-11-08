@@ -80,7 +80,7 @@ func TestDirectoryOverwriteActualModesAndFileFacts(t *testing.T) {
 			if e := a.assetAtPath(context.Background(), first.Files[0].Target, &prior); e != nil {
 				t.Fatal(e)
 			}
-			next := filepath.Join(source, "Original.Movie.2024.2160p.mkv")
+			next := filepath.Join(source, "Original.Movie.2024.1080p.REPACK.mkv")
 			if c.sameInode {
 				if e := os.Link(old, next); e != nil {
 					t.Fatal(e)
@@ -96,7 +96,7 @@ func TestDirectoryOverwriteActualModesAndFileFacts(t *testing.T) {
 			}
 			p := overwritePlan(t, a, next)
 			// Source preview never makes or applies an overwrite decision.
-			if got, _ := os.ReadFile(p.Files[0].Target); string(got) != c.old {
+			if got, _ := os.ReadFile(p.Files[0].Target); p.Files[0].Target != first.Files[0].Target || string(got) != c.old {
 				t.Fatal("preview changed target")
 			}
 			j = overwriteStart(t, a, p)

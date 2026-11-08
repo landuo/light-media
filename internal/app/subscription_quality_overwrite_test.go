@@ -38,8 +38,12 @@ func TestSubscriptionQualityActualDirectoryOverwriteAndCoexistence(t *testing.T)
 			if branch == "same_size_larger" {
 				oldSize = 512
 			}
-			oldSource := filepath.Join(source, "old", "测试影片 (2024) 1080p.mkv")
 			newName := "测试影片 (2024) 2160p.mkv"
+			oldName := "测试影片 (2024) 1080p.mkv"
+			if rename {
+				oldName = "测试影片 (2024) 2160p.WEBRip.mkv"
+			}
+			oldSource := filepath.Join(source, "old", oldName)
 			newSource := filepath.Join(source, newName)
 			oldBytes, newBytes := bytes.Repeat([]byte{'o'}, oldSize), bytes.Repeat([]byte{'n'}, 1024)
 			importWrite(t, oldSource, oldBytes)

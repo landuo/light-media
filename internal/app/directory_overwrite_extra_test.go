@@ -52,7 +52,7 @@ func TestDirectoryOverwriteUnknownPolicyCanReuseExistingHardlink(t *testing.T) {
 			movie := importFixture(t, a, "movie")
 			overwriteRule(a, source, target, "<nil>", false)
 			ctx := context.Background()
-			input := filepath.Join(source, "Original.Movie.2024.2160p.mkv")
+			input := filepath.Join(source, "Original.Movie.2024.mkv")
 			content := []byte("same bytes can still be separate files")
 			importWrite(t, input, content)
 			item := historyUpsertSubmit(t, a, manualOrganizeRequest{Paths: []string{input}, MediaType: "movie",
