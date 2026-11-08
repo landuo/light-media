@@ -970,6 +970,12 @@ func (a *App) catalogAPI(r *http.Request, action string) (any, error) {
 		result, e = a.originalCatalogTMDBDetail(ctx, kind, int64(atoi(q.Get("id"))))
 	case "seasons":
 		result, e = a.originalCatalogSeasons(ctx, int64(atoi(q.Get("id"))))
+	case "episode-group":
+		id, err := strconv.ParseInt(q.Get("id"), 10, 32)
+		if err != nil {
+			return nil, bad("INVALID_MEDIA", "请选择明确的电视剧身份")
+		}
+		result, e = a.catalogEpisodeGroup(ctx, id, q.Get("group"))
 	case "season":
 		var s catalog.Season
 		var group any

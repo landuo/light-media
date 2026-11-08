@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import CatalogRelated from './CatalogRelated.vue';
+import MediaDetailLayout from './MediaDetailLayout.vue';
+import MediaDetailSeasons from './MediaDetailSeasons.vue';
+import { VBtn } from 'vuetify/components/VBtn';
 import { VSelect } from 'vuetify/components/VSelect';
 import { VInfiniteScroll } from 'vuetify/components/VInfiniteScroll';
 import { ref, shallowRef, onMounted, onDeactivated, onUnmounted, computed } from 'vue';
-import { api, action, go, image, date, ui, label, errorText } from '../api';
+import { api, action, go, image, date, ui, errorText } from '../api';
 import MediaCards from './MediaCards.vue';
 import Subscriptions from './Subscriptions.vue';
 import ExploreActions from './ExploreActions.vue';
@@ -94,7 +97,7 @@ async function load() {
     if (parts[0] === 'detail') {
       detail.value = await api('/catalog/detail?kind=' + kind.value + '&id=' + parts[2]);
       season.value = detailSeasons.value.find((s: any) => s.season_number > 0)?.season_number || 1;
-      if (kind.value === 'tv') await loadSeason();
+      if (kind.value === 'tv') void loadSeason();
     } else if (parts[0] === 'person') {
       [person.value, credits.value] = await Promise.all([
         api('/catalog/person?id=' + parts[1]),
@@ -301,89 +304,41 @@ onUnmounted(() => {
       </div></template
     ></template
   >
-  <template v-else-if="detail"
-    ><section
-      class="detail-hero"
-      :style="
-        image(detail.backdrop_path, 'w1280')
-          ? {
-              backgroundImage: `linear-gradient(180deg,rgba(244,245,250,.72),rgba(244,245,250,.98)),url(${image(detail.backdrop_path, 'w1280')})`,
-            }
-          : {}
-      "
+  <template v-else-if="detail">
+    <MediaDetailLayout
+      :media="detail"
+      :poster-url="image(detail.poster_path, 'w500')"
+      :backdrop-url="image(detail.backdrop_path, 'w1280')"
     >
-      <img
-        v-if="image(detail.poster_path)"
-        class="detail-poster"
-        :src="image(detail.poster_path)"
-        :alt="detail.title"
-      />
-      <div class="detail-copy">
-        <p class="eyebrow">{{ label(detail.media_type) }} · {{ detail.year || '上映待定' }}</p>
-        <h1>{{ detail.title }}</h1>
-        <p class="original-title">{{ detail.original_title }}</p>
-        <div class="tags">
-          <span class="gold" v-if="detail.vote_average">★ {{ detail.vote_average.toFixed(1) }}</span
-          ><span v-for="g in detail.genres" :key="g.id">{{ g.name }}</span
-          ><span v-if="detail.runtime">{{ detail.runtime }} 分钟</span
-          ><span>{{ detail.status }}</span>
-        </div>
-        <p class="overview">{{ detail.overview || '暂无剧情简介。' }}</p>
-        <div class="button-row">
-          <button
-            class="detail-search"
-            @click="resource"
-            :disabled="kind === 'tv' && (!seasonData || seasonLoading)"
-          >
-            ⌕ 搜索资源</button
-          ><button class="detail-subscribe" @click="openSubscription(detail)">＋ 添加订阅</button>
-        </div>
-        <div class="tags">
-          <span v-if="['present', 'managed', 'external'].includes(detail.library_state)"
-            >已入库</span
-          ><span v-if="detail.subscription_id">已订阅</span
-          ><span v-if="detail.download_state">{{ label(detail.download_state) }}</span>
-        </div>
-        <p class="hint">TMDB {{ detail.id }} · {{ detail.release_date }}</p>
-      </div>
-    </section>
-    <section class="panel" v-if="kind === 'tv'">
-      <div class="section-heading">
-        <h2>季度</h2>
-        <VSelect
-          v-model.number="season"
-          @update:model-value="loadSeason"
-          density="compact"
-          aria-label="季度"
-          :items="
-            detailSeasons.map((s: any) => ({
-              title: `${s.name} · ${s.episode_count} 集`,
-              value: s.season_number,
-            }))
-          "
+      <template #actions>
+        <VBtn
+          color="primary"
+          variant="tonal"
+          prepend-icon="mdi-magnify"
+          :disabled="kind === 'tv' && (!seasonData || seasonLoading)"
+          @click="resource"
+        >搜索资源</VBtn>
+        <VBtn color="warning" variant="tonal" prepend-icon="mdi-heart-outline" @click="openSubscription(detail)">
+          添加订阅
+        </VBtn>
+      </template>
+      <template v-if="kind === 'tv'" #seasons>
+        <MediaDetailSeasons
+          v-model:season="season"
+          v-model:selected="selected"
+          :seasons="detailSeasons"
+          :season-data="seasonData"
+          :loading="seasonLoading"
+          :media-id="detail.id"
+          :groups="detail.original_media?.episode_groups"
+          @change-season="loadSeason"
+          @retry="loadSeason"
         />
-      </div>
-      <p class="hint">订阅以季为单位，添加订阅时可设置从哪一集开始，后续更新自动追踪。</p>
-      <p v-if="seasonLoading" class="hint">正在加载所选季度的标准单集信息…</p>
-      <button v-else-if="!seasonData" class="small" @click="loadSeason">重试加载本季</button>
-      <details>
-        <summary>本季剧集 · 可选集数搜索资源</summary>
-        <div class="episode-grid">
-          <label
-            v-for="(e, index) in seasonData?.episodes || []"
-            :key="`${e.season_number}:${e.episode_number}:${index}`"
-            :class="['episode-option', { selected: selected.includes(e.episode_number) }]"
-            ><input type="checkbox" :value="e.episode_number" v-model="selected" /><span
-              ><strong>E{{ String(e.episode_number).padStart(2, '0') }} · {{ e.name }}</strong
-              ><small>{{ e.air_date || '日期待定' }}</small></span
-            ></label
-          >
-        </div>
-      </details>
-    </section>
+      </template>
+    </MediaDetailLayout>
     <CatalogRelated :key="route + 'credits'" :media="detail" part="credits" />
-    <CatalogRelated :key="route + 'recommendations'" :media="detail" part="recommendations"
-  /></template>
+    <CatalogRelated :key="route + 'recommendations'" :media="detail" part="recommendations" />
+  </template>
   <template v-else-if="person"
     ><section class="panel person-header">
       <img v-if="image(person.profile_path)" :src="image(person.profile_path)" :alt="person.name" />
@@ -472,79 +427,6 @@ onUnmounted(() => {
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
-.detail-hero {
-  gap: 32px;
-  padding: 32px;
-  border-radius: var(--radius);
-  background-color: var(--bg);
-  color: var(--text);
-}
-.detail-poster {
-  width: 184px;
-  height: 276px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-.detail-copy h1 {
-  margin: 5px 0 8px;
-  color: var(--text);
-  font-size: clamp(26px, 2.7vw, 36px);
-  line-height: 1.3;
-  letter-spacing: -0.6px;
-}
-.detail-copy .eyebrow {
-  color: var(--muted);
-  font-size: 11px;
-}
-.detail-copy .overview {
-  margin: 17px 0 21px;
-  color: var(--text);
-  font-size: 13px;
-  line-height: 1.9;
-}
-.detail-copy .tags span {
-  padding: 4px 8px;
-  border: 1px solid #ffffff20;
-  border-radius: 6px;
-  background: var(--surface);
-  color: var(--muted);
-}
-.detail-copy .tags .gold {
-  color: #efce87;
-}
-.detail-copy .hint {
-  color: var(--muted);
-}
-.detail-copy .original-title {
-  color: var(--muted);
-}
-.detail-copy .button-row .detail-search {
-  color: var(--info);
-  background: rgba(22, 177, 255, 0.12);
-  border-color: transparent;
-}
-.detail-copy .button-row .detail-subscribe {
-  color: var(--danger);
-  background: rgba(255, 76, 81, 0.12);
-  border-color: transparent;
-}
-.episode-option {
-  padding: 13px;
-  border-color: var(--line);
-  border-radius: var(--radius);
-  background: #f8fafb;
-}
-.episode-option.selected {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-}
-.episode-option strong {
-  color: var(--text);
-  font-size: 12px;
-}
-.episode-option small {
-  color: var(--muted);
-}
 .cast-row {
   gap: 17px;
   padding: 2px 0 16px;
@@ -593,17 +475,6 @@ onUnmounted(() => {
   .toolbar {
     flex-wrap: wrap;
   }
-  .detail-hero {
-    gap: 22px;
-    padding: 25px;
-  }
-  .detail-poster {
-    width: 140px;
-    height: 210px;
-  }
-  .detail-copy .overview {
-    font-size: 12px;
-  }
   .person-header {
     gap: 20px;
     padding: 22px;
@@ -613,18 +484,6 @@ onUnmounted(() => {
   }
 }
 @media (max-width: 520px) {
-  .detail-hero {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 23px;
-  }
-  .detail-poster {
-    width: 126px;
-    height: 189px;
-  }
-  .detail-copy h1 {
-    font-size: 27px;
-  }
   .person-header {
     flex-direction: column;
     gap: 16px;

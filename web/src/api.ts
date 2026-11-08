@@ -247,6 +247,16 @@ export function go(path: string) {
   location.hash = path;
 }
 export function image(path: string, size = 'w342') {
+  // Source-compatible catalog responses carry a full TMDB image URL.
+  // Keep the request on the host's existing authenticated image proxy.
+  const full = /^https:\/\/([^/@?#]+)\/t\/p\/(?:original|w\d+)\/([A-Za-z0-9_-]+\.(?:jpg|jpeg|png|webp))$/.exec(
+    path,
+  );
+  if (full) {
+    const domain = full[1]!.toLowerCase();
+    const configured = String(ui.settings?.tmdb_image_domain || '').toLowerCase();
+    if (domain === 'image.tmdb.org' || domain === configured) path = '/' + full[2];
+  }
   if (!path || !/^\/[A-Za-z0-9._/-]+$/.test(path) || path.startsWith('//') || path.includes('..'))
     return '';
   const safeSize = ['w92', 'w185', 'w342', 'w500', 'w780', 'w1280'].includes(size) ? size : 'w342';
