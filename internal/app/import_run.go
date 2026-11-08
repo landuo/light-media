@@ -17,6 +17,7 @@ import (
 )
 
 type importReceipt struct {
+	ReusedHardlink            bool                               `json:"reused_hardlink,omitempty"`
 	DirectoryException        string                             `json:"directory_exception,omitempty"`
 	DirectoryMembers          map[string]originalDirectoryMember `json:"directory_members,omitempty"`
 	DirectoryFiles            []string                           `json:"directory_files,omitempty"`
@@ -463,6 +464,11 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				if err := a.resolveOriginalNativeTransferName(ctx, job, &plan, index, meta); err != nil {
 					return importReceipt{}, err
 				}
+				reused, useExisting, err := a.reuseExistingImportHardlink(ctx, job, &plan, index, meta, check)
+				if useExisting || err != nil {
+					file = &plan.Files[index]
+					return reused, err
+				}
 				file = &plan.Files[index]
 				if file.DirectoryDigest != "" {
 					return a.publishOriginalDirectory(ctx, plan.ID+"/"+file.ID, *file, check)
@@ -562,7 +568,7 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				}
 			}
 			owned := []managedFile{}
-			if mainSucceeded {
+			if mainSucceeded && !receipt.ReusedHardlink {
 				kind := file.MaterialKind
 				if kind == "" {
 					kind = "video"
@@ -659,6 +665,18 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				}
 			}
 			if mainSucceeded && file.MaterialKind == "" {
+				if receipt.ReusedHardlink {
+					if err := checkExistingImportHardlink(ctx, tx, receipt); err != nil {
+						return err
+					}
+					asset.State, asset.IdentitySource, asset.IdentityConfirmedAt = "external", "manual", now()
+					proof := libraryIdentity{AssetID: asset.ID, RootID: root.ID, RootPath: root.Path, Path: asset.Path,
+						Snapshot: receipt.StageSnapshot, MediaType: asset.Media.MediaType, TMDBID: asset.Media.ID,
+						Season: asset.Season, Episodes: asset.Episodes, Source: "manual", ConfirmedAt: asset.IdentityConfirmedAt, Actor: "admin"}
+					if err := txPut(ctx, tx, "asset_identity", asset.ID, proof); err != nil {
+						return err
+					}
+				}
 				if err = commitImportReorganizeTx(ctx, tx, plan, meta, asset, owned); err != nil {
 					return err
 				}

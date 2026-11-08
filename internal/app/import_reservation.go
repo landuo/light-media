@@ -85,7 +85,7 @@ func canReplaceFailedImportReservation(ctx context.Context, q qualityReader, own
 	if err == nil {
 		if receipt.ID != want.ID || receipt.Source != want.Source || receipt.Target != want.Target || receipt.SourceSnapshot != want.SourceSnapshot ||
 			receipt.Stage != want.Stage || receipt.State != "planned" || receipt.StageSnapshot != (importSnapshot{}) || receipt.SHA256 != "" ||
-			receipt.OriginalModuleStarted || len(receipt.OriginalModuleResult) != 0 || receipt.OriginalNativeInterrupted || receipt.DirectoryListed || receipt.DirectoryException != "" {
+			receipt.ReusedHardlink || receipt.OriginalModuleStarted || len(receipt.OriginalModuleResult) != 0 || receipt.OriginalNativeInterrupted || receipt.DirectoryListed || receipt.DirectoryException != "" {
 			return false, nil
 		}
 	} else if !errors.Is(err, sql.ErrNoRows) {

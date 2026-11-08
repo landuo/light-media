@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"os"
@@ -39,6 +40,67 @@ func TestDirectoryOverwriteUnknownPolicyChecksOtherVersions(t *testing.T) {
 				}
 			} else if e != nil {
 				t.Fatal("all four modes agree on empty directory", e)
+			}
+		})
+	}
+}
+
+func TestDirectoryOverwriteUnknownPolicyCanReuseExistingHardlink(t *testing.T) {
+	for _, sameFile := range []bool{true, false} {
+		t.Run(fmt.Sprintf("same-file-%t", sameFile), func(t *testing.T) {
+			a, source, target := importTestApp(t)
+			movie := importFixture(t, a, "movie")
+			overwriteRule(a, source, target, "<nil>", false)
+			ctx := context.Background()
+			input := filepath.Join(source, "Original.Movie.2024.2160p.mkv")
+			content := []byte("same bytes can still be separate files")
+			importWrite(t, input, content)
+			item := historyUpsertSubmit(t, a, manualOrganizeRequest{Paths: []string{input}, MediaType: "movie",
+				TMDBID: movie.ID, Mode: "hardlink", Scraping: importFlag(false)}, false)
+			p, _ := historyUpsertAttempt(t, a, item.JobID)
+			canonical := p.Files[0].Target
+			existing := strings.TrimSuffix(canonical, filepath.Ext(canonical)) + " - 2160p" + filepath.Ext(canonical)
+			if err := os.MkdirAll(filepath.Dir(existing), 0700); err != nil {
+				t.Fatal(err)
+			}
+			if sameFile {
+				if err := os.Link(input, existing); err != nil {
+					t.Fatal(err)
+				}
+			} else {
+				importWrite(t, existing, content)
+			}
+			job, err := a.claim(ctx)
+			if err != nil || job.ID != item.JobID {
+				t.Fatalf("claim submitted job: %v %v", job.ID, err)
+			}
+			err = a.safeRun(ctx, job)
+			if !sameFile {
+				if fileCode(err) != "REVIEW_OVERWRITE_POLICY" {
+					t.Fatalf("a separate file should still require an overwrite choice: %v", err)
+				}
+			} else {
+				if err != nil {
+					t.Fatal(err)
+				}
+				if _, err := a.finishJob(ctx, job, "succeeded", "", "", 0); err != nil {
+					t.Fatal(err)
+				}
+				latest := historyUpsertOnly(t, a, "status=success")
+				if latest.Target != existing || latest.Source != input {
+					t.Fatalf("history did not point to the existing link: %+v", latest)
+				}
+				var asset Asset
+				if err := a.assetAtPath(ctx, existing, &asset); err != nil || asset.State != "external" || asset.SourcePath != input {
+					t.Fatalf("existing link was not registered as an external asset: %+v %v", asset, err)
+				}
+				var owned managedFile
+				if err := a.Store.Get(ctx, "managed_file", tokenHash(existing), &owned); !errors.Is(err, sql.ErrNoRows) {
+					t.Fatalf("the preexisting link must not be claimed as a newly written file: %v", err)
+				}
+			}
+			if _, err := os.Stat(canonical); !errors.Is(err, os.ErrNotExist) {
+				t.Fatalf("an extra video was created: %v", err)
 			}
 		})
 	}
