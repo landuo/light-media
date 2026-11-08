@@ -24,14 +24,21 @@ func (c *Client) qbLogin(ctx context.Context) error {
 	ctx = mutationReadOnly(ctx)
 	v := url.Values{"username": {c.config.Username}, "password": {c.config.Password}}
 	u := c.qbURL("auth/login")
-	body, _, status, err := c.request(ctx, http.MethodPost, u, []byte(v.Encode()), "application/x-www-form-urlencoded", "")
+	var body []byte
+	var status int
+	var err error
+	if c.sourceQBLogin {
+		body, _, status, err = c.sourceQBReadRequest(ctx, http.MethodPost, u, []byte(v.Encode()), "application/x-www-form-urlencoded", false)
+	} else {
+		body, _, status, err = c.request(ctx, http.MethodPost, u, []byte(v.Encode()), "application/x-www-form-urlencoded", "")
+	}
 	if err != nil {
 		return err
 	}
-	if status != http.StatusOK {
+	if !c.sourceQBLogin && status != http.StatusOK || c.sourceQBLogin && status >= http.StatusBadRequest {
 		return statusError(status)
 	}
-	if strings.TrimSpace(string(body)) != "Ok." {
+	if !c.sourceQBLogin && strings.TrimSpace(string(body)) != "Ok." || c.sourceQBLogin && len(body) != 0 && string(body) != "Ok." {
 		return failure("login", "authentication_failed")
 	}
 	found := false
@@ -40,7 +47,7 @@ func (c *Client) qbLogin(ctx context.Context) error {
 			found = true
 		}
 	}
-	if !found {
+	if !c.sourceQBLogin && !found {
 		return failure("login", "missing_session_cookie")
 	}
 	c.loggedIn = true
@@ -60,13 +67,23 @@ func (c *Client) qbRequest(ctx context.Context, method, endpoint, data, contentT
 		}
 	}
 	u := c.qbURL(endpoint)
-	body, _, status, err := c.request(ctx, method, u, []byte(data), contentType, "")
+	var body []byte
+	var status int
+	var err error
+	request := func() {
+		if c.sourceQBLogin {
+			body, _, status, err = c.sourceQBReadRequest(ctx, method, u, []byte(data), contentType, selected)
+		} else {
+			body, _, status, err = c.request(ctx, method, u, []byte(data), contentType, "")
+		}
+	}
+	request()
 	if err != nil {
 		return nil, err
 	}
 	// Read-only callers may refresh authentication. A selected IYUU request
 	// has already been delegated: 401/403 cannot prove no mutation occurred.
-	if status == http.StatusForbidden || status == http.StatusUnauthorized {
+	if status == http.StatusForbidden || status == http.StatusUnauthorized && !c.sourceQBLogin {
 		c.loggedIn = false
 		if selected {
 			return nil, statusError(status)
@@ -74,12 +91,12 @@ func (c *Client) qbRequest(ctx context.Context, method, endpoint, data, contentT
 		if err := c.qbLogin(ctx); err != nil {
 			return nil, err
 		}
-		body, _, status, err = c.request(ctx, method, u, []byte(data), contentType, "")
+		request()
 		if err != nil {
 			return nil, err
 		}
 	}
-	if status != http.StatusOK {
+	if !c.sourceQBLogin && status != http.StatusOK || c.sourceQBLogin && status >= http.StatusBadRequest {
 		return nil, statusError(status)
 	}
 	return body, nil

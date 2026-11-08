@@ -26,7 +26,7 @@ func (a *App) consumeOriginalCoreSiteDeleted(ctx context.Context, raw json.RawMe
 		if !numeric || infinity != 0 || number == nil || !number.IsInt() || !number.Num().IsInt64() || number.Sign() <= 0 {
 			return nil
 		}
-		identity, err := a.Store.nativeSiteByID(ctx, number.Num().Int64())
+		identity, err := a.Store.nativeSiteByPublicSourceID(ctx, number.Num().Int64())
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil
 		}

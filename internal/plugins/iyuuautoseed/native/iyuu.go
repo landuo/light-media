@@ -24,7 +24,10 @@ type IYUUOptions struct {
 	Sequential   bool
 	FirstLast    bool
 	APIKey       string
-	Sleep        func(context.Context, time.Duration) error
+	// Fixed source-only auth/response/session policy. Worker values cannot set it.
+	SourceQBLogin    bool
+	SourceTRResponse bool
+	Sleep            func(context.Context, time.Duration) error
 	// Guard is supplied by the trusted owner and runs before every HTTP dispatch,
 	// including session negotiation. It is not serialized or worker supplied.
 	Guard func(context.Context) error
@@ -41,6 +44,8 @@ type IYUUAddSpec struct {
 	Category            *string
 	Tags                []string
 	SkipChecking        *bool
+	SkipCheckingWire    *string
+	QBLabels            []string
 	IgnoreCategoryCheck bool
 }
 type IYUUAddResult struct {
@@ -70,6 +75,9 @@ func NewIYUUClient(config Config, options IYUUOptions) (*IYUUClient, error) {
 	if e != nil {
 		return nil, e
 	}
+	c.sourceQBLogin = options.SourceQBLogin
+	c.sourceTRResponse = options.SourceTRResponse
+	c.sourceGuard = options.Guard
 	c.http.Transport = &mutationDispatchTransport{next: c.http.Transport}
 	if options.APIKey != "" {
 		c.http.Transport = &iyuuBearer{next: c.http.Transport, origin: c.base.Scheme + "://" + c.base.Host, token: options.APIKey}
@@ -100,7 +108,7 @@ type iyuuGuard struct {
 func (g *iyuuGuard) RoundTrip(r *http.Request) (*http.Response, error) {
 	if err := g.guard(r.Context()); err != nil {
 		mutationOwnerDenied(r.Context(), err)
-		return nil, failure("iyuu_owner", "revoked")
+		return nil, &iyuuGuardError{cause: err}
 	}
 	return g.next.RoundTrip(r)
 }
@@ -271,13 +279,18 @@ func (c *IYUUClient) addPaused(ctx context.Context, spec IYUUAddSpec, expected *
 				return out, e
 			}
 		}
-		if spec.SkipChecking != nil {
-			if e := field("skip_checking", iyuuBool(*spec.SkipChecking)); e != nil {
+		if value, present := iyuuSkipCheckingField(spec); present {
+			if e := field("skip_checking", value); e != nil {
 				return out, e
 			}
 		}
 		if e := field("autoTMM", iyuuBool(auto)); e != nil {
 			return out, e
+		}
+		for _, label := range spec.QBLabels {
+			if e := field("labels", label); e != nil {
+				return out, e
+			}
 		}
 		if len(spec.Torrent) > 0 {
 			header := make(map[string][]string)

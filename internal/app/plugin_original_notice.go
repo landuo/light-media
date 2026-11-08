@@ -42,7 +42,20 @@ func (a *App) originalNoticeQueue(ctx context.Context) (*notice.Queue, error) {
 }
 
 func (a *App) sendOriginalNoticeModules(ctx context.Context, call notice.Call) error {
-	_, err := a.sendOriginalNoticeModulesCount(ctx, call)
+	if len(call.Args) == 0 || call.Args[0] != "post_message" {
+		return bad("PLUGIN_NOTIFICATION_INVALID", "通知调用无效")
+	}
+	kwargs, err := json.Marshal(call.Kwargs)
+	if err != nil {
+		return err
+	}
+	args, err := json.Marshal(call.Args[1:])
+	if err != nil {
+		return err
+	}
+	// The source dispatcher consumes ordinary module exceptions itself. Only
+	// errors it propagates reach the queue; native delivery counts stay separate.
+	_, err = a.invokeOriginalPluginModules(ctx, "post_message", nil, args, kwargs)
 	return err
 }
 
@@ -112,8 +125,20 @@ func (a *App) stopOriginalNoticeQueue() {
 
 func (a *App) originalPostMessageResource(ctx context.Context, scope originalBaseCallScope, raw json.RawMessage) (json.RawMessage, error) {
 	p := scope.object
-	if p == nil || p.app != a || scope.phase == "stop" {
+	if p == nil || p.app != a {
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "通知需要当前插件调用")
+	}
+	if scope.phase == "stop" {
+		// The existing validated stop frame binds one exact object/client.
+		// Original close/stop_service may notify before message shutdown;
+		// the Go-only physical stop remains unable to create notifications.
+		hook, ok := ctx.Value(originalBaseStopKey{}).(*originalBaseStopCall)
+		sourceHook := ok && hook != nil && hook.businessHook && hook.object == p && hook.client != nil &&
+			(p.manifest.ManagedPublicServices && hook.client.SupportsPublicServiceStop() ||
+				p.manifest.ManagedPrivateScheduler && hook.client.SupportsPrivateSchedulerStop())
+		if !sourceHook {
+			return nil, bad("PLUGIN_CAPABILITY_DENIED", "通知需要当前插件调用")
+		}
 	}
 	p.sessionMu.Lock()
 	concurrent := p.session != nil && p.session.SupportsConcurrent()
@@ -141,7 +166,7 @@ func (a *App) originalPostMessageResource(ctx context.Context, scope originalBas
 			fields["link"] = strings.TrimRight(domain, "/") + "/#/plugins?tab=installed&id=" + p.installation.InstanceID
 		}
 	}
-	result, err := a.postOriginalPluginMessage(ctx, fields)
+	result, err := a.postOriginalPluginMessageRaw(ctx, fields, validated)
 	if err != nil {
 		return nil, err
 	}
@@ -149,6 +174,14 @@ func (a *App) originalPostMessageResource(ctx context.Context, scope originalBas
 }
 
 func (a *App) postOriginalPluginMessage(ctx context.Context, fields map[string]any) (plugins.NotificationDispatch, error) {
+	return a.postOriginalPluginMessageRaw(ctx, fields, nil)
+}
+
+func (a *App) postOriginalPluginMessageRaw(ctx context.Context, fields map[string]any, sourceFields map[string]json.RawMessage) (plugins.NotificationDispatch, error) {
+	return a.postOriginalPluginMessageWithContext(ctx, fields, sourceFields, noticetemplate.ContextInput{}, nil)
+}
+
+func (a *App) postOriginalPluginMessageWithContext(ctx context.Context, fields map[string]any, sourceFields map[string]json.RawMessage, input noticetemplate.ContextInput, kwargs notice.Object) (plugins.NotificationDispatch, error) {
 	out := plugins.NotificationDispatch{Errors: []string{}}
 	if !a.admitOriginalBackground() {
 		return out, bad("APP_STOPPING", "服务正在停止")
@@ -181,10 +214,14 @@ func (a *App) postOriginalPluginMessage(ctx context.Context, fields map[string]a
 	router := notice.Router{Dependencies: notice.Dependencies{
 		Superuser: username,
 		Render: func(ctx context.Context, message *notice.Envelope, _ notice.Business, kwargs notice.Object) (*notice.Envelope, error) {
-			result, err := a.pluginStore.noticeTemplateHelper().RenderMessage(ctx, message, noticetemplate.ContextInput{Extra: kwargs}, func(context.Context) (any, error) { return preference("templates", "NotificationTemplates") })
+			input.Extra = kwargs
+			result, err := a.pluginStore.noticeTemplateHelper().RenderMessage(ctx, message, input, func(context.Context) (any, error) { return preference("templates", "NotificationTemplates") })
 			return result.Message, err
 		},
 		SaveHistory: func(ctx context.Context, value notice.Object) error {
+			if err := originalNoticeSourceHistoryEncoding(sourceFields); err != nil {
+				return err
+			}
 			text := func(key string) string { s, _ := value[key].(string); return s }
 			var userID *string
 			switch user := value["userid"].(type) {
@@ -254,6 +291,6 @@ func (a *App) postOriginalPluginMessage(ctx context.Context, fields map[string]a
 			return nil
 		},
 	}}
-	err = router.Post(ctx, message, notice.Business{}, nil)
+	err = router.Post(ctx, message, notice.Business{}, kwargs)
 	return out, err
 }

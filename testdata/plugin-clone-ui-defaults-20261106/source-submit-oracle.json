@@ -1,0 +1,158 @@
+{
+  "classification": "Actual fixed original Card.executePluginClone function executed; controlled transport/toast/dialog. Captures POST normalization, not network/UI runtime. Input defaults reused from separately executed original Dialog SFC.",
+  "commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "card_sha256": "9ced26a58fb27d1d9ba99cf9dd124f96bfe5ecbc3d8505224066ca6b2df4acf4",
+  "function_sha256": "1500f6a8fe987b888a9cb4af71c159d997649ec03022118094ea019b3710a9ce",
+  "cases": [
+    {
+      "id": "current-source-card",
+      "form": {
+        "suffix": "CopyA",
+        "name": "辅种分身 分身",
+        "description": "来源描述 (分身版本)",
+        "version": "view-9",
+        "icon": "/plugin_icon/seed.png"
+      },
+      "actual_posts": [
+        {
+          "path": "plugin/clone/SeedRescue2",
+          "body": {
+            "suffix": "CopyA",
+            "name": "辅种分身 分身",
+            "description": "来源描述 (分身版本)",
+            "version": "view-9",
+            "icon": "/plugin_icon/seed.png"
+          }
+        }
+      ],
+      "events": [
+        [
+          "remove"
+        ]
+      ],
+      "toast": [
+        [
+          "success",
+          "plugin.cloneSuccess{\"name\":\"辅种分身 分身\"}"
+        ]
+      ]
+    },
+    {
+      "id": "empty-source-version",
+      "form": {
+        "suffix": "CopyA",
+        "name": "无版本插件 分身",
+        "description": " (分身版本)",
+        "version": "1.0",
+        "icon": ""
+      },
+      "actual_posts": [
+        {
+          "path": "plugin/clone/SeedRescue2",
+          "body": {
+            "suffix": "CopyA",
+            "name": "无版本插件 分身",
+            "description": "(分身版本)",
+            "version": "1.0",
+            "icon": ""
+          }
+        }
+      ],
+      "events": [
+        [
+          "remove"
+        ]
+      ],
+      "toast": [
+        [
+          "success",
+          "plugin.cloneSuccess{\"name\":\"无版本插件 分身\"}"
+        ]
+      ]
+    },
+    {
+      "id": "edited-outer-whitespace",
+      "form": {
+        "suffix": " UserA ",
+        "name": " 自定义名称 ",
+        "description": " 描述 ",
+        "version": " display-3 ",
+        "icon": " https://synthetic.invalid/custom.svg "
+      },
+      "actual_posts": [
+        {
+          "path": "plugin/clone/SeedRescue2",
+          "body": {
+            "suffix": "UserA",
+            "name": "自定义名称",
+            "description": "描述",
+            "version": "display-3",
+            "icon": "https://synthetic.invalid/custom.svg"
+          }
+        }
+      ],
+      "events": [
+        [
+          "remove"
+        ]
+      ],
+      "toast": [
+        [
+          "success",
+          "plugin.cloneSuccess{\"name\":\" 自定义名称 \"}"
+        ]
+      ]
+    },
+    {
+      "id": "cleared-optionals",
+      "form": {
+        "suffix": " CopyA ",
+        "name": " \t ",
+        "description": " ",
+        "version": " ",
+        "icon": " "
+      },
+      "actual_posts": [
+        {
+          "path": "plugin/clone/SeedRescue2",
+          "body": {
+            "suffix": "CopyA",
+            "name": "",
+            "description": "",
+            "version": "",
+            "icon": ""
+          }
+        }
+      ],
+      "events": [
+        [
+          "remove"
+        ]
+      ],
+      "toast": [
+        [
+          "success",
+          "plugin.cloneSuccess{\"name\":\" \\t \"}"
+        ]
+      ]
+    },
+    {
+      "id": "empty-suffix-no-write",
+      "form": {
+        "suffix": " ",
+        "name": "n",
+        "description": "d",
+        "version": "1",
+        "icon": ""
+      },
+      "actual_posts": [],
+      "events": [],
+      "toast": [
+        [
+          "error",
+          "plugin.suffixRequired{}"
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "kind": "installed Python3.12 genericpath.exists and tzlocal5.4.4 anonymous _get_localzone function AST with separate stat/open fault injection",
+  "source_sha256": {
+    "python-runtime-reference/stdlib/genericpath.py": "2b0b35d2206778af4081cf81dd9b513876e72c35a55bec941402e1fa62b1f1aa",
+    "python-timezone-reference/tzlocal/unix.py": "68e936f6076c4dac8c9e8a4a76fb6a7cec73f38294ee7dd92d493d03f15bd876"
+  },
+  "fixture_sha256": "e9ed07d7bee0c76a9d442d091ef1f01668fee7c4f26014c0a868b19fe6c18a95",
+  "limitations": [
+    "Synthetic stat/open boundary faults; canonical system permissions/files were not modified",
+    "Local Python3.14 interpreter and standard ZoneInfo parses owned local-system New_York bytes, not live tzdata",
+    "Name discovery and nonempty ENV branch deliberately stubbed out to isolate anonymous canonical-file branch"
+  ],
+  "cases": [
+    {
+      "case": "first-valid",
+      "result": {
+        "zone": "local",
+        "offset_2026_01_01": -18000
+      },
+      "warnings": [],
+      "trace": [
+        {
+          "op": "stat",
+          "path": "/owned/etc/localtime"
+        },
+        {
+          "op": "open",
+          "path": "/owned/etc/localtime",
+          "mode": "rb"
+        }
+      ]
+    },
+    {
+      "case": "first-stat-EACCES-second-valid",
+      "result": {
+        "zone": "local",
+        "offset_2026_01_01": -18000
+      },
+      "warnings": [],
+      "trace": [
+        {
+          "op": "stat",
+          "path": "/owned/etc/localtime"
+        },
+        {
+          "op": "stat",
+          "path": "/owned/usr/local/etc/localtime"
+        },
+        {
+          "op": "open",
+          "path": "/owned/usr/local/etc/localtime",
+          "mode": "rb"
+        }
+      ]
+    },
+    {
+      "case": "first-stat-EIO-second-valid",
+      "result": {
+        "zone": "local",
+        "offset_2026_01_01": -18000
+      },
+      "warnings": [],
+      "trace": [
+        {
+          "op": "stat",
+          "path": "/owned/etc/localtime"
+        },
+        {
+          "op": "stat",
+          "path": "/owned/usr/local/etc/localtime"
+        },
+        {
+          "op": "open",
+          "path": "/owned/usr/local/etc/localtime",
+          "mode": "rb"
+        }
+      ]
+    },
+    {
+      "case": "first-stat-ENOENT-second-valid",
+      "result": {
+        "zone": "local",
+        "offset_2026_01_01": -18000
+      },
+      "warnings": [],
+      "trace": [
+        {
+          "op": "stat",
+          "path": "/owned/etc/localtime"
+        },
+        {
+          "op": "stat",
+          "path": "/owned/usr/local/etc/localtime"
+        },
+        {
+          "op": "open",
+          "path": "/owned/usr/local/etc/localtime",
+          "mode": "rb"
+        }
+      ]
+    },
+    {
+      "case": "first-read-EACCES-no-fallback",
+      "result": {
+        "raises": "PermissionError",
+        "errno": 13
+      },
+      "warnings": [],
+      "trace": [
+        {
+          "op": "stat",
+          "path": "/owned/etc/localtime"
+        },
+        {
+          "op": "open",
+          "path": "/owned/etc/localtime",
+          "mode": "rb"
+        }
+      ]
+    },
+    {
+      "case": "first-read-EIO-no-fallback",
+      "result": {
+        "raises": "OSError",
+        "errno": 5
+      },
+      "warnings": [],
+      "trace": [
+        {
+          "op": "stat",
+          "path": "/owned/etc/localtime"
+        },
+        {
+          "op": "open",
+          "path": "/owned/etc/localtime",
+          "mode": "rb"
+        }
+      ]
+    },
+    {
+      "case": "first-malformed-no-fallback",
+      "result": {
+        "raises": "ValueError",
+        "errno": null
+      },
+      "warnings": [],
+      "trace": [
+        {
+          "op": "stat",
+          "path": "/owned/etc/localtime"
+        },
+        {
+          "op": "open",
+          "path": "/owned/etc/localtime",
+          "mode": "rb"
+        }
+      ]
+    },
+    {
+      "case": "first-stat-EACCES-second-stat-EACCES-UTC",
+      "result": {
+        "zone": "UTC",
+        "offset_2026_01_01": 0
+      },
+      "warnings": [
+        "Can not find any timezone configuration, defaulting to UTC."
+      ],
+      "trace": [
+        {
+          "op": "stat",
+          "path": "/owned/etc/localtime"
+        },
+        {
+          "op": "stat",
+          "path": "/owned/usr/local/etc/localtime"
+        }
+      ]
+    },
+    {
+      "case": "both-absent-UTC",
+      "result": {
+        "zone": "UTC",
+        "offset_2026_01_01": 0
+      },
+      "warnings": [
+        "Can not find any timezone configuration, defaulting to UTC."
+      ],
+      "trace": [
+        {
+          "op": "stat",
+          "path": "/owned/etc/localtime"
+        },
+        {
+          "op": "stat",
+          "path": "/owned/usr/local/etc/localtime"
+        }
+      ]
+    }
+  ]
+}

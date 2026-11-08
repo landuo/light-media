@@ -39,7 +39,12 @@ func (a *App) emitStandardSiteRefreshed(ctx context.Context, siteID string) {
 		a.log("ERROR", "plugins", "business_event_identity", "插件站点事件身份无法核对", "", "")
 		return
 	}
-	a.emitStandardBusinessEvent(ctx, "site.refreshed", map[string]any{"site_id": identity.publicSourceID()})
+	sourceID, err := a.Store.nativeSourceEventSiteID(context.WithoutCancel(ctx), identity)
+	if err != nil {
+		a.log("ERROR", "plugins", "business_event_identity", "插件站点事件身份无法核对", "", "")
+		return
+	}
+	a.emitStandardBusinessEvent(ctx, "site.refreshed", map[string]any{"site_id": sourceID})
 }
 
 // Called after config commit and publication, never during reconciliation or
@@ -59,7 +64,12 @@ func (a *App) emitStandardSiteDeletions(ctx context.Context, previous, next Sett
 			a.log("ERROR", "plugins", "business_event_identity", "插件站点删除事件身份无法核对", "", "")
 			continue
 		}
-		a.emitStandardBusinessEventCoreState(ctx, "site.deleted", map[string]any{"site_id": identity.publicSourceID()}, true)
+		sourceID, err := a.Store.nativeSourceEventSiteID(context.WithoutCancel(ctx), identity)
+		if err != nil {
+			a.log("ERROR", "plugins", "business_event_identity", "插件站点删除事件身份无法核对", "", "")
+			continue
+		}
+		a.emitStandardBusinessEventCoreState(ctx, "site.deleted", map[string]any{"site_id": sourceID}, true)
 	}
 }
 

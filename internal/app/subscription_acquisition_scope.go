@@ -23,10 +23,12 @@ type subscriptionAcquisition struct {
 	Generation                          int
 	Subscription                        Subscription
 	Request                             SearchRequest
+	ProviderMedia                       json.RawMessage `json:"provider_media,omitempty"`
 	Options                             releasemeta.Options
 	Candidates                          []Candidate
 	Metas                               []json.RawMessage
 	SelectionContexts                   []json.RawMessage `json:",omitempty"`
+	RSSBatchID                          string            `json:"rss_batch_id,omitempty"`
 	Steps                               []subscriptionAcquisitionStep
 }
 type subscriptionAcquisitionInput struct {
@@ -35,7 +37,24 @@ type subscriptionAcquisitionInput struct {
 	Episodes, Selected []int
 	Meta               json.RawMessage
 	Material           string
+	RSSListed          *subscriptionAcquisitionRSSListing `json:"rss_listed,omitempty"`
 }
+
+// The source takes this whole release by its declared episodes. A file-based
+// selection never carries this proof because a magnet cannot supply that list.
+type subscriptionAcquisitionRSSListing struct {
+	BatchID, SiteKey, ResourceID, SourceMetaSHA, ProofSHA string
+	Season, Priority                                      int
+	Episodes                                              []int
+}
+
+func (l *subscriptionAcquisitionRSSListing) matches(batchID string, proof *originalChatLatestDownloadProof, meta json.RawMessage, season, priority int, episodes []int) bool {
+	return l != nil && batchID != "" && l.BatchID == batchID && proof != nil && proof.Mode == "rss" &&
+		l.SiteKey == proof.SiteKey && l.ResourceID == proof.Row.Resource.ID && l.ProofSHA == tokenHash(string(mustCleanSeedJSON(proof))) &&
+		len(meta) > 0 && l.SourceMetaSHA == tokenHash(string(meta)) && l.Season == season && season > 0 &&
+		l.Priority == priority && len(episodes) > 0 && slices.Equal(l.Episodes, episodes)
+}
+
 type subscriptionAcquisitionStep struct {
 	Input                                                subscriptionAcquisitionInput
 	InputSHA, Phase, IntentID, IntentSHA, ChildID, Error string
@@ -58,6 +77,30 @@ func acquisitionIntentSHA(in Intent) string {
 	in.Progress = 0
 	return tokenHash(string(mustCleanSeedJSON(in)))
 }
+
+func (r *subscriptionAcquisition) restoreProviderSearch() error {
+	identity := r.Subscription.Media
+	if !providerNativeMedia(identity) {
+		if len(r.ProviderMedia) != 0 {
+			return acquisitionEvidence()
+		}
+		return nil
+	}
+	if r.Request.TMDBID != 0 || r.Request.MediaType != identity.MediaType || r.Request.Season != r.Subscription.Season {
+		return acquisitionEvidence()
+	}
+	info := sourceMediaInformation{MediaInfo: r.ProviderMedia, ProviderInfo: r.ProviderMedia}
+	var err error
+	info.Media, err = subscriptionProviderMedia(info, identity.ProviderSource, identity.ProviderID, identity.MediaType)
+	if err != nil {
+		return acquisitionEvidence()
+	}
+	owner := r.Subscription
+	r.Request.originalSubscription = &owner
+	r.Request.originalSearchInfo = &info
+	return nil
+}
+
 func (a *App) saveAcquisitionTx(ctx context.Context, tx *sql.Tx, r subscriptionAcquisition) error {
 	raw := mustCleanSeedJSON(r)
 	if len(raw) > pluginDataValueLimit-(8<<10) {
@@ -96,14 +139,14 @@ func (a *App) readAcquisition(ctx context.Context, q qualityReader, key string) 
 			return r, acquisitionEvidence()
 		}
 	}
-	return r, nil
+	return r, r.restoreProviderSearch()
 }
 func (a *App) acquisitionScopeTx(ctx context.Context, q qualityReader, want *subscriptionAcquisition) (subscriptionAcquisition, error) {
 	r, e := a.readAcquisition(ctx, q, want.ID)
 	if e != nil {
 		return r, e
 	}
-	if r.JobSHA != want.JobSHA || r.Generation != want.Generation || r.RulesSHA != want.RulesSHA || r.Subscription.ID != want.Subscription.ID || r.Subscription.Revision != want.Subscription.Revision || r.Subscription.SourceContextSHA != want.Subscription.SourceContextSHA {
+	if r.JobSHA != want.JobSHA || r.Generation != want.Generation || r.RulesSHA != want.RulesSHA || r.RSSBatchID != want.RSSBatchID || r.Subscription.ID != want.Subscription.ID || r.Subscription.Revision != want.Subscription.Revision || r.Subscription.SourceContextSHA != want.Subscription.SourceContextSHA || mediaKey(r.Subscription.Media) != mediaKey(want.Subscription.Media) {
 		return r, acquisitionEvidence()
 	}
 	j, e := scanJob(q.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, r.ID))
@@ -121,7 +164,7 @@ func (a *App) acquisitionScopeTx(ctx context.Context, q qualityReader, want *sub
 	if e = qualityRecord(ctx, q, "subscription", r.Subscription.ID, &current); e != nil {
 		return r, e
 	}
-	if current.State != "active" || current.Revision != r.Subscription.Revision || current.SourceContextSHA != r.Subscription.SourceContextSHA || qualityRuleSHA(a.Settings()) != r.RulesSHA {
+	if !a.subscriptionSearchState(ctx, current) || current.Revision != r.Subscription.Revision || current.SourceContextSHA != r.Subscription.SourceContextSHA || qualityRuleSHA(a.Settings()) != r.RulesSHA || mediaKey(current.Media) != mediaKey(r.Subscription.Media) {
 		return r, acquisitionEvidence()
 	}
 	return r, nil
@@ -150,7 +193,7 @@ func (a *App) acquisitionConfirmTx(ctx context.Context, tx *sql.Tx, p DownloadPr
 	}
 	step := &r.Steps[g.ordinal]
 	input := step.Input
-	if step.Phase != "intent" || input.Candidate.Resource.SiteID != in.SiteID || input.Candidate.Resource.ID != in.ResourceID || !reflect.DeepEqual(input.Episodes, in.Episodes) || !reflect.DeepEqual(input.Selected, in.SelectedEpisodes) || in.SubscriptionID != r.Subscription.ID || in.SubscriptionRevision != r.Subscription.Revision || child.Kind != "subscription_download" || child.ParentJobID != r.ID || child.WorkflowID != in.WorkflowID {
+	if step.Phase != "intent" || input.Candidate.Resource.SiteID != in.SiteID || input.Candidate.Resource.ID != in.ResourceID || !reflect.DeepEqual(input.Episodes, in.Episodes) || !reflect.DeepEqual(input.Selected, in.SelectedEpisodes) || in.SubscriptionID != r.Subscription.ID || in.SubscriptionRevision != r.Subscription.Revision || mediaKey(in.Media) != mediaKey(r.Subscription.Media) || child.Kind != "subscription_download" || child.ParentJobID != r.ID || child.WorkflowID != in.WorkflowID {
 		return acquisitionEvidence()
 	}
 	var c downloadContextSnapshot
@@ -158,6 +201,14 @@ func (a *App) acquisitionConfirmTx(ctx context.Context, tx *sql.Tx, p DownloadPr
 		return e
 	}
 	if c.DownloadKind != "intent" || c.DownloadID != in.ID || !sameHash(c.Hash, in.Hash) || !reflect.DeepEqual(mustCleanSeedJSON(c.SourceMeta), mustCleanSeedJSON(input.Meta)) {
+		return acquisitionEvidence()
+	}
+	if c.RSSMagnet && r.Subscription.Media.MediaType == "tv" {
+		if !in.RSSMagnet || input.Selected != nil || in.SelectedEpisodes != nil || !reflect.DeepEqual(c.RSSQualityListing, input.RSSListed) ||
+			!input.RSSListed.matches(r.RSSBatchID, c.LatestResource, c.SourceMeta, in.Season, input.Candidate.Resource.PriorityOrder, in.Episodes) {
+			return acquisitionEvidence()
+		}
+	} else if c.RSSQualityListing != nil {
 		return acquisitionEvidence()
 	}
 	step.Phase, step.IntentID, step.IntentSHA, step.ChildID = "confirmed", in.ID, acquisitionIntentSHA(in), child.ID

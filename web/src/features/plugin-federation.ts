@@ -4,6 +4,7 @@ import { apiURL } from '../base-path.ts';
 import {
   parsePluginFrontendDescriptor,
   validPluginInstance,
+  validPluginSharedModules,
   type PluginComponentName,
   type PluginFrontendDescriptor,
 } from './plugin-remote-contract.ts';
@@ -25,20 +26,21 @@ export function pluginFederationEntry(
   const checked = parsePluginFrontendDescriptor(descriptor, descriptor.instance_id, name);
   return apiURL(checked.entry_path);
 }
+// Vuetify's CSS entry has no JS exports. The host already loads component
+// styles and deliberately avoids applying the global reset to other pages.
+const vuetifyStyles = Object.freeze({});
 export function pluginRemoteSharedScope(shared: PluginFrontendDescriptor['shared']) {
-  if (
-    !Array.isArray(shared) ||
-    !shared.includes('vue') ||
-    new Set(shared).size !== shared.length ||
-    shared.some((name) => name !== 'vue' && name !== 'vuetify')
-  )
-    throw new Error('插件共享依赖不受支持');
+  if (!validPluginSharedModules(shared)) throw new Error('插件共享依赖不受支持');
   const scope: Record<string, unknown> = {
     vue: { [Vue.version]: { get: async () => () => Vue, loaded: true, scope: 'default' } },
   };
   if (shared.includes('vuetify'))
     scope.vuetify = {
       [Vuetify.version]: { get: async () => () => Vuetify, loaded: true, scope: 'default' },
+    };
+  if (shared.includes('vuetify/styles'))
+    scope['vuetify/styles'] = {
+      [Vuetify.version]: { get: async () => () => vuetifyStyles, loaded: true, scope: 'default' },
     };
   return scope;
 }

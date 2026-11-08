@@ -8,6 +8,7 @@ import (
 
 	"light-media/internal/catalog"
 	"light-media/internal/download"
+	"light-media/internal/metainfo"
 	"light-media/internal/plugins"
 )
 
@@ -55,6 +56,19 @@ func (a *App) originalDownloadSelection(requested string, site SiteConfig) (Down
 	return d, sourceDownloadName(d, selected), nil
 }
 
+func originalDownloadModuleContent(torrent []byte, magnet string) (json.RawMessage, error) {
+	if magnet == "" {
+		return plugins.ModuleResultBytes(torrent)
+	}
+	if len(torrent) != 0 {
+		return nil, bad("INVALID_DOWNLOAD_MATERIAL", "下载材料不能同时包含种子文件和磁力链接")
+	}
+	if _, err := metainfo.MagnetHash(magnet); err != nil {
+		return nil, bad("INVALID_DOWNLOAD_MATERIAL", "磁力链接无法核对")
+	}
+	return json.Marshal(magnet)
+}
+
 // The fixed download wrapper passes seven kwargs. A plugin tuple terminates
 // the chain, while a plugin list still invokes the seven-argument core method
 // and ignores its tuple return. Preserve the actual core Add receipt separately
@@ -85,14 +99,14 @@ func (a *App) originalDownload(ctx context.Context, d DownloaderConfig, request 
 		}
 		options.Category = category
 	}
+	content, err := originalDownloadModuleContent(request.Torrent, request.Magnet)
+	if err != nil {
+		return out, err
+	}
 	if options.BeforeInvoke != nil {
 		if err = options.BeforeInvoke(); err != nil {
 			return out, err
 		}
-	}
-	content, err := plugins.ModuleResultBytes(request.Torrent)
-	if err != nil {
-		return out, err
 	}
 	if len(options.Downloader) == 0 {
 		options.Downloader, _ = json.Marshal(d.Name)

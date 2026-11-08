@@ -22,10 +22,13 @@ func TestOriginalInstanceLogSynchronousNoticeHostFailureKeepsCaller(t *testing.T
 	assertOriginalRegistrySuccess(t, response.Code, response.Body.Bytes())
 	a.wg.Wait()
 	clone := originalBaseSDKLoaded(t, a, "OwnedNoticelogs")
+	response = callTest(t, a.Handler(), "PUT", "/api/plugins/OwnedNotice", `{"enabled":true,"fail":true}`, cookie, "")
+	assertOriginalRegistrySuccess(t, response.Code, response.Body.Bytes())
+	a.wg.Wait()
 	for _, object := range []*originalPluginInstance{source, clone} {
 		out := postOwnedNotice(t, object, context.Background(), `{"title":"owned scoped failure","channel":"Telegram","immediately":true,"plugin_instance_id":"forged"}`)
-		if out.Attempted != 1 || out.Failed != 1 || out.Queued != 0 {
-			t.Fatal("real unavailable module attempt changed", out)
+		if out.Attempted != 1 || out.Failed != 0 || len(out.Errors) != 0 || out.Queued != 0 {
+			t.Fatal("source consumed module exception was rethrown", out)
 		}
 	}
 	for _, id := range []string{"OwnedNotice", "OwnedNoticelogs"} {
@@ -35,7 +38,7 @@ func TestOriginalInstanceLogSynchronousNoticeHostFailureKeepsCaller(t *testing.T
 		}
 		found := 0
 		for _, row := range page.Entries {
-			if row["event"] == "notification_failed" {
+			if row["event"] == "module_execution_failed" {
 				found++
 				if row["plugin_id"] != "OwnedNotice" || row["operation"] != "post_notice" || row["plugin_call_id"] == "" || strings.Contains(row["message"].(string), "forged") {
 					t.Fatal("actual host error caller was replaced", row)

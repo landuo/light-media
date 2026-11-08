@@ -1,0 +1,1539 @@
+{
+  "classification": "exact SiteChain refresh wrapper and SiteOper AST; fake module result/DB/events/messages, no actual refresh or site network",
+  "python": "3.12.13",
+  "pydantic": "2.13.4",
+  "clock": "synthetic 2026-11-05 12:34:56",
+  "source_sha256": {
+    "chain_site.py": "06358a8fd070d46ab254015a2f8c7a34f07c35dd240bd2b3fef38cbf219252fa",
+    "site_oper.py": "08e202eb3fc97c7fe5d67d7253867334ada9bdd1747eb23b2d3cbe26da7f0cf0",
+    "schema_site.py": "aa759e3f1348863b109acdecb765c87a14822a14fbf63bab3fc93584d51bfaa6"
+  },
+  "schema_defaults": {
+    "domain": null,
+    "username": null,
+    "userid": null,
+    "user_level": null,
+    "join_at": null,
+    "bonus": 0.0,
+    "upload": 0,
+    "download": 0,
+    "ratio": 0.0,
+    "seeding": 0,
+    "leeching": 0,
+    "seeding_size": 0,
+    "leeching_size": 0,
+    "seeding_info": [],
+    "message_unread": 0,
+    "message_unread_contents": [],
+    "err_msg": null,
+    "updated_day": null,
+    "updated_time": null
+  },
+  "cases": [
+    {
+      "case": "none-keeps-old",
+      "module_input": null,
+      "old_row_present": true,
+      "outcome": {
+        "value": null,
+        "same_object_as_module": true
+      },
+      "returned_source_unchanged": true,
+      "daily_rows": [
+        {
+          "domain": "site.invalid",
+          "name": "old",
+          "updated_day": "2026-11-05",
+          "upload": 999,
+          "err_msg": ""
+        }
+      ],
+      "calls": []
+    },
+    {
+      "case": "defaults-create",
+      "module_input": {},
+      "old_row_present": false,
+      "outcome": {
+        "value": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": null,
+          "updated_day": null,
+          "updated_time": null
+        },
+        "same_object_as_module": true
+      },
+      "returned_source_unchanged": true,
+      "daily_rows": [
+        {
+          "domain": "site.invalid",
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": "",
+          "updated_day": "2026-11-05",
+          "updated_time": "12:34:56",
+          "name": "OwnedFixture"
+        }
+      ],
+      "calls": [
+        [
+          "db.get",
+          "site.invalid",
+          "2026-11-05"
+        ],
+        [
+          "db.create",
+          {
+            "domain": "site.invalid",
+            "username": null,
+            "userid": null,
+            "user_level": null,
+            "join_at": null,
+            "bonus": 0.0,
+            "upload": 0,
+            "download": 0,
+            "ratio": 0.0,
+            "seeding": 0,
+            "leeching": 0,
+            "seeding_size": 0,
+            "leeching_size": 0,
+            "seeding_info": [],
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "err_msg": "",
+            "updated_day": "2026-11-05",
+            "updated_time": "12:34:56",
+            "name": "OwnedFixture"
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": 123
+          }
+        ]
+      ]
+    },
+    {
+      "case": "success-preserves-returned-domain-day",
+      "module_input": {
+        "domain": "parser.domain.invalid",
+        "updated_day": "1999-01-01",
+        "updated_time": "01:02:03",
+        "username": "合成账户",
+        "userid": 90071992547409931234567890,
+        "upload": 17,
+        "download": 2,
+        "seeding_info": [
+          [
+            2,
+            123
+          ]
+        ],
+        "message_unread_contents": [
+          [
+            "题目",
+            "日期",
+            "正文",
+            {
+              "id": "opaque"
+            },
+            "extra"
+          ]
+        ]
+      },
+      "old_row_present": false,
+      "outcome": {
+        "value": {
+          "domain": "parser.domain.invalid",
+          "username": "合成账户",
+          "userid": 90071992547409931234567890,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 17,
+          "download": 2,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [
+            [
+              2,
+              123
+            ]
+          ],
+          "message_unread": 0,
+          "message_unread_contents": [
+            [
+              "题目",
+              "日期",
+              "正文",
+              {
+                "id": "opaque"
+              },
+              "extra"
+            ]
+          ],
+          "err_msg": null,
+          "updated_day": "1999-01-01",
+          "updated_time": "01:02:03"
+        },
+        "same_object_as_module": true
+      },
+      "returned_source_unchanged": true,
+      "daily_rows": [
+        {
+          "domain": "site.invalid",
+          "username": "合成账户",
+          "userid": 90071992547409931234567890,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 17,
+          "download": 2,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [
+            [
+              2,
+              123
+            ]
+          ],
+          "message_unread": 0,
+          "message_unread_contents": [
+            [
+              "题目",
+              "日期",
+              "正文",
+              {
+                "id": "opaque"
+              },
+              "extra"
+            ]
+          ],
+          "err_msg": "",
+          "updated_day": "2026-11-05",
+          "updated_time": "12:34:56",
+          "name": "OwnedFixture"
+        }
+      ],
+      "calls": [
+        [
+          "db.get",
+          "site.invalid",
+          "2026-11-05"
+        ],
+        [
+          "db.create",
+          {
+            "domain": "site.invalid",
+            "username": "合成账户",
+            "userid": 90071992547409931234567890,
+            "user_level": null,
+            "join_at": null,
+            "bonus": 0.0,
+            "upload": 17,
+            "download": 2,
+            "ratio": 0.0,
+            "seeding": 0,
+            "leeching": 0,
+            "seeding_size": 0,
+            "leeching_size": 0,
+            "seeding_info": [
+              [
+                2,
+                123
+              ]
+            ],
+            "message_unread": 0,
+            "message_unread_contents": [
+              [
+                "题目",
+                "日期",
+                "正文",
+                {
+                  "id": "opaque"
+                },
+                "extra"
+              ]
+            ],
+            "err_msg": "",
+            "updated_day": "2026-11-05",
+            "updated_time": "12:34:56",
+            "name": "OwnedFixture"
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": 123
+          }
+        ]
+      ]
+    },
+    {
+      "case": "success-replaces-old",
+      "module_input": {
+        "upload": 22
+      },
+      "old_row_present": true,
+      "outcome": {
+        "value": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 22,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": null,
+          "updated_day": null,
+          "updated_time": null
+        },
+        "same_object_as_module": true
+      },
+      "returned_source_unchanged": true,
+      "daily_rows": [
+        {
+          "domain": "site.invalid",
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 22,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": "",
+          "updated_day": "2026-11-05",
+          "updated_time": "12:34:56",
+          "name": "OwnedFixture"
+        }
+      ],
+      "calls": [
+        [
+          "db.get",
+          "site.invalid",
+          "2026-11-05"
+        ],
+        [
+          "db.update",
+          {
+            "domain": "site.invalid",
+            "username": null,
+            "userid": null,
+            "user_level": null,
+            "join_at": null,
+            "bonus": 0.0,
+            "upload": 22,
+            "download": 0,
+            "ratio": 0.0,
+            "seeding": 0,
+            "leeching": 0,
+            "seeding_size": 0,
+            "leeching_size": 0,
+            "seeding_info": [],
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "err_msg": "",
+            "updated_day": "2026-11-05",
+            "updated_time": "12:34:56",
+            "name": "OwnedFixture"
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": 123
+          }
+        ]
+      ]
+    },
+    {
+      "case": "error-keeps-old",
+      "module_input": {
+        "err_msg": "synthetic vendor error",
+        "upload": 0
+      },
+      "old_row_present": true,
+      "outcome": {
+        "value": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": "synthetic vendor error",
+          "updated_day": null,
+          "updated_time": null
+        },
+        "same_object_as_module": true
+      },
+      "returned_source_unchanged": true,
+      "daily_rows": [
+        {
+          "domain": "site.invalid",
+          "name": "old",
+          "updated_day": "2026-11-05",
+          "upload": 999,
+          "err_msg": ""
+        }
+      ],
+      "calls": [
+        [
+          "db.get",
+          "site.invalid",
+          "2026-11-05"
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": 123
+          }
+        ]
+      ]
+    },
+    {
+      "case": "error-creates-first",
+      "module_input": {
+        "err_msg": "synthetic vendor error"
+      },
+      "old_row_present": false,
+      "outcome": {
+        "value": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": "synthetic vendor error",
+          "updated_day": null,
+          "updated_time": null
+        },
+        "same_object_as_module": true
+      },
+      "returned_source_unchanged": true,
+      "daily_rows": [
+        {
+          "domain": "site.invalid",
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": "synthetic vendor error",
+          "updated_day": "2026-11-05",
+          "updated_time": "12:34:56",
+          "name": "OwnedFixture"
+        }
+      ],
+      "calls": [
+        [
+          "db.get",
+          "site.invalid",
+          "2026-11-05"
+        ],
+        [
+          "db.create",
+          {
+            "domain": "site.invalid",
+            "username": null,
+            "userid": null,
+            "user_level": null,
+            "join_at": null,
+            "bonus": 0.0,
+            "upload": 0,
+            "download": 0,
+            "ratio": 0.0,
+            "seeding": 0,
+            "leeching": 0,
+            "seeding_size": 0,
+            "leeching_size": 0,
+            "seeding_info": [],
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "err_msg": "synthetic vendor error",
+            "updated_day": "2026-11-05",
+            "updated_time": "12:34:56",
+            "name": "OwnedFixture"
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": 123
+          }
+        ]
+      ]
+    },
+    {
+      "case": "db-error-stops-event",
+      "module_input": {
+        "upload": 22
+      },
+      "old_row_present": true,
+      "outcome": {
+        "exception": "RuntimeError",
+        "message": "synthetic DB update failure"
+      },
+      "returned_source_unchanged": true,
+      "daily_rows": [
+        {
+          "domain": "site.invalid",
+          "name": "old",
+          "updated_day": "2026-11-05",
+          "upload": 999,
+          "err_msg": ""
+        }
+      ],
+      "calls": [
+        [
+          "db.get",
+          "site.invalid",
+          "2026-11-05"
+        ],
+        [
+          "db.update",
+          {
+            "domain": "site.invalid",
+            "username": null,
+            "userid": null,
+            "user_level": null,
+            "join_at": null,
+            "bonus": 0.0,
+            "upload": 22,
+            "download": 0,
+            "ratio": 0.0,
+            "seeding": 0,
+            "leeching": 0,
+            "seeding_size": 0,
+            "leeching_size": 0,
+            "seeding_info": [],
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "err_msg": "",
+            "updated_day": "2026-11-05",
+            "updated_time": "12:34:56",
+            "name": "OwnedFixture"
+          }
+        ]
+      ]
+    },
+    {
+      "case": "malformed-message-after-persist-event",
+      "module_input": {
+        "message_unread": 1,
+        "message_unread_contents": [
+          [
+            "too-short"
+          ]
+        ]
+      },
+      "old_row_present": false,
+      "outcome": {
+        "exception": "ValueError",
+        "message": "not enough values to unpack (expected at least 3, got 1)"
+      },
+      "returned_source_unchanged": true,
+      "daily_rows": [
+        {
+          "domain": "site.invalid",
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 1,
+          "message_unread_contents": [
+            [
+              "too-short"
+            ]
+          ],
+          "err_msg": "",
+          "updated_day": "2026-11-05",
+          "updated_time": "12:34:56",
+          "name": "OwnedFixture"
+        }
+      ],
+      "calls": [
+        [
+          "db.get",
+          "site.invalid",
+          "2026-11-05"
+        ],
+        [
+          "db.create",
+          {
+            "domain": "site.invalid",
+            "username": null,
+            "userid": null,
+            "user_level": null,
+            "join_at": null,
+            "bonus": 0.0,
+            "upload": 0,
+            "download": 0,
+            "ratio": 0.0,
+            "seeding": 0,
+            "leeching": 0,
+            "seeding_size": 0,
+            "leeching_size": 0,
+            "seeding_info": [],
+            "message_unread": 1,
+            "message_unread_contents": [
+              [
+                "too-short"
+              ]
+            ],
+            "err_msg": "",
+            "updated_day": "2026-11-05",
+            "updated_time": "12:34:56",
+            "name": "OwnedFixture"
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": 123
+          }
+        ]
+      ]
+    },
+    {
+      "case": "ratio-zero-no-alert",
+      "module_input": {
+        "ratio": 0
+      },
+      "old_row_present": false,
+      "outcome": {
+        "value": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": null,
+          "updated_day": null,
+          "updated_time": null
+        },
+        "same_object_as_module": true
+      },
+      "returned_source_unchanged": true,
+      "daily_rows": [
+        {
+          "domain": "site.invalid",
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": "",
+          "updated_day": "2026-11-05",
+          "updated_time": "12:34:56",
+          "name": "OwnedFixture"
+        }
+      ],
+      "calls": [
+        [
+          "db.get",
+          "site.invalid",
+          "2026-11-05"
+        ],
+        [
+          "db.create",
+          {
+            "domain": "site.invalid",
+            "username": null,
+            "userid": null,
+            "user_level": null,
+            "join_at": null,
+            "bonus": 0.0,
+            "upload": 0,
+            "download": 0,
+            "ratio": 0.0,
+            "seeding": 0,
+            "leeching": 0,
+            "seeding_size": 0,
+            "leeching_size": 0,
+            "seeding_info": [],
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "err_msg": "",
+            "updated_day": "2026-11-05",
+            "updated_time": "12:34:56",
+            "name": "OwnedFixture"
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": 123
+          }
+        ]
+      ]
+    },
+    {
+      "case": "ratio-low-alert",
+      "module_input": {
+        "ratio": 0.5
+      },
+      "old_row_present": false,
+      "outcome": {
+        "value": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.5,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": null,
+          "updated_day": null,
+          "updated_time": null
+        },
+        "same_object_as_module": true
+      },
+      "returned_source_unchanged": true,
+      "daily_rows": [
+        {
+          "domain": "site.invalid",
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.5,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": "",
+          "updated_day": "2026-11-05",
+          "updated_time": "12:34:56",
+          "name": "OwnedFixture"
+        }
+      ],
+      "calls": [
+        [
+          "db.get",
+          "site.invalid",
+          "2026-11-05"
+        ],
+        [
+          "db.create",
+          {
+            "domain": "site.invalid",
+            "username": null,
+            "userid": null,
+            "user_level": null,
+            "join_at": null,
+            "bonus": 0.0,
+            "upload": 0,
+            "download": 0,
+            "ratio": 0.5,
+            "seeding": 0,
+            "leeching": 0,
+            "seeding_size": 0,
+            "leeching_size": 0,
+            "seeding_info": [],
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "err_msg": "",
+            "updated_day": "2026-11-05",
+            "updated_time": "12:34:56",
+            "name": "OwnedFixture"
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": 123
+          }
+        ],
+        [
+          "message",
+          {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 OwnedFixture 分享率 0.5，请注意！"
+          }
+        ]
+      ]
+    },
+    {
+      "case": "ratio-vip-no-alert",
+      "module_input": {
+        "ratio": 0.5,
+        "user_level": "VIP"
+      },
+      "old_row_present": false,
+      "outcome": {
+        "value": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": "VIP",
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.5,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": null,
+          "updated_day": null,
+          "updated_time": null
+        },
+        "same_object_as_module": true
+      },
+      "returned_source_unchanged": true,
+      "daily_rows": [
+        {
+          "domain": "site.invalid",
+          "username": null,
+          "userid": null,
+          "user_level": "VIP",
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.5,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": "",
+          "updated_day": "2026-11-05",
+          "updated_time": "12:34:56",
+          "name": "OwnedFixture"
+        }
+      ],
+      "calls": [
+        [
+          "db.get",
+          "site.invalid",
+          "2026-11-05"
+        ],
+        [
+          "db.create",
+          {
+            "domain": "site.invalid",
+            "username": null,
+            "userid": null,
+            "user_level": "VIP",
+            "join_at": null,
+            "bonus": 0.0,
+            "upload": 0,
+            "download": 0,
+            "ratio": 0.5,
+            "seeding": 0,
+            "leeching": 0,
+            "seeding_size": 0,
+            "leeching_size": 0,
+            "seeding_info": [],
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "err_msg": "",
+            "updated_day": "2026-11-05",
+            "updated_time": "12:34:56",
+            "name": "OwnedFixture"
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": 123
+          }
+        ]
+      ]
+    },
+    {
+      "case": "explicit-nulls",
+      "module_input": {
+        "domain": null,
+        "userid": null,
+        "upload": null,
+        "download": null,
+        "ratio": null,
+        "seeding_info": null,
+        "message_unread_contents": null,
+        "err_msg": null,
+        "updated_day": null
+      },
+      "old_row_present": false,
+      "outcome": {
+        "value": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": null,
+          "download": null,
+          "ratio": null,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": null,
+          "message_unread": 0,
+          "message_unread_contents": null,
+          "err_msg": null,
+          "updated_day": null,
+          "updated_time": null
+        },
+        "same_object_as_module": true
+      },
+      "returned_source_unchanged": true,
+      "daily_rows": [
+        {
+          "domain": "site.invalid",
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": null,
+          "download": null,
+          "ratio": null,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": null,
+          "message_unread": 0,
+          "message_unread_contents": null,
+          "err_msg": "",
+          "updated_day": "2026-11-05",
+          "updated_time": "12:34:56",
+          "name": "OwnedFixture"
+        }
+      ],
+      "calls": [
+        [
+          "db.get",
+          "site.invalid",
+          "2026-11-05"
+        ],
+        [
+          "db.create",
+          {
+            "domain": "site.invalid",
+            "username": null,
+            "userid": null,
+            "user_level": null,
+            "join_at": null,
+            "bonus": 0.0,
+            "upload": null,
+            "download": null,
+            "ratio": null,
+            "seeding": 0,
+            "leeching": 0,
+            "seeding_size": 0,
+            "leeching_size": 0,
+            "seeding_info": null,
+            "message_unread": 0,
+            "message_unread_contents": null,
+            "err_msg": "",
+            "updated_day": "2026-11-05",
+            "updated_time": "12:34:56",
+            "name": "OwnedFixture"
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": 123
+          }
+        ]
+      ]
+    }
+  ],
+  "aggregate_classification": "exact SiteChain.refresh_userdatas AST; synthetic helper-list + run_module DTOs and stopped flag; not native all-site refresh",
+  "aggregate_cases": [
+    {
+      "case": "all-none",
+      "site_rows": [
+        {
+          "id": 1,
+          "name": "First",
+          "domain": "https://one.invalid/",
+          "is_active": true
+        }
+      ],
+      "module_rows": {
+        "1": null
+      },
+      "outcome": {},
+      "calls": [],
+      "progress": [
+        {
+          "value": 0,
+          "text": "开始刷新站点数据，共 1 个站点 ...",
+          "data": {
+            "total": 1,
+            "finished": 0
+          }
+        },
+        {
+          "value": 0.0,
+          "text": "正在刷新站点数据（1/1）First ...",
+          "data": {
+            "total": 1,
+            "finished": 0,
+            "current": 1
+          }
+        },
+        {
+          "value": 100.0,
+          "text": "站点数据（1/1）刷新完成",
+          "data": {
+            "total": 1,
+            "finished": 1
+          }
+        },
+        {
+          "value": 100,
+          "text": "站点数据刷新完成"
+        }
+      ]
+    },
+    {
+      "case": "error-dto-global-event",
+      "site_rows": [
+        {
+          "id": 1,
+          "name": "First",
+          "domain": "https://one.invalid/",
+          "is_active": true
+        }
+      ],
+      "module_rows": {
+        "1": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": "synthetic error",
+          "updated_day": null,
+          "updated_time": null
+        }
+      },
+      "outcome": {
+        "First": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": "synthetic error",
+          "updated_day": null,
+          "updated_time": null
+        }
+      },
+      "calls": [
+        [
+          "db.get",
+          "one.invalid",
+          "2026-11-05"
+        ],
+        [
+          "db.create",
+          {
+            "domain": "one.invalid",
+            "username": null,
+            "userid": null,
+            "user_level": null,
+            "join_at": null,
+            "bonus": 0.0,
+            "upload": 0,
+            "download": 0,
+            "ratio": 0.0,
+            "seeding": 0,
+            "leeching": 0,
+            "seeding_size": 0,
+            "leeching_size": 0,
+            "seeding_info": [],
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "err_msg": "synthetic error",
+            "updated_day": "2026-11-05",
+            "updated_time": "12:34:56",
+            "name": "First"
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": 1
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": "*"
+          }
+        ]
+      ],
+      "progress": [
+        {
+          "value": 0,
+          "text": "开始刷新站点数据，共 1 个站点 ...",
+          "data": {
+            "total": 1,
+            "finished": 0
+          }
+        },
+        {
+          "value": 0.0,
+          "text": "正在刷新站点数据（1/1）First ...",
+          "data": {
+            "total": 1,
+            "finished": 0,
+            "current": 1
+          }
+        },
+        {
+          "value": 100.0,
+          "text": "站点数据（1/1）刷新完成",
+          "data": {
+            "total": 1,
+            "finished": 1
+          }
+        },
+        {
+          "value": 100,
+          "text": "站点数据刷新完成"
+        }
+      ]
+    },
+    {
+      "case": "same-name-last-data",
+      "site_rows": [
+        {
+          "id": 1,
+          "name": "SameName",
+          "domain": "https://one.invalid/",
+          "is_active": true
+        },
+        {
+          "id": 2,
+          "name": "SameName",
+          "domain": "https://two.invalid/",
+          "is_active": true
+        }
+      ],
+      "module_rows": {
+        "1": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 1,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": null,
+          "updated_day": null,
+          "updated_time": null
+        },
+        "2": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 2,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": null,
+          "updated_day": null,
+          "updated_time": null
+        }
+      },
+      "outcome": {
+        "SameName": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 2,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": null,
+          "updated_day": null,
+          "updated_time": null
+        }
+      },
+      "calls": [
+        [
+          "db.get",
+          "one.invalid",
+          "2026-11-05"
+        ],
+        [
+          "db.create",
+          {
+            "domain": "one.invalid",
+            "username": null,
+            "userid": null,
+            "user_level": null,
+            "join_at": null,
+            "bonus": 0.0,
+            "upload": 1,
+            "download": 0,
+            "ratio": 0.0,
+            "seeding": 0,
+            "leeching": 0,
+            "seeding_size": 0,
+            "leeching_size": 0,
+            "seeding_info": [],
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "err_msg": "",
+            "updated_day": "2026-11-05",
+            "updated_time": "12:34:56",
+            "name": "SameName"
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": 1
+          }
+        ],
+        [
+          "db.get",
+          "two.invalid",
+          "2026-11-05"
+        ],
+        [
+          "db.update",
+          {
+            "domain": "two.invalid",
+            "username": null,
+            "userid": null,
+            "user_level": null,
+            "join_at": null,
+            "bonus": 0.0,
+            "upload": 2,
+            "download": 0,
+            "ratio": 0.0,
+            "seeding": 0,
+            "leeching": 0,
+            "seeding_size": 0,
+            "leeching_size": 0,
+            "seeding_info": [],
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "err_msg": "",
+            "updated_day": "2026-11-05",
+            "updated_time": "12:34:56",
+            "name": "SameName"
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": 2
+          }
+        ],
+        [
+          "event",
+          "SiteRefreshed",
+          {
+            "site_id": "*"
+          }
+        ]
+      ],
+      "progress": [
+        {
+          "value": 0,
+          "text": "开始刷新站点数据，共 2 个站点 ...",
+          "data": {
+            "total": 2,
+            "finished": 0
+          }
+        },
+        {
+          "value": 0.0,
+          "text": "正在刷新站点数据（1/2）SameName ...",
+          "data": {
+            "total": 2,
+            "finished": 0,
+            "current": 1
+          }
+        },
+        {
+          "value": 50.0,
+          "text": "站点数据（1/2）刷新完成",
+          "data": {
+            "total": 2,
+            "finished": 1
+          }
+        },
+        {
+          "value": 50.0,
+          "text": "正在刷新站点数据（2/2）SameName ...",
+          "data": {
+            "total": 2,
+            "finished": 1,
+            "current": 2
+          }
+        },
+        {
+          "value": 100.0,
+          "text": "站点数据（2/2）刷新完成",
+          "data": {
+            "total": 2,
+            "finished": 2
+          }
+        },
+        {
+          "value": 100,
+          "text": "站点数据刷新完成"
+        }
+      ]
+    },
+    {
+      "case": "stopped-no-refresh",
+      "site_rows": [
+        {
+          "id": 1,
+          "name": "First",
+          "domain": "https://one.invalid/",
+          "is_active": true
+        }
+      ],
+      "module_rows": {
+        "1": {
+          "domain": null,
+          "username": null,
+          "userid": null,
+          "user_level": null,
+          "join_at": null,
+          "bonus": 0.0,
+          "upload": 0,
+          "download": 0,
+          "ratio": 0.0,
+          "seeding": 0,
+          "leeching": 0,
+          "seeding_size": 0,
+          "leeching_size": 0,
+          "seeding_info": [],
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "err_msg": null,
+          "updated_day": null,
+          "updated_time": null
+        }
+      },
+      "outcome": null,
+      "calls": [],
+      "progress": [
+        {
+          "value": 0,
+          "text": "开始刷新站点数据，共 1 个站点 ...",
+          "data": {
+            "total": 1,
+            "finished": 0
+          }
+        }
+      ]
+    }
+  ]
+}

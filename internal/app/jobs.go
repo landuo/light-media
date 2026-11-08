@@ -95,6 +95,14 @@ func readJobTrace(j *Job) {
 
 const jobColumns = `id,workflow_id,kind,state,payload,attempt,generation,run_at,lease_until,error_code,error_message,created_at,updated_at`
 
+func privateOrdinarySearchDownloadJob(j Job) bool {
+	var payload struct {
+		Parent json.RawMessage `json:"_ordinary_search_attempt"`
+	}
+	return j.Kind == "download" && json.Unmarshal(j.Payload, &payload) == nil &&
+		len(payload.Parent) != 0 && string(payload.Parent) != "null" && string(payload.Parent) != `""`
+}
+
 func (a *App) jobs(ctx context.Context, limit int) ([]Job, error) {
 	rows, e := a.Store.DB.QueryContext(ctx, `SELECT `+jobColumns+` FROM jobs ORDER BY created_at DESC LIMIT ?`, limit)
 	if e != nil {
@@ -117,7 +125,10 @@ func (a *App) claim(ctx context.Context) (Job, error) {
 		return Job{}, e
 	}
 	defer tx.Rollback()
-	j, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE state IN ('queued','retry_wait') AND kind NOT IN ('lark_download','subscription_download') AND run_at<=? ORDER BY run_at,created_at LIMIT 1`, time.Now().Unix()))
+	j, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE state IN ('queued','retry_wait')
+		AND kind NOT IN ('lark_download','subscription_download')
+		AND (kind!='download' OR COALESCE(json_extract(payload,'$._ordinary_search_attempt'),'')='')
+		AND run_at<=? ORDER BY run_at,created_at LIMIT 1`, time.Now().Unix()))
 	if e != nil {
 		return Job{}, e
 	}
@@ -177,12 +188,15 @@ func (a *App) worker(ctx context.Context) {
 			}
 			// The pinned transfer task ends on an explicit false result;
 			// only a new user action retries that rejected operation.
-			if code == "DOWNLOADER_DISABLED" {
+			if code == "PLUGIN_REFRESH_PENDING" {
+				state = "retry_wait"
+				runAt = time.Now().Add(2 * time.Second).Unix()
+			} else if code == "DOWNLOADER_DISABLED" {
 				state = "retry_wait"
 				runAt = time.Now().Add(time.Minute).Unix()
 			} else if code == "AUTOMATION_PAUSED" {
 				state = "waiting_paused"
-			} else if code != "PLUGIN_ADAPTER_UNAVAILABLE" && code != "PLUGIN_TRANSFER_FAILED" && j.Attempt < 3 && !strings.Contains(code, "REVIEW") && !strings.Contains(code, "CONFLICT") && !strings.Contains(code, "INVALID") && !strings.Contains(code, "EXCLUDED") {
+			} else if code != "PLUGIN_ADAPTER_UNAVAILABLE" && code != "PLUGIN_TRANSFER_FAILED" && (j.Kind != "import" || code != "TRANSFER_OVERWRITE_DENIED") && j.Attempt < 3 && !strings.Contains(code, "REVIEW") && !strings.Contains(code, "CONFLICT") && !strings.Contains(code, "INVALID") && !strings.Contains(code, "EXCLUDED") {
 				state = "retry_wait"
 				runAt = time.Now().Add(time.Duration(1<<j.Attempt) * 30 * time.Second).Unix()
 			}
@@ -197,7 +211,9 @@ func (a *App) worker(ctx context.Context) {
 			a.notifyFailed(ctx, j, message)
 		}
 		if changed {
-			if e != nil {
+			if code == "PLUGIN_REFRESH_PENDING" {
+				a.log("DEBUG", j.Kind, code, message, j.WorkflowID, j.ID)
+			} else if e != nil {
 				a.log("ERROR", j.Kind, code, message, j.WorkflowID, j.ID)
 			} else {
 				a.log("INFO", j.Kind, "completed", "任务完成", j.WorkflowID, j.ID)
@@ -329,6 +345,9 @@ func (a *App) jobAPI(w http.ResponseWriter, r *http.Request, p string) (any, err
 		var result sql.Result
 		switch parts[1] {
 		case "retry":
+			if privateOrdinarySearchDownloadJob(j) {
+				return nil, bad("JOB_NOT_RETRYABLE", "该下载任务仅由原订阅搜索处理")
+			}
 			if j.State != "failed" && j.State != "cancelled" && j.State != "needs_review" {
 				return nil, bad("JOB_NOT_RETRYABLE", "只能重试失败、取消或待核对的任务")
 			}

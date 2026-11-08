@@ -1,12 +1,14 @@
 package app
 
 import (
+	"bytes"
 	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"path/filepath"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -20,6 +22,9 @@ import (
 )
 
 type SearchRequest struct {
+	chatProvider         *originalChatMediaProvider
+	chatUnscoped         bool
+	chatMediaSeasons     []originalChatMediaSeason
 	resourceBatch        *originalResourceBatchSearch
 	mediaModuleSearch    *originalMediaResourceSearch
 	originalSearchInfo   *sourceMediaInformation
@@ -42,12 +47,15 @@ type SearchRequest struct {
 	EpisodeDates         map[int]string      `json:"episode_dates"`
 }
 type PreviewRequest struct {
+	chatOrigin        *originalChatDownloadOrigin
+	chatWholeUnscoped bool
+	chatEpisodeBatch  *originalChatEpisodeBatch
 	sourceContext     json.RawMessage
 	sourceSeasons     []SearchRequest
 	sourceSeasonBasis json.RawMessage
 	sourceMaterial    string
 	sourceMeta        json.RawMessage
-	selectedEpisodes  []int  // Native batch-only selection, never a public JSON claim.
+	selectedEpisodes  []int  // Native batch selection, never a public JSON claim.
 	DirectoryID       string `json:"directory_id"`
 	DownloadPath      string `json:"download_path"`
 	SearchRequest
@@ -59,6 +67,8 @@ type PreviewRequest struct {
 	RootID              string `json:"root_id"`
 	SubscriptionID      string `json:"subscription_id"`
 	Revision            int    `json:"revision"`
+
+	subscriptionFailureFingerprint string
 }
 
 func (a *App) site(key string) (SiteConfig, error) {
@@ -128,6 +138,13 @@ func (a *App) root(key, kind string) (Root, error) {
 	return Root{}, bad("ROOT_NOT_CONFIGURED", "请选择匹配类型的媒体目录")
 }
 func (a *App) withSite(ctx context.Context, s SiteConfig, auto bool, fn func(*sites.Client) error) error {
+	return a.withSiteCooldown(ctx, s, auto, true, fn)
+}
+
+// MoviePilot's synchronous userdata refresh has no search/connection cooldown.
+// Only the host-owned SourceResult collector selects false; identity, request
+// guards, locks, request spacing and daily budgets are unchanged below.
+func (a *App) withSiteCooldown(ctx context.Context, s SiteConfig, auto, ordinaryCooldown bool, fn func(*sites.Client) error) error {
 	if e := a.guardSubscriptionContext(ctx); e != nil {
 		return e
 	}
@@ -148,7 +165,7 @@ func (a *App) withSite(ctx context.Context, s SiteConfig, auto bool, fn func(*si
 	var cooldown struct {
 		Until int64 `json:"until"`
 	}
-	if a.Store.Get(ctx, "site_cooldown", s.ID, &cooldown) == nil && cooldown.Until > time.Now().Unix() {
+	if ordinaryCooldown && a.Store.Get(ctx, "site_cooldown", s.ID, &cooldown) == nil && cooldown.Until > time.Now().Unix() {
 		return bad("SITE_COOLDOWN", "站点因限流或认证异常正在冷却，请稍后重试")
 	}
 	proxySnapshot := a.Settings().ProxyHost
@@ -228,7 +245,7 @@ func (a *App) withSite(ctx context.Context, s SiteConfig, auto bool, fn func(*si
 		return tx.Commit()
 	})
 	e = fn(client)
-	if e != nil && (strings.Contains(e.Error(), "site_rate_limited") || strings.Contains(e.Error(), "site_authentication_failed") || strings.Contains(e.Error(), "site_forbidden_or_challenge")) {
+	if ordinaryCooldown && e != nil && (strings.Contains(e.Error(), "site_rate_limited") || strings.Contains(e.Error(), "site_authentication_failed") || strings.Contains(e.Error(), "site_forbidden_or_challenge")) {
 		_ = a.Store.Put(context.Background(), "site_cooldown", s.ID, map[string]int64{"until": time.Now().Add(15 * time.Minute).Unix()})
 	}
 	return e
@@ -309,7 +326,13 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 	if moduleSearch == nil {
 		t, e = a.target(ctx, in, auto)
 	} else {
-		t, e = a.targetMedia(ctx, in, auto, moduleSearch.information.Media)
+		if in.originalSubscription != nil && providerNativeMedia(in.originalSubscription.Media) {
+			t, e = providerSubscriptionSearchTarget(in, moduleSearch.information)
+		} else if in.chatProvider.sourceOnly() {
+			t, e = a.originalChatProviderSearchTarget(ctx, in, auto, moduleSearch.information)
+		} else {
+			t, e = a.targetMedia(ctx, in, auto, moduleSearch.information.Media)
+		}
 		in.mediaModuleSearch = moduleSearch
 		in.originalSearchInfo = &moduleSearch.information
 		in.Page = 1 // Source media process uses the ordinary default page0.
@@ -320,7 +343,10 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 	in.priorityMedia = &t.Media
 	in.priorityTarget = &t
 	in.prioritySubscription = auto
-	out := SearchOutput{Candidates: []Candidate{}, Sites: []SiteStatus{}, WorkflowID: a.workflow(ctx, in.WorkflowID, t.Media), CachedAt: now()}
+	out := SearchOutput{Candidates: []Candidate{}, Sites: []SiteStatus{}, CachedAt: now()}
+	if t.ProviderSearchKey == "" {
+		out.WorkflowID = a.workflow(ctx, in.WorkflowID, t.Media)
+	}
 	out, e = a.searchSites(ctx, in, out, func(siteCtx context.Context, s SiteConfig) siteSearchOutput {
 		if moduleSearch != nil {
 			return a.originalMediaResourceSiteOutput(siteCtx, s, in, t, out.WorkflowID, moduleSearch)
@@ -380,10 +406,33 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 			return out, e
 		}
 	}
-	a.saveDecision(ctx, out, t.Media)
+	if t.ProviderSearchKey == "" {
+		a.saveDecision(ctx, out, t.Media)
+	}
 	return out, nil
 }
 func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool) (DownloadPreview, error) {
+	if in.chatUnscoped != in.chatWholeUnscoped || in.chatWholeUnscoped &&
+		(auto || in.chatOrigin == nil || !in.chatProvider.sourceOnly() || in.MediaType != "tv" || in.Season != 0 ||
+			len(in.Episodes) != 0 || len(in.selectedEpisodes) != 0 || in.chatEpisodeBatch != nil || len(in.sourceSeasons) != 0 || in.qualitySelection) {
+		return DownloadPreview{}, bad("INVALID_DOWNLOAD_CONTEXT", "下载预览无法核对无季集的手动选择")
+	}
+	if in.chatEpisodeBatch != nil && (in.chatOrigin == nil || in.MediaType != "tv") {
+		return DownloadPreview{}, bad("PLUGIN_CAPABILITY_DENIED", "按集下载需要已验证的 Lark 选择")
+	}
+	if in.chatOrigin != nil {
+		origin, err := a.originalChatDownloadOrigin(ctx)
+		if err != nil || origin != *in.chatOrigin || auto || in.SubscriptionID != "" {
+			return DownloadPreview{}, bad("PLUGIN_CAPABILITY_DENIED", "下载预览的 Lark 来源无法核对")
+		}
+	}
+	if in.chatProvider != nil {
+		provider := originalChatMediaProviderFrom(ctx)
+		if in.chatOrigin == nil || provider == nil || *provider != *in.chatProvider ||
+			!(provider.valid(in.TMDBID) || provider.sourceOnly() && in.TMDBID == 0) {
+			return DownloadPreview{}, bad("MEDIA_SOURCE_CHANGED", "下载预览无法核对已选择的媒体来源")
+		}
+	}
 	var e error
 	if _, scoped := ctx.Value(resourceRecognitionKey{}).(resourceRecognition); !scoped && auto && in.SubscriptionID != "" {
 		ctx, e = a.subscriptionRecognitionContext(ctx, in.SubscriptionID, in.Revision)
@@ -402,17 +451,46 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		if e = a.Store.Get(ctx, "subscription", in.SubscriptionID, &owner); e != nil {
 			return DownloadPreview{}, e
 		}
-		if !owner.BestVersion || owner.Revision != in.Revision || owner.State != "active" {
+		if !owner.BestVersion || owner.Revision != in.Revision || !a.subscriptionSearchState(ctx, owner) {
 			return DownloadPreview{}, bad("QUALITY_CONTEXT_CHANGED", "洗版订阅已变化")
 		}
 	}
 	var selectedContext *originalDownloadContext
+	var providerModel json.RawMessage
 	var t decision.Target
 	if len(in.sourceContext) > 0 {
 		selectedContext = &originalDownloadContext{}
 		if e = json.Unmarshal(in.sourceContext, selectedContext); e != nil {
 			return DownloadPreview{}, e
 		}
+	}
+	var providerSubscription *subscriptionIdentity
+	if in.originalSubscription != nil && providerNativeMedia(in.originalSubscription.Media) {
+		providerModel, e = a.providerSubscriptionDownloadModel(ctx, in, auto, selectedContext)
+		if e != nil {
+			return DownloadPreview{}, e
+		}
+		t, e = providerDownloadTarget(in.SearchRequest, in.originalSubscription.Media, providerModel, true)
+		providerSubscription = &subscriptionIdentity{ID: in.SubscriptionID, Revision: in.Revision}
+	} else if in.chatProvider != nil {
+		if in.originalSearchInfo == nil || in.originalSearchInfo.Media.ID != in.TMDBID || in.originalSearchInfo.Media.MediaType != in.MediaType {
+			return DownloadPreview{}, bad("MEDIA_SOURCE_CHANGED", "下载预览无法核对已选择的媒体来源")
+		}
+		primary := in.originalSearchInfo.MediaInfo
+		if selectedContext != nil {
+			primary = selectedContext.Media
+		}
+		native, err := originalChatProviderTargetMedia(primary, in.chatProvider, in.originalSearchInfo.Media)
+		if err != nil {
+			return DownloadPreview{}, err
+		}
+		if providerNativeMedia(native) {
+			t, e = providerDownloadTarget(in.SearchRequest, native, primary, auto)
+			providerModel = primary
+		} else {
+			t, e = a.targetMedia(ctx, in.SearchRequest, auto, native)
+		}
+	} else if selectedContext != nil {
 		// batch_download already resolved this private, identity-checked source
 		// Context. Reusing its media avoids a second provider call before the
 		// actual material/path checks, including after durable batch recovery.
@@ -427,7 +505,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	if e != nil {
 		return DownloadPreview{}, e
 	}
-	if t.Media.MediaType == "tv" && len(in.Episodes) == 0 {
+	if t.Media.MediaType == "tv" && len(in.Episodes) == 0 && !in.chatWholeUnscoped {
 		return DownloadPreview{}, bad("REVIEW_EPISODES", "请选择此资源的目标集数；整季下载也须先明确确认本季集数")
 	}
 	in.Episodes = append([]int{}, t.Episodes...)
@@ -455,7 +533,26 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	}
 	var fresh sites.Resource
 	var torrent []byte
-	if in.Query == "" {
+	var magnet string
+	latest := originalChatLatestFromContext(ctx)
+	var latestProof *originalChatLatestDownloadProof
+	if latest != nil {
+		if !auto || in.SubscriptionID == "" {
+			return DownloadPreview{}, bad("REVIEW_RESOURCE_CHANGED", "最新资源必须绑定实际订阅")
+		}
+		latestProof, e = a.originalChatLatestSelect(latest, site, in.ResourceID)
+		if e != nil {
+			return DownloadPreview{}, e
+		}
+		fresh, e = a.originalChatLatestProofResource(latestProof, site, in.ResourceID)
+		if e != nil {
+			return DownloadPreview{}, e
+		}
+		if providerSubscription != nil && !originalChatLatestMediaMatches(fresh.ModuleMediaFields, originalChatLatestMediaFields(providerModel), t) {
+			return DownloadPreview{}, bad("MEDIA_SOURCE_CHANGED", "最新资源的来源影视已变化")
+		}
+	}
+	if latest == nil && in.Query == "" {
 		var prior struct {
 			Query    string `json:"query"`
 			Page     int    `json:"page"`
@@ -466,10 +563,32 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 			in.Page = prior.Page
 		}
 	}
-	if in.Query == "" {
+	if latest == nil && in.Query == "" {
 		in.Query = t.Media.Title
 	}
+	ordinarySubscription := auto && in.SubscriptionID != "" && !in.qualitySelection
 	e = a.withSite(ctx, site, auto, func(client *sites.Client) error {
+		if latestProof != nil {
+			var err error
+			if latestProof.Mode == "rss" && in.qualitySelection && in.sourceMaterial != "" {
+				grant, _ := ctx.Value(subscriptionAcquisitionKey{}).(*subscriptionAcquisitionGrant)
+				if grant == nil || grant.a != a || grant.root == nil || grant.ordinal < 0 || grant.ordinal >= len(grant.root.Steps) {
+					return acquisitionEvidence()
+				}
+				input := grant.root.Steps[grant.ordinal].Input
+				if input.Material != in.sourceMaterial || input.Candidate.Resource.SiteID != in.SiteID || input.Candidate.Resource.ID != in.ResourceID {
+					return acquisitionEvidence()
+				}
+				torrent, err = a.resolveMaterial(ctx, in.sourceMaterial, materialPurpose)
+			} else if ordinarySubscription && latestProof.Mode == "spider" {
+				torrent, err = client.SubscriptionTorrent(ctx, in.ResourceID)
+			} else {
+				var content sites.SubscriptionRSSContent
+				content, err = a.originalChatLatestMaterial(ctx, latestProof, site, client)
+				torrent, magnet = content.Torrent, content.Magnet
+			}
+			return err
+		}
 		resources, err := client.Search(ctx, in.Query, in.Page)
 		for _, r := range resources.Resources {
 			if r.ID == in.ResourceID {
@@ -489,6 +608,15 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		var err2 error
 		if in.sourceMaterial != "" {
 			torrent, err2 = a.resolveMaterial(ctx, in.sourceMaterial, materialPurpose)
+		} else if in.chatOrigin != nil {
+			var content sites.DownloadMaterial
+			content, err2 = client.ChatDownloadMaterial(ctx, in.ResourceID)
+			torrent, magnet = content.Torrent, content.Magnet
+			if sites.IsSubscriptionMaterialFailure(err2) {
+				return bad(originalChatTorrentFailedCode, a.clean(err2.Error()))
+			}
+		} else if ordinarySubscription {
+			torrent, err2 = client.SubscriptionTorrent(ctx, in.ResourceID)
 		} else {
 			torrent, err2 = client.Torrent(ctx, in.ResourceID)
 		}
@@ -497,8 +625,27 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	if e != nil {
 		return DownloadPreview{}, e
 	}
+	var material metainfo.Material
+	if in.chatEpisodeBatch != nil {
+		if magnet != "" {
+			return DownloadPreview{}, bad("REVIEW_MAGNET_FILES_REQUIRED", "此下载需要种子文件清单，无法使用磁力链接")
+		}
+		material, e = metainfo.ParseMaterial(torrent)
+		if e != nil {
+			return DownloadPreview{}, bad("INVALID_TORRENT", e.Error())
+		}
+		if e = a.planOriginalChatEpisodeBatch(ctx, &in, &t, fresh, material); e != nil {
+			return DownloadPreview{}, e
+		}
+		if selectedContext != nil && in.chatEpisodeBatch.mode == "whole_pack" {
+			selectedContext.Meta, e = originalChatEpisodeContextMeta(in.sourceMeta)
+			if e != nil {
+				return DownloadPreview{}, e
+			}
+		}
+	}
 	evaluationTarget := t
-	if in.qualitySelection {
+	if in.qualitySelection || in.chatOrigin != nil && len(in.selectedEpisodes) != 0 {
 		evaluationTarget = qualityEvaluationTarget(t)
 	}
 	choice := a.evaluateResourceContext(ctx, fresh, evaluationTarget, decisionPolicy(in.Policy))
@@ -506,30 +653,64 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	if !choice.Accepted && !verifiedPack {
 		return DownloadPreview{}, bad("RESOURCE_REJECTED", strings.Join(choice.Reasons, "；"))
 	}
-	material, e := metainfo.ParseMaterial(torrent)
+	materialHash, materialSize := "", int64(0)
+	var rssQualityListing *subscriptionAcquisitionRSSListing
+	if magnet != "" {
+		if in.chatOrigin != nil {
+			if !in.chatWholeUnscoped {
+				e = verifyChatMagnetListing(in.SearchRequest, choice, len(in.sourceSeasons) != 0)
+			}
+			if e == nil {
+				materialHash, e = downloadMagnetHash(magnet)
+			}
+		} else {
+			rssQualityListing, e = a.rssQualityMagnetPreview(ctx, in, latestProof)
+			if e == nil {
+				materialHash, e = rssMagnetPreviewIdentity(in, latestProof, choice, magnet, rssQualityListing)
+			}
+		}
+	} else if in.chatEpisodeBatch == nil {
+		material, e = metainfo.ParseMaterial(torrent)
+	}
 	if e != nil {
+		if magnet != "" {
+			return DownloadPreview{}, e
+		}
 		return DownloadPreview{}, bad("INVALID_TORRENT", e.Error())
 	}
-	if e = actualSizePolicy(material.TotalBytes, in.Policy); e != nil {
+	if magnet == "" {
+		materialHash, materialSize = material.Hash, material.TotalBytes
+	}
+	policySize := materialSize
+	if magnet != "" {
+		policySize = fresh.Size
+	}
+	if e = actualSizePolicy(policySize, in.Policy); e != nil {
 		return DownloadPreview{}, e
 	}
-	if t.Media.MediaType == "tv" && len(in.Episodes) == 0 {
+	if t.Media.MediaType == "tv" && len(in.Episodes) == 0 && !in.chatWholeUnscoped {
 		return DownloadPreview{}, bad("REVIEW_EPISODES", "请先选择明确的目标集，再确认资源覆盖")
 	}
 	if t.Media.MediaType == "movie" && t.Media.ReleaseDate != "" && t.Media.ReleaseDate > time.Now().In(shanghai()).Format("2006-01-02") {
 		return DownloadPreview{}, bad("REVIEW_UNRELEASED", "该电影尚未到元数据上映日期，请核实后再获取")
 	}
-	p := DownloadPreview{WorkflowID: a.workflow(ctx, in.WorkflowID, t.Media), Request: in.SearchRequest, ID: id("preview_"), Media: t.Media, Season: in.Season, Episodes: in.Episodes, SiteID: site.ID, ResourceID: in.ResourceID, ResourceTitle: fresh.Title, DownloaderID: d.ID, RootID: destination.Root, DirectoryID: destination.Rule.ID, DownloadPath: destination.Path, DirectorySnapshot: destination.Snapshot, Hash: material.Hash, Files: []string{}, TotalBytes: material.TotalBytes, CreatedAt: now(), ExpiresAt: time.Now().Add(10 * time.Minute).UTC().Format(time.RFC3339Nano), Policy: in.Policy, SubscriptionID: in.SubscriptionID, Revision: in.Revision, Auto: auto, Warnings: choice.Reasons, NeedsConfirmation: choice.NeedsConfirmation}
+	p := DownloadPreview{WorkflowID: a.workflow(ctx, in.WorkflowID, t.Media), Request: in.SearchRequest, ID: id("preview_"), Media: t.Media, Season: in.Season, Episodes: in.Episodes, SiteID: site.ID, ResourceID: in.ResourceID, ResourceTitle: fresh.Title, DownloaderID: d.ID, RootID: destination.Root, DirectoryID: destination.Rule.ID, DownloadPath: destination.Path, DirectorySnapshot: destination.Snapshot, Hash: materialHash, Files: []string{}, TotalBytes: materialSize, CreatedAt: now(), ExpiresAt: time.Now().Add(10 * time.Minute).UTC().Format(time.RFC3339Nano), Policy: in.Policy, SubscriptionID: in.SubscriptionID, Revision: in.Revision, Auto: auto, Warnings: choice.Reasons, NeedsConfirmation: choice.NeedsConfirmation}
+	p.LatestResource = latestProof != nil
+	p.ChatDownload = in.chatOrigin != nil
+	p.ChatWholeUnscoped = in.chatWholeUnscoped
+	p.ChatMagnet = magnet != "" && p.ChatDownload
+	p.RSSMagnet = magnet != "" && !p.ChatDownload
 	p.DownloaderSnapshot = downloaderSnapshot(d)
 	p.SourceDownloader = sourceChoice
 	p.SelectedEpisodes = append([]int(nil), in.selectedEpisodes...)
-	seasonProof, e := a.prepareDownloadSeasonProof(ctx, &p, in.sourceSeasons, material, fresh, in.sourceSeasonBasis)
+	seasonProof, e := a.prepareDownloadSeasonProof(ctx, &p, in.sourceSeasons, material, fresh, in.sourceSeasonBasis, providerModel)
 	if e != nil {
 		return p, e
 	}
 	if seasonProof != nil {
 		in.Season, in.Episodes = p.Season, qualityCopyNote(p.Episodes)
-		evaluationTarget.Season, evaluationTarget.Episodes = p.Season, qualityCopyNote(p.Episodes)
+		p.Warnings = originalChatPackListingWarnings(p.Warnings)
+		p.NeedsConfirmation = len(p.Warnings) != 0
 	}
 	coverage := map[int]bool{}
 	p.ImportMode = destination.Mode
@@ -543,6 +724,9 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		}
 		videos++
 		p.Files = append(p.Files, f.Path)
+		if seasonProof != nil || p.ChatWholeUnscoped {
+			continue // Scoped packs were checked separately; unscoped files need later organization review.
+		}
 		fileResource := fresh
 		fileResource.Title = filepath.Base(f.Path)
 		fileResource.Subtitle = ""
@@ -586,7 +770,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 			}
 		}
 	}
-	if videos == 0 {
+	if videos == 0 && magnet == "" && !p.ChatWholeUnscoped {
 		return p, bad("NO_MEDIA_FILES", "种子未包含支持的视频文件")
 	}
 	if verifiedPack && !in.qualitySelection {
@@ -605,7 +789,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		p.Request.VerifiedSeasonPack = true
 		p.Warnings, p.NeedsConfirmation = []string{}, false
 	}
-	if t.Media.MediaType == "tv" {
+	if t.Media.MediaType == "tv" && seasonProof == nil && magnet == "" {
 		for _, ep := range in.Episodes {
 			if !coverage[ep] {
 				return p, bad("REVIEW_TORRENT_COVERAGE", "种子文件无法证明覆盖所选目标集，请修正集号映射或更换资源")
@@ -632,11 +816,18 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	if auto && p.NeedsConfirmation {
 		return p, bad("REVIEW_RESOURCE", "自动获取需人工确认该资源包")
 	}
-	qualitySnapshot, e := a.prepareQualityPreview(ctx, p, fresh)
+	qualitySnapshot, e := a.prepareQualityPreview(ctx, p, fresh, providerModel)
 	if e != nil {
 		return p, e
 	}
-	p.MaterialRef, e = a.persistMaterial(ctx, torrent, p.Hash)
+	if rssQualityListing != nil && (qualitySnapshot == nil || !qualitySnapshot.BestVersion || qualitySnapshot.Resource.Priority != rssQualityListing.Priority) {
+		return p, acquisitionEvidence()
+	}
+	raw := torrent
+	if magnet != "" {
+		raw = []byte(magnet)
+	}
+	p.MaterialRef, e = a.persistDownloadMaterial(ctx, raw, p.Hash, magnet != "")
 	if e != nil {
 		return p, e
 	}
@@ -645,6 +836,20 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	if e != nil {
 		return p, e
 	}
+	sourceContext.LatestResource = latestProof
+	sourceContext.RSSMagnet = p.RSSMagnet
+	sourceContext.RSSQualityListing = rssQualityListing
+	sourceContext.ChatMagnet = p.ChatMagnet
+	if in.subscriptionFailureFingerprint != "" {
+		if !ordinarySubscription || !validOrdinarySubscriptionFailureFingerprint(in.subscriptionFailureFingerprint) {
+			return p, acquisitionEvidence()
+		}
+		sourceContext.OrdinaryFailureFingerprint = in.subscriptionFailureFingerprint
+	}
+	sourceContext.ChatOrigin = in.chatOrigin
+	sourceContext.ChatProvider = in.chatProvider
+	sourceContext.ChatWholeUnscoped = p.ChatWholeUnscoped
+	sourceContext.ProviderSubscription = providerSubscription
 	if len(in.sourceMeta) > 0 {
 		if !json.Valid(in.sourceMeta) {
 			return p, bad("INVALID_SOURCE_METADATA", "原资源识别上下文无法核对")
@@ -654,15 +859,41 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	if selectedContext != nil {
 		sourceContext.Original = selectedContext
 	} else {
-		contextResource, originalMedia, contextErr := a.originalCachedDownloadInputs(ctx, fresh, p.Media)
-		if contextErr != nil {
-			return p, contextErr
+		contextResource := fresh
+		var originalMedia json.RawMessage
+		matchSource, recognized := "unknown", false
+		if latest == nil {
+			var contextErr error
+			contextResource, originalMedia, contextErr = a.originalCachedDownloadInputs(ctx, fresh, p.Media)
+			if contextErr != nil {
+				return p, contextErr
+			}
+		} else {
+			originalMedia, matchSource = originalChatLatestDownloadMedia(fresh.ModuleMediaFields, p.Media)
+			recognized = len(originalMedia) != 0
 		}
-		if in.originalSearchInfo != nil {
+		if providerSubscription != nil && !bytes.Equal(originalMedia, providerModel) {
+			originalMedia, recognized = providerModel, false
+		}
+		if in.originalSearchInfo != nil && (!recognized || in.chatProvider != nil) {
 			originalMedia = in.originalSearchInfo.MediaInfo
 		}
-		if e = a.completeOriginalDownloadContext(ctx, &sourceContext, Candidate{Resource: contextResource}, p.Media, originalMedia); e != nil {
+		buildContext := a.completeOriginalDownloadContext
+		if p.ChatDownload || providerSubscription != nil {
+			buildContext = a.buildOriginalDownloadContext
+		}
+		if e = buildContext(ctx, &sourceContext, Candidate{Resource: contextResource}, p.Media, originalMedia); e != nil {
 			return p, e
+		}
+		if p.ChatDownload {
+			sourceContext.Original.ResourceSource = "search"
+			sourceContext.Original.MediaIsTarget = true
+		}
+		if latest != nil && sourceContext.Original != nil {
+			sourceContext.Original.ResourceSource = latest.Mode
+			sourceContext.Original.MatchSource = matchSource
+			sourceContext.Original.CandidateRecognized = recognized
+			sourceContext.Original.MediaIsTarget = !recognized
 		}
 	}
 	previewTx, e := a.Store.DB.BeginTx(ctx, nil)
@@ -688,7 +919,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		return p, e
 	}
 	a.materialMu.Lock()
-	if len(torrent) <= 16<<20 {
+	if torrent != nil && len(torrent) <= 16<<20 {
 		total := 0
 		for _, b := range a.materials {
 			total += len(b)
@@ -727,7 +958,7 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 		if e = a.Store.Get(ctx, "subscription", p.SubscriptionID, &s); e != nil {
 			return Intent{}, e
 		}
-		if s.State != "active" || s.Revision != p.Revision {
+		if !a.subscriptionSearchState(ctx, s) || s.Revision != p.Revision {
 			return Intent{}, bad("SUBSCRIPTION_CHANGED", "订阅已修改或暂停，请重新检查")
 		}
 		for _, ep := range p.Episodes {
@@ -736,10 +967,17 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 			}
 		}
 	}
-	if e = a.ensureNotExcluded(ctx, p.Media, p.Season, p.Episodes); e != nil {
-		return Intent{}, e
+	if !p.ChatWholeUnscoped {
+		if e = a.ensureNotExcluded(ctx, p.Media, p.Season, p.Episodes); e != nil {
+			return Intent{}, e
+		}
 	}
 	intent := Intent{Request: p.Request, ID: id("dl_"), WorkflowID: p.WorkflowID, Media: p.Media, Season: p.Season, Episodes: p.Episodes, SiteID: p.SiteID, ResourceID: p.ResourceID, ResourceTitle: p.ResourceTitle, DownloaderID: p.DownloaderID, RootID: p.RootID, Hash: p.Hash, State: "planned", SubscriptionID: p.SubscriptionID, SubscriptionRevision: p.Revision, Auto: p.Auto, CreatedAt: now(), UpdatedAt: now(), PreviewID: p.ID}
+	intent.LatestResource = p.LatestResource
+	intent.RSSMagnet = p.RSSMagnet
+	intent.ChatMagnet = p.ChatMagnet
+	intent.ChatDownload = p.ChatDownload
+	intent.ChatWholeUnscoped = p.ChatWholeUnscoped
 	intent.SeasonScopeSHA = p.SeasonScopeSHA
 	intent.ImportMode = p.ImportMode
 	intent.SourcePostAddVersion = 1
@@ -759,11 +997,43 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 	if e != nil {
 		return intent, e
 	}
+	if p.LatestResource != (sourceContext != nil && sourceContext.LatestResource != nil) {
+		return intent, bad("REVIEW_RESOURCE_CHANGED", "最新资源下载凭据无法核对，请重新刷新")
+	}
+	if err := verifyRSSMagnetContext(intent, sourceContext); err != nil {
+		return intent, err
+	}
+	if err := verifyChatDownloadContext(intent, sourceContext); err != nil {
+		return intent, err
+	}
+	if sourceContext != nil && sourceContext.ProviderSubscription != nil {
+		guard, _ := ctx.Value(subscriptionGuardKey{}).(subscriptionIdentity)
+		if guard != *sourceContext.ProviderSubscription {
+			return intent, bad("INVALID_DOWNLOAD_CONTEXT", "下载确认无法核对来源订阅")
+		}
+	}
+	if p.ChatDownload {
+		origin, err := a.originalChatDownloadOrigin(ctx)
+		if err != nil || origin != *sourceContext.ChatOrigin {
+			return intent, bad("PLUGIN_CAPABILITY_DENIED", "下载确认的 Lark 来源无法核对")
+		}
+	}
+	if p.ChatDownload {
+		provider := originalChatMediaProviderFrom(ctx)
+		stored := sourceContext.ChatProvider
+		if (provider == nil) != (stored == nil) || provider != nil && *provider != *stored {
+			return intent, bad("MEDIA_SOURCE_CHANGED", "下载确认无法核对已选择的媒体来源")
+		}
+	}
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
 		return intent, e
 	}
 	defer tx.Rollback()
+	childPayload := map[string]string{"id": intent.ID}
+	if scope, _ := ctx.Value(ordinarySearchDownloadKey{}).(ordinarySearchDownloadScope); scope.app != nil && p.SubscriptionID == "" {
+		return intent, ordinarySearchDownloadReview()
+	}
 	if p.SubscriptionID != "" {
 		// A plugin fill or user edit can commit after the preliminary read but
 		// before this transaction. Never create an obsolete selected intent or
@@ -773,15 +1043,34 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 			return intent, e
 		}
 		var current Subscription
-		if json.Unmarshal(raw, &current) != nil || current.ID != p.SubscriptionID || current.State != "active" || current.Revision != p.Revision {
+		if json.Unmarshal(raw, &current) != nil || current.ID != p.SubscriptionID || !a.subscriptionSearchState(ctx, current) || current.Revision != p.Revision {
 			return intent, bad("SUBSCRIPTION_CHANGED", "订阅已修改或暂停，请重新检查")
+		}
+		if providerNativeMedia(p.Media) && (mediaKey(current.Media) != mediaKey(p.Media) || current.Season != p.Season) {
+			return intent, bad("SUBSCRIPTION_CHANGED", "订阅身份或季号已变化，请重新检查")
+		}
+		ordinaryRoot, err := a.ordinarySearchChildMarker(ctx, tx, current, intent, sourceContext)
+		if err != nil {
+			return intent, err
+		}
+		if ordinaryRoot != "" {
+			childPayload["_ordinary_search_attempt"] = ordinaryRoot
+		}
+		if pausedRoot := originalChatPausedSearchJob(ctx, current); pausedRoot != "" {
+			trace, _ := ctx.Value(jobTraceKey{}).(jobTrace)
+			if trace.Job != pausedRoot {
+				return intent, bad("SUBSCRIPTION_CHANGED", "暂停订阅的下载来源无法核对")
+			}
+			childPayload["_chat_paused_search_job"] = pausedRoot
 		}
 	}
 	if e = pinMaterialTx(ctx, tx, p.MaterialRef, p.Hash); e != nil {
 		return intent, e
 	}
-	if e = a.reserveQualityDownloadTx(ctx, tx, p, intent); e != nil {
-		return intent, bad("ALREADY_ACQUIRED", e.Error())
+	if !intent.ChatWholeUnscoped {
+		if e = a.reserveQualityDownloadTx(ctx, tx, p, intent); e != nil {
+			return intent, bad("ALREADY_ACQUIRED", e.Error())
+		}
 	}
 	if e = txPut(ctx, tx, "intent", intent.ID, intent); e != nil {
 		return intent, e
@@ -792,7 +1081,7 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 			return intent, e
 		}
 	}
-	child, e := enqueueTx(ctx, tx, jobKind, map[string]string{"id": intent.ID}, intent.WorkflowID)
+	child, e := enqueueTx(ctx, tx, jobKind, childPayload, intent.WorkflowID)
 	if e != nil {
 		return intent, e
 	}
@@ -807,6 +1096,13 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	var in Intent
 	if e := a.Store.Get(ctx, "intent", key, &in); e != nil {
 		return e
+	}
+	if e := a.guardOrdinarySearchDownload(ctx, j, in); e != nil {
+		return e
+	}
+	ctx, err := a.originalChatPausedSearchForDownload(ctx, j, in)
+	if err != nil {
+		return err
 	}
 	if e := a.guardAcquisitionChild(ctx, j, in); e != nil {
 		return e
@@ -826,6 +1122,15 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 		return bad("REVIEW_PLUGIN_DOWNLOAD_UNCONFIRMED", "下载插件已调用，结果尚未提交，请核对原任务后重新添加")
 	}
 	if in.SourcePostAddVersion == 1 && in.State == "post_add" {
+		if in.ChatDownload || providerNativeMedia(in.Media) {
+			frozen, err := a.loadDownloadContext(ctx, "intent", in.ID, in.Hash)
+			if err != nil {
+				return err
+			}
+			if err = verifyChatDownloadContext(in, frozen); err != nil {
+				return err
+			}
+		}
 		return a.resumeSourcePostAdd(ctx, in, j)
 	}
 	if len(in.SelectedEpisodes) > 0 && in.State != "planned" {
@@ -856,8 +1161,11 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 		if e := a.Store.Get(ctx, "subscription", in.SubscriptionID, &s); e != nil {
 			return e
 		}
-		if s.State != "active" || s.Revision != in.SubscriptionRevision {
+		if !a.subscriptionSearchState(ctx, s) || s.Revision != in.SubscriptionRevision {
 			return bad("REVIEW_SUBSCRIPTION_CHANGED", "订阅状态或规则变化，请人工核对未提交的下载意图")
+		}
+		if providerNativeMedia(in.Media) && (mediaKey(s.Media) != mediaKey(in.Media) || s.Season != in.Season) {
+			return bad("REVIEW_SUBSCRIPTION_CHANGED", "订阅身份或季号已变化，请重新检查")
 		}
 	}
 	if e := a.guardIntentSeasonExclusions(ctx, in); e != nil {
@@ -876,15 +1184,55 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	if e = a.guardIntentDirectory(ctx, in, false); e != nil {
 		return e
 	}
+	frozen, e := a.loadDownloadContext(ctx, "intent", in.ID, in.Hash)
+	if e != nil {
+		return e
+	}
+	if err := verifyChatDownloadContext(in, frozen); err != nil {
+		return err
+	}
+	if err := verifyRSSMagnetContext(in, frozen); err != nil {
+		return err
+	}
+	var providerModel json.RawMessage
+	if providerNativeMedia(in.Media) {
+		providerModel = frozen.Original.Media
+	}
+	var magnet string
+	if in.RSSMagnet || in.ChatMagnet {
+		raw, err := a.resolveDownloadMaterial(ctx, in.MaterialRef, materialPurpose, true)
+		if err != nil {
+			return err
+		}
+		identity, err := metainfo.MagnetHash(string(raw))
+		if err != nil || !sameHash(identity, in.Hash) {
+			return bad("REVIEW_MATERIAL_CHANGED", "磁力材料与确认预览不一致")
+		}
+		magnet = string(raw)
+	}
+	var latest *originalChatLatestDownloadProof
+	if frozen != nil {
+		latest = frozen.LatestResource
+	}
+	if in.LatestResource != (latest != nil) {
+		return bad("REVIEW_RESOURCE_CHANGED", "最新资源下载凭据无法核对，请重新刷新")
+	}
+	var latestResource sites.Resource
+	if latest != nil {
+		latestResource, e = a.originalChatLatestIntentResource(ctx, in, latest)
+		if e != nil {
+			return e
+		}
+	}
 	client, e := download.New(d.Config)
 	if e != nil {
 		return e
 	}
-	qualityIntentProof, e := a.qualitySnapshot(ctx, a.Store.DB, "intent", in.ID, in.Hash)
+	qualityProof, e := a.qualitySnapshot(ctx, a.Store.DB, "intent", in.ID, in.Hash)
 	if e != nil {
 		return e
 	}
-	if qualityIntentProof == nil && in.SubscriptionID != "" {
+	if qualityProof == nil && in.SubscriptionID != "" {
 		var owner Subscription
 		if e = a.Store.Get(ctx, "subscription", in.SubscriptionID, &owner); e != nil {
 			return e
@@ -893,12 +1241,25 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 			return bad("QUALITY_SNAPSHOT_CHANGED", "洗版下载缺少原始授权快照")
 		}
 	}
+	if frozen != nil && frozen.RSSQualityListing != nil {
+		if e = a.verifyRSSQualityMagnetAdd(ctx, in, frozen, qualityProof); e != nil {
+			return e
+		}
+	}
 	tasks, e := client.List(ctx)
 	if e != nil {
 		return jobErr("DOWNLOADER_UNAVAILABLE", e)
 	}
 	for _, task := range tasks {
-		if sameHash(task.Hash, in.Hash) && (qualityIntentProof == nil || !qualityIntentProof.BestVersion) {
+		if sameHash(task.Hash, in.Hash) && (qualityProof == nil || !qualityProof.BestVersion) {
+			if latest != nil {
+				if _, e = a.originalChatLatestIntentResource(ctx, in, latest); e != nil {
+					return e
+				}
+				if e = a.guardOrdinarySearchDownloadWrite(ctx, j, in); e != nil {
+					return e
+				}
+			}
 			in.Hash = task.Hash
 			in.State = "accepted"
 			in.UpdatedAt = now()
@@ -910,8 +1271,12 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	a.materialMu.Lock()
 	torrent = a.materials[in.PreviewID]
 	a.materialMu.Unlock()
-	if torrent == nil && in.MaterialRef != "" {
-		torrent, e = a.resolveMaterial(ctx, in.MaterialRef, materialPurpose)
+	materialRef := in.MaterialRef
+	if materialRef == "" && frozen != nil {
+		materialRef = frozen.OriginalMaterialRef
+	}
+	if magnet == "" && materialRef != "" && (torrent == nil || in.MaterialRef == "") {
+		torrent, e = a.resolveMaterial(ctx, materialRef, materialPurpose)
 		if e != nil {
 			return e
 		}
@@ -919,6 +1284,15 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	var preview DownloadPreview
 	if e = a.Store.Get(ctx, "download_preview", in.PreviewID, &preview); e != nil {
 		return e
+	}
+	if preview.LatestResource != in.LatestResource || preview.RSSMagnet != in.RSSMagnet {
+		return bad("REVIEW_RESOURCE_CHANGED", "最新资源下载凭据无法核对，请重新刷新")
+	}
+	if preview.ChatDownload != in.ChatDownload || preview.ChatMagnet != in.ChatMagnet || preview.ChatWholeUnscoped != in.ChatWholeUnscoped || in.ChatDownload && !slices.Equal(preview.SelectedEpisodes, in.SelectedEpisodes) {
+		return bad("INVALID_DOWNLOAD_CONTEXT", "下载上下文的 Lark 选集无法核对")
+	}
+	if mediaKey(preview.Media) != mediaKey(in.Media) {
+		return bad("INVALID_DOWNLOAD_CONTEXT", "下载预览的媒体身份已变化")
 	}
 	request := in.Request
 	if request.MediaType == "" {
@@ -928,6 +1302,7 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	request.TMDBID = in.Media.ID
 	request.Season = in.Season
 	request.Episodes = in.Episodes
+	request.chatUnscoped = in.ChatWholeUnscoped
 	if in.Auto && in.Media.MediaType == "tv" {
 		// The check's effective dates were a snapshot. Reapply the unchanged
 		// subscription's explicit overrides to current provider data before Add.
@@ -938,7 +1313,7 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 		if e = a.Store.Get(ctx, "subscription", in.SubscriptionID, &current); e != nil {
 			return e
 		}
-		season, err := a.season(ctx, in.Media.ID, in.Season)
+		season, err := a.importSeason(ctx, in.Media, providerModel, in.Season)
 		if err != nil {
 			return err
 		}
@@ -951,17 +1326,15 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 			request.EpisodeDates[episode.EpisodeNumber] = date
 		}
 	}
-	frozen, e := a.loadDownloadContext(ctx, "intent", in.ID, in.Hash)
-	if e != nil {
-		return e
-	}
 	var target decision.Target
-	if frozen != nil && frozen.Original != nil && len(frozen.Original.Media) > 0 && string(frozen.Original.Media) != "null" {
-		information, err := a.originalRecognitionProjection(in.Media, frozen.Original.Media)
+	if providerNativeMedia(in.Media) {
+		target, e = providerDownloadTarget(request, in.Media, providerModel, in.Auto)
+	} else if frozen != nil && frozen.Original != nil && len(frozen.Original.Media) > 0 && string(frozen.Original.Media) != "null" {
+		native, err := a.originalChatFrozenDownloadTarget(in.Media, frozen.Original.Media, frozen.ChatProvider)
 		if err != nil {
 			return err
 		}
-		target, e = a.targetMedia(ctx, request, in.Auto, information.Media)
+		target, e = a.targetMedia(ctx, request, in.Auto, native)
 	} else {
 		target, e = a.target(ctx, request, in.Auto)
 	}
@@ -972,40 +1345,58 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	if e != nil {
 		return e
 	}
-	qualityProof, e := a.qualitySnapshot(ctx, a.Store.DB, "intent", in.ID, in.Hash)
-	if e != nil {
-		return e
-	}
 	if qualityProof != nil && qualityProof.BestVersion {
 		target = qualityEvaluationTarget(target)
 	}
+	if in.ChatDownload && len(in.SelectedEpisodes) != 0 {
+		for _, ep := range in.SelectedEpisodes {
+			if !slices.Contains(target.AiredEpisodes, ep) && !slices.Contains(target.AllowEarly, ep) {
+				return bad("REVIEW_EPISODE_DATE", "已选剧集的播出日期无法核对")
+			}
+		}
+		target = qualityEvaluationTarget(target)
+	}
+	seasonProof, e := a.intentSeasonProof(ctx, a.Store.DB, in)
+	if e != nil {
+		return e
+	}
 	var sourceResource sites.Resource
 	e = a.withSite(ctx, site, in.Auto, func(c *sites.Client) error {
-		query := request.Query
-		if query == "" {
-			query = in.Media.Title
-		}
-		result, err := c.Search(ctx, query, request.Page)
-		var fresh *sites.Resource
-		for i := range result.Resources {
-			if result.Resources[i].ID == in.ResourceID {
-				fresh = &result.Resources[i]
-				break
+		fresh := latestResource
+		if latest == nil {
+			query := request.Query
+			if query == "" {
+				query = in.Media.Title
+			}
+			result, err := c.Search(ctx, query, request.Page)
+			for _, resource := range result.Resources {
+				if resource.ID == in.ResourceID {
+					fresh = resource
+					break
+				}
+			}
+			if fresh.ID == "" {
+				if err != nil {
+					return err
+				}
+				return bad("REVIEW_RESOURCE_CHANGED", "提交前未能重新确认资源，请重新预览")
+			}
+			if err != nil {
+				a.log("WARN", "sites", "partial_recheck", "同页其他资源解析不完整；当前资源已独立重新确认", in.WorkflowID, j.ID)
 			}
 		}
-		if fresh == nil {
-			if err != nil {
+		sourceResource = fresh
+		if seasonProof != nil && seasonProof.ChatOrigin != nil {
+			if err := validateOriginalChatSeasonListing(ctx, fresh, seasonProof.Requested); err != nil {
 				return err
 			}
-			return bad("REVIEW_RESOURCE_CHANGED", "提交前未能重新确认资源，请重新预览")
 		}
-		sourceResource = *fresh
-		if err != nil {
-			a.log("WARN", "sites", "partial_recheck", "同页其他资源解析不完整；当前资源已独立重新确认", in.WorkflowID, j.ID)
+		choice := a.evaluateResourceContext(ctx, fresh, target, decisionPolicy(preview.Policy))
+		if seasonProof != nil && seasonProof.ChatOrigin != nil {
+			choice.Reasons = originalChatPackListingWarnings(choice.Reasons)
+			choice.NeedsConfirmation = len(choice.Reasons) != 0
 		}
-		err = nil
-		choice := a.evaluateResourceContext(ctx, *fresh, target, decisionPolicy(preview.Policy))
-		if in.Auto && (request.VerifiedSeasonPack || qualityProof != nil && qualityProof.BestVersion) && a.eligibleAutomaticSeasonPackContext(ctx, *fresh, target, preview.Policy) {
+		if magnet == "" && in.Auto && (request.VerifiedSeasonPack || qualityProof != nil && qualityProof.BestVersion) && a.eligibleAutomaticSeasonPackContext(ctx, fresh, target, preview.Policy) {
 			choice.Accepted, choice.NeedsConfirmation, choice.Reasons = true, false, []string{}
 		}
 		newReason := false
@@ -1024,10 +1415,35 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 		if !choice.Accepted || (choice.NeedsConfirmation && (!preview.NeedsConfirmation || newReason)) {
 			return bad("REVIEW_POLICY_CHANGED", "资源促销或筛选条件已变化，请重新预览确认")
 		}
-		if torrent == nil {
-			torrent, err = c.Torrent(ctx, in.ResourceID)
+		if in.ChatMagnet {
+			if !in.ChatWholeUnscoped {
+				if err := verifyChatMagnetListing(request, choice, seasonProof != nil); err != nil {
+					return err
+				}
+			}
+			return actualSizePolicy(fresh.Size, preview.Policy)
 		}
-		return err
+		if frozen != nil && frozen.RSSQualityListing != nil {
+			if !choice.Accepted || choice.NeedsConfirmation || choice.Season != in.Season || !slices.Equal(choice.Episodes, in.Episodes) {
+				return acquisitionEvidence()
+			}
+			return actualSizePolicy(fresh.Size, preview.Policy)
+		}
+		if torrent == nil && magnet == "" {
+			var err error
+			switch {
+			case latest != nil && latest.Mode == "rss":
+				torrent, err = a.originalChatLatestTorrent(ctx, latest, site, c)
+			case in.ChatDownload:
+				torrent, err = legacyChatDownloadTorrent(ctx, c, in.ResourceID)
+			case in.Auto && in.SubscriptionID != "" && (qualityProof == nil || !qualityProof.BestVersion):
+				torrent, err = c.SubscriptionTorrent(ctx, in.ResourceID)
+			default:
+				torrent, err = c.Torrent(ctx, in.ResourceID)
+			}
+			return err
+		}
+		return nil
 	})
 	if e != nil {
 		return e
@@ -1038,7 +1454,7 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 			return e
 		}
 		owner.Policy = qualityProof.Policy
-		priority, err := a.subscriptionResourcePriority(ctx, owner, sourceResource)
+		priority, err := a.subscriptionResourcePriority(ctx, owner, sourceResource, providerModel)
 		if err != nil {
 			return err
 		}
@@ -1046,22 +1462,24 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 			return bad("QUALITY_PRIORITY_CHANGED", "实际资源优先级在确认后已变化")
 		}
 	}
-	material, e := metainfo.ParseMaterial(torrent)
-	if e != nil || !sameHash(material.Hash, in.Hash) {
-		return bad("REVIEW_MATERIAL_CHANGED", "下载材料与确认预览不一致")
-	}
-	if e = a.guardSeasonMaterial(ctx, in, material); e != nil {
-		return e
-	}
-	if e = actualSizePolicy(material.TotalBytes, preview.Policy); e != nil {
-		return e
-	}
-	if in.Auto && (request.VerifiedSeasonPack || qualityProof != nil && qualityProof.BestVersion && in.Media.MediaType == "tv") {
-		if qualityProof != nil && qualityProof.BestVersion {
-			target.Episodes = in.Episodes
+	if magnet == "" {
+		material, e := metainfo.ParseMaterial(torrent)
+		if e != nil || !sameHash(material.Hash, in.Hash) {
+			return bad("REVIEW_MATERIAL_CHANGED", "下载材料与确认预览不一致")
 		}
-		if e = a.validateQualityOrAutomaticFiles(ctx, qualityProof, material, target, in.SiteID); e != nil {
+		if e = a.guardSeasonMaterial(ctx, in, material); e != nil {
 			return e
+		}
+		if e = actualSizePolicy(material.TotalBytes, preview.Policy); e != nil {
+			return e
+		}
+		if in.Auto && (request.VerifiedSeasonPack || qualityProof != nil && qualityProof.BestVersion && in.Media.MediaType == "tv") {
+			if qualityProof != nil && qualityProof.BestVersion {
+				target.Episodes = in.Episodes
+			}
+			if e = a.validateQualityOrAutomaticFiles(ctx, qualityProof, material, target, in.SiteID); e != nil {
+				return e
+			}
 		}
 	}
 	if e = a.jobCancelled(ctx, j); e != nil {
@@ -1086,7 +1504,16 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 		return e
 	}
 	if frozen != nil {
+		sourceContext.RSSMagnet = frozen.RSSMagnet
+		sourceContext.RSSQualityListing = frozen.RSSQualityListing
+		sourceContext.ChatMagnet = frozen.ChatMagnet
+		sourceContext.ChatOrigin = frozen.ChatOrigin
+		sourceContext.ChatProvider = frozen.ChatProvider
+		sourceContext.ChatWholeUnscoped = frozen.ChatWholeUnscoped
+		sourceContext.ProviderSubscription = frozen.ProviderSubscription
+		sourceContext.LatestResource = frozen.LatestResource
 		sourceContext.SourceMeta = append(json.RawMessage(nil), frozen.SourceMeta...)
+		sourceContext.OrdinaryFailureFingerprint = frozen.OrdinaryFailureFingerprint
 		sourceContext.Original = frozen.Original
 	}
 	if sourceContext.Original == nil {
@@ -1095,7 +1522,16 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 		}
 	}
 	origin := "Manual"
-	if in.SubscriptionAcquisition != "" {
+	if sourceContext.ChatOrigin != nil {
+		origin = sourceContext.ChatOrigin.Source
+		// Freeze the known native result before Add. A verified post-Add receipt
+		// can recover this context without claiming a plugin module succeeded.
+		sourceContext.OriginalDownloader, e = json.Marshal(d.Name)
+		if e != nil {
+			return e
+		}
+		sourceContext.OriginalLayout = json.RawMessage(`"Original"`)
+	} else if in.SubscriptionAcquisition != "" {
 		acquisition, err := a.readAcquisition(ctx, a.Store.DB, in.SubscriptionAcquisition)
 		if err != nil {
 			return err
@@ -1123,6 +1559,17 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	if e != nil {
 		return e
 	}
+	if grant, _ := ctx.Value(originalChatPausedSearchKey{}).(originalChatPausedSearchGrant); grant.app == a {
+		// A mutable resource hook may have outlived this paused revision.
+		if e = a.guardSubscriptionContext(ctx); e != nil {
+			return e
+		}
+	}
+	if latest != nil {
+		if _, e = a.originalChatLatestIntentResource(ctx, in, latest); e != nil {
+			return e
+		}
+	}
 	if e = a.guardIntentDirectory(ctx, in, false); e != nil {
 		return e
 	}
@@ -1134,16 +1581,25 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	if in.LarkInbox != "" {
 		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "旧插件下载任务尚未适配标准模块")
 	}
+	ordinaryRejection := j.Kind == "download" && j.ParentJobID != "" && in.Auto && in.SubscriptionAcquisition == "" && qualityProof != nil && !qualityProof.BestVersion
+	if ordinaryRejection && sourceContext.OrdinaryFailureFingerprint == "" {
+		// Legacy contexts may predate the selected fingerprint. Resolve that
+		// older source only now, before invoking the downloader.
+		sourceContext.OrdinaryFailureFingerprint, e = a.legacyOrdinarySubscriptionRejectionFingerprint(ctx, in, site)
+		if e != nil {
+			return e
+		}
+	}
 	in.State = "submitting"
 	in.UpdatedAt = now()
-	sourceContext.OriginalDownloadDir, sourceContext.OriginalMaterialRef = effectiveIntentDownloadPath(in, d), in.MaterialRef
-	if e = a.stageIntentDownload(ctx, in, sourceContext); e != nil {
+	sourceContext.OriginalDownloadDir, sourceContext.OriginalMaterialRef = effectiveIntentDownloadPath(in, d), materialRef
+	if e = a.stageIntentDownload(ctx, in, &sourceContext, torrent); e != nil {
 		return e
 	}
 	if e := a.guardAcquisitionChild(ctx, j, in); e != nil {
 		return e
 	}
-	requestAdd := download.AddRequest{Torrent: torrent, SavePath: effectiveIntentDownloadPath(in, d), Paused: len(in.SelectedEpisodes) > 0, Tags: []string{"light-media"}}
+	requestAdd := download.AddRequest{Torrent: torrent, Magnet: magnet, SavePath: effectiveIntentDownloadPath(in, d), Paused: len(in.SelectedEpisodes) > 0, Tags: []string{"light-media"}}
 	var episodes any
 	if len(in.SelectedEpisodes) > 0 {
 		episodes = in.SelectedEpisodes
@@ -1151,9 +1607,15 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	var postAddErr error
 	category, categorySet := originalDownloadContextCategory(&sourceContext)
 	module, e := a.originalDownload(ctx, d, requestAdd, originalDownloadOptions{Category: category, CategorySet: categorySet, Cookie: site.Cookie, Episodes: episodes, Downloader: in.SourceDownloader, Media: &in.Media, BeforeInvoke: func() error {
+		if e := a.guardOrdinarySearchDownloadWrite(ctx, j, in); e != nil {
+			return e
+		}
 		in.SourceModuleStarted = true
 		return a.Store.Put(ctx, "intent", in.ID, in)
 	}}, func(options originalDownloadOptions) (download.AddResult, error) {
+		if e := a.guardOrdinarySearchDownloadWrite(ctx, j, in); e != nil {
+			return download.AddResult{}, e
+		}
 		if in.SourceModuleStarted || options.CategorySet {
 			requestAdd.SourceCategorySet = true
 			if category, ok := options.Category.(string); ok {
@@ -1182,6 +1644,12 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 			}
 			return jobErr("REVIEW_PLUGIN_DOWNLOAD_FAILED", e)
 		}
+		if download.MutationRejected(e) && ordinaryRejection {
+			return a.rejectOrdinarySubscriptionDownload(ctx, j, in, origin, e)
+		}
+		if in.ChatDownload && download.MutationRejected(e) {
+			return jobErr(originalChatAddRejectedCode, e)
+		}
 		if download.MutationNotStarted(e) || download.MutationRejected(e) {
 			in.State, in.Error, in.UpdatedAt = "planned", a.clean(e.Error()), now()
 			if saveErr := a.Store.Put(ctx, "intent", in.ID, in); saveErr != nil {
@@ -1192,6 +1660,9 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 		in.State = "reconcile_pending"
 		in.Error = a.clean(e.Error())
 		_ = a.Store.Put(ctx, "intent", in.ID, in)
+		if in.ChatDownload {
+			return jobErr(originalChatAddUnknownCode, e)
+		}
 		return jobErr("DOWNLOAD_RECONCILE_PENDING", e)
 	}
 	result := module.Added
@@ -1234,17 +1705,29 @@ func (a *App) downloadList(ctx context.Context, selected ...string) (any, error)
 	if len(selected) > 0 {
 		selector = selected[0]
 	}
-	moduleRows, useCore, e := a.originalDownloadingTorrents(ctx, selector)
+	intents, e := a.Store.List(ctx, "intent", 200, 0)
 	if e != nil {
 		return nil, e
 	}
-	intents, e := a.Store.List(ctx, "intent", 200, 0)
+	instances, e := a.downloadInstances(ctx, selector)
+	if e != nil {
+		return nil, e
+	}
+	native, e := a.Store.List(ctx, "native_download", 200, 0)
+	if e != nil {
+		return nil, e
+	}
+	return map[string]any{"intents": intents, "instances": instances, "native_downloads": native}, nil
+}
+
+func (a *App) downloadInstances(ctx context.Context, selector string) ([]map[string]any, error) {
+	moduleRows, useCore, e := a.originalDownloadingTorrents(ctx, selector)
 	if e != nil {
 		return nil, e
 	}
 	instances := []map[string]any{}
 	for _, d := range a.Settings().Downloaders {
-		if len(selected) > 0 && selected[0] != "" && d.ID != selected[0] {
+		if selector != "" && d.ID != selector {
 			continue
 		}
 		if !downloaderEnabled(d) {
@@ -1285,11 +1768,7 @@ func (a *App) downloadList(ctx context.Context, selected ...string) (any, error)
 		}
 		instances = append(instances, entry)
 	}
-	native, e := a.Store.List(ctx, "native_download", 200, 0)
-	if e != nil {
-		return nil, e
-	}
-	return map[string]any{"intents": intents, "instances": instances, "native_downloads": native}, nil
+	return instances, nil
 }
 func (a *App) downloadAction(ctx context.Context, key, action string) error {
 	a.downloadMu.Lock()
@@ -1487,24 +1966,56 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 	if e := a.bindCompletedDirectory(ctx, in, task, d); e != nil {
 		return e
 	}
+	var providerMedia json.RawMessage
+	var recoveredEpisodes []media.Episode
+	var e error
+	if in.ChatWholeUnscoped {
+		providerMedia, recoveredEpisodes, e = a.recoverCompletedUnscopedMedia(ctx, *in)
+	} else {
+		providerMedia, e = a.completedProviderDownloadMedia(ctx, *in)
+	}
+	if e != nil {
+		return e
+	}
 	files, e := c.Files(ctx, in.Hash)
 	if e != nil {
 		return e
+	}
+	seasonProof, e := a.intentSeasonProof(ctx, a.Store.DB, *in)
+	if e != nil {
+		return e
+	}
+	var recoveredFiles map[string]downloadScopedFile
+	if in.ChatWholeUnscoped {
+		recoveredFiles, e = a.completedUnscopedFiles(ctx, *in, providerMedia, recoveredEpisodes, files)
+		if e != nil {
+			return e
+		}
+	} else if in.RSSMagnet || in.ChatMagnet {
+		if e = a.verifyCompletedDownloadMagnet(ctx, *in, files, seasonProof); e != nil {
+			return e
+		}
+		if seasonProof != nil {
+			seasonProof.Files, e = a.measureCompletedSeasonMagnet(ctx, *in, seasonProof, files)
+			if e != nil {
+				return e
+			}
+		}
 	}
 	mode := in.ImportMode
 	if mode == "" {
 		mode = "hardlink"
 	}
 	request := ImportRequest{MediaType: in.Media.MediaType, TMDBID: in.Media.ID, RootID: in.RootID, Mode: mode, IntentID: in.ID, WorkflowID: in.WorkflowID}
+	request.originalRecoveredWhole = in.ChatWholeUnscoped
+	if len(providerMedia) > 0 {
+		request.providerIdentity, request.originalResolvedMedia = in.Media, providerMedia
+	}
 	qualityProof, e := a.qualitySnapshot(ctx, a.Store.DB, "intent", in.ID, in.Hash)
 	if e != nil {
 		return e
 	}
 	request.qualityReplacement = qualityProof != nil && qualityProof.BestVersion
-	seasonProof, e := a.intentSeasonProof(ctx, a.Store.DB, *in)
-	if e != nil {
-		return e
-	}
 	if in.DirectoryID != "" {
 		rule, ruleErr := a.getDirectory(in.DirectoryID)
 		if ruleErr != nil {
@@ -1514,12 +2025,13 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 	}
 	rules := in.Request.Mappings
 	request.Mappings = rules
+	var completedScope []downloadScopedFile
 	for _, f := range files {
 		if !isVideo(f.Path) {
 			continue
 		}
 		if qualityProof != nil && in.Media.MediaType == "tv" {
-			selected, err := a.qualityCompletedFileSelected(ctx, *in, f.Path)
+			selected, err := a.qualityCompletedFileSelected(ctx, *in, f.Path, providerMedia)
 			if err != nil {
 				return err
 			}
@@ -1546,7 +2058,12 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 		}
 		parsed := a.parseMediaNameContext(ctx, filepath.Base(f.Path))
 		entry := ImportFileRequest{Path: full}
-		if seasonProof != nil {
+		if in.ChatWholeUnscoped {
+			scoped := recoveredFiles[f.Path]
+			entry.Season, entry.SeasonExplicit, entry.Episodes = scoped.Season, true, scoped.Episodes
+			scoped.Path = full
+			completedScope = append(completedScope, scoped)
+		} else if seasonProof != nil {
 			scoped, ok := seasonScopeForFile(seasonProof, f.Path)
 			if !ok || scoped.Size != f.Size {
 				return seasonScopeError()
@@ -1556,7 +2073,7 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 			if parsed.Original == nil {
 				continue
 			}
-			season, e := a.season(ctx, in.Media.ID, in.Season)
+			season, e := a.importSeason(ctx, in.Media, providerMedia, in.Season)
 			if e != nil {
 				return e
 			}
@@ -1612,13 +2129,29 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 		if f.Status != "ready" && f.Status != "already_imported" {
 			plan.State = "needs_review"
 			_ = a.Store.Put(ctx, "import_plan", plan.ID, plan)
-			in.ImportPlanID = plan.ID
-			_ = a.Store.Put(ctx, "intent", in.ID, *in)
+			if in.ChatWholeUnscoped {
+				if e = a.saveCompletedUnscopedPlan(ctx, in, plan, completedScope); e != nil {
+					return e
+				}
+			} else {
+				in.ImportPlanID = plan.ID
+				_ = a.Store.Put(ctx, "intent", in.ID, *in)
+			}
 			return bad("REVIEW_IMPORT_PLAN", "整理计划存在冲突，请在手动整理页核对")
 		}
 	}
-	in.ImportPlanID = plan.ID
-	if e = a.Store.Put(ctx, "intent", in.ID, *in); e != nil {
+	if seasonProof != nil && seasonProof.Magnet {
+		if e = a.saveCompletedSeasonMagnet(ctx, *in, seasonProof.Files); e != nil {
+			return e
+		}
+	}
+	if in.ChatWholeUnscoped {
+		e = a.saveCompletedUnscopedPlan(ctx, in, plan, completedScope)
+	} else {
+		in.ImportPlanID = plan.ID
+		e = a.Store.Put(ctx, "intent", in.ID, *in)
+	}
+	if e != nil {
 		return e
 	}
 	_, e = a.executeImport(ctx, plan.ID, nil)

@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"slices"
 	"sort"
 	"strings"
 	"syscall"
@@ -37,6 +38,9 @@ type ImportRequest struct {
 	originalDirectoryListings map[string][]map[string]any
 	originalSingleHistory     bool
 	originalResolvedMedia     json.RawMessage
+	originalRecoveredWhole    bool
+	originalRetry             bool
+	providerIdentity          catalog.Media
 	originalModulePreview     bool
 	directoryRule             *DirectoryRule
 	directorySelection        *nativeDirectorySelection
@@ -230,7 +234,8 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	if prepareErr != nil {
 		return ImportPlan{}, prepareErr
 	}
-	if !validMedia(request.MediaType, request.TMDBID) || len(request.Files) == 0 || len(request.Files) > 2000 || (request.Mode != "hardlink" && request.Mode != "copy" && request.Mode != "auto") || len(request.Mappings) > 100 {
+	providerImport := request.providerImport()
+	if (!providerImport && !validMedia(request.MediaType, request.TMDBID)) || len(request.Files) == 0 || len(request.Files) > 2000 || (request.Mode != "hardlink" && request.Mode != "copy" && request.Mode != "auto") || len(request.Mappings) > 100 {
 		return ImportPlan{}, bad("INVALID_IMPORT", "请选择明确影视身份、1–2000 个源文件及有效整理方式")
 	}
 	if request.TargetPath != "" {
@@ -278,7 +283,11 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	}
 	var identity catalog.Media
 	var originalMedia json.RawMessage
-	if len(request.originalResolvedMedia) > 0 {
+	if providerImport {
+		provider := originalChatMediaProvider{Source: request.providerIdentity.ProviderSource, ID: request.providerIdentity.ProviderID}
+		complete, e := originalChatProviderSearchInformation(request.originalResolvedMedia, &provider, request.MediaType)
+		identity, originalMedia, err = complete.Media, complete.MediaInfo, e
+	} else if len(request.originalResolvedMedia) > 0 {
 		complete, e := a.originalRecognitionProjection(catalog.Media{ID: request.TMDBID, MediaType: request.MediaType}, request.originalResolvedMedia)
 		identity, originalMedia, err = complete.Media, complete.MediaInfo, e
 	} else if a.originalTransferHasHandlers() {
@@ -390,7 +399,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		} else if file.Status == "ready" && file.DirectoryDigest == "" {
 			explicitSeason := requested.SeasonExplicit
 			nfoEpisodeID := requested.SourceEpisodeID
-			if inferred, numbering, reason := a.importNFOEvidence(file.Source); reason == "" && inferred != nil && inferred.Type == "tv" && inferred.ID == identity.ID && numbering != nil && numbering.Season != nil && len(numbering.Episodes) == 1 && len(file.Episodes) == 0 {
+			if inferred, numbering, reason := a.importNFOEvidence(file.Source); !providerImport && reason == "" && inferred != nil && inferred.Type == "tv" && inferred.ID == identity.ID && numbering != nil && numbering.Season != nil && len(numbering.Episodes) == 1 && len(file.Episodes) == 0 {
 				if !explicitSeason && file.Season == 0 || file.Season == *numbering.Season {
 					file.Season = *numbering.Season
 					file.Episodes = append([]int(nil), numbering.Episodes...)
@@ -412,7 +421,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				if seasonNumber > 0 && seasonNumber <= 1000 {
 					season, exists := seasons[seasonNumber]
 					if !exists {
-						season, err = a.season(ctx, identity.ID, seasonNumber)
+						season, err = a.importSeason(ctx, identity, originalMedia, seasonNumber)
 						if err != nil {
 							return ImportPlan{}, err
 						}
@@ -435,22 +444,24 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					}
 				}
 			}
-			if file.Season < 0 || file.Season == 0 && !explicitSeason || file.Season > 1000 || len(file.Episodes) != 1 || file.Episodes[0] < 1 {
+			multipleRecovered := providerImport && request.originalRecoveredWhole
+			if file.Season < 0 || file.Season == 0 && !explicitSeason || file.Season > 1000 ||
+				len(file.Episodes) == 0 || len(file.Episodes) > 1 && !multipleRecovered || file.Episodes[0] < 1 {
 				block("需要明确一个标准季集；特别篇须明确第0季，多集视频不能猜测拆分")
 			}
 			if file.Status == "ready" {
 				season, exists := seasons[file.Season]
 				if !exists {
-					season, err = a.season(ctx, identity.ID, file.Season)
+					season, err = a.importSeason(ctx, identity, originalMedia, file.Season)
 					if err != nil {
 						return ImportPlan{}, err
 					}
 					seasons[file.Season] = season
 				}
-				if file.Season == 0 && (season.ID <= 0 || season.SeriesID != identity.ID || season.SeasonNumber != 0) {
+				if !providerImport && file.Season == 0 && (season.ID <= 0 || season.SeriesID != identity.ID || season.SeasonNumber != 0) {
 					block("未取得对应剧集的 TMDB 第0季信息，请人工核对")
 				}
-				found := false
+				found := 0
 				for _, episode := range season.Episodes {
 					if file.Status != "ready" {
 						break
@@ -458,18 +469,26 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					// Fixed TmdbEpisode intentionally has no provider episode ID.
 					// A validated original module DTO establishes season/episode
 					// membership without inventing a native TMDB episode identity.
-					if episode.SeasonNumber == file.Season && episode.EpisodeNumber == file.Episodes[0] && (episode.ID > 0 || len(episode.OriginalEpisode) > 0) {
+					if episode.SeasonNumber == file.Season && slices.Contains(file.Episodes, episode.EpisodeNumber) && (providerImport || episode.ID > 0 || len(episode.OriginalEpisode) > 0) {
 						if nfoEpisodeID > 0 && episode.ID != nfoEpisodeID {
 							block("NFO 单集来源 ID 与 TMDB 季集不符，需人工核对")
 							break
 						}
-						meta.Episodes[file.ID] = episode
-						found = true
-						break
+						if episode.EpisodeNumber == file.Episodes[0] {
+							meta.Episodes[file.ID] = episode
+						}
+						found++
+						if found == len(file.Episodes) {
+							break
+						}
 					}
 				}
-				if !found {
-					block("TMDB 中没有该季集，需人工核对")
+				if found != len(file.Episodes) {
+					if providerImport {
+						block("所选影视来源中没有该季集，需人工核对")
+					} else {
+						block("TMDB 中没有该季集，需人工核对")
+					}
 				}
 			}
 		}
@@ -483,6 +502,8 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			folder := title
 			if identity.Year > 0 {
 				folder = fmt.Sprintf("%s (%d)", title, identity.Year)
+			} else if providerImport {
+				folder = fmt.Sprintf("%s (%s-%s)", title, identity.ProviderSource, identity.ProviderID)
 			} else {
 				folder = fmt.Sprintf("%s (tmdb-%d)", title, identity.ID)
 			}
@@ -495,6 +516,9 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			if request.MediaType == "tv" {
 				if file.DirectoryDigest == "" {
 					base = fmt.Sprintf("%s S%02dE%02d", title, file.Season, file.Episodes[0])
+					if len(file.Episodes) > 1 {
+						base += fmt.Sprintf("-E%02d", file.Episodes[len(file.Episodes)-1])
+					}
 				}
 				targetDir = filepath.Join(targetDir, fmt.Sprintf("Season %d", file.Season))
 			}
@@ -507,7 +531,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				// when smart naming is off, without title or Season subdirectories.
 				file.Target = filepath.Join(baseDir, filepath.Base(file.Source))
 			}
-			if a.originalTransferHasHandlers() || file.MaterialKind != "" || requested.originalResolvedMeta != nil {
+			if providerImport || a.originalTransferHasHandlers() || file.MaterialKind != "" || requested.originalResolvedMeta != nil {
 				metadataFile := file
 				if requested.originalMetadataPath != "" {
 					metadataFile.Source = requested.originalMetadataPath
@@ -522,7 +546,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				if meta.OriginalTransfer == nil {
 					meta.OriginalTransfer = map[string]originalTransferFileContext{}
 				}
-				if season, exists := seasons[file.Season]; exists {
+				if season, exists := seasons[file.Season]; !providerImport && exists {
 					rows := make([]map[string]any, 0, len(season.Episodes))
 					for _, episode := range season.Episodes {
 						raw := episode.OriginalEpisode
@@ -540,7 +564,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				meta.OriginalTransfer[file.ID] = original
 				if importBool(request.Renaming, true) && !request.originalModulePreview {
 					var episodes []catalog.Episode
-					if season, exists := seasons[file.Season]; exists {
+					if season, exists := seasons[file.Season]; !providerImport && exists {
 						episodes = season.Episodes
 					}
 					file.Target, e = a.originalTransferNativeRename(ctx, identity, file, baseDir, original, episodes, false)
@@ -563,7 +587,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				}
 				meta.Methods[file.ID] = file.Method
 				var episodes []catalog.Episode
-				if season, exists := seasons[file.Season]; exists {
+				if season, exists := seasons[file.Season]; !providerImport && exists {
 					episodes = season.Episodes
 				}
 				preview, callback, e := a.originalTransferModulePreview(ctx, plan, file, meta, request.directorySelection, baseDir, episodes)
@@ -688,7 +712,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 							sidecars[i].Original = &projection
 							if importBool(request.Renaming, true) {
 								var episodes []catalog.Episode
-								if season, exists := seasons[file.Season]; exists {
+								if season, exists := seasons[file.Season]; !providerImport && exists {
 									episodes = season.Episodes
 								}
 								path, e := a.originalTransferNativeRename(ctx, identity, extra, baseDir, projection, episodes, false)

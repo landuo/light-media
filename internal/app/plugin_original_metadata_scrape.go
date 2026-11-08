@@ -15,6 +15,7 @@ import (
 
 	"light-media/internal/catalog"
 	"light-media/internal/fileextensions"
+	"light-media/internal/plugins"
 	"light-media/internal/releasemeta"
 )
 
@@ -64,7 +65,18 @@ func (a *App) scrapeOriginalLocalMetadata(ctx context.Context, kwargs map[string
 	info := sourceMap(kwargs["mediainfo"])
 	if len(info) == 0 {
 		raw, err := a.originalCatalogRecognizeByMetaMethod(ctx, "recognize_media", meta, func(meta *releasemeta.MetaObject) (json.RawMessage, error) {
-			return a.originalMetadataRecognizeNative(ctx, meta)
+			if a.originalHostMediaRecognition.Source == "themoviedb" {
+				return a.originalMetadataRecognizeNative(ctx, meta)
+			}
+			fields, err := meta.ToDict()
+			if err != nil {
+				return nil, err
+			}
+			input, err := originalCatalogRecognitionMetaKwargs(fields)
+			if err != nil {
+				return nil, err
+			}
+			return a.originalHostMediaRecognizeNative(ctx, input)
 		})
 		if err != nil {
 			return err
@@ -110,15 +122,23 @@ func (a *App) scrapeOriginalLocalMetadata(ctx context.Context, kwargs map[string
 				return err
 			}
 			fields = sourceMap(canonical)
-			input, err := originalCatalogRecognitionCallKwargs(fields, map[string]any{"tmdbid": info["tmdb_id"], "episode_group": info["episode_group"]})
-			if err != nil {
-				return err
+			var raw json.RawMessage
+			if sourceSubscriptionTruth(info["tmdb_id"]) {
+				input, inputErr := originalCatalogRecognitionCallKwargs(fields, map[string]any{"tmdbid": info["tmdb_id"], "episode_group": info["episode_group"]})
+				if inputErr != nil {
+					return inputErr
+				}
+				raw, err = a.originalCatalogRecognizeMethod(ctx, "recognize_media", input, func() (json.RawMessage, error) {
+					id, _ := strconv.ParseInt(sourceNumberString(info["tmdb_id"]), 10, 64)
+					result, err := a.sourceRecognizeTMDBCore(ctx, catalog.Media{ID: id, MediaType: "tv"})
+					return result.MediaInfo, err
+				})
+			} else {
+				// A provider ID from the original import is not an explicit
+				// episode recognition argument. The parsed path supplies the
+				// title and season to the configured recognition module.
+				raw, err = a.originalHostMediaRecognize(ctx, plugins.MediaRecognizeRequest{Meta: fields, EpisodeGroup: sourceText(info["episode_group"])})
 			}
-			raw, err := a.originalCatalogRecognizeMethod(ctx, "recognize_media", input, func() (json.RawMessage, error) {
-				id, _ := strconv.ParseInt(sourceNumberString(info["tmdb_id"]), 10, 64)
-				result, err := a.sourceRecognizeTMDBCore(ctx, catalog.Media{ID: id, MediaType: "tv"})
-				return result.MediaInfo, err
-			})
 			if err != nil || !originalModuleResultTruthy(raw) {
 				return err
 			}
@@ -270,10 +290,18 @@ func (a *App) originalMetadataNativeNFO(ctx context.Context, raw json.RawMessage
 		return nil, err
 	}
 	fields := sourceMap(value)
-	if sourceSubscriptionTruth(fields["scrape_source"]) && fields["scrape_source"] != "themoviedb" {
+	scraper := a.originalMetadataScrapeSource(fields)
+	switch scraper {
+	case "bangumi", "anilist", "douban":
+		return originalProviderMetadataNFO(fields, scraper, season, episode)
+	case "themoviedb":
+	default:
 		return nil, nil
 	}
 	id, _ := strconv.ParseInt(sourceNumberString(fields["tmdb_id"]), 10, 64)
+	if id <= 0 {
+		return originalSparseTMDBMetadataNFO(fields, season, episode, a.Settings().TMDBImageDomain)
+	}
 	kind := "movie"
 	if fields["type"] != "电影" {
 		kind = "tv"
@@ -312,17 +340,38 @@ func (a *App) originalMetadataNativeNFO(ctx context.Context, raw json.RawMessage
 	return append(append([]byte(xml.Header), body...), '\n'), err
 }
 
+func (a *App) originalMetadataScrapeSource(info map[string]any) string {
+	if override := info["scrape_source"]; sourceSubscriptionTruth(override) {
+		return sourceText(override)
+	}
+	return a.originalHostMediaRecognition.ScrapeSource
+}
+
 // MediaChain.metadata_img is a system-only override. Calling the plugin module
 // of the same name here would add an extension point absent from the source.
-// Reuse the native TMDB image fields and season endpoint already used by scrape.
 func (a *App) scrapeOriginalMetadataImages(ctx context.Context, item, parent map[string]any, info map[string]any, season, episode any, overwrite bool) {
 	path := strings.TrimSuffix(sourceText(item["path"]), "/")
-	if sourceSubscriptionTruth(info["scrape_source"]) && info["scrape_source"] != "themoviedb" {
-		return
-	}
+	scraper := a.originalMetadataScrapeSource(info)
 	images := map[string]string{}
 	order := []string{}
-	if season == nil {
+	if scraper != "themoviedb" {
+		if (scraper != "bangumi" && scraper != "anilist" && scraper != "douban") || season != nil ||
+			episode != nil && (scraper != "douban" || sourceSubscriptionTruth(episode)) {
+			return
+		}
+		for _, field := range []string{"poster", "backdrop"} {
+			address := sourceText(info[field+"_path"])
+			if address == "" {
+				continue
+			}
+			ext := filepath.Ext(address)
+			if scraper != "douban" {
+				ext = originalProviderMetadataImageExtension(address)
+			}
+			name := field + ext
+			images[name], order = address, append(order, name)
+		}
+	} else if season == nil {
 		if sourceSubscriptionTruth(info["tmdb_id"]) && !(sourceSubscriptionTruth(info["poster_path"]) && sourceSubscriptionTruth(info["backdrop_path"])) {
 			id, _ := strconv.ParseInt(sourceNumberString(info["tmdb_id"]), 10, 64)
 			kind := "movie"
@@ -366,6 +415,9 @@ func (a *App) scrapeOriginalMetadataImages(ctx context.Context, item, parent map
 	} else {
 		id, _ := strconv.ParseInt(sourceNumberString(info["tmdb_id"]), 10, 64)
 		seasonNumber, _ := strconv.Atoi(sourceStringValue(season))
+		if id <= 0 {
+			return
+		}
 		details, err := a.nativeSeason(ctx, id, seasonNumber)
 		if err == nil {
 			imagePath, name := details.PosterPath, fmt.Sprintf("season%02d-poster", seasonNumber)
@@ -448,6 +500,16 @@ func (a *App) scrapeOriginalMetadataImages(ctx context.Context, item, parent map
 			}
 		}
 	}
+}
+
+func originalProviderMetadataImageExtension(address string) string {
+	if parsed, err := url.Parse(address); err == nil {
+		switch ext := strings.ToLower(filepath.Ext(parsed.Path)); ext {
+		case ".jpg", ".jpeg", ".png", ".webp":
+			return ext
+		}
+	}
+	return ".jpg"
 }
 
 func (a *App) fetchOriginalMetadataImage(ctx context.Context, path, imageURL, target string, overwrite bool) error {

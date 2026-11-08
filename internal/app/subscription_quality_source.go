@@ -2,14 +2,14 @@ package app
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"time"
 )
 
-// This is the native subscription row's source-shaped projection. Unsupported
-// alternative providers/episode groups retain the original nullable columns;
-// they are not inferred from a title or from a compact media search result.
+// This is the native subscription row's source-shaped projection. It emits
+// only identities already bound to the saved subscription.
 func (a *App) subscriptionSourceProjection(ctx context.Context, s Subscription) (json.RawMessage, error) {
 	return a.subscriptionSourceProjectionFrom(ctx, a.Store.DB, s)
 }
@@ -52,6 +52,17 @@ func (a *App) subscriptionSourceProjectionReferences(ctx context.Context, q Plug
 		row["imdbid"] = nil
 	}
 	row["media_source"], row["media_id"], row["mediaid"] = "themoviedb", fmt.Sprint(s.Media.ID), nil
+	if providerNativeMedia(s.Media) {
+		row["tmdbid"], row["media_source"], row["media_id"] = nil, s.Media.ProviderSource, s.Media.ProviderID
+		switch s.Media.ProviderSource {
+		case "douban":
+			row["doubanid"] = s.Media.ProviderID
+		case "bangumi":
+			row["bangumiid"] = json.Number(s.Media.ProviderID)
+		case "anilist":
+			row["anilistid"] = json.Number(s.Media.ProviderID)
+		}
+	}
 	row["season"], row["poster"], row["backdrop"] = s.Season, s.Media.PosterPath, s.Media.BackdropPath
 	if s.Media.MediaType == "movie" {
 		row["season"] = nil
@@ -75,7 +86,18 @@ func (a *App) subscriptionSourceProjectionReferences(ctx context.Context, q Plug
 		if e != nil {
 			return nil, e
 		}
-		sites = append(sites, identity.SourceID)
+		reader, ok := q.(interface {
+			PluginProofReader
+			QueryContext(context.Context, string, ...any) (*sql.Rows, error)
+		})
+		if !ok {
+			return nil, nativeSourceSiteError()
+		}
+		sourceID, e := a.Store.nativeSourcePublicSiteID(ctx, reader, identity)
+		if e != nil {
+			return nil, e
+		}
+		sites = append(sites, sourceID)
 	}
 	row["sites"] = sites
 	if s.DownloaderID != "" {

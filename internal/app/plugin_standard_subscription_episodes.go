@@ -20,6 +20,14 @@ func (a *App) applyStandardSubscriptionEpisodes(ctx context.Context, current, se
 	data := map[string]any{"tmdbid": media["tmdb_id"], "doubanid": media["douban_id"], "bangumiid": media["bangumi_id"], "anilistid": media["anilist_id"], "media_source": media["source"], "media_id": nil, "season": season, "mediainfo": value, "current_total_episode": current, "subscribe_id": subscriptionID, "scene": scene, "updated": false, "total_episode": nil, "source": "未知来源", "reason": ""}
 	if data["media_source"] == "themoviedb" {
 		data["media_id"] = sourceNumberString(media["tmdb_id"])
+	} else {
+		provider := originalChatMediaProvider{Source: sourceText(media["source"]), ID: sourceStringValue(media["media_id"])}
+		if provider.ID == "" {
+			provider.ID = sourceStringValue(media[provider.field()])
+		}
+		if provider.sourceOnly() {
+			data["media_id"] = provider.ID
+		}
 	}
 	event := plugins.MutableEvent{Type: "subscribe.episodes.refresh", Data: mustCleanSeedJSON(data)}
 	if !a.sendOriginalChainEvent(ctx, &event) || !originalBaseJSONTruthy(event.Data) {

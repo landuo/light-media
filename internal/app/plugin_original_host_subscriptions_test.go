@@ -157,7 +157,7 @@ func TestOriginalHostBusinessSettingsActualSDKLiveParserAndColdPersistence(t *te
 	if err := hostBusinessCall(t, worker, plugins.SettingsWriteCapability, plugins.SettingsHostWriteV1{Key: "CustomIdentifiers", Value: json.RawMessage(`["Owned => Renamed"]`)}, &result); err != nil || result.Changed != nil {
 		t.Fatal("source equal set must return None", err)
 	}
-	for _, key := range []string{"API_TOKEN", "AI_MODELS", "WORKFLOWS", "UserInstalledPlugins"} {
+	for _, key := range []string{"API_TOKEN", "AI_MODELS", "WORKFLOWS"} {
 		if err := hostBusinessCall(t, worker, plugins.SettingsWriteCapability, plugins.SettingsHostWriteV1{Key: key, Value: json.RawMessage(`[]`)}, &result); err == nil {
 			t.Fatal("non-resource setting accepted", key)
 		}

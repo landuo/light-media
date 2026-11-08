@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"regexp"
+	"strconv"
 	"time"
 )
 
@@ -52,6 +53,24 @@ const domainEventSchema = `CREATE TABLE IF NOT EXISTS domain_events(seq INTEGER 
 var domainEventIDPattern = regexp.MustCompile(`^evt_[a-f0-9]{64}$`)
 var domainReferencePattern = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$`)
 var domainMediaPattern = regexp.MustCompile(`^(movie|tv):[1-9][0-9]{0,9}$`)
+var domainProviderMediaPattern = regexp.MustCompile(`^(?:movie|tv):(?:douban|bangumi|anilist):([1-9][0-9]{0,18})$`)
+
+func validDomainMediaID(eventType, key string) bool {
+	if domainMediaPattern.MatchString(key) {
+		return true
+	}
+	switch eventType {
+	case "subscription.added", "subscription.completed", "download.accepted", "download.completed", "import.completed", "scrape.completed", "library.visible":
+	default:
+		return false
+	}
+	match := domainProviderMediaPattern.FindStringSubmatch(key)
+	if len(match) == 0 {
+		return false
+	}
+	_, err := strconv.ParseInt(match[1], 10, 64)
+	return err == nil
+}
 
 func domainEventID(eventType, stableID string) string {
 	sum := sha256.Sum256([]byte("v1\x00" + eventType + "\x00" + stableID))
@@ -164,17 +183,17 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 		}
 		subject, kind = in.SiteID, "site"
 	case "subscription.added", "subscription.completed":
-		if in.SubscriptionID == "" || !domainMediaPattern.MatchString(in.MediaID) {
+		if in.SubscriptionID == "" || !validDomainMediaID(in.Type, in.MediaID) {
 			return invalid()
 		}
 		subject, kind = in.SubscriptionID, "subscription"
 	default:
 		return invalid()
 	}
-	if in.Type != "job.failed" && in.Type != "site.refreshed" && in.Type != "subscription.added" && in.NativeDownloadID == "" && (in.WorkflowID == "" || !domainMediaPattern.MatchString(in.MediaID)) {
+	if in.Type != "job.failed" && in.Type != "site.refreshed" && in.Type != "subscription.added" && in.NativeDownloadID == "" && (in.WorkflowID == "" || !validDomainMediaID(in.Type, in.MediaID)) {
 		return invalid()
 	}
-	if in.MediaID != "" && !domainMediaPattern.MatchString(in.MediaID) {
+	if in.MediaID != "" && !validDomainMediaID(in.Type, in.MediaID) {
 		return invalid()
 	}
 	if in.SubjectID == "" {

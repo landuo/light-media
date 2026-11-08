@@ -86,7 +86,7 @@ func (a *App) reportOriginalSiteModuleFailure(ctx context.Context, err error) {
 func originalSiteUserDataStats(d *sites.SourceUserData) sites.UserStats {
 	s := sites.UserStats{Uploaded: &d.Upload, Downloaded: &d.Download, Ratio: &d.Ratio, Bonus: &d.Bonus, Seeding: &d.Seeding, Leeching: &d.Leeching, SeedingBytes: &d.SeedingSize, LeechingBytes: &d.LeechingSize, SeedingInfo: d.SeedingInfo, MessageUnread: &d.MessageUnread, Error: d.Error, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Sources: map[string]string{}, Warnings: []string{}}
 	for key, field := range map[string]**int64{"upload": &s.Uploaded, "download": &s.Downloaded, "seeding": &s.Seeding, "leeching": &s.Leeching, "seeding_size": &s.SeedingBytes, "leeching_size": &s.LeechingBytes, "message_unread": &s.MessageUnread} {
-		if d.SourceFieldNull(key) {
+		if d.SourceFieldNull(key) || !d.SourceIntegerRepresentable(key) {
 			*field = nil
 		}
 	}

@@ -268,6 +268,16 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 	if implementation.External {
 		response, err := a.callOriginalExternalHTTP(r.Context(), installation, *api, input, authority)
 		if err != nil {
+			var cancelled *APIError
+			if errors.As(err, &cancelled) && cancelled.Code == "PLUGIN_API_REQUEST_CANCELLED" {
+				// Exact source H11 send_500_response body: no trailing newline.
+				// The already-admitted synchronous method continues separately.
+				w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+				w.Header().Set("Connection", "close")
+				w.WriteHeader(http.StatusInternalServerError)
+				_, _ = w.Write([]byte("Internal Server Error"))
+				return true
+			}
 			status := 502
 			var failure *APIError
 			if errors.As(err, &failure) && failure.Code == "PLUGIN_API_AUTH_REVOKED" {

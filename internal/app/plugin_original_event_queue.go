@@ -17,6 +17,7 @@ type originalQueuedBroadcast struct {
 	// A native producer may already have performed its concrete core consumer.
 	// Keep this queue fact outside callback contexts and SDK-visible event data.
 	coreConsumed bool
+	refresh      *originalFNOSRefreshEvent
 }
 
 type originalBroadcastHeap []originalQueuedBroadcast
@@ -71,13 +72,17 @@ func (a *App) enqueueOriginalBroadcast(ctx context.Context, event plugins.Mutabl
 }
 
 func (a *App) enqueueOriginalBroadcastCoreState(ctx context.Context, event plugins.MutableEvent, consumed bool) bool {
+	return a.enqueueOriginalBroadcastWithRefresh(ctx, event, consumed, nil)
+}
+
+func (a *App) enqueueOriginalBroadcastWithRefresh(ctx context.Context, event plugins.MutableEvent, consumed bool, refresh *originalFNOSRefreshEvent) bool {
 	if !a.admitOriginalBackground() {
 		return false
 	}
 	state := &a.pluginOriginalBroadcast
 	state.mu.Lock()
 	state.sequence++
-	heap.Push(&state.pending, originalQueuedBroadcast{ctx: context.WithoutCancel(ctx), event: event, sequence: state.sequence, coreConsumed: consumed})
+	heap.Push(&state.pending, originalQueuedBroadcast{ctx: context.WithoutCancel(ctx), event: event, sequence: state.sequence, coreConsumed: consumed, refresh: refresh})
 	start := !state.running
 	state.running = true
 	state.mu.Unlock()
@@ -98,7 +103,7 @@ func (a *App) drainOriginalBroadcasts() {
 		}
 		next := heap.Pop(&state.pending).(originalQueuedBroadcast)
 		state.mu.Unlock()
-		a.dispatchOriginalBroadcast(next.ctx, next.event, next.coreConsumed)
+		a.dispatchOriginalBroadcast(next.ctx, next.event, next.coreConsumed, next.refresh)
 		// Release the last entry only after publishing the idle state. A caller
 		// waiting for all admitted work must not race an untracked drain loop.
 		state.mu.Lock()

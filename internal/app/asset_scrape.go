@@ -127,7 +127,8 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 	if !within(root.Path, asset.Path) {
 		return bad("REVIEW_ROOT_CHANGED", "资产路径不在配置库内")
 	}
-	if _, err = snapshotTransferPath(asset.Path); err != nil {
+	stamp, err := snapshotTransferPath(asset.Path)
+	if err != nil {
 		return bad("REVIEW_ASSET_MISSING", "视频不可访问，不能标记刮削成功")
 	}
 	if err = a.jobCancelled(ctx, job); err != nil {
@@ -158,6 +159,12 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 	}
 	if len(job.Payload) != 0 {
 		if err = json.Unmarshal(job.Payload, &inherited); err != nil {
+			return err
+		}
+	}
+	if providerNativeMedia(asset.Media) && !originalModuleResultTruthy(inherited.Event) {
+		inherited.Event, err = a.providerAssetScrapeEvent(ctx, asset, root, stamp)
+		if err != nil {
 			return err
 		}
 	}
@@ -316,7 +323,15 @@ func (a *App) finishAssetScrape(ctx context.Context, job Job, asset *Asset) erro
 		return err
 	}
 	if fnosEnabled {
-		if _, err = enqueueTx(ctx, tx, "fnos_sync", map[string]string{"id": asset.ID}, job.WorkflowID); err != nil {
+		payload := map[string]string{"id": asset.ID}
+		var source struct {
+			Metadata json.RawMessage `json:"original_metadata_event"`
+		}
+		_ = json.Unmarshal(job.Payload, &source)
+		if asset.FNOSRefreshTransfer != "" && (job.ParentJobID != "" || len(source.Metadata) > 0) {
+			payload["original_fnos_transfer"] = asset.FNOSRefreshTransfer
+		}
+		if _, err = enqueueTx(ctx, tx, "fnos_sync", payload, job.WorkflowID); err != nil {
 			var api *APIError
 			if !errors.As(err, &api) || api.Code != "JOB_EXISTS" {
 				return err
@@ -600,6 +615,22 @@ func (a *App) runFNOSSync(ctx context.Context, job Job, assetID string) (returnE
 			actual = mapped
 		}
 	}
+	pluginOwnsScan := false
+	// Only the follow-up created for this transfer can borrow its owner.
+	var origin struct {
+		Transfer string `json:"original_fnos_transfer"`
+	}
+	_ = json.Unmarshal(job.Payload, &origin)
+	if origin.Transfer != "" && origin.Transfer == asset.FNOSRefreshTransfer {
+		pending, owned, err := a.originalFNOSRefreshDisposition(ctx, asset, configuration)
+		if err != nil {
+			return err
+		}
+		if pending {
+			return bad("PLUGIN_REFRESH_PENDING", "等待媒体服务器刷新插件提交飞牛扫描")
+		}
+		pluginOwnsScan = owned
+	}
 	service, err := fnos.NewService(fnos.Config{Host: configuration.Host, Username: configuration.Username, Password: configuration.Password})
 	if err != nil {
 		return err
@@ -640,7 +671,7 @@ func (a *App) runFNOSSync(ctx context.Context, job Job, assetID string) (returnE
 	}
 	scope := libraryGUID + ":" + filepath.ToSlash(scanDirectory)
 	lastScan, _ := time.Parse(time.RFC3339Nano, asset.FNOSScanAt)
-	if asset.FNOSScanScope != scope || lastScan.IsZero() || time.Since(lastScan) >= 2*time.Minute {
+	if !pluginOwnsScan && (asset.FNOSScanScope != scope || lastScan.IsZero() || time.Since(lastScan) >= 2*time.Minute) {
 		if err = service.Scan(ctx, libraryGUID, filepath.ToSlash(scanDirectory)); err != nil {
 			return err
 		}

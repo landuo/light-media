@@ -21,8 +21,9 @@ type SettingsHostRequestV1 struct {
 	Key string `json:"key"`
 }
 type SettingsHostWriteV1 struct {
-	Key   string          `json:"key"`
-	Value json.RawMessage `json:"value"`
+	Key                      string          `json:"key"`
+	Value                    json.RawMessage `json:"value"`
+	ReplaceRemoteIdentifiers bool            `json:"replace_remote_identifiers,omitempty"`
 }
 type SettingsHostResultV1 struct {
 	SchemaVersion int             `json:"schema_version"`
@@ -41,12 +42,23 @@ func (s SystemSettings) Get(ctx context.Context, key string) (SettingsHostResult
 	return out, err
 }
 func (s SystemSettings) Set(ctx context.Context, key string, value any) (SettingsHostResultV1, error) {
+	return s.set(ctx, key, value, false)
+}
+
+// ReplaceRemoteIdentifiers publishes one fully collected remote suffix. The
+// host retains the latest user prefix in the same recognition-store transaction.
+func (s SystemSettings) ReplaceRemoteIdentifiers(ctx context.Context, words []string) (SettingsHostResultV1, error) {
+	return s.set(ctx, "CustomIdentifiers", words, true)
+}
+
+func (s SystemSettings) set(ctx context.Context, key string, value any, replaceRemoteIdentifiers bool) (SettingsHostResultV1, error) {
 	var out SettingsHostResultV1
 	raw, err := json.Marshal(value)
 	if err != nil {
 		return out, err
 	}
-	err = hostBusinessCall(ctx, s.Host, SettingsWriteCapability, SettingsHostWriteV1{key, raw}, &out)
+	request := SettingsHostWriteV1{Key: key, Value: raw, ReplaceRemoteIdentifiers: replaceRemoteIdentifiers}
+	err = hostBusinessCall(ctx, s.Host, SettingsWriteCapability, request, &out)
 	if err == nil && (out.SchemaVersion != 1 || out.Key != key || !json.Valid(out.Value)) {
 		err = errors.New("invalid system setting response")
 	}

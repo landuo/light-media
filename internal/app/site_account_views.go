@@ -21,6 +21,10 @@ type siteAccountView struct {
 }
 
 func (a *App) recordSiteAccountObservationTx(ctx context.Context, tx *sql.Tx, site SiteConfig, snapshot siteSnapshot) error {
+	return a.recordSiteAccountObservationTxMode(ctx, tx, site, snapshot, false)
+}
+
+func (a *App) recordSiteAccountObservationTxMode(ctx context.Context, tx *sql.Tx, site SiteConfig, snapshot siteSnapshot, source bool) error {
 	if snapshot.SiteID != site.ID || snapshot.ConfigKey != a.managedSiteKey(site) {
 		return invalidSiteAccountSnapshot()
 	}
@@ -47,7 +51,21 @@ func (a *App) recordSiteAccountObservationTx(ctx context.Context, tx *sql.Tx, si
 			break
 		}
 	}
+	if source && !exists && snapshot.SourceData != nil {
+		// Source current return/message DTO remains separate from the stored
+		// INSERT model's scalar defaults. Existing-row UPDATE preserves null.
+		cloned, err := snapshot.SourceData.SourceAccountInsertClone()
+		if err != nil {
+			return err
+		}
+		snapshot.SourceData = cloned
+	}
 	if data.Error == "" || !exists {
+		if snapshot.SourceData != nil {
+			if err := snapshot.SourceData.ValidateSourceAccountBinding(); err != nil {
+				return err
+			}
+		}
 		if err = a.Store.putSiteAccountSnapshotTx(ctx, tx, "site_stats_history", site.ID+":"+data.UpdatedDay, snapshot); err != nil {
 			return err
 		}

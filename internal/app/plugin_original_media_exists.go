@@ -65,6 +65,9 @@ func (a *App) resolveOriginalSubscriptionExistence(ctx context.Context, s Subscr
 }
 
 func (a *App) originalNativeSubscriptionExistence(ctx context.Context, s Subscription) (json.RawMessage, error) {
+	if !validMedia(s.Media.MediaType, s.Media.ID) && !providerNativeMedia(s.Media) {
+		return json.RawMessage(`null`), nil
+	}
 	rows, err := a.Store.DB.QueryContext(ctx, `SELECT season,episode FROM asset_slots WHERE media_key=? ORDER BY season,episode`, mediaKey(s.Media))
 	if err != nil {
 		return nil, err

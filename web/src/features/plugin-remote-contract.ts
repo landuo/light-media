@@ -9,6 +9,7 @@ export type PluginComponentName = string;
 export function validPluginComponent(value: unknown): value is string {
   return typeof value === 'string' && /^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(value);
 }
+const pluginSharedModules = ['vue', 'vuetify', 'vuetify/styles'] as const;
 export type PluginFrontendDescriptor = {
   instance_id: string;
   plugin_id: string;
@@ -16,17 +17,18 @@ export type PluginFrontendDescriptor = {
   package_sha256: string;
   contract: typeof pluginFrontendContract;
   exposes: PluginComponentName[];
-  shared: ('vue' | 'vuetify')[];
+  shared: (typeof pluginSharedModules)[number][];
   api_contract: typeof pluginAPIContract;
   entry_path: string;
 };
 export function validPluginInstance(value: unknown): value is string {
   return typeof value === 'string' && new TextEncoder().encode(value).length <= 255 && /^[\p{L}\p{N}][^/\\\p{Cc}\p{Cf}\p{Zl}\p{Zp}]*$/u.test(value);
 }
-function stringSubset(value: unknown, allowed: readonly string[]) {
-  return Array.isArray(value) && value.length > 0 &&
-    value.every((item) => typeof item === 'string' && allowed.includes(item)) &&
-    new Set(value).size === value.length;
+export function validPluginSharedModules(value: unknown): value is PluginFrontendDescriptor['shared'] {
+  return Array.isArray(value) && value.includes('vue') &&
+    value.every((item) => pluginSharedModules.includes(item)) &&
+    new Set(value).size === value.length &&
+    (!value.includes('vuetify/styles') || value.includes('vuetify'));
 }
 export function parsePluginFrontendDescriptor(
   value: unknown,
@@ -45,7 +47,7 @@ export function parsePluginFrontendDescriptor(
   if (item.contract !== pluginFrontendContract || item.api_contract !== pluginAPIContract ||
       !Array.isArray(item.exposes) || item.exposes.length === 0 || item.exposes.length > 64 ||
       !item.exposes.every(validPluginComponent) || new Set(item.exposes).size !== item.exposes.length ||
-      !stringSubset(item.shared, ['vue', 'vuetify']) || !item.shared.includes('vue'))
+      !validPluginSharedModules(item.shared))
     throw new Error('插件界面契约不受支持');
   if (!validPluginComponent(name) || !item.exposes.includes(name))
     throw new Error('插件未声明此界面组件：' + name);

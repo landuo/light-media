@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"light-media/internal/commandrouter"
+	"slices"
 )
 
 // getCommands reads the already initialized native object's actual state and
@@ -49,6 +50,9 @@ func (a *App) initOriginalPluginCommands(requested ...string) {
 				continue
 			}
 			object := loaded.(*originalPluginInstance)
+			if !slices.Contains(object.manifest.Methods, "get_command") {
+				continue
+			}
 			enabled, err := object.getState(context.Background())
 			if err != nil {
 				a.log("ERROR", "plugins", "commands_failed", "读取插件状态失败", "", "")

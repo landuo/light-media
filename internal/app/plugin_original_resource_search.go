@@ -108,7 +108,11 @@ func (a *App) originalResourceSiteFields(ctx context.Context, site SiteConfig) (
 			return nil, err
 		}
 	}
-	fields := map[string]any{"id": identity.SourceID, "name": site.Name, "domain": domain, "url": site.BaseURL, "cookie": nullable(site.Cookie), "ua": nullable(site.UserAgent), "apikey": nullable(site.APIKey), "token": nullable(site.Token), "rss": nullable(site.RSS), "proxy": flag(site.Proxy), "render": flag(site.Render), "public": flag(site.Public), "pri": site.Priority, "downloader": nullable(site.Downloader), "filter": nullable(site.Filter), "note": note, "limit_interval": site.LimitInterval, "limit_count": site.LimitCount, "limit_seconds": site.LimitSeconds, "timeout": site.Timeout, "is_active": site.Enabled}
+	sourceID, err := a.Store.nativeSourcePublicSiteID(ctx, a.Store.DB, identity)
+	if err != nil {
+		return nil, err
+	}
+	fields := map[string]any{"id": sourceID, "name": site.Name, "domain": domain, "url": site.BaseURL, "cookie": nullable(site.Cookie), "ua": nullable(site.UserAgent), "apikey": nullable(site.APIKey), "token": nullable(site.Token), "rss": nullable(site.RSS), "proxy": flag(site.Proxy), "render": flag(site.Render), "public": flag(site.Public), "pri": site.Priority, "downloader": nullable(site.Downloader), "filter": nullable(site.Filter), "note": note, "limit_interval": site.LimitInterval, "limit_count": site.LimitCount, "limit_seconds": site.LimitSeconds, "timeout": site.Timeout, "is_active": site.Enabled}
 	if site.Kind == "mteam" {
 		fields["parser"] = "mTorrent"
 	}
@@ -168,7 +172,7 @@ func (a *App) originalResourceFromSourceTorrent(ctx context.Context, fallback Si
 		if err != nil || number == 0 {
 			return fail()
 		}
-		identity, err := a.Store.nativeSiteByID(ctx, number)
+		identity, err := a.Store.nativeSiteByPublicSourceID(ctx, number)
 		if err != nil {
 			return fail()
 		}

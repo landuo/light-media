@@ -196,26 +196,25 @@ func (c *Client) Search(ctx context.Context, query string, page int) (SearchResu
 // Torrent takes a stable numeric site ID, never a caller supplied URL. The
 // tracker passkey remains in metainfo and is delivered only to the downloader.
 func (c *Client) Torrent(ctx context.Context, resourceID string) ([]byte, error) {
+	return c.torrent(ctx, resourceID, false, false)
+}
+
+// SubscriptionTorrent keeps local admission failures distinct from a tracker
+// response that conclusively failed to supply material.
+func (c *Client) SubscriptionTorrent(ctx context.Context, resourceID string) ([]byte, error) {
+	return c.torrent(ctx, resourceID, false, true)
+}
+
+// BrushTorrent adds only the ordinary NexusPHP download-tip bypass requested
+// by BrushFlow. Specialized material providers retain their own token paths.
+func (c *Client) BrushTorrent(ctx context.Context, resourceID string, skipTips bool) ([]byte, error) {
+	return c.torrent(ctx, resourceID, skipTips, false)
+}
+
+func (c *Client) torrent(ctx context.Context, resourceID string, skipTips, subscription bool) ([]byte, error) {
 	ctx = logging.SiteContext(ctx, c.config.ID)
-	if !numericID.MatchString(resourceID) {
-		return nil, errors.New("site_invalid_resource_id")
-	}
 	ctx, _ = logging.Target(ctx, "material")
-	var u *url.URL
-	headers := c.auth()
-	var err error
-	if c.config.Kind == "mteam" {
-		u, err = c.mteamTorrentURL(ctx, resourceID)
-		headers = nil // Token URLs and the CDN must never receive API credentials.
-	} else if c.config.Kind == "rousi" {
-		u, err = c.rousiTorrentURL(ctx, resourceID)
-		headers = nil
-	} else if c.config.Kind == "hhanclub" {
-		u, err = c.hhanTorrentURL(ctx, resourceID)
-	} else {
-		u = c.endpoint("download.php")
-		u.RawQuery = url.Values{"id": {resourceID}}.Encode()
-	}
+	u, headers, err := c.torrentRequest(ctx, resourceID, skipTips)
 	if err != nil {
 		return nil, err
 	}
@@ -229,15 +228,55 @@ func (c *Client) Torrent(ctx context.Context, resourceID string) ([]byte, error)
 		if !c.allowedMaterial(next) {
 			return nil, errors.New("site_material_redirect_blocked")
 		}
-		b, _, err = c.request(ctx, http.MethodGet, next, nil, nil, torrentLimit)
+		u, headers = next, nil
+		b, _, err = c.request(ctx, http.MethodGet, u, nil, headers, torrentLimit)
 	}
 	if err != nil {
+		var response *siteHTTPResponseError
+		if subscription && errors.As(err, &response) && subscriptionMaterialHTTPFailure(response.status) {
+			return nil, markSubscriptionMaterialFailure(err)
+		}
 		return nil, err
 	}
+	if subscription {
+		b, err = c.confirmSubscriptionTorrent(ctx, u, headers, b)
+		if err != nil {
+			return nil, err
+		}
+	}
 	if _, err = metainfo.ProductInspect(b); err != nil {
-		return nil, errors.New("site_invalid_metainfo")
+		err = errors.New("site_invalid_metainfo")
+		if subscription && !bytes.HasPrefix(b, []byte("magnet:")) {
+			err = markSubscriptionMaterialFailure(err)
+		}
+		return nil, err
 	}
 	return b, nil
+}
+
+func (c *Client) torrentRequest(ctx context.Context, resourceID string, skipTips bool) (*url.URL, map[string]string, error) {
+	if !numericID.MatchString(resourceID) {
+		return nil, nil, errors.New("site_invalid_resource_id")
+	}
+	switch c.config.Kind {
+	case "mteam":
+		u, err := c.mteamTorrentURL(ctx, resourceID)
+		return u, nil, err // The signed URL and CDN never receive API credentials.
+	case "rousi":
+		u, err := c.rousiTorrentURL(ctx, resourceID)
+		return u, nil, err
+	case "hhanclub":
+		u, err := c.hhanTorrentURL(ctx, resourceID)
+		return u, c.auth(), err
+	default:
+		u := c.endpoint("download.php")
+		query := url.Values{"id": {resourceID}}
+		if skipTips {
+			query.Set("letdown", "1")
+		}
+		u.RawQuery = query.Encode()
+		return u, c.auth(), nil
+	}
 }
 
 func (c *Client) endpoint(path string) *url.URL {
@@ -255,6 +294,10 @@ func (c *Client) auth() map[string]string {
 }
 
 func (c *Client) request(ctx context.Context, method string, u *url.URL, body []byte, headers map[string]string, limit int64) ([]byte, string, error) {
+	return c.requestWithBrushReply(ctx, method, u, body, headers, limit, nil)
+}
+
+func (c *Client) requestWithBrushReply(ctx context.Context, method string, u *url.URL, body []byte, headers map[string]string, limit int64, reply *BrushRecipeResponse) ([]byte, string, error) {
 	if (len(headers) > 0 || c.config.Kind == "nexusphp") && !sameOrigin(u, c.base) {
 		return nil, "", errors.New("site_credential_origin_mismatch")
 	}
@@ -289,6 +332,11 @@ func (c *Client) request(ctx context.Context, method string, u *url.URL, body []
 		return nil, "", errors.New("site_transport_error")
 	}
 	defer res.Body.Close()
+	if reply != nil {
+		reply.Status = res.StatusCode
+		reply.ContentType = res.Header.Get("Content-Type")
+		reply.ContentEncoding = res.Header.Get("Content-Encoding")
+	}
 	if trace := sourceStatsTrace(ctx); trace != nil {
 		trace.status = res.StatusCode
 		trace.contentType = res.Header.Get("Content-Type")
@@ -298,15 +346,15 @@ func (c *Client) request(ctx context.Context, method string, u *url.URL, body []
 	sourceBody := sourceStatsTrace(ctx) != nil && (res.StatusCode == 403 || res.StatusCode == 500)
 	switch {
 	case res.StatusCode == 401:
-		return nil, "", errors.New("site_authentication_failed")
+		return nil, "", &siteHTTPResponseError{status: res.StatusCode, message: "site_authentication_failed"}
 	case res.StatusCode == 403 && !sourceBody:
-		return nil, "", errors.New("site_forbidden_or_challenge")
+		return nil, "", &siteHTTPResponseError{status: res.StatusCode, message: "site_forbidden_or_challenge"}
 	case res.StatusCode == 429:
-		return nil, "", errors.New("site_rate_limited")
-	case res.StatusCode >= 300 && res.StatusCode < 400:
+		return nil, "", &siteHTTPResponseError{status: res.StatusCode, message: "site_rate_limited"}
+	case res.StatusCode >= 300 && res.StatusCode < 400 && (reply == nil || brushRecipeRedirect(res.StatusCode) && res.Header.Get("Location") != ""):
 		return nil, res.Header.Get("Location"), errors.New("site_redirect_blocked")
-	case (res.StatusCode < 200 || res.StatusCode >= 300) && !sourceBody:
-		return nil, "", errors.New("site_http_error")
+	case (res.StatusCode < 200 || res.StatusCode >= 300 && reply == nil || res.StatusCode >= 400) && !sourceBody:
+		return nil, "", &siteHTTPResponseError{status: res.StatusCode, message: "site_http_error"}
 	}
 	b, err := io.ReadAll(io.LimitReader(res.Body, limit+1))
 	if err != nil {

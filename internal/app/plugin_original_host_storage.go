@@ -13,7 +13,7 @@ import (
 )
 
 func originalHostStorageCapability(method string) bool {
-	return method == plugins.StorageExistsCapability || method == plugins.StorageListCapability || method == plugins.StorageDeleteCapability
+	return method == plugins.StorageExistsCapability || method == plugins.StorageListCapability || method == plugins.StorageDeleteCapability || method == plugins.StorageLocalReadGrantCapability || method == originalScrapeCleanRemoveCapability
 }
 
 func originalHostNestedModuleScope(scope originalBaseCallScope) error {
@@ -44,15 +44,21 @@ func (a *App) originalHostStorageResource(ctx context.Context, scope originalBas
 	if err != nil {
 		var api *APIError
 		if errors.As(err, &api) {
-			a.writeOriginalPluginCallLog(scope.installation, scope.logCall, "ERROR", "storage_host_"+api.Code, "存储宿主调用失败："+api.Code)
+			a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "storage_host_"+api.Code, "存储宿主调用失败："+api.Code)
 		} else if !errors.Is(err, context.Canceled) && !errors.Is(err, context.DeadlineExceeded) {
-			a.writeOriginalPluginCallLog(scope.installation, scope.logCall, "ERROR", "storage_host_failed", "存储宿主文件操作失败")
+			a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "storage_host_failed", "存储宿主文件操作失败")
 		}
 	}
 	return result, err
 }
 
 func (a *App) originalHostStorageCall(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (json.RawMessage, error) {
+	if method == plugins.StorageLocalReadGrantCapability {
+		return a.originalHostLocalReadGrant(ctx, scope, raw)
+	}
+	if method == originalScrapeCleanRemoveCapability {
+		return a.originalHostScrapeCleanResource(ctx, scope, raw)
+	}
 	var request plugins.StorageFilesRequest
 	if err := originalResourceDecode(raw, &request); err != nil {
 		return nil, err
@@ -155,7 +161,7 @@ func (a *App) originalHostLocalDelete(ctx context.Context, scope originalBaseCal
 	if err := a.originalMetadataAllowed(path); err != nil {
 		return false, err
 	}
-	if err := a.browserMutationAllowed(ctx, path); err != nil {
+	if err := a.browserMutationAllowedWithReferences(ctx, path, false); err != nil {
 		return false, err
 	}
 	for _, root := range a.browserRoots() {
@@ -163,7 +169,7 @@ func (a *App) originalHostLocalDelete(ctx context.Context, scope originalBaseCal
 			return false, bad("FILE_PROTECTED", "不能删除授权根目录")
 		}
 	}
-	before, err := browserManifest(ctx, path)
+	before, err := browserManifestWithHardlinkGuard(ctx, path, false)
 	if errors.Is(err, os.ErrNotExist) {
 		return true, nil
 	}
@@ -173,39 +179,9 @@ func (a *App) originalHostLocalDelete(ctx context.Context, scope originalBaseCal
 	if err = a.guardBrowserDownloaderSources(ctx, []string{path}); err != nil {
 		return false, err
 	}
-	after, err := browserManifest(ctx, path)
+	after, err := browserManifestWithHardlinkGuard(ctx, path, false)
 	if err != nil || !sameBrowserManifest(before, after) {
 		return false, bad("FILE_SNAPSHOT_CHANGED", "删除前文件发生变化")
 	}
-	parent, err := importDir(filepath.Dir(path), false)
-	if err != nil {
-		return false, err
-	}
-	defer parent.Close()
-	root, err := os.OpenRoot(filepath.Dir(path))
-	if err != nil {
-		return false, err
-	}
-	defer root.Close()
-	parentInfo, err := parent.Stat()
-	if err != nil {
-		return false, err
-	}
-	rootInfo, err := root.Stat(".")
-	if err != nil || !os.SameFile(parentInfo, rootInfo) {
-		return false, bad("FILE_PARENT_CHANGED", "删除前父目录发生变化")
-	}
-	if err = scope.validate(ctx); err != nil {
-		return false, err
-	}
-	release, err := a.beginWrite()
-	if err != nil {
-		return false, err
-	}
-	defer release()
-	if err = root.RemoveAll(filepath.Base(path)); err != nil {
-		return false, nil
-	}
-	_, err = root.Lstat(filepath.Base(path))
-	return errors.Is(err, os.ErrNotExist), nil
+	return a.originalHostLocalRemove(ctx, scope, path, after)
 }

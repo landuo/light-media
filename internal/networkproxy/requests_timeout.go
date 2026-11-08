@@ -2,6 +2,7 @@ package networkproxy
 
 import (
 	"context"
+	"crypto/tls"
 	"net"
 	"net/http"
 	"time"
@@ -25,6 +26,15 @@ func NewRequestsTimeoutTransport(timeout time.Duration) *http.Transport {
 	// requests uses HTTP/1.1. Per-socket deadlines must not affect unrelated
 	// multiplexed streams; the per-request transport does not share sessions.
 	base.ForceAttemptHTTP2 = false
+	// DefaultTransport.Clone can retain an initialized HTTP/2 ALPN list.
+	// Clear the inherited h2 implementation and advertise exactly HTTP/1.1.
+	base.Protocols = new(http.Protocols)
+	base.Protocols.SetHTTP1(true)
+	base.TLSNextProto = nil
+	if base.TLSClientConfig == nil {
+		base.TLSClientConfig = &tls.Config{}
+	}
+	base.TLSClientConfig.NextProtos = []string{"http/1.1"}
 	base.TLSHandshakeTimeout = timeout
 	base.ResponseHeaderTimeout = 0
 	return base

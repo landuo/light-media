@@ -1,0 +1,133 @@
+{
+  "kind": "actual installed APScheduler3.11.3 CronTrigger/base/field/expression + tzlocal5.4.4 AST with owned copies of local-system New_York TZif",
+  "source_sha256": {
+    "apscheduler/util.py": "f97dea0b2f5da9d6ffcbbc18ebfa7c00dcf6f6a45c03fffeeb42ac4bb6813c9a",
+    "apscheduler/triggers/base.py": "f222a596e6da7b1178e7a20af637e2e7a413ad521f0c33cb6af51cf304e59cbd",
+    "apscheduler/triggers/cron/expressions.py": "7cdde1781829e9211e167c2bd5b7dce817c13b4b1bc33c706b1bcabf7284b92a",
+    "apscheduler/triggers/cron/fields.py": "8ad524dd9439edaff6050b6cb173638c2de8802a02aedc6340d1568c24f744eb",
+    "apscheduler/triggers/cron/__init__.py": "d45d8fb6987ab66b2a9d69498a4589c7d2d2667a3647c41c1b9f7a8ebd6b31f5",
+    "tzlocal/utils.py": "a2ff1f3f03e3caf5d1a96f56cf1fec9004ec8e207d800ccad42107276508f756",
+    "tzlocal/unix.py": "68e936f6076c4dac8c9e8a4a76fb6a7cec73f38294ee7dd92d493d03f15bd876"
+  },
+  "fixture": {
+    "path": "fixtures/new-york.tzif",
+    "sha256": "e9ed07d7bee0c76a9d442d091ef1f01668fee7c4f26014c0a868b19fe6c18a95",
+    "copied_from": "local system /usr/share/zoneinfo/America/New_York",
+    "bytes": 3552
+  },
+  "limitations": [
+    "Python interpreter is local 3.14; original installed source runtime is 3.12.13",
+    "TZif is local system copied data, not installed host tzdata",
+    "Pure source-class execution with standard datetime/zoneinfo, no application import, live config, network or scheduling execution"
+  ],
+  "cases": [
+    {
+      "branch": "explicit-TZ-file",
+      "case": "NY-gap",
+      "cron": "30 2 * * *",
+      "start": "2026-03-08T05:00:00+00:00",
+      "zone_key": "owned-dst-zone",
+      "fires": [
+        {
+          "wall": "2026-03-08T02:30:00-05:00",
+          "utc": "2026-03-08T07:30:00Z",
+          "fold": 0,
+          "offset_seconds": -18000
+        },
+        {
+          "wall": "2026-03-09T02:30:00-04:00",
+          "utc": "2026-03-09T06:30:00Z",
+          "fold": 0,
+          "offset_seconds": -14400
+        },
+        {
+          "wall": "2026-03-10T02:30:00-04:00",
+          "utc": "2026-03-10T06:30:00Z",
+          "fold": 0,
+          "offset_seconds": -14400
+        }
+      ]
+    },
+    {
+      "branch": "explicit-TZ-file",
+      "case": "NY-fold",
+      "cron": "30 1 * * *",
+      "start": "2026-11-01T04:00:00+00:00",
+      "zone_key": "owned-dst-zone",
+      "fires": [
+        {
+          "wall": "2026-11-01T01:30:00-04:00",
+          "utc": "2026-11-01T05:30:00Z",
+          "fold": 0,
+          "offset_seconds": -14400
+        },
+        {
+          "wall": "2026-11-01T01:30:00-05:00",
+          "utc": "2026-11-01T06:30:00Z",
+          "fold": 1,
+          "offset_seconds": -18000
+        },
+        {
+          "wall": "2026-11-02T01:30:00-05:00",
+          "utc": "2026-11-02T06:30:00Z",
+          "fold": 0,
+          "offset_seconds": -18000
+        }
+      ]
+    },
+    {
+      "branch": "anonymous-localtime-file",
+      "case": "NY-gap",
+      "cron": "30 2 * * *",
+      "start": "2026-03-08T05:00:00+00:00",
+      "zone_key": "local",
+      "fires": [
+        {
+          "wall": "2026-03-08T02:30:00-05:00",
+          "utc": "2026-03-08T07:30:00Z",
+          "fold": 0,
+          "offset_seconds": -18000
+        },
+        {
+          "wall": "2026-03-09T02:30:00-04:00",
+          "utc": "2026-03-09T06:30:00Z",
+          "fold": 0,
+          "offset_seconds": -14400
+        },
+        {
+          "wall": "2026-03-10T02:30:00-04:00",
+          "utc": "2026-03-10T06:30:00Z",
+          "fold": 0,
+          "offset_seconds": -14400
+        }
+      ]
+    },
+    {
+      "branch": "anonymous-localtime-file",
+      "case": "NY-fold",
+      "cron": "30 1 * * *",
+      "start": "2026-11-01T04:00:00+00:00",
+      "zone_key": "local",
+      "fires": [
+        {
+          "wall": "2026-11-01T01:30:00-04:00",
+          "utc": "2026-11-01T05:30:00Z",
+          "fold": 0,
+          "offset_seconds": -14400
+        },
+        {
+          "wall": "2026-11-01T01:30:00-05:00",
+          "utc": "2026-11-01T06:30:00Z",
+          "fold": 1,
+          "offset_seconds": -18000
+        },
+        {
+          "wall": "2026-11-02T01:30:00-05:00",
+          "utc": "2026-11-02T06:30:00Z",
+          "fold": 0,
+          "offset_seconds": -18000
+        }
+      ]
+    }
+  ]
+}

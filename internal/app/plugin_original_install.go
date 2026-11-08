@@ -51,6 +51,8 @@ func (a *App) originalPluginInstallHTTP(w http.ResponseWriter, r *http.Request, 
 	ctx := context.WithoutCancel(r.Context())
 	a.pluginOriginalOperationMu.Lock()
 	defer a.pluginOriginalOperationMu.Unlock()
+	ctx, releaseOperationOwner := a.bindOriginalOperationOwner(ctx)
+	defer releaseOperationOwner()
 	if !a.admitOriginalBackground() {
 		return nil, &APIError{"APP_STOPPING", "服务正在停止", http.StatusServiceUnavailable}
 	}

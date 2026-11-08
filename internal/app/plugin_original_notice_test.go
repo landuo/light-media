@@ -177,13 +177,13 @@ func TestOriginalNoticeActualSDKRoutesEventsHistoryAndModuleDelivery(t *testing.
 	}
 	configure(true, true)
 	out = postOwnedNotice(t, object, context.Background(), `{"title":"failed delivery"}`)
-	if out.Attempted != 1 || out.Failed != 1 || len(out.Errors) != 1 || out.Errors[0] != "PLUGIN_NOTIFICATION_SEND_FAILED" {
-		t.Fatal("sender error disguised as delivery", out)
+	if out.Attempted != 1 || out.Failed != 0 || len(out.Errors) != 0 {
+		t.Fatal("source dispatcher-consumed module exception was rethrown by queue", out)
 	}
 	configure(false, false)
 	out = postOwnedNotice(t, object, context.Background(), `{"title":"no provider","save_history":false}`)
-	if out.Failed != 1 || out.Errors[0] != "PLUGIN_NOTIFICATION_PROVIDER_UNAVAILABLE" {
-		t.Fatal("missing provider disguised as delivery", out)
+	if out.Failed != 0 || len(out.Errors) != 0 {
+		t.Fatal("source zero-module result was turned into a sender failure", out)
 	}
 	history, err = a.Store.List(context.Background(), "notification", 100, 0)
 	if err != nil || len(history) != 3 {

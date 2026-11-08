@@ -46,8 +46,20 @@ func qualityRecord(ctx context.Context, q qualityReader, kind, key string, value
 func qualityRuleSHA(settings Settings) string {
 	return tokenHash(string(mustCleanSeedJSON(settings.PriorityRules)))
 }
-func (a *App) subscriptionResourcePriority(ctx context.Context, s Subscription, resource sites.Resource) (int, error) {
+func (a *App) subscriptionResourcePriority(ctx context.Context, s Subscription, resource sites.Resource, providerModel ...json.RawMessage) (int, error) {
 	in := SearchRequest{MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Policy: s.Policy, prioritySubscription: true, priorityMedia: &s.Media}
+	if providerNativeMedia(s.Media) {
+		if len(providerModel) != 1 || len(providerModel[0]) == 0 {
+			return 0, acquisitionEvidence()
+		}
+		info := sourceMediaInformation{MediaInfo: append(json.RawMessage(nil), providerModel[0]...)}
+		var err error
+		info.Media, err = subscriptionProviderMedia(info, s.Media.ProviderSource, s.Media.ProviderID, s.Media.MediaType)
+		if err != nil {
+			return 0, err
+		}
+		in.originalSearchInfo = &info
+	}
 	filter, e := a.preparePriorityFilter(ctx, in, a.Settings())
 	if e != nil {
 		return 0, e
@@ -156,7 +168,7 @@ func qualityWholeScope(state subscriptionquality.State, resource subscriptionqua
 	}
 	return state.Full() || reflect.DeepEqual(selection.AllowedEpisodes, acquired)
 }
-func (a *App) prepareQualityPreview(ctx context.Context, preview DownloadPreview, resource sites.Resource) (*qualityDownloadSnapshot, error) {
+func (a *App) prepareQualityPreview(ctx context.Context, preview DownloadPreview, resource sites.Resource, providerModel ...json.RawMessage) (*qualityDownloadSnapshot, error) {
 	if preview.SubscriptionID == "" {
 		return nil, nil
 	}
@@ -164,14 +176,14 @@ func (a *App) prepareQualityPreview(ctx context.Context, preview DownloadPreview
 	if e := qualityRecord(ctx, a.Store.DB, "subscription", preview.SubscriptionID, &s); e != nil {
 		return nil, e
 	}
-	if s.Revision != preview.Revision || s.State != "active" || mediaKey(s.Media) != mediaKey(preview.Media) || s.Season != preview.Season {
+	if s.Revision != preview.Revision || !a.subscriptionSearchState(ctx, s) || mediaKey(s.Media) != mediaKey(preview.Media) || s.Season != preview.Season {
 		return nil, bad("SUBSCRIPTION_CHANGED", "订阅在资源预览前已变化")
 	}
 	state, e := a.subscriptionQualitySourceState(ctx, s)
 	if e != nil {
 		return nil, e
 	}
-	priority, e := a.subscriptionResourcePriority(ctx, s, resource)
+	priority, e := a.subscriptionResourcePriority(ctx, s, resource, providerModel...)
 	if e != nil {
 		return nil, e
 	}
@@ -277,7 +289,7 @@ func (a *App) guardQualityAcquisition(ctx context.Context, q qualityReader, p *q
 	if e := qualityRecord(ctx, q, "subscription", p.SubscriptionID, &s); e != nil {
 		return e
 	}
-	if s.State != "active" || s.Revision != p.Revision || s.BestVersion != p.BestVersion || mediaKey(s.Media) != p.MediaKey || s.Season != p.Season || s.SourceContextSHA != p.SourceContextSHA || qualityRuleSHA(a.Settings()) != p.RulesSHA {
+	if !a.subscriptionSearchState(ctx, s) || s.Revision != p.Revision || s.BestVersion != p.BestVersion || mediaKey(s.Media) != p.MediaKey || s.Season != p.Season || s.SourceContextSHA != p.SourceContextSHA || qualityRuleSHA(a.Settings()) != p.RulesSHA {
 		return bad("QUALITY_SCOPE_CHANGED", "订阅或优先级规则在预览后已变化")
 	}
 	state := subscriptionQualityState(s)

@@ -19,10 +19,27 @@ func (a *App) emitStandardSiteUpdated(ctx context.Context, site SiteConfig, crea
 		a.log("ERROR", "plugins", "business_event_identity", "插件站点更新事件身份无法核对", "", "")
 		return
 	}
+	sourceID, err := a.Store.nativeSourceEventSiteID(context.WithoutCancel(ctx), identity)
+	if err != nil {
+		a.log("ERROR", "plugins", "business_event_identity", "插件站点更新事件身份无法核对", "", "")
+		return
+	}
+	name := site.Name
+	// The source full-save event uses site_in.name literally. Native management
+	// has a normalized UI projection; only an admitted authenticated snapshot
+	// can supply the preserved original value after the owning commit.
+	source, _, _, err := a.Store.nativeSourceSiteFields(context.WithoutCancel(ctx), site, identity)
+	if err != nil {
+		a.log("ERROR", "plugins", "business_event_identity", "插件站点更新事件字段无法核对", "", "")
+		return
+	}
+	if source != nil {
+		name = source.Name
+	}
 	a.emitStandardBusinessEvent(ctx, "site.updated", map[string]any{
-		"site_id":  identity.publicSourceID(),
+		"site_id":  sourceID,
 		"domain":   domain,
-		"name":     site.Name,
+		"name":     name,
 		"site_url": strings.TrimRight(site.BaseURL, "/") + "/",
 	})
 }

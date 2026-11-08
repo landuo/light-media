@@ -1,0 +1,715 @@
+{
+  "kind": "actual installed plugin __download + QB add wrapper + vendor request pipeline AST; actual Requests Session to owned loopback peer",
+  "scope": "Synthetic configured labels/content/paths/HTTP responses. No live daemon, production module import, config or credentials. Peer acceptance is not daemon acceptance.",
+  "source_sha256": {
+    "source-snapshot/torrenttransfer/__init__.py": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+    "host-reference/app/modules/qbittorrent/qbittorrent.py": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+    "qbittorrent-vendor/request.py": "dcf8371d17e5623ca81d95be2a8a6a8ade747f23d2aac5a79a629dc961dc206e",
+    "qbittorrent-vendor/torrents.py": "d087e5ef72ee748a8af160fd7f4fdbf119d41df6b1fdf2fe1d50509a3a0c2e26",
+    "qbittorrent-vendor/exceptions.py": "342f88472634f33f82b4923efa8bb69b8779580cc203bc20f320b1c1d7ebdabe",
+    "python-runtime-reference/requests/models.py": "d1bc0d990abf5d5ebee05f890911b4363fadf2d5264b686a963df47c529b6ace"
+  },
+  "interpreter": "local Python3.14, original installed source Python3.12.13",
+  "cases": [
+    {
+      "labels": [],
+      "peer_response": {
+        "status": 200,
+        "body": "Ok."
+      },
+      "outcome": {
+        "raised": "AttributeError",
+        "message": "'tuple' object has no attribute 'hashString'"
+      },
+      "network_POSTs_to_owned_peer": 1,
+      "trace": [
+        {
+          "event": "plugin.download.enter",
+          "metadata_kind": "transmission",
+          "runtime_class": "Qbittorrent"
+        },
+        {
+          "event": "wrapper.add.enter",
+          "kwargs": [
+            "content",
+            "download_dir",
+            "is_paused",
+            "labels"
+          ],
+          "labels": []
+        },
+        {
+          "event": "Requests.Session.request.enter",
+          "method": "post"
+        },
+        {
+          "event": "peer.received.POST",
+          "path": "/api/v2/torrents/add",
+          "non_file_fields": [
+            {
+              "name": "savepath",
+              "value": "/owned/payload"
+            },
+            {
+              "name": "sequentialDownload",
+              "value": "False"
+            },
+            {
+              "name": "firstLastPiecePrio",
+              "value": "False"
+            },
+            {
+              "name": "paused",
+              "value": "True"
+            },
+            {
+              "name": "stopped",
+              "value": "True"
+            },
+            {
+              "name": "autoTMM",
+              "value": "False"
+            }
+          ],
+          "torrent_file_parts": 1
+        },
+        {
+          "event": "wrapper.add.return",
+          "value": [
+            true,
+            []
+          ],
+          "truthy": true
+        },
+        {
+          "event": "plugin.download.raise",
+          "raised": "AttributeError",
+          "message": "'tuple' object has no attribute 'hashString'"
+        }
+      ]
+    },
+    {
+      "labels": [
+        "a"
+      ],
+      "peer_response": {
+        "status": 200,
+        "body": "Ok."
+      },
+      "outcome": {
+        "raised": "AttributeError",
+        "message": "'tuple' object has no attribute 'hashString'"
+      },
+      "network_POSTs_to_owned_peer": 1,
+      "trace": [
+        {
+          "event": "plugin.download.enter",
+          "metadata_kind": "transmission",
+          "runtime_class": "Qbittorrent"
+        },
+        {
+          "event": "wrapper.add.enter",
+          "kwargs": [
+            "content",
+            "download_dir",
+            "is_paused",
+            "labels"
+          ],
+          "labels": [
+            "a"
+          ]
+        },
+        {
+          "event": "Requests.Session.request.enter",
+          "method": "post"
+        },
+        {
+          "event": "peer.received.POST",
+          "path": "/api/v2/torrents/add",
+          "non_file_fields": [
+            {
+              "name": "savepath",
+              "value": "/owned/payload"
+            },
+            {
+              "name": "sequentialDownload",
+              "value": "False"
+            },
+            {
+              "name": "firstLastPiecePrio",
+              "value": "False"
+            },
+            {
+              "name": "paused",
+              "value": "True"
+            },
+            {
+              "name": "stopped",
+              "value": "True"
+            },
+            {
+              "name": "autoTMM",
+              "value": "False"
+            },
+            {
+              "name": "labels",
+              "value": "a"
+            }
+          ],
+          "torrent_file_parts": 1
+        },
+        {
+          "event": "wrapper.add.return",
+          "value": [
+            true,
+            []
+          ],
+          "truthy": true
+        },
+        {
+          "event": "plugin.download.raise",
+          "raised": "AttributeError",
+          "message": "'tuple' object has no attribute 'hashString'"
+        }
+      ]
+    },
+    {
+      "labels": [
+        "a",
+        "b"
+      ],
+      "peer_response": {
+        "status": 200,
+        "body": "Ok."
+      },
+      "outcome": {
+        "raised": "AttributeError",
+        "message": "'tuple' object has no attribute 'hashString'"
+      },
+      "network_POSTs_to_owned_peer": 1,
+      "trace": [
+        {
+          "event": "plugin.download.enter",
+          "metadata_kind": "transmission",
+          "runtime_class": "Qbittorrent"
+        },
+        {
+          "event": "wrapper.add.enter",
+          "kwargs": [
+            "content",
+            "download_dir",
+            "is_paused",
+            "labels"
+          ],
+          "labels": [
+            "a",
+            "b"
+          ]
+        },
+        {
+          "event": "Requests.Session.request.enter",
+          "method": "post"
+        },
+        {
+          "event": "peer.received.POST",
+          "path": "/api/v2/torrents/add",
+          "non_file_fields": [
+            {
+              "name": "savepath",
+              "value": "/owned/payload"
+            },
+            {
+              "name": "sequentialDownload",
+              "value": "False"
+            },
+            {
+              "name": "firstLastPiecePrio",
+              "value": "False"
+            },
+            {
+              "name": "paused",
+              "value": "True"
+            },
+            {
+              "name": "stopped",
+              "value": "True"
+            },
+            {
+              "name": "autoTMM",
+              "value": "False"
+            },
+            {
+              "name": "labels",
+              "value": "a"
+            },
+            {
+              "name": "labels",
+              "value": "b"
+            }
+          ],
+          "torrent_file_parts": 1
+        },
+        {
+          "event": "wrapper.add.return",
+          "value": [
+            true,
+            []
+          ],
+          "truthy": true
+        },
+        {
+          "event": "plugin.download.raise",
+          "raised": "AttributeError",
+          "message": "'tuple' object has no attribute 'hashString'"
+        }
+      ]
+    },
+    {
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "peer_response": {
+        "status": 200,
+        "body": "Ok."
+      },
+      "outcome": {
+        "raised": "AttributeError",
+        "message": "'tuple' object has no attribute 'hashString'"
+      },
+      "network_POSTs_to_owned_peer": 1,
+      "trace": [
+        {
+          "event": "plugin.download.enter",
+          "metadata_kind": "transmission",
+          "runtime_class": "Qbittorrent"
+        },
+        {
+          "event": "wrapper.add.enter",
+          "kwargs": [
+            "content",
+            "download_dir",
+            "is_paused",
+            "labels"
+          ],
+          "labels": [
+            "a",
+            "b",
+            "c"
+          ]
+        },
+        {
+          "event": "Requests.Session.request.enter",
+          "method": "post"
+        },
+        {
+          "event": "peer.received.POST",
+          "path": "/api/v2/torrents/add",
+          "non_file_fields": [
+            {
+              "name": "savepath",
+              "value": "/owned/payload"
+            },
+            {
+              "name": "sequentialDownload",
+              "value": "False"
+            },
+            {
+              "name": "firstLastPiecePrio",
+              "value": "False"
+            },
+            {
+              "name": "paused",
+              "value": "True"
+            },
+            {
+              "name": "stopped",
+              "value": "True"
+            },
+            {
+              "name": "autoTMM",
+              "value": "False"
+            },
+            {
+              "name": "labels",
+              "value": "a"
+            },
+            {
+              "name": "labels",
+              "value": "b"
+            },
+            {
+              "name": "labels",
+              "value": "c"
+            }
+          ],
+          "torrent_file_parts": 1
+        },
+        {
+          "event": "wrapper.add.return",
+          "value": [
+            true,
+            []
+          ],
+          "truthy": true
+        },
+        {
+          "event": "plugin.download.raise",
+          "raised": "AttributeError",
+          "message": "'tuple' object has no attribute 'hashString'"
+        }
+      ]
+    },
+    {
+      "labels": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "peer_response": {
+        "status": 200,
+        "body": "Ok."
+      },
+      "outcome": {
+        "raised": "AttributeError",
+        "message": "'tuple' object has no attribute 'hashString'"
+      },
+      "network_POSTs_to_owned_peer": 1,
+      "trace": [
+        {
+          "event": "plugin.download.enter",
+          "metadata_kind": "transmission",
+          "runtime_class": "Qbittorrent"
+        },
+        {
+          "event": "wrapper.add.enter",
+          "kwargs": [
+            "content",
+            "download_dir",
+            "is_paused",
+            "labels"
+          ],
+          "labels": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ]
+        },
+        {
+          "event": "Requests.Session.request.enter",
+          "method": "post"
+        },
+        {
+          "event": "peer.received.POST",
+          "path": "/api/v2/torrents/add",
+          "non_file_fields": [
+            {
+              "name": "savepath",
+              "value": "/owned/payload"
+            },
+            {
+              "name": "sequentialDownload",
+              "value": "False"
+            },
+            {
+              "name": "firstLastPiecePrio",
+              "value": "False"
+            },
+            {
+              "name": "paused",
+              "value": "True"
+            },
+            {
+              "name": "stopped",
+              "value": "True"
+            },
+            {
+              "name": "autoTMM",
+              "value": "False"
+            },
+            {
+              "name": "labels",
+              "value": "a"
+            },
+            {
+              "name": "labels",
+              "value": "b"
+            },
+            {
+              "name": "labels",
+              "value": "c"
+            },
+            {
+              "name": "labels",
+              "value": "d"
+            }
+          ],
+          "torrent_file_parts": 1
+        },
+        {
+          "event": "wrapper.add.return",
+          "value": [
+            true,
+            []
+          ],
+          "truthy": true
+        },
+        {
+          "event": "plugin.download.raise",
+          "raised": "AttributeError",
+          "message": "'tuple' object has no attribute 'hashString'"
+        }
+      ]
+    },
+    {
+      "labels": [
+        "a",
+        "b"
+      ],
+      "peer_response": {
+        "status": 200,
+        "body": "Fails."
+      },
+      "outcome": {
+        "raised": "AttributeError",
+        "message": "'tuple' object has no attribute 'hashString'"
+      },
+      "network_POSTs_to_owned_peer": 1,
+      "trace": [
+        {
+          "event": "plugin.download.enter",
+          "metadata_kind": "transmission",
+          "runtime_class": "Qbittorrent"
+        },
+        {
+          "event": "wrapper.add.enter",
+          "kwargs": [
+            "content",
+            "download_dir",
+            "is_paused",
+            "labels"
+          ],
+          "labels": [
+            "a",
+            "b"
+          ]
+        },
+        {
+          "event": "Requests.Session.request.enter",
+          "method": "post"
+        },
+        {
+          "event": "peer.received.POST",
+          "path": "/api/v2/torrents/add",
+          "non_file_fields": [
+            {
+              "name": "savepath",
+              "value": "/owned/payload"
+            },
+            {
+              "name": "sequentialDownload",
+              "value": "False"
+            },
+            {
+              "name": "firstLastPiecePrio",
+              "value": "False"
+            },
+            {
+              "name": "paused",
+              "value": "True"
+            },
+            {
+              "name": "stopped",
+              "value": "True"
+            },
+            {
+              "name": "autoTMM",
+              "value": "False"
+            },
+            {
+              "name": "labels",
+              "value": "a"
+            },
+            {
+              "name": "labels",
+              "value": "b"
+            }
+          ],
+          "torrent_file_parts": 1
+        },
+        {
+          "event": "wrapper.add.return",
+          "value": [
+            false,
+            []
+          ],
+          "truthy": true
+        },
+        {
+          "event": "plugin.download.raise",
+          "raised": "AttributeError",
+          "message": "'tuple' object has no attribute 'hashString'"
+        }
+      ]
+    },
+    {
+      "labels": [
+        "a",
+        "b"
+      ],
+      "peer_response": {
+        "status": 409,
+        "body": "owned conflict"
+      },
+      "outcome": {
+        "raised": "AttributeError",
+        "message": "'tuple' object has no attribute 'hashString'"
+      },
+      "network_POSTs_to_owned_peer": 1,
+      "trace": [
+        {
+          "event": "plugin.download.enter",
+          "metadata_kind": "transmission",
+          "runtime_class": "Qbittorrent"
+        },
+        {
+          "event": "wrapper.add.enter",
+          "kwargs": [
+            "content",
+            "download_dir",
+            "is_paused",
+            "labels"
+          ],
+          "labels": [
+            "a",
+            "b"
+          ]
+        },
+        {
+          "event": "Requests.Session.request.enter",
+          "method": "post"
+        },
+        {
+          "event": "peer.received.POST",
+          "path": "/api/v2/torrents/add",
+          "non_file_fields": [
+            {
+              "name": "savepath",
+              "value": "/owned/payload"
+            },
+            {
+              "name": "sequentialDownload",
+              "value": "False"
+            },
+            {
+              "name": "firstLastPiecePrio",
+              "value": "False"
+            },
+            {
+              "name": "paused",
+              "value": "True"
+            },
+            {
+              "name": "stopped",
+              "value": "True"
+            },
+            {
+              "name": "autoTMM",
+              "value": "False"
+            },
+            {
+              "name": "labels",
+              "value": "a"
+            },
+            {
+              "name": "labels",
+              "value": "b"
+            }
+          ],
+          "torrent_file_parts": 1
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "\u6dfb\u52a0\u79cd\u5b50\u51fa\u9519\uff1aowned conflict"
+        },
+        {
+          "event": "wrapper.add.return",
+          "value": [
+            false,
+            []
+          ],
+          "truthy": true
+        },
+        {
+          "event": "plugin.download.raise",
+          "raised": "AttributeError",
+          "message": "'tuple' object has no attribute 'hashString'"
+        }
+      ]
+    },
+    {
+      "labels": [
+        "\ud800"
+      ],
+      "peer_response": {
+        "status": 200,
+        "body": "Ok."
+      },
+      "outcome": {
+        "raised": "AttributeError",
+        "message": "'tuple' object has no attribute 'hashString'"
+      },
+      "network_POSTs_to_owned_peer": 0,
+      "trace": [
+        {
+          "event": "plugin.download.enter",
+          "metadata_kind": "transmission",
+          "runtime_class": "Qbittorrent"
+        },
+        {
+          "event": "wrapper.add.enter",
+          "kwargs": [
+            "content",
+            "download_dir",
+            "is_paused",
+            "labels"
+          ],
+          "labels": [
+            "\ud800"
+          ]
+        },
+        {
+          "event": "Requests.Session.request.enter",
+          "method": "post"
+        },
+        {
+          "event": "vendor.context.reset"
+        },
+        {
+          "event": "Requests.Session.request.enter",
+          "method": "post"
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "\u6dfb\u52a0\u79cd\u5b50\u51fa\u9519\uff1aFailed to connect to qBittorrent. Unknown Error: UnicodeEncodeError('utf-8', '\\ud800', 0, 1, 'surrogates not allowed')"
+        },
+        {
+          "event": "wrapper.add.return",
+          "value": [
+            false,
+            []
+          ],
+          "truthy": true
+        },
+        {
+          "event": "plugin.download.raise",
+          "raised": "AttributeError",
+          "message": "'tuple' object has no attribute 'hashString'"
+        }
+      ]
+    }
+  ]
+}

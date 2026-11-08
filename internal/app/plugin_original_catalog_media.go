@@ -107,7 +107,26 @@ func originalCatalogMediaProjection(raw json.RawMessage) (catalog.ExploreMedia, 
 	if fields["genres"] != nil {
 		encoded, _ := json.Marshal(fields["genres"])
 		if json.Unmarshal(encoded, &out.Genres) != nil {
-			return out, originalCatalogMediaInvalid()
+			// These source models use genre names as IDs. Preserve that
+			// original value in OriginalMedia and the display name here.
+			switch out.Source {
+			case "douban", "bangumi", "anilist":
+				out.Genres = nil
+				genres, ok := fields["genres"].([]any)
+				if !ok {
+					return out, originalCatalogMediaInvalid()
+				}
+				for _, row := range genres {
+					genre := sourceMap(row)
+					name, ok := genre["name"].(string)
+					if !ok {
+						return out, originalCatalogMediaInvalid()
+					}
+					out.Genres = append(out.Genres, catalog.Genre{Name: name})
+				}
+			default:
+				return out, originalCatalogMediaInvalid()
+			}
 		}
 	}
 	return out, nil

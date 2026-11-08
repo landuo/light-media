@@ -155,12 +155,8 @@ func (p *PluginStore) readSubscriptionCompletionNoticeStageTx(ctx context.Contex
 		if e != nil {
 			return "", e
 		}
-		var d struct {
-			ID   string `json:"download_id"`
-			Kind string `json:"download_kind"`
-			Hash string `json:"hash"`
-		}
-		if json.Unmarshal(added, &d) != nil || d.ID != f.Intent || d.Kind != "intent" || !sameHash(d.Hash, f.Hash) {
+		var d downloadAddedSnapshot
+		if json.Unmarshal(added, &d) != nil || !subscriptionCompletionDownloadMatches(d, native, f.Intent, f.Hash, f.Revision) {
 			return "", completionEvidenceError()
 		}
 	}
@@ -183,6 +179,22 @@ func (p *PluginStore) readSubscriptionCompletionNoticeStageTx(ctx context.Contex
 		return "", completionEvidenceError()
 	}
 	return r.Stage, nil
+}
+
+func subscriptionCompletionDownloadMatches(added downloadAddedSnapshot, s Subscription, intent, hash string, revision int) bool {
+	if added.DownloadID != intent || added.DownloadKind != "intent" || !sameHash(added.Hash, hash) {
+		return false
+	}
+	key, err := added.mediaIdentity()
+	if err != nil || key != mediaKey(s.Media) {
+		return false
+	}
+	if providerNativeMedia(s.Media) {
+		// mediaIdentity requires the original context for a provider download.
+		owner := added.Context.ProviderSubscription
+		return owner != nil && owner.ID == s.ID && owner.Revision == revision
+	}
+	return true
 }
 func (p *PluginStore) subscriptionCompletionNoticeIdentityTx(ctx context.Context, q subscriptionCompletionReader, want subscriptionCompletionIdentity) error {
 	_, e := p.subscriptionCompletionNoticeStageTx(ctx, q, want)

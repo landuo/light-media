@@ -4,14 +4,16 @@ import (
 	"context"
 	"encoding/json"
 	"strconv"
+	"strings"
 
 	"light-media/internal/catalog"
 	"light-media/internal/notice"
+	"light-media/internal/plugins"
 	"light-media/internal/releasemeta"
 )
 
-// This producer models the source web/API async_add call. It is deliberately
-// distinct from Lark's synchronous add plus sub_reg_async thread start.
+// The source web/API async_add and ordinary chat add share a durable save,
+// notice and event. Their recognition methods and statistics timing differ.
 type subscriptionAddIdentity struct{ ID, JobID, InputSHA string }
 type subscriptionAddInput struct {
 	Version      int
@@ -44,6 +46,10 @@ func subscriptionAddEvidenceError() error {
 }
 
 func (a *App) buildUISubscriptionAdd(ctx context.Context, in SubscriptionRequest, username string) (subscriptionAddInput, error) {
+	return a.buildSourceSubscriptionAdd(ctx, in, username, nil)
+}
+
+func (a *App) buildSourceSubscriptionAdd(ctx context.Context, in SubscriptionRequest, username string, chat *sourceSubscriptionOrigin) (subscriptionAddInput, error) {
 	var out subscriptionAddInput
 	if in.source != nil {
 		return out, subscriptionAddEvidenceError()
@@ -55,7 +61,18 @@ func (a *App) buildUISubscriptionAdd(ctx context.Context, in SubscriptionRequest
 	if id == 0 {
 		id = in.Media.ID
 	}
-	if (kind != "movie" && kind != "tv") || id <= 0 {
+	provider, providerID, err := subscriptionProviderIdentity(in)
+	if err != nil {
+		return out, err
+	}
+	if provider == "themoviedb" {
+		explicit, err := strconv.ParseInt(providerID, 10, 64)
+		if err != nil || id != 0 && id != explicit {
+			return out, bad("MEDIA_SOURCE_CHANGED", "订阅媒体来源与 TMDB 编号不一致")
+		}
+		id, provider, providerID = explicit, "", ""
+	}
+	if (kind != "movie" && kind != "tv") || id < 0 || id == 0 && provider == "" && (chat == nil || !chat.MediaProvider.sourceOnly()) {
 		return out, bad("INVALID_MEDIA", "请选择电影或电视剧")
 	}
 	originalMedia := in.Media
@@ -116,11 +133,14 @@ func (a *App) buildUISubscriptionAdd(ctx context.Context, in SubscriptionRequest
 	meta.Set("type", sourceType)
 	var season any
 	if kind == "tv" {
+		specified := in.Season != 0
 		if in.Season == 0 {
 			in.Season = 1
 		}
 		season = in.Season
-		meta.Set("begin_season", in.Season)
+		if specified || chat == nil {
+			meta.Set("begin_season", in.Season)
+		}
 	}
 	encoded, e := meta.EncodeState()
 	if e != nil {
@@ -130,11 +150,25 @@ func (a *App) buildUISubscriptionAdd(ctx context.Context, in SubscriptionRequest
 	if e != nil {
 		return out, e
 	}
-	recognized, e := a.sourceAsyncRecognizeTMDBMedia(ctx, catalog.Media{MediaType: kind, ID: id}, metaFields)
+	identity := catalog.Media{MediaType: kind, ID: id}
+	var recognized sourceMediaInformation
+	if id == 0 || provider != "" {
+		recognized, e = a.recognizeSubscriptionProviderAdd(ctx, kind, provider, providerID, metaFields, chat != nil)
+	} else if chat == nil {
+		recognized, e = a.sourceAsyncRecognizeTMDBMedia(ctx, identity, metaFields)
+	} else {
+		recognized, e = a.originalRecognizeTMDBModule(ctx, identity, "recognize_media", metaFields, strconv.FormatInt(id, 10), nil, false, func() (sourceMediaInformation, error) {
+			return a.sourceRecognizeTMDBCore(ctx, identity)
+		})
+	}
 	if e != nil {
 		return out, e
 	}
+	id = recognized.Media.ID
 	in.MediaType, in.TMDBID, in.Media = kind, id, recognized.Media
+	if id == 0 {
+		in.MediaSource, in.MediaID = in.Media.ProviderSource, in.Media.ProviderID
+	}
 	if e = a.applySubscriptionQualityDefaults(ctx, &in, kind); e != nil {
 		return out, e
 	}
@@ -164,6 +198,38 @@ func (a *App) buildUISubscriptionAdd(ctx context.Context, in SubscriptionRequest
 			in.ManualTotalEpisode = &automatic
 		}
 	}
+	var alias *originalChatMediaProvider
+	if chat != nil && chat.MediaProvider != nil && !chat.MediaProvider.sourceOnly() {
+		if !chat.MediaProvider.valid(id) {
+			return out, bad("MEDIA_SOURCE_CHANGED", "所选媒体与已核对的来源身份不一致")
+		}
+		alias = chat.MediaProvider
+	}
+	if chat != nil || id == 0 {
+		enriched, e := a.originalTransferObtainImages(ctx, recognized.MediaInfo)
+		if e != nil {
+			return out, e
+		}
+		recognized.MediaInfo, e = originalPublicCatalogMedia(enriched)
+		if e != nil {
+			return out, e
+		}
+		recognized.MediaInfo, e = originalChatAttachProvider(recognized.MediaInfo, alias, id)
+		if e != nil {
+			return out, e
+		}
+		value, err := decodeSourceJSON(recognized.MediaInfo)
+		if err != nil {
+			return out, err
+		}
+		fields = sourceMap(value)
+		if fields == nil {
+			return out, notice.ErrTemplateDependency
+		}
+		fields["poster"] = strings.ReplaceAll(sourceText(fields["poster_path"]), "original", "w500")
+		fields["backdrop"] = strings.ReplaceAll(sourceText(fields["backdrop_path"]), "original", "w500")
+		recognized.MediaInfo = mustCleanSeedJSON(fields)
+	}
 	image := fields["backdrop"]
 	if !sourceSubscriptionTruth(image) {
 		image = fields["poster"]
@@ -175,10 +241,20 @@ func (a *App) buildUISubscriptionAdd(ctx context.Context, in SubscriptionRequest
 	}
 	origin := sourceSubscriptionOrigin{Version: 1, State: state, Username: user, Meta: encoded, Defaults: in.qualityDefaults, MediaInfo: recognized.MediaInfo, ProviderInfo: recognized.ProviderInfo}
 	business := sourceBusinessNotice{Envelope: notice.Object{"channel": nil, "source": nil, "mtype": "订阅", "ctype": "subscribeAdded", "image": image, "link": sourceSubscriptionLink(a.Settings().AppDomain, kind), "userid": nil, "username": username}, Meta: encoded, Media: recognized.Media, MediaInfo: recognized.MediaInfo, ProviderInfo: recognized.ProviderInfo, Kwargs: notice.Object{"username": username}}
+	if chat != nil {
+		origin.Channel, origin.Source, origin.UserID = chat.Channel, chat.Source, chat.UserID
+		origin.MediaProvider = alias
+		origin.State, origin.Note = chat.State, sourceSubscriptionNoteClone(chat.Note)
+		business.Envelope["channel"], business.Envelope["source"], business.Envelope["userid"] = chat.Channel, chat.Source, chat.UserID
+	}
 	if _, e = larkBusinessNoticeContext(business); e != nil {
 		return out, e
 	}
-	locals := map[string]any{"name": name, "year": year, "type": sourceType, "season": season, "media_source": "themoviedb", "media_id": strconv.FormatInt(id, 10)}
+	registrationSource, registrationID := "themoviedb", strconv.FormatInt(id, 10)
+	if id == 0 {
+		registrationSource, registrationID = in.Media.ProviderSource, in.Media.ProviderID
+	}
+	locals := map[string]any{"name": name, "year": year, "type": sourceType, "season": season, "media_source": registrationSource, "media_id": registrationID}
 	for target, source := range map[string]string{"tmdbid": "tmdb_id", "imdbid": "imdb_id", "tvdbid": "tvdb_id", "doubanid": "douban_id", "bangumiid": "bangumi_id", "anilistid": "anilist_id", "poster": "poster", "backdrop": "backdrop", "vote": "vote_average", "description": "overview"} {
 		v, ok := fields[source]
 		if !ok {
@@ -191,4 +267,41 @@ func (a *App) buildUISubscriptionAdd(ctx context.Context, in SubscriptionRequest
 		return out, e
 	}
 	return subscriptionAddInput{Version: 1, Request: in, Origin: origin, Business: mustCleanSeedJSON(business), Registration: raw, Username: user}, nil
+}
+
+func (a *App) recognizeSubscriptionProviderAdd(ctx context.Context, kind, source, providerID string, meta map[string]any, chat bool) (sourceMediaInformation, error) {
+	method := "async_recognize_media"
+	if chat {
+		method = "recognize_media"
+	}
+	request := plugins.MediaRecognizeRequest{Type: kind, Meta: meta, Source: source, MediaID: providerID}
+	if providerID != "" {
+		fresh := false
+		request.Cache = &fresh
+	}
+	raw, err := a.originalHostMediaRecognizeMethod(ctx, method, request)
+	if err != nil {
+		return sourceMediaInformation{}, err
+	}
+	if !originalModuleResultTruthy(raw) && providerID != "" {
+		// An explicitly chosen provider keeps ownership of its title fallback.
+		request.MediaID, request.Cache = "", nil
+		raw, err = a.originalHostMediaRecognizeMethod(ctx, method, request)
+		if err != nil {
+			return sourceMediaInformation{}, err
+		}
+	}
+	if !originalModuleResultTruthy(raw) {
+		return sourceMediaInformation{}, bad("MEDIA_NOT_FOUND", "未识别到媒体信息")
+	}
+	view, err := originalCatalogMediaProjection(raw)
+	if err != nil || view.MediaType != kind || source != "" && (view.Source != source || view.SourceID != providerID) {
+		return sourceMediaInformation{}, bad("MEDIA_SOURCE_CHANGED", "订阅媒体来源身份无法核对")
+	}
+	if view.Source == "themoviedb" && validMedia(kind, view.ID) {
+		return a.originalRecognitionProjection(view.Media, raw)
+	}
+	info := sourceMediaInformation{Media: view.Media, MediaInfo: raw, ProviderInfo: raw}
+	info.Media, err = subscriptionProviderMedia(info, view.Source, view.SourceID, kind)
+	return info, err
 }

@@ -24,7 +24,9 @@ import (
 // Preview uses the same preparation path without submitting a transfer job.
 type manualOrganizeRequest struct {
 	originalRetry         bool
+	originalRetryAttempt  *originalTransferRetryAttempt
 	originalResolvedMedia json.RawMessage
+	providerIdentity      catalog.Media
 	Paths                 []string `json:"paths"`
 	HistoryIDs            []string `json:"history_ids"`
 	FromHistory           bool     `json:"from_history"`
@@ -102,7 +104,16 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 	if len(in.HistoryIDs) > 0 {
 		paths = nil
 		for _, key := range in.HistoryIDs {
-			h, e := a.transferHistoryItem(ctx, key)
+			var h transferHistoryItem
+			var e error
+			if in.originalRetryAttempt != nil {
+				if key != in.originalRetryAttempt.HistoryID {
+					return out, originalTransferRetryStale()
+				}
+				h, e = a.originalCurrentTransferRetry(ctx, *in.originalRetryAttempt, false)
+			} else {
+				h, e = a.transferHistoryItem(ctx, key)
+			}
 			if e != nil {
 				return out, e
 			}
@@ -244,6 +255,8 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		request := ImportRequest{MediaType: in.MediaType, TMDBID: in.TMDBID, TargetPath: in.TargetPath, Mode: in.Mode, Renaming: in.Renaming, Scraping: in.Scraping, LibraryTypeFolder: in.LibraryTypeFolder, WorkflowID: wf, Files: []ImportFileRequest{{Path: file.Path}}}
 		request.Manual = true
 		request.originalResolvedMedia = in.originalResolvedMedia
+		request.originalRetry = in.originalRetryAttempt != nil
+		request.providerIdentity = in.providerIdentity
 		request.Files[0].originalMetadataPath = file.originalMetadataPath
 		request.Files[0].originalItem = file.originalItem
 		request.Files[0].originalResolvedMeta = file.originalResolvedMeta.DeepCopy()
@@ -420,6 +433,13 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			continue
 		}
 		if !in.Preview {
+			executeCtx := ctx
+			if in.originalRetryAttempt != nil {
+				if _, err := a.originalCurrentTransferRetry(ctx, *in.originalRetryAttempt, false); err != nil {
+					return out, err
+				}
+				executeCtx = context.WithValue(ctx, originalTransferRetryAttemptKey{}, *in.originalRetryAttempt)
+			}
 			// The pinned manual history endpoint cleans only this history's
 			// destination before starting the explicitly requested transfer.
 			// Preview does not delete anything; no parent video is selected.
@@ -437,7 +457,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 					continue
 				}
 			}
-			job, e := a.executeImport(ctx, plan.ID, nil)
+			job, e := a.executeImport(executeCtx, plan.ID, nil)
 			if e != nil {
 				if e = fail(file.Path, e); e != nil {
 					return out, e
@@ -488,6 +508,14 @@ func (a *App) recordManualOrganizeFailure(ctx context.Context, path, wf string, 
 	}
 	job.State, job.ErrorCode, job.ErrorMessage = "failed", code, a.clean(cause.Error())
 	a.log("WARN", "import", "preparation_failed", job.ErrorMessage, wf, job.ID)
+	if code == "MEDIA_NOT_FOUND" {
+		history, err := a.transferHistoryItem(ctx, plan.Files[0].ID)
+		if err != nil {
+			a.originalTransferEventError(ctx, err)
+		} else if history.JobID == job.ID {
+			a.originalTransferFailureNotice(ctx, history, nil)
+		}
+	}
 	return job, nil
 }
 

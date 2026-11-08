@@ -13,9 +13,20 @@ import (
 // holds the implementation lock only while resolving/starting it, never during
 // a potentially long business method. Every invocation has fresh authority.
 func (p *originalPluginInstance) callSession(ctx context.Context, runner plugins.Runner, method string, payload json.RawMessage, host plugins.HostHandler) (plugins.RunResult, error) {
-	client, err := p.originalSessionClient(ctx, runner)
-	if err != nil {
-		return plugins.RunResult{}, err
+	return p.callSessionBound(ctx, runner, method, payload, host, nil)
+}
+
+func (p *originalPluginInstance) callSessionBound(ctx context.Context, runner plugins.Runner, method string, payload json.RawMessage, host plugins.HostHandler, initialization *originalInitializationCall) (plugins.RunResult, error) {
+	var client *plugins.Client
+	if p.originalPublicServiceScopeAllowed(ctx) {
+		lease, _ := ctx.Value(originalSubmittedObjectKey{}).(*originalSubmittedLease)
+		client = lease.client
+	} else {
+		var err error
+		client, err = p.originalSessionClient(ctx, runner)
+		if err != nil {
+			return plugins.RunResult{}, err
+		}
 	}
 	// A fixed plugin method belongs to its loaded object. Disconnecting one
 	// HTTP caller does not stop that object. Legacy serial RPC has no per-call
@@ -28,7 +39,7 @@ func (p *originalPluginInstance) callSession(ctx context.Context, runner plugins
 		}
 		ctx = context.WithoutCancel(ctx)
 	}
-	callback, closePhase := p.originalBaseSessionHost(ctx, method, host)
+	callback, closePhase := p.originalBaseSessionHostBound(ctx, method, host, initialization)
 	defer closePhase()
 	options := plugins.CallOptions{Timeout: runner.Timeout, ExcludeHostTime: runner.ExcludeHostTime}
 	if client.SupportsConcurrent() {
@@ -68,6 +79,7 @@ func (p *originalPluginInstance) originalSessionClient(ctx context.Context, runn
 		}
 		p.sessionStarted = true
 		runner.ConcurrentCalls = true
+		runner.SequentialHostStream = p.hostContract == pluginResourcesSDKContract && plugins.SupportsSequentialHostStream(implementation.Manifest)
 		// Startup has a finite transport budget; it is not the business-method
 		// budget. Idle process lifetime is independent of one HTTP request.
 		p.session, err = runner.Start(context.WithoutCancel(ctx), implementation.Command, implementation.Manifest, plugins.SessionBinding{Identity: plugins.Identity{PluginID: current.PluginID, InstanceID: current.InstanceID, Version: current.Version}, Generation: current.Generation})
@@ -120,12 +132,12 @@ func (p *originalPluginInstance) stopSession(ctx context.Context) error {
 	return client.StopWithHost(ctx, callback)
 }
 func (a *App) closeOriginalSessions() {
-	a.pluginRunningInstances.Range(func(key, value any) bool {
+	a.log("INFO", "plugins", "plugins_stopping", "正在停止所有插件...", "", "")
+	for _, object := range a.originalLoadedPluginSnapshot() {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		_ = a.stopOriginalPlugin(ctx, key.(string))
+		_ = a.stopOriginalPluginObject(ctx, object.installation.InstanceID)
 		cancel()
-		return true
-	})
+	}
 	a.pluginOriginalRunningMu.Lock()
 	a.pluginOriginalClasses.Range(func(key, value any) bool { a.pluginOriginalClasses.Delete(key); return true })
 	a.pluginOriginalClassOrder = nil
@@ -147,11 +159,17 @@ func (p *originalPluginInstance) stopOriginalMethods(ctx context.Context) error 
 			return err
 		}
 	}
+	p.submitted.mu.Lock()
+	privateRan, privateErr := p.submitted.privateMethodsRan, p.submitted.privateStopErr
+	p.submitted.mu.Unlock()
+	if privateRan {
+		return privateErr
+	}
 	for _, method := range []string{"close", "stop_service"} {
 		if !slices.Contains(p.manifest.Methods, method) {
 			continue
 		}
-		phaseCtx := context.WithValue(ctx, originalBaseStopKey{}, &originalBaseStopCall{object: p, client: client})
+		phaseCtx := context.WithValue(ctx, originalBaseStopKey{}, &originalBaseStopCall{object: p, client: client, businessHook: true})
 		callback, revoke := p.originalBaseSessionHost(phaseCtx, "stop", nil)
 		var err error
 		if client.SupportsConcurrent() {

@@ -141,7 +141,7 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 	if err != nil {
 		return request, err
 	}
-	if !validMedia(request.MediaType, request.TMDBID) {
+	if !request.providerImport() && !validMedia(request.MediaType, request.TMDBID) {
 		for i, file := range request.Files {
 			class := originalImportFileClass(file)
 			video, _ := classifier.Media(class)

@@ -113,7 +113,14 @@ func (a *App) executeOriginalService(ctx context.Context, job *originalDirectJob
 	if job.commonModule {
 		// ChainBase.scheduler_job deliberately returns None even when a
 		// provider returns a terminal value; Scheduler.start sees success.
-		_, err = a.invokeOriginalPluginModules(ctx, "scheduler_job", nil, nil, nil)
+		var moduleResult json.RawMessage
+		moduleResult, err = a.invokeOriginalPluginModules(ctx, "scheduler_job", nil, nil, nil)
+		if err == nil {
+			var list []json.RawMessage
+			if originalModuleResultEmpty(moduleResult) || json.Unmarshal(moduleResult, &list) == nil && list != nil {
+				err = a.reconnectOriginalSourceConnections(ctx)
+			}
+		}
 	} else if err == nil {
 		result, err = job.object.callOriginalMethod(ctx, job.definition.Handler, input)
 	}

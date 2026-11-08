@@ -33,6 +33,9 @@ func (a *App) guardDownloaderSnapshot(ctx context.Context, in Intent) error {
 	return nil
 }
 func (a *App) guardAcquisitionSlots(ctx context.Context, in Intent) error {
+	if in.ChatWholeUnscoped {
+		return nil // This manual download has no library slot to acquire.
+	}
 	proof, e := a.qualitySnapshot(ctx, a.Store.DB, "intent", in.ID, in.Hash)
 	if e != nil {
 		return e

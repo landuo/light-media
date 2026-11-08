@@ -366,7 +366,7 @@ func (a *App) importMediaCategory(ctx context.Context, identity catalog.Media) (
 			needsRefresh = true
 		}
 	}
-	if needsRefresh {
+	if needsRefresh && !providerNativeMedia(identity) {
 		fresh, err := a.catalog().DetailForCategory(ctx, identity.MediaType, identity.ID, fields)
 		if err != nil {
 			return identity, "", err

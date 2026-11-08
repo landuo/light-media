@@ -39,7 +39,9 @@ func validatePluginArtifactContract(m plugins.Manifest, contract string) error {
 			return bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "插件宿主能力不属于已知契约")
 		}
 	}
-	for _, method := range []string{"init", "get_state", "get_service", "get_command", "stop"} {
+	// Command/service declarations are optional source getters, not lifecycle
+	// methods. Their absence must be checked before discovery reads state.
+	for _, method := range []string{"init", "get_state", "stop"} {
 		if !slices.Contains(m.Methods, method) {
 			return bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "插件制品缺少实例生命周期方法")
 		}

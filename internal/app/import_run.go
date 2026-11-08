@@ -82,6 +82,11 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 	if a.paused() {
 		return Job{}, &APIError{"AUTOMATION_PAUSED", "自动化已暂停，请先恢复", 409}
 	}
+	if attempt, ok := ctx.Value(originalTransferRetryAttemptKey{}).(originalTransferRetryAttempt); ok {
+		if _, err := a.originalCurrentTransferRetry(ctx, attempt, false); err != nil {
+			return Job{}, err
+		}
+	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return Job{}, err
@@ -108,8 +113,14 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		return Job{}, findErr
 	}
 	if plan.IntentID != "" {
-		if _, err = importIntentTx(ctx, tx, plan); err != nil {
+		intent, err := importIntentTx(ctx, tx, plan)
+		if err != nil {
 			return Job{}, err
+		}
+		if intent.ChatWholeUnscoped {
+			if _, err = a.readCompletedUnscopedPlan(ctx, tx, intent, plan); err != nil {
+				return Job{}, err
+			}
 		}
 	}
 	for _, index := range selected {
@@ -584,6 +595,9 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				owned = append(owned, managedFile{Path: sidecar.Target, RootID: root.ID, AssetID: assetID, MediaKey: mediaKey(plan.Media), Kind: sidecarMaterialKind(sidecar), Snapshot: sideReceipt.StageSnapshot, SourceSnapshot: sidecar.Snapshot, SHA256: sideReceipt.SHA256})
 			}
 			asset := Asset{ID: assetID, Media: plan.Media, Season: file.Season, Episodes: append([]int(nil), file.Episodes...), RootID: root.ID, Path: file.Target, SourcePath: file.Source, Size: file.Size, State: "present", ScrapeState: "pending", FNOSState: "pending", IntentID: plan.IntentID, CreatedAt: now()}
+			if _, sourced := meta.OriginalTransfer[file.ID]; sourced && mainSucceeded && file.MaterialKind == "" {
+				asset.FNOSRefreshTransfer = plan.ID + "/" + file.ID
+			}
 			asset.Part = file.Part
 			if meta.Reorganize != nil {
 				asset.IntentID = meta.Reorganize.Asset.IntentID
@@ -727,7 +741,9 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				return err
 			}
 			publicationCommitted = true
-			a.event(ctx, job, "INFO", "import", "published", "已登记本次实际发布成功的文件；源文件保留")
+			if len(owned) != 0 {
+				a.event(ctx, job, "INFO", "import", "published", "已登记本次实际发布成功的文件；源文件保留")
+			}
 			if len(originalMetadataEvent) > 0 {
 				// The same core event consumer is scheduled by the existing scrape
 				// job above. Plugin observers still get the ordinary broadcast.
@@ -790,6 +806,17 @@ func (a *App) importIntentActive(ctx context.Context, plan ImportPlan) error {
 	if e := a.guardSeasonImportPlan(ctx, intent, plan); e != nil {
 		return e
 	}
+	if intent.ChatWholeUnscoped && len(plan.Files) > 0 {
+		scope, e := a.readCompletedUnscopedPlan(ctx, a.Store.DB, intent, plan)
+		if e != nil {
+			return e
+		}
+		if scope != nil {
+			if e := a.guardSourcePostAddReceipt(ctx, intent); e != nil {
+				return e
+			}
+		}
+	}
 	return validImportIntent(plan, intent)
 }
 
@@ -839,7 +866,7 @@ func (a *App) importCompleteIntent(ctx context.Context, tx *sql.Tx, plan ImportP
 	if err := validImportIntent(plan, intent); err != nil {
 		return err
 	}
-	if intent.Media.MediaType == "tv" && len(intent.Episodes) == 0 {
+	if intent.Media.MediaType == "tv" && len(intent.Episodes) == 0 && !intent.ChatWholeUnscoped {
 		return nil
 	}
 	seasonProof, e := a.intentSeasonProof(ctx, tx, intent)
@@ -849,6 +876,18 @@ func (a *App) importCompleteIntent(ctx context.Context, tx *sql.Tx, plan ImportP
 	scopes := []downloadSeasonScope{{intent.Season, importEpisodes(intent.Episodes)}}
 	if seasonProof != nil {
 		scopes = seasonProof.Scopes
+	}
+	if intent.ChatWholeUnscoped {
+		completed, err := a.readCompletedUnscopedPlan(ctx, tx, intent, plan)
+		if err != nil {
+			return err
+		}
+		if completed != nil {
+			scopes = nil
+			for _, file := range completed.Files {
+				scopes = append(scopes, downloadSeasonScope{Season: file.Season, Episodes: file.Episodes})
+			}
+		}
 	}
 	for _, scope := range scopes {
 		for _, episode := range scope.Episodes {

@@ -8,11 +8,14 @@ import (
 
 func (a *App) validateUISubscriptionStatisticsSource(ctx context.Context, q pluginRemoveLinkJournalReader, r subscriptionStatsReceipt) error {
 	in := r.Input
-	if in.Mode != "await_async" || in.Operation != "add" || in.Added == nil || in.Lark != nil || in.Completion != nil || len(in.MediaInfo) != 0 || len(in.Subscribe) != 0 {
+	if (in.Mode != "await_async" && in.Mode != "chat_background") || in.Operation != "add" || in.Added == nil || in.Lark != nil || in.Completion != nil || len(in.MediaInfo) != 0 || len(in.Subscribe) != 0 {
 		return subscriptionStatsEvidenceError()
 	}
 	source, e := a.pluginStore.subscriptionAddReceipt(ctx, q, *in.Added, false)
 	if e != nil || (source.Stage != "statistics_pending" && source.Stage != "complete") || source.StatisticsID != r.ID || !bytes.Equal(source.Input.Registration, in.Registration) {
+		return subscriptionStatsEvidenceError()
+	}
+	if (in.Mode == "chat_background") != (source.Input.Origin.Channel == "飞书") {
 		return subscriptionStatsEvidenceError()
 	}
 	var proof pluginNoticeV2Result
@@ -24,6 +27,42 @@ func (a *App) validateUISubscriptionStatisticsSource(ctx context.Context, q plug
 	route, _, e := a.pluginStore.readNoticeRoute(ctx, q, proof.RouteID)
 	if e != nil || !route.Complete || route.SourceError != "" || route.BusinessV2 == nil || route.BusinessV2.Binding.Added == nil || *route.BusinessV2.Binding.Added != source.Identity || route.Count != proof.Count || route.LastSHA != proof.LastSHA || route.BusinessV2.EnvelopeSHA != proof.EnvelopeSHA || route.BusinessV2.BusinessSHA != proof.BusinessSHA {
 		return subscriptionStatsEvidenceError()
+	}
+	return nil
+}
+
+// The synchronous source add starts a background statistics thread after
+// SubscribeAdded. Atomically admit its native job without waiting for HTTP.
+func (a *App) startChatSubscriptionAddStatistics(ctx context.Context, j Job, r subscriptionAddReceipt) error {
+	if err := a.jobCancelled(ctx, j); err != nil {
+		return err
+	}
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	current, err := a.pluginStore.subscriptionAddReceipt(ctx, tx, r.Identity, true)
+	if err != nil {
+		return err
+	}
+	if current.Stage != "added" || current.Input.Origin.Channel != "飞书" {
+		return subscriptionAddEvidenceError()
+	}
+	key, err := a.enqueueSubscriptionStatsTx(ctx, tx, subscriptionStatsInput{Operation: "add", Mode: "chat_background", Added: &current.Identity, Registration: current.Input.Registration}, j.WorkflowID)
+	if err != nil {
+		return err
+	}
+	current.Stage, current.StatisticsID = "complete", key
+	if err := a.writeQualitySealedTx(ctx, tx, "subscription_add", current.Identity.ID, current); err != nil {
+		return err
+	}
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+	select {
+	case a.jobWake <- struct{}{}:
+	default:
 	}
 	return nil
 }

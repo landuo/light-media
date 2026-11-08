@@ -227,8 +227,8 @@ func TestPluginLogsProductionCLI(t *testing.T) {
 	for _, instance := range []string{"OwnedInstanceLog", "OwnedInstanceLogtwin"} {
 		raw, _ := request("POST", "/api/v1/plugin/"+instance+"/notice", map[string]any{"title": "owned host scope failure", "channel": "Telegram", "immediately": true, "plugin_instance_id": "forged"}, 200)
 		var dispatch plugins.NotificationDispatch
-		if json.Unmarshal(raw, &dispatch) != nil || dispatch.Attempted != 1 || dispatch.Failed != 1 || dispatch.Queued != 0 {
-			t.Fatal("actual synchronous unavailable notice module semantics changed")
+		if json.Unmarshal(raw, &dispatch) != nil || dispatch.Attempted != 1 || dispatch.Failed != 0 || len(dispatch.Errors) != 0 || dispatch.Queued != 0 {
+			t.Fatal("source empty module callback became a sender failure")
 		}
 		canonical, _ := request("GET", "/api/logs?plugin_instance_id="+instance+"&from=0001-01-01T00:00:00Z&limit=100", nil, 200)
 		var canonicalPage struct{ Data logPage }
@@ -245,8 +245,8 @@ func TestPluginLogsProductionCLI(t *testing.T) {
 				}
 			}
 		}
-		if count != 1 {
-			t.Fatal("actual host error did not reach caller history", instance, count)
+		if count != 0 {
+			t.Fatal("empty source module callback invented a host error", instance, count)
 		}
 	}
 	rows, boundary := history("OwnedInstanceLog")

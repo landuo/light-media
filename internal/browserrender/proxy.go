@@ -20,22 +20,34 @@ import (
 // arguments. The source wrapper puts inline credentials in --proxy-server;
 // that would violate this application's explicit credential boundary.
 func browserProxy(ctx context.Context, raw string, guard func(context.Context) error) (string, func(), error) {
+	return browserOriginProxy(ctx, raw, guard, nil)
+}
+
+// Credentialed actions need a process-wide network boundary as well as CDP
+// interception, which is target-local and does not cover new windows.
+func browserOriginProxy(ctx context.Context, raw string, guard func(context.Context) error, origin *url.URL) (string, func(), error) {
 	ctx, cancel := context.WithCancel(ctx)
-	u, err := networkproxy.Parse(raw)
-	if err != nil {
-		cancel()
-		return "", nil, &Error{Code: "browser_proxy_invalid"}
-	}
-	transportURL := *u
-	// Browser SOCKS resolves target domains at the proxy. RequestUtils' local
-	// socks5 DNS adaptation is deliberately not reused for this browser path.
-	if transportURL.Scheme == "socks5" {
-		transportURL.Scheme = "socks5h"
-	}
-	transport, err := networkproxy.Apply(nil, transportURL.String())
-	if err != nil {
-		cancel()
-		return "", nil, &Error{Code: "browser_proxy_invalid"}
+	var u *url.URL
+	transport := http.DefaultTransport.(*http.Transport).Clone()
+	transport.Proxy = nil
+	if raw != "" {
+		var err error
+		u, err = networkproxy.Parse(raw)
+		if err != nil {
+			cancel()
+			return "", nil, &Error{Code: "browser_proxy_invalid"}
+		}
+		transportURL := *u
+		// Browser SOCKS resolves target domains at the proxy. RequestUtils' local
+		// socks5 DNS adaptation is deliberately not reused for this browser path.
+		if transportURL.Scheme == "socks5" {
+			transportURL.Scheme = "socks5h"
+		}
+		transport, err = networkproxy.Apply(transport, transportURL.String())
+		if err != nil {
+			cancel()
+			return "", nil, &Error{Code: "browser_proxy_invalid"}
+		}
 	}
 	listener, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
@@ -54,8 +66,15 @@ func browserProxy(ctx context.Context, raw string, guard func(context.Context) e
 			}
 		}
 		if request.Method != http.MethodConnect {
+			if origin != nil && (origin.Scheme != "http" || request.URL.User != nil || !sameOrigin(request.URL, origin)) {
+				w.WriteHeader(http.StatusForbidden)
+				return
+			}
 			request.RequestURI = ""
 			request = request.WithContext(ctx)
+			if origin != nil {
+				request.Host = origin.Host
+			}
 			request.Header.Del("Proxy-Authorization")
 			response, err := transport.RoundTrip(request)
 			if err != nil {
@@ -71,6 +90,13 @@ func browserProxy(ctx context.Context, raw string, guard func(context.Context) e
 			w.WriteHeader(response.StatusCode)
 			_, _ = io.Copy(w, response.Body)
 			return
+		}
+		if origin != nil {
+			target := &url.URL{Scheme: "https", Host: request.Host}
+			if _, _, err := net.SplitHostPort(request.Host); err != nil || !sameOrigin(target, origin) {
+				w.WriteHeader(http.StatusForbidden)
+				return
+			}
 		}
 		upstream, err := proxyTunnel(ctx, u, request.Host)
 		if err != nil {
@@ -115,6 +141,9 @@ func browserProxy(ctx context.Context, raw string, guard func(context.Context) e
 
 func proxyTunnel(ctx context.Context, upstream *url.URL, target string) (net.Conn, error) {
 	dialer := &net.Dialer{Timeout: 30 * time.Second}
+	if upstream == nil {
+		return dialer.DialContext(ctx, "tcp", target)
+	}
 	address := upstream.Host
 	if upstream.Port() == "" {
 		port := "80"

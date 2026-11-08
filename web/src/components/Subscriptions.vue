@@ -21,9 +21,12 @@ import {
   subscriptionTotal,
   subscriptionDownloaded,
   subscriptionProgressTotal,
+  subscriptionMediaIdentity,
+  subscriptionMediaKey,
   validateSubscriptionCounts,
   mediaDetailSeasons,
 } from '../features/subscriptions';
+import { exploreDetailRoute, exploreImage } from '../features/explore-media';
 import {
   calendarDay,
   calendarDates,
@@ -104,6 +107,22 @@ function percent(s: any) {
   return subscriptionProgressTotal(s)
     ? Math.min(100, Math.round((subscriptionDownloaded(s) / subscriptionProgressTotal(s)) * 100))
     : 0;
+}
+function subscriptionImage(media: any, path: string, size: string) {
+  const identity = subscriptionMediaIdentity(media);
+  return identity && identity.source !== 'themoviedb'
+    ? exploreImage({ source: identity.source }, path, size)
+    : image(path, size);
+}
+function subscriptionDetail(s: any) {
+  const identity = subscriptionMediaIdentity(s.media);
+  if (!identity) return;
+  const { kind, source, id } = identity;
+  go(
+    source === 'themoviedb'
+      ? `detail/${kind}/${id}`
+      : exploreDetailRoute({ ...s.media, source, source_id: id }),
+  );
 }
 const isCalendar = computed(() => props.view.split('?')[0] === 'calendar');
 const typedView = computed(() =>
@@ -205,6 +224,8 @@ function policySize(field: string, event: Event) {
     Number.isFinite(value) && value > 0 ? Math.round(value * 1073741824) : 0;
 }
 function setSeason(value: number) {
+  const identity = subscriptionMediaIdentity(editing.value.media);
+  if (value === editing.value.season && identity && identity.source !== 'themoviedb') return;
   editing.value.season = value;
   editing.value.total_episodes =
     mediaDetailSeasons(editing.value.media).find((season: any) => season.season_number === value)
@@ -305,7 +326,8 @@ async function pick(m: any) {
 }
 function formInput() {
   const s = clone(editing.value);
-  if (!s.media) throw new Error('请先选择影视作品');
+  const identity = subscriptionMediaIdentity(s.media);
+  if (!identity) throw new Error('请先选择影视作品');
   Object.assign(s, downloadDestination(s));
   delete s.root_id;
   delete s.directory_id;
@@ -322,8 +344,14 @@ function formInput() {
     if (!match) throw new Error('单集日期格式：17=2026-10-16');
     s.episode_dates[match[1]!] = match[2];
   }
-  s.media_type = s.media.media_type;
-  s.tmdb_id = s.media.id;
+  s.media_type = identity.kind;
+  if (identity.source === 'themoviedb') {
+    s.tmdb_id = identity.id;
+  } else {
+    delete s.tmdb_id;
+    s.media_source = identity.source;
+    s.media_id = identity.id;
+  }
   return s;
 }
 async function openMulti() {
@@ -560,9 +588,9 @@ watch(() => props.view, applyView);
         :class="{ paused: s.state === 'paused' }"
       >
         <img
-          v-if="image(s.media?.backdrop_path || s.media?.poster_path, 'w780')"
+          v-if="subscriptionImage(s.media, s.media?.backdrop_path || s.media?.poster_path, 'w780')"
           class="subscription-backdrop"
-          :src="image(s.media.backdrop_path || s.media.poster_path, 'w780')"
+          :src="subscriptionImage(s.media, s.media.backdrop_path || s.media.poster_path, 'w780')"
           alt=""
         />
         <button
@@ -572,9 +600,9 @@ watch(() => props.view, applyView);
         >
           <div class="subscription-heading">
             <img
-              v-if="image(s.media?.poster_path, 'w185')"
+              v-if="subscriptionImage(s.media, s.media?.poster_path, 'w185')"
               class="subscription-poster"
-              :src="image(s.media.poster_path, 'w185')"
+              :src="subscriptionImage(s.media, s.media.poster_path, 'w185')"
               :alt="s.media.title"
             />
             <div class="subscription-name">
@@ -602,6 +630,9 @@ watch(() => props.view, applyView);
             <div class="subscription-menu-actions">
               <button @click="check(s)"><AppIcon name="refresh" />立即检查</button>
               <button @click="begin(s)"><AppIcon name="edit" />编辑</button>
+              <button v-if="subscriptionMediaIdentity(s.media)" @click="subscriptionDetail(s)">
+                <AppIcon name="info" />详情
+              </button>
               <button @click="state(s)">
                 <AppIcon :name="s.state === 'paused' ? 'play' : 'pause'" />{{
                   s.state === 'paused' ? '恢复' : '暂停'
@@ -1096,7 +1127,7 @@ watch(() => props.view, applyView);
               />
               <MappingRules
                 :model="editing.mappings"
-                :media-id="editing.media.media_type + ':' + editing.media.id"
+                :media-id="subscriptionMediaKey(editing.media)"
                 :season="editing.season"
               />
               <label

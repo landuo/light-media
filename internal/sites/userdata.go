@@ -44,6 +44,7 @@ type SourceUserData struct {
 	// snapshots are immutable, so modifying Messages does not replace raw authority.
 	rawMessageRows []json.RawMessage
 	rawSeedingInfo json.RawMessage
+	rawIntegers    map[string]json.RawMessage
 	nullFields     map[string]bool
 	Error          *string `json:"err_msg"`
 	Day            string  `json:"updated_day"`
@@ -60,9 +61,14 @@ func (d *SourceUserData) UnmarshalJSON(raw []byte) error {
 		Rows    json.RawMessage `json:"message_unread_contents"`
 		Seeding json.RawMessage `json:"seeding_info"`
 	}{plain: &value}
-	if !decodeJSON(raw, &wire) {
+	compatible, wide, err := sourceUserDataIntegerView(raw)
+	if err != nil {
+		return err
+	}
+	if !decodeJSON(compatible, &wire) {
 		return sourceModuleError(nil)
 	}
+	value.rawIntegers = wide
 	var fields map[string]json.RawMessage
 	if !decodeJSON(raw, &fields) {
 		return sourceModuleError(nil)
@@ -109,7 +115,7 @@ func (d SourceUserData) MarshalJSON() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	if d.rawMessageRows == nil && len(d.nullFields) == 0 && len(d.rawSeedingInfo) == 0 {
+	if d.rawMessageRows == nil && len(d.nullFields) == 0 && len(d.rawSeedingInfo) == 0 && len(d.rawIntegers) == 0 {
 		return raw, nil
 	}
 	var fields map[string]json.RawMessage
@@ -124,6 +130,9 @@ func (d SourceUserData) MarshalJSON() ([]byte, error) {
 	}
 	if len(d.rawSeedingInfo) > 0 {
 		fields["seeding_info"] = d.rawSeedingInfo
+	}
+	for key, raw := range d.rawIntegers {
+		fields[key] = raw
 	}
 	for key := range d.nullFields {
 		value := string(fields[key])

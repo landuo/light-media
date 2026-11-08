@@ -69,7 +69,8 @@ func sourceEpisodeInputSHA(in Intent) string {
 		Season                                                                                                                       int
 		Episodes, Selected                                                                                                           []int
 		SeasonScopeSHA                                                                                                               string `json:",omitempty"`
-	}{in.ID, in.Hash, in.DownloaderID, in.DownloaderSnapshot, in.DownloadPath, in.DirectoryID, in.DirectorySnapshot, in.RootID, mediaKey(in.Media), in.PreviewID, in.MaterialRef, in.ImportMode, in.Season, in.Episodes, in.SelectedEpisodes, in.SeasonScopeSHA})))
+		ChatWholeUnscoped                                                                                                            bool   `json:",omitempty"`
+	}{in.ID, in.Hash, in.DownloaderID, in.DownloaderSnapshot, in.DownloadPath, in.DirectoryID, in.DirectorySnapshot, in.RootID, mediaKey(in.Media), in.PreviewID, in.MaterialRef, in.ImportMode, in.Season, in.Episodes, in.SelectedEpisodes, in.SeasonScopeSHA, in.ChatWholeUnscoped})))
 }
 func sourceEpisodeReceiptValid(r sourceEpisodeSelectionReceipt, in Intent) bool {
 	return r.Version == 1 && r.Intent == in.ID && sameHash(r.Hash, in.Hash) && reflect.DeepEqual(r.Episodes, in.SelectedEpisodes) && r.InputSHA == sourceEpisodeInputSHA(in) && (r.Mode == "existing_hash" || r.Mode == "new_paused_hash")

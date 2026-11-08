@@ -30,7 +30,9 @@ func (a *App) originalHostMediaResource(ctx context.Context, scope originalBaseC
 		value, err = a.originalHostMediaServers(ctx, scope, request)
 	case plugins.MediaServersRefreshCapability:
 		var request plugins.MediaRefreshRequest
-		if err = originalResourceDecode(raw, &request); err != nil {
+		// Source debounce sends one complete item batch. Retain the SDK's
+		// transport bound without splitting it into multiple library scans.
+		if err = originalResourceDecodeBounded(raw, &request, plugins.MaxPayloadBytes); err != nil {
 			return nil, err
 		}
 		value, err = a.originalHostMediaRefresh(ctx, scope, request)
@@ -56,11 +58,11 @@ func (a *App) originalHostMediaResource(ctx context.Context, scope originalBaseC
 	if err != nil {
 		var serviceError *fnos.ServiceError
 		if errors.As(err, &serviceError) {
-			a.writeOriginalPluginCallLog(scope.installation, scope.logCall, "ERROR", "media_server_"+serviceError.Code, serviceError.Error())
+			a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "media_server_"+serviceError.Code, serviceError.Error())
 		} else {
 			var api *APIError
 			if errors.As(err, &api) {
-				a.writeOriginalPluginCallLog(scope.installation, scope.logCall, "ERROR", "media_host_"+api.Code, "媒体宿主调用失败："+api.Code)
+				a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "media_host_"+api.Code, "媒体宿主调用失败："+api.Code)
 			}
 		}
 		return nil, err
@@ -76,6 +78,9 @@ func (a *App) originalHostMediaResource(ctx context.Context, scope originalBaseC
 }
 
 func (a *App) originalHostMediaServers(ctx context.Context, scope originalBaseCallScope, request plugins.MediaServersRequest) ([]plugins.MediaServer, error) {
+	if request.ConnectivityOnly && !request.Probe {
+		return nil, bad("INVALID_PLUGIN_VALUE", "媒体服务连通检查需要启用探测")
+	}
 	config := a.Settings().FNOS
 	result := []plugins.MediaServer{}
 	if !config.Enabled && !request.IncludeDisabled || request.Type != "" && request.Type != "fnos" || len(request.Names) > 0 && !slices.Contains(request.Names, "fnos") {
@@ -84,12 +89,31 @@ func (a *App) originalHostMediaServers(ctx context.Context, scope originalBaseCa
 	server := plugins.MediaServer{Name: "fnos", Type: "fnos", Enabled: config.Enabled, Configured: config.Host != "" && config.Username != "" && config.Password != ""}
 	if request.Probe {
 		service, err := fnos.NewService(fnos.Config{Host: config.Host, Username: config.Username, Password: config.Password})
-		if err != nil {
-			return nil, err
-		}
-		libraries, err := service.Libraries(ctx)
-		if err != nil {
-			return nil, err
+		connected := true
+		if request.ConnectivityOnly {
+			if err == nil {
+				err = service.CheckConnectivity(ctx)
+			}
+			if ctx.Err() != nil {
+				return nil, ctx.Err()
+			}
+			var provider *fnos.ServiceError
+			if err != nil && (!errors.As(err, &provider) || provider.Code == "canceled") {
+				return nil, err
+			}
+			connected = err == nil
+		} else {
+			if err != nil {
+				return nil, err
+			}
+			libraries, err := service.Libraries(ctx)
+			if err != nil {
+				return nil, err
+			}
+			server.Libraries = []plugins.MediaServerLibrary{}
+			for _, library := range libraries {
+				server.Libraries = append(server.Libraries, plugins.MediaServerLibrary{ID: library.GUID, Name: library.Name, Directories: library.Directories})
+			}
 		}
 		if err := scope.validate(ctx); err != nil {
 			return nil, err
@@ -97,12 +121,12 @@ func (a *App) originalHostMediaServers(ctx context.Context, scope originalBaseCa
 		if !sameHostMediaConfiguration(config, a.Settings().FNOS) {
 			return nil, bad("MEDIA_SERVER_CHANGED", "媒体服务配置已变化")
 		}
-		connected := true
-		server.Connected = &connected
-		server.Libraries = []plugins.MediaServerLibrary{}
-		for _, library := range libraries {
-			server.Libraries = append(server.Libraries, plugins.MediaServerLibrary{ID: library.GUID, Name: library.Name, Directories: library.Directories})
+		if scope.fnosRefresh != nil && request.ConnectivityOnly && connected && slices.Contains(request.Names, "fnos") {
+			if err := a.recordOriginalFNOSRefreshOwner(ctx, scope.fnosRefresh); err != nil {
+				return nil, err
+			}
 		}
+		server.Connected = &connected
 	}
 	return append(result, server), nil
 }
@@ -155,7 +179,7 @@ func (a *App) originalHostMediaRefresh(ctx context.Context, scope originalBaseCa
 		}
 		var source *fnos.ServiceError
 		if errors.As(err, &source) {
-			a.writeOriginalPluginCallLog(scope.installation, scope.logCall, "ERROR", "media_server_"+source.Code, source.Error())
+			a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "media_server_"+source.Code, source.Error())
 			value := false
 			result.Result = &value
 			return result, nil
@@ -212,6 +236,10 @@ func (a *App) originalHostMediaRefreshLibrary(ctx context.Context, scope origina
 }
 
 func (a *App) originalHostMediaRecognize(ctx context.Context, request plugins.MediaRecognizeRequest) (json.RawMessage, error) {
+	return a.originalHostMediaRecognizeMethod(ctx, "recognize_media", request)
+}
+
+func (a *App) originalHostMediaRecognizeMethod(ctx context.Context, method string, request plugins.MediaRecognizeRequest) (json.RawMessage, error) {
 	if request.Type != "" && request.Type != "movie" && request.Type != "tv" && request.Type != "电影" && request.Type != "电视剧" && request.Type != "未知" {
 		return nil, bad("INVALID_PLUGIN_VALUE", "识别媒体类型无效")
 	}
@@ -237,7 +265,7 @@ func (a *App) originalHostMediaRecognize(ctx context.Context, request plugins.Me
 		ctx = context.WithValue(ctx, originalHostMediaFreshContextKey{}, true)
 	}
 	ctx = context.WithValue(ctx, originalHostMediaNativeSourceKey{}, a.originalHostMediaRecognitionSource(kwargs))
-	result, err := a.originalCatalogRecognizeMethod(ctx, "recognize_media", kwargs, func() (json.RawMessage, error) {
+	result, err := a.originalCatalogRecognizeMethod(ctx, method, kwargs, func() (json.RawMessage, error) {
 		return a.originalHostMediaRecognizeNative(ctx, kwargs)
 	})
 	if err != nil {

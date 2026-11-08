@@ -61,7 +61,12 @@ func (a *App) originalMetadataNFO(ctx context.Context, meta *releasemeta.MetaObj
 	callCore := func() ([]byte, error) {
 		content, err := native()
 		if err != nil && ctx.Err() == nil {
-			a.reportOriginalPluginExecutionError(ctx, "system", "TheMovieDb发生了错误", map[string]any{"type": "module", "module_id": "TheMovieDbModule", "module_name": "TheMovieDb", "module_method": "metadata_nfo"}, err)
+			value, _ := decodeSourceJSON(information)
+			name := map[string]string{"douban": "Douban", "bangumi": "Bangumi", "anilist": "AniList"}[a.originalMetadataScrapeSource(sourceMap(value))]
+			if name == "" {
+				name = "TheMovieDb"
+			}
+			a.reportOriginalPluginExecutionError(ctx, "system", name+"发生了错误", map[string]any{"type": "module", "module_id": name + "Module", "module_name": name, "module_method": "metadata_nfo"}, err)
 			return nil, nil
 		}
 		return content, err

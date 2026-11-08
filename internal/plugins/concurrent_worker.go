@@ -6,20 +6,28 @@ import (
 	"errors"
 	"io"
 	"slices"
+	"strconv"
 	"strings"
 	"sync"
 )
 
 type concurrentWorkerCall struct {
-	cleanup bool
-	request Frame
-	ctx     context.Context
-	cancel  context.CancelFunc
-	phase   callbackPhase
-	account concurrentAccount
-	gate    chan struct{}
-	mu      sync.Mutex
-	pending map[string]chan Frame
+	privateSchedulerStop bool
+	cleanup              bool
+	request              Frame
+	ctx                  context.Context
+	cancel               context.CancelFunc
+	phase                callbackPhase
+	account              concurrentAccount
+	gate                 chan struct{}
+	mu                   sync.Mutex
+	pending              map[string]chan Frame
+	cleanupRoot          *cleanupWorkerRoot
+	reverseClosed        bool
+	reverseHosts         sync.WaitGroup
+	cancelNotified       bool
+	streamMu             sync.Mutex // orders publication only for parallel streams
+	streamSequence       uint64     // guarded by streamMu or the serial callback gate
 }
 
 type concurrentWorker struct {
@@ -196,24 +204,62 @@ func (w *concurrentWorker) readLoop() {
 			return
 		}
 		ctx, cancel := context.WithCancel(w.ctx)
-		call := &concurrentWorkerCall{request: request, ctx: ctx, cancel: cancel, account: concurrentAccount{limits: w.transport.wire.limits, worker: true}, gate: make(chan struct{}, 1), pending: map[string]chan Frame{}}
+		window := 1
+		if w.proposal.MaxParallelHostCalls > 0 {
+			window = w.proposal.MaxParallelHostCalls
+		}
+		call := &concurrentWorkerCall{request: request, ctx: ctx, cancel: cancel, account: concurrentAccount{limits: w.transport.wire.limits, worker: true, streaming: w.proposal.streamsHostCalls(request.Method)}, gate: make(chan struct{}, window), pending: map[string]chan Frame{}}
 		if err = call.account.receive(count); err != nil {
 			cancel()
 			w.finish(err)
 			return
 		}
 		w.mu.Lock()
-		cleanup := w.draining && (request.Method == "close" || request.Method == "stop_service")
-		if w.stopping || w.retiring || w.calls[request.ID] != nil || w.draining && !cleanup && request.Method != "stop" || cleanup && w.cleanupActive || len(w.calls) >= w.proposal.MaxCalls && request.Method != "stop" && !cleanup {
+		rootCleanup := w.draining && (request.Method == "close" || request.Method == "stop_service")
+		privateStop := !w.draining && (w.manifest.ManagedPrivateScheduler || w.manifest.ManagedPublicServices) && !cleanupDeclared(w.manifest) && (request.Method == "close" || request.Method == "stop_service")
+		var ancestor *cleanupWorkerRoot
+		if request.CleanupRoot != "" {
+			parent := w.calls[request.CleanupRoot]
+			if !w.draining || !cleanupDeclared(w.manifest) || parent == nil || parent.cleanupRoot == nil || parent.cleanupRoot.root != parent || parent.cleanupRoot.closed || parent.ctx.Err() != nil || (parent.phase.closed.Load() && !parent.cleanupRoot.bodyReturned) || parent.cleanupRoot.slots >= cleanupHandoffSlots {
+				w.mu.Unlock()
+				cancel()
+				w.finish(failure("cleanup_call_closed"))
+				return
+			}
+			ancestor = parent.cleanupRoot
+		}
+		cleanup := rootCleanup || ancestor != nil
+		if w.stopping || w.retiring || w.calls[request.ID] != nil || w.draining && !cleanup && request.Method != "stop" || (rootCleanup || privateStop) && w.cleanupActive || len(w.calls) >= w.proposal.MaxCalls && request.Method != "stop" && !cleanup && !privateStop {
 			w.mu.Unlock()
 			cancel()
 			w.finish(failure("concurrent_call_limit"))
 			return
 		}
 		w.calls[request.ID] = call
+		if privateStop {
+			w.cleanupActive = true
+			call.privateSchedulerStop = true
+		}
 		if cleanup {
 			call.cleanup = true
+		}
+		if rootCleanup {
 			w.cleanupActive = true
+			if cleanupDeclared(w.manifest) {
+				call.cleanupRoot = &cleanupWorkerRoot{root: call}
+				call.ctx = context.WithValue(call.ctx, cleanupInvocationKey{}, true)
+			}
+		}
+		if ancestor != nil {
+			cancel()
+			call.ctx, call.cancel = context.WithCancel(ancestor.root.ctx)
+			call.ctx = context.WithValue(call.ctx, cleanupInvocationKey{}, true)
+			call.cleanupRoot = ancestor
+			ancestor.slots++
+			ancestor.children.Add(1)
+		}
+		if w.proposal.MaxParallelHostCalls > 0 {
+			call.ctx = context.WithValue(call.ctx, hostCallBudgetKey{}, &hostCallBudgetView{worker: w, call: call})
 		}
 		if request.Method == "stop" {
 			w.stopping = true
@@ -236,16 +282,29 @@ func (w *concurrentWorker) readLoop() {
 }
 
 func (w *concurrentWorker) invoke(call *concurrentWorkerCall) {
+	defer w.releaseCleanupChild(call)
 	host := func(ctx context.Context, method string, payload json.RawMessage) (json.RawMessage, error) {
 		return w.host(call, ctx, method, payload)
 	}
 	result, err := w.handle(call.ctx, call.request.Method, call.request.Payload, host)
+	if w.proposal.MaxParallelHostCalls > 0 {
+		// Seal WG registration without moving the cleanup root's atomic
+		// phase.closed/bodyReturned transition out of its existing w.mu scope.
+		call.mu.Lock()
+		call.reverseClosed = true
+		call.mu.Unlock()
+	}
+	w.finishCleanupRoot(call, err)
 	call.phase.closed.Store(true)
 	canceled := call.ctx.Err() != nil
 	call.cancel()
 	// A Handler may have launched a callback goroutine. Revoke first and join
 	// that callback before sending its result, so it cannot become a new phase.
-	call.gate <- struct{}{}
+	if w.proposal.MaxParallelHostCalls > 0 {
+		call.reverseHosts.Wait()
+	} else {
+		call.gate <- struct{}{}
+	}
 	reply := Frame{Protocol: ProtocolVersion, ID: call.request.ID, Type: "result", Identity: w.transport.wire.identity}
 	if canceled {
 		reply.Error = &ReplyError{Code: "EXECUTION_CANCELED"}
@@ -261,7 +320,13 @@ func (w *concurrentWorker) invoke(call *concurrentWorkerCall) {
 	// result. The host may immediately send the next reserved cleanup call.
 	w.mu.Lock()
 	delete(w.calls, call.request.ID)
-	if call.cleanup {
+	if root := call.cleanupRoot; root != nil && root.root != call {
+		root.slots--
+		if root.bodyReturned && root.slots == 0 {
+			root.closed = true
+		}
+	}
+	if call.privateSchedulerStop || call.cleanup && (call.cleanupRoot == nil || call.cleanupRoot.root == call) {
 		w.cleanupActive = false
 	}
 	w.mu.Unlock()
@@ -271,13 +336,21 @@ func (w *concurrentWorker) invoke(call *concurrentWorkerCall) {
 		reply.Error = &ReplyError{Code: code}
 		_, sendErr = w.transport.write(reply, nil)
 	}
-	<-call.gate
+	if w.proposal.MaxParallelHostCalls == 0 {
+		<-call.gate
+	}
 	if sendErr != nil {
 		w.finish(sendErr)
 	}
 }
 
 func (w *concurrentWorker) host(call *concurrentWorkerCall, ctx context.Context, method string, payload json.RawMessage) (json.RawMessage, error) {
+	if w.proposal.MaxParallelHostCalls > 0 {
+		return w.hostParallel(call, ctx, method, payload)
+	}
+	return w.hostSerial(call, ctx, method, payload)
+}
+func (w *concurrentWorker) hostSerial(call *concurrentWorkerCall, ctx context.Context, method string, payload json.RawMessage) (json.RawMessage, error) {
 	if ctx == nil || ctx.Err() != nil || call.phase.closed.Load() || call.ctx.Err() != nil || !methodPattern.MatchString(method) || strings.HasPrefix(method, "transport.") || len(payload) > 0 && !json.Valid(payload) {
 		return nil, failure("invalid_host_call")
 	}
@@ -295,11 +368,10 @@ func (w *concurrentWorker) host(call *concurrentWorkerCall, ctx context.Context,
 	if err := call.account.host(w.proposal.MaxHostCalls); err != nil {
 		return nil, err
 	}
-	suffix, err := randomID()
+	id, err := call.nextReverseID()
 	if err != nil {
 		return nil, err
 	}
-	id := call.request.ID + "." + suffix
 	pending := make(chan Frame, 1)
 	call.mu.Lock()
 	call.pending[id] = pending
@@ -313,6 +385,9 @@ func (w *concurrentWorker) host(call *concurrentWorkerCall, ctx context.Context,
 	})
 	if err != nil {
 		return nil, err
+	}
+	if call.account.streaming {
+		call.streamSequence++
 	}
 	select {
 	case reply := <-pending:
@@ -331,6 +406,119 @@ func (w *concurrentWorker) host(call *concurrentWorkerCall, ctx context.Context,
 		_, e := w.transport.write(Frame{Protocol: ProtocolVersion, ID: call.request.ID, Type: "host_call", Identity: w.transport.wire.identity, Method: "transport.cancel", Payload: json.RawMessage(`null`)}, nil)
 		if e != nil {
 			w.finish(e)
+		}
+		return nil, failure("execution_canceled")
+	case <-call.ctx.Done():
+		return nil, failure("execution_canceled")
+	}
+}
+
+// The caller serializes ID assignment and publication for a streaming root.
+func (call *concurrentWorkerCall) nextReverseID() (string, error) {
+	if call.account.streaming {
+		sequence := call.streamSequence + 1
+		if sequence == 0 {
+			return "", failure("host_call_limit")
+		}
+		return call.request.ID + "." + strconv.FormatUint(sequence, 10), nil
+	}
+	suffix, err := randomID()
+	return call.request.ID + "." + suffix, err
+}
+
+func (w *concurrentWorker) publishParallelHostCall(call *concurrentWorkerCall, ctx context.Context, method string, payload json.RawMessage, pending chan Frame) (string, error) {
+	if call.account.streaming {
+		call.streamMu.Lock()
+		defer call.streamMu.Unlock()
+	}
+	id, err := call.nextReverseID()
+	if err != nil {
+		return "", err
+	}
+	call.mu.Lock()
+	call.pending[id] = pending
+	call.mu.Unlock()
+	written, err := w.transport.write(Frame{Protocol: ProtocolVersion, ID: id, Type: "host_call", Identity: w.transport.wire.identity, Method: method, Payload: append(json.RawMessage(nil), payload...)}, func(n concurrentWireCount) error {
+		call.mu.Lock()
+		closed := call.reverseClosed
+		call.mu.Unlock()
+		if closed || call.phase.closed.Load() || call.ctx.Err() != nil || ctx.Err() != nil {
+			return failure("execution_canceled")
+		}
+		return call.account.send(n)
+	})
+	if err != nil {
+		// A rejected unpublished stream ID can be reused by the next caller.
+		// Remove this receiver before releasing the publication lock.
+		call.mu.Lock()
+		delete(call.pending, id)
+		call.mu.Unlock()
+		if call.account.streaming && written.bytes != 0 {
+			w.finish(err)
+		}
+		return "", err
+	}
+	if call.account.streaming {
+		call.streamSequence++
+	}
+	return id, nil
+}
+
+func (w *concurrentWorker) hostParallel(call *concurrentWorkerCall, ctx context.Context, method string, payload json.RawMessage) (json.RawMessage, error) {
+	if ctx == nil || ctx.Err() != nil || call.phase.closed.Load() || call.ctx.Err() != nil || !methodPattern.MatchString(method) || strings.HasPrefix(method, "transport.") || len(payload) > 0 && !json.Valid(payload) {
+		return nil, failure("invalid_host_call")
+	}
+	select {
+	case call.gate <- struct{}{}:
+	case <-ctx.Done():
+		return nil, failure("execution_canceled")
+	case <-call.ctx.Done():
+		return nil, failure("execution_canceled")
+	}
+	call.mu.Lock()
+	if call.reverseClosed || call.phase.closed.Load() || call.ctx.Err() != nil || ctx.Err() != nil {
+		call.mu.Unlock()
+		<-call.gate
+		return nil, failure("invalid_host_call")
+	}
+	call.reverseHosts.Add(1)
+	call.mu.Unlock()
+	defer func() { <-call.gate; call.reverseHosts.Done() }()
+	if err := call.account.host(w.proposal.MaxHostCalls); err != nil {
+		return nil, err
+	}
+	pending := make(chan Frame, 1)
+	id, err := w.publishParallelHostCall(call, ctx, method, payload, pending)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { call.mu.Lock(); delete(call.pending, id); call.mu.Unlock() }()
+	select {
+	case reply := <-pending:
+		call.mu.Lock()
+		closed := call.reverseClosed
+		call.mu.Unlock()
+		if closed || call.phase.closed.Load() || call.ctx.Err() != nil || ctx.Err() != nil {
+			return nil, failure("execution_canceled")
+		}
+		if reply.Error != nil {
+			return nil, failure("host_operation_failed")
+		}
+		return reply.Result, nil
+	case <-ctx.Done():
+		call.phase.closed.Store(true)
+		call.cancel()
+		// A callback deadline revokes this invocation, not the process or an
+		// unrelated invocation. The host must cancel its in-flight authority.
+		call.mu.Lock()
+		notify := !call.cancelNotified
+		call.cancelNotified = true
+		call.mu.Unlock()
+		if notify {
+			_, e := w.transport.write(Frame{Protocol: ProtocolVersion, ID: call.request.ID, Type: "host_call", Identity: w.transport.wire.identity, Method: "transport.cancel", Payload: json.RawMessage(`null`)}, nil)
+			if e != nil {
+				w.finish(e)
+			}
 		}
 		return nil, failure("execution_canceled")
 	case <-call.ctx.Done():

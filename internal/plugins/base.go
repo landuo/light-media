@@ -8,6 +8,7 @@ import (
 
 const (
 	BaseGetConfig           = "plugin.base.get_config"
+	BaseConfigSaveOrigin    = "plugin.base.config_save_origin"
 	BaseUpdateConfig        = "plugin.base.update_config"
 	BaseGetDataPath         = "plugin.base.get_data_path"
 	BaseSaveData            = "plugin.base.save_data"
@@ -19,11 +20,11 @@ const (
 // BaseMethods is the finite method vocabulary, not an authorization grant.
 // Only the host's recognized contract may grant any of these operations.
 func BaseMethods() []string {
-	return []string{BaseGetConfig, BaseUpdateConfig, BaseGetDataPath, BaseSaveData, BaseGetData, BaseDelData, BaseGetInstanceMetadata}
+	return []string{BaseGetConfig, BaseConfigSaveOrigin, BaseUpdateConfig, BaseGetDataPath, BaseSaveData, BaseGetData, BaseDelData, BaseGetInstanceMetadata}
 }
 func IsBaseMethod(method string) bool {
 	switch method {
-	case BaseGetConfig, BaseUpdateConfig, BaseGetDataPath, BaseSaveData, BaseGetData, BaseDelData, BaseGetInstanceMetadata:
+	case BaseGetConfig, BaseConfigSaveOrigin, BaseUpdateConfig, BaseGetDataPath, BaseSaveData, BaseGetData, BaseDelData, BaseGetInstanceMetadata:
 		return true
 	}
 	return false
@@ -88,6 +89,20 @@ func (b Base) call(ctx context.Context, method string, arguments map[string]any,
 		return nil, err
 	}
 	return b.Host(ctx, method, raw)
+}
+
+// ConfigSaveOrigin reports whether the active initializer was called by the
+// public configuration save endpoint. The host binds it to that invocation;
+// no configuration field, startup or manager call can assert this origin.
+func (b Base) ConfigSaveOrigin(ctx context.Context) (bool, error) {
+	var saved *bool
+	if err := hostBusinessCall(ctx, b.Host, BaseConfigSaveOrigin, struct{}{}, &saved); err != nil {
+		return false, err
+	}
+	if saved == nil {
+		return false, errors.New("invalid configuration save origin")
+	}
+	return *saved, nil
 }
 
 func (b Base) GetConfig(ctx context.Context, target ...string) (json.RawMessage, error) {

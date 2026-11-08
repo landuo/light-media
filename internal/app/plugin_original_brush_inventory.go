@@ -41,7 +41,11 @@ func (a *App) originalBrushInventory(ctx context.Context) (plugins.BrushInventor
 		if err != nil || identity.State != "active" || identity.CanonicalOrigin != origin {
 			return out, siteIdentityError()
 		}
-		ref := plugins.BrushSiteReferenceV1{SourceID: identity.SourceID, Name: site.Name, Kind: site.Kind, Public: site.Public, Enabled: site.Enabled, LocalStatistics: plugins.BrushLocalStatisticsV1{Status: "missing"}}
+		sourceID, err := a.Store.nativeSourcePublicSiteID(ctx, tx, identity)
+		if err != nil {
+			return out, err
+		}
+		ref := plugins.BrushSiteReferenceV1{SourceID: sourceID, Name: site.Name, Kind: site.Kind, Public: site.Public, Enabled: site.Enabled, HasAPIKey: !site.Public && site.APIKey != "", LocalStatistics: plugins.BrushLocalStatisticsV1{Status: "missing"}}
 		if origin != "" {
 			ref.URL = &origin
 			domain := originalBrushInventoryDomain(site, origin)

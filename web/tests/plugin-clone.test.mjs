@@ -12,6 +12,7 @@ import * as projectHelpers from '../src/features/plugin-project.ts';
 import * as forms from '../src/features/plugin-forms.ts';
 
 const { emptyPluginClone, pluginCloneErrors, pluginCloneInstanceId, safePluginIcon } = cloneHelpers;
+const originalCloneDefaults = JSON.parse(readFileSync(new URL('../../testdata/plugin-clone-ui-defaults-20261106/source-oracle.json', import.meta.url))).cases[0].initial_model;
 const plugin = (overrides = {}) => ({
   plugin_id: 'SeedRescue',
   instance_id: 'SeedRescue2',
@@ -286,7 +287,7 @@ async function mount(t, name, { props = {}, api, emit, desktop = true } = {}) {
   };
 }
 
-test('clone dialog has five editable fields, inherited placeholders, responsive original layout and accurate ID preview', async (t) => {
+test('clone dialog prefills fixed original frontend defaults with editable fields and responsive layout', async (t) => {
   const dialog = await mount(t, 'PluginCloneDialog', { props: { plugin: plugin() } });
   assert.equal(dialog.component('VDialog').props['max-width'], '600');
   assert.equal(dialog.component('VDialog').props.fullscreen, false);
@@ -296,7 +297,7 @@ test('clone dialog has five editable fields, inherited placeholders, responsive 
     ['分身描述', '来源描述'],
     ['分身版本', 'view-9'],
   ]) {
-    assert.equal(dialog.label(name).props.modelValue, '');
+    assert.equal(dialog.label(name).props.modelValue, originalCloneDefaults[{ '分身名称':'name', '分身描述':'description', '分身版本':'version' }[name]]);
     assert.equal(dialog.label(name).props.placeholder, placeholder);
   }
   await dialog.set('分身后缀', 'CopyA');
@@ -310,6 +311,22 @@ test('clone dialog has five editable fields, inherited placeholders, responsive 
     desktop: false,
   });
   assert.equal(mobile.component('VDialog').props.fullscreen, true);
+});
+
+// Expected bodies come from executing fixed2829 Card.executePluginClone,
+// independently of this SFC and its native API route adaptation.
+test('fixed original Card submit normalizes all five clone fields and preserves empty strings', async (t) => {
+  const sourceCases = JSON.parse(readFileSync(new URL('../../testdata/plugin-clone-ui-defaults-20261106/source-submit-oracle.json', import.meta.url))).cases;
+  for (const sample of sourceCases) await t.test(sample.id, async (t) => {
+    const source = sample.id === 'empty-source-version'
+      ? plugin({name:'无版本插件',description:'',version:'',display_version:'',icon:''})
+      : plugin();
+    const dialog = await mount(t, 'PluginCloneDialog', { props: { plugin: source } });
+    for (const [key,label] of [['suffix','分身后缀'],['name','分身名称'],['description','分身描述'],['version','分身版本'],['icon','分身图标']])
+      await dialog.set(label,sample.form[key]);
+    await dialog.submit();await dialog.flush();
+    assert.deepEqual(dialog.requests.map(row=>row.body),sample.actual_posts.map(row=>row.body));
+  });
 });
 
 test('cancel, close and outside/escape dismissal send no request; reopening starts a clean form', async (t) => {
@@ -583,7 +600,7 @@ test('actual card-to-dialog flow creates once, refreshes lists and statistics an
     ['/plugins/SeedRescue2/clone', '/plugins?state=installed', '/plugins/market?details=true', '/plugins/statistic', '/plugins/organization'],
   );
   assert.equal(allRequests.filter((row) => row.body).length, 1);
-  assert.deepEqual(allRequests.find((row) => row.body).body, validForm());
+  assert.deepEqual(allRequests.find((row) => row.body).body, { ...originalCloneDefaults, suffix: 'CopyA' });
   assert.deepEqual(
     app
       .nodes()

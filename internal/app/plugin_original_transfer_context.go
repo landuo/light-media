@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"path/filepath"
 	"slices"
+	"strings"
 
 	"light-media/internal/catalog"
 	"light-media/internal/directorysource"
@@ -75,10 +76,13 @@ func (a *App) originalTransferContextWithMedia(ctx context.Context, identity cat
 		meta.Set("type", "电视剧")
 		meta.Set("begin_season", file.Season)
 		meta.Set("end_season", nil)
-		if len(file.Episodes) == 1 {
+		if len(file.Episodes) > 0 {
 			meta.Set("begin_episode", file.Episodes[0])
 			meta.Set("end_episode", nil)
-			meta.Set("total_episode", 1)
+			if len(file.Episodes) > 1 {
+				meta.Set("end_episode", file.Episodes[len(file.Episodes)-1])
+			}
+			meta.Set("total_episode", len(file.Episodes))
 		}
 	} else {
 		meta.Set("type", "电影")
@@ -115,6 +119,17 @@ func (a *App) originalTransferContextWithMedia(ctx context.Context, identity cat
 const originalNativeMovieNaming = "{{title}}{% if year %} ({{year}}){% else %} (tmdb-{{tmdbid}}){% endif %}/{{title}}{% if year %} ({{year}}){% else %} (tmdb-{{tmdbid}}){% endif %}{% if part %}-{{part}}{% endif %}{{fileExt}}"
 const originalNativeTVNaming = "{{title}}{% if year %} ({{year}}){% else %} (tmdb-{{tmdbid}}){% endif %}/Season {{season}}/{{title}} {{season_episode}}{% if part %}-{{part}}{% endif %}{{fileExt}}"
 
+func originalNativeTransferNaming(identity catalog.Media) string {
+	template := originalNativeMovieNaming
+	if identity.MediaType == "tv" {
+		template = originalNativeTVNaming
+	}
+	if providerNativeMedia(identity) {
+		template = strings.ReplaceAll(template, "tmdb-{{tmdbid}}", "{{media_source}}-{{media_id}}")
+	}
+	return template
+}
+
 func (a *App) originalTransferNativeRename(ctx context.Context, identity catalog.Media, file PlanFile, base string, source originalTransferFileContext, episodes []catalog.Episode, observe ...bool) (string, error) {
 	item, err := originalTransferSourceItem(source, file)
 	if err != nil {
@@ -137,7 +152,17 @@ func (a *App) originalTransferNativeRename(ctx context.Context, identity catalog
 	if extension != "" {
 		extension = "." + extension
 	}
-	input := noticetemplate.ContextInput{Meta: sourceMap(meta), Media: sourceMap(media), FileExtension: extension}
+	mediaFields := sourceMap(media)
+	if mediaFields != nil {
+		// The source TemplateHelper uses image getters. MediaInfo.to_dict
+		// retains the paths, while the naming context needs the getter results.
+		for _, name := range []string{"poster", "backdrop"} {
+			if _, present := mediaFields[name]; !present {
+				mediaFields[name] = strings.ReplaceAll(sourceText(mediaFields[name+"_path"]), "original", "w500")
+			}
+		}
+	}
+	input := noticetemplate.ContextInput{Meta: sourceMap(meta), Media: mediaFields, FileExtension: extension}
 	for _, episode := range episodes {
 		raw, err := json.Marshal(episode)
 		if err != nil {
@@ -153,10 +178,7 @@ func (a *App) originalTransferNativeRename(ctx context.Context, identity catalog
 	if err != nil {
 		return "", err
 	}
-	template := originalNativeMovieNaming
-	if identity.MediaType == "tv" {
-		template = originalNativeTVNaming
-	}
+	template := originalNativeTransferNaming(identity)
 	path, err := a.originalTransferRenamePath(ctx, template, variables, &base, &file.Source, item, observe...)
 	if err != nil {
 		return "", err

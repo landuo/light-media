@@ -21,7 +21,7 @@ func validateSubscriptionCompletedDomainEvent(in DomainEvent) (DomainEvent, erro
 	if in.SchemaVersion == 0 {
 		in.SchemaVersion = 1
 	}
-	if in.Type != "subscription.completed" || in.SchemaVersion != 1 || in.Sequence != 0 || !domainEventIDPattern.MatchString(in.EventID) || !domainReferencePattern.MatchString(in.JobID) || !domainReferencePattern.MatchString(in.WorkflowID) || !domainReferencePattern.MatchString(in.SubscriptionID) || !domainMediaPattern.MatchString(in.MediaID) {
+	if in.Type != "subscription.completed" || in.SchemaVersion != 1 || in.Sequence != 0 || !domainEventIDPattern.MatchString(in.EventID) || !domainReferencePattern.MatchString(in.JobID) || !domainReferencePattern.MatchString(in.WorkflowID) || !domainReferencePattern.MatchString(in.SubscriptionID) || !validDomainMediaID(in.Type, in.MediaID) {
 		return invalid()
 	}
 	if in.IntentID != "" || in.NativeDownloadID != "" || in.AssetID != "" || in.SiteID != "" || in.FileEventID != "" || in.NoticeID != "" || in.DownloadDeletedID != "" || in.PluginTriggerID != "" || in.SourceSiteID != 0 || in.CausationID != "" || in.ParentJobID != "" {

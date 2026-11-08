@@ -132,7 +132,14 @@ func (a *App) qualityImportDownload(ctx context.Context, request ImportRequest) 
 			return nil, te
 		}
 	}
-	if p.MediaKey != request.MediaType+":"+jsonNumber(request.TMDBID) || intent.RootID != request.RootID {
+	identity := request.MediaType + ":" + jsonNumber(request.TMDBID)
+	if request.providerImport() {
+		identity = mediaKey(request.providerIdentity)
+		if identity != mediaKey(intent.Media) {
+			return nil, bad("QUALITY_IMPORT_CONTEXT_CHANGED", "洗版下载与整理影视来源不符")
+		}
+	}
+	if p.MediaKey != identity || intent.RootID != request.RootID {
 		return nil, bad("QUALITY_IMPORT_CONTEXT_CHANGED", "洗版下载与整理身份或媒体库不符")
 	}
 	if e = a.guardQualityAssets(ctx, a.Store.DB, p); e != nil {

@@ -25,6 +25,8 @@ type Media struct {
 	SubscriptionID      string    `json:"subscription_id,omitempty"`
 	DownloadState       string    `json:"download_state,omitempty"`
 	ID                  int64     `json:"id"`
+	ProviderSource      string    `json:"media_source,omitempty"`
+	ProviderID          string    `json:"media_id,omitempty"`
 	MediaType           string    `json:"media_type"`
 	Title               string    `json:"title"`
 	OriginalTitle       string    `json:"original_title"`

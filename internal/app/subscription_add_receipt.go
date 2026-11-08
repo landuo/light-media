@@ -79,7 +79,7 @@ func (p *PluginStore) subscriptionAddReceipt(ctx context.Context, q subscription
 }
 func (a *App) guardUISubscriptionAddMutationTx(ctx context.Context, tx *sql.Tx, origin *sourceSubscriptionOrigin, inputSHA string) error {
 	scope, ok := ctx.Value(subscriptionAddExecutionKey{}).(*subscriptionAddExecution)
-	if !ok || scope == nil || scope.a != a || origin == nil || origin.SourceAddID != scope.Identity.ID || origin.Version != 1 || origin.Channel != "" || origin.Source != "" || (origin.State != "N" && origin.State != "S") {
+	if !ok || scope == nil || scope.a != a || origin == nil || origin.SourceAddID != scope.Identity.ID || origin.Version != 1 || !validSubscriptionAddOrigin(*origin) {
 		return subscriptionAddEvidenceError()
 	}
 	r, e := a.pluginStore.subscriptionAddReceipt(ctx, tx, scope.Identity, true)
@@ -120,6 +120,9 @@ func (a *App) commitUISubscriptionSaveTx(ctx context.Context, tx *sql.Tx, inputS
 }
 func (a *App) admitUISubscriptionAdd(ctx context.Context, input subscriptionAddInput) (subscriptionAddIdentity, Job, error) {
 	var identity subscriptionAddIdentity
+	if !validSubscriptionAddOrigin(input.Origin) || (input.Origin.Channel != "" && !a.originalChatSubscriptionIngress(ctx)) {
+		return identity, Job{}, subscriptionAddEvidenceError()
+	}
 	identity.ID = id("subscription_add_")
 	input.Origin.SourceAddID = identity.ID
 	identity.InputSHA = tokenHash(string(mustCleanSeedJSON(input)))
@@ -218,6 +221,9 @@ func (a *App) runUISubscriptionAdd(ctx context.Context, j Job, key string) error
 		r = current
 	}
 	if r.Stage == "added" || r.Stage == "statistics_pending" {
+		if r.Input.Origin.Channel == "飞书" {
+			return a.startChatSubscriptionAddStatistics(ctx, j, r)
+		}
 		return a.awaitUISubscriptionAddStatistics(ctx, j, r)
 	}
 	return subscriptionAddEvidenceError()
@@ -233,6 +239,10 @@ func (a *App) createUISubscription(ctx context.Context, in SubscriptionRequest, 
 	if e != nil {
 		return Subscription{}, e
 	}
+	return a.executeNewSubscriptionAdd(ctx, input, "网页新增订阅原始业务流程")
+}
+
+func (a *App) executeNewSubscriptionAdd(ctx context.Context, input subscriptionAddInput, label string) (Subscription, error) {
 	identity, job, e := a.admitUISubscriptionAdd(ctx, input)
 	if e != nil {
 		return Subscription{}, e
@@ -245,7 +255,7 @@ func (a *App) createUISubscription(ctx context.Context, in SubscriptionRequest, 
 			state = "failed"
 		}
 	}
-	_, finishErr := a.finishJob(context.WithoutCancel(ctx), job, state, code, "网页新增订阅原始业务流程", time.Now().Add(time.Minute).Unix())
+	_, finishErr := a.finishJob(context.WithoutCancel(ctx), job, state, code, label, time.Now().Add(time.Minute).Unix())
 	var r subscriptionAddReceipt
 	e = a.readQualitySealed(context.WithoutCancel(ctx), a.Store.DB, "subscription_add", identity.ID, &r)
 	if cause != nil {
@@ -261,4 +271,11 @@ func (a *App) createUISubscription(ctx context.Context, in SubscriptionRequest, 
 		return Subscription{}, subscriptionAddEvidenceError()
 	}
 	return *r.Saved, nil
+}
+
+func validSubscriptionAddOrigin(origin sourceSubscriptionOrigin) bool {
+	if origin.Channel == "" {
+		return origin.Source == "" && origin.UserID == "" && (origin.State == "N" || origin.State == "S")
+	}
+	return origin.Channel == "飞书" && origin.Source == "Lark" && origin.UserID != "" && (origin.State == "N" || origin.State == "R")
 }

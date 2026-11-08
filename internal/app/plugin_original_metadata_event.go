@@ -226,7 +226,12 @@ func (a *App) validateOriginalAssetMetadataEvent(asset Asset, raw json.RawMessag
 	if asset.Media.MediaType == "tv" {
 		kind = "电视剧"
 	}
-	if info["type"] != kind || sourceNumberString(info["tmdb_id"]) != strconv.FormatInt(asset.Media.ID, 10) {
+	if providerNativeMedia(asset.Media) {
+		provider := originalChatMediaProvider{Source: asset.Media.ProviderSource, ID: asset.Media.ProviderID}
+		if _, err := originalChatProviderSearchInformation(mustCleanSeedJSON(info), &provider, asset.Media.MediaType); err != nil {
+			return bad("REVIEW_METADATA_CONTEXT", "整理刮削影视身份与当前资产不符")
+		}
+	} else if info["type"] != kind || sourceNumberString(info["tmdb_id"]) != strconv.FormatInt(asset.Media.ID, 10) {
 		return bad("REVIEW_METADATA_CONTEXT", "整理刮削影视身份与当前资产不符")
 	}
 	files, ok := fields["file_list"].([]any)

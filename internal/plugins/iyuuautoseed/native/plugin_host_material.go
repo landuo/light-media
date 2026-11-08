@@ -9,6 +9,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"io"
 	"math/big"
 	"mime/multipart"
@@ -274,40 +275,40 @@ func pluginCookieKey(row map[string]any) (string, bool, error) {
 // Lock is held by the add operation. Source failures deliberately fall back
 // to the original cookie parameter; request guard failures still stop every
 // following dispatch. Global cookie and add writes share one mutation seal.
-func (c *IYUUClient) pluginHostSyncCookiesLocked(ctx context.Context, address, header string) bool {
+func (c *IYUUClient) pluginHostSyncCookiesLocked(ctx context.Context, address, header string) (bool, error) {
 	version := c.webVersion
 	if version == "" {
 		body, err := c.client.qb(mutationReadOnly(ctx), http.MethodGet, "app/webapiVersion", "", "")
 		if err != nil {
-			return false
+			return false, pluginHostCookieTerminalError(err)
 		}
 		version = string(body)
 	}
 	current, err := pep440.Parse(strings.TrimSpace(version))
 	if err != nil {
-		return false
+		return false, nil
 	}
 	minimum := pep440.MustParse("2.11.3")
 	if !current.GreaterThanOrEqual(minimum) {
-		return false
+		return false, nil
 	}
 	hostname, validHost := pluginCookieHostname(address)
 	if !validHost {
-		return false
+		return false, nil
 	}
 	pairs, err := pluginHostCookiePairs(header)
 	if err != nil || len(pairs) == 0 {
-		return false
+		return false, nil
 	}
 	body, err := c.client.qb(mutationReadOnly(ctx), http.MethodGet, "app/cookies", "", "")
 	if err != nil {
-		return false
+		return false, pluginHostCookieTerminalError(err)
 	}
 	d := json.NewDecoder(bytes.NewReader(body))
 	d.UseNumber()
 	var previous []any
 	if d.Decode(&previous) != nil || d.Decode(new(any)) != io.EOF {
-		return false
+		return false, nil
 	}
 	order := []string{}
 	merged := map[string]map[string]any{}
@@ -338,12 +339,12 @@ func (c *IYUUClient) pluginHostSyncCookiesLocked(ctx context.Context, address, h
 			}
 		}
 		if !put(normalized) {
-			return false
+			return false, nil
 		}
 	}
 	for _, pair := range pairs {
 		if !put(map[string]any{"domain": hostname, "path": "/", "name": pair[0], "value": pair[1]}) {
-			return false
+			return false, nil
 		}
 	}
 	list := []map[string]any{}
@@ -352,10 +353,10 @@ func (c *IYUUClient) pluginHostSyncCookiesLocked(ctx context.Context, address, h
 	}
 	encoded, err := json.Marshal(list)
 	if err != nil {
-		return false
+		return false, nil
 	}
 	_, err = c.client.qbSelected(ctx, http.MethodPost, "app/setCookies", url.Values{"cookies": {string(encoded)}}.Encode(), "application/x-www-form-urlencoded")
-	return err == nil
+	return err == nil, pluginHostCookieTerminalError(err)
 }
 
 func (c *IYUUClient) PluginHostAddMaterial(ctx context.Context, spec IYUUAddSpec, paused bool, uploadBytes, downloadBytes *int64, address *string, cookie *string) (out IYUUAddResult, err error) {
@@ -389,8 +390,14 @@ func (c *IYUUClient) PluginHostAddMaterial(ctx context.Context, spec IYUUAddSpec
 	defer c.client.mu.Unlock()
 	if c.client.config.Kind == "qbittorrent" {
 		cookieToUse := cookie
-		if content != "" && cookie != nil && *cookie != "" && !strings.HasPrefix(content, "magnet:") && c.pluginHostSyncCookiesLocked(ctx, content, *cookie) {
-			cookieToUse = nil
+		if content != "" && cookie != nil && *cookie != "" && !strings.HasPrefix(content, "magnet:") {
+			synced, syncErr := c.pluginHostSyncCookiesLocked(ctx, content, *cookie)
+			if syncErr != nil {
+				return out, syncErr
+			}
+			if synced {
+				cookieToUse = nil
+			}
 		}
 		var body bytes.Buffer
 		writer := multipart.NewWriter(&body)
@@ -411,14 +418,17 @@ func (c *IYUUClient) PluginHostAddMaterial(ctx context.Context, spec IYUUAddSpec
 		if len(spec.Tags) > 0 {
 			fields = append(fields, [2]string{"tags", strings.Join(spec.Tags, ",")})
 		}
-		if spec.SkipChecking != nil {
-			fields = append(fields, [2]string{"skip_checking", iyuuBool(*spec.SkipChecking)})
+		if value, present := iyuuSkipCheckingField(spec); present {
+			fields = append(fields, [2]string{"skip_checking", value})
 		}
 		if uploadBytes != nil {
 			fields = append(fields, [2]string{"upLimit", strconv.FormatInt(*uploadBytes, 10)})
 		}
 		if downloadBytes != nil {
 			fields = append(fields, [2]string{"dlLimit", strconv.FormatInt(*downloadBytes, 10)})
+		}
+		for _, label := range spec.QBLabels {
+			fields = append(fields, [2]string{"labels", label})
 		}
 		for _, field := range fields {
 			if err = writer.WriteField(field[0], field[1]); err != nil {
@@ -503,4 +513,12 @@ func (c *IYUUClient) PluginHostAddMaterial(ctx context.Context, spec IYUUAddSpec
 	out.SourceTruthy = true
 	out.Outcome = "confirmed"
 	return out, nil
+}
+
+func pluginHostCookieTerminalError(err error) error {
+	var denied *iyuuGuardError
+	if errors.As(err, &denied) || errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+		return err
+	}
+	return nil
 }

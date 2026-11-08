@@ -30,6 +30,7 @@ type originalPluginInstance struct {
 	sessionMu             sync.Mutex
 	session               *plugins.Client
 	sessionStarted        bool
+	sourceLogSecrets      originalSourceLogSecrets
 }
 
 func (p *originalPluginInstance) frontendPackageHash() string {
@@ -44,7 +45,13 @@ func (p *originalPluginInstance) setFrontendPackageHash(value string) {
 }
 
 type originalInitializingObjectKey struct{}
-type originalInitializationCall struct{ object *originalPluginInstance }
+type originalInitializationCall struct {
+	object            *originalPluginInstance
+	configurationSave bool
+	config            json.RawMessage
+	active            atomic.Bool
+	retire            atomic.Bool
+}
 
 // Keep the actual Config object even when initialization throws after member
 // mutation. A checkpoint decoder is not the original running object's getter.
@@ -61,13 +68,40 @@ func (p *originalPluginInstance) init(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	call := &originalInitializationCall{object: p}
-	_, err = p.callSession(context.WithValue(ctx, originalInitializingObjectKey{}, call), plugins.Runner{Timeout: 10 * time.Second}, "init", config, nil)
-	if err == nil {
-		p.configMu.Lock()
-		p.appliedConfig = append(json.RawMessage(nil), config...)
-		p.configMu.Unlock()
+	initCtx := ctx
+	if originalLiveInitialization(ctx, p) == nil {
+		var endInit func()
+		initCtx, endInit = p.beginOriginalInitialization(ctx, false)
+		defer endInit()
 	}
+	err = p.callOriginalInitializer(initCtx, config)
+	if err == nil {
+		p.recordOriginalAppliedConfig(config)
+	}
+	return err
+}
+
+func (p *originalPluginInstance) recordOriginalAppliedConfig(config json.RawMessage) {
+	p.configMu.Lock()
+	defer p.configMu.Unlock()
+	if (p.installation.PluginID == "AutoBackup" || p.installation.PluginID == "CloudflareSpeedTest") &&
+		len(p.appliedConfig) > 0 && !originalBaseJSONTruthy(config) {
+		return // These warm initializers retain their previous fields.
+	}
+	p.appliedConfig = copyOriginalBaseJSON(config)
+}
+
+func (p *originalPluginInstance) callOriginalInitializer(ctx context.Context, config json.RawMessage) error {
+	// Only this actual initializer call gets the lease. A reentrant ordinary
+	// event named "init" cannot inherit the configuration-save origin.
+	initialization := originalLiveInitialization(ctx, p)
+	if initialization != nil && (p.installation.PluginID == "ScrapeFileClean" || p.installation.PluginID == "CleanInvalidSeed" ||
+		p.installation.PluginID == "CloudflareSpeedTest" || originalCustomHostsInstallation(p.installation)) {
+		// Initializer-bound resources and admitted private callbacks use the
+		// exact host input before init has published the applied configuration.
+		initialization.config = copyOriginalBaseJSON(config)
+	}
+	_, err := p.callSessionBound(ctx, plugins.Runner{Timeout: 10 * time.Second}, "init", config, nil, initialization)
 	return err
 }
 
@@ -76,7 +110,6 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 
 	if err == nil {
 		implementation, resolveErr := a.resolvePluginImplementation(ctx, in)
-		manifest := implementation.Manifest
 		if resolveErr != nil {
 			return nil
 		}
@@ -84,39 +117,52 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 			a.log("WARN", "plugins", "adapter_unavailable", "插件尚未适配新的标准模块，未加载旧执行器", "", "")
 			return nil
 		}
-		meta, metadataErr := a.pluginStore.instanceMetadata(ctx, a.Store.DB, instance)
-		if metadataErr != nil {
-			return nil
-		}
-		class := originalPluginClass{installation: in, isClone: meta.SourceInstanceID != "", external: implementation.External}
-		a.storeOriginalPluginClass(instance, class)
-		object := &originalPluginInstance{app: a, installation: in, manifest: manifest, external: implementation.External, hostContract: implementation.HostContract}
-		object.setFrontendPackageHash(implementation.PackageSHA256)
-		a.registerOriginalObjectChainHandlers(object)
-		err = object.init(ctx)
-		if err != nil && object.external {
-			object.finishOriginalInitialization(false)
-		}
+		object, class, err := a.prepareOriginalPluginObject(ctx, in, implementation)
 		if err == nil {
-			a.pluginOriginalRunningMu.Lock()
-			if _, exists := a.pluginRunningInstances.Load(instance); !exists {
-				a.pluginOriginalRunningOrder = append(a.pluginOriginalRunningOrder, instance)
-			}
-			a.pluginRunningInstances.Store(instance, object)
-			a.pluginOriginalRunningMu.Unlock()
-			object.finishOriginalInitialization(true)
-			// Original start stores the object before get_state/event registration.
-			// A later exception is caught without rolling back that stored object.
-			if err = a.updateOriginalPluginEventState(ctx, object); err != nil {
-				a.log("ERROR", "plugins", "load_failed", "插件事件状态设置失败", "", "")
-				return nil
-			}
-			return object
+			return a.startPreparedOriginalPlugin(ctx, object, class)
 		}
 	}
 	// Original start catches per-plugin init errors and leaves no running object.
 	a.log("ERROR", "plugins", "load_failed", "插件初始化失败，实例未加载", "", "")
 	return nil
+}
+
+// Startup imports the full fixed class list before any initializer. Preparing
+// these finite objects does not publish classes or run business initializers.
+func (a *App) prepareOriginalPluginObject(ctx context.Context, in PluginInstallation, implementation pluginImplementation) (*originalPluginInstance, originalPluginClass, error) {
+	meta, err := a.pluginStore.instanceMetadata(ctx, a.Store.DB, in.InstanceID)
+	if err != nil {
+		return nil, originalPluginClass{}, err
+	}
+	class := originalPluginClass{installation: in, isClone: meta.SourceInstanceID != "", external: implementation.External}
+	object := &originalPluginInstance{app: a, installation: in, manifest: implementation.Manifest, external: implementation.External, hostContract: implementation.HostContract}
+	object.setFrontendPackageHash(implementation.PackageSHA256)
+	return object, class, nil
+}
+func (a *App) startPreparedOriginalPlugin(ctx context.Context, object *originalPluginInstance, class originalPluginClass) *originalPluginInstance {
+	instance := object.installation.InstanceID
+	a.storeOriginalPluginClass(instance, class)
+	a.registerOriginalObjectChainHandlers(object)
+	err := object.init(ctx)
+	if err != nil {
+		object.finishOriginalInitialization(false)
+		a.log("ERROR", "plugins", "load_failed", "插件初始化失败，实例未加载", "", "")
+		return nil
+	}
+	// Source start unconditionally inserts the pre-imported object after init,
+	// even if init removed its own class, code or installed membership.
+	a.pluginOriginalRunningMu.Lock()
+	if _, exists := a.pluginRunningInstances.Load(instance); !exists {
+		a.pluginOriginalRunningOrder = append(a.pluginOriginalRunningOrder, instance)
+	}
+	a.pluginRunningInstances.Store(instance, object)
+	a.pluginOriginalRunningMu.Unlock()
+	object.finishOriginalInitialization(true)
+	if err = a.updateOriginalPluginEventState(ctx, object); err != nil {
+		a.log("ERROR", "plugins", "load_failed", "插件事件状态设置失败", "", "")
+		return nil
+	}
+	return object
 }
 
 // Clone uses the same reload lifecycle, then repeats the source initializer
@@ -162,6 +208,12 @@ func (a *App) initializeOriginalCloneCalls(ctx context.Context, instance string)
 // Only the manager decides stop order. Client.StopWithHost owns the actual
 // process shutdown/join; no legacy queue transition can veto this method.
 func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
+	a.log("INFO", "plugins", "plugin_stopping", a.clean("正在停止插件 "+instance+"..."), "", "")
+	return a.stopOriginalPluginObject(ctx, instance)
+}
+
+// Global stop has one original manager INFO header; object cleanup is shared.
+func (a *App) stopOriginalPluginObject(ctx context.Context, instance string) error {
 	loaded, ok := a.pluginRunningInstances.Load(instance)
 	if !ok {
 		a.stopOriginalUnpublishedSubmissions(ctx, instance)
@@ -169,21 +221,40 @@ func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
 		return nil
 	}
 	object := loaded.(*originalPluginInstance)
-	object.stopping.Store(true)
-	object.closeOriginalSubmissions()
+	retainedPublic := object.beginOriginalPublicServiceStop()
+	drainedPrivate := object.drainOriginalPrivateScheduler(context.WithoutCancel(ctx))
+	if !drainedPrivate {
+		object.stopping.Store(true)
+	}
+	if retainedPublic {
+		object.closeOriginalUnretainedSubmissions()
+	} else {
+		object.closeOriginalSubmissions()
+	}
 	object.configMu.Lock()
 	object.eventsEnabled = false
 	object.configMu.Unlock()
-	stopCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
-	defer cancel()
-	if err := object.stopOriginalMethods(stopCtx); err != nil {
-		a.log("ERROR", "plugins", "stop_method_failed", "插件停止方法失败", "", "")
+	stopParent := ctx
+	if drainedPrivate {
+		stopParent = context.WithoutCancel(ctx)
 	}
-	if err := object.stopSession(stopCtx); err != nil {
-		a.log("ERROR", "plugins", "stop_failed", "插件停止方法失败", "", "")
+	stopCtx, cancel := context.WithTimeout(stopParent, 10*time.Second)
+	defer cancel()
+	if retainedPublic {
+		if !drainedPrivate {
+			if err := object.stopOriginalPublicServiceMethods(stopCtx); err != nil {
+				a.log("ERROR", "plugins", "stop_method_failed", "插件停止方法失败", "", "")
+			}
+		}
+	} else {
+		if err := object.stopOriginalMethods(stopCtx); err != nil {
+			a.log("ERROR", "plugins", "stop_method_failed", "插件停止方法失败", "", "")
+		}
+		if err := object.stopSession(stopCtx); err != nil {
+			a.log("ERROR", "plugins", "stop_failed", "插件停止方法失败", "", "")
+		}
 	}
 	a.pluginOriginalRunningMu.Lock()
-	defer a.pluginOriginalRunningMu.Unlock()
 	a.forgetOriginalPluginClassLocked(instance)
 	a.pluginRunningInstances.Delete(instance)
 	for i, id := range a.pluginOriginalRunningOrder {
@@ -191,6 +262,10 @@ func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
 			a.pluginOriginalRunningOrder = append(a.pluginOriginalRunningOrder[:i], a.pluginOriginalRunningOrder[i+1:]...)
 			break
 		}
+	}
+	a.pluginOriginalRunningMu.Unlock()
+	if retainedPublic {
+		object.finishOriginalPublicServiceStop()
 	}
 	return nil
 }

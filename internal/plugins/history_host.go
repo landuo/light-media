@@ -12,21 +12,23 @@ const (
 )
 
 type DownloadHistoryRequestV1 struct {
-	Hash string `json:"hash"`
+	Hash             string `json:"hash"`
+	SourceProjection bool   `json:"source_projection,omitempty"`
 }
 type DownloadHistoryRowV1 struct {
-	ID           string `json:"id"`
-	Hash         string `json:"hash"`
-	Title        string `json:"title"`
-	Type         string `json:"type"`
-	TMDBID       int64  `json:"tmdbid"`
-	Season       int    `json:"season"`
-	Episodes     []int  `json:"episodes"`
-	SiteID       string `json:"site_id"`
-	DownloaderID string `json:"downloader_id"`
-	SavePath     string `json:"save_path"`
-	State        string `json:"state"`
-	CreatedAt    string `json:"created_at"`
+	ID           string  `json:"id"`
+	Hash         string  `json:"hash"`
+	Title        string  `json:"title"`
+	Type         string  `json:"type"`
+	TMDBID       int64   `json:"tmdbid"`
+	Season       int     `json:"season"`
+	Seasons      *string `json:"seasons,omitempty"`
+	Episodes     []int   `json:"episodes"`
+	SiteID       string  `json:"site_id"`
+	DownloaderID string  `json:"downloader_id"`
+	SavePath     string  `json:"save_path"`
+	State        string  `json:"state"`
+	CreatedAt    string  `json:"created_at"`
 }
 type DownloadHistoryResultV1 struct {
 	SchemaVersion int                   `json:"schema_version"`

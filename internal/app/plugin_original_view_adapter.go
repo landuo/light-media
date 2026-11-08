@@ -33,6 +33,12 @@ func (p *originalPluginInstance) originalViewRenderMode(ctx context.Context) (mo
 }
 
 func (p *originalPluginInstance) originalViewDashboard(ctx context.Context, key string, userAgent *string) (json.RawMessage, bool, error) {
+	// The original direct dashboard endpoint still calls Base.get_dashboard
+	// when no implementation exists. Its pass body returns None, while metadata
+	// discovery must skip that same getter before reading state.
+	if p != nil && p.external && !slices.Contains(p.manifest.Methods, "get_dashboard") {
+		return json.RawMessage(`null`), true, nil
+	}
 	args := map[string]any{"key": key, "user_agent": userAgent}
 	if p != nil && p.manifest.DashboardParameters != nil {
 		parameters := *p.manifest.DashboardParameters

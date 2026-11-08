@@ -12,7 +12,7 @@ import (
 
 // The native history is a projection of the committed execution plan/job. Read
 // its stable ID after that commit; a preview never emits a completion event.
-func (a *App) emitOriginalTransferResult(ctx context.Context, plan ImportPlan, file PlanFile, source originalTransferFileContext, success bool, message string, history any, provided ...map[string]any) {
+func (a *App) emitOriginalTransferResult(ctx context.Context, plan ImportPlan, file PlanFile, source originalTransferFileContext, success bool, message string, history any, refreshKey, refreshTarget string, provided ...map[string]any) {
 	if len(source.Meta) == 0 || len(source.Media) == 0 {
 		return
 	}
@@ -132,6 +132,10 @@ func (a *App) emitOriginalTransferResult(ctx context.Context, plan ImportPlan, f
 		a.originalTransferEventError(ctx, err)
 		return
 	}
+	if refreshKey != "" && event == "transfer.complete" {
+		a.enqueueOriginalTransferRefresh(ctx, raw, refreshKey, refreshTarget)
+		return
+	}
 	a.broadcastOriginalPluginEvent(ctx, event, raw)
 }
 
@@ -177,10 +181,7 @@ func originalTransferMediaRoot(plan ImportPlan, file PlanFile) (string, error) {
 	if !importBool(plan.Renaming, true) {
 		return filepath.Dir(file.Target), nil
 	}
-	format := originalNativeMovieNaming
-	if plan.Media.MediaType == "tv" {
-		format = originalNativeTVNaming
-	}
+	format := originalNativeTransferNaming(plan.Media)
 	root, err := directorysource.MediaRoot(&format, file.Target)
 	if err != nil {
 		return "", err

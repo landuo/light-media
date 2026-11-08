@@ -14,7 +14,7 @@ import (
 
 func originalHostDownloaderCapability(method string) bool {
 	switch method {
-	case plugins.DownloaderConnectionCapability, plugins.DownloaderDeleteFilesCapability, plugins.DownloaderCompletedCapability, plugins.DownloaderDownloadingCapability, plugins.DownloaderAddCapability, plugins.DownloaderControlCapability, plugins.DownloaderTagsCapability, plugins.DownloaderFindByTagCapability, plugins.DownloaderDeleteTagsCapability, plugins.DownloaderListCapability, plugins.DownloaderTrackersCapability:
+	case plugins.DownloaderSourceFindByTagCapability, plugins.DownloaderSourceConnectionCapability, plugins.DownloaderConfigurationsReadCapability, plugins.DownloaderSourceTasksCapability, plugins.DownloaderSourceCompletedCapability, plugins.DownloaderSourceAddCapability, plugins.DownloaderSourceControlCapability, plugins.DownloaderConnectionCapability, plugins.DownloaderDeleteFilesCapability, plugins.DownloaderCompletedCapability, plugins.DownloaderDownloadingCapability, plugins.DownloaderAddCapability, plugins.DownloaderControlCapability, plugins.DownloaderTagsCapability, plugins.DownloaderFindByTagCapability, plugins.DownloaderDeleteTagsCapability, plugins.DownloaderListCapability, plugins.DownloaderTrackersCapability:
 		return true
 	}
 	return false
@@ -29,6 +29,9 @@ func (a *App) originalHostDownloaderMutationClient(ctx context.Context, scope or
 }
 
 func (a *App) originalHostDownloaderBoundClient(ctx context.Context, scope originalBaseCallScope, id string, requireEnabled bool) (*native.IYUUClient, string, func(context.Context) error, error) {
+	return a.originalHostDownloaderBoundSourceClient(ctx, scope, id, requireEnabled, false)
+}
+func (a *App) originalHostDownloaderBoundSourceClient(ctx context.Context, scope originalBaseCallScope, id string, requireEnabled, source bool) (*native.IYUUClient, string, func(context.Context) error, error) {
 	if _, err := (plugins.DownloaderTasksRequestV1{DownloaderID: id, Hashes: []string{}}).CanonicalSelection(); err != nil {
 		return nil, "", nil, bad("INVALID_PLUGIN_VALUE", "必须指定下载器实例 ID")
 	}
@@ -46,7 +49,12 @@ func (a *App) originalHostDownloaderBoundClient(ctx context.Context, scope origi
 	default:
 		return nil, "", nil, bad("DOWNLOADER_UNSUPPORTED", "下载器类型不支持插件操作")
 	}
-	guard := func(ctx context.Context) error {
+	guard := func(ctx context.Context) (err error) {
+		defer func() {
+			if err != nil {
+				err = &originalDownloaderGuardError{cause: err}
+			}
+		}()
 		if err := ctx.Err(); err != nil {
 			return err
 		}
@@ -71,7 +79,7 @@ func (a *App) originalHostDownloaderBoundClient(ctx context.Context, scope origi
 	if err := guard(ctx); err != nil {
 		return nil, "", nil, err
 	}
-	client, err := native.NewIYUUClient(native.Config{ID: id, Kind: kind, BaseURL: configured.BaseURL, Username: configured.Username, Password: configured.Password}, native.IYUUOptions{APIKey: configured.APIKey, AutoCategory: configured.AutoCategory, Sequential: configured.Sequential, FirstLast: configured.FirstLast, Guard: guard})
+	client, err := native.NewIYUUClient(native.Config{ID: id, Kind: kind, BaseURL: configured.BaseURL, Username: configured.Username, Password: configured.Password}, native.IYUUOptions{APIKey: configured.APIKey, SourceQBLogin: source, SourceTRResponse: source, AutoCategory: configured.AutoCategory, Sequential: configured.Sequential, FirstLast: configured.FirstLast, Guard: guard})
 	return client, kind, guard, err
 }
 
@@ -91,6 +99,12 @@ func originalHostDownloaderAddDecode(raw json.RawMessage, out any) error {
 
 func (a *App) originalHostDownloaderResource(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (json.RawMessage, error) {
 	switch method {
+	case plugins.DownloaderSourceConnectionCapability:
+		return a.originalHostDownloaderSourceConnection(ctx, scope, raw)
+	case plugins.DownloaderConfigurationsReadCapability:
+		return a.originalDownloaderConfigurations(ctx, raw)
+	case plugins.DownloaderSourceTasksCapability, plugins.DownloaderSourceCompletedCapability, plugins.DownloaderSourceAddCapability, plugins.DownloaderSourceControlCapability:
+		return a.originalHostDownloaderSourceResource(ctx, scope, method, raw)
 	case plugins.DownloaderConnectionCapability:
 		return a.originalHostDownloaderConnection(ctx, scope, raw)
 	case plugins.DownloaderDeleteFilesCapability:
@@ -130,7 +144,7 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 			}
 			hashes = append(hashes, strings.ToLower(hash))
 		}
-		tasks, err := originalDownloaderTaskProjection(kind, hashes, body)
+		tasks, err := originalDownloaderTaskProjectionForBrush(kind, hashes, body, false, originalBrushSourceScope(ctx, scope))
 		if err != nil {
 			return nil, err
 		}
@@ -171,7 +185,7 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 			return nil, bad("INVALID_PLUGIN_VALUE", "标签读取 Hash 无效")
 		}
 		return a.originalHostDownloaderTags(ctx, scope, request)
-	case plugins.DownloaderFindByTagCapability:
+	case plugins.DownloaderFindByTagCapability, plugins.DownloaderSourceFindByTagCapability:
 		var request plugins.DownloaderFindByTagRequestV1
 		if err := originalResourceDecode(raw, &request); err != nil {
 			return nil, err
@@ -179,7 +193,7 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 		if request.Validate() != nil {
 			return nil, bad("INVALID_PLUGIN_VALUE", "标签轮询必须指定下载器和标签")
 		}
-		client, kind, guard, err := a.originalHostDownloaderMutationClient(ctx, scope, request.DownloaderID)
+		client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, method == plugins.DownloaderSourceFindByTagCapability)
 		if err != nil {
 			return nil, err
 		}
@@ -187,7 +201,12 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 		if kind != "qbittorrent" {
 			return nil, bad("DOWNLOADER_UNSUPPORTED", "标签轮询仅适用qBittorrent")
 		}
-		hash, err := client.PluginHostFindByTag(ctx, request.Tags, request.Status)
+		var hash string
+		if method == plugins.DownloaderSourceFindByTagCapability {
+			hash, err = client.PluginHostSourceFindByTag(ctx, request.Tags, request.Status)
+		} else {
+			hash, err = client.PluginHostFindByTag(ctx, request.Tags, request.Status)
+		}
 		if current := guard(ctx); current != nil {
 			return nil, current
 		}
@@ -206,6 +225,16 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 		}
 		if len(request.Tags) == 0 {
 			return nil, bad("INVALID_PLUGIN_VALUE", "必须指定要删除的标签定义")
+		}
+		if scope.object != nil && scope.object.installation.PluginID == "BrushFlowLanduo" {
+			if !originalBrushSourceScope(ctx, scope) || scope.phase != "cleanup_tags" && scope.phase != "cleanup_task_tag" {
+				return nil, bad("PLUGIN_CAPABILITY_DENIED", "刷流标签清理不在当前任务范围内")
+			}
+			for _, tag := range request.Tags {
+				if !strings.HasPrefix(tag, "刷流-") {
+					return nil, bad("PLUGIN_CAPABILITY_DENIED", "只允许清理刷流任务标签")
+				}
+			}
 		}
 		client, kind, guard, err := a.originalHostDownloaderMutationClient(ctx, scope, request.DownloaderID)
 		if err != nil {
@@ -242,7 +271,10 @@ func (a *App) originalHostDownloaderCompleted(ctx context.Context, scope origina
 	return a.originalHostDownloaderFiltered(ctx, scope, request, false)
 }
 func (a *App) originalHostDownloaderFiltered(ctx context.Context, scope originalBaseCallScope, request plugins.DownloaderCompletedRequestV1, downloading bool) (json.RawMessage, error) {
-	client, kind, guard, err := a.originalHostDownloaderClient(ctx, scope, request.DownloaderID)
+	return a.originalHostDownloaderFilteredOutcome(ctx, scope, request, downloading, false, false)
+}
+func (a *App) originalHostDownloaderFilteredOutcome(ctx context.Context, scope originalBaseCallScope, request plugins.DownloaderCompletedRequestV1, downloading, source, includeQBPackFields bool) (json.RawMessage, error) {
+	client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, source)
 	if err != nil {
 		return nil, err
 	}
@@ -252,7 +284,7 @@ func (a *App) originalHostDownloaderFiltered(ctx context.Context, scope original
 	if request.Hashes != nil {
 		hashes, _ = (plugins.DownloaderTasksRequestV1{DownloaderID: request.DownloaderID, Hashes: request.Hashes}).CanonicalSelection()
 		if len(hashes) == 0 {
-			return originalHostDownloaderMarshal(out)
+			return originalHostDownloaderTasksOutcome(out, source, false)
 		}
 	}
 	var body json.RawMessage
@@ -265,6 +297,9 @@ func (a *App) originalHostDownloaderFiltered(ctx context.Context, scope original
 		return nil, current
 	}
 	if err != nil {
+		if source && originalDownloaderNativeError(ctx, err) {
+			return originalHostDownloaderTasksOutcome(out, true, true)
+		}
 		return nil, err
 	}
 	var rows []map[string]json.RawMessage
@@ -297,20 +332,26 @@ func (a *App) originalHostDownloaderFiltered(ctx context.Context, scope original
 	}
 	body, err = json.Marshal(filteredRows)
 	if err == nil {
-		out.Tasks, err = originalDownloaderTaskProjection(kind, projectionHashes, body)
+		out.Tasks, err = originalDownloaderTaskProjectionForBrush(kind, projectionHashes, body, includeQBPackFields, originalBrushSourceScope(ctx, scope))
 	}
 	if err != nil {
 		return nil, err
 	}
-	return originalHostDownloaderMarshal(out)
+	return originalHostDownloaderTasksOutcome(out, source, false)
 }
 
 func (a *App) originalHostDownloaderAdd(ctx context.Context, scope originalBaseCallScope, request plugins.DownloaderAddRequestV1) (json.RawMessage, error) {
-	client, kind, guard, err := a.originalHostDownloaderMutationClient(ctx, scope, request.DownloaderID)
+	return a.originalHostDownloaderAddOutcome(ctx, scope, request, false, nil, nil)
+}
+func (a *App) originalHostDownloaderAddOutcome(ctx context.Context, scope originalBaseCallScope, request plugins.DownloaderAddRequestV1, source bool, skipCheckingWire *string, qbLabels []string) (json.RawMessage, error) {
+	client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, source)
 	if err != nil {
 		return nil, err
 	}
 	defer client.Close()
+	if kind != "qbittorrent" && (skipCheckingWire != nil || len(qbLabels) != 0) {
+		return nil, bad("INVALID_PLUGIN_VALUE", "原始skip_checking及labels字段仅适用qBittorrent")
+	}
 	if kind != "qbittorrent" && (request.UploadLimitBytes != nil || request.DownloadLimitBytes != nil) {
 		return nil, bad("INVALID_PLUGIN_VALUE", "Transmission限速使用set_limits的KB/s字段")
 	}
@@ -318,32 +359,48 @@ func (a *App) originalHostDownloaderAdd(ctx context.Context, scope originalBaseC
 	if request.IgnoreCategoryCheck != nil {
 		ignoreCategory = *request.IgnoreCategoryCheck
 	}
-	spec := native.IYUUAddSpec{Torrent: request.Torrent, Magnet: request.Magnet, SavePath: request.SavePath, Tags: request.Tags, Category: request.Category, SkipChecking: request.SkipChecking, IgnoreCategoryCheck: ignoreCategory}
+	spec := native.IYUUAddSpec{Torrent: request.Torrent, Magnet: request.Magnet, SavePath: request.SavePath, Tags: request.Tags, Category: request.Category, SkipChecking: request.SkipChecking, IgnoreCategoryCheck: ignoreCategory, SkipCheckingWire: skipCheckingWire, QBLabels: qbLabels}
 	// Reuse generic bytes/magnet transport only, with ordinary source defaults.
 	// No legacy business selection, journal, ownership or queue is invoked.
 	result, err := client.PluginHostAddMaterial(ctx, spec, request.Paused, request.UploadLimitBytes, request.DownloadLimitBytes, request.URL, request.Cookie)
-	if current := guard(ctx); current != nil {
+	if current := originalDownloaderOutcomeGuard(ctx, guard, err, source); current != nil {
 		if result.Accepted || result.Outcome == "unknown" {
-			return originalHostDownloaderMarshal(plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Accepted: result.Accepted, Outcome: result.Outcome, Hash: result.Hash, AddedIDs: result.AddedIDs, FailureCode: "CALL_CHANGED_AFTER_MUTATION"})
+			return originalHostDownloaderMutationOutcome(ctx, source, err, plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Accepted: result.Accepted, Outcome: result.Outcome, Hash: result.Hash, AddedIDs: result.AddedIDs, FailureCode: "CALL_CHANGED_AFTER_MUTATION"})
 		}
 		return nil, current
 	}
 	if err != nil {
+		if source && originalDownloaderNativeError(ctx, err) {
+			return originalHostDownloaderMutationOutcome(ctx, true, err, plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Accepted: result.Accepted, Outcome: result.Outcome, Hash: result.Hash, AddedIDs: result.AddedIDs})
+		}
 		if result.Outcome == "unknown" {
 			return nil, bad("DOWNLOADER_OUTCOME_UNKNOWN", "种子添加已发送，结果未知；请先查询任务，勿自动重试")
 		}
 		return nil, err
 	}
-	return originalHostDownloaderMarshal(plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Accepted: result.Accepted, Outcome: result.Outcome, Hash: result.Hash, AddedIDs: result.AddedIDs})
+	return originalHostDownloaderMutationOutcome(ctx, source, err, plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Accepted: result.Accepted, Outcome: result.Outcome, Hash: result.Hash, AddedIDs: result.AddedIDs})
 }
 
 func (a *App) originalHostDownloaderControl(ctx context.Context, scope originalBaseCallScope, request plugins.DownloaderControlRequestV1) (json.RawMessage, error) {
-	client, kind, guard, err := a.originalHostDownloaderMutationClient(ctx, scope, request.DownloaderID)
+	return a.originalHostDownloaderControlOutcome(ctx, scope, request, false)
+}
+func (a *App) originalHostDownloaderControlOutcome(ctx context.Context, scope originalBaseCallScope, request plugins.DownloaderControlRequestV1, source bool) (json.RawMessage, error) {
+	brush := scope.object != nil && scope.object.installation.PluginID == "BrushFlowLanduo"
+	if brush {
+		a.downloadMu.Lock()
+		defer a.downloadMu.Unlock()
+	}
+	client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, source)
 	if err != nil {
 		return nil, err
 	}
 	defer client.Close()
 	hashes, _ := (plugins.DownloaderTasksRequestV1{DownloaderID: request.DownloaderID, Hashes: request.Hashes}).CanonicalSelection()
+	if brush {
+		if err := a.originalBrushControlAllowed(ctx, scope, client, kind, request.DownloaderID, request.Action, hashes); err != nil {
+			return nil, err
+		}
+	}
 	if kind != "qbittorrent" && (request.Action == "set_category" || request.Action == "reannounce" || request.Action == "remove_tags" || request.Action == "delete_tags") || kind == "qbittorrent" && request.Action == "set_limits" {
 		return nil, bad("DOWNLOADER_UNSUPPORTED", "该下载器不支持此操作")
 	}
@@ -364,7 +421,7 @@ func (a *App) originalHostDownloaderControl(ctx context.Context, scope originalB
 		tags := request.Tags
 		if kind == "transmission" {
 			if len(tags) == 0 {
-				return originalHostDownloaderMarshal(plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Outcome: "rejected"})
+				return originalHostDownloaderMutationOutcome(ctx, source, err, plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Outcome: "rejected"})
 			}
 			tags = []string{}
 			seen := map[string]bool{}
@@ -393,22 +450,30 @@ func (a *App) originalHostDownloaderControl(ctx context.Context, scope originalB
 			previousAccepted = true
 		}
 	}
-	if current := guard(ctx); current != nil {
+	if current := originalDownloaderOutcomeGuard(ctx, guard, err, source); current != nil {
 		if result.Accepted || result.Outcome == "unknown" {
-			return originalHostDownloaderMarshal(plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Accepted: result.Accepted, Outcome: result.Outcome, FailureCode: "CALL_CHANGED_AFTER_MUTATION"})
+			return originalHostDownloaderMutationOutcome(ctx, source, err, plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Accepted: result.Accepted, Outcome: result.Outcome, FailureCode: "CALL_CHANGED_AFTER_MUTATION"})
 		}
 		return nil, current
 	}
 	if partial {
-		return originalHostDownloaderMarshal(plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Outcome: "unknown", FailureCode: "PARTIAL_MUTATION"})
+		return originalHostDownloaderMutationOutcome(ctx, source, err, plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Outcome: "unknown", FailureCode: "PARTIAL_MUTATION"})
 	}
 	if err != nil {
+		if source && originalDownloaderNativeError(ctx, err) {
+			return originalHostDownloaderMutationOutcome(ctx, true, err, plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Accepted: result.Accepted, Outcome: result.Outcome})
+		}
 		if result.Outcome == "unknown" {
 			return nil, bad("DOWNLOADER_OUTCOME_UNKNOWN", "下载器操作已发送，结果未知；请先查询任务，勿自动重试")
 		}
 		return nil, err
 	}
-	return originalHostDownloaderMarshal(plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Accepted: result.Accepted, Outcome: result.Outcome})
+	if brush && request.Action == "remove_task" && result.Accepted && result.Outcome == "confirmed" {
+		if err := a.originalBrushForgetOwners(ctx, scope, request.DownloaderID, hashes); err != nil {
+			return originalHostDownloaderMutationOutcome(ctx, source, err, plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Accepted: true, Outcome: "confirmed", FailureCode: "PARTIAL_MUTATION"})
+		}
+	}
+	return originalHostDownloaderMutationOutcome(ctx, source, err, plugins.DownloaderMutationV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Accepted: result.Accepted, Outcome: result.Outcome})
 }
 
 func (a *App) originalHostDownloaderTags(ctx context.Context, scope originalBaseCallScope, request plugins.DownloaderTagsRequestV1) (json.RawMessage, error) {

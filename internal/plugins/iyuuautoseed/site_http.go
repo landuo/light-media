@@ -499,6 +499,15 @@ func decodeResponseBytes(raw []byte, enc string) (string, error) {
 func responseText(raw []byte, contentType string) (string, error) {
 	return decodeResponseBytes(raw, headerEncoding(contentType))
 }
+
+// DecodeRequestsSiteResponse reuses the pinned requests text/JSON charset
+// rules for trusted host material adapters.
+func DecodeRequestsSiteResponse(raw []byte, contentType string, asJSON bool) (string, error) {
+	if asJSON {
+		return responseJSONText(raw, contentType)
+	}
+	return responseText(raw, contentType)
+}
 func responseJSONText(raw []byte, contentType string) (string, error) {
 	enc := headerEncoding(contentType)
 	if enc == "" && len(raw) > 3 {

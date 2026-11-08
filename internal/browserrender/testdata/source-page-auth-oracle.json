@@ -1,0 +1,258 @@
+{
+  "rows": [
+    {
+      "stage": "ok",
+      "timeout": 60,
+      "result": {
+        "response": "<html>owned FS</html>"
+      },
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"sessions.create\", \"session\": \"0dd52346-6bf1-425c-a7f3-da6dc4a3c632\", \"proxy\": {\"url\": \"http://owned.invalid:1234\", \"username\": \"owned%2Fuser\", \"password\": \"owned%3Apass\"}}"
+        },
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://hdsky.me/attendance.php\", \"session\": \"0dd52346-6bf1-425c-a7f3-da6dc4a3c632\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        },
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"sessions.destroy\", \"session\": \"0dd52346-6bf1-425c-a7f3-da6dc4a3c632\"}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "debug",
+          "message": "\u68c0\u6d4b\u5230flaresolverr\u4ee3\u7406\u9700\u8981\u8ba4\u8bc1\uff0c\u4f7f\u7528 session \u6a21\u5f0f"
+        },
+        {
+          "level": "debug",
+          "message": "\u5df2\u6e05\u7406 FlareSolverr \u4f1a\u8bdd: 0dd52346-6bf1-425c-a7f3-da6dc4a3c632"
+        }
+      ],
+      "constructors": [
+        {
+          "content_type": "application/json",
+          "timeout": 60
+        },
+        {
+          "content_type": "application/json",
+          "timeout": 60
+        },
+        {
+          "content_type": "application/json",
+          "timeout": 10
+        }
+      ]
+    },
+    {
+      "stage": "ok",
+      "timeout": true,
+      "result": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"sessions.destroy\", \"session\": \"05960e70-6a9d-4f8e-8607-59a5a81eed4f\"}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "debug",
+          "message": "\u68c0\u6d4b\u5230flaresolverr\u4ee3\u7406\u9700\u8981\u8ba4\u8bc1\uff0c\u4f7f\u7528 session \u6a21\u5f0f"
+        },
+        {
+          "level": "error",
+          "message": "\u8c03\u7528 FlareSolverr \u5931\u8d25: Timeout cannot be a boolean value. It must be an int, float or None."
+        },
+        {
+          "level": "debug",
+          "message": "\u5df2\u6e05\u7406 FlareSolverr \u4f1a\u8bdd: 05960e70-6a9d-4f8e-8607-59a5a81eed4f"
+        }
+      ],
+      "constructors": [
+        {
+          "content_type": "application/json",
+          "timeout": true
+        },
+        {
+          "content_type": "application/json",
+          "timeout": 10
+        }
+      ]
+    },
+    {
+      "stage": "ok",
+      "timeout": "2",
+      "result": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"sessions.destroy\", \"session\": \"37ae8767-14b9-4717-955c-8fc4841e9e9d\"}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "debug",
+          "message": "\u68c0\u6d4b\u5230flaresolverr\u4ee3\u7406\u9700\u8981\u8ba4\u8bc1\uff0c\u4f7f\u7528 session \u6a21\u5f0f"
+        },
+        {
+          "level": "error",
+          "message": "\u8c03\u7528 FlareSolverr \u5931\u8d25: Timeout value connect was 2, but it must be an int, float or None."
+        },
+        {
+          "level": "debug",
+          "message": "\u5df2\u6e05\u7406 FlareSolverr \u4f1a\u8bdd: 37ae8767-14b9-4717-955c-8fc4841e9e9d"
+        }
+      ],
+      "constructors": [
+        {
+          "content_type": "application/json",
+          "timeout": "2"
+        },
+        {
+          "content_type": "application/json",
+          "timeout": 10
+        }
+      ]
+    },
+    {
+      "stage": "create-failed",
+      "timeout": 1.25,
+      "result": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"sessions.create\", \"session\": \"a9396c43-9413-48ae-bfa8-677177951e43\", \"proxy\": {\"url\": \"http://owned.invalid:1234\", \"username\": \"owned%2Fuser\", \"password\": \"owned%3Apass\"}}"
+        },
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"sessions.destroy\", \"session\": \"a9396c43-9413-48ae-bfa8-677177951e43\"}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "debug",
+          "message": "\u68c0\u6d4b\u5230flaresolverr\u4ee3\u7406\u9700\u8981\u8ba4\u8bc1\uff0c\u4f7f\u7528 session \u6a21\u5f0f"
+        },
+        {
+          "level": "error",
+          "message": "\u521b\u5efa FlareSolverr \u4f1a\u8bdd\u5931\u8d25: owned failure"
+        },
+        {
+          "level": "debug",
+          "message": "\u5df2\u6e05\u7406 FlareSolverr \u4f1a\u8bdd: a9396c43-9413-48ae-bfa8-677177951e43"
+        }
+      ],
+      "constructors": [
+        {
+          "content_type": "application/json",
+          "timeout": 1.25
+        },
+        {
+          "content_type": "application/json",
+          "timeout": 10
+        }
+      ]
+    },
+    {
+      "stage": "request-failed",
+      "timeout": 60,
+      "result": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"sessions.create\", \"session\": \"80fcff54-5353-4a78-a9fa-7d735598bda5\", \"proxy\": {\"url\": \"http://owned.invalid:1234\", \"username\": \"owned%2Fuser\", \"password\": \"owned%3Apass\"}}"
+        },
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://hdsky.me/attendance.php\", \"session\": \"80fcff54-5353-4a78-a9fa-7d735598bda5\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        },
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"sessions.destroy\", \"session\": \"80fcff54-5353-4a78-a9fa-7d735598bda5\"}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "debug",
+          "message": "\u68c0\u6d4b\u5230flaresolverr\u4ee3\u7406\u9700\u8981\u8ba4\u8bc1\uff0c\u4f7f\u7528 session \u6a21\u5f0f"
+        },
+        {
+          "level": "error",
+          "message": "FlareSolverr \u8c03\u7528\u5931\u8d25: owned failure"
+        },
+        {
+          "level": "debug",
+          "message": "\u5df2\u6e05\u7406 FlareSolverr \u4f1a\u8bdd: 80fcff54-5353-4a78-a9fa-7d735598bda5"
+        }
+      ],
+      "constructors": [
+        {
+          "content_type": "application/json",
+          "timeout": 60
+        },
+        {
+          "content_type": "application/json",
+          "timeout": 60
+        },
+        {
+          "content_type": "application/json",
+          "timeout": 10
+        }
+      ]
+    }
+  ],
+  "source_hashes": {
+    "HTTP": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "BROWSER": "cb455ffadc75b32fa0fe151242b7c4162233e525d35257ac3a71e1dda1316f29",
+    "BASE": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d"
+  },
+  "interfaces": [
+    [
+      1,
+      "lo"
+    ]
+  ],
+  "ipv4_routes": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n",
+  "qualification": "actual selected fixed source RequestUtils+private FS method, real owned HTTP, networknone Linux1000; synthetic credentials and fake FS protocol endpoint, no browser"
+}

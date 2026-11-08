@@ -6,6 +6,7 @@ import (
 	"crypto/sha256"
 	"database/sql"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"net/url"
 	"sort"
@@ -23,15 +24,16 @@ type managedConnection struct {
 	Error      string `json:"error,omitempty"`
 }
 type siteSnapshot struct {
-	SiteID        string                `json:"site_id"`
-	Name          string                `json:"name,omitempty"`
-	Domain        string                `json:"domain,omitempty"`
-	Day           string                `json:"updated_day,omitempty"`
-	ConfigKey     string                `json:"config_key,omitempty"`
-	Connection    managedConnection     `json:"connection"`
-	Stats         *sites.UserStats      `json:"stats"`
-	SourceData    *sites.SourceUserData `json:"source_data,omitempty"`
-	SourceOutcome string                `json:"source_outcome,omitempty"`
+	SourceStoredTime *string               `json:"source_updated_time,omitempty"`
+	SiteID           string                `json:"site_id"`
+	Name             string                `json:"name,omitempty"`
+	Domain           string                `json:"domain,omitempty"`
+	Day              string                `json:"updated_day,omitempty"`
+	ConfigKey        string                `json:"config_key,omitempty"`
+	Connection       managedConnection     `json:"connection"`
+	Stats            *sites.UserStats      `json:"stats"`
+	SourceData       *sites.SourceUserData `json:"source_data,omitempty"`
+	SourceOutcome    string                `json:"source_outcome,omitempty"`
 }
 type SiteTemplate struct {
 	Kind     string `json:"kind"`
@@ -177,6 +179,7 @@ func (a *App) managedSites(ctx context.Context) (any, error) {
 }
 
 func (a *App) saveManagedSite(ctx context.Context, in SiteConfig) (any, error) {
+	sourceInput := in
 	a.settingsMu.Lock()
 	defer a.settingsMu.Unlock()
 	c := a.Settings()
@@ -212,6 +215,8 @@ func (a *App) saveManagedSite(ctx context.Context, in SiteConfig) (any, error) {
 	} else {
 		c.Sites[found] = in
 	}
+	sourceInput.ID = in.ID
+	ctx = context.WithValue(ctx, nativeSourceSiteEditKey{}, &sourceInput)
 	if e := a.saveSettings(ctx, c); e != nil {
 		return nil, e
 	}
@@ -288,6 +293,8 @@ func (a *App) refreshManagedSite(ctx context.Context, key string) (any, error) {
 // connection and optional owning job. A failed response never replaces an
 // existing day; its first failure can create that day's error observation.
 type siteCollectionHooks struct {
+	SourceDomain          *string          // source SiteChain domain derived by the host from its selected indexer
+	SourceResult          *json.RawMessage // current DTO before storage-only normalization; source resources only
 	OrdinaryEvent         bool
 	Origin                siteCollectionOrigin
 	ExpectedMessagePolicy *siteMessagePolicy
@@ -304,10 +311,14 @@ func (a *App) collectManagedSiteObserved(ctx context.Context, key, eventKey stri
 	}
 	started := time.Now()
 	snapshot := siteSnapshot{SiteID: key, Name: s.Name, Domain: siteStatisticDomain(s), ConfigKey: a.managedSiteKey(s)}
+	if hooks != nil && hooks.SourceDomain != nil {
+		snapshot.Domain = *hooks.SourceDomain
+	}
 	if hooks != nil {
 		snapshot.SourceOutcome = "none"
 	}
 	var observed sites.UserStats
+	var nativeSourceData *sites.SourceUserData
 	readPolicy := func(ctx context.Context) (siteMessagePolicy, error) {
 		if hooks == nil {
 			return siteMessagePolicy{enabled: siteMessagesEnabled(a.Settings())}, nil
@@ -327,7 +338,8 @@ func (a *App) collectManagedSiteObserved(ctx context.Context, key, eventKey stri
 	collectNative := func() (sites.UserStats, *sites.SourceUserData, error) {
 		var nativeStats sites.UserStats
 		var nativeData *sites.SourceUserData
-		nativeErr := a.withSite(ctx, s, hooks != nil && hooks.Auto, func(client *sites.Client) error {
+		ordinaryCooldown := hooks == nil || hooks.SourceResult == nil
+		nativeErr := a.withSiteCooldown(ctx, s, hooks != nil && hooks.Auto, ordinaryCooldown, func(client *sites.Client) error {
 			client.AddRequestGuard(func(requestCtx context.Context) error {
 				currentPolicy, policyErr := readPolicy(requestCtx)
 				if policyErr != nil {
@@ -353,6 +365,7 @@ func (a *App) collectManagedSiteObserved(ctx context.Context, key, eventKey stri
 		if hooks != nil && hooks.OrdinaryEvent && nativeData == nil {
 			a.reportOriginalSiteModuleFailure(ctx, nativeErr)
 		}
+		nativeSourceData = nativeData
 		return nativeStats, nativeData, nativeErr
 	}
 	if hooks != nil {
@@ -362,6 +375,9 @@ func (a *App) collectManagedSiteObserved(ctx context.Context, key, eventKey stri
 		}
 	} else {
 		observed, snapshot.SourceData, e = collectNative()
+	}
+	if hooks != nil && hooks.SourceResult != nil && sites.SourceUserRequestRejected(e) {
+		return siteSnapshot{}, e
 	}
 	var moduleFailure *APIError
 	if errors.As(e, &moduleFailure) && moduleFailure.Code == "PLUGIN_MODULE_RESULT_INVALID" {
@@ -386,8 +402,26 @@ func (a *App) collectManagedSiteObserved(ctx context.Context, key, eventKey stri
 		snapshot.Stats = &observed
 	}
 	snapshot.Day = time.Now().In(shanghai()).Format("2006-01-02")
+	if hooks != nil && hooks.SourceResult != nil {
+		snapshot.Day, snapshot.SourceStoredTime = sourceSiteStorageClock(time.Now())
+	}
+	if hooks != nil && hooks.SourceResult != nil {
+		current, err := json.Marshal(snapshot.SourceData)
+		if snapshot.SourceData != nil && snapshot.SourceData == nativeSourceData {
+			current, err = sites.MarshalNativeSourceUserData(snapshot.SourceData)
+		}
+		if err != nil {
+			return siteSnapshot{}, err
+		}
+		*hooks.SourceResult = current
+	}
 	if snapshot.SourceData != nil {
 		snapshot.SourceData.Domain, snapshot.SourceData.Day = snapshot.Domain, snapshot.Day
+	}
+	if hooks != nil && hooks.SourceResult != nil && hooks.RequestGuard != nil {
+		if err := hooks.RequestGuard(ctx); err != nil {
+			return siteSnapshot{}, err
+		}
 	}
 	a.settingsMu.Lock()
 	defer a.settingsMu.Unlock()
@@ -415,7 +449,7 @@ func (a *App) collectManagedSiteObserved(ctx context.Context, key, eventKey stri
 			return siteSnapshot{}, err
 		}
 	}
-	if err = a.recordSiteAccountObservationTx(ctx, tx, current, snapshot); err != nil {
+	if err = a.recordSiteAccountObservationTxMode(ctx, tx, current, snapshot, hooks != nil && hooks.SourceResult != nil); err != nil {
 		return siteSnapshot{}, err
 	}
 	newStandardRefresh := false

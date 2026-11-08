@@ -36,7 +36,11 @@ func (a *App) originalTitleFilterResourceModel(ctx context.Context, candidate Ca
 	// Use the existing source model and known native host fields. An unfetched
 	// enclosure/category/grab count is not invented as download evidence. A
 	// complete fresh SDK model above retains its actual extra/private attributes.
-	torrent, err := rsscontext.NewTorrentInfo(map[string]any{"site": identity.SourceID, "site_name": site.Name, "site_cookie": nullable(site.Cookie), "site_ua": nullable(site.UserAgent), "site_proxy": site.Proxy, "site_order": site.Priority, "site_downloader": nullable(site.Downloader), "title": resource.Title, "description": description, "page_url": resource.DetailsURL, "size": resource.Size, "seeders": resource.Seeders, "peers": resource.Leechers, "pubdate": nullable(resource.PublishedAt), "freedate": nullable(resource.PromotionEnd), "uploadvolumefactor": resource.UploadFactor, "downloadvolumefactor": resource.DownloadFactor, "hit_and_run": resource.HitAndRun, "labels": resource.Labels, "pri_order": resource.PriorityOrder})
+	sourceID, err := a.Store.nativeSourcePublicSiteID(ctx, a.Store.DB, identity)
+	if err != nil {
+		return nil, err
+	}
+	torrent, err := rsscontext.NewTorrentInfo(map[string]any{"site": sourceID, "site_name": site.Name, "site_cookie": nullable(site.Cookie), "site_ua": nullable(site.UserAgent), "site_proxy": site.Proxy, "site_order": site.Priority, "site_downloader": nullable(site.Downloader), "title": resource.Title, "description": description, "page_url": resource.DetailsURL, "size": resource.Size, "seeders": resource.Seeders, "peers": resource.Leechers, "pubdate": nullable(resource.PublishedAt), "freedate": nullable(resource.PromotionEnd), "uploadvolumefactor": resource.UploadFactor, "downloadvolumefactor": resource.DownloadFactor, "hit_and_run": resource.HitAndRun, "labels": resource.Labels, "pri_order": resource.PriorityOrder})
 	if err != nil {
 		return nil, err
 	}
@@ -71,6 +75,9 @@ func (a *App) originalTitleFilterCandidates(ctx context.Context, filter priority
 		}
 		season, episodes := a.resourceNumberingSuggestionContext(ctx, resource.Title)
 		candidate := Candidate{Resource: resource, Accepted: choice.Accepted, NeedsConfirmation: choice.Accepted, Reasons: choice.Reasons, Season: season, Episodes: episodes, originalFilterModel: model}
+		if prior := model.candidate; prior != nil && prior.Resource.SiteID == resource.SiteID && prior.Resource.ID == resource.ID {
+			candidate.chatSearchQuery = prior.chatSearchQuery
+		}
 		model.candidate = &candidate
 		out = append(out, candidate)
 	}

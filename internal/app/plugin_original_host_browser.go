@@ -21,6 +21,12 @@ func (a *App) originalHostBrowserResource(ctx context.Context, scope originalBas
 	if err := originalResourceDecode(raw, &in); err != nil {
 		return nil, err
 	}
+	if in.SourceReference != nil {
+		return a.originalHostSourceBrowserResource(ctx, scope, in)
+	}
+	if len(in.SourceTimeout) != 0 || in.SourceTimeoutFloat != "" || in.OriginProfile != "" {
+		return nil, bad("INVALID_PLUGIN_VALUE", "原值页面参数须绑定源引用")
+	}
 	if in.ID == "" {
 		return nil, bad("INVALID_PLUGIN_VALUE", "页面渲染须指定准确站点ID")
 	}
@@ -110,6 +116,10 @@ func (a *App) originalHostBrowserResource(ctx context.Context, scope originalBas
 			request.SourceProxy = p
 		}
 	}
+	return a.originalHostRenderBrowser(ctx, request, guard)
+}
+
+func (a *App) originalHostRenderBrowser(ctx context.Context, request browserrender.Request, guard func(context.Context) error) (json.RawMessage, error) {
 	config := browserrender.ConfigFromEnvironment(os.Getenv)
 	config.Emulation, config.FlareSolverrURL = a.originalHostBrowserEmulation, a.originalHostFlareSolverrURL
 	config.Humanize, config.HumanPreset = a.originalHostBrowserHumanize, a.originalHostBrowserHumanPreset
@@ -117,7 +127,16 @@ func (a *App) originalHostBrowserResource(ctx context.Context, scope originalBas
 	if err := os.MkdirAll(config.TempDir, 0700); err != nil {
 		return nil, err
 	}
-	html, renderErr := config.Render(ctx, request)
+	var html *string
+	var sourceValue []byte
+	var renderErr error
+	if len(request.SourceTimeout) > 0 {
+		var result browserrender.PageResult
+		result, renderErr = config.RenderSource(ctx, request)
+		html, sourceValue = result.HTML, result.SourceValueJSON
+	} else {
+		html, renderErr = config.Render(ctx, request)
+	}
 	if renderErr != nil {
 		var revoked *browserrender.GuardError
 		if errors.As(renderErr, &revoked) {
@@ -130,17 +149,25 @@ func (a *App) originalHostBrowserResource(ctx context.Context, scope originalBas
 		var failed *browserrender.Error
 		if errors.As(renderErr, &failed) {
 			code = failed.Code
+			if len(request.SourceTimeout) > 0 && code == "browser_value_too_large" {
+				return nil, bad("PLUGIN_VALUE_TOO_LARGE", "插件页面结果超过资源上限")
+			}
 		}
-		a.logOriginalPluginContext(ctx, "ERROR", code, "插件页面渲染失败")
+		if request.SourceLog == nil {
+			a.logOriginalPluginContext(ctx, "ERROR", code, "插件页面渲染失败")
+		}
 	}
 	if err := guard(ctx); err != nil {
 		return nil, err
 	}
-	out, err := json.Marshal(plugins.SiteRenderResult{HTML: html})
+	out, err := json.Marshal(plugins.SiteRenderResult{HTML: html, SourceValueJSON: sourceValue})
 	if err != nil {
 		return nil, err
 	}
 	if len(out) > plugins.MaxPayloadBytes {
+		if sourceValue != nil {
+			return nil, bad("PLUGIN_VALUE_TOO_LARGE", "插件页面结果超过资源上限")
+		}
 		return nil, bad("PLUGIN_VALUE_TOO_LARGE", "渲染HTML超过插件资源上限")
 	}
 	return out, nil

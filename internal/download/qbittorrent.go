@@ -243,11 +243,17 @@ func (c *Client) qbAdd(ctx context.Context, in AddRequest, hashes []string) (Add
 	}
 	var body bytes.Buffer
 	w := multipart.NewWriter(&body)
-	f, err := w.CreateFormFile("torrents", "resource.torrent")
-	if err != nil {
-		return out, beforeMutation(failure("add", "multipart_failed"))
+	if in.Magnet != "" {
+		if err := w.WriteField("urls", in.Magnet); err != nil {
+			return out, beforeMutation(failure("add", "multipart_failed"))
+		}
+	} else {
+		f, err := w.CreateFormFile("torrents", "resource.torrent")
+		if err != nil {
+			return out, beforeMutation(failure("add", "multipart_failed"))
+		}
+		_, _ = f.Write(in.Torrent)
 	}
-	_, _ = f.Write(in.Torrent)
 	autoCategory := c.config.AutoCategory
 	fields := map[string]string{"savepath": in.SavePath, "stopped": strconv.FormatBool(in.Paused), "tags": strings.Join(in.Tags, ","), "sequentialDownload": strconv.FormatBool(c.config.Sequential), "firstLastPiecePrio": strconv.FormatBool(c.config.FirstLast), "skip_checking": "false", "contentLayout": "Original"}
 	if in.SourceCategorySet {

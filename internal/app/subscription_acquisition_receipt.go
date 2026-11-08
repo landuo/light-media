@@ -311,6 +311,10 @@ func (a *App) runAcquisitionReceipt(ctx context.Context, j Job, key string) erro
 		return e
 	}
 	in.State, in.Error, in.UpdatedAt = "accepted", "", now()
+	ctx, e = a.originalChatPausedSearchForDownload(ctx, child, in)
+	if e != nil {
+		return e
+	}
 	ctx = sourcePostAddContext(ctx, post)
 	ctx = context.WithValue(ctx, acquisitionReceiptExecutionKey{}, &acquisitionReceiptExecution{a, j, receipt})
 	return a.acceptDownload(ctx, in, child)

@@ -86,6 +86,16 @@ func (m PluginHost) Read(ctx context.Context, request PluginManagerRequest) ([]P
 	return value, err
 }
 
+// Local mirrors the source manager's get_local_plugins metadata traversal.
+// It includes imported but uninstalled classes and performs their ordinary
+// state getters before sorting; it does not consult any plugin market.
+// Raw source-shaped rows preserve metadata independently of runtime state DTOs.
+func (m PluginHost) Local(ctx context.Context) ([]json.RawMessage, error) {
+	var value []json.RawMessage
+	err := hostServiceCall(ctx, m.Host, PluginManagerReadCapability, PluginManagerRequest{View: "local"}, &value)
+	return value, err
+}
+
 func (m PluginHost) ControlRequest(ctx context.Context, request PluginManagerRequest) (PluginControlResult, error) {
 	var value PluginControlResult
 	err := hostServiceCall(ctx, m.Host, PluginManagerControlCapability, request, &value)

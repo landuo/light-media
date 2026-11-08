@@ -17,6 +17,7 @@ type BrushSiteReferenceV1 struct {
 	Domain          *string                `json:"domain"`
 	Public          bool                   `json:"public"`
 	Enabled         bool                   `json:"enabled"`
+	HasAPIKey       bool                   `json:"has_api_key,omitempty"`
 	LocalStatistics BrushLocalStatisticsV1 `json:"local_statistics"`
 }
 

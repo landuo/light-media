@@ -13,6 +13,7 @@ import (
 type originalResolvedServiceOptions struct {
 	coalesceDisabled, unlimited bool
 	hasNextRun                  bool
+	nextRunPresent              bool
 	nextRun                     time.Time
 	executorUnavailable         bool
 	maxInstances                *big.Int
@@ -81,7 +82,12 @@ func originalServiceOptions(definition *pluginScheduleDefinition) (options origi
 			if bytes.Equal(bytes.TrimSpace(value), []byte("null")) {
 				continue
 			}
-			options.nextRun, err = originalServiceNextRunTime(value, definition.Trigger.Timezone)
+			location, locationErr := definition.Trigger.Location()
+			if locationErr != nil {
+				return invalid()
+			}
+			options.nextRunPresent = true
+			options.nextRun, err = originalServiceNextRunTime(value, location)
 			if err != nil {
 				return invalid()
 			}
@@ -131,7 +137,7 @@ func originalServicePositiveInteger(raw json.RawMessage) (int64, bool) {
 
 var originalServiceDatePattern = regexp.MustCompile(`^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2}):(\d{1,2}):(\d{1,2})(?:\.(\d{1,6}))?(Z|[+-]\d\d:\d\d)?)?$`)
 
-func originalServiceNextRunTime(raw json.RawMessage, timezone string) (time.Time, error) {
+func originalServiceNextRunTime(raw json.RawMessage, location *time.Location) (time.Time, error) {
 	var text string
 	if json.Unmarshal(raw, &text) != nil {
 		return time.Time{}, bad("INVALID_PLUGIN_SERVICE_OPTIONS", "下次运行时间无效")
@@ -142,10 +148,6 @@ func originalServiceNextRunTime(raw json.RawMessage, timezone string) (time.Time
 		return time.Time{}, bad("INVALID_PLUGIN_SERVICE_OPTIONS", "下次运行时间格式无效")
 	}
 	n := func(i int) int { value, _ := strconv.Atoi(parts[i]); return value }
-	location, err := time.LoadLocation(timezone)
-	if err != nil {
-		return time.Time{}, err
-	}
 	if parts[8] == "Z" {
 		location = time.UTC
 	} else if parts[8] != "" {

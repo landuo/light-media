@@ -7,6 +7,7 @@ import (
 	"golang.org/x/sys/unix"
 	"light-media/internal/app"
 	"light-media/web"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -71,19 +72,21 @@ func main() {
 	}
 	safe = safe || safeEnv
 	markets := pluginMarketEnvironment(os.LookupEnv)
+	frontendVersion, _ := web.FrontendVersion()
 	parent, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 	for {
 		if e = applyRestore(absolute); e != nil {
 			fatal(e.Error())
 		}
-		a, e := app.New(app.Options{DataDir: absolute, Web: web.Handler(), BigMemoryMode: large, SafeMode: safe, PluginMarketsOverride: markets, PluginDeveloperMode: developer, PluginLogRotation: logRotation, ResourceSearchPages: searchPages, MediaSearch: mediaSearch})
+		a, e := app.New(app.Options{DataDir: absolute, Web: web.Handler(), FrontendVersion: frontendVersion, BigMemoryMode: large, SafeMode: safe, PluginMarketsOverride: markets, PluginDeveloperMode: developer, PluginLogRotation: logRotation, ResourceSearchPages: searchPages, MediaSearch: mediaSearch})
 		if e != nil {
 			fatal(e.Error())
 		}
 		ctx, cancel := context.WithCancel(parent)
 		a.Start(ctx)
-		server := &http.Server{Addr: addr, Handler: a.Handler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 32 << 10}
+		httpContext, cancelHTTP := context.WithCancel(context.Background())
+		server := &http.Server{Addr: addr, Handler: a.Handler(), BaseContext: func(net.Listener) context.Context { return httpContext }, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 32 << 10}
 		errs := make(chan error, 1)
 		go func() { errs <- server.ListenAndServe() }()
 		fmt.Printf("light-media listening at %s\n", addr)
@@ -95,6 +98,7 @@ func main() {
 		case err := <-errs:
 			if err != http.ErrServerClosed {
 				cancel()
+				cancelHTTP()
 				_ = a.Close()
 				fatal("http_listener_failed")
 			}
@@ -109,10 +113,20 @@ func main() {
 			timer.Stop()
 		}
 		cancel()
-		shutdown, done := context.WithTimeout(context.Background(), 2*time.Second)
-		_ = server.Shutdown(shutdown)
+		shutdown, done := context.WithTimeout(context.Background(), 60*time.Second)
+		shutdownError := server.Shutdown(shutdown)
 		done()
+		if shutdownError != nil {
+			// Source cancels HTTP tasks at graceful expiry while synchronous
+			// plugin functions may still run. Let their HTTP waiters send500
+			// before forcing sockets closed; App.Close joins physical calls.
+			cancelHTTP()
+			flush, flushed := context.WithTimeout(context.Background(), 2*time.Second)
+			_ = server.Shutdown(flush)
+			flushed()
+		}
 		_ = server.Close()
+		cancelHTTP()
 		_ = a.Close()
 		if !restart || parent.Err() != nil {
 			return

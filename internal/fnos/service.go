@@ -299,6 +299,12 @@ func (s *Service) Libraries(ctx context.Context) ([]ServiceLibrary, error) {
 	return current.libraries(ctx)
 }
 
+// CheckConnectivity checks the authenticated user without reading libraries.
+func (s *Service) CheckConnectivity(ctx context.Context) error {
+	_, err := s.session(ctx)
+	return err
+}
+
 // Scan only requests the specified strict child directory of the selected
 // configured library. A successful return means scan accepted, not item visible.
 func (s *Service) Scan(ctx context.Context, libraryGUID, dir string) error {

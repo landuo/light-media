@@ -28,6 +28,7 @@ type originalMediaResourceSearch struct {
 	keywords               []string
 	mtype                  string
 	auto, stream, multiple bool
+	synchronous            bool
 	once                   sync.Once
 	results                map[string]originalResourceSiteResult
 	queries                map[string]map[string]string
@@ -71,11 +72,13 @@ func originalMediaSearchKeywords(fields map[string]any, explicit string, limit *
 }
 
 func (a *App) prepareOriginalMediaResourceSearch(ctx context.Context, in SearchRequest, auto bool) (*originalMediaResourceSearch, error) {
+	synchronous := auto || len(in.chatMediaSeasons) != 0 || in.chatUnscoped
 	groups, err := a.originalPluginModules(ctx, "")
 	if err != nil {
 		return nil, err
 	}
-	relevant := false
+	providerSubscription := auto && in.originalSubscription != nil && providerNativeMedia(in.originalSubscription.Media)
+	relevant := in.chatProvider != nil || providerSubscription
 	for _, method := range []string{"recognize_media", "async_recognize_media", "filter_torrents", "batch_search_torrents", "search_torrents", "async_batch_search_torrents", "async_search_torrents", "async_worker_search_site", "get_search_page_size"} {
 		if originalModuleGroupsHaveMethod(groups, method) {
 			relevant = true
@@ -90,6 +93,8 @@ func (a *App) prepareOriginalMediaResourceSearch(ctx context.Context, in SearchR
 	groupsConsumed := false
 	if in.originalSearchInfo != nil {
 		information = *in.originalSearchInfo
+	} else if providerSubscription {
+		information, err = a.sourceRecognizeSubscriptionMedia(ctx, *in.originalSubscription)
 	} else if auto && in.originalSubscription != nil {
 		// The existing subscription caller owns its original MetaInfo/IDs/cache
 		// boundary; a TV precheck can pass the very same resolved value above.
@@ -114,7 +119,7 @@ func (a *App) prepareOriginalMediaResourceSearch(ctx context.Context, in SearchR
 		groupsConsumed = true
 	} else {
 		method := "async_recognize_media" // Web async_search_by_id[_stream]
-		if auto {
+		if synchronous {
 			method = "recognize_media"
 		}
 		information, err = a.originalRecognizeTMDBModuleGroups(ctx, input, method, nil, nil, nil, true, func() (sourceMediaInformation, error) { return a.sourceRecognizeTMDBCore(ctx, input) }, groups)
@@ -132,12 +137,22 @@ func (a *App) prepareOriginalMediaResourceSearch(ctx context.Context, in SearchR
 	if in.originalSearchInfo != nil && sourceSubscriptionTruth(fields["names"]) {
 		originalInformation = in.originalSearchInfo
 	}
-	if !sourceSubscriptionTruth(fields["names"]) {
+	if providerSubscription && !sourceSubscriptionTruth(fields["names"]) {
+		information, err = a.recognizeProviderSubscriptionMedia(ctx, in.originalSubscription.Media, nil)
+		if err != nil {
+			return nil, err
+		}
+		decoded, err = decodeSourceJSON(information.MediaInfo)
+		if err != nil || sourceMap(decoded) == nil {
+			return nil, originalResourceProjectionError()
+		}
+		fields = sourceMap(decoded)
+	} else if in.chatProvider == nil && !sourceSubscriptionTruth(fields["names"]) {
 		// Fixed process/async_process fills missing names once before planning
 		// queries. This second request resolves the full MediaInfo source ID;
 		// it is distinct from the first Web request's requested mediaid=None.
 		method := "async_recognize_media"
-		if auto {
+		if synchronous {
 			method = "recognize_media"
 		}
 		var recognitionGroups []originalPluginModuleGroup
@@ -170,7 +185,7 @@ func (a *App) prepareOriginalMediaResourceSearch(ctx context.Context, in SearchR
 		keywords = []string{keyword}
 	}
 	_, stream := ctx.Value(searchProgressKey{}).(func(SearchOutput))
-	plan := &originalMediaResourceSearch{app: a, information: information, originalInformation: originalInformation, keywords: keywords, mtype: sourceText(fields["type"]), auto: auto, stream: stream, multiple: multiple}
+	plan := &originalMediaResourceSearch{app: a, information: information, originalInformation: originalInformation, keywords: keywords, mtype: sourceText(fields["type"]), auto: auto, stream: stream, multiple: multiple, synchronous: synchronous}
 	if !groupsConsumed {
 		plan.initialGroups = groups
 	}
@@ -192,7 +207,7 @@ func (op *originalMediaResourceSearch) run() {
 		}
 		batch := &originalResourceBatchSearch{app: op.app, ctx: op.ctx, configs: op.configs, keyword: keyword, mtype: op.mtype, page: 1, initialGroups: op.initialGroups}
 		op.initialGroups = nil
-		if op.auto {
+		if op.synchronous {
 			batch.method = "batch_search_torrents"
 		}
 		batch.native = func(ctx context.Context, site SiteConfig, page int) (sites.SearchResult, error) {
@@ -205,7 +220,7 @@ func (op *originalMediaResourceSearch) run() {
 			return result, err
 		}
 		var results map[string]originalResourceSiteResult
-		if op.stream && !op.auto {
+		if op.stream && !op.synchronous {
 			results = batch.parallel(op.configs, func(ctx context.Context, site SiteConfig) (sites.SearchResult, error) {
 				return op.app.originalResourceSiteSearchPagesMedia(ctx, "async_worker_search_site", site, keyword, op.mtype, 1, func(page int) (sites.SearchResult, error) { return batch.native(ctx, site, page) })
 			})
@@ -299,7 +314,14 @@ func (a *App) originalMediaResourceSiteOutput(ctx context.Context, site SiteConf
 	for _, resource := range result.result.Resources {
 		resource.ModuleMediaFields = append(json.RawMessage(nil), op.information.MediaInfo...)
 		choice := a.evaluateResourceContext(ctx, resource, target, decision.NativePolicy(decisionPolicy(in.Policy)))
-		found.candidates = append(found.candidates, Candidate{Resource: resource, Accepted: choice.Accepted, Reasons: choice.Reasons, Season: choice.Season, Episodes: choice.Episodes, NeedsConfirmation: choice.NeedsConfirmation})
+		candidate := Candidate{Resource: resource, Accepted: choice.Accepted, Reasons: choice.Reasons, Season: choice.Season, Episodes: choice.Episodes, NeedsConfirmation: choice.NeedsConfirmation}
+		if in.chatProvider.sourceOnly() {
+			candidate.chatSearchQuery = op.queries[site.ID][resource.ID]
+		}
+		found.candidates = append(found.candidates, candidate)
+	}
+	if target.ProviderSearchKey != "" {
+		return found // No native media key or preview authority for this query.
 	}
 	cacheResources := append([]sites.Resource(nil), result.result.Resources...)
 	for i := range cacheResources {

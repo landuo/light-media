@@ -122,7 +122,7 @@ func OpenStore(dir string) (*Store, error) {
  CREATE TABLE IF NOT EXISTS quota(site_id TEXT NOT NULL,day TEXT NOT NULL,used INTEGER NOT NULL,PRIMARY KEY(site_id,day));
  INSERT OR IGNORE INTO migrations VALUES(1,strftime('%Y-%m-%dT%H:%M:%fZ','now'));
  `
-	if _, err = db.Exec(schema + nativeSiteIdentitySchema + sourceAccountSchema); err != nil {
+	if _, err = db.Exec(schema + nativeSiteIdentitySchema + sourceAccountSchema + originalSubscriptionAliasSchema + originalTransferAliasSchema); err != nil {
 		db.Close()
 		return fail(err)
 	}

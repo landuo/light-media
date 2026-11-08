@@ -1,0 +1,148 @@
+{
+  "kind": "actual installed QB wrapper get_torrents and vendor info/request/auth method AST with local Requests and owned HTTP peer",
+  "source_sha256": {
+    "host-reference/app/modules/qbittorrent/qbittorrent.py": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+    "qbittorrent-vendor/request.py": "dcf8371d17e5623ca81d95be2a8a6a8ade747f23d2aac5a79a629dc961dc206e",
+    "qbittorrent-vendor/auth.py": "c7b484061ca28a5d4723dc9128191542f5f46c39ce99074bf12c536136f0efe8",
+    "qbittorrent-vendor/torrents.py": "d087e5ef72ee748a8af160fd7f4fdbf119d41df6b1fdf2fe1d50509a3a0c2e26"
+  },
+  "limitations": [
+    "TorrentInfoList is an inert list model double preserving valid dict entries; auth context/session reset is recorded rather than reconstructing the whole Client",
+    "No real daemon/original application imports/config/credentials; only synthetic data and owned loopback HTTP",
+    "No selected mutation in this test. Read/auth retry evidence does not authorize replaying selected writes",
+    "Local interpreter3.14 versus installed3.12.13; installed Requests serialization critical files previously byte-matched"
+  ],
+  "cases": [
+    {
+      "case": "ordinary200",
+      "reply_sequence": [
+        200
+      ],
+      "task_count": 1,
+      "error_flag": false,
+      "info_POSTs": 1,
+      "trace": [
+        {
+          "event": "peer.info",
+          "attempt": 1,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "case": "success201",
+      "reply_sequence": [
+        201
+      ],
+      "task_count": 1,
+      "error_flag": false,
+      "info_POSTs": 1,
+      "trace": [
+        {
+          "event": "peer.info",
+          "attempt": 1,
+          "status": 201
+        }
+      ]
+    },
+    {
+      "case": "unauthorized401-then200",
+      "reply_sequence": [
+        401,
+        200
+      ],
+      "task_count": 0,
+      "error_flag": true,
+      "info_POSTs": 1,
+      "trace": [
+        {
+          "event": "peer.info",
+          "attempt": 1,
+          "status": 401
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "\u83b7\u53d6\u79cd\u5b50\u5217\u8868\u51fa\u9519\uff1aowned failure"
+        }
+      ]
+    },
+    {
+      "case": "forbidden403-then200",
+      "reply_sequence": [
+        403,
+        200
+      ],
+      "task_count": 1,
+      "error_flag": false,
+      "info_POSTs": 2,
+      "trace": [
+        {
+          "event": "peer.info",
+          "attempt": 1,
+          "status": 403
+        },
+        {
+          "event": "vendor.context.reset"
+        },
+        {
+          "event": "peer.login"
+        },
+        {
+          "event": "peer.info",
+          "attempt": 2,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "case": "HTTP500-then200",
+      "reply_sequence": [
+        500,
+        200
+      ],
+      "task_count": 1,
+      "error_flag": false,
+      "info_POSTs": 2,
+      "trace": [
+        {
+          "event": "peer.info",
+          "attempt": 1,
+          "status": 500
+        },
+        {
+          "event": "vendor.context.reset"
+        },
+        {
+          "event": "peer.info",
+          "attempt": 2,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "case": "drop-then200",
+      "reply_sequence": [
+        "DROP",
+        200
+      ],
+      "task_count": 1,
+      "error_flag": false,
+      "info_POSTs": 2,
+      "trace": [
+        {
+          "event": "peer.info",
+          "attempt": 1,
+          "status": "DROP"
+        },
+        {
+          "event": "vendor.context.reset"
+        },
+        {
+          "event": "peer.info",
+          "attempt": 2,
+          "status": 200
+        }
+      ]
+    }
+  ]
+}

@@ -228,6 +228,9 @@ func (a *App) reconcileNativeSiteIdentitiesTx(ctx context.Context, tx *sql.Tx, p
 			}
 		}
 	}
+	if err := a.reconcileNativeSourceSiteValuesTx(ctx, tx, previous, next); err != nil {
+		return err
+	}
 	return a.recordImportedSiteIdentitiesTx(ctx, tx)
 }
 func (a *App) bootstrapNativeSiteIdentities(ctx context.Context) error {

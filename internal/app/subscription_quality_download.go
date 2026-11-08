@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"path/filepath"
 	"reflect"
@@ -159,7 +160,7 @@ func (a *App) acceptSubscriptionQualityTx(ctx context.Context, tx *sql.Tx, in In
 			state.TotalEpisode = 0
 		}
 		setSubscriptionQualityState(&current, state)
-		if current.SourceState == "N" {
+		if current.State == "active" && current.SourceState == "N" {
 			current.SourceState = "R"
 		}
 		if err = txPut(ctx, tx, "subscription", current.ID, current); err != nil {
@@ -195,15 +196,20 @@ func (a *App) guardAcceptedDownloadProgressTx(ctx context.Context, tx *sql.Tx, i
 	if e = a.readQualitySealed(ctx, tx, "download_added", domainEventID("download.accepted", in.ID), &fact); e != nil || fact.DownloadID != in.ID || fact.DownloadKind != "intent" || !sameHash(fact.Hash, in.Hash) || fact.SiteID != in.SiteID || fact.MediaType != in.Media.MediaType || fact.TMDBID != in.Media.ID {
 		return bad("REVIEW_POST_ADD_UNCONFIRMED", "实际下载接受事务尚未完成，未推进进度")
 	}
+	if providerNativeMedia(in.Media) {
+		if key, err := fact.mediaIdentity(); err != nil || key != mediaKey(in.Media) {
+			return bad("REVIEW_POST_ADD_UNCONFIRMED", "实际下载接受事务的媒体来源不符，未推进进度")
+		}
+	}
 	return nil
 }
 
-func (a *App) qualityCompletedFileSelected(ctx context.Context, in Intent, path string) (bool, error) {
+func (a *App) qualityCompletedFileSelected(ctx context.Context, in Intent, path string, providerMedia json.RawMessage) (bool, error) {
 	parsed := a.parseMediaNameContext(ctx, filepath.Base(path))
 	if parsed.Status != media.Parsed || parsed.Original == nil {
 		return false, bad("QUALITY_FILE_IDENTITY_CHANGED", "下载器文件缺少已确认的季集身份")
 	}
-	season, e := a.season(ctx, in.Media.ID, in.Season)
+	season, e := a.importSeason(ctx, in.Media, providerMedia, in.Season)
 	if e != nil {
 		return false, e
 	}

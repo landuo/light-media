@@ -20,6 +20,20 @@ import (
 	"light-media/internal/plugins"
 )
 
+// originalSiteRequestGuardError keeps an authority failure distinct from an
+// ordinary vendor/transport error even if the current guard later recovers.
+// This private marker is used only by the finite site HTTP and CAPTCHA paths.
+type originalSiteRequestGuardError struct{ cause error }
+
+func (e *originalSiteRequestGuardError) Error() string { return e.cause.Error() }
+func (e *originalSiteRequestGuardError) Unwrap() error { return e.cause }
+func originalSiteRequestGuardFailure(err error) error {
+	if err == nil {
+		return nil
+	}
+	return &originalSiteRequestGuardError{cause: err}
+}
+
 type originalSiteHTTPGuardTransport struct {
 	next  http.RoundTripper
 	guard func(context.Context) error
@@ -28,7 +42,7 @@ type originalSiteHTTPGuardTransport struct {
 
 func (t originalSiteHTTPGuardTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	if err := t.guard(r.Context()); err != nil {
-		return nil, err
+		return nil, originalSiteRequestGuardFailure(err)
 	}
 	t.sent.Store(true)
 	return t.next.RoundTrip(r)
@@ -138,7 +152,17 @@ func (a *App) originalHostSiteHTTPResource(ctx context.Context, scope originalBa
 		}
 		return nil
 	}
+	return a.originalExecuteSiteHTTP(ctx, scope, input, method, site, base, address, guard, nil)
+}
+
+// One existing physical owner serves both entry points. Source-only values are
+// resolved and authorized before this call; the ordinary entry passes nil.
+func (a *App) originalExecuteSiteHTTP(ctx context.Context, scope originalBaseCallScope, input plugins.SiteHTTPRequestV1, method string, site SiteConfig, base, address *url.URL, guard func(context.Context) error, source *originalSourceSiteHTTPValues) (json.RawMessage, error) {
+	var err error
 	cookie := originalOCRCookieHeader(site.Cookie)
+	if source != nil {
+		cookie = source.cookie
+	}
 	if input.NoCookies {
 		cookie = ""
 	}
@@ -154,6 +178,9 @@ func (a *App) originalHostSiteHTTPResource(ctx context.Context, scope originalBa
 			parts = append(parts, pair.Name+"="+pair.Value)
 		}
 		cookie = strings.Join(parts, "; ")
+		if source != nil {
+			cookie = originalOCRCookieHeader(cookie)
+		}
 	}
 
 	if input.CookieNames != nil {
@@ -171,7 +198,9 @@ func (a *App) originalHostSiteHTTPResource(ctx context.Context, scope originalBa
 		cookie = strings.Join(parts, "; ")
 	}
 	headers := http.Header{}
-	if len(input.Headers) == 0 {
+	if source != nil {
+		headers = source.headers.Clone()
+	} else if len(input.Headers) == 0 {
 		headers.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
 	} else {
 		headers.Set("Accept", "*/*")
@@ -196,35 +225,37 @@ func (a *App) originalHostSiteHTTPResource(ctx context.Context, scope originalBa
 			headers.Set(name, v)
 		}
 	}
-	agent := "python-urllib3/2.7.0"
-	if len(input.Headers) > 0 {
-		agent = "python-requests/2.34.2"
-	}
-	useSiteUA := len(input.Headers) == 0
-	if input.UseSiteUserAgent != nil {
-		useSiteUA = *input.UseSiteUserAgent
-	}
-	if useSiteUA && site.UserAgent != "" {
-		agent = site.UserAgent
-	}
-	if input.UseSiteUserAgent != nil && !*input.UseSiteUserAgent {
-		agent = "python-urllib3/2.7.0"
-	}
-	if input.UseHostUserAgent {
-		if input.UseSiteUserAgent != nil {
-			return nil, bad("INVALID_PLUGIN_VALUE", "宿主与站点User-Agent选择不能混用")
+	if source == nil {
+		agent := "python-urllib3/2.7.0"
+		if len(input.Headers) > 0 {
+			agent = "python-requests/2.34.2"
 		}
-		agent = originalPluginServerUserAgent()
-	}
-	if len(input.Headers) == 0 && agent == originalPluginServerUserAgent() {
-		agent += " Plugin/" + strings.ToLower(scope.installation.InstanceID)
-	}
+		useSiteUA := len(input.Headers) == 0
+		if input.UseSiteUserAgent != nil {
+			useSiteUA = *input.UseSiteUserAgent
+		}
+		if useSiteUA && site.UserAgent != "" {
+			agent = site.UserAgent
+		}
+		if input.UseSiteUserAgent != nil && !*input.UseSiteUserAgent {
+			agent = "python-urllib3/2.7.0"
+		}
+		if input.UseHostUserAgent {
+			if input.UseSiteUserAgent != nil {
+				return nil, bad("INVALID_PLUGIN_VALUE", "宿主与站点User-Agent选择不能混用")
+			}
+			agent = originalPluginServerUserAgent()
+		}
+		if len(input.Headers) == 0 && agent == originalPluginServerUserAgent() {
+			agent += " Plugin/" + strings.ToLower(scope.installation.InstanceID)
+		}
 
-	agent, err = originalOCRHeaderLatin1(agent)
-	if err != nil {
-		return nil, bad("INVALID_PLUGIN_VALUE", "站点User-Agent无法编码")
+		agent, err = originalOCRHeaderLatin1(agent)
+		if err != nil {
+			return nil, bad("INVALID_PLUGIN_VALUE", "站点User-Agent无法编码")
+		}
+		headers.Set("User-Agent", agent)
 	}
-	headers.Set("User-Agent", agent)
 	if input.Referer != "" {
 		referer, err := originalSiteHTTPURL(base, input.Referer)
 		if err != nil {
@@ -260,7 +291,7 @@ func (a *App) originalHostSiteHTTPResource(ctx context.Context, scope originalBa
 	if err != nil {
 		return nil, bad("INVALID_PLUGIN_VALUE", "站点Cookie无法编码")
 	}
-	if cookie != "" {
+	if cookie != "" || source != nil && source.cookiePresent && !input.NoCookies {
 		headers.Set("Cookie", cookie)
 	}
 	body := input.Body
@@ -306,22 +337,33 @@ func (a *App) originalHostSiteHTTPResource(ctx context.Context, scope originalBa
 			explicit["https"] = proxy.HTTPS
 		}
 	}
+	if source != nil {
+		explicit = source.explicitProxy
+	}
 	transport, err := networkproxy.NewRequestsProxyTransport(networkproxy.NewRequestsTimeoutTransport(idle), os.Environ(), explicit, address)
 	if err != nil {
 		return nil, bad("NETWORK_CONFIGURATION_INVALID", "宿主代理配置无效")
 	}
 	defer transport.CloseIdleConnections()
 	jar, _ := cookiejar.New(nil)
+	var physical http.RoundTripper = transport
+	if source != nil {
+		physical = originalSourceSiteHTTPTransport{next: transport, includeLocation: source.includeLocation}
+	}
 	var sent atomic.Bool
-	client := &http.Client{Jar: jar, Transport: originalSiteHTTPGuardTransport{transport, guard, &sent}, CheckRedirect: func(next *http.Request, via []*http.Request) error {
+	client := &http.Client{Jar: jar, Transport: originalSiteHTTPGuardTransport{physical, guard, &sent}, CheckRedirect: func(next *http.Request, via []*http.Request) error {
 		if input.AllowRedirects != nil && !*input.AllowRedirects {
 			return http.ErrUseLastResponse
 		}
 		if len(via) > 30 {
 			return errors.New("site_http_redirect_limit")
 		}
-		if next.URL.User != nil || originalOCROrigin(next.URL) != originalOCROrigin(base) {
-			return bad("SITE_HTTP_TARGET_DENIED", "站点HTTP请求不能跨来源跳转")
+		if next.URL.User != nil || originalOCROrigin(next.URL) != originalOCROrigin(base) || source != nil && (next.URL.Fragment != "" || next.URL.Opaque != "") {
+			err := bad("SITE_HTTP_TARGET_DENIED", "站点HTTP请求不能跨来源跳转")
+			if source != nil {
+				return originalSiteRequestGuardFailure(err)
+			}
+			return err
 		}
 		// requests keeps an explicit initial Referer and does not synthesize one.
 		next.Header.Del("Referer")
@@ -329,7 +371,7 @@ func (a *App) originalHostSiteHTTPResource(ctx context.Context, scope originalBa
 			next.Header.Set("Referer", value)
 		}
 		// requests preserves its initial unscoped cookies alongside redirect Set-Cookie.
-		if cookie != "" {
+		if cookie != "" && (source == nil || source.retainCookieOnRedirect) {
 			next.Header.Set("Cookie", cookie)
 		} else {
 			next.Header.Del("Cookie")
@@ -339,7 +381,7 @@ func (a *App) originalHostSiteHTTPResource(ctx context.Context, scope originalBa
 			next.Header.Del("Content-Length")
 			next.Header.Del("Transfer-Encoding")
 		}
-		return guard(next.Context())
+		return originalSiteRequestGuardFailure(guard(next.Context()))
 	}}
 	req, err := http.NewRequestWithContext(ctx, method, address.String(), bytes.NewReader(body))
 	if err != nil {
@@ -355,7 +397,12 @@ func (a *App) originalHostSiteHTTPResource(ctx context.Context, scope originalBa
 	if response != nil {
 		defer response.Body.Close()
 	}
-	out := plugins.SiteHTTPResultV1{SchemaVersion: 1, RequestState: "unknown"}
+	var denied *originalSiteRequestGuardError
+	revoked := errors.As(requestErr, &denied)
+	if revoked && (method != "POST" || !sent.Load()) {
+		return nil, denied.cause
+	}
+	out := plugins.SiteHTTPResultV1{SchemaVersion: 1, RequestState: "unknown", ScopeChanged: revoked}
 	if requestErr == nil {
 		content, readErr := io.ReadAll(io.LimitReader(response.Body, originalHostNetworkContentLimit+1))
 		if len(content) > originalHostNetworkContentLimit {
@@ -370,6 +417,15 @@ func (a *App) originalHostSiteHTTPResource(ctx context.Context, scope originalBa
 			}
 			cookies := originalSiteHTTPResponseCookies(response.Request.URL, response.Cookies())
 			out.Response = &plugins.SiteHTTPResponseV1{StatusCode: response.StatusCode, Content: content, ContentType: response.Header.Get("Content-Type"), Cookies: cookies}
+			if source != nil && source.includeLocation && (response.StatusCode == 301 || response.StatusCode == 302) {
+				if locations := response.Header.Values("Location"); len(locations) != 0 {
+					location := strings.Join(locations, ", ")
+					if len(location) > 8192 {
+						return nil, bad("PLUGIN_VALUE_TOO_LARGE", "站点跳转地址超出共享传输上限")
+					}
+					out.Response.Location = &location
+				}
+			}
 			out.RequestState = "completed"
 		} else {
 			requestErr = readErr

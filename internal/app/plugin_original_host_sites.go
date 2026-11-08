@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"light-media/internal/metainfo"
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/brushflow"
 	"light-media/internal/sites"
@@ -18,6 +19,8 @@ import (
 
 func originalHostSitesCapability(method string) bool {
 	switch method {
+	case plugins.SitesSourceIndexerCapability, plugins.SitesSourceIndexersCapability, plugins.SitesSourceRefreshCapability, plugins.SitesSourceRefreshAllCapability, plugins.SitesSourceAccountsCapability:
+		return true
 	case plugins.SitesReadCapability, plugins.SitesAccountReadCapability, plugins.SitesRefreshCapability, plugins.SitesResultWriteCapability, plugins.SitesBrowseCapability, plugins.SitesRSSCapability, plugins.SitesTorrentDownloadCapability:
 		return true
 	}
@@ -26,12 +29,25 @@ func originalHostSitesCapability(method string) bool {
 
 func (a *App) originalHostSitesResource(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (json.RawMessage, error) {
 	switch method {
+	case plugins.SitesSourceIndexerCapability, plugins.SitesSourceIndexersCapability, plugins.SitesSourceRefreshCapability, plugins.SitesSourceRefreshAllCapability, plugins.SitesSourceAccountsCapability:
+		return a.originalHostSourceSitesResource(ctx, scope, method, raw)
 	case plugins.SitesReadCapability:
 		var in plugins.SiteHostRequestV1
 		if err := originalResourceDecode(raw, &in); err != nil {
 			return nil, err
 		}
+		if in.SourceProjection {
+			out, err := a.originalSourceConfiguredRows(ctx, in)
+			if err != nil {
+				return nil, err
+			}
+			if err := scope.validate(ctx); err != nil {
+				return nil, err
+			}
+			return json.Marshal(out)
+		}
 		out := plugins.SiteHostResultV1{SchemaVersion: 1, Items: []plugins.SiteHostRowV1{}}
+		nativeOrder := map[string]int64{}
 		configured := a.Settings().Sites
 		for _, s := range configured {
 			if in.ID != "" && s.ID != in.ID || in.ActiveOnly && !s.Enabled {
@@ -45,13 +61,18 @@ func (a *App) originalHostSitesResource(ctx context.Context, scope originalBaseC
 			if err != nil || identity.State != "active" || identity.CanonicalOrigin != origin {
 				return nil, siteIdentityError()
 			}
-			out.Items = append(out.Items, plugins.SiteHostRowV1{ID: s.ID, SourceID: identity.SourceID, Name: s.Name, Kind: s.Kind, Domain: originalBrushInventoryDomain(s, origin), URL: origin, Priority: s.Priority, Enabled: s.Enabled, Public: s.Public, Proxy: s.Proxy, Render: s.Render})
+			nativeOrder[s.ID] = identity.SourceID
+			sourceID, err := a.Store.nativeSourcePublicSiteID(ctx, a.Store.DB, identity)
+			if err != nil {
+				return nil, err
+			}
+			out.Items = append(out.Items, plugins.SiteHostRowV1{ID: s.ID, SourceID: sourceID, Name: s.Name, Kind: s.Kind, Domain: originalBrushInventoryDomain(s, origin), URL: origin, Priority: s.Priority, Enabled: s.Enabled, Public: s.Public, Proxy: s.Proxy, Render: s.Render})
 		}
 		sort.SliceStable(out.Items, func(i, j int) bool {
 			if in.OrderByPriority && out.Items[i].Priority != out.Items[j].Priority {
 				return out.Items[i].Priority < out.Items[j].Priority
 			}
-			return out.Items[i].SourceID < out.Items[j].SourceID
+			return nativeOrder[out.Items[i].ID] < nativeOrder[out.Items[j].ID]
 		})
 		if err := scope.validate(ctx); err != nil {
 			return nil, err
@@ -86,37 +107,8 @@ func (a *App) originalHostSitesResource(ctx context.Context, scope originalBaseC
 		if err = scope.validate(ctx); err != nil {
 			return nil, err
 		}
-		// SiteChain refresh publishes its account observation before posting
-		// messages. A later malformed row must not roll back an earlier message.
-		for _, step := range siteMessageBusinesses(site.Name, site.BaseURL, snapshot) {
-			messageRaw, err := siteMessageBusinessAt(site.Name, site.BaseURL, snapshot, step)
-			if err != nil {
-				return nil, err
-			}
-			var message sourceBusinessNotice
-			if err = json.Unmarshal(messageRaw, &message); err != nil {
-				return nil, err
-			}
-			if sourceSubscriptionTruth(message.Envelope["source"]) {
-				tx, err := a.Store.DB.BeginTx(ctx, nil)
-				if err != nil {
-					return nil, err
-				}
-				exists, err := a.siteMessageSourceExistsTx(ctx, tx, message.Envelope["source"])
-				tx.Rollback()
-				if err != nil {
-					return nil, err
-				}
-				if exists {
-					continue
-				}
-			}
-			if err = scope.validate(ctx); err != nil {
-				return nil, err
-			}
-			if _, err = a.postOriginalPluginMessage(ctx, message.Envelope); err != nil {
-				return nil, err
-			}
+		if err = a.originalHostSiteRefreshMessages(ctx, scope, site, snapshot); err != nil {
+			return nil, err
 		}
 		return a.originalHostSiteAccounts(ctx, scope, plugins.SiteAccountHostRequestV1{ID: in.ID, Date: snapshot.Day})
 	case plugins.SitesResultWriteCapability:
@@ -187,7 +179,10 @@ func (a *App) originalHostSitesResource(ctx context.Context, scope originalBaseC
 	return nil, bad("PLUGIN_CAPABILITY_DENIED", "未知站点资源操作")
 }
 
-type originalHostSiteMaterial struct{ SiteID, ConfigKey, URL string }
+type originalHostSiteMaterial struct {
+	SiteID, ConfigKey, URL string
+	FailureResourceKey     string `json:",omitempty"`
+}
 
 const originalHostSiteMaterialKind = "site_host_material"
 
@@ -201,7 +196,7 @@ func (a *App) originalHostReadSiteMaterial(ctx context.Context, site SiteConfig,
 		return out, err
 	}
 	raw, err := a.pluginStore.unseal(originalHostSiteMaterialKind, "system", site.ID+":"+id, sealed)
-	if err != nil || json.Unmarshal(raw, &out) != nil || out.SiteID != site.ID || out.ConfigKey != a.managedSiteKey(site) {
+	if err != nil || json.Unmarshal(raw, &out) != nil || out.SiteID != site.ID || out.ConfigKey != a.managedSiteKey(site) || id != "rss_"+tokenHash(out.URL) {
 		return out, bad("SITE_CHANGED", "RSS材料与当前站点配置不匹配")
 	}
 	return out, nil
@@ -219,38 +214,51 @@ func (a *App) originalHostSiteRSS(ctx context.Context, scope originalBaseCallSco
 	if err != nil {
 		return nil, err
 	}
-	out := plugins.SiteBrowseHostResultV1{SchemaVersion: 1, Items: []plugins.SiteTorrentHostRowV1{}, Page: 0}
+	out, err := a.originalConfiguredSiteRSS(ctx, site, false, scope.validate)
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(out.SiteBrowseHostResultV1)
+}
+
+type originalConfiguredRSSResult struct {
+	plugins.SiteBrowseHostResultV1
+	detailURLs []string
+}
+
+func (a *App) originalConfiguredSiteRSS(ctx context.Context, site SiteConfig, automatic bool, guard func(context.Context) error) (originalConfiguredRSSResult, error) {
+	out := originalConfiguredRSSResult{SiteBrowseHostResultV1: plugins.SiteBrowseHostResultV1{SchemaVersion: 1, Items: []plugins.SiteTorrentHostRowV1{}}}
 	if site.RSS == "" {
-		return json.Marshal(out)
+		return out, nil
 	}
 	var body []byte
 	var contentType string
-	err = a.withSite(ctx, site, false, func(client *sites.Client) error {
-		client.AddRequestGuard(scope.validate)
+	err := a.withSite(ctx, site, automatic, func(client *sites.Client) error {
+		client.AddRequestGuard(guard)
 		var err error
 		body, contentType, err = client.ConfiguredRSS(ctx, site.RSS)
 		return err
 	})
 	if err != nil {
-		return nil, err
+		return out, err
 	}
 	text, err := brushflow.DecodeRSSXML(body, contentType)
 	if err != nil {
-		return nil, bad("SITE_RSS_INVALID", "站点RSS编码无法解析")
+		return out, bad("SITE_RSS_INVALID", "站点RSS编码无法解析")
 	}
 	rows, err := brushflow.ParseRustRSS(text, 1000, shanghai())
 	if err != nil {
 		rows, err = originalRSSRecoverRows(text, time.Now().In(shanghai()))
 		if err != nil {
-			return nil, bad("SITE_RSS_INVALID", "站点RSS内容无法解析")
+			return out, bad("SITE_RSS_INVALID", "站点RSS内容无法解析")
 		}
 	}
-	if err = scope.validate(ctx); err != nil {
-		return nil, err
+	if err = guard(ctx); err != nil {
+		return out, err
 	}
 	base, err := url.Parse(site.BaseURL)
 	if err != nil {
-		return nil, bad("SITE_RSS_INVALID", "站点地址无效")
+		return out, bad("SITE_RSS_INVALID", "站点地址无效")
 	}
 	materials := map[string][]byte{}
 	for _, row := range rows {
@@ -259,18 +267,27 @@ func (a *App) originalHostSiteRSS(ctx context.Context, scope originalBaseCallSco
 			continue
 		}
 		enclosure, _ := row["enclosure"].(string)
-		u, err := url.Parse(enclosure)
-		if err != nil {
+		if automatic && enclosure == "" {
 			continue
 		}
-		u = base.ResolveReference(u)
-		resourceID := "rss_" + tokenHash(u.String())
-		private := originalHostSiteMaterial{SiteID: site.ID, ConfigKey: a.managedSiteKey(site), URL: u.String()}
-		sealed, err := a.pluginStore.seal(originalHostSiteMaterialKind, "system", site.ID+":"+resourceID, mustCleanSeedJSON(private))
-		if err != nil {
-			return nil, err
+		address := enclosure
+		if strings.HasPrefix(enclosure, "magnet:") {
+			// A magnet is material itself and has no HTTP origin to resolve.
+			if _, err := metainfo.MagnetHash(enclosure); err != nil {
+				continue
+			}
+		} else {
+			u, err := url.Parse(enclosure)
+			if err != nil {
+				continue
+			}
+			u = base.ResolveReference(u)
+			if automatic && (u.User != nil || u.Fragment != "" || originalOCROrigin(u) != originalOCROrigin(base)) {
+				continue
+			}
+			address = u.String()
 		}
-		materials[site.ID+":"+resourceID] = sealed
+		resourceID := "rss_" + tokenHash(address)
 		published, _ := row["pubdate"].(string)
 		size := json.Number("0")
 		switch value := row["size"].(type) {
@@ -279,32 +296,56 @@ func (a *App) originalHostSiteRSS(ctx context.Context, scope originalBaseCallSco
 		case json.Number:
 			size = value
 		}
+		private := originalHostSiteMaterial{SiteID: site.ID, ConfigKey: a.managedSiteKey(site), URL: address}
+		// Source prefers the RSS detail page over its credential-bearing
+		// enclosure. Persist only the derived key in the sealed record.
+		link, _ := row["link"].(string)
+		private.FailureResourceKey = acquisitionResourceURLKey(link)
+		if private.FailureResourceKey == "" {
+			private.FailureResourceKey = acquisitionResourceURLKey(enclosure)
+		}
+		if private.FailureResourceKey == "" {
+			byteCount, _ := size.Int64()
+			private.FailureResourceKey = acquisitionResourceKey(sites.Resource{Title: title, Size: byteCount})
+		}
+		sealed, err := a.pluginStore.seal(originalHostSiteMaterialKind, "system", site.ID+":"+resourceID, mustCleanSeedJSON(private))
+		if err != nil {
+			return out, err
+		}
+		materials[site.ID+":"+resourceID] = sealed
 		out.Items = append(out.Items, plugins.SiteTorrentHostRowV1{ID: resourceID, SiteID: site.ID, Title: title, Size: size, PublishedAt: published, DownloadFactor: 1, UploadFactor: 1})
+		if automatic {
+			out.detailURLs = append(out.detailURLs, originalRSSDetailsURL(base, site, link, address))
+		}
 	}
-	if err = scope.validate(ctx); err != nil {
-		return nil, err
+	if err = guard(ctx); err != nil {
+		return out, err
 	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
-		return nil, err
+		return out, err
 	}
 	defer tx.Rollback()
 	for key, sealed := range materials {
 		if _, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, originalHostSiteMaterialKind, key, sealed, now()); err != nil {
-			return nil, err
+			return out, err
 		}
 	}
 	if err = tx.Commit(); err != nil {
-		return nil, err
+		return out, err
 	}
-	if err = scope.validate(ctx); err != nil {
-		return nil, err
+	if err = guard(ctx); err != nil {
+		return out, err
 	}
-	return json.Marshal(out)
+	return out, nil
 }
 
 func (a *App) originalHostSiteAccounts(ctx context.Context, scope originalBaseCallScope, in plugins.SiteAccountHostRequestV1) (json.RawMessage, error) {
-	if in.Date != "" {
+	return a.originalHostSiteAccountsMode(ctx, scope, in, false)
+}
+
+func (a *App) originalHostSiteAccountsMode(ctx context.Context, scope originalBaseCallScope, in plugins.SiteAccountHostRequestV1, source bool) (json.RawMessage, error) {
+	if !source && in.Date != "" {
 		if _, err := time.Parse("2006-01-02", in.Date); err != nil {
 			return nil, bad("INVALID_PLUGIN_VALUE", "账户日期须为YYYY-MM-DD")
 		}
@@ -384,17 +425,50 @@ func (a *App) originalHostSiteAccounts(ctx context.Context, scope originalBaseCa
 				if err := json.Unmarshal(mustCleanSeedJSON(s.SourceData), &row); err != nil {
 					return nil, err
 				}
-				row["name"] = mustCleanSeedJSON(site.Name)
+				if source {
+					row["name"] = mustCleanSeedJSON(s.Name)
+					row["domain"] = mustCleanSeedJSON(o.Header.Domain)
+					if s.SourceData.Error == nil {
+						row["err_msg"] = json.RawMessage(`""`)
+					}
+				} else {
+					row["name"] = mustCleanSeedJSON(site.Name)
+				}
 				row["updated_day"] = mustCleanSeedJSON(o.Header.Day)
 				row["updated_time"] = mustCleanSeedJSON(o.Header.Time)
 				fields = mustCleanSeedJSON(row)
 			} else {
+				if source {
+					site.Name = s.Name
+				}
 				data, err := statisticData(*s, site)
 				if err != nil {
 					return nil, err
 				}
 				row := sourceAccountRow{Domain: &data.Domain, Name: &data.Name, Username: data.Username, UserLevel: data.UserLevel, Bonus: data.Bonus, Upload: data.Upload, Download: data.Download, Ratio: data.Ratio, Seeding: data.Seeding, SeedingSize: data.SeedingSize, Error: &data.Error, Day: &data.UpdatedDay, Time: &data.UpdatedTime}
 				fields = mustCleanSeedJSON(row)
+			}
+		}
+		if source {
+			// The source table always has a real row id. Imported identities
+			// remain original; new host rows use their actual stable SQLite
+			// record identity, not an invented counter or a permission grant.
+			identifier := o.Header.ID
+			if identifier == 0 {
+				identifier = o.Order
+			}
+			if identifier <= 0 {
+				return nil, invalidSiteAccountSnapshot()
+			}
+			var logical map[string]json.RawMessage
+			if err = json.Unmarshal(fields, &logical); err != nil {
+				return nil, err
+			}
+			logical["id"] = mustCleanSeedJSON(identifier)
+			fields = mustCleanSeedJSON(logical)
+			fields, err = originalSourceAccountFields(fields)
+			if err != nil {
+				return nil, err
 			}
 		}
 		out.Items = append(out.Items, plugins.SiteAccountHostRowV1{SiteID: o.SiteID, Fields: fields})
@@ -532,4 +606,39 @@ func originalHostSiteAccessUpdate(out plugins.SiteHostAccessV1, exists bool, in 
 		out.LastState = 1
 	}
 	return out
+}
+
+func (a *App) originalHostSiteRefreshMessages(ctx context.Context, scope originalBaseCallScope, site SiteConfig, snapshot siteSnapshot) error {
+	for _, step := range siteMessageBusinesses(site.Name, site.BaseURL, snapshot) {
+		messageRaw, err := siteMessageBusinessAt(site.Name, site.BaseURL, snapshot, step)
+		if err != nil {
+			return err
+		}
+		var message sourceBusinessNotice
+		if err = json.Unmarshal(messageRaw, &message); err != nil {
+			return err
+		}
+		if sourceSubscriptionTruth(message.Envelope["source"]) {
+			tx, err := a.Store.DB.BeginTx(ctx, nil)
+			if err != nil {
+				return err
+			}
+			exists, err := a.siteMessageSourceExistsTx(ctx, tx, message.Envelope["source"])
+			tx.Rollback()
+			if err != nil {
+				return err
+			}
+			if exists {
+				continue
+			}
+		}
+		if err = scope.validate(ctx); err != nil {
+			return err
+		}
+		if _, err = a.postOriginalPluginMessage(ctx, message.Envelope); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

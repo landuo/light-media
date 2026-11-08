@@ -4,6 +4,7 @@ package schedule
 
 import (
 	"errors"
+	"light-media/internal/releasemeta/legacyanime"
 	"regexp"
 	"strconv"
 	"strings"
@@ -63,11 +64,27 @@ type Cron struct {
 // ParseCrontab uses Monday=0 and AND between day-of-month/day-of-week, matching
 // APScheduler 3. Unix cron parsers commonly use different meanings for both.
 func ParseCrontab(expression, timezone string) (*Cron, error) {
-	parts := strings.Fields(expression)
-	if len(parts) != 5 || len(expression) > 4096 {
-		return nil, errCron
+	fields, err := crontabFields(expression)
+	if err != nil {
+		return nil, err
 	}
-	return ParseCronFields(CronFields{Minute: parts[0], Hour: parts[1], Day: parts[2], Month: parts[3], DayOfWeek: parts[4]}, timezone)
+	return ParseCronFields(fields, timezone)
+}
+
+func parseCrontabLocation(expression string, location *time.Location) (*Cron, error) {
+	fields, err := crontabFields(expression)
+	if err != nil {
+		return nil, err
+	}
+	return parseCronFieldsLocation(fields, location)
+}
+
+func crontabFields(expression string) (CronFields, error) {
+	parts := legacyanime.Fields(expression)
+	if len(parts) != 5 || len(expression) > 4096 {
+		return CronFields{}, errCron
+	}
+	return CronFields{Minute: parts[0], Hour: parts[1], Day: parts[2], Month: parts[3], DayOfWeek: parts[4]}, nil
 }
 
 func ParseCronFields(fields CronFields, timezone string) (*Cron, error) {
@@ -78,6 +95,10 @@ func ParseCronFields(fields CronFields, timezone string) (*Cron, error) {
 	if err != nil {
 		return nil, errCron
 	}
+	return parseCronFieldsLocation(fields, location)
+}
+
+func parseCronFieldsLocation(fields CronFields, location *time.Location) (*Cron, error) {
 	values := []string{fields.Year, fields.Month, fields.Day, fields.Week, fields.DayOfWeek, fields.Hour, fields.Minute, fields.Second}
 	defaults := []string{"*", "1", "1", "*", "*", "0", "0", "0"}
 	minimum := []int{1970, 1, 1, 1, 0, 0, 0, 0}

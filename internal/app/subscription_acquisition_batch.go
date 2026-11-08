@@ -52,28 +52,38 @@ func acquisitionResourceKey(resource sites.Resource) string {
 	if resource.Hash != "" {
 		return resource.Hash
 	}
-	if text := resource.DetailsURL; text != "" {
-		if m := regexp.MustCompile(`\[(.*?)](.*)`).FindStringSubmatch(text); m != nil {
-			text = m[2]
-		}
-		u, e := url.Parse(text)
-		if e == nil {
-			q := u.Query()
-			for _, key := range []string{"id", "torrentid", "torrent_id", "tid", "hash"} {
-				if v := q[key]; len(v) > 0 && v[0] != "" {
-					return u.Host + ":" + key + "=" + v[0]
-				}
-			}
-			if u.Host != "" && u.Path != "" {
-				return u.Host + u.Path
-			}
-		}
+	if key := acquisitionResourceURLKey(resource.DetailsURL); key != "" {
+		return key
 	}
 	size := ""
 	if resource.Size != 0 {
 		size = strconv.FormatInt(resource.Size, 10)
 	}
 	return fmt.Sprintf("title=%s|size=%s", resource.Title, size)
+}
+
+var acquisitionIndirectURL = regexp.MustCompile(`\[(.*?)](.*)`)
+
+func acquisitionResourceURLKey(address string) string {
+	if m := acquisitionIndirectURL.FindStringSubmatch(address); m != nil {
+		address = m[2]
+	}
+	u, err := url.Parse(address)
+	if err != nil || u.User != nil {
+		return ""
+	}
+	q := u.Query()
+	for _, key := range []string{"id", "torrentid", "torrent_id", "tid", "hash"} {
+		for _, value := range q[key] {
+			if value != "" {
+				return u.Host + ":" + key + "=" + value
+			}
+		}
+	}
+	if path := u.EscapedPath(); u.Host != "" && path != "" {
+		return u.Host + path
+	}
+	return ""
 }
 func (a *App) beginSubscriptionAcquisition(ctx context.Context, j Job, s Subscription, request SearchRequest, candidates []Candidate) (*subscriptionAcquisition, error) {
 	subscribe, e := a.subscriptionSourceProjection(ctx, s)
@@ -122,6 +132,24 @@ func (a *App) beginSubscriptionAcquisition(ctx context.Context, j Job, s Subscri
 		return nil, e
 	}
 	r := subscriptionAcquisition{Source: source, Subscribe: subscribe, Version: 1, ID: j.ID, JobSHA: tokenHash(string(j.Payload)), JobWorkflowID: j.WorkflowID, Generation: j.Generation, RulesSHA: qualityRuleSHA(a.Settings()), Subscription: s, Request: request, Options: recognition.options, Candidates: []Candidate{}, Metas: []json.RawMessage{}, Steps: []subscriptionAcquisitionStep{}}
+	if providerNativeMedia(s.Media) {
+		if request.originalSearchInfo == nil {
+			return nil, acquisitionEvidence()
+		}
+		r.ProviderMedia = append(json.RawMessage(nil), request.originalSearchInfo.MediaInfo...)
+		if e = r.restoreProviderSearch(); e != nil {
+			return nil, e
+		}
+	}
+	if latest := originalChatLatestFromContext(ctx); latest != nil && latest.Mode == "rss" {
+		owned, e := a.originalChatRSSOwnsSearch(ctx, tx, actual, s)
+		if e != nil {
+			return nil, e
+		}
+		if owned {
+			r.RSSBatchID = latest.id
+		}
+	}
 	for _, c := range candidates {
 		if (!c.Accepted || c.NeedsConfirmation) && !(s.Media.MediaType == "tv" && automaticPackCandidate(c, s.Season)) {
 			continue
@@ -140,6 +168,14 @@ func (a *App) beginSubscriptionAcquisition(ctx context.Context, j Job, s Subscri
 		}
 		if len(c.originalSelectionMeta) > 0 {
 			raw = append([]byte(nil), c.originalSelectionMeta...)
+		}
+		if r.RSSBatchID != "" {
+			// Persisted acquisition and download snapshots canonicalize JSON.
+			// Use that same immutable representation for the title proof SHA.
+			raw, e = cleanupJournalJSON(json.RawMessage(raw))
+			if e != nil {
+				return nil, e
+			}
 		}
 		r.Candidates = append(r.Candidates, c)
 		r.Metas = append(r.Metas, raw)
@@ -188,10 +224,13 @@ func (a *App) acquisitionStep(ctx context.Context, r *subscriptionAcquisition, i
 	*r = current
 	ctx = context.WithValue(ctx, subscriptionAcquisitionKey{}, &subscriptionAcquisitionGrant{a, r, index})
 	ctx = context.WithValue(ctx, jobTraceKey{}, jobTrace{Job: r.ID})
+	if providerNativeMedia(r.Subscription.Media) {
+		ctx = subscriptionContext(ctx, r.Subscription.ID, r.Subscription.Revision)
+	}
 	return ctx, &r.Steps[index], nil
 }
-func (a *App) acquisitionCandidate(ctx context.Context, r *subscriptionAcquisition, c Candidate, episodes, selected []int, material string, meta json.RawMessage, allowExtra bool) (bool, error) {
-	input := subscriptionAcquisitionInput{AllowWholeExtra: allowExtra, Candidate: c, Episodes: qualityCopyNote(episodes), Selected: qualityCopyNote(selected), Meta: append(json.RawMessage(nil), meta...), Material: material}
+func (a *App) acquisitionCandidate(ctx context.Context, r *subscriptionAcquisition, c Candidate, episodes, selected []int, material string, meta json.RawMessage, allowExtra bool, listed *subscriptionAcquisitionRSSListing) (bool, error) {
+	input := subscriptionAcquisitionInput{AllowWholeExtra: allowExtra, Candidate: c, Episodes: qualityCopyNote(episodes), Selected: qualityCopyNote(selected), Meta: append(json.RawMessage(nil), meta...), Material: material, RSSListed: listed}
 	ctx, step, e := a.acquisitionStep(ctx, r, input)
 	if e != nil {
 		return false, e
@@ -284,27 +323,34 @@ type subscriptionDownloadFailure struct {
 }
 
 func (a *App) acquisitionFingerprint(ctx context.Context, r *subscriptionAcquisition, c Candidate, meta *releasemeta.MetaObject) (string, error) {
+	return a.subscriptionFailureFingerprint(ctx, r.Subscription, c.Resource.SiteID, acquisitionResourceKey(c.Resource), meta)
+}
+
+func (a *App) subscriptionFailureFingerprint(ctx context.Context, s Subscription, siteID, resource string, meta *releasemeta.MetaObject) (string, error) {
 	// Numeric source identities are authenticated mappings. Test/legacy sites
 	// without a mapping retain the source's site_name fallback, never an App ID.
 	siteName := ""
-	for _, s := range a.Settings().Sites {
-		if s.ID == c.Resource.SiteID {
-			siteName = s.Name
+	for _, site := range a.Settings().Sites {
+		if site.ID == siteID {
+			siteName = site.Name
 			break
 		}
 	}
-	numeric, e := a.Store.nativeSiteByAppID(ctx, c.Resource.SiteID)
+	numeric, e := a.Store.nativeSiteByAppID(ctx, siteID)
 	if e == nil {
 		siteName = strconv.FormatInt(numeric.SourceID, 10)
 	} else if !errors.Is(e, sql.ErrNoRows) {
 		return "", e
 	}
-	resource := acquisitionResourceKey(c.Resource)
 	kind := subscriptionquality.Movie
-	if r.Subscription.Media.MediaType == "tv" {
+	if s.Media.MediaType == "tv" {
 		kind = subscriptionquality.TV
 	}
-	values := map[string]string{"episodes": meta.Episode(), "media_key": "themoviedb:" + strconv.FormatInt(r.Subscription.Media.ID, 10), "media_type": kind, "resource": resource, "season": meta.Season(), "site": siteName}
+	identity := "themoviedb:" + strconv.FormatInt(s.Media.ID, 10)
+	if providerNativeMedia(s.Media) {
+		identity = s.Media.ProviderSource + ":" + s.Media.ProviderID
+	}
+	values := map[string]string{"episodes": meta.Episode(), "media_key": identity, "media_type": kind, "resource": resource, "season": meta.Season(), "site": siteName}
 	raw, e := sourcejson.PythonDumps(values, sourcejson.JSONOptions{SortKeys: true})
 	if e != nil {
 		return "", e
@@ -328,7 +374,6 @@ func (a *App) recordAcquisitionFailure(ctx context.Context, r *subscriptionAcqui
 	if fingerprint == "" {
 		return nil
 	}
-	ttl := acquisitionFailureTTL(message)
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
 		return e
@@ -337,9 +382,16 @@ func (a *App) recordAcquisitionFailure(ctx context.Context, r *subscriptionAcqui
 	if _, e = a.acquisitionScopeTx(ctx, tx, r); e != nil {
 		return e
 	}
-	out := subscriptionDownloadFailure{Version: 1, Fingerprint: fingerprint, Source: r.Source, Message: a.clean(message), RetryAt: time.Now().Add(ttl).Unix(), Count: 1}
+	if e = a.recordSubscriptionFailureTx(ctx, tx, r.Source, fingerprint, message); e != nil {
+		return e
+	}
+	return tx.Commit()
+}
+
+func (a *App) recordSubscriptionFailureTx(ctx context.Context, tx *sql.Tx, source, fingerprint, message string) error {
+	out := subscriptionDownloadFailure{Version: 1, Fingerprint: fingerprint, Source: source, Message: a.clean(message), RetryAt: time.Now().Add(acquisitionFailureTTL(message)).Unix(), Count: 1}
 	var old subscriptionDownloadFailure
-	e = a.readQualitySealed(ctx, tx, "subscription_download_failure", fingerprint, &old)
+	e := a.readQualitySealed(ctx, tx, "subscription_download_failure", fingerprint, &old)
 	if e == nil {
 		if old.Version != 1 || old.Fingerprint != fingerprint {
 			return acquisitionEvidence()
@@ -348,10 +400,22 @@ func (a *App) recordAcquisitionFailure(ctx context.Context, r *subscriptionAcqui
 	} else if !errors.Is(e, sql.ErrNoRows) {
 		return e
 	}
-	if e = a.writeQualitySealedTx(ctx, tx, "subscription_download_failure", fingerprint, out); e != nil {
-		return e
+	return a.writeQualitySealedTx(ctx, tx, "subscription_download_failure", fingerprint, out)
+}
+
+func (a *App) subscriptionFailureActive(ctx context.Context, fingerprint string, now int64) (bool, error) {
+	var failure subscriptionDownloadFailure
+	err := a.readQualitySealed(ctx, a.Store.DB, "subscription_download_failure", fingerprint, &failure)
+	if errors.Is(err, sql.ErrNoRows) {
+		return false, nil
 	}
-	return tx.Commit()
+	if err != nil {
+		return false, err
+	}
+	if failure.Version != 1 || failure.Fingerprint != fingerprint {
+		return false, acquisitionEvidence()
+	}
+	return failure.RetryAt > now, nil
 }
 
 func (a *App) runSubscriptionAcquisition(ctx context.Context, j Job, s Subscription, request SearchRequest, candidates []Candidate, state subscriptionquality.State, available []int) (int, error) {
@@ -359,6 +423,11 @@ func (a *App) runSubscriptionAcquisition(ctx context.Context, j Job, s Subscript
 	if e != nil {
 		return 0, e
 	}
+	latest := originalChatLatestFromContext(ctx)
+	if r.RSSBatchID != "" && (latest == nil || latest.Mode != "rss" || latest.id != r.RSSBatchID || !latest.ownsRSSRoot(j)) {
+		return 0, acquisitionEvidence()
+	}
+	rss := latest != nil && latest.Mode == "rss"
 	state = subscriptionQualityState(r.Subscription)
 	available = qualityCopyNote(r.Request.Episodes)
 	ctx, e = withResourceRecognition(ctx, r.Options)
@@ -475,23 +544,17 @@ func (a *App) runSubscriptionAcquisition(ctx context.Context, j Job, s Subscript
 		Fingerprint: fingerprint,
 		ActiveFailures: func(ctx context.Context, vs []*acquisitionbatch.Candidate) (map[string]bool, error) {
 			out := map[string]bool{}
+			now := time.Now().Unix()
 			for _, v := range vs {
 				key := fingerprint(v)
 				if key == "" {
 					return nil, acquisitionEvidence()
 				}
-				var f subscriptionDownloadFailure
-				e := a.readQualitySealed(ctx, a.Store.DB, "subscription_download_failure", key, &f)
-				if errors.Is(e, sql.ErrNoRows) {
-					continue
-				}
+				active, e := a.subscriptionFailureActive(ctx, key, now)
 				if e != nil {
 					return nil, e
 				}
-				if f.Version != 1 || f.Fingerprint != key {
-					return nil, acquisitionEvidence()
-				}
-				if f.RetryAt > time.Now().Unix() {
+				if active {
 					out[key] = true
 				}
 			}
@@ -505,7 +568,20 @@ func (a *App) runSubscriptionAcquisition(ctx context.Context, j Job, s Subscript
 				return acquisitionbatch.Material{}, e
 			}
 			var raw []byte
+			var magnet string
+			var proof *originalChatLatestDownloadProof
+			if rss {
+				proof, e = a.originalChatLatestSelect(latest, site, original.Resource.ID)
+				if e != nil {
+					return acquisitionbatch.Material{}, e
+				}
+			}
 			e = a.withSite(ctx, site, false, func(client *sites.Client) error {
+				if proof != nil {
+					material, err := a.originalChatLatestMaterial(ctx, proof, site, client)
+					raw, magnet = material.Torrent, material.Magnet
+					return err
+				}
 				var e error
 				raw, e = client.Torrent(ctx, original.Resource.ID)
 				return e
@@ -514,16 +590,28 @@ func (a *App) runSubscriptionAcquisition(ctx context.Context, j Job, s Subscript
 				if ctx.Err() != nil {
 					return acquisitionbatch.Material{}, ctx.Err()
 				}
+				if rss {
+					if sites.IsSubscriptionMaterialFailure(e) {
+						return acquisitionbatch.Material{}, nil
+					}
+					return acquisitionbatch.Material{}, e
+				}
 				if e = a.recordAcquisitionFailure(ctx, r, fingerprint(c), e.Error()); e != nil {
 					return acquisitionbatch.Material{}, e
 				}
 				return acquisitionbatch.Material{}, nil
+			}
+			if magnet != "" {
+				return acquisitionbatch.Material{Magnet: true}, nil
 			}
 			if len(raw) == 0 {
 				return acquisitionbatch.Material{}, nil
 			}
 			m, e := metainfo.ParseMaterial(raw)
 			if e != nil {
+				if rss {
+					return acquisitionbatch.Material{}, nil
+				}
 				if e = a.recordAcquisitionFailure(ctx, r, fingerprint(c), "invalid torrent"); e != nil {
 					return acquisitionbatch.Material{}, e
 				}
@@ -603,7 +691,38 @@ func (a *App) runSubscriptionAcquisition(ctx context.Context, j Job, s Subscript
 					}
 				}
 			}
-			accepted, e := a.acquisitionCandidate(ctx, r, byID[c.ID], episodes, selected, refs[c.ID], raw, allowExtra)
+			var listed *subscriptionAcquisitionRSSListing
+			if r.RSSBatchID != "" && s.Media.MediaType == "tv" && d.Episodes == nil && len(d.Content) == 0 && refs[c.ID] == "" {
+				idx, err := strconv.Atoi(c.ID)
+				if err != nil || idx < 0 || idx >= len(r.Metas) {
+					return false, acquisitionEvidence()
+				}
+				original := r.Metas[idx]
+				meta, err := releasemeta.DecodeMetaObjectState(original)
+				if err != nil {
+					return false, err
+				}
+				seasons, declared, err := larkMetaNumbers(meta)
+				if err != nil {
+					return false, err
+				}
+				if len(seasons) == 1 && seasons[0] == s.Season && len(declared) > 0 && slices.Equal(declared, episodes) {
+					candidate := byID[c.ID].Resource
+					site, err := a.site(candidate.SiteID)
+					if err != nil {
+						return false, err
+					}
+					proof, err := a.originalChatLatestSelect(latest, site, candidate.ID)
+					if err != nil {
+						return false, err
+					}
+					raw = original
+					listed = &subscriptionAcquisitionRSSListing{BatchID: r.RSSBatchID, SiteKey: proof.SiteKey, ResourceID: candidate.ID,
+						SourceMetaSHA: tokenHash(string(raw)), ProofSHA: tokenHash(string(mustCleanSeedJSON(proof))),
+						Season: s.Season, Priority: candidate.PriorityOrder, Episodes: qualityCopyNote(declared)}
+				}
+			}
+			accepted, e := a.acquisitionCandidate(ctx, r, byID[c.ID], episodes, selected, refs[c.ID], raw, allowExtra, listed)
 			if e == nil && !accepted {
 				for i := len(r.Steps) - 1; i >= 0; i-- {
 					step := r.Steps[i]

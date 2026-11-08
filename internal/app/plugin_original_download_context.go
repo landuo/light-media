@@ -182,12 +182,38 @@ func originalDownloadContextCategory(snapshot *downloadContextSnapshot) (any, bo
 	return category, present
 }
 
+// RSS material and the tracker credentials used to fetch it are private to
+// the host. Use the page projected at feed intake, including when a selection
+// handler returned a different TorrentInfo or a download resumes from disk.
+func (snapshot *downloadContextSnapshot) originalDownloadEventContext() (*originalDownloadContext, error) {
+	proof := snapshot.LatestResource
+	if snapshot.Original == nil || proof == nil || proof.Mode != "rss" {
+		return snapshot.Original, nil
+	}
+	var torrent map[string]json.RawMessage
+	if json.Unmarshal(snapshot.Original.Torrent, &torrent) != nil || torrent == nil {
+		return nil, bad("INVALID_DOWNLOAD_CONTEXT", "下载上下文的 RSS 资源无法核对")
+	}
+	page, _ := json.Marshal(proof.Row.Resource.DetailsURL)
+	torrent["page_url"] = page
+	torrent["enclosure"] = json.RawMessage(`null`)
+	torrent["site_cookie"] = json.RawMessage(`null`)
+	projected := *snapshot.Original
+	var err error
+	projected.Torrent, err = json.Marshal(torrent)
+	return &projected, err
+}
+
 // download_single consumes only cancel and options.save_path. Replacing the
 // event's downloader/episodes/context does not grant a new downloader or media
 // identity. The Go ABI carries value snapshots, not Python heap aliases.
 func (a *App) originalResourceDownload(ctx context.Context, snapshot *downloadContextSnapshot, path string, selected []int, origin string, downloader json.RawMessage, client *download.Client) (string, error) {
 	if snapshot == nil || snapshot.Original == nil {
 		return path, nil
+	}
+	projected, err := snapshot.originalDownloadEventContext()
+	if err != nil {
+		return "", err
 	}
 	var category any
 	var media map[string]json.RawMessage
@@ -197,8 +223,12 @@ func (a *App) originalResourceDownload(ctx context.Context, snapshot *downloadCo
 	if len(downloader) == 0 {
 		downloader = json.RawMessage(`null`)
 	}
+	var channel, userID, username any
+	if chat := snapshot.ChatOrigin; chat != nil {
+		channel, userID, username = chat.Channel, chat.UserID, chat.Username
+	}
 	episodes := originalDownloadEpisodes(snapshot.Original.Meta, selected)
-	raw, err := json.Marshal(map[string]any{"context": snapshot.Original, "episodes": episodes, "channel": nil, "origin": origin, "downloader": downloader, "options": map[string]any{"save_path": path, "userid": nil, "username": nil, "media_category": category}, "cancel": false, "source": "未知拦截源", "reason": ""})
+	raw, err := json.Marshal(map[string]any{"context": projected, "episodes": episodes, "channel": channel, "origin": origin, "downloader": downloader, "options": map[string]any{"save_path": path, "userid": userID, "username": username, "media_category": category}, "cancel": false, "source": "未知拦截源", "reason": ""})
 	if err != nil {
 		return "", err
 	}
@@ -262,9 +292,20 @@ func (a *App) emitOriginalDownloadAdded(ctx context.Context, hash string, snapsh
 	if snapshot == nil || snapshot.Original == nil {
 		return
 	}
+	projected, err := snapshot.originalDownloadEventContext()
+	if err != nil {
+		a.logOriginalPluginContext(ctx, "ERROR", "download_added_submit_failed", "下载成功事件的上下文无法核对")
+		return
+	}
 	if len(downloader) == 0 {
 		downloader = json.RawMessage(`null`)
 	}
-	a.submitOriginalDownloadAdded(ctx, snapshot)
-	a.emitStandardBusinessEvent(ctx, "download.added", map[string]any{"hash": hash, "context": snapshot.Original, "username": nil, "downloader": downloader, "episodes": snapshot.OriginalEpisodes, "source": snapshot.OriginalOrigin})
+	var username any
+	if snapshot.ChatOrigin != nil {
+		username = snapshot.ChatOrigin.Username
+	}
+	eventSnapshot := *snapshot
+	eventSnapshot.Original = projected
+	a.submitOriginalDownloadAdded(ctx, &eventSnapshot)
+	a.emitStandardBusinessEvent(ctx, "download.added", map[string]any{"hash": hash, "context": projected, "username": username, "downloader": downloader, "episodes": snapshot.OriginalEpisodes, "source": snapshot.OriginalOrigin})
 }

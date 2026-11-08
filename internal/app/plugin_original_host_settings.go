@@ -8,11 +8,17 @@ import (
 	"light-media/internal/fileextensions"
 	"light-media/internal/media/words"
 	"light-media/internal/plugins"
+	"strings"
 )
 
 func originalHostSettingsCapability(method string) bool {
 	return method == plugins.SettingsReadCapability || method == plugins.SettingsWriteCapability
 }
+func originalRemoteIdentifiersTask(scope originalBaseCallScope) bool {
+	return scope.object != nil && scope.object.installation.PluginID == "RemoteIdentifiers" &&
+		(scope.phase == "refresh" || scope.phase == "private_once" || scope.phase == "refresh_continue")
+}
+
 func (a *App) originalHostSettingsResource(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (json.RawMessage, error) {
 	var in plugins.SettingsHostWriteV1
 	if method == plugins.SettingsReadCapability {
@@ -22,8 +28,19 @@ func (a *App) originalHostSettingsResource(ctx context.Context, scope originalBa
 		}
 		in.Key = read.Key
 	} else {
-		if err := originalResourceDecode(raw, &in); err != nil {
+		limit := 128 << 10
+		if originalRemoteIdentifiersTask(scope) {
+			limit = plugins.MaxPayloadBytes
+		}
+		if err := originalResourceDecodeBounded(raw, &in, limit); err != nil {
 			return nil, err
+		}
+		if in.ReplaceRemoteIdentifiers {
+			if !originalRemoteIdentifiersTaskScope(ctx, scope) || in.Key != "CustomIdentifiers" {
+				return nil, bad("PLUGIN_CAPABILITY_DENIED", "远程识别词更新必须由当前任务提交")
+			}
+		} else if len(raw) > 128<<10 {
+			return nil, bad("INVALID_PLUGIN_VALUE", "插件资源参数必须为有界对象")
 		}
 		if len(in.Value) == 0 || !json.Valid(in.Value) {
 			return nil, bad("INVALID_PLUGIN_VALUE", "系统设置值无效")
@@ -32,6 +49,19 @@ func (a *App) originalHostSettingsResource(ctx context.Context, scope originalBa
 	write := method == plugins.SettingsWriteCapability
 	out := plugins.SettingsHostResultV1{SchemaVersion: 1, Key: in.Key, Value: json.RawMessage(`null`)}
 	switch in.Key {
+	case "TEMP_PATH", "TEMP_FILE_DAYS":
+		if write {
+			return nil, bad("PLUGIN_CAPABILITY_DENIED", "宿主临时目录和保留天数只读")
+		}
+		if in.Key == "TEMP_PATH" {
+			path, err := a.originalPluginTemporaryPath()
+			if err != nil {
+				return nil, err
+			}
+			out.Value = mustCleanSeedJSON(path)
+		} else {
+			out.Value = a.originalPluginTemporaryDaysJSON()
+		}
 	case "USER_AGENT":
 		if write {
 			return nil, bad("PLUGIN_CAPABILITY_DENIED", "宿主HTTP身份只读")
@@ -54,7 +84,7 @@ func (a *App) originalHostSettingsResource(ctx context.Context, scope originalBa
 		if err != nil {
 			return nil, err
 		}
-	case "BIG_MEMORY_MODE", "META_CACHE_EXPIRE", "TMDB_LOCALE", "RECOGNIZE_SOURCE":
+	case "BIG_MEMORY_MODE", "META_CACHE_EXPIRE", "TMDB_LOCALE", "RECOGNIZE_SOURCE", "SCRAP_SOURCE":
 		// These names come from core.config.settings, not SystemConfigOper's
 		// database. The process boundary exposes their startup snapshot only.
 		if write {
@@ -69,6 +99,8 @@ func (a *App) originalHostSettingsResource(ctx context.Context, scope originalBa
 			out.Value = mustCleanSeedJSON(a.originalHostMediaRecognition.Locale)
 		case "RECOGNIZE_SOURCE":
 			out.Value = mustCleanSeedJSON(a.originalHostMediaRecognition.Source)
+		case "SCRAP_SOURCE":
+			out.Value = mustCleanSeedJSON(a.originalHostMediaRecognition.ScrapeSource)
 		}
 	case "MEDIA_RECOGNIZE_SHARE", "MEDIA_RECOGNIZE_SHARE_API":
 		a.settingsMu.Lock()
@@ -144,6 +176,19 @@ func (a *App) originalHostSettingsResource(ctx context.Context, scope originalBa
 			var next []string
 			if json.Unmarshal(in.Value, &next) != nil {
 				return nil, bad("INVALID_RECOGNITION_WORDS", "识别词须为字符串数组或null")
+			}
+			if in.ReplaceRemoteIdentifiers {
+				if len(next) == 0 || next[0] != remoteIdentifiersMarker {
+					return nil, bad("INVALID_RECOGNITION_WORDS", "远程识别词缺少原版边界标记")
+				}
+				prefix := len(rules)
+				for i, rule := range rules {
+					if strings.Contains(rule, "RemoteIdentifiers") {
+						prefix = i
+						break
+					}
+				}
+				next = append(rules[:prefix:prefix], next...)
 			}
 			nextRaw := mustCleanSeedJSON(next)
 			if revision == 0 || !originalBaseJSONEqual(old, nextRaw) {
@@ -252,7 +297,21 @@ func (a *App) originalHostSettingsResource(ctx context.Context, scope originalBa
 		}
 	case "UserInstalledPlugins":
 		if write {
-			return nil, bad("PLUGIN_CAPABILITY_DENIED", "安装清单须通过插件生命周期操作修改")
+			operation, release, err := a.enterOriginalManagerOperation(ctx)
+			if err != nil {
+				return nil, err
+			}
+			defer release()
+			if err = scope.validate(operation); err != nil {
+				return nil, err
+			}
+			changed, err := a.pluginStore.sourceSetOriginalInstalled(operation, in.Value)
+			if err != nil {
+				return nil, err
+			}
+			if changed {
+				out.Changed = &changed
+			}
 		}
 		ids, err := a.originalInstalledPluginIDs(ctx)
 		if err != nil {

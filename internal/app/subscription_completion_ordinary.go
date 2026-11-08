@@ -143,7 +143,7 @@ func (a *App) ordinaryCompletionBasis(ctx context.Context, q qualityReader, s Su
 }
 
 func (a *App) ordinaryCompletionBasisWithExistence(ctx context.Context, q qualityReader, s Subscription, accepted []subscriptionCompletionAccepted, existence *originalSubscriptionExistence) (*subscriptionCompletionOrdinaryBasis, bool, error) {
-	if s.BestVersion || s.State != "active" || s.SourceState == "P" {
+	if s.BestVersion || !a.subscriptionSearchState(ctx, s) || s.SourceState == "P" {
 		return nil, false, nil
 	}
 	targets := ordinaryCompletionTargets(s)
@@ -223,6 +223,8 @@ func (a *App) ordinaryCompletionBasisWithExistence(ctx context.Context, q qualit
 				return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "订阅库存缺少真实文件受管归属")
 			}
 			entry.Video = &video
+		} else if providerNativeMedia(s.Media) {
+			return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "外部库存缺少可核对的来源影视身份")
 		} else if asset.IdentitySource == "manual" {
 			var proof libraryIdentity
 			if e = qualityRecord(ctx, q, "asset_identity", asset.ID, &proof); e != nil || proof.AssetID != asset.ID || proof.Path != asset.Path || proof.RootPath != root.Path || proof.RootID != root.ID || proof.Snapshot != stamp || proof.MediaType != s.Media.MediaType || proof.TMDBID != s.Media.ID || proof.Season != s.Season || !equalQualityEpisodes(importEpisodes(proof.Episodes), importEpisodes(asset.Episodes)) || proof.Source != "manual" || proof.ConfirmedAt != asset.IdentityConfirmedAt {
@@ -245,7 +247,7 @@ func (a *App) ordinaryCompletionBasisWithExistence(ctx context.Context, q qualit
 
 func (p *PluginStore) validateOrdinaryCompletionInput(ctx context.Context, q subscriptionCompletionReader, r subscriptionCompletionReceipt) error {
 	var s Subscription
-	if cleanupJournalStrict(r.Input.Source.Subscription, &s) != nil || s.ID != r.Identity.SubscriptionID || s.Revision != r.Identity.Revision || s.BestVersion || s.SourceState == "P" || s.State != "active" {
+	if cleanupJournalStrict(r.Input.Source.Subscription, &s) != nil || s.ID != r.Identity.SubscriptionID || s.Revision != r.Identity.Revision || s.BestVersion || s.SourceState == "P" || (s.State != "active" && s.State != "paused") {
 		return completionEvidenceError()
 	}
 	basis := r.Input.Ordinary
@@ -289,6 +291,8 @@ func (p *PluginStore) validateOrdinaryCompletionInput(ctx context.Context, q sub
 			if video == nil || video.Kind != "video" || video.Path != asset.Path || video.AssetID != asset.ID || video.RootID != asset.RootID || video.MediaKey != basis.MediaKey || video.Snapshot != entry.Snapshot || entry.Registration != nil || entry.NFO != nil {
 				return completionEvidenceError()
 			}
+		} else if providerNativeMedia(s.Media) {
+			return completionEvidenceError()
 		} else if asset.IdentitySource == "manual" {
 			proof := entry.Registration
 			if video != nil || entry.NFO != nil || proof == nil || proof.AssetID != asset.ID || proof.Path != asset.Path || proof.RootPath != entry.RootPath || proof.RootID != asset.RootID || proof.Snapshot != entry.Snapshot || proof.MediaType != s.Media.MediaType || proof.TMDBID != s.Media.ID || proof.Season != s.Season || !equalQualityEpisodes(importEpisodes(proof.Episodes), importEpisodes(asset.Episodes)) || proof.Source != "manual" || proof.ConfirmedAt != asset.IdentityConfirmedAt {
@@ -311,6 +315,12 @@ func (p *PluginStore) validateOrdinaryCompletionInput(ctx context.Context, q sub
 	return nil
 }
 
+type subscriptionCompletionPreparationPayload struct {
+	ID              string `json:"id"`
+	Revision        int    `json:"revision"`
+	PausedSearchJob string `json:"_chat_paused_search_job,omitempty"`
+}
+
 func enqueueSubscriptionCompletionPreparationForTx(ctx context.Context, tx *sql.Tx, s Subscription, workflow string) error {
 	// The generic queue deduplicates kind+object, while a completion is bound
 	// to one exact subscription revision. Revoke only obsolete preparations;
@@ -325,7 +335,8 @@ func enqueueSubscriptionCompletionPreparationForTx(ctx context.Context, tx *sql.
 	if count > 0 {
 		return nil
 	}
-	_, e := enqueueTx(ctx, tx, "subscription_completion_prepare", map[string]any{"id": s.ID, "revision": s.Revision}, workflow)
+	payload := subscriptionCompletionPreparationPayload{ID: s.ID, Revision: s.Revision, PausedSearchJob: originalChatPausedSearchJob(ctx, s)}
+	_, e := enqueueTx(ctx, tx, "subscription_completion_prepare", payload, workflow)
 	return e
 }
 
@@ -336,11 +347,8 @@ func requireSubscriptionPreparationJob(ctx context.Context, q subscriptionComple
 	if e := q.QueryRowContext(ctx, `SELECT kind,state,generation,payload,workflow_id FROM jobs WHERE id=?`, j.ID).Scan(&kind, &state, &generation, &raw, &workflow); e != nil {
 		return e
 	}
-	var payload struct {
-		ID       string `json:"id"`
-		Revision int    `json:"revision"`
-	}
-	if kind != "subscription_completion_prepare" || state != "running" || generation != j.Generation || workflow != j.WorkflowID || json.Unmarshal(raw, &payload) != nil || payload.ID != key || payload.Revision != revision {
+	var payload subscriptionCompletionPreparationPayload
+	if kind != "subscription_completion_prepare" || state != "running" || generation != j.Generation || workflow != j.WorkflowID || !bytes.Equal(raw, j.Payload) || json.Unmarshal(raw, &payload) != nil || payload.ID != key || payload.Revision != revision {
 		return completionEvidenceError()
 	}
 	return nil
@@ -360,7 +368,7 @@ func (a *App) requestOrdinarySubscriptionCompletion(ctx context.Context, j Job, 
 	} else if e != nil {
 		return e
 	}
-	if current.Revision != s.Revision || current.State != "active" || current.SourceState == "P" || current.BestVersion {
+	if current.Revision != s.Revision || !a.subscriptionSearchState(ctx, current) || current.SourceState == "P" || current.BestVersion {
 		return nil
 	}
 	if e = enqueueSubscriptionCompletionPreparationForTx(ctx, tx, current, j.WorkflowID); e != nil {
@@ -369,8 +377,10 @@ func (a *App) requestOrdinarySubscriptionCompletion(ctx context.Context, j Job, 
 	current.LastReason = "目标已满足，等待原订阅完成判定、历史与通知流程"
 	current.LastCheck = now()
 	current.NextCheck = ""
-	if next := nextScheduleCheck(current.Schedule, time.Now(), nil); !next.IsZero() {
-		current.NextCheck = next.UTC().Format(time.RFC3339Nano)
+	if current.State == "active" {
+		if next := nextScheduleCheck(current.Schedule, time.Now(), nil); !next.IsZero() {
+			current.NextCheck = next.UTC().Format(time.RFC3339Nano)
+		}
 	}
 	if e = txPut(ctx, tx, "subscription", current.ID, current); e != nil {
 		return e

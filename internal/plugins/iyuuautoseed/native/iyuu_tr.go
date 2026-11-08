@@ -28,7 +28,11 @@ func (c *Client) iyuuTRTorrents(ctx context.Context, hashes []string) (json.RawM
 	}
 	var request any
 	if c.trDialect == "legacy" {
-		request = map[string]any{"method": "torrent-get", "arguments": args, "tag": id}
+		if c.sourceTRResponse {
+			request = map[string]any{"method": "torrent-get", "arguments": args}
+		} else {
+			request = map[string]any{"method": "torrent-get", "arguments": args, "tag": id}
+		}
 	} else {
 		request = map[string]any{"jsonrpc": "2.0", "method": "torrent_get", "params": args, "id": id}
 	}
@@ -41,6 +45,14 @@ func (c *Client) iyuuTRTorrents(ctx context.Context, hashes []string) (json.RawM
 		if err != nil {
 			return nil, err
 		}
+		if c.sourceTRResponse {
+			if session := header.Get("X-Transmission-Session-Id"); session != "" {
+				if len(session) > 1024 || strings.ContainsAny(session, "\r\n\x00") {
+					return nil, failure("rpc", "invalid_session_header")
+				}
+				c.trSession = session
+			}
+		}
 		if status == http.StatusConflict {
 			session := header.Get("X-Transmission-Session-Id")
 			if session == "" || len(session) > 1024 || strings.ContainsAny(session, "\r\n\x00") {
@@ -49,7 +61,7 @@ func (c *Client) iyuuTRTorrents(ctx context.Context, hashes []string) (json.RawM
 			c.trSession = session
 			continue
 		}
-		if status != http.StatusOK {
+		if status != http.StatusOK && (!c.sourceTRResponse || status == http.StatusUnauthorized || status == http.StatusForbidden) {
 			return nil, statusError(status)
 		}
 		var envelope map[string]json.RawMessage
@@ -60,7 +72,7 @@ func (c *Client) iyuuTRTorrents(ctx context.Context, hashes []string) (json.RawM
 		if c.trDialect == "legacy" {
 			var tag uint64
 			var result string
-			if json.Unmarshal(envelope["tag"], &tag) != nil || tag != id {
+			if !c.sourceTRResponse && (json.Unmarshal(envelope["tag"], &tag) != nil || tag != id) {
 				return nil, failure("rpc", "response_id_mismatch")
 			}
 			if json.Unmarshal(envelope["result"], &result) != nil || result != "success" {

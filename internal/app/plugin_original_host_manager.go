@@ -30,6 +30,32 @@ func (a *App) originalHostManagerResource(ctx context.Context, scope originalBas
 		if request.Action != "" || len(request.Config) > 0 || request.Force || request.JobID != "" {
 			return nil, bad("INVALID_PLUGIN_VALUE", "状态读取不能指定操作")
 		}
+		if request.View == "local" {
+			if request.InstanceID != "" || request.IncludeState {
+				return nil, bad("INVALID_PLUGIN_VALUE", "本地插件元数据使用完整原版遍历")
+			}
+			if scope.object != nil && originalObjectStillLoaded(scope.object) {
+				if err := originalHostRequireConcurrent(scope); err != nil {
+					return nil, err
+				}
+			}
+			cards, err := a.originalLocalPluginCards(ctx, false, scope.validate)
+			if err != nil {
+				return nil, err
+			}
+			rows := make([]map[string]any, 0, len(cards))
+			for _, card := range cards {
+				version := card.Version
+				if card.SourceInstanceID != "" {
+					version = card.DisplayVersion
+				}
+				rows = append(rows, map[string]any{"id": card.InstanceID, "plugin_name": card.Name, "plugin_version": version, "plugin_order": card.PluginOrder, "installed": card.Installed, "state": card.State, "has_page": card.HasPage})
+			}
+			if err := scope.validate(ctx); err != nil {
+				return nil, err
+			}
+			return json.Marshal(rows)
+		}
 		list := []PluginInstallation{}
 		switch request.View {
 		case "", "installed":
@@ -112,7 +138,7 @@ func (a *App) originalHostManagerResource(ctx context.Context, scope originalBas
 		}
 	}
 	switch request.Action {
-	case "init", "stop", "reload", "uninstall", "services.refresh", "services.remove", "config.delete", "data.delete":
+	case "init", "stop", "reload", "uninstall", "services.refresh", "services.remove", "config.delete", "data.delete", "remove", "code.exists", "code.remove":
 	default:
 		return nil, bad("INVALID_PLUGIN_VALUE", "插件管理操作无效")
 	}
@@ -148,6 +174,9 @@ func (a *App) originalHostManagerResource(ctx context.Context, scope originalBas
 		}()
 		return json.Marshal(plugins.PluginControlResult{Accepted: true, Completed: false})
 	}
+	if request.Action == "remove" && request.InstanceID == scope.installation.InstanceID && originalLiveInitialization(ctx, scope.object) == nil {
+		return nil, bad("PLUGIN_CAPABILITY_DENIED", "自身同步移除需要真实初始化调用")
+	}
 	var sourceResult json.RawMessage
 	if err := a.originalHostManagerControl(ctx, request, &sourceResult); err != nil {
 		return nil, err
@@ -159,10 +188,11 @@ func (a *App) originalHostManagerResource(ctx context.Context, scope originalBas
 }
 
 func (a *App) originalHostManagerControl(ctx context.Context, request plugins.PluginManagerRequest, sourceResult *json.RawMessage) error {
-	if !a.pluginOriginalOperationMu.TryLock() {
-		return bad("PLUGIN_OPERATION_BUSY", "另一插件生命周期操作正在执行，请重试")
+	ctx, releaseOperationOwner, err := a.enterOriginalManagerOperation(ctx)
+	if err != nil {
+		return err
 	}
-	defer a.pluginOriginalOperationMu.Unlock()
+	defer releaseOperationOwner()
 	if err := ctx.Err(); err != nil {
 		return err
 	}
@@ -173,6 +203,14 @@ func (a *App) originalHostManagerControl(ctx context.Context, request plugins.Pl
 	}
 	setResult("null")
 	switch request.Action {
+	case "remove":
+		return a.sourceRemoveOriginalPlugin(ctx, request.InstanceID)
+	case "code.exists", "code.remove":
+		raw, err := a.sourceOriginalCode(ctx, request.InstanceID, request.Action)
+		if err == nil && sourceResult != nil {
+			*sourceResult = raw
+		}
+		return err
 	case "uninstall":
 		if !a.admitOriginalBackground() {
 			return bad("APP_STOPPING", "服务正在停止")
@@ -188,16 +226,15 @@ func (a *App) originalHostManagerControl(ctx context.Context, request plugins.Pl
 			}
 			object := loaded.(*originalPluginInstance)
 			unlock := object.lockOriginalMethod()
-			call := &originalInitializationCall{object: object}
-			_, err := object.callSession(context.WithValue(ctx, originalInitializingObjectKey{}, call), plugins.Runner{Timeout: 10 * time.Second}, "init", request.Config, nil)
+			initCtx, endInit := object.beginOriginalInitialization(ctx, false)
+			err := object.callOriginalInitializer(initCtx, request.Config)
+			defer endInit()
 			unlock()
 			if err != nil {
 				return err
 			}
-			object.configMu.Lock()
-			object.appliedConfig = append(json.RawMessage(nil), request.Config...)
-			object.configMu.Unlock()
-			return a.updateOriginalPluginEventState(ctx, object)
+			object.recordOriginalAppliedConfig(request.Config)
+			return a.updateOriginalPluginEventState(initCtx, object)
 		}
 		return a.initOriginalLoadedPlugin(ctx, request.InstanceID)
 	case "stop":

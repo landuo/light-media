@@ -10,6 +10,29 @@ import (
 	"light-media/internal/metainfo"
 )
 
+func addHashes(in AddRequest, kind string) ([]string, error) {
+	if in.Magnet == "" {
+		return torrentHashes(in.Torrent, kind)
+	}
+	if len(in.Torrent) != 0 {
+		return nil, failure("add", "ambiguous_material")
+	}
+	hash, err := metainfo.MagnetHash(in.Magnet)
+	if err != nil {
+		return nil, failure("add", "invalid_magnet")
+	}
+	if len(hash) == 64 {
+		if kind == "transmission" {
+			return nil, failure("add", "pure_v2_unsupported_by_transmission")
+		}
+		// This matches the existing qB/libtorrent v2 TorrentID projection.
+		hash = hash[:40]
+	}
+	// A hybrid magnet's two exact topics are not authenticated by info bytes.
+	// Lookup and acceptance use only its canonical btih, not its second topic.
+	return []string{hash}, nil
+}
+
 // torrentHashes hashes the original info dictionary, never a re-encoded map.
 // Hybrid qB IDs depend on its libtorrent build, so both known IDs are checked.
 func torrentHashes(data []byte, kind string) ([]string, error) {

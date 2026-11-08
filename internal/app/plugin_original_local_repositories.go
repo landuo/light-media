@@ -111,6 +111,8 @@ func (a *App) scanOriginalLocalRepositories(ctx context.Context, state *original
 func (a *App) reloadOriginalLocalCandidate(ctx context.Context, source artifacts.Discovery) error {
 	a.pluginOriginalOperationMu.Lock()
 	defer a.pluginOriginalOperationMu.Unlock()
+	ctx, releaseOperationOwner := a.bindOriginalOperationOwner(ctx)
+	defer releaseOperationOwner()
 	if !a.admitOriginalBackground() {
 		return nil
 	}

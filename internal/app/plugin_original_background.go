@@ -7,8 +7,12 @@ import "sync"
 // Add and sealing it before Close waits prevents late external producers from
 // adding callbacks to a drained WaitGroup.
 type originalBackgroundAdmission struct {
-	mu     sync.Mutex
-	closed bool
+	mu                      sync.Mutex
+	closed                  bool
+	privateSchedulerClosing bool
+	sourceEntriesClosing    bool
+	sourceEventsClosing     bool
+	eventLifetimes          sync.WaitGroup
 }
 
 func (a *App) admitOriginalBackground() bool {

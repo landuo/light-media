@@ -148,12 +148,12 @@ func (p *PluginStore) cloneOriginalClass(ctx context.Context, source string, req
 	manifest := storedManifest
 
 	raw := json.RawMessage(`{}`)
-	err = tx.QueryRowContext(ctx, `SELECT sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, source).Scan(&sealed)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	observed, configSealed, err := p.readOriginalBaseConfigRow(ctx, tx, source)
+	if err != nil {
 		return out, err
 	}
-	if err == nil {
-		raw, err = p.unseal("config", source, "main", sealed)
+	if observed.present {
+		raw, err = p.unsealBound("config", source, "main", configSealed, observed.valueLimit)
 		if err != nil {
 			return out, err
 		}
@@ -177,7 +177,7 @@ func (p *PluginStore) cloneOriginalClass(ctx context.Context, source string, req
 	if err != nil {
 		return out, err
 	}
-	if len(raw) > pluginValueLimit {
+	if len(raw) > observed.valueLimit {
 		return out, bad("INVALID_PLUGIN_VALUE", "分身配置超过大小上限")
 	}
 	sourceMeta, err := p.instanceMetadata(ctx, tx, source)
@@ -364,6 +364,8 @@ func (a *App) pluginCloneHTTP(w http.ResponseWriter, r *http.Request, source str
 	ctx := context.WithoutCancel(r.Context())
 	a.pluginOriginalOperationMu.Lock()
 	defer a.pluginOriginalOperationMu.Unlock()
+	ctx, releaseOperationOwner := a.bindOriginalOperationOwner(ctx)
+	defer releaseOperationOwner()
 	if !a.admitOriginalBackground() {
 		return nil, &APIError{"APP_STOPPING", "服务正在停止", http.StatusServiceUnavailable}
 	}

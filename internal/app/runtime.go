@@ -27,9 +27,22 @@ import (
 )
 
 type App struct {
+	originalFNOSRefresh              originalFNOSRefreshRuntime
+	originalPluginTemporary          originalPluginTemporaryState
+	pluginOriginalSourceSites        originalSourceSites
+	pluginOriginalSourceConnections  originalSourceConnections
 	originalHostBrowserHumanize      bool
 	originalHostBrowserHumanPreset   string
 	pluginOriginalBase               originalBaseState
+	pluginOriginalLarkTestOrigin     string       // Set only by an owned App fixture before Start.
+	seedRescueIYUUOrigin             string       // Set only by an owned App fixture before Start.
+	cloudflareTestClient             *http.Client // Owned fixture only; never selected by plugin input.
+	pluginCustomHostsTestPath        string       // Owned fixture only; never selected by plugin input.
+	pluginOriginalSiteInteractions   originalSlashInteractions
+	pluginOriginalSubscribes         originalSlashInteractions
+	originalChatRSSInvalid           originalChatRSSInvalidEnclosures
+	pluginOriginalChatMedia          originalChatMediaInteractions
+	originalLocalBackupMu            sync.Mutex
 	pluginOriginalMarkets            originalMarketCache
 	pluginOriginalInput              originalPluginInputRuntime
 	pluginOriginalNotice             originalNoticeRuntime
@@ -83,6 +96,7 @@ type App struct {
 	Store                            *Store
 	Dir                              string
 	web                              http.Handler
+	frontendVersion                  string
 	cfgMu                            sync.RWMutex
 	settingsMu                       sync.Mutex
 	originalHostOCRHost              string // Immutable ordinary OCR_HOST startup snapshot; never exposed to workers.
@@ -126,16 +140,18 @@ type App struct {
 }
 
 type Options struct {
-	PluginLogRotation     *PluginLogRotation
-	ResourceSearchPages   *big.Int
-	MediaSearch           *MediaSearchConfiguration
-	HostMediaRecognition  *HostMediaRecognitionConfiguration
-	PluginDeveloperMode   bool      // Original DEV: plugin monitoring only; no other business debug switches.
-	BigMemoryMode         bool      // Original BIG_MEMORY_MODE pool selection, fixed for this App lifetime.
-	SafeMode              bool      // Management remains available without automatic background tasks.
-	PluginMarketsOverride *[]string // nil means no process override; an empty list is an explicit empty override.
-	DataDir               string
-	Web                   http.Handler
+	PluginTemporaryFileDays *big.Int // Trusted normalized startup snapshot; nil reads process environment.
+	PluginLogRotation       *PluginLogRotation
+	ResourceSearchPages     *big.Int
+	MediaSearch             *MediaSearchConfiguration
+	HostMediaRecognition    *HostMediaRecognitionConfiguration
+	PluginDeveloperMode     bool      // Original DEV: plugin monitoring only; no other business debug switches.
+	BigMemoryMode           bool      // Original BIG_MEMORY_MODE pool selection, fixed for this App lifetime.
+	SafeMode                bool      // Management remains available without automatic background tasks.
+	PluginMarketsOverride   *[]string // nil means no process override; an empty list is an explicit empty override.
+	DataDir                 string
+	Web                     http.Handler
+	FrontendVersion         string
 }
 
 const appVersion = "0.4.19"
@@ -154,6 +170,7 @@ func New(opts Options) (*App, error) {
 		return nil, e
 	}
 	a := &App{pluginDeveloperMode: opts.PluginDeveloperMode, bigMemoryMode: opts.BigMemoryMode, safeMode: opts.SafeMode, RestartRequested: make(chan struct{}, 1), Store: s, Dir: opts.DataDir, web: opts.Web, control: "running", authAttempts: map[string][]time.Time{}, jobWake: make(chan struct{}, 1), materials: map[string][]byte{}}
+	a.frontendVersion = opts.FrontendVersion
 	a.originalHostDouban.searchStamp = time.Now().Format("20060102")
 	a.originalHostOCRHost = originalHostOCRStartupHost(os.LookupEnv)
 	a.originalHostBrowserEmulation, a.originalHostFlareSolverrURL = originalHostBrowserStartup(os.LookupEnv)
@@ -258,6 +275,11 @@ func New(opts Options) (*App, error) {
 	if e != nil {
 		a.log("ERROR", "metadata", "recognize_cache_restore_failed", "恢复媒体识别缓存失败", "", "")
 	}
+	if e = a.initializeOriginalPluginTemporary(opts.PluginTemporaryFileDays); e != nil {
+		a.logs.close()
+		_ = s.Close()
+		return nil, e
+	}
 	// Match the original CategoryHelper process lifetime. Syntax failures start
 	// empty on a cold process; a later failed/empty reload retains these maps.
 	_, _ = a.currentMediaCategoryPolicy()
@@ -273,10 +295,14 @@ func (a *App) Start(parent context.Context) {
 	if err := a.restoreOriginalPluginCode(ctx); err != nil {
 		a.log("ERROR", "plugins", "code_restore_failed", "恢复插件代码备份失败，继续加载现有插件", "", "")
 	}
+	if err := a.initializeOriginalSourceConnections(ctx, nil); err != nil {
+		a.log("ERROR", "downloaders", "source_connection_initialize_failed", "下载器模块连接初始化中断", "", "")
+	}
 	a.initializeOriginalCommonService(time.Now())
 	if err := a.initializeOriginalPlugins(ctx); err != nil {
 		a.log("ERROR", "plugins", "initialize_failed", "恢复插件初始化失败，请查看插件执行记录", "", "")
 	}
+	a.completeOriginalChatRestart(ctx)
 	if err := a.recoverOriginalScrapeBatches(ctx); err != nil {
 		a.log("ERROR", "import", "scrape_batch_recovery_failed", "整理刮削批次恢复失败，请检查任务状态", "", "")
 	}
@@ -304,6 +330,27 @@ func (a *App) Start(parent context.Context) {
 	a.log("INFO", "runtime", "recovery_checked", fmt.Sprintf("数据库版本1；启动恢复%d个未完成任务；自动化状态%s", a.Store.RecoveredJobs, initialControl), "", "")
 }
 func (a *App) Close() error {
+	// Source Scheduler.stop joins accepted public services while their ordinary
+	// manager/notice/continuation authority is still available.
+	a.drainOriginalPluginScheduler()
+	backupPluginCode := func() {
+		if !a.safeMode {
+			if err := a.backupOriginalPluginCode(context.Background()); err != nil {
+				a.log("ERROR", "plugins", "code_backup_failed", "备份插件代码失败，继续停止插件", "", "")
+			}
+		}
+	}
+	privateOwners := a.beginOriginalPrivateSchedulerDrain()
+	boundOwners := a.beginOriginalBoundEntriesShutdown()
+	if privateOwners || boundOwners {
+		a.pluginOriginalOperationMu.Lock()
+		backupPluginCode()
+		a.pluginOriginalOperationMu.Unlock()
+		a.closeOriginalSessions()
+	}
+	if boundOwners {
+		a.drainOriginalBoundEvents()
+	}
 	a.closeOriginalBackgroundAdmission()
 	if a.cancel != nil {
 		a.cancel()
@@ -313,12 +360,10 @@ func (a *App) Close() error {
 	// Join any package update before closing its loaded object. Both automatic
 	// synchronizers recheck sealed admission under this same operation lock.
 	a.pluginOriginalOperationMu.Lock()
-	if !a.safeMode {
-		if err := a.backupOriginalPluginCode(context.Background()); err != nil {
-			a.log("ERROR", "plugins", "code_backup_failed", "备份插件代码失败，继续停止插件", "", "")
-		}
+	if !privateOwners && !boundOwners {
+		backupPluginCode()
+		a.closeOriginalSessions()
 	}
-	a.closeOriginalSessions()
 	a.pluginOriginalOperationMu.Unlock()
 	a.stopOriginalUnpublishedSubmissions(context.Background(), "")
 	a.systemMessages.close()
@@ -339,6 +384,12 @@ func (a *App) Close() error {
 		a.metadataProxyClient.CloseIdleConnections()
 	}
 	a.metadataProxyMu.Unlock()
+	// Source stop_modules disposes its DB before clear_temp. This Go logger
+	// persists shutdown diagnostics in Store, so keep only logger/store open
+	// until this host-owned step completes; all plugin/callback joins precede it.
+	if err := a.clearOriginalPluginTemporary(); err != nil {
+		a.log("ERROR", "plugins", "temp_cleanup_failed", fmt.Sprintf("清理插件共享临时目录失败，继续关闭服务: %v", err), "", "")
+	}
 	a.logs.close()
 	return a.Store.Close()
 }
@@ -445,6 +496,7 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 	a.cfgMu.Lock()
 	a.config = c
 	a.cfgMu.Unlock()
+	a.reloadInitializedOriginalSourceConnections(ctx, previous.Downloaders, c.Downloaders)
 	a.emitStandardSiteDeletions(ctx, previous, c)
 	a.emitStandardPluginSettingsChanged(ctx, previous, a.Settings())
 	a.log("INFO", "settings", "updated", "连接和路径设置已更新", "", "")

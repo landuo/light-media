@@ -3,8 +3,6 @@ package app
 import (
 	"context"
 	"encoding/json"
-
-	"light-media/internal/plugins"
 )
 
 // DownloadChain submits this ordinary module call before broadcasting the
@@ -22,7 +20,7 @@ func (a *App) submitOriginalDownloadAdded(ctx context.Context, snapshot *downloa
 		a.logOriginalPluginContext(ctx, "ERROR", "download_added_submit_failed", "提交下载成功后处理失败")
 		return
 	}
-	directory, material := snapshot.OriginalDownloadDir, snapshot.OriginalMaterialRef
+	directory, material, magnet := snapshot.OriginalDownloadDir, snapshot.OriginalMaterialRef, snapshot.RSSMagnet || snapshot.ChatMagnet
 	if !a.admitOriginalBackground() {
 		a.logOriginalPluginContext(ctx, "ERROR", "download_added_submit_failed", "提交下载成功后处理失败")
 		return
@@ -35,17 +33,13 @@ func (a *App) submitOriginalDownloadAdded(ctx context.Context, snapshot *downloa
 			return
 		}
 		if err == nil {
-			var content []byte
-			content, err = a.resolveMaterial(ctx, material, materialPurpose)
+			var encoded json.RawMessage
+			encoded, err = a.originalDownloadAddedContent(ctx, material, magnet)
 			if err == nil {
-				var encoded json.RawMessage
-				encoded, err = plugins.ModuleResultBytes(content)
+				var kwargs json.RawMessage
+				kwargs, err = json.Marshal(map[string]any{"context": json.RawMessage(full), "download_dir": directory, "torrent_content": encoded})
 				if err == nil {
-					kwargs, encodeErr := json.Marshal(map[string]any{"context": json.RawMessage(full), "download_dir": directory, "torrent_content": encoded})
-					err = encodeErr
-					if err == nil {
-						_, err = a.invokeOriginalPluginModuleGroups(ctx, "download_added", nil, json.RawMessage(`[]`), kwargs, nil, groups)
-					}
+					_, err = a.invokeOriginalPluginModuleGroups(ctx, "download_added", nil, json.RawMessage(`[]`), kwargs, nil, groups)
 				}
 			}
 		}
@@ -53,4 +47,15 @@ func (a *App) submitOriginalDownloadAdded(ctx context.Context, snapshot *downloa
 			a.logOriginalPluginContext(ctx, "ERROR", "download_added_failed", "执行下载成功后处理失败")
 		}
 	}()
+}
+
+func (a *App) originalDownloadAddedContent(ctx context.Context, material string, magnet bool) (json.RawMessage, error) {
+	content, err := a.resolveDownloadMaterial(ctx, material, materialPurpose, magnet)
+	if err != nil {
+		return nil, err
+	}
+	if magnet {
+		return originalDownloadModuleContent(nil, string(content))
+	}
+	return originalDownloadModuleContent(content, "")
 }

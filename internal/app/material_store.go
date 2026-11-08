@@ -21,6 +21,7 @@ import (
 const materialPurpose = "core_download"
 
 type materialInfo struct {
+	Magnet    bool   `json:"magnet,omitempty"`
 	Ref       string `json:"ref"`
 	Hash      string `json:"hash"`
 	Digest    string `json:"sha256"`
@@ -49,18 +50,17 @@ func (a *App) materialAEAD() (cipher.AEAD, error) {
 // Archive original bytes, including private tracker data, only as authenticated
 // ciphertext. A reference is opaque and is never a URL or a filesystem path.
 func (a *App) persistMaterial(ctx context.Context, raw []byte, hash string) (string, error) {
+	return a.persistDownloadMaterial(ctx, raw, hash, false)
+}
+
+func (a *App) persistDownloadMaterial(ctx context.Context, raw []byte, hash string, magnet bool) (string, error) {
 	if len(raw) == 0 || len(raw) > 32<<20 {
 		return "", bad("INVALID_MATERIAL", "种子材料超过允许大小")
 	}
-	material, e := metainfo.ParseMaterial(raw)
-	if e != nil || material.Hash != hash {
+	identity, e := downloadMaterialHash(raw, magnet)
+	if e != nil || identity != hash {
 		return "", bad("INVALID_MATERIAL", "种子原始材料与稳定标识不符")
 	}
-	digest := sha256.Sum256(raw)
-	mac := hmac.New(sha256.New, a.Store.key)
-	mac.Write([]byte("torrent-material-v1:"))
-	mac.Write(digest[:])
-	ref := "mat_" + hex.EncodeToString(mac.Sum(nil))
 	a.materialMu.Lock()
 	defer a.materialMu.Unlock()
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
@@ -68,11 +68,27 @@ func (a *App) persistMaterial(ctx context.Context, raw []byte, hash string) (str
 		return "", e
 	}
 	defer tx.Rollback()
+	ref, e := a.persistVerifiedMaterialTx(ctx, tx, raw, identity, magnet)
+	if e != nil {
+		return "", e
+	}
+	return ref, tx.Commit()
+}
+
+// The caller verifies the metainfo identity and holds the archive lock for the
+// lifetime of the transaction. The same archive backs previews and recovered
+// pre-archive downloads.
+func (a *App) persistVerifiedMaterialTx(ctx context.Context, tx *sql.Tx, raw []byte, hash string, magnet bool) (string, error) {
+	digest := sha256.Sum256(raw)
+	mac := hmac.New(sha256.New, a.Store.key)
+	mac.Write([]byte("torrent-material-v1:"))
+	mac.Write(digest[:])
+	ref := "mat_" + hex.EncodeToString(mac.Sum(nil))
 	var previous []byte
-	e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='material_info' AND id=?`, ref).Scan(&previous)
+	e := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='material_info' AND id=?`, ref).Scan(&previous)
 	if e == nil {
 		var info materialInfo
-		if json.Unmarshal(previous, &info) != nil || info.Ref != ref || info.Purpose != materialPurpose || info.Size != len(raw) || info.Hash != hash || info.Digest != hex.EncodeToString(digest[:]) {
+		if json.Unmarshal(previous, &info) != nil || info.Ref != ref || info.Purpose != materialPurpose || info.Size != len(raw) || info.Hash != hash || info.Digest != hex.EncodeToString(digest[:]) || info.Magnet != magnet {
 			return "", bad("MATERIAL_CORRUPT", "已有材料归档无法核对")
 		}
 		var sealed []byte
@@ -98,7 +114,7 @@ func (a *App) persistMaterial(ctx context.Context, raw []byte, hash string) (str
 				return "", e
 			}
 		}
-		return ref, tx.Commit()
+		return ref, nil
 	}
 	if !errors.Is(e, sql.ErrNoRows) {
 		return "", e
@@ -122,14 +138,14 @@ func (a *App) persistMaterial(ctx context.Context, raw []byte, hash string) (str
 	if used+int64(len(sealed)) > a.materialBudget() {
 		return "", bad("MATERIAL_ARCHIVE_FULL", "加密种子归档达到上限，请在设置提高归档容量；在用材料未删除")
 	}
-	info := materialInfo{Ref: ref, Hash: hash, Digest: hex.EncodeToString(digest[:]), Purpose: materialPurpose, Size: len(raw), CreatedAt: now(), ExpiresAt: time.Now().Add(24 * time.Hour).UTC().Format(time.RFC3339Nano)}
+	info := materialInfo{Ref: ref, Hash: hash, Digest: hex.EncodeToString(digest[:]), Purpose: materialPurpose, Size: len(raw), Magnet: magnet, CreatedAt: now(), ExpiresAt: time.Now().Add(24 * time.Hour).UTC().Format(time.RFC3339Nano)}
 	if e = txPut(ctx, tx, "material_info", ref, info); e != nil {
 		return "", e
 	}
 	if _, e = tx.ExecContext(ctx, `INSERT INTO records VALUES('material_blob',?,?,?)`, ref, sealed, now()); e != nil {
 		return "", e
 	}
-	return ref, tx.Commit()
+	return ref, nil
 }
 
 func cleanupMaterialOrphansTx(ctx context.Context, tx *sql.Tx) error {
@@ -198,6 +214,9 @@ func pinMaterialTx(ctx context.Context, tx *sql.Tx, ref, hash string) error {
 	if count != 1 {
 		return bad("MATERIAL_UNAVAILABLE", "原种子材料已不可用")
 	}
+	if info.Pinned && info.ExpiresAt == "" {
+		return nil
+	}
 	info.Pinned = true
 	info.ExpiresAt = ""
 	return txPut(ctx, tx, "material_info", ref, info)
@@ -206,6 +225,10 @@ func pinMaterialTx(ctx context.Context, tx *sql.Tx, ref, hash string) error {
 // resolveMaterial is an internal core capability. P1 must put permission checks
 // around its host resolver; this function has no HTTP or plugin passthrough.
 func (a *App) resolveMaterial(ctx context.Context, ref, purpose string) ([]byte, error) {
+	return a.resolveDownloadMaterial(ctx, ref, purpose, false)
+}
+
+func (a *App) resolveDownloadMaterial(ctx context.Context, ref, purpose string, magnet bool) ([]byte, error) {
 	if purpose != materialPurpose || len(ref) != 68 || ref[:4] != "mat_" {
 		return nil, bad("INVALID_MATERIAL_REF", "材料引用或用途无效")
 	}
@@ -213,7 +236,7 @@ func (a *App) resolveMaterial(ctx context.Context, ref, purpose string) ([]byte,
 	if e := a.Store.Get(ctx, "material_info", ref, &info); e != nil {
 		return nil, bad("MATERIAL_UNAVAILABLE", "受保护的原种子材料不可用")
 	}
-	if info.Ref != ref || info.Purpose != purpose {
+	if info.Ref != ref || info.Purpose != purpose || info.Magnet != magnet {
 		return nil, bad("MATERIAL_CORRUPT", "材料引用无法核对")
 	}
 	if !info.Pinned {
@@ -238,11 +261,19 @@ func (a *App) resolveMaterial(ctx context.Context, ref, purpose string) ([]byte,
 		return nil, bad("MATERIAL_CORRUPT", "种子材料完整性校验失败")
 	}
 	digest := sha256.Sum256(raw)
-	material, e := metainfo.ParseMaterial(raw)
-	if e != nil || material.Hash != info.Hash || hex.EncodeToString(digest[:]) != info.Digest {
+	identity, e := downloadMaterialHash(raw, magnet)
+	if e != nil || identity != info.Hash || hex.EncodeToString(digest[:]) != info.Digest {
 		return nil, bad("MATERIAL_CORRUPT", "种子材料身份不一致")
 	}
 	return raw, nil
+}
+
+func downloadMaterialHash(raw []byte, magnet bool) (string, error) {
+	if magnet {
+		return metainfo.MagnetHash(string(raw))
+	}
+	material, err := metainfo.ParseMaterial(raw)
+	return material.Hash, err
 }
 
 func (a *App) acceptDownload(ctx context.Context, in Intent, j Job) error {
@@ -256,6 +287,12 @@ func (a *App) acceptDownloadWithContext(ctx context.Context, in Intent, j Job, l
 	}
 	if live != nil {
 		source = live
+	}
+	if e = verifyRSSMagnetContext(in, source); e != nil {
+		return e
+	}
+	if e = verifyChatDownloadContext(in, source); e != nil {
+		return e
 	}
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
@@ -282,6 +319,7 @@ func (a *App) acceptDownloadWithContext(ctx context.Context, in Intent, j Job, l
 	}
 	event := DomainEvent{SchemaVersion: 1, EventID: domainEventID("download.accepted", in.ID), Type: "download.accepted", OccurredAt: now(), WorkflowID: in.WorkflowID, JobID: j.ID, MediaID: mediaKey(in.Media), IntentID: in.ID, Purpose: in.Purpose}
 	snapshot := downloadAddedSnapshot{DownloadID: in.ID, DownloadKind: "intent", Hash: in.Hash, SiteID: in.SiteID, MediaType: in.Media.MediaType, TMDBID: in.Media.ID, HasContext: source != nil, HasHistory: true, Context: source}
+	snapshot.MediaSource, snapshot.MediaID = in.Media.ProviderSource, in.Media.ProviderID
 	if e = a.recordDownloadAddedTx(ctx, tx, event, snapshot); e != nil {
 		return e
 	}
@@ -297,8 +335,20 @@ func (a *App) acceptDownloadWithContext(ctx context.Context, in Intent, j Job, l
 	if e = tx.Commit(); e != nil {
 		return e
 	}
-	if fresh && live != nil {
-		a.emitOriginalDownloadAdded(ctx, in.Hash, source, source.OriginalDownloader)
+	if fresh && source != nil {
+		// A sealed native post-Add receipt can finish a chat Add after
+		// restart. An intent that only reconciled a pre-existing hash must
+		// never invent a new Add, success notice or plugin callback.
+		postAdd, _ := ctx.Value(sourcePostAddKey{}).(sourcePostAddReceipt)
+		recovered := live == nil && (source.ChatOrigin != nil || source.RSSMagnet) && source.Original != nil &&
+			sourcePostAddReceiptValid(postAdd, in) && postAdd.Mode == "new_hash" && postAdd.SourceReturned && postAdd.SourceError == ""
+		if live != nil || recovered {
+			dispatch := context.WithoutCancel(ctx)
+			if err := a.postOriginalChatDownloadAdded(dispatch, source, in); err != nil {
+				a.logOriginalPluginContext(dispatch, "ERROR", "chat_download_notification_failed", "下载已确认，飞书下载通知发送失败")
+			}
+			a.emitOriginalDownloadAdded(dispatch, in.Hash, source, source.OriginalDownloader)
+		}
 	}
 	return nil
 }

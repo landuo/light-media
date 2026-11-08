@@ -16,6 +16,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"syscall"
 
 	"golang.org/x/sys/unix"
@@ -36,10 +37,19 @@ type originalBaseConfigValue struct {
 }
 
 type originalBaseCallScope struct {
-	object       *originalPluginInstance
-	phase        string
-	installation PluginInstallation
-	logCall      originalPluginLogCall
+	object         *originalPluginInstance
+	phase          string
+	installation   PluginInstallation
+	logCall        originalPluginLogCall
+	initialization *originalInitializationCall
+	iyuuMaterial   *originalIYUUMTeamMaterialGrant
+	fnosRefresh    *originalFNOSRefreshEvent
+	localBackup    *atomic.Bool
+	brush          *originalBrushSourceCall
+	cleanSeed      *originalCleanSeedCall
+	seedRescue     *originalSeedRescueCall
+	cloudflare     *originalCloudflareCall
+	customHosts    *originalCustomHostsCall
 	// validate must reject expired/replaced calls, not merely installed objects.
 	validate func(context.Context) error
 	// The host-owned recognized contract defines permitted namespace access;
@@ -78,6 +88,16 @@ func (a *App) pluginOriginalBaseHost(ctx context.Context, scope originalBaseCall
 	if method == plugins.BaseGetInstanceMetadata {
 		return a.originalBaseInstanceMetadata(ctx, scope, raw)
 	}
+	if method == plugins.BaseConfigSaveOrigin {
+		call := scope.initialization
+		if call == nil || !call.active.Load() || scope.phase != "init" || call.object != scope.object {
+			return nil, bad("PLUGIN_CAPABILITY_DENIED", "配置保存来源只在初始化期间可读")
+		}
+		if err := originalResourceDecode(raw, &struct{}{}); err != nil {
+			return nil, err
+		}
+		return json.Marshal(call.configurationSave)
+	}
 	var request originalBaseRequest
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
@@ -90,6 +110,18 @@ func (a *App) pluginOriginalBaseHost(ctx context.Context, scope originalBaseCall
 	target := in.InstanceID
 	if request.PluginID != nil && *request.PluginID != "" {
 		target = *request.PluginID
+	}
+	if in.PluginID == "MergeSiteSwitch" && target != in.InstanceID {
+		return nil, bad("PLUGIN_CAPABILITY_DENIED", "聚合站点开关只能通过专用站点字段接口访问其他插件")
+	}
+	if in.PluginID == "SeedRescue" && target != in.InstanceID {
+		return nil, bad("PLUGIN_CAPABILITY_DENIED", "稀缺保种只能访问当前实例的数据")
+	}
+	if in.PluginID == "CloudflareSpeedTest" && target != in.InstanceID {
+		return nil, bad("PLUGIN_CAPABILITY_DENIED", "Cloudflare IP优选只能通过受限接口更新 CustomHosts")
+	}
+	if originalCustomHostsInstallation(in) && target != in.InstanceID {
+		return nil, bad("PLUGIN_CAPABILITY_DENIED", "自定义Hosts只能访问当前实例的配置")
 	}
 	if target == "" || len(target) > 4096 || strings.ContainsRune(target, 0) {
 		return nil, bad("INVALID_PLUGIN_VALUE", "插件数据命名空间无效")
@@ -109,8 +141,16 @@ func (a *App) pluginOriginalBaseHost(ctx context.Context, scope originalBaseCall
 	}
 	switch method {
 	case plugins.BaseGetConfig:
-		return a.originalBaseConfigLocked(ctx, target)
+		value, err := a.originalBaseConfigLocked(ctx, target)
+		if call := scope.customHosts; err == nil && call != nil && call.init == nil && len(call.config) == 0 {
+			call.config = copyOriginalBaseJSON(value)
+			call.fingerprint = state.config[target].observed
+		}
+		return value, err
 	case plugins.BaseUpdateConfig:
+		if originalCustomHostsInstallation(in) {
+			return a.originalCustomHostsSaveLocked(ctx, scope, target, request.Config)
+		}
 		return a.originalBaseUpdateConfigLocked(ctx, target, request.Config)
 	case plugins.BaseGetDataPath:
 		path, err := a.originalBaseDataPath(ctx, target)
@@ -121,6 +161,17 @@ func (a *App) pluginOriginalBaseHost(ctx context.Context, scope originalBaseCall
 	case plugins.BaseGetData:
 		return a.pluginStore.originalBaseGetData(ctx, target, request.Key)
 	case plugins.BaseSaveData:
+		if in.PluginID == "SeedRescue" && in.InstanceID != in.PluginID {
+			current, err := a.pluginStore.Installation(ctx, target)
+			if errors.Is(err, sql.ErrNoRows) || err == nil && !current.Installed {
+				// A retained scan can reach its stop checkpoint after the
+				// clone's configuration and history have been removed.
+				return json.RawMessage("null"), nil
+			}
+			if err != nil {
+				return nil, err
+			}
+		}
 		if request.Key == nil {
 			return nil, bad("INVALID_PLUGIN_VALUE", "save_data 缺少 key")
 		}
@@ -202,6 +253,8 @@ func (a *App) invalidateOriginalBaseConfig(target string) {
 type originalBaseConfigFingerprint struct {
 	present      bool
 	revision     int64
+	updatedAt    string
+	valueLimit   int
 	sealedDigest [sha256.Size]byte
 }
 
@@ -209,18 +262,49 @@ type originalBaseConfigReader interface {
 	QueryRowContext(context.Context, string, ...any) *sql.Row
 }
 
-func readOriginalBaseConfigRow(ctx context.Context, q originalBaseConfigReader, target string) (originalBaseConfigFingerprint, []byte, error) {
+func (p *PluginStore) readOriginalBaseConfigRow(ctx context.Context, q originalBaseConfigReader, target string) (originalBaseConfigFingerprint, []byte, error) {
 	var observed originalBaseConfigFingerprint
 	var sealed []byte
-	err := q.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, target).Scan(&observed.revision, &sealed)
-	if errors.Is(err, sql.ErrNoRows) {
-		return originalBaseConfigFingerprint{}, nil, nil
-	}
+	var revision sql.NullInt64
+	var pluginID string
+	var hasCloneMetadata bool
+	err := q.QueryRowContext(ctx, `SELECT v.revision,v.sealed,COALESCE(v.updated_at,''),COALESCE(i.plugin_id,''),m.instance_id IS NOT NULL
+		FROM (SELECT ? AS instance_id) AS target
+		LEFT JOIN plugin_installations AS i ON i.instance_id=target.instance_id
+		LEFT JOIN plugin_instance_metadata AS m ON m.instance_id=target.instance_id
+		LEFT JOIN plugin_values AS v ON v.instance_id=target.instance_id AND v.kind='config' AND v.item_key='main'`, target).
+		Scan(&revision, &sealed, &observed.updatedAt, &pluginID, &hasCloneMetadata)
 	if err != nil {
 		return originalBaseConfigFingerprint{}, nil, err
 	}
-	observed.present = true
-	observed.sealedDigest = sha256.Sum256(sealed)
+	// A clone's own ID or copied implementation can change after a market
+	// update. Check every sealed source link before using the ancestor's bound.
+	for instance := target; hasCloneMetadata; {
+		metadata, err := p.instanceMetadata(ctx, q, instance)
+		if err != nil {
+			return originalBaseConfigFingerprint{}, nil, err
+		}
+		parent := metadata.SourceInstanceID
+		if parent == "" || len(parent) >= len(instance) || !strings.HasPrefix(instance, parent) {
+			return originalBaseConfigFingerprint{}, nil, bad("PLUGIN_INSTANCE_METADATA_INVALID", "插件分身来源与实例标识不一致")
+		}
+		err = q.QueryRowContext(ctx, `SELECT i.plugin_id,m.instance_id IS NOT NULL
+			FROM plugin_installations AS i LEFT JOIN plugin_instance_metadata AS m ON m.instance_id=i.instance_id
+			WHERE i.instance_id=?`, parent).Scan(&pluginID, &hasCloneMetadata)
+		if errors.Is(err, sql.ErrNoRows) {
+			pluginID = ""
+			break
+		}
+		if err != nil {
+			return originalBaseConfigFingerprint{}, nil, err
+		}
+		instance = parent
+	}
+	observed.valueLimit = originalPluginConfigValueLimit(pluginID)
+	observed.present, observed.revision = revision.Valid, revision.Int64
+	if observed.present {
+		observed.sealedDigest = sha256.Sum256(sealed)
+	}
 	return observed, sealed, nil
 }
 
@@ -231,7 +315,7 @@ func (a *App) originalBaseObserveConfigLocked(target string, observed originalBa
 	raw := json.RawMessage("null")
 	if observed.present {
 		var err error
-		raw, err = a.pluginStore.unseal("config", target, "main", sealed)
+		raw, err = a.pluginStore.unsealBound("config", target, "main", sealed, observed.valueLimit)
 		if err != nil {
 			return nil, err
 		}
@@ -244,7 +328,7 @@ func (a *App) originalBaseObserveConfigLocked(target string, observed originalBa
 }
 
 func (a *App) originalBaseConfigLocked(ctx context.Context, target string) (json.RawMessage, error) {
-	observed, sealed, err := readOriginalBaseConfigRow(ctx, a.pluginStore.store.DB, target)
+	observed, sealed, err := a.pluginStore.readOriginalBaseConfigRow(ctx, a.pluginStore.store.DB, target)
 	if err != nil {
 		return nil, err
 	}
@@ -270,17 +354,17 @@ func (a *App) originalBaseUpdateConfigLocked(ctx context.Context, target string,
 	if len(raw) == 0 {
 		return nil, bad("INVALID_PLUGIN_VALUE", "update_config 缺少 config")
 	}
-	checked, err := pluginJSON(raw, false)
-	if err != nil {
-		return nil, err
-	}
 	p := a.pluginStore
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
-	observed, sealed, err := readOriginalBaseConfigRow(ctx, tx, target)
+	observed, sealed, err := p.readOriginalBaseConfigRow(ctx, tx, target)
+	if err != nil {
+		return nil, err
+	}
+	checked, err := pluginJSONLimit(raw, false, observed.valueLimit)
 	if err != nil {
 		return nil, err
 	}
@@ -309,7 +393,7 @@ func (a *App) originalBaseUpdateConfigLocked(ctx context.Context, target string,
 	}
 	// Observe our actual post-mutation row inside this transaction, before
 	// commit. A later namespace write must not be mistaken for our cached value.
-	after, _, err := readOriginalBaseConfigRow(ctx, tx, target)
+	after, _, err := p.readOriginalBaseConfigRow(ctx, tx, target)
 	if err != nil {
 		return nil, err
 	}

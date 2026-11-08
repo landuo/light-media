@@ -164,7 +164,16 @@ func (a *App) originalMediaFilterResources(ctx context.Context, filter priorityF
 	if err != nil {
 		return out, err
 	}
-	information, err := a.originalRecognitionProjection(filter.sourceMedia.Media, *media)
+	var information sourceMediaInformation
+	if filter.target != nil && providerNativeMedia(filter.target.Media) {
+		current := filter.target.Media
+		information = sourceMediaInformation{MediaInfo: *media}
+		information.Media, err = subscriptionProviderMedia(information, current.ProviderSource, current.ProviderID, current.MediaType)
+	} else if filter.target != nil && filter.target.ProviderSearchKey != "" {
+		information, err = originalChatProviderSearchInformation(*media, originalChatMediaProviderFrom(ctx), filter.target.Media.MediaType)
+	} else {
+		information, err = a.originalRecognitionProjection(filter.sourceMedia.Media, *media)
+	}
 	if err != nil {
 		return out, err
 	}

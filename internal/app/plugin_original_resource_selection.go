@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"slices"
 
+	"light-media/internal/catalog"
 	"light-media/internal/plugins"
 	"light-media/internal/releasemeta"
 )
@@ -46,10 +47,7 @@ func (a *App) originalResourceSelection(ctx context.Context, contexts []json.Raw
 // material verification. A returned Context is still checked against the
 // selected local site and subscription identity; it is not a material receipt.
 func (a *App) originalSubscriptionResourceSelection(ctx context.Context, s Subscription, request SearchRequest, candidates []Candidate) ([]Candidate, error) {
-	a.pluginOriginalEventsMu.Lock()
-	active := len(a.pluginOriginalChainHandlers["resource.selection"]) > 0
-	a.pluginOriginalEventsMu.Unlock()
-	if !active {
+	if !a.originalResourceSelectionActive() {
 		return candidates, nil
 	}
 	subscribe, err := a.subscriptionSourceProjection(ctx, s)
@@ -77,27 +75,53 @@ func (a *App) originalSubscriptionResourceSelection(ctx context.Context, s Subsc
 		}
 	}
 	if len(media) == 0 {
-		resolved, e := a.sourceRecognizeSubscriptionTMDBMedia(ctx, s)
+		resolved, e := a.sourceRecognizeSubscriptionMedia(ctx, s)
 		if e != nil {
 			return nil, e
 		}
 		media = resolved.MediaInfo
 	}
+	return a.originalSelectResourceCandidates(ctx, request, s.Media, media, candidates, downloader, origin, func(candidate Candidate) bool {
+		return (candidate.Accepted && !candidate.NeedsConfirmation) || (s.Media.MediaType == "tv" && automaticPackCandidate(candidate, s.Season))
+	})
+}
+
+func (a *App) originalResourceSelectionActive() bool {
+	a.pluginOriginalEventsMu.Lock()
+	defer a.pluginOriginalEventsMu.Unlock()
+	return len(a.pluginOriginalChainHandlers["resource.selection"]) > 0
+}
+
+func (a *App) originalSelectResourceCandidates(ctx context.Context, request SearchRequest, target catalog.Media, media json.RawMessage, candidates []Candidate, downloader json.RawMessage, origin string, include func(Candidate) bool) ([]Candidate, error) {
 	contexts := []json.RawMessage{}
 	originals := []Candidate{}
 	for _, candidate := range candidates {
-		if (!candidate.Accepted || candidate.NeedsConfirmation) && !(s.Media.MediaType == "tv" && automaticPackCandidate(candidate, s.Season)) {
+		if !include(candidate) {
 			continue
 		}
 		snapshot, e := a.prepareDownloadContext(ctx, "search_resource", candidate.Resource.SiteID+":"+candidate.Resource.ID, "", candidate.Resource)
 		if e != nil {
 			return nil, e
 		}
-		if e = a.buildOriginalDownloadContext(ctx, &snapshot, candidate, s.Media, media); e != nil {
+		resolved, source, recognized := media, "unknown", false
+		latest := originalChatLatestFromContext(ctx)
+		if latest != nil {
+			ownMedia, matchSource := originalChatLatestDownloadMedia(candidate.Resource.ModuleMediaFields, target)
+			source = matchSource
+			if len(ownMedia) != 0 {
+				resolved, recognized = ownMedia, true
+			}
+		}
+		if e = a.buildOriginalDownloadContext(ctx, &snapshot, candidate, target, resolved); e != nil {
 			return nil, e
 		}
 		snapshot.Original.ResourceSource = "search"
-		snapshot.Original.MediaIsTarget = true
+		if latest != nil {
+			snapshot.Original.ResourceSource = latest.Mode
+			snapshot.Original.MatchSource = source
+			snapshot.Original.CandidateRecognized = recognized
+		}
+		snapshot.Original.MediaIsTarget = !recognized
 		raw, e := json.Marshal(snapshot.Original)
 		if e != nil {
 			return nil, e
@@ -121,8 +145,16 @@ func (a *App) originalSubscriptionResourceSelection(ctx context.Context, s Subsc
 		}
 		fields := sourceMap(value)
 		id, e := originalResourceInteger(fields["tmdb_id"])
-		if e != nil || id != s.Media.ID || sourceText(fields["type"]) != map[string]string{"movie": "电影", "tv": "电视剧"}[s.Media.MediaType] {
-			return nil, bad("REVIEW_MEDIA_CHANGED", "资源选择上下文离开当前订阅身份")
+		matches := e == nil && id == target.ID && sourceText(fields["type"]) == map[string]string{"movie": "电影", "tv": "电视剧"}[target.MediaType]
+		if providerNativeMedia(target) {
+			_, e = subscriptionProviderMedia(sourceMediaInformation{MediaInfo: full.Media}, target.ProviderSource, target.ProviderID, target.MediaType)
+			matches = e == nil
+		}
+		if !matches {
+			if isSubscriptionAcquisitionSource(origin) {
+				return nil, bad("REVIEW_MEDIA_CHANGED", "资源选择上下文离开当前订阅身份")
+			}
+			return nil, bad("REVIEW_MEDIA_CHANGED", "资源选择上下文离开当前影视身份")
 		}
 		var candidate Candidate
 		found := false

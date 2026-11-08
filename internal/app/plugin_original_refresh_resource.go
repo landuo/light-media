@@ -49,9 +49,13 @@ func (a *App) originalRefreshServicesResource(ctx context.Context, scope origina
 	state.mu.Lock()
 	for key := range state.jobs {
 		if key.instance == p.installation.InstanceID {
+			if job := state.jobs[key]; job != nil && job.sourceScanCancel != nil {
+				job.sourceScanCancel()
+			}
 			delete(state.jobs, key)
 		}
 	}
+	state.notifyOriginalSourceDeadlineLocked()
 	state.mu.Unlock()
 	a.pluginOriginalRunningMu.Unlock()
 	// Removal happens before reading declarations. Failure does not restore
@@ -74,6 +78,10 @@ func (a *App) originalRefreshServicesResource(ctx context.Context, scope origina
 		provider, err := p.originalDisplayName(ctx)
 		if err != nil {
 			return nil, err
+		}
+		if definition.Trigger.Kind == "source_interval" {
+			_ = a.addOriginalSourceIntervalJob(ctx, p, definition, provider)
+			continue
 		}
 		at := time.Now()
 		trigger, triggerErr := schedule.New(definition.Trigger, at)
@@ -104,10 +112,11 @@ func (a *App) originalRefreshServicesResource(ctx context.Context, scope origina
 			}
 		}
 		state.jobs[originalServiceKey{p.installation.InstanceID, definition.ID}] = job
+		state.notifyOriginalSourceDeadlineLocked()
 		state.mu.Unlock()
 		a.pluginOriginalRunningMu.Unlock()
 		if triggerErr != nil {
-			a.writeOriginalPluginCallLog(scope.installation, scope.logCall, "ERROR", "register_service_failed", "注册插件定时服务失败")
+			a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "register_service_failed", "注册插件定时服务失败")
 			a.reportOriginalPluginExecutionError(ctx, "system", "插件 "+provider+" 服务注册失败", nil, triggerErr)
 		}
 	}

@@ -8,6 +8,7 @@ import (
 	"errors"
 	"strconv"
 
+	"light-media/internal/catalog"
 	"light-media/internal/plugins/subscribegroup"
 	"light-media/internal/releasemeta"
 	"light-media/internal/sites"
@@ -17,22 +18,33 @@ import (
 // The parsed fields are frozen too, so later parser/configuration changes
 // cannot reinterpret an accepted download. Raw inputs stay private for audit.
 type downloadContextSnapshot struct {
-	Original            *originalDownloadContext `json:"original_context,omitempty"`
-	OriginalEpisodes    []int                    `json:"original_episodes,omitempty"`
-	OriginalOrigin      string                   `json:"original_origin,omitempty"`
-	OriginalDownloader  json.RawMessage          `json:"original_downloader,omitempty"`
-	OriginalLayout      json.RawMessage          `json:"original_layout,omitempty"`
-	OriginalDownloadDir string                   `json:"original_download_dir,omitempty"`
-	OriginalMaterialRef string                   `json:"original_material_ref,omitempty"`
-	SourceMeta          json.RawMessage          `json:"source_meta,omitempty"`
-	DownloadID          string                   `json:"download_id"`
-	DownloadKind        string                   `json:"download_kind"`
-	Hash                string                   `json:"hash"`
-	Title               string                   `json:"title"`
-	Subtitle            *string                  `json:"subtitle"`
-	Options             releasemeta.Options      `json:"options"`
-	Metadata            *subscribegroup.Metadata `json:"metadata"`
-	Seasons             string                   `json:"seasons"`
+	RSSMagnet            bool                             `json:"rss_magnet,omitempty"`
+	ChatMagnet           bool                             `json:"chat_magnet,omitempty"`
+	ChatWholeUnscoped    bool                             `json:"chat_whole_unscoped,omitempty"`
+	ChatProvider         *originalChatMediaProvider       `json:"chat_provider,omitempty"`
+	ProviderSubscription *subscriptionIdentity            `json:"provider_subscription,omitempty"`
+	ChatOrigin           *originalChatDownloadOrigin      `json:"chat_origin,omitempty"`
+	LatestResource       *originalChatLatestDownloadProof `json:"latest_resource,omitempty"`
+	Original             *originalDownloadContext         `json:"original_context,omitempty"`
+	OriginalEpisodes     []int                            `json:"original_episodes,omitempty"`
+	OriginalOrigin       string                           `json:"original_origin,omitempty"`
+	OriginalDownloader   json.RawMessage                  `json:"original_downloader,omitempty"`
+	OriginalLayout       json.RawMessage                  `json:"original_layout,omitempty"`
+	OriginalDownloadDir  string                           `json:"original_download_dir,omitempty"`
+	OriginalMaterialRef  string                           `json:"original_material_ref,omitempty"`
+	SourceMeta           json.RawMessage                  `json:"source_meta,omitempty"`
+	DownloadID           string                           `json:"download_id"`
+	DownloadKind         string                           `json:"download_kind"`
+	Hash                 string                           `json:"hash"`
+	Title                string                           `json:"title"`
+	Subtitle             *string                          `json:"subtitle"`
+	Options              releasemeta.Options              `json:"options"`
+	Metadata             *subscribegroup.Metadata         `json:"metadata"`
+	Seasons              string                           `json:"seasons"`
+
+	OrdinaryFailureFingerprint string `json:"ordinary_failure_fingerprint,omitempty"`
+
+	RSSQualityListing *subscriptionAcquisitionRSSListing `json:"rss_quality_listing,omitempty"`
 }
 type downloadAddedSnapshot struct {
 	JobID        string                   `json:"job_id"`
@@ -43,6 +55,8 @@ type downloadAddedSnapshot struct {
 	SiteID       string                   `json:"site_id"`
 	MediaType    string                   `json:"media_type"`
 	TMDBID       int64                    `json:"tmdb_id"`
+	MediaSource  string                   `json:"media_source,omitempty"`
+	MediaID      string                   `json:"media_id,omitempty"`
 	Seasons      string                   `json:"seasons"`
 	Metadata     *subscribegroup.Metadata `json:"metadata"`
 	HasContext   bool                     `json:"has_context"`
@@ -108,8 +122,66 @@ func (a *App) loadDownloadContext(ctx context.Context, kind, key, hash string) (
 	if json.Unmarshal(raw, &snapshot) != nil || snapshot.DownloadID != key || snapshot.DownloadKind != kind || !sameHash(snapshot.Hash, hash) {
 		return nil, bad("INVALID_DOWNLOAD_CONTEXT", "下载上下文身份无法核对")
 	}
+	if snapshot.ChatOrigin != nil && (!snapshot.ChatOrigin.valid() || snapshot.Original == nil || (kind != "download_preview" && kind != "intent")) {
+		return nil, bad("INVALID_DOWNLOAD_CONTEXT", "下载上下文的 Lark 来源无法核对")
+	}
 	return &snapshot, nil
 }
+
+func verifyChatDownloadContext(in Intent, snapshot *downloadContextSnapshot) error {
+	hasOrigin := snapshot != nil && snapshot.ChatOrigin != nil
+	if in.ChatDownload != hasOrigin || hasOrigin && (!snapshot.ChatOrigin.valid() || in.Auto || in.SubscriptionID != "" || in.SubscriptionAcquisition != "" || in.LarkInbox != "") {
+		return bad("INVALID_DOWNLOAD_CONTEXT", "下载上下文的 Lark 来源无法核对")
+	}
+	var provider *originalChatMediaProvider
+	var subscription *subscriptionIdentity
+	if snapshot != nil {
+		provider = snapshot.ChatProvider
+		subscription = snapshot.ProviderSubscription
+	}
+	if providerNativeMedia(in.Media) {
+		chat := hasOrigin && subscription == nil && provider.sourceOnly() && provider.Source == in.Media.ProviderSource && provider.ID == in.Media.ProviderID
+		automatic := !hasOrigin && provider == nil && subscription != nil && in.Auto && in.LarkInbox == "" &&
+			subscription.ID != "" && subscription.ID == in.SubscriptionID && subscription.Revision > 0 && subscription.Revision == in.SubscriptionRevision
+		if (!chat && !automatic) || snapshot.Original == nil {
+			return bad("INVALID_DOWNLOAD_CONTEXT", "下载上下文的媒体来源无法核对")
+		}
+		if _, err := subscriptionProviderMedia(sourceMediaInformation{MediaInfo: snapshot.Original.Media}, in.Media.ProviderSource, in.Media.ProviderID, in.Media.MediaType); err != nil {
+			return err
+		}
+	} else if subscription != nil || provider != nil && (!hasOrigin || !provider.valid(in.Media.ID)) {
+		return bad("INVALID_DOWNLOAD_CONTEXT", "下载上下文的媒体来源无法核对")
+	}
+	unscoped := snapshot != nil && snapshot.ChatWholeUnscoped
+	if in.ChatWholeUnscoped != unscoped || unscoped &&
+		(!hasOrigin || !providerNativeMedia(in.Media) || in.Media.MediaType != "tv" || in.Season != 0 || len(in.Episodes) != 0 ||
+			len(in.SelectedEpisodes) != 0 || in.SeasonScopeSHA != "" || in.LatestResource || snapshot.LatestResource != nil) {
+		return bad("INVALID_DOWNLOAD_CONTEXT", "无季集的整包下载凭据无法核对")
+	}
+	magnet := snapshot != nil && snapshot.ChatMagnet
+	if in.ChatMagnet != magnet || magnet && (!hasOrigin || in.RSSMagnet || snapshot.RSSMagnet || in.LatestResource || snapshot.LatestResource != nil || in.MaterialRef == "" || len(in.SelectedEpisodes) != 0) {
+		return bad("INVALID_DOWNLOAD_CONTEXT", "Lark 磁力下载凭据无法核对")
+	}
+	return nil
+}
+
+func (snapshot downloadAddedSnapshot) mediaIdentity() (string, error) {
+	if snapshot.MediaSource != "" || snapshot.MediaID != "" {
+		if snapshot.DownloadKind != "intent" || snapshot.TMDBID != 0 || snapshot.Context == nil || snapshot.Context.Original == nil {
+			return "", bad("INVALID_DOWNLOAD_EVENT", "下载事实与影视来源不符")
+		}
+		m, err := subscriptionProviderMedia(sourceMediaInformation{MediaInfo: snapshot.Context.Original.Media}, snapshot.MediaSource, snapshot.MediaID, snapshot.MediaType)
+		if err != nil {
+			return "", err
+		}
+		return mediaKey(m), nil
+	}
+	if validMedia(snapshot.MediaType, snapshot.TMDBID) {
+		return snapshot.MediaType + ":" + strconv.FormatInt(snapshot.TMDBID, 10), nil
+	}
+	return "", nil
+}
+
 func (a *App) recordDownloadAddedTx(ctx context.Context, tx *sql.Tx, event DomainEvent, snapshot downloadAddedSnapshot) error {
 	if tx == nil {
 		return bad("DOMAIN_EVENT_TX_REQUIRED", "下载事实必须与业务状态在同一事务提交")
@@ -117,13 +189,6 @@ func (a *App) recordDownloadAddedTx(ctx context.Context, tx *sql.Tx, event Domai
 	valid, err := validateDomainEvent(event)
 	if err != nil || valid.Type != "download.accepted" || valid.SubjectID != snapshot.DownloadID || valid.SubjectKind != snapshot.DownloadKind {
 		return bad("INVALID_DOWNLOAD_EVENT", "下载事实与上下文身份不符")
-	}
-	mediaID := ""
-	if validMedia(snapshot.MediaType, snapshot.TMDBID) {
-		mediaID = snapshot.MediaType + ":" + strconv.FormatInt(snapshot.TMDBID, 10)
-	}
-	if valid.MediaID != mediaID {
-		return bad("INVALID_DOWNLOAD_EVENT", "下载事实与影视身份不符")
 	}
 	snapshot.JobID, snapshot.WorkflowID = valid.JobID, valid.WorkflowID
 	decodedHash, hashErr := hex.DecodeString(snapshot.Hash)
@@ -135,13 +200,17 @@ func (a *App) recordDownloadAddedTx(ctx context.Context, tx *sql.Tx, event Domai
 		return err
 	}
 	var history struct {
-		ID     string `json:"id"`
-		Hash   string `json:"hash"`
-		SiteID string `json:"site_id"`
-		State  string `json:"state"`
+		ID     string        `json:"id"`
+		Hash   string        `json:"hash"`
+		SiteID string        `json:"site_id"`
+		State  string        `json:"state"`
+		Media  catalog.Media `json:"media"`
 	}
 	if json.Unmarshal(accepted, &history) != nil || history.ID != snapshot.DownloadID || !sameHash(history.Hash, snapshot.Hash) || history.SiteID != snapshot.SiteID || history.State != "accepted" {
 		return bad("INVALID_DOWNLOAD_EVENT", "下载器尚未接受资源，未发布下载事实")
+	}
+	if mediaID, err := snapshot.mediaIdentity(); err != nil || valid.MediaID != mediaID || snapshot.MediaSource != "" && mediaID != mediaKey(history.Media) {
+		return bad("INVALID_DOWNLOAD_EVENT", "下载事实与影视身份不符")
 	}
 	raw, err := json.Marshal(snapshot)
 	if err != nil {
@@ -184,13 +253,6 @@ func (p *PluginStore) downloadAddedSnapshotFrom(ctx context.Context, q PluginPro
 	if json.Unmarshal(raw, &snapshot) != nil || snapshot.DownloadID != valid.SubjectID || snapshot.DownloadKind != valid.SubjectKind || snapshot.JobID != valid.JobID || snapshot.WorkflowID != valid.WorkflowID {
 		return snapshot, bad("INVALID_DOWNLOAD_EVENT", "下载事件与保存上下文不符")
 	}
-	mediaID := ""
-	if validMedia(snapshot.MediaType, snapshot.TMDBID) {
-		mediaID = snapshot.MediaType + ":" + strconv.FormatInt(snapshot.TMDBID, 10)
-	}
-	if valid.MediaID != mediaID {
-		return snapshot, bad("INVALID_DOWNLOAD_EVENT", "下载事件与影视身份不符")
-	}
 	var stored []byte
 	if err = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, snapshot.DownloadKind, snapshot.DownloadID).Scan(&stored); err != nil {
 		return snapshot, err
@@ -202,6 +264,9 @@ func (p *PluginStore) downloadAddedSnapshotFrom(ctx context.Context, q PluginPro
 	}
 	if json.Unmarshal(stored, &history) != nil || history.ID != snapshot.DownloadID || !sameHash(history.Hash, snapshot.Hash) || history.SiteID != snapshot.SiteID {
 		return snapshot, bad("INVALID_DOWNLOAD_EVENT", "下载历史已变化，无法核对事件上下文")
+	}
+	if mediaID, err := snapshot.mediaIdentity(); err != nil || valid.MediaID != mediaID {
+		return snapshot, bad("INVALID_DOWNLOAD_EVENT", "下载事件与影视身份不符")
 	}
 	if source := snapshot.Context; source != nil {
 		if source.DownloadID != snapshot.DownloadID || source.DownloadKind != snapshot.DownloadKind || !sameHash(source.Hash, snapshot.Hash) {
@@ -260,17 +325,47 @@ func (a *App) acceptNativeDownload(ctx context.Context, in NativeDownload, job J
 	return nil
 }
 
-func (a *App) stageIntentDownload(ctx context.Context, in Intent, source downloadContextSnapshot) error {
+func (a *App) stageIntentDownload(ctx context.Context, in Intent, source *downloadContextSnapshot, torrent []byte) error {
+	staged := *source
+	var recoveredHash string
+	if in.MaterialRef == "" && len(torrent) != 0 {
+		hash, err := downloadMaterialHash(torrent, false)
+		if err != nil || !sameHash(hash, in.Hash) {
+			return bad("REVIEW_MATERIAL_CHANGED", "恢复的种子材料与已确认的下载标识不符")
+		}
+		recoveredHash = hash
+		a.materialMu.Lock()
+		defer a.materialMu.Unlock()
+	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
+	if recoveredHash != "" {
+		ref, err := a.persistVerifiedMaterialTx(ctx, tx, torrent, recoveredHash, false)
+		if err != nil {
+			return err
+		}
+		if staged.OriginalMaterialRef != "" && staged.OriginalMaterialRef != ref {
+			return bad("REVIEW_MATERIAL_CHANGED", "恢复的种子材料与已归档的下载内容不符")
+		}
+		if err = pinMaterialTx(ctx, tx, ref, recoveredHash); err != nil {
+			return err
+		}
+		// Keep the legacy Intent byte-for-byte compatible with its guarded
+		// acquisition and post-Add digests. The sealed context owns the ref.
+		staged.OriginalMaterialRef = ref
+	}
 	if err = txPut(ctx, tx, "intent", in.ID, in); err != nil {
 		return err
 	}
-	if err = a.saveDownloadContextTx(ctx, tx, source); err != nil {
+	if err = a.saveDownloadContextTx(ctx, tx, staged); err != nil {
 		return err
 	}
-	return tx.Commit()
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+	*source = staged
+	return nil
 }

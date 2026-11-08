@@ -226,7 +226,11 @@ func main() {
 				}
 				var err error
 				if request.Method == plugins.PluginManagerReadCapability {
-					value, err = (plugins.PluginHost{Host: host}).Read(ctx, input)
+					if input.View == "local" && input.InstanceID == "" && !input.IncludeState && input.Action == "" && len(input.Config) == 0 && !input.Force && input.JobID == "" {
+						value, err = (plugins.PluginHost{Host: host}).Local(ctx)
+					} else {
+						value, err = (plugins.PluginHost{Host: host}).Read(ctx, input)
+					}
 				} else {
 					value, err = (plugins.PluginHost{Host: host}).ControlRequest(ctx, input)
 				}

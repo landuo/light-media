@@ -192,6 +192,7 @@ type Subscription struct {
 	StartEpisode        int                                       `json:"start_episode"`
 	ID                  string                                    `json:"id"`
 	Media               catalog.Media                             `json:"media"`
+	ProviderEpisodes    []int                                     `json:"provider_episodes,omitempty"`
 	Season              int                                       `json:"season"`
 	Episodes            []int                                     `json:"episodes"`
 	Excluded            []int                                     `json:"excluded"`
@@ -210,6 +211,11 @@ type Subscription struct {
 	CreatedAt           string                                    `json:"created_at"`
 }
 type Intent struct {
+	RSSMagnet               bool            `json:"rss_magnet,omitempty"`
+	ChatMagnet              bool            `json:"chat_magnet,omitempty"`
+	ChatDownload            bool            `json:"chat_download,omitempty"`
+	ChatWholeUnscoped       bool            `json:"chat_whole_unscoped,omitempty"`
+	LatestResource          bool            `json:"latest_resource,omitempty"`
 	SourceModuleStarted     bool            `json:"source_module_started,omitempty"`
 	SourceDownloader        json.RawMessage `json:"source_downloader,omitempty"`
 	SeasonScopeSHA          string          `json:"season_scope_sha,omitempty"`
@@ -267,6 +273,7 @@ type Asset struct {
 	FNOSGUID            string        `json:"fnos_guid"`
 	FNOSScanAt          string        `json:"fnos_scan_at,omitempty"`
 	FNOSScanScope       string        `json:"fnos_scan_scope,omitempty"`
+	FNOSRefreshTransfer string        `json:"fnos_refresh_transfer,omitempty"`
 	Error               string        `json:"error"`
 	IntentID            string        `json:"intent_id"`
 	CreatedAt           string        `json:"created_at"`
@@ -342,6 +349,8 @@ type Event struct {
 	Message    string `json:"message"`
 }
 type Candidate struct {
+	chatSearchQuery          string
+	chatSeasonPack           []int
 	originalSelectionContext json.RawMessage
 	originalSelectionMeta    json.RawMessage
 	originalSelectionAllowed *[]int
@@ -367,6 +376,11 @@ type SiteStatus struct {
 	ElapsedMS int64  `json:"elapsed_ms"`
 }
 type DownloadPreview struct {
+	RSSMagnet          bool            `json:"rss_magnet,omitempty"`
+	ChatMagnet         bool            `json:"chat_magnet,omitempty"`
+	ChatDownload       bool            `json:"chat_download,omitempty"`
+	ChatWholeUnscoped  bool            `json:"chat_whole_unscoped,omitempty"`
+	LatestResource     bool            `json:"latest_resource,omitempty"`
 	SourceDownloader   json.RawMessage `json:"source_downloader,omitempty"`
 	SeasonScopeSHA     string          `json:"season_scope_sha,omitempty"`
 	SelectedEpisodes   []int           `json:"selected_episodes,omitempty"`
@@ -402,7 +416,12 @@ type DownloadPreview struct {
 	Auto               bool            `json:"auto"`
 }
 
-func mediaKey(m catalog.Media) string       { return fmt.Sprintf("%s:%d", m.MediaType, m.ID) }
+func mediaKey(m catalog.Media) string {
+	if providerNativeMedia(m) {
+		return m.MediaType + ":" + m.ProviderSource + ":" + m.ProviderID
+	}
+	return fmt.Sprintf("%s:%d", m.MediaType, m.ID)
+}
 func validMedia(kind string, id int64) bool { return (kind == "movie" || kind == "tv") && id > 0 }
 func defaultSchedule() Schedule {
 	return Schedule{Source: "metadata", Rule: "weekly", Timezone: "Asia/Shanghai", Mode: "follow", IntervalMinutes: 360, WindowHours: 6, ActiveMinutes: 30, FallbackMinutes: 360, WaitMinutes: 30, EveryDays: 1, StartDate: time.Now().Format("2006-01-02")}

@@ -22,17 +22,41 @@ func (a *App) checkQualitySubscription(ctx context.Context, j Job, s Subscriptio
 		if err = a.Store.Get(ctx, "subscription", s.ID, &s); err != nil {
 			return err
 		}
-		return a.recordSubscriptionCheck(ctx, s, "已根据实际下载接受收据恢复质量记录，未重复提交下载", nil, time.Time{})
+		return a.recordQualitySubscriptionCheck(ctx, j, s, "已根据实际下载接受收据恢复质量记录，未重复提交下载", nil)
 	}
 	state, err := a.subscriptionQualitySourceState(ctx, s)
 	if err != nil {
 		return err
 	}
+	prior, priorErr := a.readAcquisition(ctx, a.Store.DB, j.ID)
+	if priorErr != nil && !errors.Is(priorErr, sql.ErrNoRows) {
+		return priorErr
+	}
+	provider := providerNativeMedia(s.Media)
+	var info *sourceMediaInformation
+	if provider {
+		if priorErr == nil {
+			info = prior.Request.originalSearchInfo
+			if info == nil || mediaKey(info.Media) != mediaKey(s.Media) {
+				return acquisitionEvidence()
+			}
+		} else {
+			recognized, err := a.sourceRecognizeSubscriptionMedia(ctx, s)
+			if err != nil {
+				return err
+			}
+			info = &recognized
+		}
+	}
 	dates := map[int]string{}
 	metadataDates := []string{}
 	available := []int{}
 	if s.Media.MediaType == "tv" {
-		season, err := a.season(ctx, s.Media.ID, s.Season)
+		var providerModel []byte
+		if info != nil {
+			providerModel = info.MediaInfo
+		}
+		season, err := a.importSeason(ctx, s.Media, providerModel, s.Season)
 		if err != nil {
 			return err
 		}
@@ -48,7 +72,11 @@ func (a *App) checkQualitySubscription(ctx context.Context, j Job, s Subscriptio
 			if date != "" {
 				metadataDates = append(metadataDates, date)
 			}
-			if ep.EpisodeNumber >= subscriptionStartEpisode(s) && !slices.Contains(s.Excluded, ep.EpisodeNumber) && ((date != "" && date <= today) || slices.Contains(s.AllowEarly, ep.EpisodeNumber)) {
+			aired := date != "" && date <= today
+			if provider {
+				aired = providerEpisodeAired(date, info.Media.ReleaseDate, today)
+			}
+			if ep.EpisodeNumber >= subscriptionStartEpisode(s) && !slices.Contains(s.Excluded, ep.EpisodeNumber) && (aired || slices.Contains(s.AllowEarly, ep.EpisodeNumber)) {
 				available = append(available, ep.EpisodeNumber)
 			}
 		}
@@ -61,27 +89,31 @@ func (a *App) checkQualitySubscription(ctx context.Context, j Job, s Subscriptio
 		}
 		available = slices.DeleteFunc(available, func(ep int) bool { return ep > state.TotalEpisode })
 		if len(available) == 0 {
-			return a.recordSubscriptionCheck(ctx, s, "等待已播剧集及元数据", metadataDates, time.Time{})
+			return a.recordQualitySubscriptionCheck(ctx, j, s, "等待已播剧集及元数据", metadataDates)
 		}
 	}
 	if state.Complete() {
 		// Completion is not an ordinary save or a fabricated library match.
 		// The synchronous source check, history and notification bridge own it.
-		return a.recordSubscriptionCheck(ctx, s, "已达到最高优先级，等待原订阅完成流程", metadataDates, time.Time{})
+		return a.recordQualitySubscriptionCheck(ctx, j, s, "已达到最高优先级，等待原订阅完成流程", metadataDates)
 	}
-	if s.Media.MediaType == "movie" && s.Media.ReleaseDate > time.Now().In(shanghai()).Format("2006-01-02") {
+	releaseDate := s.Media.ReleaseDate
+	if provider {
+		releaseDate = info.Media.ReleaseDate
+	}
+	if s.Media.MediaType == "movie" && releaseDate > time.Now().In(shanghai()).Format("2006-01-02") {
 		return a.recordSubscriptionCheck(ctx, s, "电影尚未到上映日期，保持洗版订阅", metadataDates, time.Time{})
 	}
 	settings := a.Settings()
-	request := SearchRequest{originalSubscription: &s, Query: s.Keyword, MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: available, Policy: s.Policy, SiteIDs: subscriptionSiteControls(settings.RSSSites, s.SiteIDs), Mappings: s.Mappings, AllowEarly: s.AllowEarly, EpisodeDates: dates}
+	request := SearchRequest{originalSubscription: &s, originalSearchInfo: info, Query: s.Keyword, MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: available, Policy: s.Policy, SiteIDs: subscriptionSiteControls(settings.RSSSites, s.SiteIDs), Mappings: s.Mappings, AllowEarly: s.AllowEarly, EpisodeDates: dates}
 	var result SearchOutput
-	if prior, e := a.readAcquisition(ctx, a.Store.DB, j.ID); e == nil {
+	if priorErr == nil {
 		// The existing acquisition owns this already selected batch. Searching
 		// again would add provider effects whose results beginAcquisition then
 		// discards, and could require a provider that selected Context replaced.
 		request, result.Candidates = prior.Request, prior.Candidates
-	} else if errors.Is(e, sql.ErrNoRows) {
-		result, err = a.search(ctx, request, true)
+	} else {
+		result, err = a.originalSubscriptionCandidates(ctx, request)
 		if err != nil {
 			return err
 		}
@@ -91,8 +123,6 @@ func (a *App) checkQualitySubscription(ctx context.Context, j Job, s Subscriptio
 				return err
 			}
 		}
-	} else {
-		return e
 	}
 	created, err := a.runSubscriptionAcquisition(ctx, j, s, request, result.Candidates, state, available)
 	if err != nil {
@@ -102,7 +132,14 @@ func (a *App) checkQualitySubscription(ctx context.Context, j Job, s Subscriptio
 	if created > 0 {
 		reason = fmt.Sprintf("下载器已实际接收 %d 个洗版下载", created)
 	}
-	return a.recordSubscriptionCheck(ctx, s, reason, metadataDates, time.Time{})
+	return a.recordQualitySubscriptionCheck(ctx, j, s, reason, metadataDates)
+}
+
+func (a *App) recordQualitySubscriptionCheck(ctx context.Context, job Job, s Subscription, reason string, dates []string) error {
+	if err := a.recordSubscriptionCheck(ctx, s, reason, dates, time.Time{}); err != nil {
+		return err
+	}
+	return a.requestPausedQualityCompletion(ctx, job, s)
 }
 
 func (a *App) storeQualityProgress(ctx context.Context, old Subscription, state subscriptionquality.State, sourceMetadataUpdatedAt ...string) error {
@@ -117,14 +154,14 @@ func (a *App) storeQualityProgress(ctx context.Context, old Subscription, state 
 	if err = qualityRecord(ctx, tx, "subscription", old.ID, &current); err != nil {
 		return err
 	}
-	if current.Revision != old.Revision || current.State != "active" {
+	if current.Revision != old.Revision || !a.subscriptionSearchState(ctx, current) {
 		return bad("SUBSCRIPTION_CHANGED", "订阅在元数据更新期间已变化")
 	}
 	setSubscriptionQualityState(&current, state)
 	if len(sourceMetadataUpdatedAt) > 0 && sourceMetadataUpdatedAt[0] != "" {
 		current.LastCheck = sourceMetadataUpdatedAt[0]
 	}
-	if current.SourceState == "N" {
+	if current.State == "active" && current.SourceState == "N" {
 		current.SourceState = "R"
 	}
 	if err = txPut(ctx, tx, "subscription", current.ID, current); err != nil {

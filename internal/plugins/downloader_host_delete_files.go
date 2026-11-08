@@ -10,8 +10,9 @@ import (
 const DownloaderDeleteFilesCapability = "downloader.tasks.delete_files"
 
 type DownloaderDeleteFilesRequestV1 struct {
-	DownloaderID string   `json:"downloader_id"`
-	Hashes       []string `json:"hashes"`
+	DownloaderID   string   `json:"downloader_id"`
+	Hashes         []string `json:"hashes"`
+	BrushOwnership bool     `json:"brush_ownership,omitempty"`
 }
 
 type DownloaderDeleteFilesV1 struct {

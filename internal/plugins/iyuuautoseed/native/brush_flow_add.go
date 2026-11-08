@@ -14,6 +14,12 @@ import (
 
 // BrushFlow source add, with its exact native speed fields and daemon-owned destination binding.
 func (c *IYUUClient) BrushFlowAddDownloading(ctx context.Context, spec IYUUAddSpec, uploadBytes, downloadBytes *int64, expected *IYUUDestination) (out IYUUAddResult, err error) {
+	return c.BrushFlowAdd(ctx, spec, false, uploadBytes, downloadBytes, expected)
+}
+
+// BrushFlowAdd keeps the existing source wire and can add promotion-protected
+// tasks paused until the worker has persisted and revalidated their deadline.
+func (c *IYUUClient) BrushFlowAdd(ctx context.Context, spec IYUUAddSpec, paused bool, uploadBytes, downloadBytes *int64, expected *IYUUDestination) (out IYUUAddResult, err error) {
 	ctx, phase := beginMutation(ctx)
 	defer func() { err = phase.finish(err, &out.Outcome) }()
 	spec.IgnoreCategoryCheck = true
@@ -81,13 +87,13 @@ func (c *IYUUClient) BrushFlowAddDownloading(ctx context.Context, spec IYUUAddSp
 				return out, e
 			}
 		}
-		for _, p := range [][2]string{{"sequentialDownload", iyuuBool(c.options.Sequential)}, {"firstLastPiecePrio", iyuuBool(c.options.FirstLast)}, {"paused", "False"}, {"stopped", "False"}} {
+		for _, p := range [][2]string{{"sequentialDownload", iyuuBool(c.options.Sequential)}, {"firstLastPiecePrio", iyuuBool(c.options.FirstLast)}, {"paused", iyuuBool(paused)}, {"stopped", iyuuBool(paused)}} {
 			if e := field(p[0], p[1]); e != nil {
 				return out, e
 			}
 		}
-		if spec.SkipChecking != nil {
-			if e := field("skip_checking", iyuuBool(*spec.SkipChecking)); e != nil {
+		if value, present := iyuuSkipCheckingField(spec); present {
+			if e := field("skip_checking", value); e != nil {
 				return out, e
 			}
 		}
@@ -103,6 +109,11 @@ func (c *IYUUClient) BrushFlowAddDownloading(ctx context.Context, spec IYUUAddSp
 		}
 		if e := field("autoTMM", iyuuBool(auto)); e != nil {
 			return out, e
+		}
+		for _, label := range spec.QBLabels {
+			if e := field("labels", label); e != nil {
+				return out, e
+			}
 		}
 		if len(spec.Torrent) > 0 {
 			header := make(map[string][]string)
@@ -143,7 +154,7 @@ func (c *IYUUClient) BrushFlowAddDownloading(ctx context.Context, spec IYUUAddSp
 			return out, e
 		}
 	}
-	args := map[string]any{"paused": false, "labels": append([]string{}, spec.Tags...)}
+	args := map[string]any{"paused": paused, "labels": append([]string{}, spec.Tags...)}
 	if spec.SavePath != nil {
 		args["download_dir"] = *spec.SavePath
 	}
@@ -160,8 +171,9 @@ func (c *IYUUClient) BrushFlowAddDownloading(ctx context.Context, spec IYUUAddSp
 	var raw json.RawMessage
 	if v, ok := values["torrent_added"]; ok {
 		raw = v
-	} else if v, ok := values["torrent_duplicate"]; ok {
-		raw = v
+	} else if _, ok := values["torrent_duplicate"]; ok {
+		// The daemon observed an existing task, not a new Brush-owned add.
+		return out, nil
 	} else {
 		out.Outcome = "unknown"
 		return out, failure("iyuu_add", "missing_added_object")

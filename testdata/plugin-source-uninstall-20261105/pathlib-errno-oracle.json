@@ -1,0 +1,56 @@
+{
+  "source_sha256": "10ba48ae8063cfe7589436041d0d4628c05f427c7709cf8e75e486f8930cc32c",
+  "installed_python": "3.12.13",
+  "kind": "installed exists/_ignore_error method AST with synthetic stat exception; no real permission mutation",
+  "cases": [
+    {
+      "case": "success",
+      "exists": true
+    },
+    {
+      "case": "ENOENT",
+      "exists": false
+    },
+    {
+      "case": "ENOTDIR",
+      "exists": false
+    },
+    {
+      "case": "EBADF",
+      "exists": false
+    },
+    {
+      "case": "ELOOP",
+      "exists": false
+    },
+    {
+      "case": "EACCES",
+      "raises": "PermissionError",
+      "errno": 13
+    },
+    {
+      "case": "EPERM",
+      "raises": "PermissionError",
+      "errno": 1
+    },
+    {
+      "case": "EIO",
+      "raises": "OSError",
+      "errno": 5
+    },
+    {
+      "case": "EINVAL",
+      "raises": "OSError",
+      "errno": 22
+    },
+    {
+      "case": "ENAMETOOLONG",
+      "raises": "OSError",
+      "errno": 63
+    },
+    {
+      "case": "ValueError-NUL",
+      "exists": false
+    }
+  ]
+}

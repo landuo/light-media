@@ -229,6 +229,7 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 	seen := map[string]bool{}
 	touched := map[string]bool{}
 	identityRefs := []importedSiteIdentity{}
+	sourceInputs := map[string]json.RawMessage{}
 	documentFingerprint := a.Store.siteIdentityMAC("import-document", []byte(raw))
 	for index, entry := range entries {
 		own, _ := siteImportExtension(entry)
@@ -308,6 +309,7 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 				result.Warnings = append(result.Warnings, "登录凭据尚未配置；已保存站点，补充凭据后再测试连接")
 			}
 			touched[in.ID] = true
+			sourceInputs[in.ID] = append(json.RawMessage(nil), entry...)
 			result.SiteID = in.ID
 			if found >= 0 {
 				config.Sites[found] = in
@@ -326,7 +328,11 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 		report.Results = append(report.Results, result)
 	}
 	if report.Imported > 0 {
-		if err := a.saveSettings(context.WithValue(ctx, importedSiteIdentitiesKey{}, identityRefs), config); err != nil {
+		saveCtx := context.WithValue(ctx, importedSiteIdentitiesKey{}, identityRefs)
+		// Only finite recognized fields can update a private source projection.
+		// Untouched imported NULLs remain intact; old references are fenced.
+		saveCtx = context.WithValue(saveCtx, nativeSourceSiteImportsKey{}, sourceInputs)
+		if err := a.saveSettings(saveCtx, config); err != nil {
 			return siteImportReport{}, bad("SITE_IMPORT_FAILED", "站点配置保存失败，本次导入未生效")
 		}
 	}

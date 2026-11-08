@@ -13,6 +13,38 @@ export function mediaDetailSeasons(media: any): any[] {
   });
 }
 
+export function subscriptionMediaIdentity(media?: {
+  media_type?: string;
+  id?: number | string;
+  media_source?: string;
+  media_id?: string;
+}) {
+  if (!media) return null;
+  const kind = media.media_type;
+  if (kind !== 'movie' && kind !== 'tv') return null;
+  const source = media.media_source;
+  const providerID = media.media_id;
+  if (source != null || providerID != null) {
+    if (
+      Number(media.id || 0) !== 0 ||
+      (source !== 'douban' && source !== 'bangumi' && source !== 'anilist') ||
+      typeof providerID !== 'string' ||
+      !/^[1-9]\d*$/.test(providerID)
+    )
+      return null;
+    return { kind, source, id: providerID };
+  }
+  const id = Number(media.id);
+  return Number.isSafeInteger(id) && id > 0 ? { kind, source: 'themoviedb', id } : null;
+}
+
+export function subscriptionMediaKey(media: Parameters<typeof subscriptionMediaIdentity>[0]) {
+  const identity = subscriptionMediaIdentity(media);
+  if (!identity) return '';
+  const { kind, source, id } = identity;
+  return source === 'themoviedb' ? `${kind}:${id}` : `${kind}:${source}:${id}`;
+}
+
 export function subscriptionTarget(input: Record<string, any>, convertLegacy = false) {
   if (input.media?.media_type === 'movie')
     return { target_scope: 'movie', start_episode: 0, episodes: [] as number[] };

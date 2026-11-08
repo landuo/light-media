@@ -50,7 +50,9 @@ func statisticData(snapshot siteSnapshot, site SiteConfig) (statistic.Data, erro
 	if _, e := time.Parse("2006-01-02", data.UpdatedDay); e != nil {
 		return data, invalidSiteAccountSnapshot()
 	}
-	if err == nil {
+	if snapshot.SourceStoredTime != nil {
+		data.UpdatedTime = *snapshot.SourceStoredTime
+	} else if err == nil {
 		data.UpdatedTime = at.In(shanghai()).Format("15:04:05")
 	}
 	if dto := snapshot.SourceData; dto != nil {
@@ -61,6 +63,22 @@ func statisticData(snapshot siteSnapshot, site SiteConfig) (statistic.Data, erro
 		data.Upload, data.Download = ptr(dto.Upload), ptr(dto.Download)
 		data.Ratio, data.Bonus = &dto.Ratio, &dto.Bonus
 		data.Seeding, data.SeedingSize = ptr(dto.Seeding), ptr(dto.SeedingSize)
+
+		// SQLAlchemy's source model binds these columns as Float. Keep the
+		// exact current DTO integer separately and round only this DB view.
+		for key, field := range map[string]**float64{"upload": &data.Upload, "download": &data.Download, "seeding": &data.Seeding, "seeding_size": &data.SeedingSize} {
+			if !dto.SourceIntegerRepresentable(key) {
+				value, err := dto.SourceIntegerFloat(key)
+				// A diagnostic/current DTO can exist even when its value
+				// cannot bind to SQLite. Validate only at a real DB write.
+				if err != nil {
+					*field = nil
+				} else {
+					*field = value
+				}
+			}
+		}
+
 		for key, field := range map[string]**float64{"upload": &data.Upload, "download": &data.Download, "ratio": &data.Ratio, "bonus": &data.Bonus, "seeding": &data.Seeding, "seeding_size": &data.SeedingSize} {
 			if dto.SourceFieldNull(key) {
 				*field = nil

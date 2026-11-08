@@ -82,14 +82,17 @@ func (e *Error) Error() string      { return "downloader " + e.Operation + ": " 
 func failure(op, code string) error { return &Error{op, code} }
 
 type Client struct {
-	config    Config
-	base      *url.URL
-	http      *http.Client
-	mu        sync.Mutex
-	loggedIn  bool
-	trDialect string
-	trSession string
-	requestID uint64
+	config           Config
+	base             *url.URL
+	http             *http.Client
+	mu               sync.Mutex
+	loggedIn         bool
+	sourceQBLogin    bool
+	sourceTRResponse bool
+	sourceGuard      func(context.Context) error
+	trDialect        string
+	trSession        string
+	requestID        uint64
 }
 
 // New may be called by separate request handlers. Serialize adds to the same
@@ -343,6 +346,11 @@ func (c *Client) request(ctx context.Context, method string, endpoint *url.URL, 
 	if contentType != "" {
 		req.Header.Set("Content-Type", contentType)
 	}
+	// Source read/auth attempts use fresh connections so Go's implicit reused-
+	// connection replay cannot add a hidden attempt to the fixed vendor budget.
+	if ctx.Value(sourceReadContextKey{}) == true {
+		req.Close = true
+	}
 	req.Header.Set("Accept", "application/json, text/plain")
 	req.Header.Set("Referer", c.base.Scheme+"://"+c.base.Host+"/")
 	if c.config.Kind == "transmission" {
@@ -356,12 +364,16 @@ func (c *Client) request(ctx context.Context, method string, endpoint *url.URL, 
 		if ctx.Err() != nil {
 			return nil, nil, 0, ctx.Err()
 		}
-		return nil, nil, 0, failure("request", "transport_failed_outcome_unknown")
+		var denied *iyuuGuardError
+		if errors.As(err, &denied) {
+			return nil, nil, 0, denied
+		}
+		return nil, nil, 0, sourceReadFailure(ctx, "request", "transport_failed_outcome_unknown", err)
 	}
 	defer res.Body.Close()
 	data, err := io.ReadAll(io.LimitReader(res.Body, maxResponse+1))
 	if err != nil {
-		return nil, nil, res.StatusCode, failure("response", "body_read_failed_outcome_unknown")
+		return nil, nil, res.StatusCode, sourceReadFailure(ctx, "response", "body_read_failed_outcome_unknown", err)
 	}
 	if len(data) > maxResponse {
 		return nil, nil, res.StatusCode, failure("response", "body_limit")

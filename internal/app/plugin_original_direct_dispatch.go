@@ -15,12 +15,19 @@ import (
 // Registrations are bound methods of actual live objects. They are not durable
 // jobs, configuration revisions, invocation receipts, or installed-list grants.
 type originalDirectJobs struct {
-	mu               sync.Mutex
-	jobs             map[originalServiceKey]*originalDirectJob
-	progress         map[string]*originalServiceProgress
-	progressAccess   uint64
-	nextRegistration uint64
-	clockInstances   map[string]int
+	mu                     sync.Mutex
+	serviceAdmissionClosed bool
+	serviceLifetimes       sync.WaitGroup
+	jobs                   map[originalServiceKey]*originalDirectJob
+	progress               map[string]*originalServiceProgress
+	progressAccess         uint64
+	nextRegistration       uint64
+	clockInstances         map[string]int
+	sourceClockSet         bool
+	sourceClockName        string
+	sourceClockLocation    *time.Location
+	sourceClockError       error
+	sourceWake             chan struct{}
 }
 type originalDirectJob struct {
 	object                               *originalPluginInstance
@@ -36,12 +43,15 @@ type originalDirectJob struct {
 	executorUnavailable, clockRegistered bool
 	timerID                              string
 	maxInstances                         *big.Int
+	sourceDuePresent, sourceScanning     bool
+	sourceClockFault                     string
+	sourceScanCancel                     context.CancelFunc
 }
 
 func (p *originalPluginInstance) callOriginalMethod(ctx context.Context, method string, input json.RawMessage) (plugins.RunResult, error) {
 	unlock := p.lockOriginalMethod()
 	defer unlock()
-	if !originalObjectStillLoaded(p) {
+	if !originalObjectStillLoaded(p) && !p.originalPublicServiceScopeAllowed(ctx) {
 		return plugins.RunResult{}, bad("PLUGIN_NOT_LOADED", "插件对象已停止")
 	}
 	if len(input) == 0 {
@@ -51,21 +61,75 @@ func (p *originalPluginInstance) callOriginalMethod(ctx context.Context, method 
 }
 
 func (a *App) runOriginalPluginScheduler(ctx context.Context) {
-	ticker := time.NewTicker(100 * time.Millisecond)
-	defer ticker.Stop()
+	state := &a.pluginOriginalDirectJobs
+	state.mu.Lock()
+	if state.serviceAdmissionClosed {
+		state.mu.Unlock()
+		return
+	}
+	if state.sourceWake == nil {
+		state.sourceWake = make(chan struct{}, 1)
+	}
+	wake := state.sourceWake
+	state.mu.Unlock()
+	timer := time.NewTimer(a.originalSourceIntervalWait(time.Now()))
+	defer timer.Stop()
 	for {
+		if ctx.Err() != nil {
+			return
+		}
 		select {
 		case <-ctx.Done():
 			return
-		case <-ticker.C:
-			a.dispatchOriginalPluginJobs(ctx, time.Now())
+		case <-wake:
+			if !timer.Stop() {
+				select {
+				case <-timer.C:
+				default:
+				}
+			}
+		case <-timer.C:
 		}
+		if ctx.Err() != nil {
+			return
+		}
+		state.mu.Lock()
+		stopped := state.serviceAdmissionClosed
+		state.mu.Unlock()
+		if stopped {
+			return
+		}
+		// The original scheduler processes due jobs after either a deadline or its
+		// coalesced wakeup event. Do not postpone old due jobs by resetting on every
+		// registration without dispatching them.
+		a.dispatchOriginalPluginJobs(ctx, time.Now())
+		if ctx.Err() != nil {
+			return
+		}
+		timer.Reset(a.originalSourceIntervalWait(time.Now()))
 	}
 }
 func (a *App) dispatchOriginalPluginJobs(ctx context.Context, at time.Time) {
 	state := &a.pluginOriginalDirectJobs
 	state.mu.Lock()
-	for _, job := range state.jobs {
+	if state.serviceAdmissionClosed {
+		state.mu.Unlock()
+		return
+	}
+	for _, item := range originalOrderedDirectJobsLocked(state.jobs) {
+		if state.serviceAdmissionClosed {
+			break
+		}
+		job := item.job
+		if state.jobs[item.key] != job {
+			continue
+		}
+		if job.definition.Trigger.Kind == "source_interval" {
+			state.mu.Unlock()
+			a.dispatchOriginalSourceIntervalJobs(ctx, at, job)
+			state.mu.Lock()
+			continue
+		}
 		if job.due.IsZero() || job.due.After(at) {
 			continue
 		}
@@ -106,6 +170,8 @@ func (a *App) dispatchOriginalPluginJobs(ctx context.Context, at time.Time) {
 		if !a.admitOriginalBackground() {
 			continue
 		}
+		// This executor batch is accepted under the same mutex as shutdown.
+		state.serviceLifetimes.Add(1)
 		if state.clockInstances == nil {
 			state.clockInstances = map[string]int{}
 		}
@@ -114,6 +180,7 @@ func (a *App) dispatchOriginalPluginJobs(ctx context.Context, at time.Time) {
 		grace := time.Duration(job.definition.MisfireGraceMS) * time.Millisecond
 		go func(job *originalDirectJob, key originalServiceKey, scheduled []time.Time, grace time.Duration, unlimited bool) {
 			defer a.wg.Done()
+			defer state.serviceLifetimes.Done()
 			defer func() {
 				state.mu.Lock()
 				state.clockInstances[job.timerID]--
@@ -129,7 +196,7 @@ func (a *App) dispatchOriginalPluginJobs(ctx context.Context, at time.Time) {
 				if !unlimited && grace > 0 && time.Since(due) > grace {
 					continue
 				}
-				_ = a.runOriginalService(ctx, key.instance, key.service, true)
+				_ = a.runOriginalAcceptedService(ctx, key.instance, key.service, true, true)
 			}
 		}(job, key, runTimes, grace, job.misfireUnlimited)
 	}
@@ -151,7 +218,8 @@ func (a *App) broadcastOriginalPluginEventCoreState(ctx context.Context, event s
 	a.enqueueOriginalBroadcastCoreState(ctx, value, consumed)
 }
 
-func (a *App) dispatchOriginalBroadcast(ctx context.Context, event plugins.MutableEvent, consumed bool) {
+func (a *App) dispatchOriginalBroadcast(ctx context.Context, event plugins.MutableEvent, consumed bool, refresh *originalFNOSRefreshEvent) {
+	defer a.finishOriginalFNOSRefreshAdmission(refresh)
 	data, target, restricted, err := originalBroadcastEventData(event.Type, event.Data)
 	if err != nil {
 		a.log("ERROR", "plugins", "event_invalid", "插件事件数据编码失败", "", "")
@@ -170,15 +238,22 @@ func (a *App) dispatchOriginalBroadcast(ctx context.Context, event plugins.Mutab
 		if !a.admitOriginalBackground() {
 			return
 		}
+		var candidate *originalFNOSRefreshEvent
+		if refresh != nil && originalFNOSRefreshHandler(object, handler.Method) {
+			candidate = refresh
+			a.addOriginalFNOSRefreshAdmission(candidate)
+		}
 		go func() {
 			defer a.wg.Done()
 			// Source constructs a distinct Event (and UUID) for each subscriber.
 			isolated, err := originalNewEvent(event.Type, data, event.Priority)
 			if err != nil {
+				a.finishOriginalFNOSRefreshAdmission(candidate)
 				return
 			}
 			raw, _ := json.Marshal(isolated)
-			_, _, err = object.callOriginalEventMethod(ctx, handler.Method, raw)
+			_, _, err, finish := object.callOriginalRegisteredBroadcast(ctx, handler.Method, raw, candidate)
+			defer finish()
 			if err != nil {
 				a.log("ERROR", "plugins", "event_failed", "插件事件方法执行失败", "", "")
 				a.reportOriginalEventError(ctx, object, event.Type, handler.Method, err)
@@ -201,8 +276,12 @@ func (a *App) removeOriginalPluginJobs(instance string) {
 	state := &a.pluginOriginalDirectJobs
 	state.mu.Lock()
 	defer state.mu.Unlock()
+	defer state.notifyOriginalSourceDeadlineLocked()
 	for key := range state.jobs {
 		if key.instance == instance {
+			if job := state.jobs[key]; job != nil && job.sourceScanCancel != nil {
+				job.sourceScanCancel()
+			}
 			delete(state.jobs, key)
 		}
 	}
@@ -222,9 +301,9 @@ func (a *App) originalPublicServicesResult(at time.Time) ([]PluginServiceInfo, e
 	// raises TypeError. Preserve this failure instead of inventing a paused UI.
 	registered, paused := 0, false
 	for _, job := range state.jobs {
-		if originalServiceActive(job) && (job.clockRegistered || !job.due.IsZero()) {
+		if originalServiceActive(job) && (job.clockRegistered || originalDirectDuePresent(job)) {
 			registered++
-			paused = paused || job.due.IsZero()
+			paused = paused || !originalDirectDuePresent(job)
 		}
 	}
 	if registered > 1 && paused {
@@ -232,7 +311,7 @@ func (a *App) originalPublicServicesResult(at time.Time) ([]PluginServiceInfo, e
 	}
 	items := []PluginServiceInfo{}
 	for key, job := range state.jobs {
-		if !originalServiceActive(job) || !job.clockRegistered && job.due.IsZero() && !job.running {
+		if !originalServiceActive(job) || !job.clockRegistered && !originalDirectDuePresent(job) && !job.running {
 			continue
 		}
 		item := PluginServiceInfo{ID: originalServiceID(job), InstanceID: key.instance, ServiceID: key.service, Name: job.definition.Name, Provider: originalServiceProvider(job), Status: "等待", CanRun: !job.running, due: job.due, busy: job.running, registrationOrder: job.registrationOrder}
@@ -289,8 +368,19 @@ func (a *App) runOriginalPublicService(ctx context.Context, instance, id string)
 }
 
 func (a *App) runOriginalService(ctx context.Context, instance, id string, wait bool) error {
+	return a.runOriginalAcceptedService(ctx, instance, id, wait, false)
+}
+
+// clockAccepted is used only by a previously counted clock executor batch.
+// Its reference stays live until this call has transferred an independent
+// actual-execution reference, including async calls and not-yet-started work.
+func (a *App) runOriginalAcceptedService(ctx context.Context, instance, id string, wait, clockAccepted bool) error {
 	state := &a.pluginOriginalDirectJobs
 	state.mu.Lock()
+	if state.serviceAdmissionClosed && !clockAccepted {
+		state.mu.Unlock()
+		return bad("APP_STOPPING", "定时服务正在停止")
+	}
 	job := state.jobs[originalServiceKey{instance, id}]
 	if job == nil || !originalServiceActive(job) {
 		state.mu.Unlock()
@@ -304,16 +394,64 @@ func (a *App) runOriginalService(ctx context.Context, instance, id string, wait 
 		state.mu.Unlock()
 		return bad("PLUGIN_NOT_LOADED", "插件管理器已停止")
 	}
+	var serviceLease *originalSubmittedLease
+	if !job.commonModule && job.object.manifest.ManagedPublicServices {
+		var err error
+		serviceLease, _, err = job.object.reserveOriginalPublicService()
+		if err != nil {
+			a.wg.Done()
+			state.mu.Unlock()
+			return err
+		}
+	}
+	state.serviceLifetimes.Add(1)
 	a.prepareOriginalServiceLocked(job)
 	state.mu.Unlock()
+	acceptedCtx := context.WithoutCancel(ctx)
+	if serviceLease != nil {
+		acceptedCtx = context.WithValue(acceptedCtx, originalSubmittedObjectKey{}, serviceLease)
+	}
+	finish := func() {
+		if serviceLease != nil {
+			job.object.releaseOriginalSubmission(serviceLease)
+			a.wg.Done()
+		}
+	}
 	if wait && !job.definition.Async {
 		defer a.wg.Done()
-		a.executeOriginalService(context.WithoutCancel(ctx), job)
+		defer state.serviceLifetimes.Done()
+		defer finish()
+		a.executeOriginalService(acceptedCtx, job)
 		return nil
 	}
 	go func() {
 		defer a.wg.Done()
-		a.executeOriginalService(context.WithoutCancel(ctx), job)
+		defer state.serviceLifetimes.Done()
+		defer finish()
+		a.executeOriginalService(acceptedCtx, job)
 	}()
 	return nil
+}
+
+// Seal only ordinary scheduler admission. Do not hold its mutex, an operation
+// lock, or any RPC lock while joining callbacks that need those host resources.
+// Accepted clock batches keep a reference before their goroutine starts, so
+// transfer to a later actual async execution cannot Add after a zero Wait.
+func (a *App) drainOriginalPluginScheduler() {
+	state := &a.pluginOriginalDirectJobs
+	state.mu.Lock()
+	logStopping := !state.serviceAdmissionClosed && (state.jobs != nil || state.sourceWake != nil)
+	state.serviceAdmissionClosed = true
+	for _, job := range state.jobs {
+		job.clockRegistered = false
+		if job.sourceScanCancel != nil {
+			job.sourceScanCancel()
+		}
+	}
+	state.notifyOriginalSourceDeadlineLocked()
+	state.mu.Unlock()
+	if logStopping {
+		a.log("INFO", "plugins", "scheduler_stopping", "正在停止定时任务...", "", "")
+	}
+	state.serviceLifetimes.Wait()
 }

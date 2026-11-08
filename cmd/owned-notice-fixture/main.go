@@ -17,7 +17,7 @@ import (
 func manifest() plugins.Manifest {
 	return plugins.Manifest{SchemaVersion: 1, PluginID: "OwnedNotice", Name: "Owned notice", Version: "1.0", Runtime: "go-executable", Entry: "owned-notice-fixture", HostAPIMin: 1, HostAPIMax: 1,
 		Methods:      []string{"init", "get_state", "get_module", "deliver", "post_notice", "get_service", "get_command", "get_api", "event", "close", "stop_service", "stop"},
-		Events:       []string{"notice.message"},
+		Events:       []string{"notice.message", "system.error"},
 		Capabilities: append(plugins.BaseMethods(), plugins.PostMessageCapability)}
 }
 
@@ -29,6 +29,7 @@ func handle(ctx context.Context, method string, raw json.RawMessage, host plugin
 	}
 	var config struct {
 		Enabled      bool   `json:"enabled"`
+		ModuleOff    bool   `json:"module_off"`
 		Endpoint     string `json:"endpoint"`
 		Fail         bool   `json:"fail"`
 		EventDelayMS int    `json:"event_delay_ms"`
@@ -40,6 +41,9 @@ func handle(ctx context.Context, method string, raw json.RawMessage, host plugin
 	case "get_state":
 		return json.Marshal(config.Enabled)
 	case "get_module":
+		if config.ModuleOff {
+			return json.RawMessage(`{}`), nil
+		}
 		return json.RawMessage(`{"post_message":"deliver"}`), nil
 	case "get_api", "get_service", "get_command":
 		return json.RawMessage(`[]`), nil
@@ -84,6 +88,23 @@ func handle(ctx context.Context, method string, raw json.RawMessage, host plugin
 			case <-ctx.Done():
 				return nil, ctx.Err()
 			}
+		}
+		var event struct {
+			Type string `json:"type"`
+		}
+		_ = json.Unmarshal(raw, &event)
+		if event.Type == "system.error" {
+			key := "system_error_count"
+			prior, err := b.GetData(ctx, &key)
+			if err != nil {
+				return nil, err
+			}
+			var count int
+			_ = json.Unmarshal(prior, &count)
+			if err = b.SaveData(ctx, key, count+1); err != nil {
+				return nil, err
+			}
+			return json.RawMessage(`null`), b.SaveData(ctx, "system_error_event", raw)
 		}
 		return json.RawMessage(`null`), b.SaveData(ctx, "notice_event", raw)
 	}

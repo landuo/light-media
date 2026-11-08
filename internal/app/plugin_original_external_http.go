@@ -58,19 +58,85 @@ func (a *App) callOriginalExternalHTTP(ctx context.Context, in PluginInstallatio
 	if err != nil {
 		return plugins.HTTPResponse{}, err
 	}
-	result, err := object.callSession(ctx, plugins.Runner{Timeout: 30 * time.Second}, "http", request, nil)
-	if err != nil {
-		return plugins.HTTPResponse{}, err
+	callCtx := ctx
+	retained := false
+	finish := func() {}
+	if object.manifest.ManagedPublicServices {
+		callCtx, finish, err = object.beginOriginalBoundEntry(ctx, originalSourceAPI)
+		if err != nil {
+			return plugins.HTTPResponse{}, err
+		}
+		retained = true
 	}
-	if err = check(); err != nil {
-		return plugins.HTTPResponse{}, err
+	if retained && object.installation.PluginID == "AutoBackup" && api.Key == "api_backup" && api.Path == "/backup" &&
+		api.Auth == "apikey" && authority.Kind == "key" && input.Method == "GET" && input.CredentialMatches["apikey"] {
+		callCtx = context.WithValue(callCtx, originalLocalBackupAPIKey{}, object)
 	}
-	var response plugins.HTTPResponse
-	if !pluginStrictJSON(result.Result, &response) {
-		return response, bad("PLUGIN_API_RESPONSE_INVALID", "插件响应无效")
+	if retained && object.installation.PluginID == "CloudflareSpeedTest" && api.Key == "cloudflare_speedtest" &&
+		api.Path == "/cloudflare_speedtest" && api.Auth == "apikey" && authority.Kind == "key" &&
+		input.Method == "GET" && input.CredentialMatches["apikey"] {
+		callCtx = context.WithValue(callCtx, originalCloudflareAPIKey{}, object)
 	}
-	if response.Validate() != nil {
-		return response, bad("PLUGIN_API_RESPONSE_INVALID", "插件响应无效")
+	if object.installation.PluginID == "LarkMessager" && api.Key == "webhook" && api.Path == "/webhook" &&
+		api.Auth == "anonymous" && authority.Kind == "anonymous" && api.Body == "raw" {
+		callCtx = context.WithValue(callCtx, originalLarkWebhookKey{}, originalLarkWebhookGrant{object: object, verified: a.originalLarkVerifiedWebhook(ctx, object, input)})
 	}
-	return response, nil
+	if retained && object.installation.PluginID == "SeedRescue" && api.Auth == "bear" &&
+		(authority.Kind == "session" || authority.Kind == "key") {
+		if grant := originalSeedRescueHTTPGrantFor(object, api, input); grant != nil {
+			callCtx = context.WithValue(callCtx, originalSeedRescueHTTPKey{}, grant)
+		}
+	}
+	invoke := func() (plugins.HTTPResponse, error) {
+		defer finish()
+		result, err := object.callSession(callCtx, plugins.Runner{Timeout: 30 * time.Second}, "http", request, nil)
+		if err != nil {
+			return plugins.HTTPResponse{}, err
+		}
+		// Source route dependencies and the method authenticate on entry.
+		// Once admitted, later route removal or key rotation does not retract
+		// the completed result. New requests and every ordinary resource guard
+		// still use their existing current authority checks.
+		if !retained {
+			if err = check(); err != nil {
+				return plugins.HTTPResponse{}, err
+			}
+		}
+		var response plugins.HTTPResponse
+		if !pluginStrictJSON(result.Result, &response) {
+			return response, bad("PLUGIN_API_RESPONSE_INVALID", "插件响应无效")
+		}
+		if response.Validate() != nil {
+			return response, bad("PLUGIN_API_RESPONSE_INVALID", "插件响应无效")
+		}
+		return response, nil
+	}
+	if !retained {
+		return invoke()
+	}
+	// The admitted source method belongs to its exact object, independently
+	// of the HTTP waiter. Uvicorn can cancel that waiter without stopping its
+	// synchronous AnyIO function. The physical call owns finish and App.wg.
+	// beginOriginalBoundEntry required the negotiated concurrent client, so
+	// this path's legacy method/process unlock functions are both no-ops.
+	type completedAPI struct {
+		response plugins.HTTPResponse
+		err      error
+	}
+	completed := make(chan completedAPI, 1)
+	go func() {
+		defer func() {
+			if recover() != nil {
+				completed <- completedAPI{err: bad("PLUGIN_API_EXECUTION_FAILED", "插件 API 调用异常")}
+			}
+		}()
+		response, err := invoke()
+		completed <- completedAPI{response: response, err: err}
+	}()
+	select {
+	case result := <-completed:
+		return result.response, result.err
+	case <-ctx.Done():
+		return plugins.HTTPResponse{}, bad("PLUGIN_API_REQUEST_CANCELLED", "插件 API 请求已结束")
+	}
 }

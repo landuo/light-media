@@ -1,10 +1,6 @@
 package app
 
-import (
-	"slices"
-
-	"light-media/internal/plugins/artifacts"
-)
+import "light-media/internal/plugins/artifacts"
 
 // Source all_plugins combines imported local classes with processed market
 // declarations. A catalog name alone is neither a local class nor a repository
@@ -25,7 +21,7 @@ func (a *App) originalMarketCards(locals []pluginCard, sources []artifacts.Disco
 		// _process_plugin_info checks page presence on the current object.
 		card.HasPage = false
 		if running, ok := a.pluginRunningInstances.Load(source.PluginID); ok {
-			card.HasPage = slices.Contains(running.(*originalPluginInstance).manifest.Methods, "get_page")
+			card.HasPage = running.(*originalPluginInstance).manifest.HasPage
 		}
 		if imported {
 			version := local.Version

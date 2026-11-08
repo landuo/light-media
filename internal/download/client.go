@@ -73,6 +73,7 @@ type File struct {
 
 type AddRequest struct {
 	Torrent  []byte   `json:"-"`
+	Magnet   string   `json:"-"`
 	SavePath string   `json:"save_path"`
 	Paused   bool     `json:"paused"`
 	Tags     []string `json:"tags,omitempty"`
@@ -225,7 +226,8 @@ func (c *Client) DefaultSavePath(ctx context.Context) (string, error) {
 	return destination, nil
 }
 
-// Add validates exact metainfo bytes and checks for an existing hash first.
+// Add validates exact metainfo bytes or one magnet URL and checks for an
+// existing hash first.
 // A duplicate never changes its download directory, tags or running state.
 // Uncertain transport failures are not automatically retried.
 func (c *Client) Add(ctx context.Context, in AddRequest) (AddResult, error) {
@@ -235,7 +237,7 @@ func (c *Client) Add(ctx context.Context, in AddRequest) (AddResult, error) {
 	if !validTags(in.Tags) {
 		return AddResult{}, beforeMutation(failure("add", "invalid_tags"))
 	}
-	hashes, err := torrentHashes(in.Torrent, c.config.Kind)
+	hashes, err := addHashes(in, c.config.Kind)
 	if err != nil {
 		return AddResult{}, beforeMutation(err)
 	}

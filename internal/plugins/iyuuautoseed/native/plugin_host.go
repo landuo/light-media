@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"mime/multipart"
 	"net/http"
 	"net/url"
@@ -80,6 +81,12 @@ func (c *IYUUClient) PluginHostDeleteTagDefinitions(ctx context.Context, tags []
 // return is ignored by the source: an observed ID is still returned when tag
 // removal fails. Selected cleanup itself is never automatically retried.
 func (c *IYUUClient) PluginHostFindByTag(ctx context.Context, tags []string, status *string) (string, error) {
+	return c.pluginHostFindByTag(ctx, tags, status, false)
+}
+func (c *IYUUClient) PluginHostSourceFindByTag(ctx context.Context, tags []string, status *string) (string, error) {
+	return c.pluginHostFindByTag(ctx, tags, status, true)
+}
+func (c *IYUUClient) pluginHostFindByTag(ctx context.Context, tags []string, status *string, source bool) (string, error) {
 	if c.client.config.Kind != "qbittorrent" || len(tags) == 0 {
 		return "", failure("plugin_find_tag", "invalid_selector")
 	}
@@ -102,6 +109,10 @@ func (c *IYUUClient) PluginHostFindByTag(ctx context.Context, tags []string, sta
 				version, err := c.webVersionLocked(ctx)
 				if err != nil {
 					c.client.mu.Unlock()
+					var denied *iyuuGuardError
+					if errors.As(err, &denied) {
+						return "", err
+					}
 					continue
 				}
 				modern, err := iyuuVersionAtLeast(version, 2, 11)
@@ -132,6 +143,10 @@ func (c *IYUUClient) PluginHostFindByTag(ctx context.Context, tags []string, sta
 		if err != nil {
 			if ctx.Err() != nil {
 				return "", ctx.Err()
+			}
+			var denied *iyuuGuardError
+			if errors.As(err, &denied) {
+				return "", err
 			}
 			if c.options.Guard != nil {
 				if denied := c.options.Guard(ctx); denied != nil {
@@ -177,7 +192,31 @@ func (c *IYUUClient) PluginHostFindByTag(ctx context.Context, tags []string, sta
 		if !valid || found == "" {
 			continue
 		}
-		_, _ = c.PluginHostTags(ctx, "delete_tags", []string{found}, tags)
+		if source {
+			// Source calls these separate wrappers even when the first returns
+			// ordinary False. Never replay its selected write. Owner revocation
+			// or cancellation still stops before the different global action.
+			_, cleanupErr := c.PluginHostTags(ctx, "remove_tags", []string{found}, tags)
+			var denied *iyuuGuardError
+			if errors.As(cleanupErr, &denied) || errors.Is(cleanupErr, context.Canceled) || errors.Is(cleanupErr, context.DeadlineExceeded) || MutationFailureClass(cleanupErr) == "owner_denied" {
+				return "", cleanupErr
+			}
+			if c.options.Guard != nil {
+				if err := c.options.Guard(ctx); err != nil {
+					return "", err
+				}
+			}
+			_, cleanupErr = c.PluginHostDeleteTagDefinitions(ctx, tags)
+			if errors.As(cleanupErr, &denied) || errors.Is(cleanupErr, context.Canceled) || errors.Is(cleanupErr, context.DeadlineExceeded) || MutationFailureClass(cleanupErr) == "owner_denied" {
+				return "", cleanupErr
+			}
+			return found, nil
+		}
+		_, cleanupErr := c.PluginHostTags(ctx, "delete_tags", []string{found}, tags)
+		var denied *iyuuGuardError
+		if errors.As(cleanupErr, &denied) || errors.Is(cleanupErr, context.Canceled) || errors.Is(cleanupErr, context.DeadlineExceeded) {
+			return "", cleanupErr
+		}
 		return found, nil
 	}
 	return "", nil
@@ -309,8 +348,8 @@ func (c *IYUUClient) pluginHostQBAddWithLimits(ctx context.Context, spec IYUUAdd
 	if len(spec.Tags) > 0 {
 		fields = append(fields, [2]string{"tags", strings.Join(spec.Tags, ",")})
 	}
-	if spec.SkipChecking != nil {
-		fields = append(fields, [2]string{"skip_checking", iyuuBool(*spec.SkipChecking)})
+	if value, present := iyuuSkipCheckingField(spec); present {
+		fields = append(fields, [2]string{"skip_checking", value})
 	}
 	if spec.Magnet != "" {
 		fields = append(fields, [2]string{"urls", spec.Magnet})
@@ -320,6 +359,9 @@ func (c *IYUUClient) pluginHostQBAddWithLimits(ctx context.Context, spec IYUUAdd
 	}
 	if downloadBytes != nil {
 		fields = append(fields, [2]string{"dlLimit", strconv.FormatInt(*downloadBytes, 10)})
+	}
+	for _, label := range spec.QBLabels {
+		fields = append(fields, [2]string{"labels", label})
 	}
 	for _, field := range fields {
 		if err = writer.WriteField(field[0], field[1]); err != nil {

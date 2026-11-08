@@ -7,6 +7,7 @@ import (
 	"errors"
 	"io"
 	"light-media/internal/plugins"
+	"strings"
 )
 
 // A finite resource vocabulary shared by standard artifacts. Declarations do
@@ -17,10 +18,10 @@ func originalStandardCapabilityAllowed(contract, method string) bool {
 			return true
 		}
 	}
-	if contract == pluginResourcesSDKContract && (method == plugins.NetworkGetCapability || method == plugins.NetworkProxyReadCapability || method == plugins.SitesRequestCapability || method == plugins.SitesCredentialsCapability || method == plugins.SiteRenderCapability || method == plugins.MessageReceiveCapability || originalHostOCRCapability(method) || originalHostDownloaderCapability(method) || originalHostStorageCapability(method) || originalHostSubscriptionsCapability(method) || originalHostMediaCapability(method) || originalHostManagerCapability(method) || originalHostHistoryCapability(method) || originalHostSettingsCapability(method) || originalHostSitesCapability(method)) {
+	if contract == pluginResourcesSDKContract && (method == originalLarkEndpointCapability || method == plugins.NetworkGetCapability || method == plugins.NetworkProxyReadCapability || method == plugins.SitesRequestCapability || method == plugins.SitesCredentialsCapability || method == plugins.SiteRenderCapability || method == plugins.MessageReceiveCapability || originalHostOCRCapability(method) || originalHostDownloaderCapability(method) || originalHostStorageCapability(method) || originalHostSubscriptionsCapability(method) || originalHostMediaCapability(method) || originalHostManagerCapability(method) || originalHostHistoryCapability(method) || originalHostSettingsCapability(method) || originalHostSitesCapability(method) || originalSourceSiteRequestCapability(method)) {
 		return true
 	}
-	return contract == pluginResourcesSDKContract && (method == plugins.BrushInventoryReadCapability || method == plugins.LogWriteCapability || method == plugins.DownloaderTasksReadCapability || method == plugins.BackgroundSubmitCapability || method == plugins.ServicesRefreshCapability || method == plugins.ServiceProgressCapability || method == plugins.AuthTicketCreateCapability || method == plugins.PostMessageCapability || method == plugins.EventSendCapability || method == plugins.EventCheckCapability || method == plugins.EventManageCapability || originalInputCapability(method) || categoryEditorCapability(method))
+	return contract == pluginResourcesSDKContract && (method == originalMergeSiteSwitchCapability || method == plugins.BrushInventoryReadCapability || originalBrushSourceCapability(method) || originalCleanSeedCapability(method) || originalSeedRescueCapability(method) || originalCloudflareCapability(method) || method == originalCustomHostsCapability || method == plugins.LogWriteCapability || method == plugins.DownloaderTasksReadCapability || method == plugins.BackgroundSubmitCapability || method == plugins.CleanupSubmitCapability || method == plugins.ServicesRefreshCapability || method == plugins.ServiceProgressCapability || method == plugins.AuthTicketCreateCapability || method == plugins.PostMessageCapability || method == plugins.EventSendCapability || method == plugins.EventCheckCapability || method == plugins.EventManageCapability || method == plugins.LocalBackupCapability || originalInputCapability(method) || categoryEditorCapability(method))
 }
 
 func originalResourceDecode(raw json.RawMessage, output any) error {
@@ -57,6 +58,30 @@ func (a *App) pluginOriginalResourceHost(ctx context.Context, scope originalBase
 		return nil, bad("PLUGIN_IDENTITY_MISMATCH", "插件执行身份不匹配")
 	}
 	ctx = withOriginalPluginLogContext(ctx, scope)
+	if method == originalMergeSiteSwitchCapability {
+		return a.originalMergeSiteSwitchResource(ctx, scope, raw)
+	}
+	if originalBrushSourceCapability(method) {
+		return a.originalBrushSourceResource(ctx, scope, method, raw)
+	}
+	if originalCleanSeedCapability(method) {
+		return a.originalCleanSeedResource(ctx, scope, method, raw)
+	}
+	if originalSeedRescueCapability(method) {
+		return a.originalSeedRescueResource(ctx, scope, strings.TrimPrefix(method, "seed_rescue."), raw)
+	}
+	if originalCloudflareCapability(method) {
+		return a.originalCloudflareResource(ctx, scope, strings.TrimPrefix(method, "cloudflare_speed."), raw)
+	}
+	if method == originalCustomHostsCapability {
+		return a.originalCustomHostsApply(ctx, scope, raw)
+	}
+	if method == plugins.LocalBackupCapability {
+		return a.originalLocalBackupResource(ctx, scope, raw)
+	}
+	if method == originalLarkEndpointCapability {
+		return a.originalLarkEndpointResource(ctx, scope, raw)
+	}
 	if method == plugins.NetworkProxyReadCapability {
 		return a.originalHostProxyResource(ctx, scope, raw)
 	}
@@ -99,6 +124,9 @@ func (a *App) pluginOriginalResourceHost(ctx context.Context, scope originalBase
 	if originalHostSettingsCapability(method) {
 		return a.originalHostSettingsResource(ctx, scope, method, raw)
 	}
+	if originalSourceSiteRequestCapability(method) {
+		return a.originalHostSourceSiteRequestResource(ctx, scope, method, raw)
+	}
 	if originalHostSitesCapability(method) {
 		return a.originalHostSitesResource(ctx, scope, method, raw)
 	}
@@ -107,6 +135,9 @@ func (a *App) pluginOriginalResourceHost(ctx context.Context, scope originalBase
 	}
 	if method == plugins.BackgroundSubmitCapability {
 		return a.originalSubmitResource(ctx, scope, raw)
+	}
+	if method == plugins.CleanupSubmitCapability {
+		return a.originalCleanupSubmitResource(ctx, scope, raw)
 	}
 	if method == plugins.AuthTicketCreateCapability {
 		return a.originalAuthTicketResource(ctx, scope, raw)

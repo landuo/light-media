@@ -22,38 +22,26 @@ func (a *App) originalInstalledPluginIDs(ctx context.Context) ([]string, error) 
 }
 
 func (p *PluginStore) originalInstalledPluginIDs(ctx context.Context, db originalInstalledOrderReader) ([]string, error) {
-	var sealed []byte
-	err := db.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id='main'`, originalInstalledOrderKind).Scan(&sealed)
-	if err == nil {
-		raw, readErr := p.unseal(originalInstalledOrderKind, "admin", "main", sealed)
-		if readErr != nil {
-			return nil, readErr
-		}
-		var ids []string
-		if json.Unmarshal(raw, &ids) != nil || ids == nil {
-			return nil, bad("PLUGIN_INSTALLED_ORDER_INVALID", "插件安装清单无法读取")
-		}
-		return ids, nil
-	}
-	if !errors.Is(err, sql.ErrNoRows) {
-		return nil, err
-	}
-	// Existing installations predate the ordered list. Preserve their creation
-	// order (rowid breaks timestamp ties); the next membership write freezes it.
-	rows, err := db.QueryContext(ctx, `SELECT instance_id FROM plugin_installations WHERE installed=1 ORDER BY created_at,rowid`)
+	state := &p.originalInstalledCache
+	state.mu.Lock()
+	epoch := state.epoch
+	state.mu.Unlock()
+	// Never hold the cache mutex while waiting for Store's single connection.
+	// An existing native transaction reads this same setting before committing.
+	ids, observed, err := p.readOriginalInstalledObservation(ctx, db)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-	ids := []string{}
-	for rows.Next() {
-		var id string
-		if err := rows.Scan(&id); err != nil {
-			return nil, err
-		}
-		ids = append(ids, id)
+	state.mu.Lock()
+	defer state.mu.Unlock()
+	if state.valid && state.observed == observed {
+		return append([]string{}, state.ids...), nil
 	}
-	return ids, rows.Err()
+	// A snapshot begun before a new source set cannot invalidate its newer cache.
+	if state.epoch == epoch {
+		state.valid = false
+	}
+	return ids, nil
 }
 
 // This is the persistent UserInstalledPlugins list, separate from the loaded

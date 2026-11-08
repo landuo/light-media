@@ -165,19 +165,20 @@ type originalOCRGuardTransport struct {
 
 func (t originalOCRGuardTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	if err := t.guard(r.Context()); err != nil {
-		return nil, err
+		return nil, originalSiteRequestGuardFailure(err)
 	}
 	return t.next.RoundTrip(r)
 }
 
 type originalOCRResponse struct {
-	status int
-	body   []byte
+	status      int
+	body        []byte
+	contentType string
 }
 
 // RequestUtils in OcrHelper supplies no explicit proxy map. Its ordinary
 // requests trust-env routing is retained, separately for image GET and OCR POST.
-func originalOCRRequest(ctx context.Context, method string, target *url.URL, headers http.Header, body []byte, guard func(context.Context) error, limit int) (*originalOCRResponse, error) {
+func originalOCRRequest(ctx context.Context, method string, target *url.URL, headers http.Header, body []byte, guard func(context.Context) error, limit int, sourceMode ...bool) (*originalOCRResponse, error) {
 	if err := guard(ctx); err != nil {
 		return nil, err
 	}
@@ -189,9 +190,13 @@ func originalOCRRequest(ctx context.Context, method string, target *url.URL, hea
 	// requests.request creates a temporary Session for this request, retaining
 	// redirect cookies without sharing image cookies with the separate OCR POST.
 	jar, _ := cookiejar.New(nil)
-	client := &http.Client{Jar: jar, Transport: originalOCRGuardTransport{transport, guard}, CheckRedirect: func(r *http.Request, via []*http.Request) error {
+	var next http.RoundTripper = originalOCRGuardTransport{transport, guard}
+	if len(sourceMode) == 1 && sourceMode[0] {
+		next = originalSourceSiteHTTPTransport{next: next}
+	}
+	client := &http.Client{Jar: jar, Transport: next, CheckRedirect: func(r *http.Request, via []*http.Request) error {
 		if err := guard(r.Context()); err != nil {
-			return err
+			return originalSiteRequestGuardFailure(err)
 		}
 		if len(via) > 30 {
 			return errors.New("ocr_redirect_limit")
@@ -218,6 +223,10 @@ func originalOCRRequest(ctx context.Context, method string, target *url.URL, hea
 	response, requestErr := client.Do(request)
 	if response != nil {
 		defer response.Body.Close()
+	}
+	var denied *originalSiteRequestGuardError
+	if errors.As(requestErr, &denied) {
+		return nil, denied.cause
 	}
 	if err := guard(ctx); err != nil {
 		return nil, err
@@ -249,7 +258,7 @@ func originalOCRRequest(ctx context.Context, method string, target *url.URL, hea
 	if err := guard(ctx); err != nil {
 		return nil, err
 	}
-	return &originalOCRResponse{status: response.StatusCode, body: decoded}, nil
+	return &originalOCRResponse{status: response.StatusCode, body: decoded, contentType: strings.Join(response.Header.Values("Content-Type"), ", ")}, nil
 }
 
 func (a *App) originalHostOCRResource(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (json.RawMessage, error) {
@@ -275,62 +284,90 @@ func (a *App) originalHostOCRResource(ctx context.Context, scope originalBaseCal
 	if err := guard(ctx); err != nil {
 		return nil, err
 	}
+	var source *originalResolvedSourceSite
+	if in.SourceReference != nil {
+		if in.SiteID != "" {
+			return nil, bad("INVALID_PLUGIN_VALUE", "验证码源引用不能混用站点ID")
+		}
+		resolved, err := a.resolveOriginalSourceSite(ctx, scope, *in.SourceReference, false)
+		if err != nil {
+			return nil, err
+		}
+		source = &resolved
+		previousGuard := guard
+		guard = func(ctx context.Context) error {
+			if err := previousGuard(ctx); err != nil {
+				return err
+			}
+			return source.guard(ctx)
+		}
+	}
 	result := plugins.CaptchaOCRResultV1{SchemaVersion: 1, Result: json.RawMessage(`""`)}
 	encoded := originalOCRNormalize(in.ImageBase64)
 	if in.ImageURL != "" {
 		if data := originalOCRDataURL(in.ImageURL); data != "" {
 			encoded = originalOCRNormalize(data)
 		} else if originalOCRNeedsImageGET(in.ImageURL, in.SiteID) {
-			if in.SiteID == "" {
-				return nil, bad("SITE_NOT_CONFIGURED", "验证码图片URL需要已配置站点ID")
-			}
-			site, err := a.siteForRequest(allowDisabledSiteRequests(ctx), in.SiteID)
-			if err != nil {
-				return nil, err
-			}
-			origin, err := nativeConfiguredSiteOrigin(site)
-			if err != nil {
-				return nil, err
-			}
-			identity, err := a.Store.nativeSiteByAppID(ctx, site.ID)
-			if err != nil || identity.State != "active" || identity.CanonicalOrigin != origin {
-				return nil, siteIdentityError()
-			}
-			base, _ := url.Parse(origin)
-			target, err := url.Parse(in.ImageURL)
-			if err != nil {
-				return nil, bad("INVALID_PLUGIN_VALUE", "验证码图片URL无效")
-			}
-			target = base.ResolveReference(target)
-			if target.User != nil || target.Fragment != "" || target.Scheme != "http" && target.Scheme != "https" || originalOCROrigin(target) != originalOCROrigin(base) {
-				return nil, bad("PLUGIN_CAPABILITY_DENIED", "验证码图片不属于当前站点")
-			}
-			fingerprint := a.managedSiteKey(site)
-			previousGuard := guard
-			guard = func(ctx context.Context) error {
-				if err := previousGuard(ctx); err != nil {
-					return err
-				}
-				current, err := a.siteForRequest(allowDisabledSiteRequests(ctx), site.ID)
+			var target *url.URL
+			var configuredUA, configuredCookie string
+			if source != nil {
+				var err error
+				target, configuredUA, configuredCookie, err = originalSourceOCRImage(*source, in.ImageURL)
 				if err != nil {
-					return err
+					return nil, err
 				}
-				if a.managedSiteKey(current) != fingerprint {
-					return bad("SITE_CHANGED", "验证码站点配置已变化")
+			} else {
+				if in.SiteID == "" {
+					return nil, bad("SITE_NOT_CONFIGURED", "验证码图片URL需要已配置站点ID")
 				}
-				return nil
-			}
-			configuredUA := site.UserAgent
-			if configuredUA == "" {
-				configuredUA = originalOCRDefaultUserAgent
+				site, err := a.siteForRequest(allowDisabledSiteRequests(ctx), in.SiteID)
+				if err != nil {
+					return nil, err
+				}
+				origin, err := nativeConfiguredSiteOrigin(site)
+				if err != nil {
+					return nil, err
+				}
+				identity, err := a.Store.nativeSiteByAppID(ctx, site.ID)
+				if err != nil || identity.State != "active" || identity.CanonicalOrigin != origin {
+					return nil, siteIdentityError()
+				}
+				base, _ := url.Parse(origin)
+				target, err = url.Parse(in.ImageURL)
+				if err != nil {
+					return nil, bad("INVALID_PLUGIN_VALUE", "验证码图片URL无效")
+				}
+				target = base.ResolveReference(target)
+				if target.User != nil || target.Fragment != "" || target.Scheme != "http" && target.Scheme != "https" || originalOCROrigin(target) != originalOCROrigin(base) {
+					return nil, bad("PLUGIN_CAPABILITY_DENIED", "验证码图片不属于当前站点")
+				}
+				fingerprint := a.managedSiteKey(site)
+				previousGuard := guard
+				guard = func(ctx context.Context) error {
+					if err := previousGuard(ctx); err != nil {
+						return err
+					}
+					current, err := a.siteForRequest(allowDisabledSiteRequests(ctx), site.ID)
+					if err != nil {
+						return err
+					}
+					if a.managedSiteKey(current) != fingerprint {
+						return bad("SITE_CHANGED", "验证码站点配置已变化")
+					}
+					return nil
+				}
+				configuredUA, configuredCookie = site.UserAgent, site.Cookie
+				if configuredUA == "" {
+					configuredUA = originalOCRDefaultUserAgent
+				}
 			}
 			userAgent, err := originalOCRHeaderLatin1(configuredUA)
 			if err != nil {
 				return nil, err
 			}
 			headers := http.Header{"Content-Type": []string{"application/x-www-form-urlencoded; charset=UTF-8"}, "User-Agent": []string{userAgent}}
-			if site.Cookie != "" {
-				cookie, err := originalOCRHeaderLatin1(originalOCRCookieHeader(site.Cookie))
+			if configuredCookie != "" {
+				cookie, err := originalOCRHeaderLatin1(originalOCRCookieHeader(configuredCookie))
 				if err != nil {
 					return nil, err
 				}
@@ -338,7 +375,7 @@ func (a *App) originalHostOCRResource(ctx context.Context, scope originalBaseCal
 					headers.Set("Cookie", cookie)
 				}
 			}
-			response, err := originalOCRRequest(ctx, http.MethodGet, target, headers, nil, guard, originalOCRImageLimit)
+			response, err := originalOCRRequest(ctx, http.MethodGet, target, headers, nil, guard, originalOCRImageLimit, source != nil)
 			if err != nil {
 				return nil, err
 			}
@@ -365,11 +402,21 @@ func (a *App) originalHostOCRResource(ctx context.Context, scope originalBaseCal
 	// host and can never be copied from site Cookie/UA or returned through SDK.
 	headers := http.Header{"Content-Type": []string{"application/json"}, "User-Agent": []string{originalOCRDefaultUserAgent}}
 	payload, _ := json.Marshal(map[string]string{"base64_img": encoded})
-	response, err := originalOCRRequest(ctx, http.MethodPost, target, headers, payload, guard, plugins.MaxPayloadBytes)
+	if source != nil {
+		payload, err = originalSiteHTTPJSON(payload)
+		if err != nil {
+			return nil, err
+		}
+	}
+	response, err := originalOCRRequest(ctx, http.MethodPost, target, headers, payload, guard, plugins.MaxPayloadBytes, source != nil)
 	if err != nil {
 		return nil, err
 	}
 	if response == nil || response.status >= 400 {
+		return json.Marshal(result)
+	}
+	if source != nil {
+		result.SourceResponse = &plugins.CaptchaOCRSourceResponseV1{Content: response.body, ContentType: response.contentType}
 		return json.Marshal(result)
 	}
 	decoded, err := decodeSourceJSON(response.body)

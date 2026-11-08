@@ -56,7 +56,8 @@ func (f *Frontend) Validate() error {
 	if f.Contract != FrontendFederationContract || f.APIContract != FrontendAPIContract ||
 		!ValidFrontendPath(f.Root) || !ValidFrontendPath(f.Entry) ||
 		path.Base(f.Entry) != "remoteEntry.js" || len(f.Exposes) == 0 || len(f.Exposes) > 64 ||
-		len(f.Shared) == 0 || len(f.Shared) > 2 || !slices.Contains(f.Shared, "vue") {
+		len(f.Shared) == 0 || len(f.Shared) > 3 || !slices.Contains(f.Shared, "vue") ||
+		slices.Contains(f.Shared, "vuetify/styles") && !slices.Contains(f.Shared, "vuetify") {
 		return failure("invalid_frontend_contract")
 	}
 	seen := map[string]bool{}
@@ -67,7 +68,7 @@ func (f *Frontend) Validate() error {
 		seen[component] = true
 	}
 	for _, field := range []struct{ values, allowed []string }{
-		{f.Shared, []string{"vue", "vuetify"}},
+		{f.Shared, []string{"vue", "vuetify", "vuetify/styles"}},
 	} {
 		seen := map[string]bool{}
 		for _, value := range field.values {

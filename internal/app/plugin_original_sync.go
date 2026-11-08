@@ -106,6 +106,8 @@ func (a *App) synchronizeOriginalPluginsAtStartup(ctx context.Context) {
 	defer a.reportOriginalPluginInstallations(ctx)
 	a.pluginOriginalOperationMu.Lock()
 	defer a.pluginOriginalOperationMu.Unlock()
+	ctx, releaseOperationOwner := a.bindOriginalOperationOwner(ctx)
+	defer releaseOperationOwner()
 	closed := func() bool {
 		a.pluginOriginalBackground.mu.Lock()
 		defer a.pluginOriginalBackground.mu.Unlock()

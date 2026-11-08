@@ -1,0 +1,1340 @@
+{
+  "kind": "actual installed QbittorrentSession and Request._session/_request_manager plus wrapper/vendor AST with real HTTPAdapter/Retry to owned read endpoints",
+  "source_sha256": {
+    "host-reference/app/modules/qbittorrent/qbittorrent.py": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+    "qbittorrent-vendor/request.py": "dcf8371d17e5623ca81d95be2a8a6a8ade747f23d2aac5a79a629dc961dc206e",
+    "qbittorrent-vendor/auth.py": "c7b484061ca28a5d4723dc9128191542f5f46c39ce99074bf12c536136f0efe8",
+    "qbittorrent-vendor/torrents.py": "d087e5ef72ee748a8af160fd7f4fdbf119d41df6b1fdf2fe1d50509a3a0c2e26",
+    "constructor-vendor-reference/qbittorrentapi/app.py": "4f4c13c7c7cf786a62b9373104eb5371cb19654ca5ef8022b3d9c7768263ebe5"
+  },
+  "library_comparison": [
+    {
+      "module": "requests.adapters",
+      "local_sha256": "647eabd4453de232aa40b55ff033d6f19778910b7e7069c51fdf63076fc77493",
+      "actual_sha256": "647eabd4453de232aa40b55ff033d6f19778910b7e7069c51fdf63076fc77493",
+      "same_bytes": true
+    },
+    {
+      "module": "urllib3.util.retry",
+      "local_sha256": "d989d25fefc579c312843eb5331e6cebc274fdbb541d9aeb73f064155452d4fe",
+      "actual_sha256": "d989d25fefc579c312843eb5331e6cebc274fdbb541d9aeb73f064155452d4fe",
+      "same_bytes": true
+    },
+    {
+      "module": "urllib3.connectionpool",
+      "local_sha256": "b0616775d5d8c25c7b282e0908fd602af74d18b34af984c22437460021a3dd8f",
+      "actual_sha256": "b0616775d5d8c25c7b282e0908fd602af74d18b34af984c22437460021a3dd8f",
+      "same_bytes": true
+    }
+  ],
+  "limitations": [
+    "Owned URL builder replaces scheme-detection/HEAD behavior; no claim about original URL autodetection. Proxy environment disabled only in isolated test Session init",
+    "Retry.sleep instrumentation delegates to real Retry.sleep, including actual Retry-After1 waits. Manager sleep also delegates to real time.sleep",
+    "Read operations only, including POST torrents/info. No selected torrent mutation replay is tested or authorized",
+    "Inert valid list model and controlled network peers; no live daemon/application/config or real credentials",
+    "Local interpreter3.14; actual installed source interpreter3.12.13; adapter dependency byte comparison recorded explicitly"
+  ],
+  "cases": [
+    {
+      "method": "POST-info",
+      "case": "500-then200",
+      "reply_sequence": [
+        500,
+        200
+      ],
+      "retry_after": null,
+      "outcome": {
+        "task_count": 1,
+        "error_flag": false
+      },
+      "peer_requests": 2,
+      "tcp_connect_attempts": 2,
+      "elapsed_seconds": 0.0048,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 1,
+          "response": 500
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 2,
+          "response": 200
+        }
+      ]
+    },
+    {
+      "method": "POST-info",
+      "case": "two500-then200",
+      "reply_sequence": [
+        500,
+        500,
+        200
+      ],
+      "retry_after": null,
+      "outcome": {
+        "task_count": 0,
+        "error_flag": true
+      },
+      "peer_requests": 2,
+      "tcp_connect_attempts": 2,
+      "elapsed_seconds": 0.0021,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 1,
+          "response": 500
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 2,
+          "response": 500
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "\u83b7\u53d6\u79cd\u5b50\u5217\u8868\u51fa\u9519\uff1aowned failure"
+        }
+      ]
+    },
+    {
+      "method": "POST-info",
+      "case": "three500-then200",
+      "reply_sequence": [
+        500,
+        500,
+        500,
+        200
+      ],
+      "retry_after": null,
+      "outcome": {
+        "task_count": 0,
+        "error_flag": true
+      },
+      "peer_requests": 2,
+      "tcp_connect_attempts": 2,
+      "elapsed_seconds": 0.0019,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 1,
+          "response": 500
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 2,
+          "response": 500
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "\u83b7\u53d6\u79cd\u5b50\u5217\u8868\u51fa\u9519\uff1aowned failure"
+        }
+      ]
+    },
+    {
+      "method": "POST-info",
+      "case": "all500",
+      "reply_sequence": [
+        500
+      ],
+      "retry_after": null,
+      "outcome": {
+        "task_count": 0,
+        "error_flag": true
+      },
+      "peer_requests": 2,
+      "tcp_connect_attempts": 2,
+      "elapsed_seconds": 0.0017,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 1,
+          "response": 500
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 2,
+          "response": 500
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "\u83b7\u53d6\u79cd\u5b50\u5217\u8868\u51fa\u9519\uff1aowned failure"
+        }
+      ]
+    },
+    {
+      "method": "POST-info",
+      "case": "all503-no-header",
+      "reply_sequence": [
+        503
+      ],
+      "retry_after": null,
+      "outcome": {
+        "task_count": 0,
+        "error_flag": true
+      },
+      "peer_requests": 2,
+      "tcp_connect_attempts": 2,
+      "elapsed_seconds": 0.0036,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 1,
+          "response": 503
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 2,
+          "response": 503
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "\u83b7\u53d6\u79cd\u5b50\u5217\u8868\u51fa\u9519\uff1aowned failure"
+        }
+      ]
+    },
+    {
+      "method": "POST-info",
+      "case": "drop-then200",
+      "reply_sequence": [
+        "DROP",
+        200
+      ],
+      "retry_after": null,
+      "outcome": {
+        "task_count": 1,
+        "error_flag": false
+      },
+      "peer_requests": 2,
+      "tcp_connect_attempts": 2,
+      "elapsed_seconds": 0.0022,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 1,
+          "response": "DROP"
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 2,
+          "response": 200
+        }
+      ]
+    },
+    {
+      "method": "POST-info",
+      "case": "all-drop",
+      "reply_sequence": [
+        "DROP"
+      ],
+      "retry_after": null,
+      "outcome": {
+        "task_count": 0,
+        "error_flag": true
+      },
+      "peer_requests": 2,
+      "tcp_connect_attempts": 2,
+      "elapsed_seconds": 0.0016,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 1,
+          "response": "DROP"
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 2,
+          "response": "DROP"
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "\u83b7\u53d6\u79cd\u5b50\u5217\u8868\u51fa\u9519\uff1aFailed to connect to qBittorrent. Connection Error: ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))"
+        }
+      ]
+    },
+    {
+      "method": "POST-info",
+      "case": "all500-retry-after1",
+      "reply_sequence": [
+        500
+      ],
+      "retry_after": 1,
+      "outcome": {
+        "task_count": 0,
+        "error_flag": true
+      },
+      "peer_requests": 2,
+      "tcp_connect_attempts": 2,
+      "elapsed_seconds": 0.0047,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 1,
+          "response": 500
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "POST",
+          "path": "/api/v2/torrents/info",
+          "attempt": 2,
+          "response": 500
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "\u83b7\u53d6\u79cd\u5b50\u5217\u8868\u51fa\u9519\uff1aowned failure"
+        }
+      ]
+    },
+    {
+      "method": "POST-info",
+      "case": "connect-refused",
+      "reply_sequence": [],
+      "retry_after": null,
+      "outcome": {
+        "task_count": 0,
+        "error_flag": true
+      },
+      "peer_requests": 0,
+      "tcp_connect_attempts": 4,
+      "elapsed_seconds": 4.0069,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": null
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 3
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": null
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 4
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "\u83b7\u53d6\u79cd\u5b50\u5217\u8868\u51fa\u9519\uff1aFailed to connect to qBittorrent. Unknown Error: ConnectTimeout(MaxRetryError(\"HTTPConnectionPool(host='127.0.0.1', port=60128): Max retries exceeded with url: /api/v2/torrents/info (Caused by ConnectTimeoutError(<HTTPConnection(host='127.0.0.1', port=60128) at 0x10b05bbd0>, 'Connection to 127.0.0.1 timed out. (connect timeout=1)'))\"))"
+        }
+      ]
+    },
+    {
+      "method": "GET-app-version",
+      "case": "500-then200",
+      "reply_sequence": [
+        500,
+        200
+      ],
+      "retry_after": null,
+      "outcome": {
+        "returned": "v5.2.0"
+      },
+      "peer_requests": 2,
+      "tcp_connect_attempts": 2,
+      "elapsed_seconds": 0.0067,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 1,
+          "response": 500
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": null
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 2,
+          "response": 200
+        }
+      ]
+    },
+    {
+      "method": "GET-app-version",
+      "case": "two500-then200",
+      "reply_sequence": [
+        500,
+        500,
+        200
+      ],
+      "retry_after": null,
+      "outcome": {
+        "returned": "v5.2.0"
+      },
+      "peer_requests": 3,
+      "tcp_connect_attempts": 3,
+      "elapsed_seconds": 0.0031,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 1,
+          "response": 500
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": null
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 2,
+          "response": 500
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 3
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 3,
+          "response": 200
+        }
+      ]
+    },
+    {
+      "method": "GET-app-version",
+      "case": "three500-then200",
+      "reply_sequence": [
+        500,
+        500,
+        500,
+        200
+      ],
+      "retry_after": null,
+      "outcome": {
+        "returned": "v5.2.0"
+      },
+      "peer_requests": 4,
+      "tcp_connect_attempts": 4,
+      "elapsed_seconds": 0.0039,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 1,
+          "response": 500
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": null
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 2,
+          "response": 500
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 3
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 3,
+          "response": 500
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": null
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 4
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 4,
+          "response": 200
+        }
+      ]
+    },
+    {
+      "method": "GET-app-version",
+      "case": "all500",
+      "reply_sequence": [
+        500
+      ],
+      "retry_after": null,
+      "outcome": {
+        "raises": "InternalServerError500Error"
+      },
+      "peer_requests": 4,
+      "tcp_connect_attempts": 4,
+      "elapsed_seconds": 0.0037,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 1,
+          "response": 500
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": null
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 2,
+          "response": 500
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 3
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 3,
+          "response": 500
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": null
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 4
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 4,
+          "response": 500
+        }
+      ]
+    },
+    {
+      "method": "GET-app-version",
+      "case": "all503-no-header",
+      "reply_sequence": [
+        503
+      ],
+      "retry_after": null,
+      "outcome": {
+        "raises": "InternalServerError500Error"
+      },
+      "peer_requests": 2,
+      "tcp_connect_attempts": 2,
+      "elapsed_seconds": 0.0016,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 1,
+          "response": 503
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 2,
+          "response": 503
+        }
+      ]
+    },
+    {
+      "method": "GET-app-version",
+      "case": "drop-then200",
+      "reply_sequence": [
+        "DROP",
+        200
+      ],
+      "retry_after": null,
+      "outcome": {
+        "returned": "v5.2.0"
+      },
+      "peer_requests": 2,
+      "tcp_connect_attempts": 2,
+      "elapsed_seconds": 0.0012,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 1,
+          "response": "DROP"
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": null
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 2,
+          "response": 200
+        }
+      ]
+    },
+    {
+      "method": "GET-app-version",
+      "case": "all-drop",
+      "reply_sequence": [
+        "DROP"
+      ],
+      "retry_after": null,
+      "outcome": {
+        "raises": "APIConnectionError"
+      },
+      "peer_requests": 4,
+      "tcp_connect_attempts": 4,
+      "elapsed_seconds": 0.0023,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 1,
+          "response": "DROP"
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": null
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 2,
+          "response": "DROP"
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 3
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 3,
+          "response": "DROP"
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": null
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 4
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 4,
+          "response": "DROP"
+        }
+      ]
+    },
+    {
+      "method": "GET-app-version",
+      "case": "all500-retry-after1",
+      "reply_sequence": [
+        500
+      ],
+      "retry_after": 1,
+      "outcome": {
+        "raises": "InternalServerError500Error"
+      },
+      "peer_requests": 4,
+      "tcp_connect_attempts": 4,
+      "elapsed_seconds": 2.0314,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 1,
+          "response": 500
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": 1
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 2,
+          "response": 500
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 3
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 3,
+          "response": 500
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": 1
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 4
+        },
+        {
+          "event": "peer.request",
+          "method": "GET",
+          "path": "/api/v2/app/version",
+          "attempt": 4,
+          "response": 500
+        }
+      ]
+    },
+    {
+      "method": "GET-app-version",
+      "case": "connect-refused",
+      "reply_sequence": [],
+      "retry_after": null,
+      "outcome": {
+        "raises": "APIConnectionError"
+      },
+      "peer_requests": 0,
+      "tcp_connect_attempts": 4,
+      "elapsed_seconds": 4.0114,
+      "adapter_defaults": {
+        "total": 1,
+        "connect": 1,
+        "read": 1,
+        "allowed_methods": [
+          "DELETE",
+          "GET",
+          "HEAD",
+          "OPTIONS",
+          "PUT",
+          "TRACE"
+        ],
+        "status_forcelist": [
+          500,
+          502,
+          504
+        ],
+        "backoff_factor": 0,
+        "raise_on_status": false
+      },
+      "trace": [
+        {
+          "event": "tcp.connect",
+          "attempt": 1
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": null
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 2
+        },
+        {
+          "event": "manager.context.reset"
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 3
+        },
+        {
+          "event": "adapter.retry.sleep",
+          "backoff_seconds": 0,
+          "retry_after_seconds": null
+        },
+        {
+          "event": "tcp.connect",
+          "attempt": 4
+        }
+      ]
+    }
+  ]
+}

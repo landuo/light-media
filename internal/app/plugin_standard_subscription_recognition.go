@@ -37,9 +37,25 @@ func (a *App) resolveStandardSubscriptionRecognition(ctx context.Context, s Subs
 	if err != nil {
 		return nil, err
 	}
-	information, err := a.originalRecognizeSubscriptionTMDBMedia(ctx, s.Media, meta, source)
+	var information sourceMediaInformation
+	if providerNativeMedia(s.Media) {
+		information, err = a.recognizeProviderSubscriptionMediaGroup(ctx, s.Media, meta, source["episode_group"])
+	} else {
+		information, err = a.originalRecognizeSubscriptionTMDBMedia(ctx, s.Media, meta, source)
+	}
 	if err != nil {
 		return nil, err
 	}
 	return &standardSubscriptionRecognition{Meta: encoded, Information: information}, nil
+}
+
+func (a *App) sourceRecognizeSubscriptionMedia(ctx context.Context, s Subscription) (sourceMediaInformation, error) {
+	if !providerNativeMedia(s.Media) {
+		return a.sourceRecognizeSubscriptionTMDBMedia(ctx, s)
+	}
+	recognized, err := a.resolveStandardSubscriptionRecognition(ctx, s, nil)
+	if err != nil {
+		return sourceMediaInformation{}, err
+	}
+	return recognized.Information, nil
 }

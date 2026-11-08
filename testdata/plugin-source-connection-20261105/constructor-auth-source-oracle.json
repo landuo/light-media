@@ -1,0 +1,562 @@
+{
+  "kind": "actual installed QB private login/auth/vendor request AST and TR wrapper/Client constructor/HTTP/version AST to owned loopback peer",
+  "source_sha256": {
+    "host-reference/app/modules/qbittorrent/qbittorrent.py": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+    "host-reference/app/modules/transmission/transmission.py": "6fc20e208b86e9e68ada074643f82b88270c2e51749e460ad881b10f744cf676",
+    "qbittorrent-vendor/auth.py": "c7b484061ca28a5d4723dc9128191542f5f46c39ce99074bf12c536136f0efe8",
+    "qbittorrent-vendor/request.py": "dcf8371d17e5623ca81d95be2a8a6a8ade747f23d2aac5a79a629dc961dc206e",
+    "constructor-vendor-reference/qbittorrentapi/app.py": "4f4c13c7c7cf786a62b9373104eb5371cb19654ca5ef8022b3d9c7768263ebe5",
+    "constructor-vendor-reference/transmission_rpc/client.py": "5d34047c37bcadb00f3320fd8dbbe46aae6583acb5fd7877ed9a4ca0eea4bf34",
+    "constructor-vendor-reference/transmission_rpc/utils.py": "265829a3ff36580a80b22a816438cef199c58c748b0179b7d09ad928f4c99007"
+  },
+  "limitations": [
+    "No real daemon, credentials, original application/package import or production IO",
+    "QB general Client constructor/options/context reset are synthetic; the actual wrapper/auth/request methods and Requests transport execute. No SID requirement is added",
+    "TR RpcMethod constant strings/exception constructors/Session model are finite doubles. get_torrent_arguments uses one synthetic constants entry solely to retain numeric version comparison; no full torrent-fields completeness claim",
+    "Original daemon preference writes are excluded by explicit user scope; QB actual preference-sync helper is given a synthetic read failure, showing it does not invalidate the client",
+    "Local interpreter3.14 and Requests; original installed interpreter3.12.13, serialization-critical files independently byte-matched"
+  ],
+  "qbittorrent": [
+    {
+      "case": "login-empty-noSID",
+      "api_key": false,
+      "status": 200,
+      "body": "",
+      "set_sid": false,
+      "client_present": true,
+      "inactive": false,
+      "trace": [
+        {
+          "event": "source.vendor.initialize_context"
+        },
+        {
+          "event": "peer.POST.login",
+          "form_keys": [
+            "password",
+            "username"
+          ],
+          "authorization_present": false
+        }
+      ]
+    },
+    {
+      "case": "login-Ok-noSID",
+      "api_key": false,
+      "status": 200,
+      "body": "Ok.",
+      "set_sid": false,
+      "client_present": true,
+      "inactive": false,
+      "trace": [
+        {
+          "event": "source.vendor.initialize_context"
+        },
+        {
+          "event": "peer.POST.login",
+          "form_keys": [
+            "password",
+            "username"
+          ],
+          "authorization_present": false
+        }
+      ]
+    },
+    {
+      "case": "login-Ok-SID",
+      "api_key": false,
+      "status": 200,
+      "body": "Ok.",
+      "set_sid": true,
+      "client_present": true,
+      "inactive": false,
+      "trace": [
+        {
+          "event": "source.vendor.initialize_context"
+        },
+        {
+          "event": "peer.POST.login",
+          "form_keys": [
+            "password",
+            "username"
+          ],
+          "authorization_present": false
+        }
+      ]
+    },
+    {
+      "case": "login-Fails-SID",
+      "api_key": false,
+      "status": 200,
+      "body": "Fails.",
+      "set_sid": true,
+      "client_present": false,
+      "inactive": true,
+      "trace": [
+        {
+          "event": "source.vendor.initialize_context"
+        },
+        {
+          "event": "peer.POST.login",
+          "form_keys": [
+            "password",
+            "username"
+          ],
+          "authorization_present": false
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "qbittorrent \u767b\u5f55\u5931\u8d25\uff1a\u8bf7\u68c0\u67e5\u7528\u6237\u540d\u548c\u5bc6\u7801\u662f\u5426\u6b63\u786e"
+        }
+      ]
+    },
+    {
+      "case": "login-401",
+      "api_key": false,
+      "status": 401,
+      "body": "",
+      "set_sid": false,
+      "client_present": false,
+      "inactive": true,
+      "trace": [
+        {
+          "event": "source.vendor.initialize_context"
+        },
+        {
+          "event": "peer.POST.login",
+          "form_keys": [
+            "password",
+            "username"
+          ],
+          "authorization_present": false
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "qbittorrent \u767b\u5f55\u5931\u8d25\uff1a\u8bf7\u68c0\u67e5\u7528\u6237\u540d\u548c\u5bc6\u7801\u662f\u5426\u6b63\u786e"
+        }
+      ]
+    },
+    {
+      "case": "login-403",
+      "api_key": false,
+      "status": 403,
+      "body": "denied",
+      "set_sid": false,
+      "client_present": false,
+      "inactive": true,
+      "trace": [
+        {
+          "event": "source.vendor.initialize_context"
+        },
+        {
+          "event": "peer.POST.login",
+          "form_keys": [
+            "password",
+            "username"
+          ],
+          "authorization_present": false
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "qbittorrent \u767b\u5f55\u5931\u8d25\uff1adenied"
+        }
+      ]
+    },
+    {
+      "case": "login-Ok-newline",
+      "api_key": false,
+      "status": 200,
+      "body": "Ok.\n",
+      "set_sid": false,
+      "client_present": false,
+      "inactive": true,
+      "trace": [
+        {
+          "event": "source.vendor.initialize_context"
+        },
+        {
+          "event": "peer.POST.login",
+          "form_keys": [
+            "password",
+            "username"
+          ],
+          "authorization_present": false
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "qbittorrent \u767b\u5f55\u5931\u8d25\uff1a\u8bf7\u68c0\u67e5\u7528\u6237\u540d\u548c\u5bc6\u7801\u662f\u5426\u6b63\u786e"
+        }
+      ]
+    },
+    {
+      "case": "login-space",
+      "api_key": false,
+      "status": 200,
+      "body": " ",
+      "set_sid": false,
+      "client_present": false,
+      "inactive": true,
+      "trace": [
+        {
+          "event": "source.vendor.initialize_context"
+        },
+        {
+          "event": "peer.POST.login",
+          "form_keys": [
+            "password",
+            "username"
+          ],
+          "authorization_present": false
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "qbittorrent \u767b\u5f55\u5931\u8d25\uff1a\u8bf7\u68c0\u67e5\u7528\u6237\u540d\u548c\u5bc6\u7801\u662f\u5426\u6b63\u786e"
+        }
+      ]
+    },
+    {
+      "case": "login-204-empty",
+      "api_key": false,
+      "status": 204,
+      "body": "",
+      "set_sid": false,
+      "client_present": true,
+      "inactive": false,
+      "trace": [
+        {
+          "event": "source.vendor.initialize_context"
+        },
+        {
+          "event": "peer.POST.login",
+          "form_keys": [
+            "password",
+            "username"
+          ],
+          "authorization_present": false
+        }
+      ]
+    },
+    {
+      "case": "key-app-version",
+      "api_key": true,
+      "status": 200,
+      "body": "v5.2.0",
+      "set_sid": false,
+      "client_present": true,
+      "inactive": false,
+      "trace": [
+        {
+          "event": "peer.GET",
+          "path": "/api/v2/app/version",
+          "authorization_present": true
+        }
+      ]
+    },
+    {
+      "case": "key-empty-version",
+      "api_key": true,
+      "status": 200,
+      "body": "",
+      "set_sid": false,
+      "client_present": true,
+      "inactive": false,
+      "trace": [
+        {
+          "event": "peer.GET",
+          "path": "/api/v2/app/version",
+          "authorization_present": true
+        }
+      ]
+    },
+    {
+      "case": "key-Fails-text-status200",
+      "api_key": true,
+      "status": 200,
+      "body": "Fails.",
+      "set_sid": false,
+      "client_present": true,
+      "inactive": false,
+      "trace": [
+        {
+          "event": "peer.GET",
+          "path": "/api/v2/app/version",
+          "authorization_present": true
+        }
+      ]
+    },
+    {
+      "case": "key-204-empty",
+      "api_key": true,
+      "status": 204,
+      "body": "",
+      "set_sid": false,
+      "client_present": true,
+      "inactive": false,
+      "trace": [
+        {
+          "event": "peer.GET",
+          "path": "/api/v2/app/version",
+          "authorization_present": true
+        }
+      ]
+    },
+    {
+      "case": "key-401",
+      "api_key": true,
+      "status": 401,
+      "body": "denied",
+      "set_sid": false,
+      "client_present": false,
+      "inactive": true,
+      "trace": [
+        {
+          "event": "peer.GET",
+          "path": "/api/v2/app/version",
+          "authorization_present": true
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "qbittorrent \u767b\u5f55\u5931\u8d25\uff1adenied"
+        }
+      ]
+    }
+  ],
+  "transmission": [
+    {
+      "case": "valid-no-session-header",
+      "status": 200,
+      "response": {
+        "result": "success",
+        "arguments": {
+          "version": "4.0.6",
+          "rpc-version": 17
+        }
+      },
+      "client_present": true,
+      "inactive": false,
+      "trace": [
+        {
+          "event": "peer.POST.rpc",
+          "query": {
+            "method": "session-get",
+            "arguments": {}
+          },
+          "session_header": "0"
+        },
+        {
+          "event": "source.preference_sync.excluded_by_user_scope"
+        }
+      ]
+    },
+    {
+      "case": "valid-409-session",
+      "status": 200,
+      "response": {
+        "result": "success",
+        "arguments": {
+          "version": "4.0.6",
+          "rpc-version": 17
+        }
+      },
+      "client_present": true,
+      "inactive": false,
+      "trace": [
+        {
+          "event": "peer.POST.rpc",
+          "query": {
+            "method": "session-get",
+            "arguments": {}
+          },
+          "session_header": "0"
+        },
+        {
+          "event": "peer.POST.rpc",
+          "query": {
+            "method": "session-get",
+            "arguments": {}
+          },
+          "session_header": "OWNED_SYNTHETIC"
+        },
+        {
+          "event": "source.preference_sync.excluded_by_user_scope"
+        }
+      ]
+    },
+    {
+      "case": "missing-version",
+      "status": 200,
+      "response": {
+        "result": "success",
+        "arguments": {
+          "rpc-version": 17
+        }
+      },
+      "client_present": false,
+      "inactive": true,
+      "trace": [
+        {
+          "event": "peer.POST.rpc",
+          "query": {
+            "method": "session-get",
+            "arguments": {}
+          },
+          "session_header": "0"
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "transmission \u8fde\u63a5\u51fa\u9519\uff1a'version'"
+        }
+      ]
+    },
+    {
+      "case": "missing-rpc-version",
+      "status": 200,
+      "response": {
+        "result": "success",
+        "arguments": {
+          "version": "4.0.6"
+        }
+      },
+      "client_present": false,
+      "inactive": true,
+      "trace": [
+        {
+          "event": "peer.POST.rpc",
+          "query": {
+            "method": "session-get",
+            "arguments": {}
+          },
+          "session_header": "0"
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "transmission \u8fde\u63a5\u51fa\u9519\uff1a'rpc-version'"
+        }
+      ]
+    },
+    {
+      "case": "string-rpc-version",
+      "status": 200,
+      "response": {
+        "result": "success",
+        "arguments": {
+          "version": "4.0.6",
+          "rpc-version": "17"
+        }
+      },
+      "client_present": false,
+      "inactive": true,
+      "trace": [
+        {
+          "event": "peer.POST.rpc",
+          "query": {
+            "method": "session-get",
+            "arguments": {}
+          },
+          "session_header": "0"
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "transmission \u8fde\u63a5\u51fa\u9519\uff1a'<' not supported between instances of 'str' and 'int'"
+        }
+      ]
+    },
+    {
+      "case": "result-failure",
+      "status": 200,
+      "response": {
+        "result": "denied",
+        "arguments": {}
+      },
+      "client_present": false,
+      "inactive": true,
+      "trace": [
+        {
+          "event": "peer.POST.rpc",
+          "query": {
+            "method": "session-get",
+            "arguments": {}
+          },
+          "session_header": "0"
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "transmission \u8fde\u63a5\u51fa\u9519\uff1aQuery failed with result \"denied\"."
+        }
+      ]
+    },
+    {
+      "case": "http401",
+      "status": 401,
+      "response": {
+        "result": "success",
+        "arguments": {
+          "version": "4.0.6",
+          "rpc-version": 17
+        }
+      },
+      "client_present": false,
+      "inactive": true,
+      "trace": [
+        {
+          "event": "peer.POST.rpc",
+          "query": {
+            "method": "session-get",
+            "arguments": {}
+          },
+          "session_header": "0"
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "transmission \u8fde\u63a5\u51fa\u9519\uff1atransmission daemon require auth"
+        }
+      ]
+    },
+    {
+      "case": "http500-valid-success-body",
+      "status": 500,
+      "response": {
+        "result": "success",
+        "arguments": {
+          "version": "4.0.6",
+          "rpc-version": 17
+        }
+      },
+      "client_present": true,
+      "inactive": false,
+      "trace": [
+        {
+          "event": "peer.POST.rpc",
+          "query": {
+            "method": "session-get",
+            "arguments": {}
+          },
+          "session_header": "0"
+        },
+        {
+          "event": "source.preference_sync.excluded_by_user_scope"
+        }
+      ]
+    },
+    {
+      "case": "invalid-json",
+      "status": 200,
+      "response": null,
+      "client_present": false,
+      "inactive": true,
+      "trace": [
+        {
+          "event": "peer.POST.rpc",
+          "query": {
+            "method": "session-get",
+            "arguments": {}
+          },
+          "session_header": "0"
+        },
+        {
+          "event": "wrapper.log.error",
+          "message": "transmission \u8fde\u63a5\u51fa\u9519\uff1afailed to parse response as json"
+        }
+      ]
+    }
+  ]
+}

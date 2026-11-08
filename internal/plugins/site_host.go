@@ -17,9 +17,10 @@ const (
 )
 
 type SiteHostRequestV1 struct {
-	ID              string `json:"id,omitempty"`
-	ActiveOnly      bool   `json:"active_only,omitempty"`
-	OrderByPriority bool   `json:"order_by_priority,omitempty"`
+	ID               string `json:"id,omitempty"`
+	ActiveOnly       bool   `json:"active_only,omitempty"`
+	OrderByPriority  bool   `json:"order_by_priority,omitempty"`
+	SourceProjection bool   `json:"source_projection,omitempty"`
 }
 type SiteHostRowV1 struct {
 	ID       string `json:"id"`
@@ -33,6 +34,9 @@ type SiteHostRowV1 struct {
 	Public   bool   `json:"public"`
 	Proxy    bool   `json:"proxy"`
 	Render   bool   `json:"render"`
+	// Returned only by explicit source_projection requests. This finite public
+	// metadata subset never contains cookies, user agents or API credentials.
+	SourceFields json.RawMessage `json:"source_fields,omitempty"`
 }
 type SiteHostResultV1 struct {
 	SchemaVersion int             `json:"schema_version"`

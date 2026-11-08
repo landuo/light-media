@@ -152,6 +152,19 @@ func browserStat(path string) (browserStamp, error) {
 	}
 	return browserInfo(path, info)
 }
+
+// unlink needs directory access, not read access to the selected file. Keep a
+// no-follow, directory-bound metadata snapshot for plugin storage operations.
+func browserEntryStat(path string) (browserStamp, error) {
+	info, err := pluginStorageEntryInfo(path)
+	if err != nil {
+		return browserStamp{}, err
+	}
+	if info.Mode()&os.ModeSymlink != 0 {
+		return browserStamp{}, bad("FILE_SYMLINK_REJECTED", "不允许符号链接")
+	}
+	return browserInfo(path, info)
+}
 func sameBrowserIdentity(a, b browserStamp) bool {
 	return a.Device == b.Device && a.Inode == b.Inode && a.Mode == b.Mode
 }
@@ -489,9 +502,20 @@ func (a *App) browserStaticProtection(path string) string {
 	return ""
 }
 func (a *App) browserMutationAllowed(ctx context.Context, path string) error {
+	return a.browserMutationAllowedWithReferences(ctx, path, true)
+}
+
+// Interactive file operations protect registered media. Plugin storage follows
+// LocalModule/Path.unlink: registration does not prevent an explicitly granted
+// deletion, while static protection and active imports still apply.
+func (a *App) browserMutationAllowedWithReferences(ctx context.Context, path string, protectReferences bool) error {
 	if reason := a.browserStaticProtection(path); reason != "" {
 		return bad("FILE_PROTECTED", reason)
 	}
+	return a.browserMutationReferences(ctx, path, protectReferences)
+}
+
+func (a *App) browserMutationReferences(ctx context.Context, path string, protectReferences bool) error {
 	identities := map[string]mountedDirectoryID{}
 	identityErrors := map[string]error{}
 	identity := func(dir string) (mountedDirectoryID, error) {
@@ -505,7 +529,11 @@ func (a *App) browserMutationAllowed(ctx context.Context, path string) error {
 	contains := func(referenced string) bool {
 		return referenced != "" && sharedDirectoryContainsWithIdentity(path, referenced, identity)
 	}
-	rows, e := a.Store.DB.QueryContext(ctx, `SELECT kind,payload FROM records WHERE kind IN ('asset','import_plan','managed_file')`)
+	query := `SELECT kind,payload FROM records WHERE kind IN ('asset','import_plan','managed_file')`
+	if !protectReferences {
+		query = `SELECT kind,payload FROM records WHERE kind='import_plan'`
+	}
+	rows, e := a.Store.DB.QueryContext(ctx, query)
 	if e != nil {
 		return e
 	}
@@ -576,6 +604,14 @@ func (a *App) browserMutationAllowed(ctx context.Context, path string) error {
 	return nil
 }
 func browserManifest(ctx context.Context, path string) ([]browserStamp, error) {
+	return browserManifestWithHardlinkGuard(ctx, path, true)
+}
+
+// The interactive file manager protects hardlinks. Ordinary plugin storage
+// deletion has the source LocalModule/Path.unlink semantics: remove this owned
+// directory entry, keeping every other hardlink and its inode contents intact.
+// Both callers retain the same traversal, snapshot and path protections.
+func browserManifestWithHardlinkGuard(ctx context.Context, path string, protectHardlinks bool) ([]browserStamp, error) {
 	result := []browserStamp{}
 	var walk func(string, int) error
 	walk = func(path string, depth int) error {
@@ -585,12 +621,19 @@ func browserManifest(ctx context.Context, path string) ([]browserStamp, error) {
 		if depth > 16 || len(result) >= 10000 {
 			return bad("FILE_OPERATION_LIMIT", "目录过深或超过 10000 项，请缩小操作范围")
 		}
-		st, e := browserStat(path)
+		stat := browserStat
+		if !protectHardlinks {
+			stat = browserEntryStat
+		}
+		st, e := stat(path)
 		if e != nil {
 			return e
 		}
 		result = append(result, st)
 		if !os.FileMode(st.Mode).IsDir() {
+			if !protectHardlinks {
+				return nil
+			}
 			f, e := importOpen(path)
 			if e != nil {
 				return e

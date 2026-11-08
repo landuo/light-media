@@ -180,12 +180,13 @@ func (a *App) validateSubscriptionStatsSource(ctx context.Context, q pluginRemov
 	if json.Unmarshal(job.Payload, &payload) != nil || payload.ID != r.ID {
 		return subscriptionStatsEvidenceError()
 	}
-	if r.Input.Mode == "await_async" {
+	if r.Input.Mode == "await_async" || r.Input.Mode == "chat_background" {
 		return a.validateUISubscriptionStatisticsSource(ctx, q, r)
 	}
 	if r.Input.Mode != "" || r.Input.Added != nil || len(r.Input.Registration) != 0 {
 		return subscriptionStatsEvidenceError()
 	}
+	var completionMediaKey string
 	switch r.Input.Operation {
 	case "done":
 		if r.Input.Completion == nil || r.Input.Lark != nil {
@@ -202,6 +203,7 @@ func (a *App) validateSubscriptionStatsSource(ctx context.Context, q pluginRemov
 		if e = a.readQualitySealed(ctx, q, "subscription_completion", identity.ID, &source); e != nil || !bytes.Equal(source.Input.Source.Subscribe, r.Input.Subscribe) || !bytes.Equal(source.Input.Source.MediaInfo, r.Input.MediaInfo) {
 			return subscriptionStatsEvidenceError()
 		}
+		completionMediaKey = sourceSubscriptionMediaKey(source.Input.Source.Subscription)
 		phase = "completion_event"
 		var complete struct {
 			SubscribeID string          `json:"subscribe_id"`
@@ -230,7 +232,7 @@ func (a *App) validateSubscriptionStatsSource(ctx context.Context, q pluginRemov
 	if json.Unmarshal(eventRaw, &event) != nil || event.EventID != eventID {
 		return subscriptionStatsEvidenceError()
 	}
-	if r.Input.Operation == "done" && (event.Type != "subscription.completed" || event.SubscriptionID != r.Input.Completion.SubscriptionID || event.JobID != r.Input.Completion.JobID) {
+	if r.Input.Operation == "done" && (event.Type != "subscription.completed" || event.SubscriptionID != r.Input.Completion.SubscriptionID || event.JobID != r.Input.Completion.JobID || event.MediaID != completionMediaKey) {
 		return subscriptionStatsEvidenceError()
 	}
 	if r.Input.Operation == "add" && (event.Type != "subscription.added" || event.SubscriptionID != r.Input.Lark.SubscriptionID) {
@@ -372,6 +374,8 @@ func (a *App) executeSubscriptionStats(ctx context.Context, in subscriptionStats
 	var e error
 	if in.Operation == "done" {
 		body, e = subscriptionstats.BuildCompletion(in.Subscribe, in.MediaInfo)
+	} else if in.Mode == "chat_background" {
+		body, e = subscriptionstats.BuildRegistration(in.Registration)
 	} else if in.Lark != nil {
 		body, e = sourceLarkRegistration(in.Lark.Notice)
 	} else {

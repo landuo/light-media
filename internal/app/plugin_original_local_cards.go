@@ -13,12 +13,21 @@ import (
 // for state, then sorts class metadata by plugin_order. state=installed filters
 // that result afterwards. It never asks a repository or infers a class from an
 // installed-ID row, and a failed initializer may still have class metadata.
-func (a *App) originalLocalPluginCards(ctx context.Context, installedOnly bool) ([]pluginCard, error) {
+func (a *App) originalLocalPluginCards(ctx context.Context, installedOnly bool, validate ...func(context.Context) error) ([]pluginCard, error) {
+	installed, err := a.originalInstalledPluginIDs(ctx)
+	if err != nil {
+		return nil, err
+	}
 	a.pluginOriginalRunningMu.Lock()
 	ids := slices.Clone(a.pluginOriginalClassOrder)
 	a.pluginOriginalRunningMu.Unlock()
 	cards := []pluginCard{}
 	for _, id := range ids {
+		for _, check := range validate {
+			if err := check(ctx); err != nil {
+				return nil, err
+			}
+		}
 		if err := ctx.Err(); err != nil {
 			return nil, err
 		}
@@ -27,20 +36,16 @@ func (a *App) originalLocalPluginCards(ctx context.Context, installedOnly bool) 
 			continue
 		}
 		class := value.(originalPluginClass)
-		in, err := a.pluginStore.Installation(ctx, id)
-		if err != nil {
-			return nil, err
-		}
 		var manifest plugins.Manifest
-		if err = json.Unmarshal(class.installation.Manifest, &manifest); err != nil {
+		if err := json.Unmarshal(class.installation.Manifest, &manifest); err != nil {
 			return nil, err
 		}
 		card, err := a.pluginStore.presentInstance(ctx, class.installation, manifest)
 		if err != nil {
 			return nil, err
 		}
-		card.Installed, card.Available = in.Installed, true
-		card.HasPage = slices.Contains(manifest.Methods, "get_page")
+		card.Installed, card.Available = slices.Contains(installed, id), true
+		card.HasPage = manifest.HasPage
 		if running, loaded := a.pluginRunningInstances.Load(id); loaded {
 			state, stateErr := running.(*originalPluginInstance).getState(ctx)
 			if stateErr == nil {

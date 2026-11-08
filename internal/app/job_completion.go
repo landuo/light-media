@@ -20,6 +20,16 @@ func (a *App) finishJob(ctx context.Context, j Job, state, code, message string,
 	if changed != 1 {
 		return false, tx.Commit()
 	}
+	if state == "succeeded" && j.Kind == "subscription" {
+		if e = a.finishOriginalChatRSSQualityRootTx(ctx, tx, j); e != nil {
+			return false, e
+		}
+	}
+	if state == "failed" && code == originalChatAddRejectedCode {
+		if e := a.failOriginalChatDownloadTx(ctx, tx, j, message); e != nil {
+			return false, e
+		}
+	}
 	level, event, description := "INFO", "completed", "任务完成"
 	if state != "succeeded" {
 		level, event, description = "ERROR", code, message

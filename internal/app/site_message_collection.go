@@ -94,7 +94,7 @@ func siteMessageBusinesses(name, url string, snapshot siteSnapshot) []siteMessag
 	if d == nil {
 		return out
 	}
-	if d.MessageUnread != 0 {
+	if d.SourceMessageUnreadTruthy() {
 		rows := d.SourceMessageRows()
 		if len(rows) == 0 {
 			out = append(out, siteMessageStep{Kind: "summary", State: "pending"})
@@ -186,7 +186,7 @@ func siteMessageBusinessAt(name, url string, snapshot siteSnapshot, step siteMes
 	fields := notice.Object{"mtype": "站点"}
 	switch step.Kind {
 	case "summary":
-		fields["title"] = fmt.Sprintf("站点 %s 收到 %d 条新消息，请登陆查看", name, d.MessageUnread)
+		fields["title"] = fmt.Sprintf("站点 %s 收到 %s 条新消息，请登陆查看", name, d.SourceMessageUnreadText())
 		fields["link"] = url
 	case "detail":
 		row, e := siteMessageUnpack(json.RawMessage(step.Row))

@@ -19,15 +19,17 @@ const (
 // SubscriptionHostRequestV1 uses stable host IDs. Empty ID reads the complete
 // matching list; a nonempty missing ID yields an empty list, like SubscribeOper.
 type SubscriptionHostRequestV1 struct {
-	ID     string `json:"id,omitempty"`
-	State  string `json:"state,omitempty"`
-	TMDBID *int64 `json:"tmdb_id,omitempty"`
-	Season *int   `json:"season,omitempty"`
+	ID           string `json:"id,omitempty"`
+	State        string `json:"state,omitempty"`
+	TMDBID       *int64 `json:"tmdb_id,omitempty"`
+	Season       *int   `json:"season,omitempty"`
+	WithRevision bool   `json:"with_revision,omitempty"`
 }
 
 type SubscriptionHostResultV1 struct {
 	SchemaVersion int               `json:"schema_version"`
 	Items         []json.RawMessage `json:"items"`
+	Revisions     map[string]int    `json:"revisions,omitempty"`
 }
 
 // Patches preserve omitted fields. Site IDs are the host's stable IDs, not
@@ -205,10 +207,23 @@ func (p *SubscriptionHostPatchV1) UnmarshalJSON(raw []byte) error {
 	return nil
 }
 
+type SubscribeGroupHistoryV1 struct {
+	Name       string `json:"name"`
+	Type       string `json:"type"`
+	Content    string `json:"content"`
+	Time       string `json:"time"`
+	HandledKey string `json:"handled_key,omitempty"`
+}
+
 type SubscriptionHostUpdateV1 struct {
-	ID       string                  `json:"id"`
-	Revision int                     `json:"revision,omitempty"`
-	Patch    SubscriptionHostPatchV1 `json:"patch"`
+	ID                    string                   `json:"id"`
+	Revision              int                      `json:"revision,omitempty"`
+	Patch                 SubscriptionHostPatchV1  `json:"patch"`
+	SubscribeGroupHistory *SubscribeGroupHistoryV1 `json:"subscribe_group_history,omitempty"`
+}
+
+type SubscriptionHostGroupUpdatesV1 struct {
+	Updates []SubscriptionHostUpdateV1 `json:"subscribe_group_updates"`
 }
 
 type Subscriptions struct{ Host HostCaller }
@@ -229,6 +244,17 @@ func (s Subscriptions) Update(ctx context.Context, request SubscriptionHostUpdat
 		err = errors.New("invalid subscription response")
 	}
 	return out, err
+}
+
+// UpdateSubscribeGroup processes a real DownloadAdded event's ordered patches
+// within one SDK call. Each subscription and its history commit together.
+func (s Subscriptions) UpdateSubscribeGroup(ctx context.Context, updates []SubscriptionHostUpdateV1) error {
+	var out HostMutationV1
+	err := hostBusinessCall(ctx, s.Host, SubscriptionsUpdateCapability, SubscriptionHostGroupUpdatesV1{Updates: updates}, &out)
+	if err == nil && out.SchemaVersion != 1 {
+		err = errors.New("invalid subscription group update response")
+	}
+	return err
 }
 
 func hostBusinessCall(ctx context.Context, host HostCaller, method string, request, result any) error {

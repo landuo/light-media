@@ -1,0 +1,87 @@
+{
+  "kind": "captured actual APScheduler3.11.3 CronTrigger.from_crontab AST, constructor recorder only",
+  "source_sha256": "d45d8fb6987ab66b2a9d69498a4589c7d2d2667a3647c41c1b9f7a8ebd6b31f5",
+  "limitations": [
+    "Local Python3.14 vs installed3.12.13",
+    "Only lexer/field-count/source argument mapping executed; calendar constructor is finite recorder, not calendar or app runtime"
+  ],
+  "cases": [
+    {
+      "case": "ascii",
+      "expression": "30 1 * * *",
+      "fields": {
+        "minute": "30",
+        "hour": "1",
+        "day": "*",
+        "month": "*",
+        "day_of_week": "*",
+        "timezone": "UTC"
+      }
+    },
+    {
+      "case": "U001C",
+      "expression": "30\u001c1\u001c*\u001c*\u001c*",
+      "fields": {
+        "minute": "30",
+        "hour": "1",
+        "day": "*",
+        "month": "*",
+        "day_of_week": "*",
+        "timezone": "UTC"
+      }
+    },
+    {
+      "case": "U001D",
+      "expression": "30\u001d1\u001d*\u001d*\u001d*",
+      "fields": {
+        "minute": "30",
+        "hour": "1",
+        "day": "*",
+        "month": "*",
+        "day_of_week": "*",
+        "timezone": "UTC"
+      }
+    },
+    {
+      "case": "U001E",
+      "expression": "30\u001e1\u001e*\u001e*\u001e*",
+      "fields": {
+        "minute": "30",
+        "hour": "1",
+        "day": "*",
+        "month": "*",
+        "day_of_week": "*",
+        "timezone": "UTC"
+      }
+    },
+    {
+      "case": "U001F",
+      "expression": "30\u001f1\u001f*\u001f*\u001f*",
+      "fields": {
+        "minute": "30",
+        "hour": "1",
+        "day": "*",
+        "month": "*",
+        "day_of_week": "*",
+        "timezone": "UTC"
+      }
+    },
+    {
+      "case": "U2003",
+      "expression": "30\u20031\u2003*\u2003*\u2003*",
+      "fields": {
+        "minute": "30",
+        "hour": "1",
+        "day": "*",
+        "month": "*",
+        "day_of_week": "*",
+        "timezone": "UTC"
+      }
+    },
+    {
+      "case": "U200B-not-space",
+      "expression": "30\u200b1\u200b*\u200b*\u200b*",
+      "error": "ValueError"
+    }
+  ]
+}

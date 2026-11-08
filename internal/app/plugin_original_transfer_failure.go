@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"os"
+	"path/filepath"
 )
 
 // Source __handle_transfer ends an explicitly rejected task. The existing Go
@@ -18,6 +19,10 @@ func (a *App) persistOriginalTransferFailure(ctx context.Context, plan ImportPla
 	}
 	switch api.Code {
 	case "PLUGIN_TRANSFER_FAILED", "PLUGIN_TRANSFER_RESULT_INVALID", "REVIEW_PLUGIN_TRANSFER_TARGET":
+	case "IMPORT_CONFLICT", "TRANSFER_OVERWRITE_DENIED":
+		if !plan.Manual || api.Code == "IMPORT_CONFLICT" && meta.Overwrite != nil {
+			return a.Store.Put(ctx, "import_plan", plan.ID, plan)
+		}
 	default:
 		return a.Store.Put(ctx, "import_plan", plan.ID, plan)
 	}
@@ -31,7 +36,12 @@ func (a *App) persistOriginalTransferFailure(ctx context.Context, plan ImportPla
 		if err != nil || source != planSnapshot(file) {
 			continue
 		}
-		if _, err := snapshotPath(file.Target); !errors.Is(err, os.ErrNotExist) {
+		target, targetErr := snapshotPath(file.Target)
+		if api.Code == "IMPORT_CONFLICT" || api.Code == "TRANSFER_OVERWRITE_DENIED" {
+			if !a.originalUnpublishedTransferConflict(ctx, plan, file, source, target, targetErr, api.Code) {
+				continue
+			}
+		} else if !errors.Is(targetErr, os.ErrNotExist) {
 			continue
 		}
 		safe := true
@@ -76,4 +86,36 @@ func (a *App) persistOriginalTransferFailure(ctx context.Context, plan ImportPla
 		}
 	}
 	return tx.Commit()
+}
+
+// A different file at a manual destination can reject the native publisher
+// before it stages any bytes. The rejection releases only the media slot; the
+// unknown target and source remain untouched.
+func (a *App) originalUnpublishedTransferConflict(ctx context.Context, plan ImportPlan, file PlanFile, source, target importSnapshot, targetErr error, code string) bool {
+	if file.DirectoryDigest != "" || targetErr != nil || source == target {
+		return false
+	}
+	want := originalTransferPlannedReceipt(plan, file)
+	var receipt importReceipt
+	err := a.Store.Get(ctx, "import_receipt", want.ID, &receipt)
+	if err == nil {
+		if receipt.ID != want.ID || receipt.State != want.State || receipt.Source != want.Source || receipt.Target != want.Target ||
+			receipt.SourceSnapshot != want.SourceSnapshot || receipt.Stage != want.Stage || receipt.StageSnapshot != (importSnapshot{}) || receipt.SHA256 != "" {
+			return false
+		}
+	} else if code != "TRANSFER_OVERWRITE_DENIED" || !errors.Is(err, sql.ErrNoRows) {
+		return false
+	}
+	if code == "TRANSFER_OVERWRITE_DENIED" {
+		// Native naming can commit a planned receipt before the overwrite
+		// decision. The decision itself rejects before saving an operation.
+		if _, err := a.readDirectoryOverwriteOperation(ctx, want.ID); !errors.Is(err, sql.ErrNoRows) {
+			return false
+		}
+	}
+	if _, err := snapshotPath(filepath.Join(filepath.Dir(file.Target), want.Stage)); !errors.Is(err, os.ErrNotExist) {
+		return false
+	}
+	var owned managedFile
+	return errors.Is(a.Store.Get(ctx, "managed_file", tokenHash(file.Target), &owned), sql.ErrNoRows)
 }

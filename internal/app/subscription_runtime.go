@@ -15,6 +15,7 @@ import (
 
 	"light-media/internal/catalog"
 	"light-media/internal/media"
+	"light-media/internal/sites"
 	"light-media/internal/subscriptiondefaults"
 	"light-media/internal/torrentfilter"
 )
@@ -22,6 +23,9 @@ import (
 type SubscriptionRequest struct {
 	SourceName         json.RawMessage `json:"name,omitempty"`
 	SourceYear         json.RawMessage `json:"year,omitempty"`
+	MediaSource        string          `json:"media_source,omitempty"`
+	MediaID            string          `json:"media_id,omitempty"`
+	MediaKey           string          `json:"mediaid,omitempty"`
 	source             *sourceSubscriptionOrigin
 	BestVersion        *bool `json:"best_version"`
 	BestVersionFull    *bool `json:"best_version_full"`
@@ -68,6 +72,10 @@ func (a *App) guardSubscriptionContext(ctx context.Context) error {
 	return nil
 }
 func (a *App) guardSubscription(ctx context.Context, key string, revision int) error {
+	return a.guardSubscriptionState(ctx, key, revision, "")
+}
+
+func (a *App) guardSubscriptionState(ctx context.Context, key string, revision int, expected string) error {
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
@@ -78,7 +86,11 @@ func (a *App) guardSubscription(ctx context.Context, key string, revision int) e
 	if e := a.Store.Get(ctx, "subscription", key, &s); e != nil {
 		return e
 	}
-	if s.State != "active" || s.Revision != revision {
+	allowed := a.subscriptionSearchState(ctx, s)
+	if expected != "" {
+		allowed = s.State == expected
+	}
+	if !allowed || s.Revision != revision {
 		return bad("REVIEW_SUBSCRIPTION_CHANGED", "订阅已修改、暂停或取消，本轮检查已失效")
 	}
 	return nil
@@ -148,6 +160,17 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	if in.TMDBID == 0 {
 		in.TMDBID = in.Media.ID
 	}
+	providerSource, providerID, e := subscriptionProviderIdentity(in)
+	if e != nil {
+		return Subscription{}, e
+	}
+	if providerSource == "themoviedb" {
+		tmdbID, _ := strconv.ParseInt(providerID, 10, 64)
+		if in.TMDBID != 0 && in.TMDBID != tmdbID {
+			return Subscription{}, invalidSubscriptionProvider()
+		}
+		in.TMDBID, providerSource, providerID = tmdbID, "", ""
+	}
 	if snapshot.ID != "" {
 		if in.MediaType == "" {
 			in.MediaType = snapshot.Media.MediaType
@@ -155,16 +178,50 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 		if in.TMDBID == 0 {
 			in.TMDBID = snapshot.Media.ID
 		}
-		if in.MediaType != snapshot.Media.MediaType || in.TMDBID != snapshot.Media.ID {
+		if providerSource == "" {
+			providerSource, providerID = snapshot.Media.ProviderSource, snapshot.Media.ProviderID
+		}
+		if in.MediaType != snapshot.Media.MediaType || in.TMDBID != snapshot.Media.ID ||
+			providerSource != snapshot.Media.ProviderSource || providerID != snapshot.Media.ProviderID {
 			return Subscription{}, bad("SUBSCRIPTION_IDENTITY_CHANGED", "请为另一部作品创建新订阅")
 		}
 		if in.State == "" {
 			in.State = snapshot.State
 		}
 	}
+	identity := catalog.Media{MediaType: in.MediaType, ID: in.TMDBID, ProviderSource: providerSource, ProviderID: providerID}
 	var m catalog.Media
-	var e error
-	if in.source != nil && len(in.source.MediaInfo) > 0 {
+	var providerEpisodes []int
+	if providerSource != "" {
+		if !providerNativeMedia(identity) {
+			return Subscription{}, invalidSubscriptionProvider()
+		}
+		if in.State == "paused" && snapshot.ID != "" && snapshot.Season == in.Season {
+			m = snapshot.Media
+			providerEpisodes = slices.Clone(snapshot.ProviderEpisodes)
+		} else {
+			var info sourceMediaInformation
+			if in.source != nil {
+				if mediaKey(in.Media) != mediaKey(identity) {
+					return Subscription{}, larkEvidenceError()
+				}
+				info.MediaInfo = in.source.MediaInfo
+			} else {
+				info, e = a.recognizeProviderSubscriptionMedia(ctx, identity, nil)
+				if e != nil {
+					return Subscription{}, e
+				}
+			}
+			m, e = subscriptionProviderMedia(info, providerSource, providerID, in.MediaType)
+			if e != nil {
+				return Subscription{}, e
+			}
+			providerEpisodes = subscriptionProviderEpisodes(info.MediaInfo, in.Season)
+			if len(providerEpisodes) == 0 && snapshot.Season == in.Season {
+				providerEpisodes = slices.Clone(snapshot.ProviderEpisodes)
+			}
+		}
+	} else if in.source != nil && len(in.source.MediaInfo) > 0 {
 		if in.Media.ID != in.TMDBID || in.Media.MediaType != in.MediaType {
 			return Subscription{}, larkEvidenceError()
 		}
@@ -260,6 +317,10 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 			for ep := range snapshot.EpisodeDates {
 				known[ep] = true
 			}
+		} else if providerNativeMedia(m) {
+			for _, ep := range providerEpisodes {
+				known[ep] = true
+			}
 		} else {
 			season, e := a.season(ctx, m.ID, in.Season)
 			if e != nil {
@@ -347,6 +408,9 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 		if in.Revision > 0 && in.Revision != old.Revision {
 			return old, bad("SUBSCRIPTION_CONFLICT", "订阅已被其他操作修改，请刷新后重试")
 		}
+		if mediaKey(old.Media) != mediaKey(m) {
+			return old, bad("SUBSCRIPTION_IDENTITY_CHANGED", "请为另一部作品创建新订阅")
+		}
 	} else {
 		key = id("sub_")
 	}
@@ -396,6 +460,7 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 		return old, bad("SUBSCRIPTION_LIMIT", "订阅数量已达500个上限")
 	}
 	s := Subscription{ID: key, TargetScope: in.TargetScope, StartEpisode: in.StartEpisode, Media: m, Season: in.Season, Episodes: episodes, Excluded: excluded, EpisodeDates: in.EpisodeDates, AllowEarly: early, Policy: in.Policy, Schedule: schedule, Mappings: in.Mappings, DownloaderID: in.DownloaderID, RootID: destination.Root, DirectoryID: destination.Rule.ID, DownloadPath: destination.Path, State: state, Revision: old.Revision + 1, CreatedAt: old.CreatedAt}
+	s.ProviderEpisodes = providerEpisodes
 	s.SiteIDs, s.TotalEpisodes = append([]string{}, in.SiteIDs...), in.TotalEpisodes
 	applySubscriptionQualityState(&s, old, in)
 	s.Keyword = in.Keyword
@@ -476,6 +541,12 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	return s, nil
 }
 func (a *App) cancelSubscription(ctx context.Context, key string) error {
+	return a.cancelSubscriptionWithEvent(ctx, key, true)
+}
+
+// The chat command calls SubscribeOper.delete directly in MoviePilot, so it
+// shares native cancellation and queue fencing without the Web deletion event.
+func (a *App) cancelSubscriptionWithEvent(ctx context.Context, key string, announce bool) error {
 	a.subMu.Lock()
 	defer a.subMu.Unlock()
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
@@ -491,10 +562,13 @@ func (a *App) cancelSubscription(ctx context.Context, key string) error {
 	if e = json.Unmarshal(b, &s); e != nil {
 		return e
 	}
+	if !announce && s.State != "active" && s.State != "paused" {
+		return sql.ErrNoRows
+	}
 	wasCancelled := s.State == "cancelled"
 	var deletedInfo json.RawMessage
 	var snapshotErr error
-	if !wasCancelled {
+	if announce && !wasCancelled {
 		deletedInfo, snapshotErr = a.subscriptionSourceProjectionReferences(ctx, tx, s, true)
 	}
 	s.State = "cancelled"
@@ -510,7 +584,7 @@ func (a *App) cancelSubscription(ctx context.Context, key string) error {
 	if e = tx.Commit(); e != nil {
 		return e
 	}
-	if !wasCancelled {
+	if announce && !wasCancelled {
 		if snapshotErr == nil {
 			a.emitStandardBusinessEvent(ctx, "subscribe.deleted", map[string]any{"subscribe_id": key, "subscribe_info": deletedInfo})
 		} else {
@@ -637,7 +711,7 @@ func (a *App) subscriptionCoverageWithExistence(ctx context.Context, s Subscript
 		return out, e
 	}
 	dateByEpisode := map[int]string{}
-	if s.Media.MediaType == "tv" {
+	if s.Media.MediaType == "tv" && !providerNativeMedia(s.Media) {
 		var cache struct {
 			Data catalog.Season `json:"data"`
 		}
@@ -680,6 +754,9 @@ func (a *App) subscriptionCoverageWithExistence(ctx context.Context, s Subscript
 	return out, nil
 }
 func (a *App) cachedSeasonEpisodes(ctx context.Context, s Subscription) []int {
+	if providerNativeMedia(s.Media) {
+		return slices.Clone(s.ProviderEpisodes)
+	}
 	var cache struct {
 		Data catalog.Season `json:"data"`
 	}
@@ -727,11 +804,18 @@ func (a *App) recordSubscriptionCheck(ctx context.Context, s Subscription, reaso
 	} else if e != nil {
 		return e
 	}
-	if current.Revision != s.Revision || current.State != "active" {
+	if current.Revision != s.Revision || !a.subscriptionSearchState(ctx, current) {
 		return nil
 	}
 	current.LastCheck = now()
 	current.LastReason = reason
+	if current.State == "paused" {
+		_, err := a.Store.DB.ExecContext(ctx, `UPDATE records
+			SET payload=json_set(payload,'$.last_check',?,'$.last_reason',?),updated_at=?
+			WHERE kind='subscription' AND id=? AND json_extract(payload,'$.revision')=? AND json_extract(payload,'$.state')='paused'`,
+			current.LastCheck, current.LastReason, current.LastCheck, s.ID, s.Revision)
+		return err
+	}
 	next := nextScheduleCheck(current.Schedule, time.Now(), metadataDates)
 	if !deferUntil.IsZero() && (next.IsZero() || deferUntil.After(next)) {
 		next = deferUntil
@@ -761,6 +845,10 @@ func (a *App) quotaReset(ctx context.Context, siteIDs []string) time.Time {
 }
 
 func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision int) error {
+	ctx, err := a.originalChatPausedSearchFromJob(ctx, j, key, revision)
+	if err != nil {
+		return err
+	}
 	if e := a.guardSubscription(ctx, key, revision); e != nil {
 		return e
 	}
@@ -776,29 +864,81 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	if recognitionErr != nil {
 		return recognitionErr
 	}
+	ctx, recognitionErr = a.originalChatLatestContext(ctx, j)
+	if recognitionErr != nil {
+		return recognitionErr
+	}
+	if originalChatLatestFromContext(ctx) != nil && !originalChatLatestActive(s) {
+		return bad("SUBSCRIPTION_CHANGED", "订阅状态已变化")
+	}
 	if s.BestVersion {
 		return a.checkQualitySubscription(ctx, j, s)
+	}
+	rssOrdinary, err := a.originalChatRSSOwnsSearch(ctx, a.Store.DB, j, s)
+	if err != nil {
+		return err
+	}
+	ownedOrdinary := rssOrdinary || originalChatManualSubscriptionJob(j)
+	var recovered int
+	var recoveredRejections map[string]bool
+	if ownedOrdinary {
+		// A pristine queued child owns reservations already. Resolve it before
+		// coverage could otherwise make the parent skip it after a restart.
+		recovered, recoveredRejections, err = a.resumeOrdinarySearchDownloads(ctx, j, s)
+		if err != nil {
+			return err
+		}
 	}
 	known := []int{}
 	available := map[int]bool{}
 	dates := map[int]string{}
 	metadataDates := []string{}
-	if s.Media.MediaType == "tv" {
+	provider := providerNativeMedia(s.Media)
+	var season catalog.Season
+	if s.Media.MediaType == "tv" && !provider {
 		if e := a.guardSubscriptionContext(ctx); e != nil {
 			return e
 		}
-		season, e := a.season(ctx, s.Media.ID, s.Season)
-		if e != nil {
+		season, err = a.season(ctx, s.Media.ID, s.Season)
+		if err != nil {
 			_ = a.recordSubscriptionCheck(ctx, s, "元数据暂不可用，下次继续检查", nil, time.Time{})
+			return err
+		}
+	}
+	episodeScope := s
+	s, resolved, e := a.refreshOrdinaryCompletionScopeResolved(ctx, s)
+	if e != nil {
+		return e
+	}
+	if provider && resolved == nil {
+		resolved, e = a.resolveStandardSubscriptionRecognition(ctx, s, nil)
+		if e != nil {
 			return e
 		}
+	}
+	var originalSearchInfo *sourceMediaInformation
+	if resolved != nil {
+		originalSearchInfo = &resolved.Information
+	}
+	releaseDate := s.Media.ReleaseDate
+	if provider {
+		releaseDate = originalSearchInfo.Media.ReleaseDate
+		if s.Media.MediaType == "tv" {
+			season, e = a.importSeason(ctx, s.Media, originalSearchInfo.MediaInfo, s.Season)
+			if e != nil {
+				return e
+			}
+			episodeScope = s
+		}
+	}
+	if s.Media.MediaType == "tv" {
 		today := time.Now().In(shanghai()).Format("2006-01-02")
 		for _, ep := range season.Episodes {
 			known = append(known, ep.EpisodeNumber)
-			if ep.EpisodeNumber < subscriptionStartEpisode(s) || s.TotalEpisodes > 0 && ep.EpisodeNumber > s.TotalEpisodes {
+			if ep.EpisodeNumber < subscriptionStartEpisode(episodeScope) || episodeScope.TotalEpisodes > 0 && ep.EpisodeNumber > episodeScope.TotalEpisodes {
 				continue
 			}
-			date, skip := effectiveEpisodeDate(s, ep.EpisodeNumber, ep.AirDate)
+			date, skip := effectiveEpisodeDate(episodeScope, ep.EpisodeNumber, ep.AirDate)
 			if skip {
 				continue
 			}
@@ -806,21 +946,9 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 			if date != "" {
 				metadataDates = append(metadataDates, date)
 			}
-			if (date != "" && date <= today) || containsInt(s.AllowEarly, ep.EpisodeNumber) {
+			if (date != "" && date <= today) || provider && providerEpisodeAired(date, releaseDate, today) || containsInt(episodeScope.AllowEarly, ep.EpisodeNumber) {
 				available[ep.EpisodeNumber] = true
 			}
-		}
-	}
-	var originalSearchInfo *sourceMediaInformation
-	var resolved *standardSubscriptionRecognition
-	{
-		var e error
-		s, resolved, e = a.refreshOrdinaryCompletionScopeResolved(ctx, s)
-		if e != nil {
-			return e
-		}
-		if resolved != nil {
-			originalSearchInfo = &resolved.Information
 		}
 	}
 	coverage, e := a.subscriptionCoverageWithExistence(ctx, s, known, originalExistenceFromRecognition(resolved))
@@ -846,7 +974,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		}
 		return a.recordSubscriptionCheck(ctx, s, reason, metadataDates, time.Time{})
 	}
-	if s.Media.MediaType == "movie" && s.Media.ReleaseDate != "" && s.Media.ReleaseDate > time.Now().In(shanghai()).Format("2006-01-02") {
+	if s.Media.MediaType == "movie" && releaseDate > time.Now().In(shanghai()).Format("2006-01-02") {
 		return a.recordSubscriptionCheck(ctx, s, "电影尚未到上映日期，保持订阅", metadataDates, time.Time{})
 	}
 	if _, e := a.downloader(s.DownloaderID); e != nil {
@@ -864,10 +992,13 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		return a.recordSubscriptionCheck(ctx, s, "订阅选择的站点尚未启用，请在站点管理中启用站点", metadataDates, time.Time{})
 	}
 	quotaSites := []string{}
-	created := 0
+	created := recovered
 	scheduled := map[int]bool{}
 	checkedPacks := map[string]bool{}
 	reason := "暂未找到符合筛选条件的资源，下次继续补漏"
+	if recovered > 0 {
+		reason = "已恢复 " + strconv.Itoa(recovered) + " 个实际下载接收记录"
+	}
 	if e := a.guardSubscriptionContext(ctx); e != nil {
 		return e
 	}
@@ -887,7 +1018,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	// that snapshot below; per-episode download admission must not rerun plugin
 	// recognition, batch search, filter mutations or MediaInfo.clear.
 	sharedRequest := SearchRequest{originalSubscription: &s, originalSearchInfo: originalSearchInfo, Query: query, MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: searchEpisodes, Policy: s.Policy, SiteIDs: selectedSiteIDs, Mappings: s.Mappings, AllowEarly: s.AllowEarly, EpisodeDates: dates}
-	result, searchErr := a.search(ctx, sharedRequest, true)
+	result, searchErr := a.originalSubscriptionCandidates(ctx, sharedRequest)
 	if searchErr != nil {
 		// A failed aggregate/filter result is diagnostic, not an admitted
 		// candidate snapshot. Do not turn partial output into a download.
@@ -919,12 +1050,16 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	}
 	sources := []candidateSource{}
 	selectedBatch := slices.ContainsFunc(result.Candidates, func(candidate Candidate) bool { return len(candidate.originalSelectionContext) > 0 })
-	if selectedBatch {
-		metas := make([]json.RawMessage, len(result.Candidates))
-		for i, candidate := range result.Candidates {
-			metas[i] = candidate.originalSelectionMeta
+	if selectedBatch || ownedOrdinary {
+		if ownedOrdinary {
+			result.Candidates, e = a.originalChatSortMediaCandidates(ctx, s.Media, result.Candidates)
+		} else {
+			metas := make([]json.RawMessage, len(result.Candidates))
+			for i, candidate := range result.Candidates {
+				metas[i] = candidate.originalSelectionMeta
+			}
+			result.Candidates, _, e = a.larkSortCandidateMetas(ctx, result.Candidates, metas, s.Media)
 		}
-		result.Candidates, _, e = a.larkSortCandidateMetas(ctx, result.Candidates, metas, s.Media)
 		if e != nil {
 			return e
 		}
@@ -940,6 +1075,10 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		for _, site := range settings.Sites {
 			sources = append(sources, candidateSource{site, -1})
 		}
+	}
+	failures := newSubscriptionMaterialFailureRound()
+	for fingerprint := range recoveredRejections {
+		failures.active[fingerprint] = true
 	}
 	for _, ep := range missing {
 		if scheduled[ep] {
@@ -1008,8 +1147,32 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 				if e := a.jobCancelled(ctx, j); e != nil {
 					return e
 				}
-				preview, e := a.previewDownload(ctx, PreviewRequest{SearchRequest: previewRequest, sourceContext: candidate.originalSelectionContext, sourceMeta: candidate.originalSelectionMeta, automaticSeasonPack: pack, SiteID: site.ID, ResourceID: candidate.Resource.ID, DownloaderID: s.DownloaderID, RootID: subscriptionLegacyRoot(s), DirectoryID: s.DirectoryID, DownloadPath: s.DownloadPath, SubscriptionID: s.ID, Revision: s.Revision}, true)
+				fingerprint, e := failures.fingerprint(ctx, a, s, site, candidate, candidateIndex)
 				if e != nil {
+					return e
+				}
+				active, checked := failures.active[fingerprint]
+				if !checked {
+					active, e = a.subscriptionFailureActive(ctx, fingerprint, failures.lookupAt)
+					if e != nil {
+						return e
+					}
+					failures.active[fingerprint] = active
+					if active {
+						a.event(ctx, j, "INFO", "subscriptions", "candidate_cooldown", "订阅候选仍处于取种失败冷却期")
+					}
+				}
+				if active {
+					continue
+				}
+				preview, e := a.previewDownload(ctx, PreviewRequest{SearchRequest: previewRequest, sourceContext: candidate.originalSelectionContext, sourceMeta: candidate.originalSelectionMeta, subscriptionFailureFingerprint: fingerprint, automaticSeasonPack: pack, SiteID: site.ID, ResourceID: candidate.Resource.ID, DownloaderID: s.DownloaderID, RootID: subscriptionLegacyRoot(s), DirectoryID: s.DirectoryID, DownloadPath: s.DownloadPath, SubscriptionID: s.ID, Revision: s.Revision}, true)
+				if e != nil {
+					if sites.IsSubscriptionMaterialFailure(e) {
+						if err := a.recordSubscriptionMaterialFailure(ctx, j, s, site, fingerprint); err != nil {
+							return err
+						}
+						failures.active[fingerprint] = true
+					}
 					var api *APIError
 					if errors.As(e, &api) && api.Code == "SITE_QUOTA" {
 						quotaSites = append(quotaSites, site.ID)
@@ -1026,14 +1189,33 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 				if e := a.jobCancelled(ctx, j); e != nil {
 					return e
 				}
-				if _, e = a.confirmDownload(ctx, preview.ID, false); e != nil {
+				var intent Intent
+				if ownedOrdinary {
+					intent, e = a.confirmOrdinarySearchDownload(ctx, j, preview.ID)
+				} else {
+					intent, e = a.confirmDownload(ctx, preview.ID, false)
+				}
+				if e != nil {
 					var api *APIError
 					if errors.As(e, &api) && api.Code == "ALREADY_ACQUIRED" {
 						acquired = true
 						break
 					}
 					a.event(ctx, j, "WARN", "subscriptions", "confirm_failed", e.Error())
+					if ownedOrdinary {
+						return e
+					}
 					continue
+				}
+				if ownedOrdinary {
+					accepted, err := a.runOrdinarySearchDownload(ctx, j, s, intent.ID)
+					if err != nil {
+						return err
+					}
+					if !accepted {
+						failures.active[fingerprint] = true
+						continue
+					}
 				}
 				created++
 				for _, covered := range preview.Episodes {
@@ -1041,6 +1223,9 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 				}
 				acquired = s.Media.MediaType == "movie" || scheduled[ep]
 				reason = "已安排 " + strconv.Itoa(created) + " 个下载；在途目标不会重复获取"
+				if ownedOrdinary {
+					reason = "下载器已实际接收 " + strconv.Itoa(created) + " 个下载"
+				}
 				if acquired {
 					break
 				}
@@ -1057,5 +1242,14 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 			reason += "；部分站点预算不足，检查将按恢复时间延期"
 		}
 	}
-	return a.recordSubscriptionCheck(ctx, s, reason, metadataDates, deferUntil)
+	if err := a.recordSubscriptionCheck(ctx, s, reason, metadataDates, deferUntil); err != nil {
+		return err
+	}
+	if ownedOrdinary && created > 0 && len(missing) == len(coverage.Missing) && !slices.ContainsFunc(missing, func(ep int) bool { return !scheduled[ep] && s.Media.MediaType != "movie" }) {
+		if err := a.jobCancelled(ctx, j); err != nil {
+			return err
+		}
+		return a.requestOrdinarySubscriptionCompletion(ctx, j, s)
+	}
+	return nil
 }

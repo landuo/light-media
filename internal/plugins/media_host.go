@@ -15,10 +15,11 @@ const MediaRecognizeCapability = "media.recognize"
 type MediaHost struct{ Host HostCaller }
 
 type MediaServersRequest struct {
-	Type            string   `json:"type,omitempty"`
-	Names           []string `json:"names,omitempty"`
-	IncludeDisabled bool     `json:"include_disabled,omitempty"`
-	Probe           bool     `json:"probe,omitempty"`
+	Type             string   `json:"type,omitempty"`
+	Names            []string `json:"names,omitempty"`
+	IncludeDisabled  bool     `json:"include_disabled,omitempty"`
+	Probe            bool     `json:"probe,omitempty"`
+	ConnectivityOnly bool     `json:"connectivity_only,omitempty"`
 }
 
 type MediaServer struct {

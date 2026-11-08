@@ -288,16 +288,9 @@ func (m *Machine) Main(ctx context.Context, event *Event) (Outcome, error) {
 		m.stop(ctx)
 		return Outcome{Status: "environment_failed"}, nil
 	}
-	args, err := SplitArgs(pyString(m.config["additional_args"]))
+	args, err := SourceArgs(m.config)
 	if err != nil {
 		return Outcome{}, err
-	}
-	args = append(args, "-o", "result_hosts.txt")
-	if truth(m.config["ipv4"]) {
-		args = append(args, "-f", "ip.txt")
-	}
-	if truth(m.config["ipv6"]) {
-		args = append(args, "-f", "ipv6.txt")
 	}
 	binary := "cfst"
 	suffix := ""
@@ -357,29 +350,14 @@ func (m *Machine) Main(ctx context.Context, event *Event) (Outcome, error) {
 	if !ok {
 		return Outcome{}, sourceError("TypeError", "hosts.replace")
 	}
-	var newHosts strings.Builder
-	for _, line := range hosts {
-		if !truth(line) || line == "\n" {
-			continue
-		}
-		fields := pyFields(pyString(line))
-		if len(fields) == 0 {
-			return Outcome{}, sourceError("IndexError", "hosts first token")
-		}
-		text, ok := line.(string)
-		if !ok {
-			return Outcome{}, sourceError("AttributeError", "hosts.replace")
-		}
-		if fields[0] == old {
-			text = strings.ReplaceAll(text, old, best)
-		}
-		newHosts.WriteString(strings.ReplaceAll(text, "\n", ""))
-		newHosts.WriteByte('\n')
+	replacement, err := replaceHosts(hosts, old, best, custom["err_hosts"])
+	if err != nil {
+		return Outcome{}, err
 	}
 	if err = m.guard(ctx); err != nil {
 		return Outcome{}, err
 	}
-	if err = m.h.SaveCustomHosts(ctx, Object{"hosts": newHosts.String(), "err_hosts": custom["err_hosts"], "enabled": true}); err != nil {
+	if err = m.h.SaveCustomHosts(ctx, replacement); err != nil {
 		return Outcome{}, err
 	}
 	m.config["cf_ip"] = best
@@ -402,6 +380,70 @@ func (m *Machine) Main(ctx context.Context, event *Event) (Outcome, error) {
 		}
 	}
 	return Outcome{Status: "updated", OldIP: old, NewIP: best}, nil
+}
+
+func SourceArgs(config Object) ([]string, error) {
+	args, err := SplitArgs(pyString(config["additional_args"]))
+	if err != nil {
+		return nil, err
+	}
+	args = append(args, "-o", "result_hosts.txt")
+	if truth(config["ipv4"]) {
+		args = append(args, "-f", "ip.txt")
+	}
+	if truth(config["ipv6"]) {
+		args = append(args, "-f", "ipv6.txt")
+	}
+	return args, nil
+}
+
+// ExpectedHostReplacement is the source replacement rule applied to the
+// host's recorded input and a result observed from its own executable.
+func ExpectedHostReplacement(config, custom Object, best string) (Object, error) {
+	if !validIP(best) {
+		return nil, nil
+	}
+	hosts, err := hostLines(custom["hosts"])
+	if err != nil {
+		return nil, err
+	}
+	corrected := Machine{config: clone(config)}
+	if truth(config["check"]) {
+		if err := corrected.correctIP(hosts); err != nil {
+			return nil, err
+		}
+	}
+	old, ok := corrected.config["cf_ip"].(string)
+	if !ok {
+		return nil, sourceError("TypeError", "hosts.replace")
+	}
+	if old == best {
+		return nil, nil
+	}
+	return replaceHosts(hosts, old, best, custom["err_hosts"])
+}
+
+func replaceHosts(hosts []any, old, best string, invalid any) (Object, error) {
+	var newHosts strings.Builder
+	for _, line := range hosts {
+		if !truth(line) || line == "\n" {
+			continue
+		}
+		fields := pyFields(pyString(line))
+		if len(fields) == 0 {
+			return nil, sourceError("IndexError", "hosts first token")
+		}
+		text, ok := line.(string)
+		if !ok {
+			return nil, sourceError("AttributeError", "hosts.replace")
+		}
+		if fields[0] == old {
+			text = strings.ReplaceAll(text, old, best)
+		}
+		newHosts.WriteString(strings.ReplaceAll(text, "\n", ""))
+		newHosts.WriteByte('\n')
+	}
+	return Object{"hosts": newHosts.String(), "err_hosts": invalid, "enabled": true}, nil
 }
 
 func (m *Machine) correctIP(hosts []any) error {

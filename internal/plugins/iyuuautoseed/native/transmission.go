@@ -13,6 +13,18 @@ func (c *Client) trConnect(ctx context.Context) error {
 	if c.trDialect != "" {
 		return nil
 	}
+	if c.sourceTRResponse {
+		c.trSession = "0"
+		result, err := c.trRPC(ctx, "session_get", map[string]any{}, "legacy")
+		if err != nil {
+			return err
+		}
+		if _, ok := result["version"]; !ok {
+			return failure("connect", "missing_version")
+		}
+		c.trDialect = "legacy"
+		return nil
+	}
 	// Protocol negotiation is read-only. Never retry a mutation in another dialect.
 	if result, err := c.trRPC(ctx, "session_get", map[string]any{"fields": []string{"version"}}, "jsonrpc"); err == nil {
 		var version string
@@ -47,7 +59,11 @@ func (c *Client) trRPCRequest(ctx context.Context, method string, args map[strin
 	id := c.requestID
 	var request any
 	if dialect == "legacy" {
-		request = map[string]any{"method": strings.ReplaceAll(method, "_", "-"), "arguments": legacyArgs(args), "tag": id}
+		if c.sourceTRResponse {
+			request = map[string]any{"method": strings.ReplaceAll(method, "_", "-"), "arguments": legacyArgs(args)}
+		} else {
+			request = map[string]any{"method": strings.ReplaceAll(method, "_", "-"), "arguments": legacyArgs(args), "tag": id}
+		}
 	} else {
 		request = map[string]any{"jsonrpc": "2.0", "method": method, "params": args, "id": id}
 	}
@@ -63,6 +79,14 @@ func (c *Client) trRPCRequest(ctx context.Context, method string, args map[strin
 		if err != nil {
 			return nil, err
 		}
+		if c.sourceTRResponse {
+			if session := header.Get("X-Transmission-Session-Id"); session != "" {
+				if len(session) > 1024 || strings.ContainsAny(session, "\r\n\x00") {
+					return nil, failure("rpc", "invalid_session_header")
+				}
+				c.trSession = session
+			}
+		}
 		if status == http.StatusConflict {
 			if selected {
 				return nil, statusError(status)
@@ -74,7 +98,7 @@ func (c *Client) trRPCRequest(ctx context.Context, method string, args map[strin
 			c.trSession = session
 			continue
 		}
-		if status != http.StatusOK {
+		if status != http.StatusOK && (!c.sourceTRResponse || status == http.StatusUnauthorized || status == http.StatusForbidden) {
 			return nil, statusError(status)
 		}
 		var envelope map[string]json.RawMessage
@@ -84,7 +108,7 @@ func (c *Client) trRPCRequest(ctx context.Context, method string, args map[strin
 		if dialect == "legacy" {
 			var result string
 			var tag uint64
-			if json.Unmarshal(envelope["tag"], &tag) != nil || tag != id {
+			if !c.sourceTRResponse && (json.Unmarshal(envelope["tag"], &tag) != nil || tag != id) {
 				return nil, failure("rpc", "response_id_mismatch")
 			}
 			if json.Unmarshal(envelope["result"], &result) != nil || result != "success" {

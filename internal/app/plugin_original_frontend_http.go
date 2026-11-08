@@ -40,7 +40,10 @@ func (a *App) serveOriginalPluginFrontend(w http.ResponseWriter, r *http.Request
 		w.Header().Set("Allow", "GET, HEAD")
 		return fail("METHOD_NOT_ALLOWED", "插件静态资源仅支持读取", 405)
 	}
-	if path.Clean(r.URL.Path) != r.URL.Path || strings.ContainsAny(r.URL.Path, "\\\x00\r\n") || r.URL.RawQuery != "" || !pluginStorageID.MatchString(parts[0]) {
+	// Original plugins use query strings as cache hints on relative imports.
+	// File identity comes only from the verified path/package, as in the source
+	// static-file endpoint; queries never select a file or grant authentication.
+	if path.Clean(r.URL.Path) != r.URL.Path || strings.ContainsAny(r.URL.Path, "\\\x00\r\n") || !pluginStorageID.MatchString(parts[0]) {
 		return fail("INVALID_PLUGIN_FRONTEND_PATH", "插件界面路径无效", 400)
 	}
 	instance := parts[0]

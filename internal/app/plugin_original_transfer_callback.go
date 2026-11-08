@@ -12,10 +12,11 @@ import (
 // Its history commits before its ordinary completion/failure broadcast. The
 // existing asset transaction still independently verifies grouped ownership.
 type originalTransferCallback struct {
-	PlanID       string   `json:"plan_id"`
-	ParentFileID string   `json:"parent_file_id"`
-	JobID        string   `json:"job_id"`
-	File         PlanFile `json:"file"`
+	PlanID           string   `json:"plan_id"`
+	ParentFileID     string   `json:"parent_file_id"`
+	JobID            string   `json:"job_id"`
+	FNOSRefreshOwner bool     `json:"fnos_refresh_owner,omitempty"`
+	File             PlanFile `json:"file"`
 }
 
 type originalTransferCallbackError struct{ cause error }
@@ -141,6 +142,13 @@ func (a *App) completeOriginalTransferCallback(ctx context.Context, job Job, pla
 	if err != nil {
 		return err
 	}
-	a.emitOriginalTransferResult(ctx, plan, file, source, success, message, history.ID, info)
+	refreshKey := ""
+	if success && file.ID == primaryID && file.MaterialKind == "" {
+		refreshKey = key
+	}
+	a.emitOriginalTransferResult(ctx, plan, file, source, success, message, history.ID, refreshKey, historyFile.Target, info)
+	if !success && history.JobID == job.ID && history.executionFileID() == historyFile.ID {
+		a.originalTransferFailureNotice(ctx, history, &source)
+	}
 	return nil
 }

@@ -21,13 +21,26 @@ import {
 const props = defineProps<{ plugin: PluginCard }>();
 const emit = defineEmits<{ close: []; created: [result: PluginCloneResult] }>();
 const display = useDisplay();
-const form = reactive(emptyPluginClone());
+const form = reactive({
+  ...emptyPluginClone(),
+  name: `${props.plugin.name} 分身`,
+  description: `${props.plugin.description || ''} (分身版本)`,
+  version: props.plugin.display_version || props.plugin.version || '1.0',
+  icon: props.plugin.icon || '',
+});
 const busy = ref(false),
   completed = ref(false),
   attempted = ref(false),
   error = ref('');
-const instanceId = computed(() => pluginCloneInstanceId(props.plugin, form.suffix));
-const errors = computed(() => pluginCloneErrors(props.plugin, form));
+const requestForm = computed(() => ({
+  suffix: form.suffix.trim(),
+  name: form.name.trim(),
+  description: form.description.trim(),
+  version: form.version.trim(),
+  icon: form.icon.trim(),
+}));
+const instanceId = computed(() => pluginCloneInstanceId(props.plugin, requestForm.value.suffix));
+const errors = computed(() => pluginCloneErrors(props.plugin, requestForm.value));
 function close() {
   if (!busy.value) emit('close');
 }
@@ -40,7 +53,7 @@ async function submit() {
   try {
     const result = await api<PluginCloneResult & { success?: boolean; message?: string }>(
       '/plugins/' + encodeURIComponent(props.plugin.instance_id) + '/clone',
-      { ...form },
+      { ...requestForm.value },
     );
     if (result?.success === false)
       throw new APIError('PLUGIN_CLONE_FAILED', result.message || '插件分身创建失败', '');

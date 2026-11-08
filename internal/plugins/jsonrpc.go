@@ -27,9 +27,10 @@ type rpcError struct {
 type rpcValue struct {
 	Protocol int `json:"protocol"`
 	Identity
-	Kind    string          `json:"kind,omitempty"`
-	Payload json.RawMessage `json:"payload,omitempty"`
-	Code    string          `json:"code,omitempty"`
+	Kind        string          `json:"kind,omitempty"`
+	Payload     json.RawMessage `json:"payload,omitempty"`
+	Code        string          `json:"code,omitempty"`
+	CleanupRoot string          `json:"cleanup_root,omitempty"`
 }
 
 func strictJSON(raw []byte, value any) error {
@@ -50,7 +51,10 @@ func (f Frame) MarshalJSON() ([]byte, error) {
 		return nil, failure("invalid_frame")
 	}
 	message := rpcMessage{Version: "2.0", ID: f.ID}
-	value := rpcValue{Protocol: f.Protocol, Identity: f.Identity}
+	value := rpcValue{Protocol: f.Protocol, Identity: f.Identity, CleanupRoot: f.CleanupRoot}
+	if f.CleanupRoot != "" && (f.Type != "call" || !identityPattern.MatchString(f.CleanupRoot) || strings.Contains(f.CleanupRoot, ".") || !cleanupChildMethod(f.Method)) {
+		return nil, failure("invalid_frame")
+	}
 	switch f.Type {
 	case "call", "host_call":
 		if !methodPattern.MatchString(f.Method) || f.Result != nil || f.Error != nil {
@@ -174,6 +178,10 @@ func (f *Frame) UnmarshalJSON(raw []byte) error {
 		decoded.Type = value.Kind
 	}
 	decoded.Protocol, decoded.Identity = value.Protocol, value.Identity
+	decoded.CleanupRoot = value.CleanupRoot
+	if decoded.CleanupRoot != "" && (decoded.Type != "call" || !identityPattern.MatchString(decoded.CleanupRoot) || strings.Contains(decoded.CleanupRoot, ".") || !cleanupChildMethod(decoded.Method)) {
+		return failure("invalid_frame")
+	}
 	*f = decoded
 	return nil
 }

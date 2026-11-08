@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"encoding/json"
+	"net/url"
 	"strings"
 
 	"light-media/internal/plugins"
@@ -13,8 +14,11 @@ import (
 // identity checks. It reuses the existing native protocol client, NOT its old
 // plugin-specific owner, journal, receipt, queue or business implementation.
 func (a *App) originalDownloaderTasks(ctx context.Context, scope originalBaseCallScope, raw json.RawMessage) (json.RawMessage, error) {
+	return a.originalDownloaderTasksOutcome(ctx, scope, raw, false)
+}
+func (a *App) originalDownloaderTasksOutcome(ctx context.Context, scope originalBaseCallScope, raw json.RawMessage, source bool) (json.RawMessage, error) {
 	var request plugins.DownloaderTasksRequestV1
-	if err := originalResourceDecode(raw, &request); err != nil {
+	if err := originalBrushDownloaderBatchDecode(ctx, scope, raw, &request); err != nil {
 		return nil, err
 	}
 	hashes, err := request.CanonicalSelection()
@@ -37,7 +41,12 @@ func (a *App) originalDownloaderTasks(ctx context.Context, scope originalBaseCal
 	default:
 		return nil, bad("DOWNLOADER_UNSUPPORTED", "下载器类型不支持任务读取")
 	}
-	guard := func(ctx context.Context) error {
+	guard := func(ctx context.Context) (err error) {
+		defer func() {
+			if err != nil {
+				err = &originalDownloaderGuardError{cause: err}
+			}
+		}()
 		if err := ctx.Err(); err != nil {
 			return err
 		}
@@ -63,9 +72,9 @@ func (a *App) originalDownloaderTasks(ctx context.Context, scope originalBaseCal
 	if len(hashes) == 0 {
 		// Native nil and empty slices have distinct wire behavior, and qB may
 		// interpret an empty hashes parameter as all. Never dispatch either.
-		return json.Marshal(out)
+		return originalHostDownloaderTasksOutcome(out, source, false)
 	}
-	client, err := native.NewIYUUClient(native.Config{ID: configured.ID, Kind: kind, BaseURL: configured.BaseURL, Username: configured.Username, Password: configured.Password}, native.IYUUOptions{APIKey: configured.APIKey, Guard: guard})
+	client, err := native.NewIYUUClient(native.Config{ID: configured.ID, Kind: kind, BaseURL: configured.BaseURL, Username: configured.Username, Password: configured.Password}, native.IYUUOptions{APIKey: configured.APIKey, SourceQBLogin: source, SourceTRResponse: source, Guard: guard})
 	if err != nil {
 		return nil, err
 	}
@@ -77,13 +86,16 @@ func (a *App) originalDownloaderTasks(ctx context.Context, scope originalBaseCal
 		return nil, currentErr
 	}
 	if err != nil {
+		if source && originalDownloaderNativeError(ctx, err) {
+			return originalHostDownloaderTasksOutcome(out, true, true)
+		}
 		return nil, err
 	}
-	out.Tasks, err = originalDownloaderTaskProjection(kind, hashes, body)
+	out.Tasks, err = originalDownloaderTaskProjectionForBrush(kind, hashes, body, false, originalBrushSourceScope(ctx, scope))
 	if err != nil {
 		return nil, err
 	}
-	result, err := json.Marshal(out)
+	result, err := originalHostDownloaderTasksOutcome(out, source, false)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +108,24 @@ func (a *App) originalDownloaderTasks(ctx context.Context, scope originalBaseCal
 	return result, nil
 }
 
+// Brush sends one daemon selection at a time, including large groups. Do not
+// split it into several mutations or widen the ordinary resources' decoder.
+func originalBrushDownloaderBatchDecode(ctx context.Context, scope originalBaseCallScope, raw json.RawMessage, output any) error {
+	if originalBrushSourceScope(ctx, scope) {
+		return originalResourceDecodeBounded(raw, output, plugins.MaxPayloadBytes)
+	}
+	return originalResourceDecode(raw, output)
+}
+
 func originalDownloaderTaskProjection(kind string, hashes []string, raw json.RawMessage) ([]plugins.DownloaderTaskV1, error) {
+	return originalDownloaderTaskProjectionWithOptions(kind, hashes, raw, false)
+}
+
+func originalDownloaderTaskProjectionWithOptions(kind string, hashes []string, raw json.RawMessage, includeQBPackFields bool) ([]plugins.DownloaderTaskV1, error) {
+	return originalDownloaderTaskProjectionForBrush(kind, hashes, raw, includeQBPackFields, false)
+}
+
+func originalDownloaderTaskProjectionForBrush(kind string, hashes []string, raw json.RawMessage, includeQBPackFields, includeBrushTrackers bool) ([]plugins.DownloaderTaskV1, error) {
 	invalid := func() error { return bad("DOWNLOADER_INVALID_RESPONSE", "下载器任务响应无效") }
 	var rows []map[string]json.RawMessage
 	if json.Unmarshal(raw, &rows) != nil || rows == nil {
@@ -128,7 +157,24 @@ func originalDownloaderTaskProjection(kind string, hashes []string, raw json.Raw
 		numeric := originalQBTaskNumericFields
 		if kind == "transmission" {
 			numeric = originalTRTaskNumericFields
+		} else if !includeQBPackFields {
+			// Older workers reject unknown fields in a resource response.
+			delete(row, "completed")
+			delete(row, "availability")
 		}
+		// Credentials may appear in any tracker URL segment. Only the actual
+		// Brush worker needs the tracker origin for tracker-to-site grouping.
+		trackerKey := "tracker"
+		if kind == "transmission" {
+			trackerKey = "trackerList"
+		}
+		var tracker string
+		if includeBrushTrackers {
+			_ = json.Unmarshal(row[trackerKey], &tracker)
+			tracker = originalBrushTrackerOrigins(tracker)
+		}
+		delete(row, "tracker")
+		delete(row, "trackerList")
 		for _, field := range numeric {
 			value := strings.TrimSpace(string(row[field]))
 			if value != "" && value != "null" && (value[0] < '0' || value[0] > '9') && value[0] != '-' {
@@ -146,9 +192,11 @@ func originalDownloaderTaskProjection(kind string, hashes []string, raw json.Raw
 		if kind == "qbittorrent" {
 			item.QBittorrent = &plugins.QBittorrentTaskInfoV1{}
 			err = json.Unmarshal(body, item.QBittorrent)
+			item.QBittorrent.Tracker = tracker
 		} else {
 			item.Transmission = &plugins.TransmissionTaskInfoV1{}
 			err = json.Unmarshal(body, item.Transmission)
+			item.Transmission.TrackerList = tracker
 		}
 		if err != nil {
 			return nil, invalid()
@@ -164,5 +212,20 @@ func originalDownloaderTaskProjection(kind string, hashes []string, raw json.Raw
 	return out, nil
 }
 
-var originalQBTaskNumericFields = []string{"size", "total_size", "progress", "amount_left", "downloaded", "uploaded", "ratio", "dlspeed", "upspeed", "added_on", "completion_on", "last_activity", "seeding_time", "eta"}
+func originalBrushTrackerOrigins(value string) string {
+	origins := []string{}
+	for _, line := range strings.Split(value, "\n") {
+		tracker, err := url.Parse(strings.TrimSpace(line))
+		if err != nil || tracker.Hostname() == "" {
+			continue
+		}
+		switch tracker.Scheme {
+		case "http", "https", "udp":
+			origins = append(origins, (&url.URL{Scheme: tracker.Scheme, Host: tracker.Host}).String())
+		}
+	}
+	return strings.Join(origins, "\n")
+}
+
+var originalQBTaskNumericFields = []string{"size", "total_size", "completed", "availability", "progress", "amount_left", "downloaded", "uploaded", "ratio", "dlspeed", "upspeed", "added_on", "completion_on", "last_activity", "seeding_time", "eta"}
 var originalTRTaskNumericFields = []string{"id", "status", "totalSize", "percentDone", "leftUntilDone", "downloadedEver", "uploadedEver", "uploadRatio", "rateDownload", "rateUpload", "addedDate", "doneDate", "activityDate", "queuePosition", "recheckProgress", "error"}

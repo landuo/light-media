@@ -21,6 +21,19 @@ func (a *App) originalHostHistoryResource(ctx context.Context, scope originalBas
 		if !plugins.DownloaderTaskHashValid(in.Hash) {
 			return nil, bad("INVALID_PLUGIN_VALUE", "下载历史查询需要准确Hash")
 		}
+		if in.SourceProjection {
+			if scope.phase != "download_notice" || !originalSubscribeGroupEvent(ctx, scope) {
+				return nil, bad("PLUGIN_CAPABILITY_DENIED", "来源下载历史须绑定实际订阅填充事件")
+			}
+			out, err := a.originalSubscribeGroupDownloadHistory(ctx, in.Hash)
+			if err != nil {
+				return nil, err
+			}
+			if err = scope.validate(ctx); err != nil {
+				return nil, err
+			}
+			return json.Marshal(out)
+		}
 		var b []byte
 		err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='intent' AND json_extract(payload,'$.hash')=? ORDER BY json_extract(payload,'$.created_at') DESC,id DESC LIMIT 1`, in.Hash).Scan(&b)
 		out := plugins.DownloadHistoryResultV1{SchemaVersion: 1}

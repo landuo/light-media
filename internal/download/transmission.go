@@ -301,7 +301,12 @@ func (c *Client) trAdd(ctx context.Context, in AddRequest, hash string) (AddResu
 		out.Duplicate = true
 		return out, nil
 	}
-	args := map[string]any{"metainfo": base64.StdEncoding.EncodeToString(in.Torrent), "download_dir": in.SavePath, "paused": in.Paused, "labels": in.Tags}
+	args := map[string]any{"download_dir": in.SavePath, "paused": in.Paused, "labels": in.Tags}
+	if in.Magnet != "" {
+		args["filename"] = in.Magnet
+	} else {
+		args["metainfo"] = base64.StdEncoding.EncodeToString(in.Torrent)
+	}
 	if in.Tags == nil {
 		args["labels"] = []string{}
 	}

@@ -18,8 +18,25 @@ func originalHostSubscriptionsCapability(method string) bool {
 func (a *App) originalHostSubscriptionsResource(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (json.RawMessage, error) {
 	if method == plugins.SubscriptionsUpdateCapability {
 		var in plugins.SubscriptionHostUpdateV1
-		if err := originalResourceDecode(raw, &in); err != nil {
+		limit := 128 << 10
+		if originalSubscribeGroupEvent(ctx, scope) {
+			limit = plugins.MaxPayloadBytes
+			if scope.phase == "download_notice" && len(raw) <= limit {
+				var keys map[string]json.RawMessage
+				if json.Unmarshal(raw, &keys) == nil && keys["subscribe_group_updates"] != nil {
+					return a.originalSubscribeGroupUpdates(ctx, scope, raw)
+				}
+			}
+		}
+		if err := originalResourceDecodeBounded(raw, &in, limit); err != nil {
 			return nil, err
+		}
+		if in.SubscribeGroupHistory != nil {
+			if err := validateOriginalSubscribeGroupUpdate(ctx, scope, in); err != nil {
+				return nil, err
+			}
+		} else if len(raw) > 128<<10 {
+			return nil, bad("INVALID_PLUGIN_VALUE", "插件资源参数必须为有界对象")
 		}
 		return a.originalHostUpdateSubscription(ctx, scope, in)
 	}
@@ -66,7 +83,13 @@ func (a *App) originalHostSubscriptionsResource(ctx context.Context, scope origi
 		return nil, err
 	}
 	out := plugins.SubscriptionHostResultV1{SchemaVersion: 1, Items: []json.RawMessage{}}
+	if in.WithRevision {
+		out.Revisions = make(map[string]int, len(items))
+	}
 	for _, s := range items {
+		if in.WithRevision {
+			out.Revisions[s.ID] = s.Revision
+		}
 		r, e := a.subscriptionSourceProjection(ctx, s)
 		if e != nil {
 			return nil, e
@@ -85,6 +108,13 @@ func (a *App) originalHostSubscriptionsResource(ctx context.Context, scope origi
 func (a *App) originalHostUpdateSubscription(ctx context.Context, scope originalBaseCallScope, in plugins.SubscriptionHostUpdateV1) (json.RawMessage, error) {
 	if in.ID == "" || len(in.ID) > 96 || in.Revision < 0 {
 		return nil, bad("INVALID_PLUGIN_VALUE", "订阅更新需要准确ID")
+	}
+	if in.SubscribeGroupHistory != nil {
+		// Match the established lock order for plugin data and frozen Intents.
+		a.pluginMu.Lock()
+		defer a.pluginMu.Unlock()
+		a.downloadMu.Lock()
+		defer a.downloadMu.Unlock()
 	}
 	a.subMu.Lock()
 	defer a.subMu.Unlock()
@@ -112,7 +142,7 @@ func (a *App) originalHostUpdateSubscription(ctx context.Context, scope original
 	if s.State == "cancelled" {
 		return json.Marshal(out)
 	}
-	if in.Revision > 0 && in.Revision != s.Revision {
+	if (in.Revision > 0 || in.SubscribeGroupHistory != nil) && in.Revision != s.Revision {
 		return nil, bad("SUBSCRIPTION_CONFLICT", "订阅已修改，请重新读取")
 	}
 	before, err := json.Marshal(s)
@@ -254,13 +284,29 @@ func (a *App) originalHostUpdateSubscription(ctx context.Context, scope original
 		}
 		noChange = originalHostSubscriptionJSONEqual(beforeProjection, afterProjection)
 	}
+	if in.SubscribeGroupHistory != nil {
+		if err := a.pluginStore.appendOriginalSubscribeGroupHistoryTx(ctx, tx, scope.installation.InstanceID, in.SubscribeGroupHistory); err != nil {
+			return nil, err
+		}
+	}
 	if noChange {
 		row, err := a.subscriptionSourceProjectionFrom(ctx, tx, s)
 		if err != nil {
 			return nil, err
 		}
+		if in.SubscribeGroupHistory != nil {
+			if err = tx.Commit(); err != nil {
+				return nil, err
+			}
+		}
 		out.Items = append(out.Items, row)
 		return json.Marshal(out)
+	}
+	previousRevision := s.Revision
+	if in.SubscribeGroupHistory != nil {
+		if err := a.advancePlannedQualityRevisionTx(ctx, tx, s); err != nil {
+			return nil, err
+		}
 	}
 	s.Revision++
 	if err = txPut(ctx, tx, "subscription", s.ID, s); err != nil {
@@ -268,6 +314,11 @@ func (a *App) originalHostUpdateSubscription(ctx context.Context, scope original
 	}
 	if err = a.saveSubscriptionWordsTx(ctx, tx, s.ID, customWords); err != nil {
 		return nil, err
+	}
+	if in.SubscribeGroupHistory != nil {
+		if err := advanceOriginalSubscribeGroupIntentsTx(ctx, tx, s, previousRevision); err != nil {
+			return nil, err
+		}
 	}
 	if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), s.ID); err != nil {
 		return nil, err

@@ -141,26 +141,44 @@ func skipValue(data []byte, offset, depth int) (int, error) {
 	return 0, fault("TorrentFormatError", "bencode", "未知的 bencode 类型")
 }
 func InfoHashFromTorrent(content []byte) (string, error) {
+	info, err := torrentInfo(content)
+	if err != nil {
+		return "", err
+	}
+	h := sha1.Sum(info)
+	return hex.EncodeToString(h[:]), nil
+}
+
+// InfoOnlyTorrent preserves the raw info slice without exposing top-level
+// tracker URLs or tracker credentials to the external plugin process.
+func InfoOnlyTorrent(content []byte) ([]byte, error) {
+	info, err := torrentInfo(content)
+	if err != nil {
+		return nil, err
+	}
+	return append(append([]byte("d4:info"), info...), 'e'), nil
+}
+
+func torrentInfo(content []byte) ([]byte, error) {
 	if len(content) == 0 || content[0] != 'd' {
-		return "", fault("TorrentFormatError", "bencode", "种子顶层必须是字典")
+		return nil, fault("TorrentFormatError", "bencode", "种子顶层必须是字典")
 	}
 	offset := 1
 	for offset < len(content) && content[offset] != 'e' {
 		key, end, e := readBytes(content, offset)
 		if e != nil {
-			return "", e
+			return nil, e
 		}
 		start := end
 		offset, e = skipValue(content, start, 0)
 		if e != nil {
-			return "", e
+			return nil, e
 		}
 		if string(key) == "info" {
-			h := sha1.Sum(content[start:offset])
-			return hex.EncodeToString(h[:]), nil
+			return content[start:offset], nil
 		}
 	}
-	return "", fault("TorrentFormatError", "bencode", "种子缺少 info 字典")
+	return nil, fault("TorrentFormatError", "bencode", "种子缺少 info 字典")
 }
 func floatValue(v any) (float64, bool) {
 	switch x := v.(type) {

@@ -2,8 +2,6 @@ package app
 
 import (
 	"context"
-	"database/sql"
-	"errors"
 	"slices"
 
 	"light-media/internal/plugins/artifacts"
@@ -55,16 +53,16 @@ func (a *App) readOriginalLocalPluginStates(ctx context.Context) error {
 }
 
 func (a *App) originalLocalPluginVersion(ctx context.Context, id string) (string, bool, error) {
+	installed, err := a.originalInstalledPluginIDs(ctx)
+	if err != nil {
+		return "", false, err
+	}
+	if !slices.Contains(installed, id) {
+		return "", false, nil
+	}
 	value, exists := a.pluginOriginalClasses.Load(id)
 	if !exists {
 		return "", false, nil
-	}
-	in, err := a.pluginStore.Installation(ctx, id)
-	if errors.Is(err, sql.ErrNoRows) || err == nil && !in.Installed {
-		return "", false, nil
-	}
-	if err != nil {
-		return "", false, err
 	}
 	class := value.(originalPluginClass)
 	version := class.installation.Version

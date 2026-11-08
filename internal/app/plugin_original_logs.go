@@ -49,7 +49,7 @@ func (a *App) pluginOriginalLogHost(ctx context.Context, scope originalBaseCallS
 		level = "WARN"
 	}
 	// Reuse the sole writer/redactor, queue, SSE, history and export pipeline.
-	a.writeOriginalPluginCallLog(scope.installation, scope.logCall, level, "plugin_message", entry.Message)
+	a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, level, "plugin_message", entry.Message)
 	return json.RawMessage(`null`), nil
 }
 
@@ -60,13 +60,17 @@ type originalPluginLogContextKey struct{}
 type originalPluginLogContext struct {
 	installation PluginInstallation
 	call         originalPluginLogCall
+	object       *originalPluginInstance
 }
 
 func withOriginalPluginLogContext(ctx context.Context, scope originalBaseCallScope) context.Context {
-	return context.WithValue(ctx, originalPluginLogContextKey{}, originalPluginLogContext{scope.installation, scope.logCall})
+	return context.WithValue(ctx, originalPluginLogContextKey{}, originalPluginLogContext{scope.installation, scope.logCall, scope.object})
 }
 
-func (a *App) writeOriginalPluginCallLog(in PluginInstallation, call originalPluginLogCall, level, event, message string) {
+func (a *App) writeOriginalPluginCallLog(owner *originalPluginInstance, in PluginInstallation, call originalPluginLogCall, level, event, message string) {
+	if owner != nil {
+		message = owner.sourceLogSecrets.redact(message)
+	}
 	fields := map[string]any{"level": level, "module": "plugins", "event": event, "message": message,
 		"app_version": appVersion, "plugin_id": in.PluginID, "plugin_version": in.Version, "plugin_instance_id": in.InstanceID}
 	if call.id != "" {
@@ -80,7 +84,7 @@ func (a *App) writeOriginalPluginCallLog(in PluginInstallation, call originalPlu
 
 func (a *App) logOriginalPluginContext(ctx context.Context, level, event, message string) {
 	if caller, ok := ctx.Value(originalPluginLogContextKey{}).(originalPluginLogContext); ok {
-		a.writeOriginalPluginCallLog(caller.installation, caller.call, level, event, message)
+		a.writeOriginalPluginCallLog(caller.object, caller.installation, caller.call, level, event, message)
 		return
 	}
 	a.log(level, "plugins", event, message, "", "")

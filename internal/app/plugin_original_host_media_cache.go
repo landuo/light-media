@@ -21,6 +21,7 @@ import (
 type HostMediaRecognitionConfiguration struct {
 	Locale          string
 	Source          string
+	ScrapeSource    string
 	MetaCacheExpire *big.Int // hours; zero selects CONF's memory-mode default
 	WallClock       func() float64
 	MonotonicClock  func() float64
@@ -28,12 +29,15 @@ type HostMediaRecognitionConfiguration struct {
 }
 
 func HostMediaRecognitionEnvironment(lookup func(string) (string, bool)) (*HostMediaRecognitionConfiguration, error) {
-	out := &HostMediaRecognitionConfiguration{Locale: "zh", Source: "themoviedb", MetaCacheExpire: new(big.Int)}
+	out := &HostMediaRecognitionConfiguration{Locale: "zh", Source: "themoviedb", ScrapeSource: "themoviedb", MetaCacheExpire: new(big.Int)}
 	if raw, ok := lookup("TMDB_LOCALE"); ok {
 		out.Locale = raw
 	}
 	if raw, ok := lookup("RECOGNIZE_SOURCE"); ok {
 		out.Source = raw
+	}
+	if raw, ok := lookup("SCRAP_SOURCE"); ok {
+		out.ScrapeSource = raw
 	}
 	if raw, ok := lookup("META_CACHE_EXPIRE"); ok {
 		number, err := legacyanime.Integer(legacyanime.Strip(raw))
@@ -49,6 +53,9 @@ func cloneHostMediaRecognitionConfiguration(value *HostMediaRecognitionConfigura
 		return nil
 	}
 	out := *value
+	if out.ScrapeSource == "" {
+		out.ScrapeSource = "themoviedb"
+	}
 	if value.MetaCacheExpire == nil {
 		out.MetaCacheExpire = new(big.Int)
 	} else {

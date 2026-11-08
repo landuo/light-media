@@ -125,8 +125,9 @@ func larkEvidenceError() error {
 }
 
 type sourceSubscriptionOrigin struct {
-	SourceAddID                    string          `json:",omitempty"`
-	Registration                   json.RawMessage `json:",omitempty"`
+	MediaProvider                  *originalChatMediaProvider `json:",omitempty"`
+	SourceAddID                    string                     `json:",omitempty"`
+	Registration                   json.RawMessage            `json:",omitempty"`
 	Version                        int
 	Channel, Source, UserID, State string
 	Username                       json.RawMessage
@@ -246,12 +247,20 @@ func (a *App) buildSubscriptionCompletionBusinessResolved(ctx context.Context, s
 	if kind == "电视剧" {
 		expectedKind = "tv"
 	}
-	id, e := strconv.ParseInt(fmt.Sprint(source["tmdbid"]), 10, 64)
-	if e != nil || id != s.Media.ID || expectedKind != s.Media.MediaType {
+	if expectedKind != s.Media.MediaType {
 		return out, notice.ErrTemplateDependency
 	}
-	if provider := sourceText(source["media_source"]); provider != "" && provider != "themoviedb" {
-		return out, notice.ErrTemplateDependency
+	providerOnly := providerNativeMedia(s.Media)
+	provider := sourceText(source["media_source"])
+	if providerOnly {
+		if source["tmdbid"] != nil || provider != s.Media.ProviderSource || sourceText(source["media_id"]) != s.Media.ProviderID {
+			return out, notice.ErrTemplateDependency
+		}
+	} else {
+		id, err := strconv.ParseInt(fmt.Sprint(source["tmdbid"]), 10, 64)
+		if err != nil || id != s.Media.ID || provider != "" && provider != "themoviedb" {
+			return out, notice.ErrTemplateDependency
+		}
 	}
 	if resolved == nil {
 		resolved, e = a.resolveStandardSubscriptionRecognition(ctx, s, subscribe)
@@ -260,6 +269,9 @@ func (a *App) buildSubscriptionCompletionBusinessResolved(ctx context.Context, s
 		}
 	}
 	encodedMeta, recognized := resolved.Meta, resolved.Information
+	if providerOnly && mediaKey(recognized.Media) != mediaKey(s.Media) {
+		return out, notice.ErrTemplateDependency
+	}
 	mi, e := decodeSourceJSON(recognized.MediaInfo)
 	if e != nil {
 		return out, e
@@ -268,6 +280,9 @@ func (a *App) buildSubscriptionCompletionBusinessResolved(ctx context.Context, s
 	image := fields["backdrop"]
 	if !sourceSubscriptionTruth(image) {
 		image = fields["poster"]
+	}
+	if providerOnly {
+		image = originalChatDownloadMessageImage(fields)
 	}
 	msgstr := "订阅"
 	if sourceSubscriptionTruth(source["best_version"]) {
@@ -323,7 +338,16 @@ func larkBusinessNoticeContext(payload pluginLarkBusinessNotice) (noticetemplate
 	}
 	out.Meta = value.(map[string]any)
 	media, e := decodeSourceJSON(payload.MediaInfo)
-	if e != nil || sourceMap(media) == nil || sourceMap(media)["source"] != "themoviedb" {
+	if e != nil || sourceMap(media) == nil {
+		return out, notice.ErrTemplateDependency
+	}
+	providerOnly := providerNativeMedia(payload.Media)
+	if providerOnly {
+		info := sourceMediaInformation{Media: payload.Media, MediaInfo: payload.MediaInfo}
+		if _, err := subscriptionProviderMedia(info, payload.Media.ProviderSource, payload.Media.ProviderID, payload.Media.MediaType); err != nil {
+			return out, notice.ErrTemplateDependency
+		}
+	} else if sourceMap(media)["source"] != "themoviedb" {
 		return out, notice.ErrTemplateDependency
 	}
 	value, e = noticeV2NormalizeNumberValues(media)
@@ -331,9 +355,16 @@ func larkBusinessNoticeContext(payload pluginLarkBusinessNotice) (noticetemplate
 		return out, e
 	}
 	out.Media = value.(map[string]any)
-	id, ok := out.Media["tmdb_id"].(*big.Int)
-	if !ok || !id.IsInt64() || id.Int64() != payload.Media.ID {
-		return out, notice.ErrTemplateDependency
+	if providerOnly {
+		// MediaInfo.to_dict keeps paths. TemplateHelper calls the image getters.
+		for _, key := range []string{"poster", "backdrop"} {
+			out.Media[key] = strings.ReplaceAll(sourceText(out.Media[key+"_path"]), "original", "w500")
+		}
+	} else {
+		id, ok := out.Media["tmdb_id"].(*big.Int)
+		if !ok || !id.IsInt64() || id.Int64() != payload.Media.ID {
+			return out, notice.ErrTemplateDependency
+		}
 	}
 	provider, e := decodeSourceJSON(payload.ProviderInfo)
 	if e != nil {
@@ -344,6 +375,22 @@ func larkBusinessNoticeContext(payload pluginLarkBusinessNotice) (noticetemplate
 	for _, field := range []string{"seasons", "season_years"} {
 		dict := exec.NewDict()
 		values := sourceMap(out.Media[field])
+		if providerOnly {
+			var seasons []int
+			for key := range values {
+				season, err := strconv.Atoi(key)
+				if err != nil || season < 0 || strconv.Itoa(season) != key {
+					return out, notice.ErrTemplateDependency
+				}
+				seasons = append(seasons, season)
+			}
+			sort.Ints(seasons)
+			for _, season := range seasons {
+				dict.Pairs = append(dict.Pairs, &exec.Pair{Key: exec.AsValue(big.NewInt(int64(season))), Value: exec.AsValue(values[strconv.Itoa(season)])})
+			}
+			out.Media[field] = dict
+			continue
+		}
 		for _, row := range sourceRows(sourceMap(provider)["seasons"]) {
 			s := sourceMap(row)
 			key, e := noticeV2NormalizeNumberValues(s["season_number"])

@@ -10,13 +10,14 @@ import (
 	"sort"
 	"time"
 
+	"light-media/internal/catalog"
 	"light-media/internal/subscriptionquality"
 )
 
 type subscriptionCompletionCheckEvent struct{ Subscribe, MediaInfo, Meta json.RawMessage }
 
 func (a *App) enqueueSubscriptionCompletionPreparationTx(ctx context.Context, tx *sql.Tx, in Intent) error {
-	if in.SubscriptionID == "" {
+	if in.SubscriptionID == "" || a.deferOrdinarySearchDownloadCompletion(ctx, in) {
 		return nil
 	}
 	var s Subscription
@@ -25,10 +26,55 @@ func (a *App) enqueueSubscriptionCompletionPreparationTx(ctx context.Context, tx
 	} else if e != nil {
 		return e
 	}
-	if s.State != "active" || s.SourceState == "P" || s.BestVersion && !subscriptionQualityState(s).Complete() {
+	if !a.subscriptionSearchState(ctx, s) || s.SourceState == "P" || s.BestVersion && !subscriptionQualityState(s).Complete() {
 		return nil
 	}
+	if s.BestVersion && originalChatPausedSearchJob(ctx, s) != "" {
+		// The paused manual search still owns the synchronous acquisition. Its
+		// final check schedules completion after it stops reading the row.
+		return nil
+	}
+	if deferRSS, e := a.deferOriginalChatRSSQualityCompletionTx(ctx, tx, in, s); e != nil || deferRSS {
+		return e
+	}
 	return enqueueSubscriptionCompletionPreparationForTx(ctx, tx, s, in.WorkflowID)
+}
+
+func (a *App) requestPausedQualityCompletion(ctx context.Context, j Job, s Subscription) error {
+	if root := originalChatPausedSearchJob(ctx, s); root == "" || root != j.ID || !a.subscriptionSearchState(ctx, s) {
+		return nil
+	}
+	if err := a.jobCancelled(ctx, j); err != nil {
+		return err
+	}
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	var current Subscription
+	if err := qualityRecord(ctx, tx, "subscription", s.ID, &current); errors.Is(err, sql.ErrNoRows) {
+		return nil
+	} else if err != nil {
+		return err
+	}
+	if originalChatPausedSearchJob(ctx, current) != j.ID || !current.BestVersion || current.SourceState == "P" || !subscriptionQualityState(current).Complete() {
+		return nil
+	}
+	if err = a.enqueueQualityCompletionForTx(ctx, tx, current, j.WorkflowID); err != nil {
+		return err
+	}
+	return tx.Commit()
+}
+
+func (a *App) enqueueQualityCompletionForTx(ctx context.Context, tx *sql.Tx, s Subscription, workflow string) error {
+	if _, err := a.completionAcceptedClosure(ctx, tx, s); err != nil {
+		if pluginErrorCodeInternal(err) == "SUBSCRIPTION_COMPLETION_FACTS_MISSING" {
+			return nil // A historical priority without actual receipts cannot retire the row.
+		}
+		return err
+	}
+	return enqueueSubscriptionCompletionPreparationForTx(ctx, tx, s, workflow)
 }
 
 func (a *App) completionAcceptedClosure(ctx context.Context, q qualityReader, s Subscription) ([]subscriptionCompletionAccepted, error) {
@@ -89,7 +135,7 @@ func (a *App) completionAcceptedClosure(ctx context.Context, q qualityReader, s 
 			return nil, completionEvidenceError()
 		}
 		var added downloadAddedSnapshot
-		if e = a.readQualitySealed(ctx, q, "download_added", domainEventID("download.accepted", fact.Intent), &added); e != nil || added.DownloadID != fact.Intent || added.DownloadKind != "intent" || !sameHash(added.Hash, fact.Hash) || added.TMDBID != s.Media.ID || added.MediaType != s.Media.MediaType {
+		if e = a.readQualitySealed(ctx, q, "download_added", domainEventID("download.accepted", fact.Intent), &added); e != nil || !subscriptionCompletionDownloadMatches(added, s, fact.Intent, fact.Hash, fact.Revision) {
 			return nil, completionEvidenceError()
 		}
 		resource := fact.Resource
@@ -133,13 +179,21 @@ func (a *App) prepareSubscriptionCompletion(ctx context.Context, j Job, key stri
 	if e := requireSubscriptionPreparationJob(ctx, a.Store.DB, j, key, revision); e != nil {
 		return e
 	}
+	var payload subscriptionCompletionPreparationPayload
+	if e := json.Unmarshal(j.Payload, &payload); e != nil {
+		return e
+	}
+	ctx, err := a.originalChatPausedSearchRoot(ctx, payload.PausedSearchJob, key, revision)
+	if err != nil {
+		return err
+	}
 	var s Subscription
 	if e := a.Store.Get(ctx, "subscription", key, &s); errors.Is(e, sql.ErrNoRows) {
 		return nil
 	} else if e != nil {
 		return e
 	}
-	if s.Revision != revision || s.State != "active" || s.SourceState == "P" {
+	if s.Revision != revision || !a.subscriptionSearchState(ctx, s) || s.SourceState == "P" {
 		return nil
 	}
 	if s.BestVersion && !subscriptionQualityState(s).Complete() {
@@ -348,13 +402,10 @@ func (a *App) runSubscriptionCompletion(ctx context.Context, j Job, key string) 
 }
 func sourceSubscriptionMediaKey(raw json.RawMessage) string {
 	var row struct {
-		Media struct {
-			ID   int64  `json:"id"`
-			Type string `json:"media_type"`
-		} `json:"media"`
+		Media catalog.Media `json:"media"`
 	}
 	if json.Unmarshal(raw, &row) != nil {
 		return ""
 	}
-	return row.Media.Type + ":" + jsonNumber(row.Media.ID)
+	return mediaKey(row.Media)
 }

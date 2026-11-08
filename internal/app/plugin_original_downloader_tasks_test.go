@@ -429,6 +429,43 @@ func TestOriginalDownloaderTaskProjectionRejectsMalformedAndDuplicateRows(t *tes
 	}
 }
 
+func TestOriginalDownloaderTaskProjectionPreservesQBPackFields(t *testing.T) {
+	hashes := []string{ownedDownloaderHash}
+	project := func(fields string) ([]plugins.DownloaderTaskV1, error) {
+		return originalDownloaderTaskProjectionWithOptions("qbittorrent", hashes, json.RawMessage(
+			`[{"hash":"`+ownedDownloaderHash+`"`+fields+`}]`), true)
+	}
+	for _, row := range []struct {
+		fields, completed, availability string
+	}{
+		{`,"total_size":9007199254740993,"completed":9007199254740992,"availability":0.75`, "9007199254740992", "0.75"},
+		{`,"completed":0,"availability":-1`, "0", "-1"},
+	} {
+		got, err := project(row.fields)
+		if err != nil || len(got) != 1 || got[0].QBittorrent == nil {
+			t.Fatalf("projection failed: %v", err)
+		}
+		qb := got[0].QBittorrent
+		if qb.Completed == nil || qb.Completed.String() != row.completed || qb.Availability == nil || qb.Availability.String() != row.availability {
+			t.Fatalf("lost native pack fields: completed=%v availability=%v", qb.Completed, qb.Availability)
+		}
+	}
+	got, err := project(`,"availability":null`)
+	if err != nil || len(got) != 1 || got[0].QBittorrent == nil || got[0].QBittorrent.Completed != nil || got[0].QBittorrent.Availability != nil {
+		t.Fatalf("missing pack fields changed: %v", err)
+	}
+	for _, field := range []string{`,"completed":"0"`, `,"availability":true`} {
+		if got, err := project(field); err == nil || got != nil {
+			t.Fatalf("accepted nonnumeric pack field: %s", field)
+		}
+	}
+	ordinary, err := originalDownloaderTaskProjection("qbittorrent", hashes, json.RawMessage(
+		`[{"hash":"`+ownedDownloaderHash+`","completed":1,"availability":1}]`))
+	if err != nil || len(ordinary) != 1 || ordinary[0].QBittorrent == nil || ordinary[0].QBittorrent.Completed != nil || ordinary[0].QBittorrent.Availability != nil {
+		t.Fatalf("ordinary pack fields changed: %v", err)
+	}
+}
+
 func TestOriginalDownloaderTasksActualSDKProtocolFailureIsNotEmptySuccess(t *testing.T) {
 	a, _, object := ownedDownloaderTasksSDKFixture(t, true)
 	var mode atomic.Int32

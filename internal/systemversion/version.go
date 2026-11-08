@@ -35,6 +35,11 @@ type Release struct {
 // SelectRelease only consumes the fields read by the source algorithm. None is
 // its normal result for HTTP failures, invalid release shapes, or caught errors.
 func SelectRelease(raw []byte) (Release, error) {
+	return SelectReleaseSeries(raw, "v2.")
+}
+
+// SelectReleaseSeries compares published tags using the source numeric sort.
+func SelectReleaseSeries(raw []byte, prefix string) (Release, error) {
 	if !utf8.Valid(raw) || unpairedSurrogate(raw) {
 		return Release{}, ErrDependency
 	}
@@ -67,7 +72,7 @@ func SelectRelease(raw []byte) (Release, error) {
 		if !ok {
 			return Release{Caught: true}, nil
 		}
-		if !strings.HasPrefix(name, "v2.") {
+		if !strings.HasPrefix(name, prefix) {
 			continue
 		}
 		keys := []*big.Int{}

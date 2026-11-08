@@ -37,15 +37,19 @@ type Policy struct {
 	Exclude              string                    `json:"exclude"`
 }
 type Target struct {
-	Media         catalog.Media       `json:"media"`
-	Season        int                 `json:"season"`
-	SeasonYear    int                 `json:"season_year"`
-	Episodes      []int               `json:"episodes"`
-	KnownEpisodes []int               `json:"known_episodes"`
-	AllowEarly    []int               `json:"allow_early"`
-	AiredEpisodes []int               `json:"aired_episodes"`
-	Mappings      []media.MappingRule `json:"mappings"`
-	Auto          bool                `json:"auto"`
+	// Provider identity stays in its own namespace. A title-only target
+	// verifies a release without establishing an episode scope.
+	ProviderSearchKey string              `json:"-"`
+	ProviderUnscoped  bool                `json:"-"`
+	Media             catalog.Media       `json:"media"`
+	Season            int                 `json:"season"`
+	SeasonYear        int                 `json:"season_year"`
+	Episodes          []int               `json:"episodes"`
+	KnownEpisodes     []int               `json:"known_episodes"`
+	AllowEarly        []int               `json:"allow_early"`
+	AiredEpisodes     []int               `json:"aired_episodes"`
+	Mappings          []media.MappingRule `json:"mappings"`
+	Auto              bool                `json:"auto"`
 }
 type Decision struct {
 	Accepted          bool     `json:"accepted"`
@@ -85,7 +89,8 @@ func EvaluateContext(ctx context.Context, resource sites.Resource, target Target
 	reject := func(value string) { hard = true; reason(value) }
 	review := func(value string) { out.NeedsConfirmation = true; reason(value) }
 	finish := func() Decision { out.Accepted = !hard && (!target.Auto || !out.NeedsConfirmation); return out }
-	if target.Media.ID <= 0 || (target.Media.MediaType != "movie" && target.Media.MediaType != "tv") || (normalizeTitle(target.Media.Title) == "" && normalizeTitle(target.Media.OriginalTitle) == "") {
+	providerSearch := target.ProviderSearchKey != "" && target.Media.ID == 0
+	if (target.Media.ID <= 0 && !providerSearch) || (target.Media.MediaType != "movie" && target.Media.MediaType != "tv") || (normalizeTitle(target.Media.Title) == "" && normalizeTitle(target.Media.OriginalTitle) == "") {
 		reject("invalid_media_identity")
 		return finish()
 	}
@@ -106,6 +111,26 @@ func EvaluateContext(ctx context.Context, resource sites.Resource, target Target
 			review("movie_year_unconfirmed")
 		} else if year != target.Media.Year {
 			review("movie_year_conflict")
+		}
+		return finish()
+	}
+	if target.ProviderUnscoped {
+		if year != 0 && target.Media.Year != 0 && year != target.Media.Year && year != target.SeasonYear {
+			review("series_year_conflict")
+		}
+		if !providerSearch || target.Auto || target.Season < 0 || target.Season > 99 || len(target.Episodes) != 0 || len(target.KnownEpisodes) != 0 {
+			reject("invalid_target_season")
+		} else if target.Season != 0 {
+			parsed := media.Parse(resourceFilename(resource.Title))
+			if parsed.Original != nil && parsed.Original.Season != nil {
+				if *parsed.Original.Season != target.Season {
+					reject("resource_season_outside_target")
+				}
+			} else if m := seasonPack.FindStringSubmatch(resource.Title); len(m) > 1 {
+				if season, _ := strconv.Atoi(m[1]); season != target.Season {
+					reject("resource_season_outside_target")
+				}
+			}
 		}
 		return finish()
 	}
@@ -177,7 +202,11 @@ func EvaluateContext(ctx context.Context, resource sites.Resource, target Target
 	if m := groupSuffix.FindStringSubmatch(strings.TrimSuffix(filename, ".mkv")); len(m) > 1 {
 		source.Group = m[1]
 	}
-	mapping := media.Resolve(fmt.Sprintf("tv:%d", target.Media.ID), *parsed.Original, source, target.Mappings, authoritative, nil)
+	mediaID := fmt.Sprintf("tv:%d", target.Media.ID)
+	if providerSearch {
+		mediaID = target.ProviderSearchKey
+	}
+	mapping := media.Resolve(mediaID, *parsed.Original, source, target.Mappings, authoritative, nil)
 	if mapping.Status != media.Parsed {
 		review("numbering_" + mapping.Reason)
 		return finish()

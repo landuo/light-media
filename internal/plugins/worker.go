@@ -20,17 +20,23 @@ type Handler func(context.Context, string, json.RawMessage, HostCaller) (json.Ra
 type callbackPhase struct{ closed atomic.Bool }
 
 func Serve(ctx context.Context, input io.Reader, output io.Writer, manifest Manifest, handle Handler) error {
-	return serve(ctx, input, output, manifest, handle, false)
+	return serve(ctx, input, output, manifest, handle, false, false)
 }
 
 // ServeConcurrent opts this one persistent object into overlapping handlers.
 // The implementation must synchronize its own mutable object state. Older
 // hosts still use the original sequential path unless negotiation succeeds.
 func ServeConcurrent(ctx context.Context, input io.Reader, output io.Writer, manifest Manifest, handle Handler) error {
-	return serve(ctx, input, output, manifest, handle, true)
+	return serve(ctx, input, output, manifest, handle, true, false)
 }
 
-func serve(ctx context.Context, input io.Reader, output io.Writer, manifest Manifest, handle Handler, concurrent bool) error {
+// ServeConcurrentWithParallelHostCalls requires explicit negotiation before any
+// business invocation. Legacy ServeConcurrent remains serial for reverse calls.
+func ServeConcurrentWithParallelHostCalls(ctx context.Context, input io.Reader, output io.Writer, manifest Manifest, handle Handler) error {
+	return serve(ctx, input, output, manifest, handle, true, true)
+}
+
+func serve(ctx context.Context, input io.Reader, output io.Writer, manifest Manifest, handle Handler, concurrent, parallelHostCalls bool) error {
 	if ctx == nil || input == nil || output == nil || handle == nil {
 		return failure("invalid_worker")
 	}
@@ -67,7 +73,20 @@ func serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 	if concurrent {
 		advertisedConcurrent = 1
 	}
-	helloResult, _ := json.Marshal(Handshake{TransportClose: advertisedConcurrent, ConcurrentSession: advertisedConcurrent, Protocol: ProtocolVersion, PluginID: manifest.PluginID, Version: manifest.Version, HostAPI: HostAPIVersion, Methods: manifest.Methods, Capabilities: manifest.Capabilities, Transport: &transportAdvertisement{Version: 1}, PersistentSession: 1})
+	helloResponse := Handshake{TransportClose: advertisedConcurrent, ConcurrentSession: advertisedConcurrent, Protocol: ProtocolVersion, PluginID: manifest.PluginID, Version: manifest.Version, HostAPI: HostAPIVersion, Methods: manifest.Methods, Capabilities: manifest.Capabilities, Transport: &transportAdvertisement{Version: 1}, PersistentSession: 1}
+	if advertisedConcurrent == 1 && manifest.ManagedPublicServices && !cleanupDeclared(manifest) {
+		helloResponse.PublicServiceStop = 1
+	}
+	if advertisedConcurrent == 1 && manifest.ManagedPrivateScheduler {
+		helloResponse.PrivateSchedulerStop = 1
+	}
+	if parallelHostCalls {
+		helloResponse.ParallelHostCalls = 1
+	}
+	if advertisedConcurrent == 1 && cleanupDeclared(manifest) {
+		helloResponse.CleanupContinuation = 1
+	}
+	helloResult, _ := json.Marshal(helloResponse)
 	if err = s.write(Frame{Protocol: ProtocolVersion, ID: first.ID, Type: "result", Identity: s.identity, Result: helloResult}); err != nil {
 		return err
 	}
@@ -110,7 +129,7 @@ func serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 		}
 		if request.Method == "transport.concurrent" {
 			var proposal concurrentProposal
-			if !concurrent || !persistent || invoked || strictJSON(request.Payload, &proposal) != nil || !proposal.valid() {
+			if !concurrent || !persistent || invoked || strictJSON(request.Payload, &proposal) != nil || !proposal.valid(manifest) || (parallelHostCalls != (proposal.MaxParallelHostCalls > 0)) {
 				return failure("concurrent_session_mismatch")
 			}
 			raw, _ := json.Marshal(proposal)
@@ -118,6 +137,9 @@ func serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 				return err
 			}
 			return serveConcurrentSession(&s, manifest, handle, proposal)
+		}
+		if parallelHostCalls {
+			return failure("parallel_host_call_unsupported")
 		}
 		if !slices.Contains(manifest.Methods, request.Method) || request.Method == "handshake" || strings.HasPrefix(request.Method, "transport.") || !persistent && (invoked && request.Method != "stop" || !invoked && request.Method == "stop") {
 			return failure("invalid_invocation")

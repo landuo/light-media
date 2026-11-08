@@ -10,7 +10,11 @@ const originalHostNetworkContentLimit = (plugins.MaxPayloadBytes - 1024) * 3 / 4
 
 // Keep the host API error projection separate from source requests decoding.
 func originalHostNetworkDecode(data []byte, encoding string) ([]byte, error) {
-	value, err := networkproxy.DecodeRequestsContent(data, encoding, originalHostNetworkContentLimit)
+	return originalHostNetworkDecodeBounded(data, encoding, originalHostNetworkContentLimit)
+}
+
+func originalHostNetworkDecodeBounded(data []byte, encoding string, limit int) ([]byte, error) {
+	value, err := networkproxy.DecodeRequestsContent(data, encoding, limit)
 	if errors.Is(err, networkproxy.ErrRequestsContentTooLarge) {
 		return nil, bad("PLUGIN_VALUE_TOO_LARGE", "远程文本超出共享传输上限")
 	}

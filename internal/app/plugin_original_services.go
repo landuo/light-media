@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"light-media/internal/plugins/schedule"
+	"slices"
 	"strings"
 	"time"
 )
@@ -12,6 +13,18 @@ func (p *originalPluginInstance) getServices(ctx context.Context) ([]pluginSched
 	defer unlock()
 	var defs []pluginScheduleDefinition
 	err := p.readSession(ctx, "get_service", &defs)
+	if err == nil && len(defs) > 0 && p.manifest.ManagedPublicServices {
+		err = p.validateOriginalPublicServiceClient()
+	}
+	if err == nil && p.installation.PluginID == "RemoteIdentifiers" {
+		// The source getter constructs its CronTrigger before returning a
+		// definition. Invalid cron never reaches the public job registry.
+		for _, def := range defs {
+			if _, err := schedule.New(def.Trigger, time.Now()); err != nil {
+				return nil, err
+			}
+		}
+	}
 	return defs, err
 }
 func (a *App) updateOriginalPluginJobs(ctx context.Context, instance string) {
@@ -21,15 +34,22 @@ func (a *App) updateOriginalPluginJobs(ctx context.Context, instance string) {
 	state.mu.Lock()
 	for key := range state.jobs {
 		if key.instance == instance {
+			if job := state.jobs[key]; job != nil && job.sourceScanCancel != nil {
+				job.sourceScanCancel()
+			}
 			delete(state.jobs, key)
 		}
 	}
+	state.notifyOriginalSourceDeadlineLocked()
 	state.mu.Unlock()
 	value, ok := a.pluginRunningInstances.Load(instance)
 	if !ok {
 		return
 	}
 	object := value.(*originalPluginInstance)
+	if !slices.Contains(object.manifest.Methods, "get_service") {
+		return
+	}
 	enabled, err := object.getState(ctx)
 	if err != nil || !enabled {
 		return
@@ -40,6 +60,10 @@ func (a *App) updateOriginalPluginJobs(ctx context.Context, instance string) {
 		return
 	}
 	for _, definition := range defs {
+		if definition.Trigger.Kind == "source_interval" {
+			_ = a.addOriginalPluginJob(ctx, object.installation, definition)
+			continue
+		}
 		if err := a.addOriginalPluginJob(ctx, object.installation, definition); err != nil {
 			a.log("ERROR", "plugins", "register_service_failed", "注册插件定时服务失败", "", "")
 			a.reportOriginalPluginExecutionError(ctx, "system", "插件 "+object.manifest.Name+" 服务注册失败", nil, err)
@@ -58,6 +82,9 @@ func (a *App) addOriginalPluginJob(ctx context.Context, in PluginInstallation, d
 	provider, err := object.originalDisplayName(ctx)
 	if err != nil {
 		return err
+	}
+	if definition.Trigger.Kind == "source_interval" {
+		return a.addOriginalSourceIntervalJob(ctx, object, definition, provider)
 	}
 	at := time.Now()
 	trigger, triggerErr := schedule.New(definition.Trigger, at)
@@ -88,5 +115,6 @@ func (a *App) addOriginalPluginJob(ctx context.Context, in PluginInstallation, d
 		}
 	}
 	state.jobs[originalServiceKey{in.InstanceID, definition.ID}] = job
+	state.notifyOriginalSourceDeadlineLocked()
 	return triggerErr
 }

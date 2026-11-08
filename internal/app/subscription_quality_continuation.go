@@ -10,7 +10,7 @@ import (
 // already-selected downloads at its internal revision advance, while ordinary
 // user edits still revoke their old scope. Their selected policy stays frozen.
 func (a *App) advancePlannedQualityRevisionTx(ctx context.Context, tx *sql.Tx, sub Subscription) error {
-	rows, e := tx.QueryContext(ctx, `SELECT payload FROM records WHERE kind='intent' AND json_extract(payload,'$.subscription_id')=? AND json_extract(payload,'$.subscription_revision')=? AND json_extract(payload,'$.state') IN ('planned','submitting','reconcile_pending')`, sub.ID, sub.Revision)
+	rows, e := tx.QueryContext(ctx, `SELECT payload FROM records WHERE kind='intent' AND json_extract(payload,'$.subscription_id')=? AND json_extract(payload,'$.subscription_revision')=? AND COALESCE(json_extract(payload,'$.subscription_acquisition'),'')='' AND json_extract(payload,'$.state') IN ('planned','submitting','reconcile_pending')`, sub.ID, sub.Revision)
 	if e != nil {
 		return e
 	}

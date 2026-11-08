@@ -31,8 +31,9 @@ type PluginStoredValue struct {
 }
 
 type PluginStore struct {
-	store   *Store
-	notices pluginNoticeRuntime
+	originalInstalledCache originalInstalledCache
+	store                  *Store
+	notices                pluginNoticeRuntime
 }
 
 const pluginImportLimit = 64 << 20
@@ -98,7 +99,7 @@ func (p *PluginStore) unsealBound(kind, instanceID, key string, sealed []byte, b
 		return nil, err
 	}
 	limit := pluginValueLimit
-	if kind == "native_directory_selection" || kind == "download_season_scope" || kind == "subscription_acquisition" || kind == "subscription_download_failure" || kind == "source_subscription_origin" || kind == "subscription_add" || kind == "subscription_stats" || kind == "subscription_completion_ordinary" || kind == "subscription_completion" || kind == "subscription_history" || kind == "source_chain_event" || kind == "source_subscribe_complete" || kind == "subscription_quality_download" || kind == "subscription_quality_import" || kind == "subscription_quality_swap" || kind == "subscription_quality_cleanup" || kind == "data" || kind == "core_words" || kind == "download_context" || kind == "download_added" || kind == "subscription_words" || kind == "run_result" || kind == "cleanup_journal" || kind == "scrape_journal" {
+	if kind == "native_directory_selection" || kind == "download_season_scope" || kind == completedSeasonMagnetKind || kind == "subscription_acquisition" || kind == "subscription_download_failure" || kind == "source_subscription_origin" || kind == "subscription_add" || kind == "subscription_stats" || kind == "subscription_completion_ordinary" || kind == "subscription_completion" || kind == "subscription_history" || kind == "source_chain_event" || kind == "source_subscribe_complete" || kind == "subscription_quality_download" || kind == "subscription_quality_import" || kind == "subscription_quality_swap" || kind == "subscription_quality_cleanup" || kind == "data" || kind == "core_words" || kind == "download_context" || kind == "download_added" || kind == "subscription_words" || kind == "run_result" || kind == "cleanup_journal" || kind == "scrape_journal" {
 		limit = pluginDataValueLimit
 	}
 	if kind == "clean_seed_journal" || kind == "notice_journal" {
@@ -195,7 +196,15 @@ func (p *PluginStore) Data(ctx context.Context, instanceID, key string) (PluginS
 	return p.readValue(ctx, instanceID, "data", key)
 }
 func (p *PluginStore) Config(ctx context.Context, instance string) (PluginStoredValue, error) {
-	return p.readValue(ctx, instance, "config", "main")
+	observed, sealed, err := p.readOriginalBaseConfigRow(ctx, p.store.DB, instance)
+	if err != nil {
+		return PluginStoredValue{}, err
+	}
+	if !observed.present {
+		return PluginStoredValue{}, sql.ErrNoRows
+	}
+	raw, err := p.unsealBound("config", instance, "main", sealed, observed.valueLimit)
+	return PluginStoredValue{Revision: observed.revision, Value: raw, UpdatedAt: observed.updatedAt}, err
 }
 func (p *PluginStore) unseal(kind, instance, key string, sealed []byte) (json.RawMessage, error) {
 	return p.unsealBound(kind, instance, key, sealed, -1)

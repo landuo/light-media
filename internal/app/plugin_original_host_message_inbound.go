@@ -8,6 +8,7 @@ import (
 	"strings"
 	"unicode"
 
+	"light-media/internal/commandrouter"
 	"light-media/internal/notice"
 	"light-media/internal/plugins"
 )
@@ -15,6 +16,11 @@ import (
 func (a *App) originalHostMessageInboundResource(ctx context.Context, scope originalBaseCallScope, raw json.RawMessage) (json.RawMessage, error) {
 	if scope.object == nil || scope.object.app != a || scope.phase == "stop" {
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "接收消息需要当前插件调用")
+	}
+	lark := scope.object.installation.PluginID == "LarkMessager"
+	grant, _ := ctx.Value(originalLarkWebhookKey{}).(originalLarkWebhookGrant)
+	if lark && (scope.phase != "http" || grant.object != scope.object) {
+		return nil, bad("PLUGIN_CAPABILITY_DENIED", "Lark 入站消息须绑定实际回调路由")
 	}
 	var input plugins.ReceiveMessageRequestV1
 	if err := originalResourceDecodeBounded(raw, &input, plugins.MaxPayloadBytes); err != nil {
@@ -34,6 +40,9 @@ func (a *App) originalHostMessageInboundResource(ctx context.Context, scope orig
 	} else if input.Source != nil {
 		input.Args["source"] = []string{*input.Source}
 	}
+	if lark && (input.Source == nil || *input.Source != "Lark") {
+		return nil, bad("PLUGIN_CAPABILITY_DENIED", "Lark 回调只能提交其自身消息来源")
+	}
 	if err := scope.validate(ctx); err != nil {
 		return nil, err
 	}
@@ -42,6 +51,9 @@ func (a *App) originalHostMessageInboundResource(ctx context.Context, scope orig
 	lease, child, err := scope.object.reserveOriginalSubmission()
 	if err != nil {
 		return nil, err
+	}
+	if lark {
+		child = context.WithValue(child, originalLarkIncomingKey{}, grant)
 	}
 	go func() {
 		defer a.wg.Done()
@@ -83,7 +95,20 @@ func (a *App) processOriginalIncomingMessage(ctx context.Context, input plugins.
 		return err
 	}
 	var attempts originalModuleAttempts
-	raw, err := a.invokeOriginalPluginModulesObserved(ctx, "message_parser", nil, nil, kwargs, &attempts)
+	var groups []originalPluginModuleGroup
+	if grant, ok := ctx.Value(originalLarkIncomingKey{}).(originalLarkWebhookGrant); ok {
+		// Raw Lark text can carry a site's login credentials. Only the
+		// exact admitted parser sees it, even when other plugins or clones
+		// have registered a general message_parser.
+		groups, err = a.originalPluginModules(ctx, grant.object.installation.InstanceID)
+		if err != nil {
+			return err
+		}
+		if len(groups) != 1 || groups[0].object != grant.object {
+			return nil
+		}
+	}
+	raw, err := a.invokeOriginalPluginModuleGroups(ctx, "message_parser", nil, nil, kwargs, &attempts, groups)
 	if err != nil {
 		return err
 	}
@@ -147,20 +172,38 @@ func (a *App) processOriginalIncomingMessage(ctx context.Context, input plugins.
 }
 
 func (a *App) handleOriginalIncomingMessage(ctx context.Context, info originalIncomingMessage, text, user, username string, chat, reply *string, hasMedia bool) error {
-	if consumed, _ := a.consumeOriginalPluginInput(ctx, originalInputMessage{Text: text, User: user, Username: &username, Channel: info.Channel, Source: info.Source, ChatID: chat, ReplyToMessageID: reply, HasMedia: hasMedia}); consumed {
-		return nil
+	lark, verified := originalLarkSlashIngress(ctx, info)
+	siteReply := originalSlashReply{info: info, user: user, username: username}
+	var siteSession, subscribeSession originalSlashSession
+	sensitive := false
+	if lark {
+		subscribeSession = a.pluginOriginalSubscribes.current(user)
+		siteSession, sensitive = a.pluginOriginalSiteInteractions.incoming(user, text, subscribeSession)
+	}
+	input := originalInputMessage{Text: text, User: user, Username: &username, Channel: info.Channel, Source: info.Source, ChatID: chat, ReplyToMessageID: reply, HasMedia: hasMedia}
+	if !sensitive {
+		if consumed, _ := a.consumeOriginalPluginInput(ctx, input); consumed {
+			return nil
+		}
 	}
 	// Fixed MessageChain's audio transcription calls AgentCapabilityManager and
 	// LLMHelper; that branch is excluded. Parser audio/image/file values remain
 	// intact and still prevent an attachment from consuming a pending text input.
 	commandText, command := originalWebCommandText(text)
 	callback := strings.HasPrefix(text, "CALLBACK:")
-	if !callback {
+	publicText := text
+	if sensitive {
+		publicText = "站点凭据输入"
+		if command {
+			publicText = "/sites"
+		}
+	}
+	if !callback && !sensitive {
 		if err := a.saveOriginalIncomingChannelMessage(ctx, info.Channel, info.Source, username, text); err != nil {
 			return err
 		}
 	}
-	status, err := a.startOriginalIncomingProcessing(ctx, info, text)
+	status, err := a.startOriginalIncomingProcessing(ctx, info, publicText)
 	if err != nil {
 		return err
 	}
@@ -171,8 +214,10 @@ func (a *App) handleOriginalIncomingMessage(ctx context.Context, info originalIn
 	// The source checks again inside _handle_message_core after starting the
 	// channel status. A status module can create a pending input, or the first
 	// check can expire a more-specific request and expose a fallback session.
-	if consumed, _ := a.consumeOriginalPluginInput(ctx, originalInputMessage{Text: text, User: user, Username: &username, Channel: info.Channel, Source: info.Source, ChatID: chat, ReplyToMessageID: reply, HasMedia: hasMedia}); consumed {
-		return nil
+	if !sensitive {
+		if consumed, _ := a.consumeOriginalPluginInput(ctx, input); consumed {
+			return nil
+		}
 	}
 	if err := ctx.Err(); err != nil {
 		return err
@@ -180,13 +225,58 @@ func (a *App) handleOriginalIncomingMessage(ctx context.Context, info originalIn
 	if command {
 		// Preserve processing_status in the ordinary event, then reuse the exact
 		// registered-command consumer. Mark it consumed to avoid duplicate work.
-		raw, err := json.Marshal(map[string]any{"cmd": commandText, "channel": info.Channel, "source": info.Source, "user": info.UserID, "processing_status": status})
+		raw, err := json.Marshal(map[string]any{"cmd": publicText, "channel": info.Channel, "source": info.Source, "user": info.UserID, "processing_status": status})
 		if err != nil {
 			return err
 		}
 		a.broadcastOriginalPluginEventCoreState(ctx, "command.excute", raw, true)
-		_, err = a.dispatchOriginalCommand(ctx, originalCommandEvent{Text: commandText, Channel: info.Channel, Source: info.Source, User: info.UserID})
-		return err
+		handled, err := a.dispatchOriginalCommand(ctx, originalCommandEvent{Text: publicText, Channel: info.Channel, Source: info.Source, User: info.UserID})
+		if err != nil || handled || !lark {
+			return err
+		}
+		if verified {
+			name, args := commandrouter.Split(commandText)
+			siteReply.username = ""
+			switch name {
+			case "/sites":
+				return a.openOriginalSiteInteraction(ctx, siteReply, args)
+			case "/subscribes":
+				return a.openOriginalSubscribeInteraction(ctx, siteReply, args)
+			case "/downloading":
+				return a.originalChatDownloading(ctx, siteReply)
+			case "/transfer":
+				return a.originalChatTransferCommand(ctx, siteReply)
+			case "/version":
+				return siteReply.post(ctx, a, a.originalChatVersionText(ctx), false)
+			case "/clear_cache":
+				return a.originalChatClearCache(ctx, siteReply)
+			case "/restart":
+				return a.originalChatRestart(ctx, siteReply)
+			case "/redo":
+				return a.originalChatTransferRedo(ctx, siteReply, args)
+			}
+		}
+		return nil
+	}
+	if verified {
+		if subscribeSession.created.After(siteSession.created) {
+			if sensitive && !originalSubscribePendingIDs(subscribeSession.awaiting, text) {
+				return siteReply.post(ctx, a, "请使用「搜索 <编号>」或「删除 <编号>」继续订阅操作", false)
+			}
+			if handled, err := a.originalSubscribeInteractionText(ctx, siteReply, subscribeSession, text); handled || err != nil {
+				return err
+			}
+		} else if handled, err := a.originalSiteInteractionText(ctx, siteReply, siteSession, text); handled || err != nil {
+			return err
+		}
+	}
+	if sensitive {
+		return nil
+	}
+	if verified {
+		if handled, err := a.originalChatMediaText(ctx, siteReply, text); handled || err != nil {
+			return err
+		}
 	}
 	a.emitStandardBusinessEvent(ctx, "user.message", map[string]any{"text": commandText, "userid": info.UserID, "channel": info.Channel, "source": info.Source, "chat_id": info.ChatID, "reply_to_message_id": info.ReplyToMessageID})
 	return nil
@@ -254,6 +344,59 @@ func (a *App) dispatchOriginalIncomingCallback(ctx context.Context, info origina
 		return nil
 	}
 	data := strings.TrimPrefix(text, "CALLBACK:")
+	if number, ok := originalChatTransferRetryNumber(data); ok {
+		lark, verified := originalLarkSlashIngress(ctx, info)
+		if lark {
+			if !verified {
+				return nil
+			}
+			user, err := originalInputID(info.UserID, false)
+			if err != nil {
+				return err
+			}
+			if user != nil && *user != "" {
+				return a.originalChatTransferRetryCallback(ctx, originalSlashReply{info: info, user: *user, username: username}, number)
+			}
+			return nil
+		}
+	}
+	kind, _, _ := strings.Cut(data, ":")
+	if lark, verified := originalLarkSlashIngress(ctx, info); lark && (kind == "sites" || kind == "subscribes") {
+		if !verified {
+			return nil
+		}
+		user, err := originalInputID(info.UserID, false)
+		if err != nil {
+			return err
+		}
+		if user != nil && *user != "" {
+			reply := originalSlashReply{info: info, user: *user, username: username}
+			callback := a.originalSiteInteractionCallback
+			if kind == "subscribes" {
+				callback = a.originalSubscribeInteractionCallback
+			}
+			if handled, err := callback(ctx, reply, data); handled || err != nil {
+				return err
+			}
+		}
+	}
+	if lark, verified := originalLarkSlashIngress(ctx, info); lark {
+		if _, action, _ := originalChatMediaCallback(data); action != "" {
+			if !verified {
+				return nil
+			}
+			user, err := originalInputID(info.UserID, false)
+			if err != nil {
+				return err
+			}
+			if user != nil && *user != "" {
+				reply := originalSlashReply{info: info, user: *user, username: username}
+				if handled, err := a.originalChatMediaCallback(ctx, reply, data); handled || err != nil {
+					return err
+				}
+			}
+		}
+	}
 	if strings.HasPrefix(data, "[PLUGIN]") {
 		plugin, content, ok := strings.Cut(data, "|")
 		if !ok {

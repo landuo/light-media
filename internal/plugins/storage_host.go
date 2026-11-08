@@ -8,6 +8,7 @@ import (
 const StorageExistsCapability = "storage.files.exists"
 const StorageListCapability = "storage.files.list"
 const StorageDeleteCapability = "storage.files.delete"
+const ScrapeCleanRemoveCapability = "storage.files.scrape_clean_remove"
 
 // Storage uses the host's configured local roots and current invocation. A
 // FileItem is descriptive data; it does not itself grant filesystem authority.

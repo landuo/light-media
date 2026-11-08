@@ -198,6 +198,22 @@ func BuildCustomHosts(original string, lines []string) (content, normalized stri
 	return
 }
 func buildCustomHostsSource(original string, lines []string) (content, normalized string, invalid []string, hasValid bool, err error) {
+	filtered := make([]string, 0, len(lines))
+	for _, raw := range lines {
+		if raw != "" && raw != "\n" {
+			filtered = append(filtered, strings.ReplaceAll(raw, "\n", ""))
+		}
+	}
+	return buildCustomHostsRows(original, filtered, false)
+}
+
+// BuildCustomHosts122 applies the installed source's allow_address_duplication
+// option. Each row has already passed the source's initial empty/LF filter.
+func BuildCustomHosts122(original string, lines []string) (content, normalized string, invalid []string, hasValid bool, err error) {
+	return buildCustomHostsRows(original, lines, true)
+}
+
+func buildCustomHostsRows(original string, lines []string, allowAddressDuplication bool) (content, normalized string, invalid []string, hasValid bool, err error) {
 	base, err := CustomHostsCanonicalBase(original)
 	if err != nil {
 		return original, "", nil, false, err
@@ -216,10 +232,6 @@ func buildCustomHostsSource(original string, lines []string) (content, normalize
 	var config strings.Builder
 	invalid = []string{}
 	for _, raw := range lines {
-		if raw == "" || raw == "\n" {
-			continue
-		}
-		raw = strings.ReplaceAll(raw, "\n", "")
 		config.WriteString(raw + "\n")
 		line := legacyanime.Strip(raw)
 		if strings.HasPrefix(line, "#") {
@@ -233,7 +245,7 @@ func buildCustomHostsSource(original string, lines []string) (content, normalize
 			continue
 		}
 		hasValid = true
-		duplicate := entry.address != "0.0.0.0" && entry.address != "127.0.0.1" && addresses[entry.address]
+		duplicate := !allowAddressDuplication && entry.address != "0.0.0.0" && entry.address != "127.0.0.1" && addresses[entry.address]
 		for _, name := range entry.names {
 			duplicate = duplicate || names[name]
 		}
