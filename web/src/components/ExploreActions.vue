@@ -470,58 +470,69 @@ defineExpose({ open });
   <VBottomSheet
     :model-value="showSeasonSheet"
     :persistent="saving"
+    :max-width="display.smAndUp.value ? '36rem' : undefined"
+    :max-height="display.smAndUp.value ? 'min(80dvh, 44rem)' : '88dvh'"
     inset
     scrollable
+    content-class="explore-season-overlay"
     aria-label="选择订阅季度"
     @update:model-value="close"
   >
     <VCard class="explore-season-card">
-      <VCardItem
-        ><VCardTitle>订阅 {{ original?.title }}</VCardTitle
-        ><template #append
-          ><VBtn
+      <VCardItem class="explore-season-header">
+        <VCardTitle>订阅 {{ original?.title }}</VCardTitle>
+        <p class="explore-season-description">选择要订阅的季度，可多选。</p>
+        <template #append>
+          <VBtn
             icon="mdi-close"
+            size="40"
             variant="text"
             :disabled="saving"
             aria-label="关闭"
-            @click="close" /></template
-      ></VCardItem>
-      <VDivider />
+            @click="close"
+          />
+        </template>
+      </VCardItem>
       <VProgressLinear v-if="loading || saving" indeterminate color="primary" />
       <VCardText class="explore-season-content">
         <VAlert v-if="error" type="error" variant="tonal" class="mb-3">{{ error }}</VAlert>
-        <p v-if="loading" role="status">正在加载季集信息…</p>
+        <p v-if="loading" class="empty-action" role="status">正在加载季集信息…</p>
         <VBtn v-else-if="phase === 'error'" variant="text" @click="retry">重试</VBtn>
-        <VList v-else-if="seasons.length" lines="three">
+        <VList v-else-if="seasons.length" class="explore-season-list" density="compact" lines="two">
           <VListItem
             v-for="row in seasons"
             :key="row.season"
+            class="explore-season-row"
+            :class="{
+              'explore-season-row--selected':
+                row.selected && (row.state === 'ready' || row.state === 'failed'),
+              'explore-season-row--locked': row.state === 'success' || row.state === 'conflict',
+            }"
             :active="row.selected"
             :disabled="saving || row.state === 'success' || row.state === 'conflict'"
             color="primary"
             @click="toggleSeason(row)"
           >
-            <template #prepend
-              ><VImg
-                :src="image(row.poster_path || '', 'w185')"
-                width="60"
-                height="90"
-                class="me-3 rounded"
-                cover
-            /></template>
-            <VListItemTitle>第 {{ row.season }} 季</VListItemTitle>
-            <VListItemSubtitle
-              >{{ row.air_date?.slice(0, 4) || '年份待定' }} ·
-              {{ row.episode_count ? row.episode_count + ' 集' : '集数待定' }}</VListItemSubtitle
-            >
-            <VListItemSubtitle>播出日期：{{ row.air_date || '待定' }}</VListItemSubtitle>
-            <VListItemSubtitle
-              v-if="row.state === 'conflict' || row.state === 'success' || row.state === 'failed'"
-            >
+            <template #prepend>
+              <div class="explore-season-poster" aria-hidden="true">
+                <VIcon icon="mdi-television-classic" size="18" />
+                <VImg
+                  v-if="image(row.poster_path || '', 'w185')"
+                  :src="image(row.poster_path || '', 'w185')"
+                  class="explore-season-poster-image"
+                  cover
+                />
+              </div>
+            </template>
+            <div class="explore-season-row-heading">
+              <VListItemTitle>第 {{ row.season }} 季</VListItemTitle>
               <VChip
+                v-if="row.state === 'conflict' || row.state === 'success' || row.state === 'failed'"
                 size="small"
-                class="mt-1"
-                :color="row.state === 'failed' ? 'error' : 'success'"
+                variant="tonal"
+                :color="
+                  row.state === 'failed' ? 'error' : row.state === 'success' ? 'success' : undefined
+                "
                 >{{
                   row.state === 'success'
                     ? '订阅成功'
@@ -532,6 +543,10 @@ defineExpose({ open });
                         : '已有订阅'
                 }}</VChip
               >
+            </div>
+            <VListItemSubtitle class="explore-season-meta">
+              <span>{{ row.episode_count ? row.episode_count + ' 集' : '集数待定' }}</span>
+              <span>首播 {{ row.air_date || '待定' }}</span>
             </VListItemSubtitle>
             <div
               v-if="row.state === 'failed' || (row.state === 'conflict' && row.selected)"
@@ -543,6 +558,8 @@ defineExpose({ open });
               ><VSwitch
                 :model-value="row.selected || row.state === 'success' || row.state === 'conflict'"
                 :disabled="saving || row.state === 'success' || row.state === 'conflict'"
+                density="compact"
+                color="primary"
                 hide-details
                 :aria-label="`选择第 ${row.season} 季`"
                 @click.stop="toggleSeason(row)"
@@ -554,8 +571,9 @@ defineExpose({ open });
           <VBtn v-if="action === 'add-seasons'" variant="text" @click="retry">重试</VBtn>
         </div>
       </VCardText>
-      <VCardActions class="season-action-footer"
-        ><VBtn
+      <VCardActions class="season-action-footer justify-space-between">
+        <span v-if="seasons.length" class="explore-season-total">共 {{ seasons.length }} 季</span>
+        <VBtn
           variant="flat"
           color="primary"
           :loading="saving"
@@ -566,8 +584,8 @@ defineExpose({ open });
               ? '提交订阅（' + pendingSeasons.length + ' 季）'
               : '请选择订阅季度'
           }}</VBtn
-        ></VCardActions
-      >
+        >
+      </VCardActions>
     </VCard>
   </VBottomSheet>
 </template>
@@ -629,18 +647,106 @@ defineExpose({ open });
   justify-content: flex-end;
   padding: 12px 20px;
 }
-.explore-season-card {
-  max-height: 85vh;
+:global(.v-bottom-sheet > .explore-season-overlay.v-overlay__content) {
+  margin-inline: auto;
+  border-radius: 16px 16px 0 0;
 }
-.explore-season-content {
+.explore-season-overlay > .explore-season-card.v-card {
+  width: 100%;
+  border-radius: inherit;
+}
+.explore-season-card.v-card > .explore-season-header.v-card-item {
+  flex: none;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.explore-season-header .v-card-title {
+  padding: 0;
+  font-size: 18px;
+  font-weight: 600;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.explore-season-description,
+.explore-season-total {
+  color: var(--muted);
+  font-size: 13px;
+}
+.explore-season-description {
+  margin: 2px 0 0;
+}
+.explore-season-card.v-card > .explore-season-content.v-card-text {
+  min-height: 0;
+  padding: 12px 20px 16px;
   overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.explore-season-list {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+}
+.explore-season-row {
+  min-width: 0;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.explore-season-row--selected {
+  border-color: var(--accent-line);
+  background: rgba(var(--v-theme-primary), 0.06);
+}
+.explore-season-row--locked {
+  background: var(--surface-subtle);
+}
+.explore-season-row.v-list-item--disabled {
+  opacity: 0.76;
+}
+.explore-season-poster {
+  position: relative;
+  display: grid;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 54px;
+  margin-inline-end: 12px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--surface-subtle);
+  color: var(--muted);
+  place-items: center;
+}
+.explore-season-poster-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.explore-season-row-heading,
+.explore-season-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px 8px;
+}
+.explore-season-row-heading .v-list-item-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+.explore-season-meta {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  opacity: 1;
 }
 .season-action-footer {
-  justify-content: center;
-  padding: 12px;
+  flex: none;
+  gap: 12px;
+  padding: 10px 20px max(10px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
 }
 .season-action-footer .v-btn {
-  min-width: 30%;
+  min-height: 40px;
+  margin-inline-start: auto;
 }
 .empty-action {
   padding: 32px 0;
@@ -658,6 +764,12 @@ defineExpose({ open });
   }
   .explore-action-content {
     max-height: none;
+  }
+  .explore-season-row {
+    padding-inline: 8px;
+  }
+  .season-action-footer {
+    padding-inline: 16px;
   }
 }
 </style>
