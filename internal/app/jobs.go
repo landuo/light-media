@@ -143,23 +143,67 @@ func (a *App) queryJobs(ctx context.Context, query string, args ...any) ([]Job, 
 	}
 	return out, rows.Err()
 }
+
+type jobLane uint8
+
+const (
+	allJobs jobLane = iota
+	generalJobs
+	subscriptionJobs
+)
+
 func (a *App) claim(ctx context.Context) (Job, error) {
+	return a.claimJob(ctx, allJobs)
+}
+
+func (a *App) claimJob(ctx context.Context, lane jobLane) (Job, error) {
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
 		return Job{}, e
 	}
 	defer tx.Rollback()
-	j, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE state IN ('queued','retry_wait')
+	const due = `SELECT ` + jobColumns + ` FROM jobs WHERE state IN ('queued','retry_wait')
 		AND kind NOT IN ('lark_download','subscription_download')
 		AND (kind!='download' OR COALESCE(json_extract(payload,'$._ordinary_search_attempt'),'')='')
-		AND run_at<=? ORDER BY run_at,created_at LIMIT 1`, time.Now().Unix()))
+		AND run_at<=?`
+	claimAt := time.Now()
+	find := func(filter string) (Job, error) {
+		return scanJob(tx.QueryRowContext(ctx, due+filter+` ORDER BY run_at,created_at LIMIT 1`, claimAt.Unix()))
+	}
+	var j Job
+	switch lane {
+	case subscriptionJobs:
+		j, e = find(` AND kind='subscription'`)
+	case generalJobs:
+		j, e = find(` AND kind!='subscription'`)
+		if e != nil {
+			break
+		}
+		// Subscription downloads keep the existing file safety checks, but
+		// can submit ahead of bulk organizing. Preserve FIFO for other work.
+		// Look up the intent so jobs already queued by older builds also qualify.
+		switch j.Kind {
+		case "organize_prepare", "organize_file", "import", "reorganize_cleanup", "quality_cleanup", "scrape", "fnos_sync":
+			download, err := find(` AND kind='download' AND EXISTS (
+				SELECT 1 FROM records AS intent WHERE intent.kind='intent'
+				AND intent.id=json_extract(jobs.payload,'$.id')
+				AND COALESCE(json_extract(intent.payload,'$.subscription_id'),'')!='')`)
+			if err == nil {
+				j = download
+			} else if !errors.Is(err, sql.ErrNoRows) {
+				return Job{}, err
+			}
+		}
+	default:
+		j, e = find("")
+	}
 	if e != nil {
 		return Job{}, e
 	}
 	j.State = "running"
 	j.Attempt++
 	j.Generation++
-	j.LeaseUntil = time.Now().Add(10 * time.Minute).Unix()
+	j.LeaseUntil = claimAt.Add(10 * time.Minute).Unix()
 	j.UpdatedAt = now()
 	_, e = tx.ExecContext(ctx, `UPDATE jobs SET state=?,attempt=?,generation=?,lease_until=?,updated_at=? WHERE id=?`, j.State, j.Attempt, j.Generation, j.LeaseUntil, j.UpdatedAt, j.ID)
 	if e != nil {
@@ -168,21 +212,29 @@ func (a *App) claim(ctx context.Context) (Job, error) {
 	return j, tx.Commit()
 }
 func (a *App) worker(ctx context.Context) {
+	a.jobWorker(ctx, allJobs)
+}
+
+func (a *App) jobWorker(ctx context.Context, lane jobLane) {
 	timer := time.NewTicker(2 * time.Second)
 	defer timer.Stop()
+	wake := (<-chan struct{})(a.jobWake)
+	if lane == subscriptionJobs {
+		wake = nil // File submissions do not need to wake the subscription lane.
+	}
 	for {
 		select {
 		case <-ctx.Done():
 			return
 		default:
 		}
-		j, e := a.claim(ctx)
+		j, e := a.claimJob(ctx, lane)
 		if e != nil {
 			select {
 			case <-ctx.Done():
 				return
 			case <-timer.C:
-			case <-a.jobWake:
+			case <-wake:
 			}
 			continue
 		}
@@ -437,6 +489,21 @@ func (a *App) scheduler(ctx context.Context) {
 		}
 		if err := a.scheduleSiteDataRefresh(ctx, time.Now()); err != nil {
 			a.log("ERROR", "site", "refresh_schedule_failed", "站点数据刷新调度失败，已保留原调度状态", "", "")
+		}
+	}
+}
+
+func (a *App) subscriptionScheduler(ctx context.Context) {
+	ticker := time.NewTicker(15 * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+		}
+		if a.paused() {
+			continue
 		}
 		raw, e := a.Store.List(ctx, "subscription", 500, 0)
 		if e != nil {

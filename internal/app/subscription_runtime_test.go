@@ -190,6 +190,7 @@ func TestCalendarPredictionsDoNotInventEpisodes(t *testing.T) {
 }
 func TestCheckCompletedSubscriptionDoesNotSearchAgain(t *testing.T) {
 	a := subscriptionTestApp(t)
+	installSubscriptionJadeDynastyMetadataFixture(t, a)
 	ctx := context.Background()
 	request := subscriptionRequest(t)
 	request.Episodes = []int{1}

@@ -313,10 +313,14 @@ func (a *App) Start(parent context.Context) {
 	}
 	for i := 0; i < 2; i++ {
 		a.wg.Add(1)
-		go func() { defer a.wg.Done(); a.worker(ctx) }()
+		go func() { defer a.wg.Done(); a.jobWorker(ctx, generalJobs) }()
 	}
 	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.jobWorker(ctx, subscriptionJobs) }()
+	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.scheduler(ctx) }()
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.subscriptionScheduler(ctx) }()
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.runOriginalPluginScheduler(ctx) }()
 	a.wg.Add(1)
