@@ -1849,7 +1849,18 @@ func (a *App) downloadAction(ctx context.Context, key, action string) error {
 func (a *App) pollDownloads(ctx context.Context) error {
 	a.downloadMu.Lock()
 	defer a.downloadMu.Unlock()
-	raw, e := a.Store.List(ctx, "intent", 500, 0)
+	// Only the completed-tag repair is bounded. Old pending downloads still
+	// need polling when recent history alone fills that window.
+	raw, e := a.Store.listRecordPayloads(ctx, `WITH recent_imported AS (
+		SELECT payload,updated_at,id FROM records WHERE kind='intent'
+		AND CASE WHEN json_valid(payload) THEN json_extract(payload,'$.state')='imported' END
+		ORDER BY updated_at DESC,id LIMIT 500
+	)
+	SELECT payload FROM (
+		SELECT payload,updated_at,id FROM records WHERE kind='intent'
+		AND CASE WHEN json_valid(payload) THEN json_extract(payload,'$.state') IN ('accepted','downloading','downloaded','reconcile_pending') END
+		UNION ALL SELECT payload,updated_at,id FROM recent_imported
+	) ORDER BY updated_at DESC,id`)
 	if e != nil {
 		return e
 	}
@@ -1859,10 +1870,7 @@ func (a *App) pollDownloads(ctx context.Context) error {
 		if json.Unmarshal(b, &in) != nil {
 			continue
 		}
-		switch in.State {
-		case "accepted", "downloading", "downloaded", "reconcile_pending", "imported":
-			byInstance[in.DownloaderID] = append(byInstance[in.DownloaderID], in)
-		}
+		byInstance[in.DownloaderID] = append(byInstance[in.DownloaderID], in)
 	}
 	for _, rule := range a.Settings().Directories {
 		if rule.Enabled && rule.MonitorType == "downloader" && rule.DownloaderID != "" {
@@ -1909,7 +1917,14 @@ func (a *App) pollDownloads(ctx context.Context) error {
 				}
 				latest, terminal, err := a.saveIntentProgress(ctx, in.ID, t)
 				if err != nil {
-					return err
+					if ctx.Err() != nil {
+						return ctx.Err()
+					}
+					message := a.clean(err.Error())
+					_ = a.saveIntentError(ctx, in.ID, message)
+					a.recordDirectoryIntentError(ctx, in, err)
+					a.log("WARN", "downloads", "intent_poll_failed", message, in.WorkflowID, "")
+					break
 				}
 				if terminal {
 					break

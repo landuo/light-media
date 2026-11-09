@@ -2,11 +2,14 @@ package app
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -240,4 +243,107 @@ func TestDirectoryFileIncompleteDownloaderNeverImports(t *testing.T) {
 	if e := a.Store.Get(context.Background(), "directory_status", rule.ID, &status); e != nil || status.Status != "error" {
 		t.Fatalf("failure not visible: %+v %v", status, e)
 	}
+}
+
+func TestDirectoryMonitorKeepsCompletedPacksMovingWhenOneFileDisappears(t *testing.T) {
+	a, source, _ := importTestApp(t)
+	ctx := context.Background()
+	identity := importFixture(t, a, "tv")
+	importCache(t, a, "directory-identify:tv:测试剧集", catalog.Page{Results: []catalog.Media{identity}, Page: 1, TotalPages: 1, TotalResults: 1})
+	season := catalog.Season{SeriesID: identity.ID, SeasonNumber: 1}
+	const contents = "synthetic pack episode"
+	var files []string
+	for episode := 1; episode <= 4; episode++ {
+		name := filepath.Join(fmt.Sprintf("pack-%d", (episode-1)/2+1), fmt.Sprintf("测试剧集 S01E%02d 1080p.mkv", episode))
+		files = append(files, name)
+		importWrite(t, filepath.Join(source, name), []byte(contents))
+		season.Episodes = append(season.Episodes, catalog.Episode{ID: int64(episode + 10), SeasonNumber: 1, EpisodeNumber: episode, Name: "episode", AirDate: "2024-01-01"})
+	}
+	importCache(t, a, "season:123:1", season)
+	packs := map[string][]string{strings.Repeat("a", 40): files[:2], strings.Repeat("b", 40): files[2:]}
+	missing := filepath.Join(source, files[0])
+	var disappear atomic.Bool
+	qb := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/api/v2/torrents/info":
+			if r.URL.Query().Get("hashes") == "" && disappear.Swap(false) {
+				// The scan has seen the first path. Simulate a concurrent move
+				// before the per-file completion checks without using sleeps.
+				if err := os.Rename(missing, missing+".moving"); err != nil {
+					t.Error(err)
+					http.Error(w, "fixture rename failed", http.StatusInternalServerError)
+					return
+				}
+			}
+			tasks := []any{}
+			for hash, names := range packs {
+				if filter := r.URL.Query().Get("hashes"); filter != "" && filter != hash {
+					continue
+				}
+				task := workflowTask(hash, 1)
+				task["state"] = "uploading"
+				task["total_size"], task["completed"] = len(names)*len(contents), len(names)*len(contents)
+				tasks = append(tasks, task)
+			}
+			workflowJSON(w, tasks)
+		case "/api/v2/torrents/files":
+			rows := []any{}
+			for _, name := range packs[r.URL.Query().Get("hash")] {
+				rows = append(rows, map[string]any{"name": name, "size": len(contents), "progress": 1})
+			}
+			workflowJSON(w, rows)
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	defer qb.Close()
+	a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "qb", Kind: "qb", BaseURL: qb.URL}, DownloadPath: "/downloads", Mappings: []PathMapping{{From: "/downloads", To: source}}}}
+	rule := DirectoryRule{ID: "packs", RootID: "root", MediaType: "tv", Mode: "hardlink", Scraping: importFlag(false), MonitorType: "downloader", DownloaderID: "qb", DownloadPath: "/downloads", Enabled: true, IncludeExisting: true}
+	a.config.Directories = []DirectoryRule{rule}
+	directoryPoll(t, a, rule)
+	for _, name := range files {
+		directoryAge(t, a, rule, filepath.Join(source, name))
+	}
+	disappear.Store(true)
+	if err := a.pollDirectoryFileRule(ctx, rule); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("missing episode inspection result: %v", err)
+	}
+	verifyHardlink := func(name string) {
+		t.Helper()
+		path := filepath.Join(source, name)
+		f := directoryObservation(t, a, rule, path)
+		if f.State != "queued" || f.PlanID == "" {
+			t.Fatalf("completed episode not queued: %+v", f)
+		}
+		reorgRunJob(t, a, reorgJob(t, a, "import", f.PlanID))
+		var plan ImportPlan
+		if err := a.Store.Get(ctx, "import_plan", f.PlanID, &plan); err != nil || len(plan.Files) != 1 {
+			t.Fatalf("completed episode plan: %+v %v", plan, err)
+		}
+		sourceInfo, err := os.Stat(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		libraryInfo, err := os.Stat(plan.Files[0].Target)
+		if err != nil || !os.SameFile(sourceInfo, libraryInfo) {
+			t.Fatalf("completed episode was not linked into the library: %s: %v", name, err)
+		}
+	}
+	for _, name := range files[1:] {
+		verifyHardlink(name)
+	}
+	if f := directoryObservation(t, a, rule, missing); f.State != "inspect_pending" || f.Reason == "" || f.PlanID != "" {
+		t.Fatalf("missing episode not recorded as pending inspection: %+v", f)
+	}
+	var status managedConnection
+	if err := a.Store.Get(ctx, "directory_status", rule.ID, &status); err != nil || status.Status != "error" || status.Error == "" {
+		t.Fatalf("directory inspection issue hidden: %+v %v", status, err)
+	}
+	if err := os.Rename(missing+".moving", missing); err != nil {
+		t.Fatal(err)
+	}
+	directoryPoll(t, a, rule)
+	directoryAge(t, a, rule, missing)
+	directoryPoll(t, a, rule)
+	verifyHardlink(files[0])
 }

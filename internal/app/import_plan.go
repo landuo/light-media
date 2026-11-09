@@ -140,6 +140,10 @@ func parseManualImportName(file ImportFileRequest, name string) media.ParseResul
 }
 
 func (a *App) scanFiles(ctx context.Context, directory string, recursive bool) (any, error) {
+	return a.scanImportFiles(ctx, directory, recursive, nil)
+}
+
+func (a *App) scanImportFiles(ctx context.Context, directory string, recursive bool, inspectFailed func(string, error) error) (any, error) {
 	if !a.sourceAllowed(directory) {
 		return nil, bad("INVALID_SOURCE", "请扫描允许目录内的规范绝对路径")
 	}
@@ -188,7 +192,13 @@ func (a *App) scanFiles(ctx context.Context, directory string, recursive bool) (
 				} else if matched, _ := classifier.Media(transferextensions.PathFile(name)); matched {
 					locked, err := snapshotPath(name)
 					if err != nil {
-						return err
+						if inspectFailed == nil {
+							return err
+						}
+						if err = inspectFailed(name, err); err != nil {
+							return err
+						}
+						continue
 					}
 					file := importScanFile{Path: name, Size: locked.Size, Parsed: a.parseMediaName(entry.Name())}
 					file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(name)

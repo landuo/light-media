@@ -19,6 +19,7 @@ import (
 // Directory monitoring uses persistent observations, not a file-create event as
 // proof that a download finished. The first pass is a baseline unless opted in.
 const directoryStableTime = 60 * time.Second
+const directoryInspectionPending = "inspect_pending"
 
 type DirectoryObservedFile struct {
 	ID                  string         `json:"id"`
@@ -139,7 +140,15 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 	if e != nil {
 		return e
 	}
-	raw, e := a.scanFiles(ctx, source, true)
+	fingerprint := directoryFingerprint(rule)
+	var inspectionError error
+	inspectFailed := func(path string, cause error) error {
+		if inspectionError == nil {
+			inspectionError = fmt.Errorf("未能核对源文件 %s: %w", filepath.Base(path), cause)
+		}
+		return a.recordDirectoryInspectionFailure(ctx, rule, fingerprint, path, cause)
+	}
+	raw, e := a.scanImportFiles(ctx, source, true, inspectFailed)
 	if e != nil {
 		return e
 	}
@@ -152,7 +161,6 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 	if e != nil {
 		return e
 	}
-	fingerprint := directoryFingerprint(rule)
 	guard := directoryImportGuard{Rule: rule, SourcePath: source}
 	if rule.DownloaderID != "" {
 		d, err := a.downloader(rule.DownloaderID)
@@ -185,10 +193,13 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		if !a.directoryRuleOwnsFile(rule, file) {
 			key := directoryFileID(rule.ID, file.Path)
 			var existing DirectoryObservedFile
-			if err := a.Store.Get(ctx, "directory_file", key, &existing); errors.Is(err, sql.ErrNoRows) {
+			if err := a.Store.Get(ctx, "directory_file", key, &existing); errors.Is(err, sql.ErrNoRows) || err == nil && existing.State == directoryInspectionPending {
 				stamp, snapshotErr := snapshotPath(file.Path)
 				if snapshotErr != nil {
-					return snapshotErr
+					if err = inspectFailed(file.Path, snapshotErr); err != nil {
+						return err
+					}
+					continue
 				}
 				baseline := DirectoryObservedFile{ID: key, DirectoryID: rule.ID, Path: file.Path, State: "baseline", Reason: "由列表中更靠前的目录规则处理", Snapshot: stamp, StableSince: time.Now().UnixNano(), RuleFingerprint: fingerprint, LastSeen: now()}
 				if err = a.Store.Put(ctx, "directory_file", key, baseline); err != nil {
@@ -207,7 +218,10 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 		stamp, e := snapshotPath(file.Path)
 		if e != nil {
-			return e
+			if e = inspectFailed(file.Path, e); e != nil {
+				return e
+			}
+			continue
 		}
 		key := directoryFileID(rule.ID, file.Path)
 		var f DirectoryObservedFile
@@ -215,7 +229,7 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		if e != nil && !errors.Is(e, sql.ErrNoRows) {
 			return e
 		}
-		fresh := e != nil || f.RuleFingerprint != fingerprint
+		fresh := e != nil || f.RuleFingerprint != fingerprint || f.State == directoryInspectionPending
 		changed := !fresh && !sameDirectorySnapshot(f.Snapshot, stamp)
 
 		evidenceJSON, _ := json.Marshal(struct {
@@ -289,8 +303,29 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 			return e
 		}
 	}
+	if inspectionError != nil {
+		return inspectionError
+	}
 	return a.Store.Put(ctx, "directory_file_state", rule.ID, directoryBaseline{Fingerprint: fingerprint, LastScan: now()})
 }
+
+func (a *App) recordDirectoryInspectionFailure(ctx context.Context, rule DirectoryRule, fingerprint, path string, cause error) error {
+	key := directoryFileID(rule.ID, path)
+	var file DirectoryObservedFile
+	if err := a.Store.Get(ctx, "directory_file", key, &file); err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return err
+	}
+	if file.RuleFingerprint == fingerprint && (file.PlanID != "" || file.State == "baseline") {
+		return nil
+	}
+	file = DirectoryObservedFile{
+		ID: key, DirectoryID: rule.ID, Path: path, State: directoryInspectionPending,
+		Reason:          "暂时无法核对源文件，下轮重新检查：" + a.clean(cause.Error()),
+		RuleFingerprint: fingerprint, LastSeen: now(),
+	}
+	return a.Store.Put(ctx, "directory_file", key, file)
+}
+
 func (a *App) refreshDirectoryFilePlan(ctx context.Context, f *DirectoryObservedFile) {
 	var p ImportPlan
 	if e := a.Store.Get(ctx, "import_plan", f.PlanID, &p); e != nil {

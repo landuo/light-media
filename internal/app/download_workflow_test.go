@@ -313,6 +313,87 @@ func TestPollCannotResurrectCancelledDownload(t *testing.T) {
 	}
 }
 
+func TestCompletedPackPollContinuesPastBadIntentAndRecentHistory(t *testing.T) {
+	a, source, _ := importTestApp(t)
+	ctx := context.Background()
+	m := importFixture(t, a, "tv")
+	importCache(t, a, "season:123:1", catalog.Season{SeriesID: 123, SeasonNumber: 1, Episodes: []catalog.Episode{
+		{ID: 101, SeasonNumber: 1, EpisodeNumber: 1},
+		{ID: 102, SeasonNumber: 1, EpisodeNumber: 2},
+	}})
+	const first = "测试剧集.S01E01.1080p.mkv"
+	const second = "测试剧集.S01E02.1080p.mkv"
+	for _, name := range []string{first, second} {
+		importWrite(t, filepath.Join(source, name), bytes.Repeat([]byte{'v'}, 1024))
+	}
+	_, healthyHash := workflowTorrent(first)
+	_, badHash := workflowTorrent("other.mkv")
+	healthyTask := workflowTask(healthyHash, 1)
+	healthyTask["total_size"], healthyTask["completed"] = 2048, 2048
+	qb := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case r.URL.Path == "/api/v2/torrents/info" && r.URL.Query().Get("hashes") == "":
+			workflowJSON(w, []any{workflowTask(badHash, 1), healthyTask})
+		case r.URL.Path == "/api/v2/torrents/info" && r.URL.Query().Get("hashes") == healthyHash:
+			workflowJSON(w, []any{healthyTask})
+		case r.URL.Path == "/api/v2/torrents/files" && r.URL.Query().Get("hash") == healthyHash:
+			workflowJSON(w, []any{
+				map[string]any{"name": first, "size": 1024, "progress": 1},
+				map[string]any{"name": second, "size": 1024, "progress": 1},
+			})
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	defer qb.Close()
+	workflowConfigure(t, a, "http://127.0.0.1:1", qb.URL)
+	d := &a.config.Downloaders[0]
+	d.Mappings = []PathMapping{{From: "/downloads", To: source}}
+	healthy := Intent{ID: "healthy-pack", WorkflowID: "wf-healthy", Media: m, Season: 1, Episodes: []int{1, 2}, State: "accepted", Hash: healthyHash, DownloaderID: d.ID, DownloaderSnapshot: downloaderSnapshot(*d), RootID: "root"}
+	broken := Intent{ID: "bad-intent", WorkflowID: "wf-bad", Media: m, State: "accepted", Hash: badHash, DownloaderID: d.ID, SourcePostAddVersion: 1}
+	for _, in := range []Intent{healthy, broken} {
+		if err := a.Store.Put(ctx, "intent", in.ID, in); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if _, err := a.Store.DB.ExecContext(ctx, `UPDATE records SET updated_at=CASE id WHEN 'bad-intent' THEN '2026-02-01' ELSE '2026-01-01' END WHERE kind='intent'`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.Store.DB.ExecContext(ctx, `WITH RECURSIVE history(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM history WHERE n<500)
+		INSERT INTO records SELECT 'intent','historical-'||n,json_object('state','cancelled'),'2026-03-01' FROM history`); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.pollDownloads(ctx); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.Store.Get(ctx, "intent", broken.ID, &broken); err != nil {
+		t.Fatal(err)
+	}
+	if broken.State != "accepted" || !strings.Contains(broken.Error, "收据缺失") {
+		t.Fatalf("bad intent did not retain its review reason: %+v", broken)
+	}
+	if err := a.Store.Get(ctx, "intent", healthy.ID, &healthy); err != nil {
+		t.Fatal(err)
+	}
+	job, err := a.claim(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if healthy.State != "downloaded" || healthy.ImportPlanID == "" || job.Kind != "import" {
+		t.Fatalf("healthy pack did not reach the import queue: state=%s plan=%s job=%s", healthy.State, healthy.ImportPlanID, job.Kind)
+	}
+	if err := a.safeRun(ctx, job); err != nil {
+		t.Fatal(err)
+	}
+	var plan ImportPlan
+	if err := a.Store.Get(ctx, "import_plan", healthy.ImportPlanID, &plan); err != nil {
+		t.Fatal(err)
+	}
+	if plan.State != "complete" || len(plan.Files) != 2 || plan.Files[0].Status != "imported" || plan.Files[1].Status != "imported" {
+		t.Fatalf("healthy pack did not fully import: %+v", plan)
+	}
+}
+
 func TestPausedReadyImportPreviewResumesExactlyOnce(t *testing.T) {
 	a, source, _ := importTestApp(t)
 	m := importFixture(t, a, "movie")
