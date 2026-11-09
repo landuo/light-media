@@ -133,7 +133,10 @@ func TestHistoryParityV031SupportsThousandRowPages(t *testing.T) {
 		t.Fatalf("no-match search must report an empty first page: %+v", none)
 	}
 	seen := map[string]bool{}
-	for _, item := range append(first.Items, second.Items...) {
+	for i, item := range append(first.Items, second.Items...) {
+		if want := fmt.Sprintf("page-file-%04d", i); item.ID != want {
+			t.Fatalf("page order changed at %d: got %s, want %s", i, item.ID, want)
+		}
 		if seen[item.ID] {
 			t.Fatalf("overlapping pages repeated %s", item.ID)
 		}

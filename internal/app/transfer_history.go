@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -57,10 +58,17 @@ const transferHistoryPlanSource = `COALESCE(NULLIF(json_extract(f.value,'$.histo
  NULLIF(json_extract(meta.payload,'$.reorganize.asset.source_path'),''),
  NULLIF(json_extract(f.value,'$.source'),''),'file:'||json_extract(f.value,'$.id'))`
 
+const transferHistoryMainFile = `COALESCE(json_extract(cb.payload,'$.file'),f.value)`
+
 const transferHistoryExecutedFiles = `, executed_seed AS MATERIALIZED (
- SELECT r.id AS plan_id, json_remove(r.payload,'$.files','$.media.cast','$.media.recommendations','$.media.seasons') AS plan, COALESCE(json_extract(cb.payload,'$.file'),f.value) AS file, COALESCE(cb.updated_at,r.updated_at) AS updated_at,
+ SELECT r.id AS plan_id, f.fullkey AS file_json_path, cb.id AS callback_id, COALESCE(cb.updated_at,r.updated_at) AS updated_at,
  j.id AS job_id,j.state AS job_state,j.error_message AS job_error,j.created_at AS executed_at,j.execution_key,
  json_extract(f.value,'$.id') AS file_id,
+ json_extract(` + transferHistoryMainFile + `,'$.id') AS execution_file_id,
+ json_extract(r.payload,'$.created_at') AS plan_created_at,
+ json_extract(r.payload,'$.media.title') AS title,
+ json_extract(` + transferHistoryMainFile + `,'$.source') AS source_path,
+ json_extract(` + transferHistoryMainFile + `,'$.target') AS target_path,
  ` + transferHistoryPlanSource + ` AS resource_source,
  CASE WHEN json_extract(cb.payload,'$.file.status')='imported' THEN 'success'
  WHEN json_extract(cb.payload,'$.file.status')='error' THEN 'failed'
@@ -74,10 +82,14 @@ const transferHistoryExecutedFiles = `, executed_seed AS MATERIALIZED (
  WHERE r.kind='import_plan'`
 
 const transferHistoryAuxiliaryFiles = `), auxiliary_seed AS MATERIALIZED (
- SELECT r.id AS plan_id, json_remove(r.payload,'$.files','$.media.cast','$.media.recommendations','$.media.seasons') AS plan,
- json_extract(cb.payload,'$.file') AS file,cb.updated_at AS updated_at,
+ SELECT r.id AS plan_id, NULL AS file_json_path, cb.id AS callback_id, cb.updated_at AS updated_at,
  j.id AS job_id,j.state AS job_state,j.error_message AS job_error,j.created_at AS executed_at,j.execution_key,
  json_extract(cb.payload,'$.file.id') AS file_id,
+ json_extract(cb.payload,'$.file.id') AS execution_file_id,
+ json_extract(r.payload,'$.created_at') AS plan_created_at,
+ json_extract(r.payload,'$.media.title') AS title,
+ json_extract(cb.payload,'$.file.source') AS source_path,
+ json_extract(cb.payload,'$.file.target') AS target_path,
  json_extract(cb.payload,'$.file.source') AS resource_source,
  CASE WHEN json_extract(cb.payload,'$.file.status')='imported' THEN 'success' ELSE 'failed' END AS status
  FROM records r,json_each(r.payload,'$.files') f
@@ -87,8 +99,8 @@ const transferHistoryAuxiliaryFiles = `), auxiliary_seed AS MATERIALIZED (
  AND json_extract(cb.payload,'$.file.id')!=json_extract(f.value,'$.id') AND json_extract(cb.payload,'$.job_id')=j.id
  WHERE r.kind='import_plan'`
 
-// Project the compact rows before ranking. Sorting with the untrimmed plan
-// payloads is expensive, especially when one plan contains many files.
+// Rank references and scalar fields, then read the JSON for the selected rows.
+// Carrying plan/file documents through each sorter can exhaust container /tmp.
 const transferHistoryRankFile = `SELECT *, MIN(execution_key) OVER (PARTITION BY plan_id,file_id) AS first_execution_key,
  ROW_NUMBER() OVER (PARTITION BY plan_id,file_id ORDER BY execution_key DESC) AS file_rank FROM `
 
@@ -100,13 +112,13 @@ const transferHistoryBaseCTE = transferHistoryJobsCTE + transferHistoryExecutedF
 
 const transferHistoryRanked = `, ranked_history AS (
  SELECT *,
- FIRST_VALUE(json_extract(file,'$.id')) OVER (PARTITION BY resource_source ORDER BY first_execution_key,json_extract(file,'$.id')) AS history_id,
- FIRST_VALUE(json_extract(plan,'$.created_at')) OVER (PARTITION BY resource_source ORDER BY first_execution_key,json_extract(file,'$.id')) AS history_created_at,
- ROW_NUMBER() OVER (PARTITION BY resource_source ORDER BY execution_key DESC,json_extract(file,'$.id')) AS history_rank
+ FIRST_VALUE(execution_file_id) OVER (PARTITION BY resource_source ORDER BY first_execution_key,execution_file_id) AS history_id,
+ FIRST_VALUE(plan_created_at) OVER (PARTITION BY resource_source ORDER BY first_execution_key,execution_file_id) AS history_created_at,
+ ROW_NUMBER() OVER (PARTITION BY resource_source ORDER BY execution_key DESC,execution_file_id) AS history_rank
  FROM attempts
 ), history AS (
  SELECT * FROM ranked_history h WHERE history_rank=1 AND NOT EXISTS (
- SELECT 1 FROM records hidden JOIN attempts old ON hidden.id=json_extract(old.file,'$.id')
+ SELECT 1 FROM records hidden JOIN attempts old ON hidden.id=old.execution_file_id
  WHERE hidden.kind='transfer_history_hidden' AND old.resource_source=h.resource_source
  AND (CASE WHEN COALESCE(json_extract(hidden.payload,'$.execution_key'),'')!=''
  THEN json_extract(hidden.payload,'$.execution_key')>=h.execution_key
@@ -116,17 +128,27 @@ const transferHistoryRanked = `, ranked_history AS (
 
 const transferHistoryCTE = transferHistoryBaseCTE + transferHistoryRanked
 
-const transferHistoryColumns = `plan,file,job_id,job_state,job_error,updated_at,status,history_id,history_created_at,resource_source,execution_key`
+const transferHistoryJSON = `json_remove(hp.payload,'$.files','$.media.cast','$.media.recommendations','$.media.seasons'),
+ COALESCE(json_extract(hc.payload,'$.file'),json_extract(hp.payload,h.file_json_path))`
+
+const transferHistoryColumns = transferHistoryJSON + `,h.job_id,h.job_state,h.job_error,h.updated_at,h.status,h.history_id,h.history_created_at,h.resource_source,h.execution_key`
+
+const transferHistoryHydrate = ` JOIN records hp ON hp.kind='import_plan' AND hp.id=h.plan_id
+ LEFT JOIN records hc ON hc.kind='original_transfer_callback' AND hc.id=h.callback_id`
+
+const transferHistorySelect = `SELECT ` + transferHistoryColumns + ` FROM history h` + transferHistoryHydrate
+
+const transferHistoryOrder = ` ORDER BY h.updated_at DESC,h.execution_key DESC,h.history_id`
 
 // Restrict both kinds of attempt before ranking. The queue worker already
 // knows the source and only needs its current history, including older retries.
 const transferHistoryBySource = transferHistoryJobsCTE +
 	transferHistoryExecutedFiles + ` AND ` + transferHistoryPlanSource + `=?1` +
 	transferHistoryAuxiliaryFiles + ` AND json_extract(cb.payload,'$.file.source')=?1` +
-	transferHistoryAttempts + transferHistoryRanked + `SELECT ` + transferHistoryColumns + ` FROM history`
+	transferHistoryAttempts + transferHistoryRanked + transferHistorySelect
 
 const transferHistoryBySourceFile = transferHistoryBySource + ` WHERE EXISTS (
- SELECT 1 FROM attempts WHERE json_extract(file,'$.id')=?2
+ SELECT 1 FROM attempts WHERE execution_file_id=?2
 )`
 
 func (item transferHistoryItem) executionFileID() string {
@@ -218,10 +240,12 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 		return nil, bad("INVALID_QUERY", "搜索内容过长")
 	}
 	pattern := historySearchPattern(query)
-	where := ` WHERE (?='' OR status=?) AND (?='' OR lower(COALESCE(json_extract(plan,'$.media.title'),'')||' '||COALESCE(json_extract(file,'$.source'),'')||' '||COALESCE(json_extract(file,'$.target'),'')) LIKE lower(?) ESCAPE '\')`
+	where := ` WHERE (?='' OR status=?) AND (?='' OR lower(COALESCE(title,'')||' '||COALESCE(source_path,'')||' '||COALESCE(target_path,'')) LIKE lower(?) ESCAPE '\')`
 	args := []any{status, status, query, pattern}
 	var total int
-	rows, e := a.Store.DB.QueryContext(ctx, transferHistoryCTE+`SELECT `+transferHistoryColumns+`,COUNT(*) OVER () FROM history`+where+` ORDER BY updated_at DESC,execution_key DESC,history_id LIMIT ? OFFSET ?`, append(args, size, (page-1)*size)...)
+	rows, e := a.Store.DB.QueryContext(ctx, transferHistoryCTE+`, page AS MATERIALIZED (
+ SELECT h.*,COUNT(*) OVER () AS total FROM history h`+where+transferHistoryOrder+` LIMIT ? OFFSET ?
+) SELECT `+transferHistoryColumns+`,h.total FROM page h`+transferHistoryHydrate, append(args, size, (page-1)*size)...)
 	if e != nil {
 		return nil, e
 	}
@@ -246,6 +270,17 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 			return nil, e
 		}
 	}
+	// Keep the page order without sending the hydrated documents through
+	// another SQLite sorter, even when the caller requests 1,000 rows.
+	slices.SortFunc(items, func(a, b transferHistoryItem) int {
+		if order := strings.Compare(b.UpdatedAt, a.UpdatedAt); order != 0 {
+			return order
+		}
+		if order := strings.Compare(b.ExecutionKey, a.ExecutionKey); order != 0 {
+			return order
+		}
+		return strings.Compare(a.ID, b.ID)
+	})
 	// Filesystem checks happen after closing the single-connection SQL cursor.
 	for i := range items {
 		if e = ctx.Err(); e != nil {
@@ -286,7 +321,7 @@ func scanTransferHistory(row interface{ Scan(...any) error }, extra ...any) (tra
 	return transferHistoryItem{ID: historyID, FileID: file.ID, ResourceSource: resourceSource, ExecutionKey: executionKey, PlanID: plan.ID, WorkflowID: plan.WorkflowID, JobID: jobID, JobState: jobState, Media: plan.Media, Season: file.Season, Episodes: file.Episodes, Part: file.Part, Source: file.Source, Target: file.Target, Mode: mode, Size: file.Size, Status: status, FileStatus: file.Status, Error: message, CreatedAt: createdAt, UpdatedAt: updated, CanRetry: status == "failed" && jobState != "running" && jobState != "queued" && jobState != "retry_wait" && jobState != "waiting_paused" && file.Status != "blocked"}, nil
 }
 func (a *App) transferHistoryItem(ctx context.Context, id string) (transferHistoryItem, error) {
-	item, e := scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryCTE+`SELECT `+transferHistoryColumns+` FROM history WHERE history_id=? OR resource_source=(SELECT resource_source FROM attempts WHERE json_extract(file,'$.id')=? LIMIT 1) LIMIT 1`, id, id))
+	item, e := scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryCTE+transferHistorySelect+` WHERE h.history_id=? OR h.resource_source=(SELECT resource_source FROM attempts WHERE execution_file_id=? LIMIT 1) LIMIT 1`, id, id))
 	if e != nil {
 		return item, e
 	}
@@ -307,7 +342,7 @@ func (a *App) transferHistoryPlanFile(ctx context.Context, planID, fileID string
 
 // Queue controls address an exact execution, never a stable-history redirect.
 func (a *App) transferHistoryExecution(ctx context.Context, fileID string) (transferHistoryItem, error) {
-	return scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryBaseCTE+`SELECT plan,file,job_id,job_state,job_error,updated_at,status,json_extract(file,'$.id'),json_extract(plan,'$.created_at'),resource_source,execution_key FROM attempts WHERE json_extract(file,'$.id')=? LIMIT 1`, fileID))
+	return scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryBaseCTE+`SELECT `+transferHistoryJSON+`,h.job_id,h.job_state,h.job_error,h.updated_at,h.status,h.execution_file_id,h.plan_created_at,h.resource_source,h.execution_key FROM attempts h`+transferHistoryHydrate+` WHERE h.execution_file_id=? LIMIT 1`, fileID))
 }
 func (a *App) transferHistoryCapabilities(ctx context.Context, item *transferHistoryItem) {
 	_, e := snapshotTransferPath(item.Source)
