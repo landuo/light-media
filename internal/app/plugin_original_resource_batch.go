@@ -26,6 +26,7 @@ type originalResourceBatchSearch struct {
 	method        string
 	initialGroups []originalPluginModuleGroup
 	page          int
+	auto          bool
 	native        func(context.Context, SiteConfig, int) (sites.SearchResult, error)
 	ctx           context.Context
 	configs       []SiteConfig
@@ -51,17 +52,25 @@ func (op *originalResourceBatchSearch) parallel(configs []SiteConfig, run func(c
 	out := map[string]originalResourceSiteResult{}
 	var mu sync.Mutex
 	var workers sync.WaitGroup
-	slots := make(chan struct{}, concurrentSearchSites)
+	var slots chan struct{}
+	if op.auto {
+		slots = make(chan struct{}, concurrentBackgroundSearchSites)
+	}
 	for _, config := range configs {
 		workers.Add(1)
 		go func() {
 			defer workers.Done()
-			select {
-			case slots <- struct{}{}:
-			case <-op.ctx.Done():
+			if slots != nil {
+				select {
+				case slots <- struct{}{}:
+				case <-op.ctx.Done():
+					return
+				}
+				defer func() { <-slots }()
+			}
+			if op.ctx.Err() != nil {
 				return
 			}
-			defer func() { <-slots }()
 			ctx, cancel := context.WithTimeout(op.ctx, siteSearchTimeout)
 			defer cancel()
 			result, err := run(ctx, config)

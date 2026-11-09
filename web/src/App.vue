@@ -164,13 +164,11 @@ function change() {
 }
 function goBack() { window.history.back(); }
 function searchMedia(resource = false) {
-  if (!globalQuery.value.trim()) return;
+  const query = globalQuery.value.trim();
+  if (!query) return;
   searchMenuOpen.value = false;
-  startSearch(
-    (resource ? 'resource-search' : 'search') +
-      '?query=' +
-      encodeURIComponent(globalQuery.value.trim()),
-  );
+  searchInput.value?.blur();
+  startSearch((resource ? 'resource-search' : 'search') + '?query=' + encodeURIComponent(query));
 }
 function searchBlur(event: FocusEvent) {
   if (!(event.currentTarget as HTMLElement).contains(event.relatedTarget as Node | null))
@@ -379,17 +377,18 @@ onUnmounted(() => {
             v-model="globalQuery"
             aria-label="搜索电影、剧集"
             :placeholder="compactAppInterface ? '搜索影视…' : '搜索电影、剧集…'"
+            enterkeyhint="search"
             @focus="searchMenuOpen = true"
             @input="searchMenuOpen = true"
           />
           <kbd>⌘K</kbd>
           <div v-if="searchMenuOpen && globalQuery.trim()" class="global-search-menu">
-            <button type="button" @click="searchMedia()">
+            <button type="button" @pointerdown.prevent @click="searchMedia()">
               <AppIcon name="movie" /><span
                 ><strong>电影、电视剧</strong><small>搜索 {{ globalQuery }} 标题</small></span
               >
             </button>
-            <button type="button" @click="searchMedia(true)">
+            <button type="button" @pointerdown.prevent @click="searchMedia(true)">
               <AppIcon name="search" /><span
                 ><strong>在站点中搜索种子资源</strong
                 ><small>搜索 {{ globalQuery }} 相关资源</small></span

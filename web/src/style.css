@@ -1741,9 +1741,6 @@ details .panel {
   .global-search kbd {
     display: none;
   }
-  .global-search input {
-    font-size: 12px;
-  }
   .sidebar {
     transform: translateX(-100%);
     transition: transform 0.2s;
@@ -2405,9 +2402,6 @@ small,
   .topbar-actions {
     gap: 0;
   }
-  .topbar .global-search input {
-    font-size: 16px;
-  }
   .notification-panel {
     inset-inline: 8px;
     top: calc(var(--topbar-height) + 4px);
@@ -2442,6 +2436,15 @@ small,
   textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)),
   label:not(.v-label, :where(.plugin-remote-config *)) {
     font-size: 14px;
+  }
+}
+
+/* Keep touch search fields large enough to avoid focus zoom in iOS Safari. */
+@media (max-width: 760px), (pointer: coarse) {
+  .topbar .global-search input,
+  .site-resource-search input,
+  .resource-keyword-form .v-field input {
+    font-size: 16px;
   }
 }
 

@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -66,7 +67,7 @@ func TestKeywordSearchStreamsFastSiteBeforeSlowSiteCompletes(t *testing.T) {
 		t.Fatal("search did not establish an authenticated stream", response.StatusCode)
 	}
 	scanner := bufio.NewScanner(response.Body)
-	sawFast, sawComplete, sawQueued := false, false, false
+	sawFast, sawComplete, sawSearching := false, false, false
 	event := ""
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -83,8 +84,8 @@ func TestKeywordSearchStreamsFastSiteBeforeSlowSiteCompletes(t *testing.T) {
 		if len(output.Sites) != 2 {
 			t.Fatal("stream lost selected site progress", output.Sites)
 		}
-		if output.Sites[0].Status == "queued" && output.Sites[1].Status == "queued" {
-			sawQueued = true
+		if output.Sites[0].Status == "searching" && output.Sites[1].Status == "searching" {
+			sawSearching = true
 		}
 		if len(output.Candidates) == 1 && output.Candidates[0].Resource.SiteID == "fast" {
 			if output.Sites[0].Status != "searching" || output.Sites[1].Status != "ok" {
@@ -100,12 +101,47 @@ func TestKeywordSearchStreamsFastSiteBeforeSlowSiteCompletes(t *testing.T) {
 	if err := scanner.Err(); err != nil {
 		t.Fatal("fast site waited behind slow site or stream was interrupted", err)
 	}
-	if !sawFast || !sawComplete || !sawQueued {
-		t.Fatal("incomplete progressive search", sawQueued, sawFast, sawComplete)
+	if !sawFast || !sawComplete || !sawSearching {
+		t.Fatal("incomplete progressive search", sawSearching, sawFast, sawComplete)
 	}
 	var count int
 	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM site_usage`).Scan(&count); err != nil || count != 2 {
 		t.Fatal("parallel search did not preserve one charged request per site", count, err)
+	}
+}
+
+func TestManualKeywordSearchStartsAllSitesBeforeAnyCompletes(t *testing.T) {
+	t.Setenv("SEARCH_RESOURCE_PAGES", "1")
+	for _, mode := range []string{"stream", "batch"} {
+		t.Run(mode, func(t *testing.T) {
+			a := newTestApp(t)
+			const siteCount = 6
+			var started atomic.Int32
+			allStarted := make(chan struct{})
+			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if started.Add(1) == siteCount {
+					close(allStarted)
+				}
+				select {
+				case <-allStarted:
+					io.WriteString(w, workflowHTML("Synthetic.Film.2024.1080p", "", false))
+				case <-r.Context().Done():
+				}
+			}))
+			defer server.Close()
+			for index := range siteCount {
+				a.config.Sites = append(a.config.Sites, parallelSearchSite("site-"+strconv.Itoa(index), server.URL))
+			}
+			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+			defer cancel()
+			if mode == "stream" {
+				ctx = context.WithValue(ctx, searchProgressKey{}, func(SearchOutput) {})
+			}
+			out, err := a.searchResources(ctx, SearchRequest{Query: "Synthetic Film"})
+			if err != nil || len(out.Candidates) != siteCount || len(out.Sites) != siteCount {
+				t.Fatalf("all %d sites must start before any may finish: started=%d, sites=%+v, candidates=%d, error=%v", siteCount, started.Load(), out.Sites, len(out.Candidates), err)
+			}
+		})
 	}
 }
 
@@ -127,7 +163,7 @@ func TestMediaSearchKeepsPartialResourcesAndCacheHintsAcrossConcurrentSites(t *t
 	if err != nil || len(out.Candidates) != 1 || out.Sites[0].Status != "partial" || out.Sites[1].Status != "failed" {
 		t.Fatalf("partial result was discarded or failure hidden: %+v %v", out, err)
 	}
-	if len(snapshots) == 0 || snapshots[0].Sites[0].Status != "queued" || len(snapshots[0].Candidates) != 0 {
+	if len(snapshots) == 0 || snapshots[0].Sites[0].Status != "searching" || len(snapshots[0].Candidates) != 0 {
 		t.Fatal("earlier progress snapshots changed after later results")
 	}
 	var stored struct {

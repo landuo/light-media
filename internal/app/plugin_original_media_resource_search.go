@@ -205,7 +205,7 @@ func (op *originalMediaResourceSearch) run() {
 				return
 			}
 		}
-		batch := &originalResourceBatchSearch{app: op.app, ctx: op.ctx, configs: op.configs, keyword: keyword, mtype: op.mtype, page: 1, initialGroups: op.initialGroups}
+		batch := &originalResourceBatchSearch{app: op.app, ctx: op.ctx, configs: op.configs, keyword: keyword, mtype: op.mtype, page: 1, auto: op.auto, initialGroups: op.initialGroups}
 		op.initialGroups = nil
 		if op.synchronous {
 			batch.method = "batch_search_torrents"

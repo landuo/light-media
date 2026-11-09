@@ -91,6 +91,7 @@ onUnmounted(() => {
             v-model="query"
             aria-label="站点资源关键词"
             placeholder="搜索关键词，留空浏览最新资源"
+            enterkeyhint="search"
           />
         </div>
         <button class="primary" :disabled="loading">搜索</button

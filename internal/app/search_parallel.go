@@ -13,7 +13,7 @@ import (
 	"light-media/internal/sites"
 )
 
-const concurrentSearchSites = 5
+const concurrentBackgroundSearchSites = 5
 const siteSearchTimeout = 45 * time.Second
 
 type siteSearchOutput struct {
@@ -24,7 +24,7 @@ type siteSearchOutput struct {
 // Sites run independently, while withSite still serializes every request for a
 // particular configured site and enforces its shared budget and cooldown.
 // Only the collector calls the progress callback / writes the HTTP stream.
-func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutput, run func(context.Context, SiteConfig) siteSearchOutput) (SearchOutput, error) {
+func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutput, auto bool, run func(context.Context, SiteConfig) siteSearchOutput) (SearchOutput, error) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 	settings := a.Settings()
@@ -52,8 +52,14 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 		}
 	}
 	sort.SliceStable(configs, func(i, j int) bool { return configs[i].Priority < configs[j].Priority })
+	status := "searching"
+	var slots chan struct{}
+	if auto {
+		status = "queued"
+		slots = make(chan struct{}, concurrentBackgroundSearchSites)
+	}
 	for _, config := range configs {
-		out.Sites = append(out.Sites, SiteStatus{ID: config.ID, Status: "queued"})
+		out.Sites = append(out.Sites, SiteStatus{ID: config.ID, Status: status})
 	}
 	if len(configs) == 0 {
 		return out, bad("NO_SITES", "请先添加并启用资源站点")
@@ -109,25 +115,26 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 	if in.mediaModuleSearch != nil {
 		in.mediaModuleSearch.ctx, in.mediaModuleSearch.configs = ctx, append([]SiteConfig(nil), configs...)
 	}
-	slots := make(chan struct{}, concurrentSearchSites)
 	var workers sync.WaitGroup
 	defer func() { cancel(); workers.Wait() }()
 	for i, config := range configs {
 		workers.Add(1)
 		go func() {
 			defer workers.Done()
-			select {
-			case slots <- struct{}{}:
-			case <-ctx.Done():
-				return
+			if slots != nil {
+				select {
+				case slots <- struct{}{}:
+				case <-ctx.Done():
+					return
+				}
+				defer func() { <-slots }()
+				select {
+				case updates <- event{index: i, started: true}:
+				case <-ctx.Done():
+					return
+				}
 			}
-			defer func() { <-slots }()
 			if ctx.Err() != nil {
-				return
-			}
-			select {
-			case updates <- event{index: i, started: true}:
-			case <-ctx.Done():
 				return
 			}
 			start := time.Now()

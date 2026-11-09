@@ -347,7 +347,7 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 	if t.ProviderSearchKey == "" {
 		out.WorkflowID = a.workflow(ctx, in.WorkflowID, t.Media)
 	}
-	out, e = a.searchSites(ctx, in, out, func(siteCtx context.Context, s SiteConfig) siteSearchOutput {
+	out, e = a.searchSites(ctx, in, out, auto, func(siteCtx context.Context, s SiteConfig) siteSearchOutput {
 		if moduleSearch != nil {
 			return a.originalMediaResourceSiteOutput(siteCtx, s, in, t, out.WorkflowID, moduleSearch)
 		}

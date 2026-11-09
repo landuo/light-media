@@ -45,7 +45,7 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 	if _, streaming := ctx.Value(searchProgressKey{}).(func(SearchOutput)); !streaming {
 		in.resourceBatch = &originalResourceBatchSearch{app: a, keyword: in.Query, page: in.Page, native: fetch}
 	}
-	out, err = a.searchSites(ctx, in, out, func(siteCtx context.Context, config SiteConfig) siteSearchOutput {
+	out, err = a.searchSites(ctx, in, out, false, func(siteCtx context.Context, config SiteConfig) siteSearchOutput {
 		var result sites.SearchResult
 		native := func(page int) (sites.SearchResult, error) {
 			return fetch(siteCtx, config, page)

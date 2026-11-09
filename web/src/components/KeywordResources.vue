@@ -61,6 +61,7 @@ const request = ref<any>(null),
   queue = ref<Candidate[]>([]);
 let controller: AbortController | null = null,
   disposed = false;
+const enabledSites = computed(() => (ui.settings?.sites || []).filter((s: any) => s.enabled));
 const names = computed<Record<string, string>>(() =>
     Object.fromEntries((ui.settings?.sites || []).map((s: any) => [s.id, s.name || s.id])),
   ),
@@ -132,6 +133,12 @@ async function search() {
     error.value = '请输入资源关键词';
     return;
   }
+  if (!selectedSites.value.length) {
+    error.value = enabledSites.value.length
+      ? '请至少选择一个资源站点'
+      : '请先在站点管理中添加并启用资源站点';
+    return;
+  }
   controller?.abort();
   const c = new AbortController();
   controller = c;
@@ -197,9 +204,7 @@ function downloadAdded() {
   else close();
 }
 onMounted(() => {
-  selectedSites.value = (ui.settings?.sites || [])
-    .filter((s: any) => s.enabled)
-    .map((s: any) => s.id);
+  selectedSites.value = enabledSites.value.map((s: any) => s.id);
   void loadDownloads();
   initialized.value = true;
 });
@@ -207,7 +212,8 @@ useExplicitSearch(
   props.route,
   () => {
     page.value = 1;
-    if (query.value.trim() && selectedSites.value.length) return search();
+    query.value = params.get('query') || '';
+    if (query.value.trim()) return search();
   },
   initialized,
 );
@@ -238,8 +244,8 @@ onUnmounted(() => {
     </button>
   </div>
   <section v-if="searchOptionsOpen" class="panel">
-    <form class="search-field" @submit.prevent="submitSearch">
-      <VTextField v-model="query" label="搜索资源关键词" density="compact" required /><button
+    <form class="search-field resource-keyword-form" @submit.prevent="submitSearch">
+      <VTextField v-model="query" label="搜索资源关键词" density="compact" enterkeyhint="search" required /><button
         class="primary"
       >
         搜索
@@ -247,7 +253,7 @@ onUnmounted(() => {
     </form>
     <div class="site-selector">
       <label
-        v-for="s in (ui.settings?.sites || []).filter((s: any) => s.enabled)"
+        v-for="s in enabledSites"
         :key="s.id"
         class="check"
         ><input v-model="selectedSites" type="checkbox" :value="s.id" />{{ s.name || s.id }}</label
