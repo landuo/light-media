@@ -100,6 +100,44 @@ func TestNexusPHPSearchVariableColumnsAndRecentListing(t *testing.T) {
 	}
 }
 
+func TestCaishenSearchReadsCardResultsOnBothOrigins(t *testing.T) {
+	const cards = `<div class="torrents"><div class="torrent-table-for-spider"><div class="torrent-table-sub-info">
+		<div><a href="details.php?id=42" title="Synthetic.Show.S01E02.1080p">Synthetic Show</a><div class="torrent-info-text-small_name">示例说明</div><img class="pro_free2up"></div>
+		<div class="torrent-info-text-added"><span title="2026-10-15 12:34:56">1小时前</span></div>
+		<div class="torrent-info-text-size">2.5 GB</div>
+		<div class="torrent-info-text-seeders"><a href="details.php?id=42#seeders">12</a></div>
+		<div class="torrent-info-text-leechers"><a href="details.php?id=42#leechers">4</a></div>
+	</div></div></div>`
+	for _, origin := range []string{"https://cspt.top", "https://cspt.cc", genericOrigin} {
+		t.Run(origin, func(t *testing.T) {
+			c, err := New(Config{ID: "synthetic", Kind: "nexusphp", BaseURL: origin, Cookie: "synthetic-cookie"})
+			if err != nil {
+				t.Fatal(err)
+			}
+			c.http.Transport = roundTripFunc(func(req *http.Request) (*http.Response, error) {
+				if req.URL.Scheme+"://"+req.URL.Host+req.URL.Path != origin+"/torrents.php" || req.URL.Query().Get("search") != "示例剧集" || req.Header.Get("Cookie") != "synthetic-cookie" {
+					t.Error("search did not use the configured origin and keyword")
+				}
+				return response([]byte(authHTML+cards), http.StatusOK), nil
+			})
+			out, err := c.Search(context.Background(), "示例剧集", 1)
+			if origin == genericOrigin {
+				if err == nil || err.Error() != "site_protocol_changed" || len(out.Resources) != 0 {
+					t.Fatalf("unrelated site accepted the card template: %+v, %v", out, err)
+				}
+				return
+			}
+			if err != nil || len(out.Resources) != 1 {
+				t.Fatalf("Caishen card search: %+v, %v", out, err)
+			}
+			r := out.Resources[0]
+			if r.ID != "42" || r.Title != "Synthetic.Show.S01E02.1080p" || r.Subtitle != "示例说明" || r.DetailsURL != origin+"/details.php?id=42" || r.Size != 2684354560 || r.Seeders != 12 || r.Leechers != 4 || r.PublishedAt != "2026-10-15T12:34:56+08:00" || !r.Free || r.UploadFactor != 2 {
+				t.Fatalf("Caishen card resource: %+v", r)
+			}
+		})
+	}
+}
+
 func TestNexusPHPSearchTemplateAndAuthenticationFailures(t *testing.T) {
 	for _, body := range []string{
 		`<input type="password">`, authHTML + `<p>Logged in, but this is not a search result.</p>`,

@@ -136,7 +136,24 @@ func (c *Client) parseHTML(b []byte, pageURL *url.URL, page int) (SearchResult, 
 		}
 		grid = grids[0]
 		rows = find(grid, func(n *html.Node) bool { return n.Data == "div" && hasClass(n, "torrent-table-sub-info") })
-	} else {
+	} else if host := c.base.Hostname(); c.config.Kind == "nexusphp" && (host == "cspt.cc" || host == "cspt.top") {
+		// 财神 uses div.torrents > div.torrent-table-for-spider for its listing.
+		lists := find(doc, func(n *html.Node) bool {
+			return n.Data == "div" && hasClass(n, "torrent-table-for-spider") &&
+				n.Parent != nil && n.Parent.Data == "div" && hasClass(n.Parent, "torrents")
+		})
+		if len(lists) > 1 {
+			return out, errors.New("site_protocol_changed")
+		}
+		if len(lists) == 1 {
+			list := lists[0]
+			grid = list.Parent
+			rows = find(list, func(n *html.Node) bool {
+				return n.Parent == list && n.Data == "div" && hasClass(n, "torrent-table-sub-info")
+			})
+		}
+	}
+	if grid == nil {
 		grids := find(doc, func(n *html.Node) bool {
 			return n.Data == "table" && (hasClass(n, "torrents") || attribute(n, "id") == "torrents")
 		})
@@ -162,7 +179,7 @@ func (c *Client) parseHTML(b []byte, pageURL *url.URL, page int) (SearchResult, 
 	seen := map[string]bool{}
 	var rowError error
 	var columns *nexusColumns
-	if c.config.Kind == "nexusphp" {
+	if c.config.Kind == "nexusphp" && grid.Data == "table" {
 		columns, err = nexusSearchColumns(rows)
 		if err != nil {
 			return out, err
@@ -295,7 +312,7 @@ func (c *Client) parseRow(row *html.Node, pageURL *url.URL, columns *nexusColumn
 		}
 	}
 	if r.ID == "" {
-		if c.config.Kind == "hhanclub" || c.config.Kind == "nexusphp" && unrecognizedNexusRow(row) || len(find(row, func(n *html.Node) bool { return n.Data == "table" && hasClass(n, "torrentname") })) > 0 {
+		if row.Data == "div" || c.config.Kind == "nexusphp" && unrecognizedNexusRow(row) || len(find(row, func(n *html.Node) bool { return n.Data == "table" && hasClass(n, "torrentname") })) > 0 {
 			return r, false, errors.New("site_protocol_changed")
 		}
 		return r, false, nil
@@ -312,8 +329,8 @@ func (c *Client) parseRow(row *html.Node, pageURL *url.URL, columns *nexusColumn
 	u.RawQuery = url.Values{"id": {r.ID}}.Encode()
 	r.DetailsURL = u.String()
 	var sizeNode, seedNode, leechNode, dateNode *html.Node
-	if c.config.Kind == "hhanclub" {
-		if len(find(row, func(n *html.Node) bool { return hasClass(n, "torrent-table-for-spider-info") })) != 1 {
+	if row.Data == "div" {
+		if c.config.Kind == "hhanclub" && len(find(row, func(n *html.Node) bool { return hasClass(n, "torrent-table-for-spider-info") })) != 1 {
 			return r, false, errors.New("site_protocol_changed")
 		}
 		sizeNode, seedNode, leechNode, dateNode = firstClass(row, "torrent-info-text-size"), firstClass(row, "torrent-info-text-seeders"), firstClass(row, "torrent-info-text-leechers"), firstClass(row, "torrent-info-text-added")
