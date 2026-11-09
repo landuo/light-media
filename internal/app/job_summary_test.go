@@ -31,7 +31,6 @@ func summaryJob(t *testing.T, a *App, kind string, payload any, workflow string)
 
 func TestJobSummaryResolvesEveryWorkerKind(t *testing.T) {
 	a := newTestApp(t)
-	ctx := context.Background()
 	base := t.TempDir()
 	source := filepath.Join(base, "source", "Queue.Show.S03E02.mkv")
 	target := filepath.Join(base, "library", "队列测试剧集", "Season 03", "Queue.Show.S03E02.mkv")
@@ -66,13 +65,17 @@ func TestJobSummaryResolvesEveryWorkerKind(t *testing.T) {
 	for _, tc := range cases {
 		jobs = append(jobs, summaryJob(t, a, tc.kind, tc.payload, "summary-"+tc.kind))
 	}
-	views, err := a.jobViews(ctx, jobs)
+	views, err := a.jobQueue(context.Background())
 	if err != nil || len(views) != len(cases) {
-		t.Fatalf("jobViews count=%d err=%v", len(views), err)
+		t.Fatalf("jobQueue count=%d err=%v", len(views), err)
+	}
+	byID := make(map[string]jobView, len(views))
+	for _, view := range views {
+		byID[view.ID] = view
 	}
 	for i, tc := range cases {
 		t.Run(tc.kind, func(t *testing.T) {
-			view := views[i]
+			view := byID[jobs[i].ID]
 			if view.ID != jobs[i].ID || view.Kind != tc.kind {
 				t.Fatalf("job identity/order changed: %+v", view)
 			}
@@ -156,21 +159,24 @@ func TestJobSummaryActivityBelongsToTheExactJob(t *testing.T) {
 	insert("2026-10-15T12:01:00Z", job.ID, "正在核对当前资源")
 	insert("2026-10-15T12:02:00Z", job.ID, "当前资源已提交下载器")
 	insert("2026-10-15T12:03:00Z", sibling.ID, "兄弟任务正在刮削另一部影片")
-	views, err := a.jobViews(ctx, []Job{job, sibling})
+	views, err := a.jobQueue(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if views[0].Summary.Activity != "当前资源已提交下载器" || views[0].Summary.ActivityAt != "2026-10-15T12:02:00Z" {
-		t.Fatalf("activity did not use latest event for job_id: %+v", views[0].Summary)
+	byID := make(map[string]jobSummary, len(views))
+	for _, view := range views {
+		byID[view.ID] = view.Summary
 	}
-	if views[1].Summary.Activity != "兄弟任务正在刮削另一部影片" {
-		t.Fatalf("sibling's own activity missing: %+v", views[1].Summary)
+	if summary := byID[job.ID]; summary.Activity != "当前资源已提交下载器" || summary.ActivityAt != "2026-10-15T12:02:00Z" {
+		t.Fatalf("activity did not use latest event for job_id: %+v", summary)
+	}
+	if summary := byID[sibling.ID]; summary.Activity != "兄弟任务正在刮削另一部影片" {
+		t.Fatalf("sibling's own activity missing: %+v", summary)
 	}
 }
 
 func TestJobSummaryProjectionDoesNotExposePrivateRecordFields(t *testing.T) {
 	a := newTestApp(t)
-	ctx := context.Background()
 	const snapshot = "synthetic-downloader-private-snapshot"
 	const material = "synthetic-torrent-material-reference"
 	const key = "synthetic-url-api-key"
@@ -187,7 +193,7 @@ func TestJobSummaryProjectionDoesNotExposePrivateRecordFields(t *testing.T) {
 		summaryJob(t, a, "native_download", map[string]string{"id": "private-unrecognized-native"}, "private-unrecognized-native-workflow"),
 		summaryJob(t, a, "download", map[string]string{"id": "private-intent"}, "private-intent-workflow"),
 	}
-	views, err := a.jobViews(ctx, jobs)
+	views, err := a.jobQueue(context.Background())
 	if err != nil {
 		t.Fatal(err)
 	}

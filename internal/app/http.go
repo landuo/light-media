@@ -517,11 +517,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	case strings.HasPrefix(p, "assets/"):
 		out, e = a.assetAPI(w, r, strings.TrimPrefix(p, "assets/"))
 	case p == "jobs" && method == "GET":
-		var jobs []Job
-		jobs, e = a.jobQueue(ctx)
-		if e == nil {
-			out, e = a.jobViews(ctx, jobs)
-		}
+		out, e = a.jobQueue(ctx)
 	case strings.HasPrefix(p, "jobs/"):
 		out, e = a.jobAPI(w, r, strings.TrimPrefix(p, "jobs/"))
 	case p == "notifications" && method == "GET":

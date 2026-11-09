@@ -82,7 +82,8 @@ const selectedJobInfo = computed(() =>
   jobDetail.value?.job ? jobQueueInfo(jobDetail.value.job) : null,
 );
 let timer: number,
-  sse: EventSource | null = null;
+  sse: EventSource | null = null,
+  jobListRequest: AbortController | undefined;
 function logParams() {
   return new URLSearchParams({
     level: logLevel.value,
@@ -95,6 +96,7 @@ function logParams() {
   });
 }
 async function load(silent = false) {
+  if (props.view === 'jobs') return loadJobs(silent);
   if (!silent) loading.value = true;
   error.value = '';
   try {
@@ -102,8 +104,7 @@ async function load(silent = false) {
     else if (props.view === 'library') {
       data.value = (await api('/assets')) || [];
       await loadCandidates();
-    } else if (props.view === 'jobs') data.value = (await api('/jobs')) || [];
-    else if (props.view === 'logs') {
+    } else if (props.view === 'logs') {
       data.value = await api('/logs?' + logParams());
       logGap.value = data.value?.gap ? '历史日志存在缺口，当前查询可能不完整。' : '';
     } else if (props.view === 'organize') plans.value = (await api('/import/plans')) || [];
@@ -111,6 +112,25 @@ async function load(silent = false) {
     error.value = errorText(e);
   } finally {
     loading.value = false;
+  }
+}
+async function loadJobs(silent: boolean) {
+  if (silent && jobListRequest) return;
+  jobListRequest?.abort();
+  const request = new AbortController();
+  jobListRequest = request;
+  if (!silent) loading.value = true;
+  error.value = '';
+  try {
+    const jobs = await api('/jobs', undefined, undefined, request.signal);
+    if (!request.signal.aborted) data.value = jobs || [];
+  } catch (e) {
+    if (!request.signal.aborted) error.value = errorText(e);
+  } finally {
+    if (jobListRequest === request) {
+      jobListRequest = undefined;
+      loading.value = false;
+    }
   }
 }
 async function loadCandidates(append = false) {
@@ -419,6 +439,7 @@ onMounted(() => {
     }, 15000);
 });
 onUnmounted(() => {
+  jobListRequest?.abort();
   clearInterval(timer);
   sse?.close();
 });

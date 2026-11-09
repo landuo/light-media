@@ -2,9 +2,7 @@ package app
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"path/filepath"
 	"slices"
@@ -45,10 +43,69 @@ var jobTypeLabels = map[string]string{
 	"site_refresh": "刷新站点数据", "download_file_deleted": "处理源文件删除通知",
 }
 
-func (a *App) jobViews(ctx context.Context, jobs []Job) ([]jobView, error) {
-	result := make([]jobView, 0, len(jobs))
-	for _, job := range jobs {
-		view, err := a.jobView(ctx, job)
+type jobSummaryInput struct {
+	subject, oldAsset    []byte
+	activity, activityAt string
+}
+
+const jobSummaryColumns = `subject.payload,old_asset.payload,COALESCE(latest.message,''),COALESCE(latest.time,'')`
+
+const jobSummaryJoins = `
+ LEFT JOIN events latest ON latest.seq=(SELECT seq FROM events WHERE job_id=j.id ORDER BY seq DESC LIMIT 1)
+ LEFT JOIN records subject ON subject.kind=CASE
+   WHEN j.kind IN ('download','lark_download','subscription_download','subscription_acquisition_receipt') THEN 'intent'
+   WHEN j.kind IN ('native_download','subscription','reorganize_cleanup') THEN j.kind
+   WHEN j.kind='import' THEN 'import_plan'
+   WHEN j.kind IN ('scrape','fnos_sync','asset_check') THEN 'asset'
+ END AND subject.id=CASE WHEN json_valid(j.payload) THEN NULLIF(json_extract(j.payload,'$.id'),'') END
+ LEFT JOIN records old_asset ON j.kind='reorganize_cleanup' AND old_asset.kind='asset'
+   AND old_asset.id=CASE WHEN json_valid(subject.payload) THEN NULLIF(json_extract(subject.payload,'$.old_asset_id'),'') END`
+
+func (a *App) jobQueue(ctx context.Context) ([]jobView, error) {
+	// Limit before reading payloads. Running and other pending work stay
+	// visible when a directory adds hundreds of recent file jobs.
+	rows, err := a.Store.DB.QueryContext(ctx, `WITH selected AS MATERIALIZED (
+ SELECT id,CASE
+   WHEN state='running' THEN 0
+   WHEN state IN `+activeOrganizeStates+` AND kind NOT IN ('import','organize_file') THEN 1
+   WHEN state IN `+activeOrganizeStates+` THEN 2
+   ELSE 3 END AS priority FROM jobs ORDER BY priority,created_at DESC,id LIMIT 100
+), page AS (SELECT `+jobColumns+`,selected.priority FROM selected JOIN jobs USING(id))
+ SELECT j.*,`+jobSummaryColumns+` FROM page j`+jobSummaryJoins+` ORDER BY j.priority,j.created_at DESC,j.id`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	type entry struct {
+		job   Job
+		input jobSummaryInput
+	}
+	var entries []entry
+	for rows.Next() {
+		var item entry
+		var priority int
+		input := &item.input
+		item.job, err = scanJobRow(rows, &priority, &input.subject, &input.oldAsset, &input.activity, &input.activityAt)
+		if err != nil {
+			return nil, err
+		}
+		entries = append(entries, item)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	// Formatting and redaction should not keep the database connection busy.
+	settings := a.Settings()
+	result := make([]jobView, 0, len(entries))
+	for _, item := range entries {
+		if err := ctx.Err(); err != nil {
+			return nil, err
+		}
+		readJobTrace(&item.job)
+		view, err := summarizeJob(item.job, item.input, settings)
 		if err != nil {
 			return nil, err
 		}
@@ -58,25 +115,31 @@ func (a *App) jobViews(ctx context.Context, jobs []Job) ([]jobView, error) {
 }
 
 func (a *App) jobView(ctx context.Context, job Job) (jobView, error) {
-	s := jobSummary{TypeLabel: jobTypeLabels[job.Kind]}
+	var input jobSummaryInput
+	err := a.Store.DB.QueryRowContext(ctx, `SELECT `+jobSummaryColumns+` FROM (SELECT ? AS id,? AS kind,? AS payload) j`+jobSummaryJoins,
+		job.ID, job.Kind, []byte(job.Payload)).Scan(&input.subject, &input.oldAsset, &input.activity, &input.activityAt)
+	if err != nil {
+		return jobView{}, err
+	}
+	return summarizeJob(job, input, a.Settings())
+}
+
+func decodeJobSummaryRecord(raw []byte, out any) error {
+	if raw == nil {
+		return nil // Old jobs remain readable after their subject is removed.
+	}
+	return json.Unmarshal(raw, out)
+}
+
+func summarizeJob(job Job, input jobSummaryInput, settings Settings) (jobView, error) {
+	s := jobSummary{TypeLabel: jobTypeLabels[job.Kind], Activity: input.activity, ActivityAt: input.activityAt}
 	if s.TypeLabel == "" {
 		s.TypeLabel = "后台任务"
 	}
 	var payload struct {
-		ID      string   `json:"id"`
+		ID      string   `json:"id"` // Keep payload type validation shared with the detail view.
 		RootID  string   `json:"root_id"`
 		FileIDs []string `json:"file_ids"`
-	}
-	settings := a.Settings()
-	read := func(kind, key string, out any) error {
-		if key == "" {
-			return nil
-		}
-		err := a.Store.Get(ctx, kind, key, out)
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil // Old jobs remain readable after their subject is removed.
-		}
-		return err
 	}
 	downloader := func(key string) string {
 		for _, d := range settings.Downloaders {
@@ -114,7 +177,7 @@ func (a *App) jobView(ctx context.Context, job Job) (jobView, error) {
 			}
 		case "download", "lark_download", "subscription_download", "subscription_acquisition_receipt":
 			var item Intent
-			if err := read("intent", payload.ID, &item); err != nil {
+			if err := decodeJobSummaryRecord(input.subject, &item); err != nil {
 				return jobView{}, err
 			}
 			s.Subject = jobMediaSubject(item.Media, item.Season, item.Episodes)
@@ -124,7 +187,7 @@ func (a *App) jobView(ctx context.Context, job Job) (jobView, error) {
 			s.Target, s.Downloader = item.DownloadPath, downloader(item.DownloaderID)
 		case "native_download":
 			var item NativeDownload
-			if err := read("native_download", payload.ID, &item); err != nil {
+			if err := decodeJobSummaryRecord(input.subject, &item); err != nil {
 				return jobView{}, err
 			}
 			if item.Media != nil {
@@ -136,7 +199,7 @@ func (a *App) jobView(ctx context.Context, job Job) (jobView, error) {
 			s.Target, s.Downloader = item.DownloadPath, downloader(item.DownloaderID)
 		case "subscription":
 			var item Subscription
-			if err := read("subscription", payload.ID, &item); err != nil {
+			if err := decodeJobSummaryRecord(input.subject, &item); err != nil {
 				return jobView{}, err
 			}
 			// LastReason and NextCheck belong to the latest subscription revision,
@@ -145,7 +208,7 @@ func (a *App) jobView(ctx context.Context, job Job) (jobView, error) {
 			s.Target, s.Downloader = item.DownloadPath, downloader(item.DownloaderID)
 		case "import":
 			var item ImportPlan
-			if err := read("import_plan", payload.ID, &item); err != nil {
+			if err := decodeJobSummaryRecord(input.subject, &item); err != nil {
 				return jobView{}, err
 			}
 			files := []PlanFile{}
@@ -177,7 +240,7 @@ func (a *App) jobView(ctx context.Context, job Job) (jobView, error) {
 			}
 		case "scrape", "fnos_sync", "asset_check":
 			var item Asset
-			if err := read("asset", payload.ID, &item); err != nil {
+			if err := decodeJobSummaryRecord(input.subject, &item); err != nil {
 				return jobView{}, err
 			}
 			s.Subject = jobMediaSubject(item.Media, item.Season, item.Episodes)
@@ -187,11 +250,11 @@ func (a *App) jobView(ctx context.Context, job Job) (jobView, error) {
 			s.Source = item.Path
 		case "reorganize_cleanup":
 			var item reorganizeCleanup
-			if err := read("reorganize_cleanup", payload.ID, &item); err != nil {
+			if err := decodeJobSummaryRecord(input.subject, &item); err != nil {
 				return jobView{}, err
 			}
 			var old Asset
-			if err := read("asset", item.OldAssetID, &old); err != nil {
+			if err := decodeJobSummaryRecord(input.oldAsset, &old); err != nil {
 				return jobView{}, err
 			}
 			s.Subject = jobMediaSubject(old.Media, old.Season, old.Episodes)
@@ -215,9 +278,6 @@ func (a *App) jobView(ctx context.Context, job Job) (jobView, error) {
 		s.Subject = "关联资料不可用"
 	}
 	s.Stage = jobSummaryStage(job)
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT message,time FROM events WHERE job_id=? ORDER BY seq DESC LIMIT 1`, job.ID).Scan(&s.Activity, &s.ActivityAt); err != nil && !errors.Is(err, sql.ErrNoRows) {
-		return jobView{}, err
-	}
 	// All display strings share the application's URL/credential redaction.
 	for _, value := range []*string{&s.Subject, &s.Source, &s.Target, &s.Downloader, &s.Activity} {
 		*value = boundedLogString(cleanWithSettings(*value, settings), 2048)

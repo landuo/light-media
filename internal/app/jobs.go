@@ -87,9 +87,17 @@ func (a *App) enqueue(ctx context.Context, kind string, payload any, wf string) 
 	return j, nil
 }
 func scanJob(row interface{ Scan(...any) error }) (Job, error) {
+	j, e := scanJobRow(row)
+	if e == nil {
+		readJobTrace(&j)
+	}
+	return j, e
+}
+
+func scanJobRow(row interface{ Scan(...any) error }, extra ...any) (Job, error) {
 	var j Job
-	e := row.Scan(&j.ID, &j.WorkflowID, &j.Kind, &j.State, &j.Payload, &j.Attempt, &j.Generation, &j.RunAt, &j.LeaseUntil, &j.ErrorCode, &j.ErrorMessage, &j.CreatedAt, &j.UpdatedAt)
-	readJobTrace(&j)
+	columns := []any{&j.ID, &j.WorkflowID, &j.Kind, &j.State, &j.Payload, &j.Attempt, &j.Generation, &j.RunAt, &j.LeaseUntil, &j.ErrorCode, &j.ErrorMessage, &j.CreatedAt, &j.UpdatedAt}
+	e := row.Scan(append(columns, extra...)...)
 	return j, e
 }
 
@@ -115,16 +123,6 @@ func privateOrdinarySearchDownloadJob(j Job) bool {
 
 func (a *App) jobs(ctx context.Context, limit int) ([]Job, error) {
 	return a.queryJobs(ctx, `SELECT `+jobColumns+` FROM jobs ORDER BY created_at DESC LIMIT ?`, limit)
-}
-
-func (a *App) jobQueue(ctx context.Context) ([]Job, error) {
-	// A directory submission can create hundreds of recent file jobs. Keep
-	// running jobs and pending work outside that batch visible in the queue.
-	return a.queryJobs(ctx, `SELECT `+jobColumns+` FROM jobs ORDER BY CASE
-		WHEN state='running' THEN 0
-		WHEN state IN `+activeOrganizeStates+` AND kind NOT IN ('import','organize_file') THEN 1
-		WHEN state IN `+activeOrganizeStates+` THEN 2
-		ELSE 3 END, created_at DESC, id LIMIT 100`)
 }
 
 func (a *App) queryJobs(ctx context.Context, query string, args ...any) ([]Job, error) {
