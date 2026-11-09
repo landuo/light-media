@@ -595,7 +595,7 @@ func (a *App) recordManualOrganizeFailure(ctx context.Context, path, wf string, 
 	a.broadcastOriginalScrapeBatch(ctx, events)
 	a.log("WARN", "import", "preparation_failed", job.ErrorMessage, wf, job.ID)
 	if code == "MEDIA_NOT_FOUND" {
-		history, err := a.transferHistoryItem(ctx, plan.Files[0].ID)
+		history, err := a.transferHistoryPlanFile(ctx, plan.ID, plan.Files[0].ID)
 		if err != nil {
 			a.originalTransferEventError(ctx, err)
 		} else if history.JobID == job.ID {

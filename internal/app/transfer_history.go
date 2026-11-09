@@ -38,25 +38,31 @@ type transferHistoryItem struct {
 
 // The visible record is stable per source resource; execution plans stay
 // intact for recovery. Only submitted attempts participate, never previews.
-const transferHistoryJobMatch = `j.kind='import' AND json_extract(j.payload,'$.id')=r.id AND (
+// Job payloads store plan IDs as JSON strings. Concatenation keeps the ID
+// text without column affinity, so SQLite can use both parts of jobs_subject.
+const transferHistoryJobMatch = `j.kind='import' AND json_extract(j.payload,'$.id')=(r.id||'') AND (
  (COALESCE(json_array_length(j.payload,'$.file_ids'),0)=0 AND json_extract(f.value,'$.status')!='blocked')
  OR EXISTS(SELECT 1 FROM json_each(j.payload,'$.file_ids') selected WHERE selected.value=json_extract(f.value,'$.id'))
 )`
 
 // Normalize RFC3339Nano fractions before comparing creation times. This key
 // survives VACUUM/backup restoration, unlike SQLite's implicit job rowid.
-const transferHistoryBaseCTE = `WITH import_jobs AS (
+const transferHistoryJobsCTE = `WITH import_jobs AS NOT MATERIALIZED (
  SELECT *,substr(created_at,1,19)||'.'||substr(
  CASE WHEN substr(created_at,20,1)='.' THEN substr(created_at,21,length(created_at)-21) ELSE '' END
  ||'000000000',1,9)||'/'||id AS execution_key FROM jobs WHERE kind='import'
-), executed_files AS (
+)`
+
+const transferHistoryPlanSource = `COALESCE(NULLIF(json_extract(f.value,'$.history_source'),''),
+ NULLIF(json_extract(meta.payload,'$.reorganize.asset.source_path'),''),
+ NULLIF(json_extract(f.value,'$.source'),''),'file:'||json_extract(f.value,'$.id'))`
+
+const transferHistoryExecutedFiles = `, executed_files AS (
  SELECT r.id AS plan_id, json_remove(r.payload,'$.files','$.media.cast','$.media.recommendations','$.media.seasons') AS plan, COALESCE(json_extract(cb.payload,'$.file'),f.value) AS file, COALESCE(cb.updated_at,r.updated_at) AS updated_at,
  j.id AS job_id,j.state AS job_state,j.error_message AS job_error,j.created_at AS executed_at,j.execution_key,
  MIN(j.execution_key) OVER (PARTITION BY r.id,json_extract(f.value,'$.id')) AS first_execution_key,
  ROW_NUMBER() OVER (PARTITION BY r.id,json_extract(f.value,'$.id') ORDER BY j.execution_key DESC) AS file_rank,
- COALESCE(NULLIF(json_extract(f.value,'$.history_source'),''),
- NULLIF(json_extract(meta.payload,'$.reorganize.asset.source_path'),''),
- NULLIF(json_extract(f.value,'$.source'),''),'file:'||json_extract(f.value,'$.id')) AS resource_source,
+ ` + transferHistoryPlanSource + ` AS resource_source,
  CASE WHEN json_extract(cb.payload,'$.file.status')='imported' THEN 'success'
  WHEN json_extract(cb.payload,'$.file.status')='error' THEN 'failed'
  WHEN json_extract(f.value,'$.status') IN ('imported','already_imported') THEN 'success'
@@ -66,8 +72,9 @@ const transferHistoryBaseCTE = `WITH import_jobs AS (
  JOIN import_jobs j ON ` + transferHistoryJobMatch + `
  LEFT JOIN records meta ON meta.kind='import_meta' AND meta.id=r.id
  LEFT JOIN records cb ON cb.kind='original_transfer_callback' AND cb.id=r.id||'/'||json_extract(f.value,'$.id') AND json_extract(cb.payload,'$.job_id')=j.id
- WHERE r.kind='import_plan'
-), auxiliary_files AS (
+ WHERE r.kind='import_plan'`
+
+const transferHistoryAuxiliaryFiles = `), auxiliary_files AS (
  SELECT r.id AS plan_id, json_remove(r.payload,'$.files','$.media.cast','$.media.recommendations','$.media.seasons') AS plan,
  json_extract(cb.payload,'$.file') AS file,cb.updated_at AS updated_at,
  j.id AS job_id,j.state AS job_state,j.error_message AS job_error,j.created_at AS executed_at,j.execution_key,
@@ -80,10 +87,13 @@ const transferHistoryBaseCTE = `WITH import_jobs AS (
  JOIN records cb ON cb.kind='original_transfer_callback' AND json_extract(cb.payload,'$.plan_id')=r.id
  AND json_extract(cb.payload,'$.parent_file_id')=json_extract(f.value,'$.id')
  AND json_extract(cb.payload,'$.file.id')!=json_extract(f.value,'$.id') AND json_extract(cb.payload,'$.job_id')=j.id
- WHERE r.kind='import_plan'
-), attempts AS (SELECT * FROM executed_files WHERE file_rank=1 UNION ALL SELECT * FROM auxiliary_files WHERE file_rank=1) `
+ WHERE r.kind='import_plan'`
 
-const transferHistoryCTE = transferHistoryBaseCTE + `, ranked_history AS (
+const transferHistoryAttempts = `), attempts AS (SELECT * FROM executed_files WHERE file_rank=1 UNION ALL SELECT * FROM auxiliary_files WHERE file_rank=1) `
+
+const transferHistoryBaseCTE = transferHistoryJobsCTE + transferHistoryExecutedFiles + transferHistoryAuxiliaryFiles + transferHistoryAttempts
+
+const transferHistoryRanked = `, ranked_history AS (
  SELECT *,
  FIRST_VALUE(json_extract(file,'$.id')) OVER (PARTITION BY resource_source ORDER BY first_execution_key,json_extract(file,'$.id')) AS history_id,
  FIRST_VALUE(json_extract(plan,'$.created_at')) OVER (PARTITION BY resource_source ORDER BY first_execution_key,json_extract(file,'$.id')) AS history_created_at,
@@ -99,7 +109,20 @@ const transferHistoryCTE = transferHistoryBaseCTE + `, ranked_history AS (
  )
 ) `
 
+const transferHistoryCTE = transferHistoryBaseCTE + transferHistoryRanked
+
 const transferHistoryColumns = `plan,file,job_id,job_state,job_error,updated_at,status,history_id,history_created_at,resource_source,execution_key`
+
+// Restrict both kinds of attempt before ranking. The queue worker already
+// knows the source and only needs its current history, including older retries.
+const transferHistoryBySource = transferHistoryJobsCTE +
+	transferHistoryExecutedFiles + ` AND ` + transferHistoryPlanSource + `=?1` +
+	transferHistoryAuxiliaryFiles + ` AND json_extract(cb.payload,'$.file.source')=?1` +
+	transferHistoryAttempts + transferHistoryRanked + `SELECT ` + transferHistoryColumns + ` FROM history`
+
+const transferHistoryBySourceFile = transferHistoryBySource + ` WHERE EXISTS (
+ SELECT 1 FROM attempts WHERE json_extract(file,'$.id')=?2
+)`
 
 func (item transferHistoryItem) executionFileID() string {
 	if item.FileID != "" {
@@ -256,6 +279,17 @@ func (a *App) transferHistoryItem(ctx context.Context, id string) (transferHisto
 	}
 	a.transferHistoryCapabilities(ctx, &item)
 	return item, nil
+}
+
+func (a *App) transferHistoryPlanFile(ctx context.Context, planID, fileID string) (transferHistoryItem, error) {
+	var source string
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT `+transferHistoryPlanSource+`
+		FROM records r,json_each(r.payload,'$.files') f
+		LEFT JOIN records meta ON meta.kind='import_meta' AND meta.id=r.id
+		WHERE r.kind='import_plan' AND r.id=? AND json_extract(f.value,'$.id')=?`, planID, fileID).Scan(&source); err != nil {
+		return transferHistoryItem{}, err
+	}
+	return scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryBySourceFile, source, fileID))
 }
 
 // Queue controls address an exact execution, never a stable-history redirect.

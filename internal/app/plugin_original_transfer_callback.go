@@ -138,7 +138,12 @@ func (a *App) completeOriginalTransferCallback(ctx context.Context, job Job, pla
 	if err = tx.Commit(); err != nil {
 		return err
 	}
-	history, err := a.transferHistoryItem(ctx, historyFile.ID)
+	var history transferHistoryItem
+	if file.ID == primaryID {
+		history, err = a.transferHistoryPlanFile(ctx, plan.ID, file.ID)
+	} else {
+		history, err = scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryBySourceFile, historyFile.Source, historyFile.ID))
+	}
 	if err != nil {
 		return err
 	}
