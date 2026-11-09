@@ -112,7 +112,7 @@ export function historyPageButtons(page: number, total: number): number[] {
 export function transferQueueState(file: { status: string; job_state?: string }): string {
   if (['success', 'imported', 'already_imported', 'completed', 'succeeded'].includes(file.status))
     return 'completed';
-  if (file.status === 'blocked') return 'failed';
+  if (['blocked', 'error'].includes(file.status)) return 'failed';
   if (['cancelled', 'canceled'].includes(file.job_state || file.status)) return 'cancelled';
   if (file.job_state === 'failed') return 'failed';
   if (file.job_state === 'running' || file.status === 'importing') return 'running';

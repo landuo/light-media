@@ -15,23 +15,28 @@ import (
 type organizeFileKey struct{}
 
 type organizeFileWork struct {
-	Job     Job
-	File    importScanFile
-	Stamp   importSnapshot
-	BatchID string
+	Job           Job
+	File          importScanFile
+	Stamp         importSnapshot
+	BatchID       string
+	HistorySource string
 }
 
 type organizeFilePayload struct {
-	ID               string                  `json:"id"`
-	File             importScanFile          `json:"file"`
-	Snapshot         importSnapshot          `json:"snapshot"`
-	MetadataPath     string                  `json:"metadata_path,omitempty"`
-	Meta             json.RawMessage         `json:"meta,omitempty"`
-	Item             *plugins.ModuleFileItem `json:"item,omitempty"`
-	DirectoryPlanned bool                    `json:"directory_planned,omitempty"`
-	MaterialKind     string                  `json:"material_kind,omitempty"`
-	Title            string                  `json:"title,omitempty"`
-	BatchID          string                  `json:"original_scrape_batch"`
+	Directory           *directoryImportGuard   `json:"directory,omitempty"`
+	HistoryID           string                  `json:"history_id,omitempty"`
+	HistoryExecutionKey string                  `json:"history_execution_key,omitempty"`
+	HistorySource       string                  `json:"history_source,omitempty"`
+	ID                  string                  `json:"id"`
+	File                importScanFile          `json:"file"`
+	Snapshot            importSnapshot          `json:"snapshot"`
+	MetadataPath        string                  `json:"metadata_path,omitempty"`
+	Meta                json.RawMessage         `json:"meta,omitempty"`
+	Item                *plugins.ModuleFileItem `json:"item,omitempty"`
+	DirectoryPlanned    bool                    `json:"directory_planned,omitempty"`
+	MaterialKind        string                  `json:"material_kind,omitempty"`
+	Title               string                  `json:"title,omitempty"`
+	BatchID             string                  `json:"original_scrape_batch"`
 }
 
 // Freeze the entire candidate list before any worker can start provider
@@ -49,7 +54,7 @@ func (a *App) enqueueOrganizeFiles(ctx context.Context, parent Job, files []impo
 		}
 		stamp, err := snapshotTransferPath(file.Path)
 		if err != nil {
-			job, storeErr := a.recordManualOrganizeFailure(ctx, file.Path, parent.WorkflowID, err)
+			job, storeErr := a.recordManualOrganizeFailure(ctx, file.Path, parent.WorkflowID, err, organizeFileHistorySource(file))
 			if storeErr != nil {
 				return out, storeErr
 			}
@@ -62,6 +67,9 @@ func (a *App) enqueueOrganizeFiles(ctx context.Context, parent Job, files []impo
 			MetadataPath: file.originalMetadataPath, Item: file.originalItem,
 			DirectoryPlanned: file.originalDirectoryPlanned, MaterialKind: file.materialKind,
 			Title: file.Parsed.Title, BatchID: batchID,
+		}
+		if file.queueHistory != nil {
+			candidate.HistoryID, candidate.HistoryExecutionKey, candidate.HistorySource = file.queueHistory.ID, file.queueHistory.ExecutionKey, file.queueHistory.ResourceSource
 		}
 		if file.originalResolvedMeta != nil {
 			candidate.Meta, err = file.originalResolvedMeta.EncodeState()
@@ -102,16 +110,27 @@ func (a *App) enqueueOrganizeFiles(ctx context.Context, parent Job, files []impo
 	if err = txPut(ctx, tx, "original_scrape_batch", batchID, originalScrapeBatch{ID: batchID, Closed: true}); err != nil {
 		return out, err
 	}
+	queued := 0
 	for _, candidate := range candidates {
+		existing, err := activeOrganizeSourceTx(ctx, tx, candidate.File.Path)
+		if err != nil {
+			return out, err
+		}
+		if existing != "" {
+			out.Items = append(out.Items, manualOrganizeItem{Source: candidate.File.Path, Status: "queued", JobID: existing})
+			out.Submitted++
+			continue
+		}
 		if _, err = enqueueTx(ctx, tx, "organize_file", candidate, parent.WorkflowID); err != nil {
 			return out, err
 		}
+		queued++
 	}
 	if err = tx.Commit(); err != nil {
 		return out, err
 	}
-	out.Submitted += len(candidates)
-	out.Total = len(out.Items) + len(candidates)
+	out.Submitted += queued
+	out.Total = len(out.Items) + queued
 	select {
 	case a.jobWake <- struct{}{}:
 	default:
@@ -153,16 +172,18 @@ func (a *App) cancelOrganizeFile(ctx context.Context, job Job) (any, error) {
 
 func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 	var item organizeFilePayload
-	if err := json.Unmarshal(job.Payload, &item); err != nil || item.File.Path == "" || job.ParentJobID == "" || item.BatchID == "" {
+	if err := json.Unmarshal(job.Payload, &item); err != nil || item.File.Path == "" || (job.ParentJobID == "" && item.Directory == nil) || item.BatchID == "" {
 		return bad("INVALID_JOB", "目录整理文件参数无效")
 	}
-	var rawRequest []byte
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM jobs WHERE id=? AND kind='organize_prepare'`, job.ParentJobID).Scan(&rawRequest); err != nil {
-		return err
-	}
 	var parent organizePreparationPayload
-	if err := json.Unmarshal(rawRequest, &parent); err != nil {
-		return bad("INVALID_JOB", "目录整理参数无效")
+	if item.Directory == nil {
+		var rawRequest []byte
+		if err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM jobs WHERE id=? AND kind='organize_prepare'`, job.ParentJobID).Scan(&rawRequest); err != nil {
+			return err
+		}
+		if err := json.Unmarshal(rawRequest, &parent); err != nil {
+			return bad("INVALID_JOB", "目录整理参数无效")
+		}
 	}
 	file := item.File
 	file.originalMetadataPath, file.originalItem = item.MetadataPath, item.Item
@@ -195,14 +216,20 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 		}
 		file.originalDirectoryListings[path] = entries
 	}
-	ctx = context.WithValue(ctx, organizeFileKey{}, organizeFileWork{Job: job, File: file, Stamp: item.Snapshot, BatchID: item.BatchID})
+	ctx = context.WithValue(ctx, organizeFileKey{}, organizeFileWork{Job: job, File: file, Stamp: item.Snapshot, BatchID: item.BatchID, HistorySource: item.HistorySource})
 	ctx = context.WithValue(ctx, originalScrapeBatchKey{}, item.BatchID)
 	fail := func(cause error) error {
-		_, err := a.recordManualOrganizeFailure(ctx, file.Path, job.WorkflowID, cause)
+		_, err := a.recordManualOrganizeFailure(ctx, file.Path, job.WorkflowID, cause, item.HistorySource)
 		return err
 	}
 	if err := a.jobCancelled(ctx, job); err != nil {
 		return err
+	}
+	if item.HistoryID != "" {
+		selected, err := a.transferHistoryItemsForOrganize(ctx, []string{item.HistoryID})
+		if err != nil || selected[0].ExecutionKey != item.HistoryExecutionKey {
+			return bad("REVIEW_ORGANIZE_HISTORY", "所选整理历史已变化，请刷新后重新选择")
+		}
 	}
 	if !a.importSourceAllowed(file.Path, true) || browserInternal(file.Path) {
 		return fail(bad("REVIEW_SOURCE_CHANGED", "源文件不在允许目录内"))
@@ -210,6 +237,25 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 	stamp, err := snapshotTransferPath(file.Path)
 	if err != nil || stamp != item.Snapshot {
 		return fail(bad("REVIEW_SOURCE_CHANGED", "源文件已移除、发生变化或不在允许目录内"))
+	}
+	if item.Directory != nil {
+		return a.runDirectoryOrganizeFile(ctx, item, file, fail)
+	}
+	if item.HistoryID != "" {
+		parent.Request.HistoryIDs = []string{item.HistoryID}
+		parent.Request.Paths = nil
+		// Auxiliary material and plugin metadata are resolved by this file's
+		// worker; a corrupt history or failed provider cannot stop other files.
+		scan, err := a.manualOrganizeScan(ctx, file.Path, parent.Request)
+		if err != nil {
+			return fail(err)
+		}
+		files := scan.(map[string]any)["files"].([]importScanFile)
+		if len(files) != 1 || files[0].Path != file.Path {
+			return fail(bad("REVIEW_ORGANIZE_HISTORY", "历史记录不再对应一个文件"))
+		}
+		file = files[0]
+		ctx = context.WithValue(ctx, organizeFileKey{}, organizeFileWork{Job: job, File: file, Stamp: item.Snapshot, BatchID: item.BatchID, HistorySource: item.HistorySource})
 	}
 	out, err := a.manualOrganize(ctx, parent.Request)
 	if err != nil {

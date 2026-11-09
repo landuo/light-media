@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -186,18 +187,18 @@ func TestImportRejectsChangedSourceAndNoOverwrite(t *testing.T) {
 	}
 }
 
-func TestImportEpisodeRequiresAuthoritativeSingleEpisode(t *testing.T) {
+func TestImportEpisodesUseMPNumbersWithoutMetadataMembershipGate(t *testing.T) {
 	a, source, _ := importTestApp(t)
 	importFixture(t, a, "tv")
 	importCache(t, a, "season:123:4", catalog.Season{ID: 40, SeriesID: 123, SeasonNumber: 4, Episodes: []catalog.Episode{{ID: 7706553, SeasonNumber: 4, EpisodeNumber: 5, Name: "单集名", AirDate: "2026-09-04"}}})
 	input := filepath.Join(source, "Series S04E05.mkv")
 	importWrite(t, input, []byte("video"))
-	for _, episodes := range [][]int{{5}, {6}, {5, 6}} {
+	for _, episodes := range [][]int{{5}, {6}, {5, 6}, {5, 6, 7}} {
 		plan, err := a.previewImport(context.Background(), ImportRequest{MediaType: "tv", TMDBID: 123, RootID: "root", Mode: "copy", Files: []ImportFileRequest{{Path: input, Season: 4, Episodes: episodes}}})
 		if err != nil {
 			t.Fatal(err)
 		}
-		if (len(episodes) == 1 && episodes[0] == 5) != (plan.Files[0].Status == "ready") {
+		if plan.Files[0].Status != "ready" || (len(episodes) > 2 && len(plan.Files[0].Episodes) != 1) {
 			t.Fatalf("episodes=%v status=%s", episodes, plan.Files[0].Status)
 		}
 	}
@@ -213,7 +214,9 @@ func TestImportCopyCancellationAndReceiptReconciliation(t *testing.T) {
 	}
 	output := filepath.Join(target, "movie", "video.mkv")
 	calls := 0
-	_, err = a.publishImport(context.Background(), "cancellation-test", input, output, locked, "copy", func() error {
+	bytesCopied := &atomic.Int64{}
+	ctx := context.WithValue(context.Background(), organizeProgressKey{}, organizeCopyProgress{Source: input, Bytes: bytesCopied})
+	_, err = a.publishImport(ctx, "cancellation-test", input, output, locked, "copy", func() error {
 		calls++
 		if calls >= 3 {
 			return context.Canceled
@@ -223,12 +226,19 @@ func TestImportCopyCancellationAndReceiptReconciliation(t *testing.T) {
 	if !errors.Is(err, context.Canceled) {
 		t.Fatalf("wanted cancellation, got %v", err)
 	}
+	if copied := bytesCopied.Load(); copied <= 0 || copied >= locked.Size {
+		t.Fatalf("copy progress must report actual partial writes before cancellation: %d/%d", copied, locked.Size)
+	}
 	if _, err = os.Lstat(output); !os.IsNotExist(err) {
 		t.Fatal("partial file published")
 	}
-	receipt, err := a.publishImport(context.Background(), "cancellation-test", input, output, locked, "copy", func() error { return nil })
+	bytesCopied.Store(0)
+	receipt, err := a.publishImport(ctx, "cancellation-test", input, output, locked, "copy", func() error { return nil })
 	if err != nil {
 		t.Fatal(err)
+	}
+	if bytesCopied.Load() != locked.Size {
+		t.Fatalf("copy byte progress differs from published file: %d/%d", bytesCopied.Load(), locked.Size)
 	}
 	first, _ := os.Stat(output)
 	receipt.State = "staged"

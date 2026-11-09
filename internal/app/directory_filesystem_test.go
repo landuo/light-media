@@ -55,6 +55,32 @@ func directoryPoll(t *testing.T, a *App, rule DirectoryRule) {
 	}
 }
 
+// Execute only this file's recognition phase; the same job ID is promoted.
+func directoryRecognize(t *testing.T, a *App, rule DirectoryRule, path string) DirectoryObservedFile {
+	t.Helper()
+	ctx := context.Background()
+	f := directoryObservation(t, a, rule, path)
+	if f.JobID == "" {
+		t.Fatal("file was not queued before recognition")
+	}
+	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, f.JobID); err != nil {
+		t.Fatal(err)
+	}
+	job, err := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, f.JobID))
+	if err != nil {
+		t.Fatal(err)
+	}
+	a.runClaimedJob(ctx, job)
+	if err := a.Store.DB.QueryRow(`SELECT json_extract(payload,'$.id') FROM jobs WHERE id=? AND kind='import'`, f.JobID).Scan(&f.PlanID); err != nil {
+		t.Fatal(err)
+	}
+	a.refreshDirectoryFilePlan(ctx, &f)
+	if err := a.Store.Put(ctx, "directory_file", f.ID, f); err != nil {
+		t.Fatal(err)
+	}
+	return f
+}
+
 func TestDirectoryFileBaselineAndChangedFileStability(t *testing.T) {
 	a, rule, source := directoryFileFixture(t, false)
 	p := directoryMovieFile(t, source)
@@ -91,6 +117,10 @@ func TestDirectoryFileNewStableVideoImportsOnceAndRetainsSource(t *testing.T) {
 			directoryAge(t, a, rule, p)
 			directoryPoll(t, a, rule)
 			f := directoryObservation(t, a, rule, p)
+			if f.JobID == "" || f.PlanID != "" {
+				t.Fatal("recognition ran before file queue", f)
+			}
+			f = directoryRecognize(t, a, rule, p)
 			if f.State != "queued" || f.PlanID == "" {
 				t.Fatalf("stable file not queued: %+v", f)
 			}
@@ -139,7 +169,6 @@ func TestDirectoryFileRuleChangeBlocksQueuedPublication(t *testing.T) {
 			directoryPoll(t, a, rule)
 			directoryAge(t, a, rule, p)
 			directoryPoll(t, a, rule)
-			f := directoryObservation(t, a, rule, p)
 			switch change {
 			case "disabled":
 				a.config.Directories[0].Enabled = false
@@ -148,12 +177,8 @@ func TestDirectoryFileRuleChangeBlocksQueuedPublication(t *testing.T) {
 			case "source":
 				a.config.Directories[0].SourcePath = filepath.Dir(source)
 			}
-			job, e := a.claim(context.Background())
-			if e != nil {
-				t.Fatal(e)
-			}
-			if e = a.runImport(context.Background(), job, f.PlanID, nil); e == nil {
-				t.Fatal("changed rule published queued import")
+			if f := directoryRecognize(t, a, rule, p); f.State != "error" {
+				t.Fatalf("changed rule did not fail only this file: %+v", f)
 			}
 			var count int
 			_ = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&count)
@@ -172,7 +197,7 @@ func TestDirectoryFileAmbiguousIdentityNeedsReviewAndNFOCanResolve(t *testing.T)
 	directoryPoll(t, a, rule)
 	directoryAge(t, a, rule, p)
 	directoryPoll(t, a, rule)
-	if f := directoryObservation(t, a, rule, p); f.State != "needs_review" || f.PlanID != "" {
+	if f := directoryRecognize(t, a, rule, p); f.State != "error" || f.PlanID == "" {
 		t.Fatalf("ambiguous identity imported: %+v", f)
 	}
 	importWrite(t, strings.TrimSuffix(p, ".mkv")+".nfo", []byte(`<movie><title>Test Film</title><uniqueid type="tmdb" default="true">123</uniqueid></movie>`))
@@ -311,7 +336,7 @@ func TestDirectoryMonitorKeepsCompletedPacksMovingWhenOneFileDisappears(t *testi
 	verifyHardlink := func(name string) {
 		t.Helper()
 		path := filepath.Join(source, name)
-		f := directoryObservation(t, a, rule, path)
+		f := directoryRecognize(t, a, rule, path)
 		if f.State != "queued" || f.PlanID == "" {
 			t.Fatalf("completed episode not queued: %+v", f)
 		}

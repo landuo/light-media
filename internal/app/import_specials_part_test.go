@@ -116,7 +116,7 @@ func TestExplicitSpecialsPartPublishesOneSourceAndScrapesActualEpisodeID(t *test
 	}
 }
 
-func TestSpecialsRequireExplicitSelectionOrTrustedNFONumberingAndActualMetadata(t *testing.T) {
+func TestSpecialsRequireNumberingAndTreatMissingEpisodeMetadataAsOptional(t *testing.T) {
 	for _, invalid := range []string{"implicit-zero", "missing-episode", "wrong-series", "nfo-id-conflict", "valid-nfo"} {
 		t.Run(invalid, func(t *testing.T) {
 			a, source, _ := importTestApp(t)
@@ -155,7 +155,7 @@ func TestSpecialsRequireExplicitSelectionOrTrustedNFONumberingAndActualMetadata(
 				t.Fatal(err)
 			}
 			want := "blocked"
-			if invalid == "valid-nfo" {
+			if invalid == "valid-nfo" || invalid == "missing-episode" || invalid == "wrong-series" {
 				want = "ready"
 			}
 			if len(plan.Files) != 1 || plan.Files[0].Status != want || plan.Files[0].Season != 0 {

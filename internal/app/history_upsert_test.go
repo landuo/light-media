@@ -437,7 +437,7 @@ func TestHistoryUpsertHiddenDuplicateCannotResurrectButNewSubmissionCan(t *testi
 	}
 }
 
-func TestHistoryUpsertHistoryFallbackAndFileManagerTargetInheritOriginalResource(t *testing.T) {
+func TestHistoryUpsertMissingCopySourceFailsAndExplicitManagedTargetKeepsResource(t *testing.T) {
 	for _, fromHistory := range []bool{true, false} {
 		t.Run(map[bool]string{true: "history-source-missing", false: "file-manager-managed-target"}[fromHistory], func(t *testing.T) {
 			a, source, old := reorgFixture(t)
@@ -457,6 +457,20 @@ func TestHistoryUpsertHistoryFallbackAndFileManagerTargetInheritOriginalResource
 				request.HistoryIDs = []string{first.ID}
 			} else {
 				request.Paths = []string{old.Path}
+			}
+			if fromHistory {
+				out, err := a.manualOrganize(context.Background(), request)
+				if err != nil || out.Failed != 1 || out.Submitted != 0 {
+					t.Fatalf("MP retries a copied history from its source, not its library target: %+v %v", out, err)
+				}
+				latest := historyUpsertOnly(t, a, "")
+				if latest.ID != first.ID || latest.Status != "failed" || latest.Source != source {
+					t.Fatalf("failed retry changed stable resource: %+v", latest)
+				}
+				if data, err := os.ReadFile(old.Path); err != nil || string(data) != "reorganize original video" {
+					t.Fatal("failed source retry touched library target", err)
+				}
+				return
 			}
 			result := historyUpsertSubmit(t, a, request, false)
 			plan, job := historyUpsertAttempt(t, a, result.JobID)

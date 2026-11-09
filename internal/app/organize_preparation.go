@@ -19,20 +19,7 @@ func (a *App) submitManualOrganize(ctx context.Context, in manualOrganizeRequest
 	if _, err := normalizeManualOrganize(&in); err != nil {
 		return out, err
 	}
-	if len(in.HistoryIDs) != 0 {
-		return a.enqueueOrganizePreparation(ctx, in, out)
-	}
-	for _, path := range in.Paths {
-		if !a.importSourceAllowed(path, true) || browserInternal(path) {
-			continue
-		}
-		info, err := pluginStorageEntryInfo(path)
-		if err != nil || !info.IsDir() {
-			continue
-		}
-		return a.enqueueOrganizePreparation(ctx, in, out)
-	}
-	return a.manualOrganize(ctx, in)
+	return a.enqueueOrganizePreparation(ctx, in, out)
 }
 
 // Acknowledge submission once the request is durable, before scanning,
@@ -63,7 +50,13 @@ func (a *App) runOrganizePreparation(ctx context.Context, job Job) error {
 		return err
 	}
 	ctx = context.WithValue(ctx, organizePreparationKey{}, job)
-	out, err := a.manualOrganize(ctx, payload.Request)
+	var out manualOrganizeOutput
+	var err error
+	if len(payload.Request.HistoryIDs) > 0 {
+		out, err = a.prepareOrganizeHistory(ctx, job, payload.Request)
+	} else {
+		out, err = a.manualOrganize(ctx, payload.Request)
+	}
 	if err != nil {
 		return err
 	}
@@ -76,6 +69,11 @@ func (a *App) runOrganizePreparation(ctx context.Context, job Job) error {
 	}
 	if out.Submitted == 0 && out.Total > 0 {
 		return bad("REVIEW_ORGANIZE_PREPARATION", "未找到符合整理条件的文件")
+	}
+	for _, item := range out.Items {
+		if item.Status == "failed" {
+			a.event(ctx, job, "WARN", job.Kind, "file_preparation_failed", item.Error)
+		}
 	}
 	a.event(ctx, job, "INFO", job.Kind, "prepared", fmt.Sprintf("已提交 %d 项整理任务，%d 项准备失败", out.Submitted, out.Failed))
 	return nil

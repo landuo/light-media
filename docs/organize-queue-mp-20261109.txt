@@ -1,0 +1,48 @@
+整理队列对齐 MoviePilot（2026-11-09）
+
+任务约束
+按本轮用户要求修正此前复核出的入队、批次失败隔离、重试、季集门槛、队列分组进度、单文件取消差异；保留并发调度、重启恢复和稳定历史 ID。仅修改光影；原版只读。通过验证后推送 main 并部署既有 NAS 服务。验证写入仅使用隔离合成文件。
+
+固定依据
+MoviePilot 8a83efeacd3e26b82be495e17d50146e31c96a60
+MoviePilot-Frontend 2829e3b08214348f05ff2f5beae644882eccad58
+后端相关原文件与上述提交一致。前端参考 ReorganizeDialog.vue 和 TransferQueueDialog.vue。
+
+对照与验收（全部针对本轮队列修正，非整个系统兼容性声明）
+1. 原版 chain/transfer.py:2933、3872、1781：无明确身份时按文件提交，再逐个识别；前端 ReorganizeDialog.vue:1202、1283 逐条提交历史并捕获失败。
+   光影 organize_preparation.go、organize_history_queue.go、organize_file_queue.go、organize_directory_queue.go：目录、多选文件、历史重整及监听文件进入持久文件任务，再识别和移交整理。批量历史中一个已删除 ID 不阻断其余项。同一活跃组内相同源文件复用既有任务。
+   验收：ManualOrganizeDirectoryQueuePreparesAndReplays；ManualOrganizeHistoryQueueAcknowledgesBatchBeforeRecognition（32 条有效记录加 1 条失效选择）；DirectoryFile*。浏览器一次提交四条历史，HTTP 提交耗时 2 ms，随后显示文件级队列。通过。
+
+2. 原版每个 TransferTask 独立结束，失败不跳过后续文件。
+   光影 import_file_submission.go、search_download.go、import_run.go：完成下载按文件提交；阻塞项单独写失败历史。旧多文件任务逐文件执行并重新读取已提交计划，普通失败后继续下一文件；取消或服务中断保留中止语义。恢复只补尚未提交的文件，不重放已终止文件。
+   验收：MPOrganizePackIsolatesBlockedFailedAndCancelledFiles（四个场景：入队前阻塞、执行时源缺失、普通 EIO 错误、取消单文件；真实硬链接和 SQLite 历史）；CompletedPackPollContinuesPastBadIntentAndRecentHistory（下载器协议回放）；PausedReadyImportPreviewResumesExactlyOnce。通过。
+
+3. 原版 JobManager:205、269、313：未识别名称/季分组，识别后迁移到媒体身份/季；相关组全部结束才移除，无法识别的失败任务直接移出。前端 TransferQueueDialog.vue 按标题/年份合并展示完成数。
+   光影 organize_queue_groups.go、organize_manual.go、store.go：持久保存分组关联及索引，保留相关组中已结束成员；后续新批次不带入已结束旧组。适配旧版本仍活跃任务。
+   验收：HistoryParityV031QueueRetainsTerminalFilesUntilRelatedGroupEnds；浏览器处理中显示 2 / 3，结束后队列清空，历史仍为 4 条（3 成功、1 失败）。通过。
+
+4. 原版 remove_task:491、remove_from_queue:1630 按源文件取消。
+   光影 organize_file_cancel.go、organize_manual.go：识别阶段可取消；旧多文件计划也可只取消选定文件，其他文件继续。取消标记持久化，传输检查和历史查询读取对应执行的标记。
+   验收：HistoryParityV031QueueCancellationIsExactAndPreservesFiles；QueueExcludesUnsubmittedPlanFiles；MPOrganizePackIsolatesBlockedFailedAndCancelledFiles/cancel-one-file，核对未发布选中文件且另外两集实际入库。通过。浏览器本轮只对批量提交、分组和结束后历史计证，不以点击取消尝试作为取消成功证据。
+
+5. 原版普通整理失败终止该任务；不迁移原版 AI 重试。
+   光影 jobs.go：import/organize_file/organize_prepare 普通失败不再套用通用最多三次自动重试。启用配置前等待、外部插件接管等待和停机恢复仍按既有状态恢复。
+   验收：MPOrganize* 中终态文件反复下载轮询不新增任务且 attempt 不递增；OriginalTransferModuleFailureEndsWorkerWithoutAutomaticRetry。通过。
+
+6. 原版 chain/transfer.py:1944、modules/filemanager/transhandler.py:341、get_naming_dict：单集详情为辅助数据，不要求解析出的季集必须存在于 TMDB；单个文件超过两集的范围按首集处理。
+   光影 import_plan.go、directory_filesystem.go：保留明确季集号；无集详情或获取失败时不挡住整理，仍拒绝不明确编号、冲突的 NFO 来源身份、非法路径和真正的写入冲突。双集保留，超过两集按原版收敛到首集。成功移动历史从目的文件重整；复制/硬链接历史从原源文件重整，源不存在时不自动替换成库内文件。
+   验收：ImportEpisodesUseMPNumbersWithoutMetadataMembershipGate；SpecialsRequireNumberingAndTreatMissingEpisodeMetadataAsOptional；HistoryUpsertMissingCopySourceFailsAndExplicitManagedTargetKeepsResource；实际入库 249/250 集的测试中季信息为空。通过。
+
+7. 原版进度来自实际传输；本轮保留光影并发、恢复与稳定历史身份。
+   光影 import_fs.go、organize_progress.go、import_run.go：累计真实复制字节，写入期间不宣告完成，完成状态后显示 100%；前端识别文件 error 状态。沿用既有三秒队列轮询传递进度，未新增原版的逐文件 SSE 连接。任务、收据、历史 ID 保留原有持久格式；追加分组和取消记录。
+   验收：ImportCopyCancellationAndReceiptReconciliation（取消前的实际字节、完整复制字节、发布后恢复）；ImportQueue*（不同季集并发、同目标串行、冷启动收据恢复）；HistoryUpsert* 与 AuxiliaryHistory*。通过。
+
+必要适配
+- MP 内存队列改为光影现有 SQLite 队列，分组关系也持久保存，满足用户保留重启恢复的要求。
+- 保留稳定资源历史 ID、路径归属/下载完成范围/快照/恢复收据，不迁移工作流或 AI。
+- 分组每三秒刷新并携带实际字节进度；原版使用队列轮询加逐文件 SSE。
+- 浏览器验收是本机隔离实例，元数据为合成协议样本；文件写入和应用处理链真实执行。NAS 上只读核查生产页面与部署状态，不批量重整用户原媒体。
+
+证据
+70 个后端顶层测试、含子测试 142 项通过，耗时 41.289 秒；563 个前端测试通过，类型检查和 Vite 构建通过。明细与证据分类见 organize-queue-mp-20261109-validation.json。最后补充的下载包提交互斥检查只重跑受影响的下载包测试；另补测普通 EIO 失败不自动重试且不丢弃后续文件。
+部署、推送结果另记同名 deployment.json；以该记录的实际提交和 NAS 程序哈希为准。

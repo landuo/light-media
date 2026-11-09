@@ -167,6 +167,9 @@ func importCopy(ctx context.Context, source io.Reader, target io.Writer, check f
 				return "", io.ErrShortWrite
 			}
 			hash.Write(buffer[:count])
+			if report, ok := ctx.Value(organizeCopyCallbackKey{}).(func(int64)); ok {
+				report(int64(written))
+			}
 		}
 		if readErr == io.EOF {
 			return hex.EncodeToString(hash.Sum(nil)), nil

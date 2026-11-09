@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"sync/atomic"
 	"time"
 
 	"light-media/internal/plugins"
@@ -54,7 +55,9 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		return Job{}, err
 	}
 	work, organizing := ctx.Value(organizeFileKey{}).(organizeFileWork)
-	if organizing {
+	if ctx.Value(importSubmissionKey{}) == true {
+		// The completed-pack submitter owns the lock until every file is queued.
+	} else if organizing {
 		// A recognition job has just created its own plan. Promotion only
 		// changes durable queue/slot records and commits before import claims it.
 		a.importMu.RLock()
@@ -114,7 +117,7 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 	}
 	// A lost HTTP response must not turn the same confirmation into another
 	// execution or a misleading error. Different selections remain separate.
-	existing, findErr := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused','succeeded') ORDER BY created_at DESC LIMIT 1`, plan.ID))
+	existing, findErr := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused','succeeded') AND (COALESCE(json_array_length(payload,'$.file_ids'),0)=0 OR json_extract(payload,'$.file_ids')=?) ORDER BY created_at DESC LIMIT 1`, plan.ID, importSelectionJSON(plan, selected)))
 	if findErr == nil {
 		var payload struct {
 			FileIDs []string `json:"file_ids"`
@@ -321,7 +324,41 @@ func importExcludedTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, file Pla
 	return nil
 }
 
-func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []string) (returnErr error) {
+func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []string) error {
+	var plan ImportPlan
+	if err := a.Store.Get(ctx, "import_plan", planID, &plan); err != nil {
+		return err
+	}
+	selected, err := selectImportFiles(plan, fileIDs)
+	if err != nil {
+		return err
+	}
+	var failures []error
+	for _, index := range selected {
+		file := plan.Files[index]
+		if err := a.organizeImportFileCancelled(ctx, job, file.ID); err != nil {
+			if organizeFileInterrupted(err) || ctx.Err() != nil {
+				return err
+			}
+			failures = append(failures, err)
+			continue
+		}
+		progress := &atomic.Int64{}
+		a.organizeProgress.Store(file.ID, progress)
+		fileCtx := context.WithValue(ctx, organizeProgressKey{}, organizeCopyProgress{Source: file.Source, Bytes: progress})
+		err := a.runImportFileSelection(fileCtx, job, planID, []string{file.ID})
+		a.organizeProgress.Delete(file.ID)
+		if err != nil {
+			if organizeFileInterrupted(err) || ctx.Err() != nil {
+				return err
+			}
+			failures = append(failures, err)
+		}
+	}
+	return errors.Join(failures...)
+}
+
+func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string, fileIDs []string) (returnErr error) {
 	admission := job.importRun
 	if admission != nil && !admission.exclusive {
 		a.importMu.RLock()
@@ -486,7 +523,7 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				// Each new publication step needs current admission. A throttled
 				// stream-progress check could otherwise miss cancellation between
 				// the failed link and a separately authorized copy action.
-				if e := a.jobCancelled(ctx, job); e != nil {
+				if e := a.organizeImportFileCancelled(ctx, job, file.ID); e != nil {
 					return e
 				}
 				return a.guardImportDirectory(ctx, plan)
@@ -1192,7 +1229,11 @@ func (a *App) publishImport(ctx context.Context, key, source, target string, loc
 			err = a.Store.Put(ctx, "import_receipt", key, receipt)
 		}
 		if err == nil {
-			receipt.SHA256, err = importCopy(ctx, input, output, check)
+			copyCtx := ctx
+			if progress, ok := ctx.Value(organizeProgressKey{}).(organizeCopyProgress); ok && (source == progress.Source || within(progress.Source, source)) {
+				copyCtx = context.WithValue(ctx, organizeCopyCallbackKey{}, func(n int64) { progress.Bytes.Add(n) })
+			}
+			receipt.SHA256, err = importCopy(copyCtx, input, output, check)
 		}
 		if err == nil {
 			err = output.Sync()

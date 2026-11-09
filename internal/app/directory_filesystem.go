@@ -24,6 +24,7 @@ const directoryStableTime = 60 * time.Second
 const directoryInspectionPending = "inspect_pending"
 
 type DirectoryObservedFile struct {
+	JobID               string         `json:"job_id,omitempty"`
 	ID                  string         `json:"id"`
 	DirectoryID         string         `json:"directory_id"`
 	Path                string         `json:"path"`
@@ -241,7 +242,7 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}{file.InferredMedia, file.Numbering, file.IdentityReason})
 		evidenceSum := sha256.Sum256(evidenceJSON)
 		evidence := hex.EncodeToString(evidenceSum[:])
-		retryIdentity := !fresh && !changed && f.State == "needs_review" && f.PlanID == "" && f.EvidenceFingerprint != evidence
+		retryIdentity := !fresh && !changed && (f.State == "needs_review" || f.State == "error") && f.EvidenceFingerprint != evidence
 		if fresh || changed || retryIdentity {
 			f = DirectoryObservedFile{ID: key, DirectoryID: rule.ID, Path: file.Path, State: "observing", Reason: "等待文件至少60秒保持稳定", Snapshot: stamp, StableSince: time.Now().UnixNano(), RuleFingerprint: fingerprint, EvidenceFingerprint: evidence}
 			if fresh && initial && !rule.IncludeExisting {
@@ -250,6 +251,12 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 			}
 		}
 		f.LastSeen = now()
+		if f.JobID != "" && f.PlanID == "" {
+			var planID string
+			if a.Store.DB.QueryRowContext(ctx, `SELECT json_extract(payload,'$.id') FROM jobs WHERE id=? AND kind='import'`, f.JobID).Scan(&planID) == nil {
+				f.PlanID = planID
+			}
+		}
 		if f.PlanID != "" {
 			a.refreshDirectoryFilePlan(ctx, &f)
 		}
@@ -273,31 +280,8 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 				f.State = "observing"
 				f.Reason = "空文件不参与整理"
 			} else {
-				request, identityErr := a.directoryFileIdentity(ctx, rule, file)
-				if identityErr != nil {
-					f.State = "needs_review"
-					f.Reason = a.clean(identityErr.Error())
-				} else {
-					// Persist the preview before enqueueing so a crash cannot duplicate work.
-					plan, previewErr := a.previewImport(ctx, request)
-					if previewErr != nil {
-						f.State = "needs_review"
-						f.Reason = a.clean(previewErr.Error())
-					} else {
-						f.PlanID = plan.ID
-						f.State = "queued"
-						f.Reason = "目录规则已生成整理预览，正在排队"
-						if e = a.Store.Put(ctx, "directory_import", plan.ID, guard); e != nil {
-							return e
-						}
-						if e = a.Store.Put(ctx, "directory_file", f.ID, f); e != nil {
-							return e
-						}
-						if _, e = a.executeImport(ctx, plan.ID, nil); e != nil {
-							f.State = "error"
-							f.Reason = a.clean(e.Error())
-						}
-					}
+				if e = a.enqueueDirectoryOrganizeFile(ctx, guard, file, &f); e != nil {
+					return e
 				}
 			}
 		}
@@ -700,11 +684,11 @@ func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, fil
 		return request, bad("DIRECTORY_MEDIA_TYPE", "影视类型与目录规则不符")
 	}
 	if request.MediaType == "tv" {
-		if numbering == nil || numbering.Season == nil || *numbering.Season < 0 || len(numbering.Episodes) != 1 || *numbering.Season == 0 && (file.InferredMedia == nil || file.IdentitySource != "nfo" && numbering.Form != "nfo_episode") {
+		if numbering == nil || numbering.Season == nil || *numbering.Season < 0 || len(numbering.Episodes) == 0 {
 			return request, bad("DIRECTORY_NUMBERING_REVIEW", "剧集需要明确季号和单集编号，请在“手动整理”中选择电视剧类型并设置季、集，必要时查询或填写TheMovieDb编号")
 		}
 		request.Files[0].Season = *numbering.Season
-		request.Files[0].SeasonExplicit = numbering.Form == "nfo_episode"
+		request.Files[0].SeasonExplicit = true
 		if file.InferredMedia != nil && numbering.Form == "nfo_episode" {
 			request.Files[0].SourceEpisodeID = file.InferredMedia.EpisodeID
 		}

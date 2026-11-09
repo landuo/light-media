@@ -86,6 +86,7 @@ type importMetadata struct {
 }
 
 type importScanFile struct {
+	queueHistory              *transferHistoryItem
 	originalResolvedMeta      *releasemeta.MetaObject
 	originalDirectoryPlanned  bool
 	originalItem              *plugins.ModuleFileItem
@@ -418,10 +419,15 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				}
 			}
 			parsed := a.parseManualImportFileContext(ctx, requested)
-			if explicitSeason && len(file.Episodes) == 0 && parsed.Original != nil && len(parsed.Original.Episodes) == 1 && len(request.Mappings) == 0 {
+			if explicitSeason && len(file.Episodes) == 0 && parsed.Original != nil && len(parsed.Original.Episodes) > 0 && len(request.Mappings) == 0 {
 				// An explicit season override (including 0) changes the season,
 				// never the episode number or the video's actual file contents.
 				file.Episodes = append([]int(nil), parsed.Original.Episodes...)
+			}
+			if len(file.Episodes) == 0 && parsed.Original != nil && parsed.Original.Season != nil && len(request.Mappings) == 0 {
+				file.Season = *parsed.Original.Season
+				file.Episodes = append([]int(nil), parsed.Original.Episodes...)
+				explicitSeason = true
 			}
 			if len(file.Episodes) == 0 && parsed.Original != nil {
 				seasonNumber := file.Season
@@ -454,22 +460,29 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					}
 				}
 			}
-			multipleRecovered := providerImport && request.originalRecoveredWhole
+			// Fixed MP treats ranges longer than two episodes as the first
+			// episode of this physical file, not as evidence for a whole season.
+			if len(file.Episodes) > 2 {
+				file.Episodes = file.Episodes[:1]
+			}
 			if file.Season < 0 || file.Season == 0 && !explicitSeason || file.Season > 1000 ||
-				len(file.Episodes) == 0 || len(file.Episodes) > 1 && !multipleRecovered || file.Episodes[0] < 1 {
-				block("需要明确一个标准季集；特别篇须明确第0季，多集视频不能猜测拆分")
+				len(file.Episodes) == 0 || file.Episodes[0] < 1 {
+				block("需要明确标准季集；特别篇须明确第0季")
 			}
 			if file.Status == "ready" {
 				season, exists := seasons[file.Season]
 				if !exists {
 					season, err = a.importSeason(ctx, identity, originalMedia, file.Season)
 					if err != nil {
-						return ImportPlan{}, err
+						if ctx.Err() != nil {
+							return ImportPlan{}, ctx.Err()
+						}
+						plan.Warnings = append(plan.Warnings, "未取得该季的辅助集信息，按已识别的季集号整理")
 					}
 					seasons[file.Season] = season
 				}
-				if !providerImport && file.Season == 0 && (season.ID <= 0 || season.SeriesID != identity.ID || season.SeasonNumber != 0) {
-					block("未取得对应剧集的 TMDB 第0季信息，请人工核对")
+				if !providerImport && season.SeriesID != 0 && season.SeriesID != identity.ID {
+					season.Episodes = nil
 				}
 				found := 0
 				for _, episode := range season.Episodes {
@@ -491,13 +504,6 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 						if found == len(file.Episodes) {
 							break
 						}
-					}
-				}
-				if found != len(file.Episodes) {
-					if providerImport {
-						block("所选影视来源中没有该季集，需人工核对")
-					} else {
-						block("TMDB 中没有该季集，需人工核对")
 					}
 				}
 			}

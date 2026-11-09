@@ -382,9 +382,12 @@ func TestCompletedPackPollContinuesPastBadIntentAndRecentHistory(t *testing.T) {
 	if healthy.State != "downloaded" || healthy.ImportPlanID == "" || job.Kind != "import" {
 		t.Fatalf("healthy pack did not reach the import queue: state=%s plan=%s job=%s", healthy.State, healthy.ImportPlanID, job.Kind)
 	}
-	if err := a.safeRun(ctx, job); err != nil {
-		t.Fatal(err)
+	a.runClaimedJob(ctx, job)
+	secondJob, err := a.claimJob(ctx, importJobs)
+	if err != nil || secondJob.ID == job.ID {
+		t.Fatalf("second file missing from pack queue: %s %v", secondJob.ID, err)
 	}
+	a.runClaimedJob(ctx, secondJob)
 	var plan ImportPlan
 	if err := a.Store.Get(ctx, "import_plan", healthy.ImportPlanID, &plan); err != nil {
 		t.Fatal(err)

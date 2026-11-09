@@ -63,7 +63,8 @@ const transferHistoryMainFile = `COALESCE(json_extract(cb.payload,'$.file'),f.va
 
 const transferHistoryExecutedFiles = `, executed_seed AS MATERIALIZED (
  SELECT r.id AS plan_id, f.fullkey AS file_json_path, cb.id AS callback_id, COALESCE(cb.updated_at,r.updated_at) AS updated_at,
- j.id AS job_id,j.state AS job_state,j.error_message AS job_error,j.created_at AS executed_at,j.execution_key,
+ j.id AS job_id,j.state AS job_state,
+ CASE WHEN EXISTS(SELECT 1 FROM records cancelled WHERE cancelled.kind='organize_file_cancel' AND cancelled.id=j.id||'/'||json_extract(f.value,'$.id')) THEN '此文件已从整理队列移除' ELSE j.error_message END AS job_error,j.created_at AS executed_at,j.execution_key,
  json_extract(f.value,'$.id') AS file_id,
  json_extract(` + transferHistoryMainFile + `,'$.id') AS execution_file_id,
  json_extract(r.payload,'$.created_at') AS plan_created_at,
@@ -74,6 +75,7 @@ const transferHistoryExecutedFiles = `, executed_seed AS MATERIALIZED (
  CASE WHEN json_extract(cb.payload,'$.file.status')='imported' THEN 'success'
  WHEN json_extract(cb.payload,'$.file.status')='error' THEN 'failed'
  WHEN json_extract(f.value,'$.status') IN ('imported','already_imported') THEN 'success'
+ WHEN EXISTS(SELECT 1 FROM records cancelled WHERE cancelled.kind='organize_file_cancel' AND cancelled.id=j.id||'/'||json_extract(f.value,'$.id')) THEN 'failed'
  WHEN j.state IN ('queued','running','retry_wait','waiting_paused') THEN 'pending'
  ELSE 'failed' END AS status
  FROM records r,json_each(r.payload,'$.files') f
@@ -333,6 +335,20 @@ func (a *App) transferHistoryItem(ctx context.Context, id string) (transferHisto
 // Both stable history IDs and execution aliases appear in attempts. Resolve
 // their sources together, then hydrate only the current visible selections.
 func (a *App) transferHistoryItemsForOrganize(ctx context.Context, ids []string) ([]transferHistoryItem, error) {
+	items, err := a.transferHistorySelections(ctx, ids)
+	if err != nil {
+		return nil, err
+	}
+	for _, item := range items {
+		if item.ID == "" {
+			return nil, sql.ErrNoRows
+		}
+	}
+	return items, nil
+}
+
+// Preserve the requested positions so a stale selection cannot suppress its peers.
+func (a *App) transferHistorySelections(ctx context.Context, ids []string) ([]transferHistoryItem, error) {
 	if len(ids) == 0 {
 		return nil, nil
 	}
@@ -351,7 +367,6 @@ func (a *App) transferHistoryItemsForOrganize(ctx context.Context, ids []string)
 	}
 	defer rows.Close()
 	items := make([]transferHistoryItem, len(ids))
-	matched := 0
 	for rows.Next() {
 		var position int
 		item, err := scanTransferHistory(rows, &position)
@@ -359,13 +374,9 @@ func (a *App) transferHistoryItemsForOrganize(ctx context.Context, ids []string)
 			return nil, err
 		}
 		items[position] = item
-		matched++
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
-	}
-	if matched != len(ids) {
-		return nil, sql.ErrNoRows
 	}
 	return items, nil
 }

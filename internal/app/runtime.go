@@ -27,6 +27,7 @@ import (
 )
 
 type App struct {
+	organizeProgress                 sync.Map // file ID -> actual native copied bytes; no per-chunk database writes.
 	originalFNOSRefresh              originalFNOSRefreshRuntime
 	originalPluginTemporary          originalPluginTemporaryState
 	pluginOriginalSourceSites        originalSourceSites

@@ -40,6 +40,9 @@ func promoteOrganizeFileTx(ctx context.Context, tx *sql.Tx, work organizeFileWor
 	if errors.Is(err, sql.ErrNoRows) {
 		return Job{}, bad("JOB_CANCELLED", "整理文件任务已取消或已由其他执行接管")
 	}
+	if err == nil {
+		err = registerOrganizeQueueTx(ctx, tx, job)
+	}
 	if err != nil || state != "queued" {
 		return job, err
 	}

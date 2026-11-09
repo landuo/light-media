@@ -186,7 +186,7 @@ func TestHistoryParityV031ChineseStatusAndOriginalWildcards(t *testing.T) {
 	}
 }
 
-func TestHistoryParityV031QueueContainsOnlyActiveImportJobs(t *testing.T) {
+func TestHistoryParityV031QueueRetainsTerminalFilesUntilRelatedGroupEnds(t *testing.T) {
 	a, source, target := importTestApp(t)
 	ctx := context.Background()
 	want := map[string]Job{}
@@ -202,7 +202,7 @@ func TestHistoryParityV031QueueContainsOnlyActiveImportJobs(t *testing.T) {
 			}
 		}
 		switch state {
-		case "queued", "running", "retry_wait", "waiting_paused":
+		case "queued", "running", "retry_wait", "waiting_paused", "succeeded", "failed":
 			want[job.ID] = job
 		}
 	}
@@ -221,11 +221,14 @@ func TestHistoryParityV031QueueContainsOnlyActiveImportJobs(t *testing.T) {
 			t.Fatalf("queue disguised job state or mixed jobs: %+v", group)
 		}
 		file := group.Files[0]
-		if file.JobID != job.ID || file.JobState != job.State || file.Size <= 0 || file.Source == "" || file.Target == "" || !file.CanCancel {
+		if file.JobID != job.ID || file.JobState != job.State || file.Size <= 0 || file.Source == "" || file.Target == "" || file.CanCancel != (job.State != "failed" && job.State != "succeeded") {
 			t.Fatalf("per-file queue facts lost: %+v job=%+v", file, job)
 		}
 	}
 	for _, job := range want {
+		if job.State == "failed" || job.State == "succeeded" {
+			continue
+		}
 		if _, e := a.Store.DB.Exec(`UPDATE jobs SET state='cancelled' WHERE id=?`, job.ID); e != nil {
 			t.Fatal(e)
 		}
@@ -281,10 +284,17 @@ func TestHistoryParityV031QueueCancellationIsExactAndPreservesFiles(t *testing.T
 	if e != nil || out.(map[string]bool)["cancelled"] != true {
 		t.Fatalf("single-file cancel failed: %+v %v", out, e)
 	}
-	for key, code := range map[string]string{selected.Files[0].ID: "QUEUE_FILE_FINISHED", finished.Files[0].ID: "QUEUE_FILE_FINISHED", multi.Files[0].ID: "QUEUE_FILE_NOT_CANCELLABLE"} {
+	for key, code := range map[string]string{selected.Files[0].ID: "QUEUE_FILE_FINISHED", finished.Files[0].ID: "QUEUE_FILE_FINISHED"} {
 		if _, e = a.cancelOrganizeQueueFile(ctx, key); fileCode(e) != code {
 			t.Fatalf("unsafe/repeated cancel %s: got=%v want=%s", key, e, code)
 		}
+	}
+	if _, err := a.cancelOrganizeQueueFile(ctx, multi.Files[0].ID); err != nil {
+		t.Fatal(err)
+	}
+	var marked int
+	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='organize_file_cancel' AND id IN (?,?)`, multiJob.ID+"/"+multi.Files[0].ID, multiJob.ID+"/"+multi.Files[1].ID).Scan(&marked); err != nil || marked != 1 {
+		t.Fatalf("cancel must select exactly one file: count=%d err=%v", marked, err)
 	}
 	for id, expected := range map[string]string{selectedJob.ID: "cancelled", otherJob.ID: "running", multiJob.ID: "queued", finishedJob.ID: "succeeded", scrapeJob.ID: "queued"} {
 		job, e := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, id))
@@ -337,8 +347,11 @@ func TestHistoryParityV031QueueExcludesUnsubmittedPlanFiles(t *testing.T) {
 	if len(groups) != 1 || len(groups[0].Files) != 1 || groups[0].Files[0].ID != plan.Files[0].ID {
 		t.Fatalf("unsubmitted preview files appeared as queue tasks: %+v", groups)
 	}
-	if _, e = a.cancelOrganizeQueueFile(ctx, plan.Files[0].ID); fileCode(e) != "QUEUE_FILE_NOT_CANCELLABLE" {
-		t.Fatal("legacy multi-file plan cancellation must not cancel its whole group", e)
+	if _, e = a.cancelOrganizeQueueFile(ctx, plan.Files[0].ID); e != nil {
+		t.Fatal(e)
+	}
+	if groups := historyParityReadQueue(t, a); len(groups) != 0 {
+		t.Fatal("cancelled member still visible")
 	}
 }
 

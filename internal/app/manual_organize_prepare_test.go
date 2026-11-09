@@ -194,7 +194,7 @@ func TestManualOrganizeHistoryQueueAcknowledgesBatchBeforeRecognition(t *testing
 		t.Fatalf("expected %d failed fixtures, got %d", count, len(ids))
 	}
 	payload, err := json.Marshal(manualOrganizeRequest{
-		HistoryIDs: ids, Background: true, TargetPath: target, Mode: "hardlink",
+		HistoryIDs: append(append([]string{}, ids...), "deleted-history-selection"), Background: true, TargetPath: target, Mode: "hardlink",
 		MediaType: "tv", TMDBID: identity.ID, Scraping: importFlag(false), LibraryTypeFolder: importFlag(false),
 	})
 	if err != nil {
@@ -215,7 +215,7 @@ func TestManualOrganizeHistoryQueueAcknowledgesBatchBeforeRecognition(t *testing
 		Preparations []organizeQueuePreparation `json:"preparations"`
 	}
 	historyParityDecode(t, value, &queue)
-	if len(queue.Preparations) != 1 || queue.Preparations[0].HistoryCount != count || queue.Preparations[0].ID != envelope.Data.PreparationJobID || metadataRequests != 0 {
+	if len(queue.Preparations) != 1 || queue.Preparations[0].HistoryCount != count+1 || queue.Preparations[0].ID != envelope.Data.PreparationJobID || metadataRequests != 0 {
 		t.Fatalf("batch must be visible before recognition: queue=%+v lookups=%d", queue, metadataRequests)
 	}
 	parent, err := a.claim(ctx)
@@ -234,15 +234,15 @@ func TestManualOrganizeHistoryQueueAcknowledgesBatchBeforeRecognition(t *testing
 		t.Fatal(err)
 	}
 	var children int
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT count(*) FROM jobs WHERE kind='import' AND json_extract(payload,'$._parent_job_id')=?`, parent.ID).Scan(&children); err != nil || children != count {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT count(*) FROM jobs WHERE kind IN ('organize_file','import') AND json_extract(payload,'$._parent_job_id')=?`, parent.ID).Scan(&children); err != nil || children != count {
 		t.Fatalf("replaying preparation duplicated children: count=%d err=%v", children, err)
 	}
 	if changed, err := a.finishJob(ctx, parent, "succeeded", "", "", time.Now().Unix()); err != nil || !changed {
 		t.Fatalf("finish preparation: changed=%v err=%v", changed, err)
 	}
-	for range count {
+	for range count * 2 { // Recognition and transfer are distinct durable phases.
 		job, err := a.claim(ctx)
-		if err != nil || job.Kind != "import" || job.ParentJobID != parent.ID {
+		if err != nil || (job.Kind != "import" && job.Kind != "organize_file") || job.ParentJobID != parent.ID {
 			t.Fatalf("claim retry: job=%+v err=%v", job, err)
 		}
 		a.runClaimedJob(ctx, job)

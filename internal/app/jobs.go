@@ -51,7 +51,14 @@ func enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload any, wf str
 			active = `(` + active + ` OR EXISTS(SELECT 1 FROM jobs child WHERE child.kind IN ('organize_file','import')
 				AND child.state IN ` + activeOrganizeStates + ` AND json_extract(child.payload,'$._parent_job_id')=jobs.id))`
 		}
-		e = tx.QueryRowContext(ctx, `SELECT id FROM jobs WHERE kind=? AND json_extract(payload,'$.id')=? AND `+active+` LIMIT 1`, kind, identity.ID).Scan(&found)
+		query := `SELECT id FROM jobs WHERE kind=? AND json_extract(payload,'$.id')=? AND ` + active
+		args := []any{kind, identity.ID}
+		if kind == "import" {
+			// Disjoint files from one downloaded pack are independent tasks.
+			query += ` AND (COALESCE(json_array_length(payload,'$.file_ids'),0)=0 OR COALESCE(json_array_length(?,'$.file_ids'),0)=0 OR EXISTS(SELECT 1 FROM json_each(payload,'$.file_ids') old JOIN json_each(?,'$.file_ids') new ON old.value=new.value))`
+			args = append(args, string(b), string(b))
+		}
+		e = tx.QueryRowContext(ctx, query+` LIMIT 1`, args...).Scan(&found)
 		if e == nil {
 			return Job{}, bad("JOB_EXISTS", "已有该对象的任务正在等待或执行")
 		}
@@ -64,6 +71,9 @@ func enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload any, wf str
 	_, e = tx.ExecContext(ctx, `INSERT INTO jobs(id,workflow_id,kind,state,payload,run_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)`, j.ID, wf, kind, j.State, b, j.RunAt, j.CreatedAt, j.UpdatedAt)
 	if e == nil {
 		_, e = tx.ExecContext(ctx, `INSERT INTO events(time,workflow_id,job_id,level,module,event,message) VALUES(?,?,?,?,?,?,?)`, now(), wf, j.ID, "INFO", kind, "queued", "任务已加入队列")
+	}
+	if e == nil {
+		e = registerOrganizeQueueTx(ctx, tx, j)
 	}
 	return j, e
 }
@@ -282,7 +292,7 @@ func (a *App) runClaimedJob(ctx context.Context, j Job) {
 			runAt = time.Now().Add(time.Minute).Unix()
 		} else if code == "AUTOMATION_PAUSED" {
 			state = "waiting_paused"
-		} else if code != "PLUGIN_ADAPTER_UNAVAILABLE" && code != "PLUGIN_TRANSFER_FAILED" && (j.Kind != "import" || code != "TRANSFER_OVERWRITE_DENIED") && j.Attempt < 3 && !strings.Contains(code, "REVIEW") && !strings.Contains(code, "CONFLICT") && !strings.Contains(code, "INVALID") && !strings.Contains(code, "EXCLUDED") {
+		} else if code != "PLUGIN_ADAPTER_UNAVAILABLE" && code != "PLUGIN_TRANSFER_FAILED" && (j.Kind != "import" || code != "TRANSFER_OVERWRITE_DENIED") && j.Kind != "import" && j.Kind != "organize_file" && j.Kind != "organize_prepare" && j.Attempt < 3 && !strings.Contains(code, "REVIEW") && !strings.Contains(code, "CONFLICT") && !strings.Contains(code, "INVALID") && !strings.Contains(code, "EXCLUDED") {
 			state = "retry_wait"
 			runAt = time.Now().Add(time.Duration(1<<j.Attempt) * 30 * time.Second).Unix()
 		}

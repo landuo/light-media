@@ -106,6 +106,7 @@ test('queue follows actual job state while preserving completed or blocked per-f
   assert.equal(transferQueueState({ status: 'failed', job_state: 'retry_wait' }), 'waiting');
   assert.equal(transferQueueState({ status: 'imported', job_state: 'running' }), 'completed');
   assert.equal(transferQueueState({ status: 'blocked', job_state: 'running' }), 'failed');
+  assert.equal(transferQueueState({ status: 'error', job_state: 'running' }), 'failed');
   assert.equal(transferQueueState({ status: 'ready', job_state: 'cancelled' }), 'cancelled');
 });
 

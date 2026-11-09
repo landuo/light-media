@@ -9,7 +9,6 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
-	"os"
 	"path/filepath"
 	"regexp"
 	"slices"
@@ -146,7 +145,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 				continue
 			}
 			path := h.Source
-			if _, e := snapshotTransferPath(path); errors.Is(e, os.ErrNotExist) && h.Target != "" {
+			if h.Target != "" && h.Status == "success" && h.Mode == "move" {
 				path = h.Target
 			}
 			paths = append(paths, path)
@@ -813,8 +812,12 @@ type organizeQueuePreparation struct {
 }
 
 func (a *App) organizeQueue(ctx context.Context) (any, error) {
+	if err := a.seedOrganizeQueue(ctx); err != nil {
+		return nil, err
+	}
 	jobs, e := a.queryJobs(ctx, `SELECT `+jobColumns+` FROM jobs
-		WHERE kind IN ('import','organize_prepare','organize_file') AND state IN `+activeOrganizeStates+`
+		WHERE kind IN ('import','organize_prepare','organize_file') AND state!='cancelled' AND (state IN `+activeOrganizeStates+` OR id IN (
+		 SELECT json_extract(payload,'$.job') FROM records WHERE kind='organize_queue_member' AND json_extract(payload,'$.group') IN (`+liveOrganizeGroups+`)))
 		AND (kind!='organize_prepare' OR NOT EXISTS(SELECT 1 FROM records WHERE kind='organize_file_listing' AND records.id=jobs.id))
 		ORDER BY created_at DESC, id`)
 	if e != nil {
@@ -862,8 +865,19 @@ func (a *App) organizeQueue(ctx context.Context) (any, error) {
 				continue
 			}
 			seen[fileKey] = true
-			canCancel := len(plan.Files) == 1
-			files = append(files, map[string]any{"id": f.ID, "source": f.Source, "target": f.Target, "size": f.Size, "status": f.Status, "error": f.Reason, "job_id": job.ID, "job_state": job.State, "can_cancel": canCancel})
+			var cancelled bool
+			if err := a.Store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE kind='organize_file_cancel' AND id=?)`, job.ID+"/"+f.ID).Scan(&cancelled); err != nil {
+				return nil, err
+			}
+			if cancelled {
+				continue
+			}
+			canCancel := job.State == "queued" || job.State == "running" || job.State == "retry_wait" || job.State == "waiting_paused"
+			entry := map[string]any{"id": f.ID, "source": f.Source, "target": f.Target, "size": f.Size, "status": f.Status, "error": f.Reason, "job_id": job.ID, "job_state": job.State, "can_cancel": canCancel}
+			if progress, ok := a.organizeFileProgress(f); ok {
+				entry["progress"] = progress
+			}
+			files = append(files, entry)
 		}
 		if len(files) == 0 {
 			continue
@@ -910,7 +924,22 @@ func (a *App) cancelOrganizeQueueFile(ctx context.Context, key string) (any, err
 		return nil, e
 	}
 	if len(plan.Files) != 1 {
-		return nil, bad("QUEUE_FILE_NOT_CANCELLABLE", "此旧任务含多个文件，不能按单文件取消整组")
+		tx, err := a.Store.DB.BeginTx(ctx, nil)
+		if err != nil {
+			return nil, err
+		}
+		defer tx.Rollback()
+		var active bool
+		if err = tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM jobs WHERE id=? AND state IN `+activeOrganizeStates+`)`, item.JobID).Scan(&active); err != nil {
+			return nil, err
+		}
+		if !active {
+			return nil, bad("QUEUE_FILE_FINISHED", "此文件整理任务已经结束")
+		}
+		if err = txPut(ctx, tx, "organize_file_cancel", item.JobID+"/"+item.FileID, struct{}{}); err != nil {
+			return nil, err
+		}
+		return map[string]bool{"cancelled": true}, tx.Commit()
 	}
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {

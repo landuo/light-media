@@ -2125,21 +2125,6 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 	if e != nil {
 		return e
 	}
-	for _, f := range plan.Files {
-		if f.Status != "ready" && f.Status != "already_imported" {
-			plan.State = "needs_review"
-			_ = a.Store.Put(ctx, "import_plan", plan.ID, plan)
-			if in.ChatWholeUnscoped {
-				if e = a.saveCompletedUnscopedPlan(ctx, in, plan, completedScope); e != nil {
-					return e
-				}
-			} else {
-				in.ImportPlanID = plan.ID
-				_ = a.Store.Put(ctx, "intent", in.ID, *in)
-			}
-			return bad("REVIEW_IMPORT_PLAN", "整理计划存在冲突，请在手动整理页核对")
-		}
-	}
 	if seasonProof != nil && seasonProof.Magnet {
 		if e = a.saveCompletedSeasonMagnet(ctx, *in, seasonProof.Files); e != nil {
 			return e
@@ -2154,8 +2139,7 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 	if e != nil {
 		return e
 	}
-	_, e = a.executeImport(ctx, plan.ID, nil)
-	return e
+	return a.enqueueCompletedImportFiles(ctx, plan)
 }
 func mapPath(p string, mappings []PathMapping) (string, error) {
 	p = filepath.Clean(p)
@@ -2209,23 +2193,7 @@ func (a *App) resumeCompletedPlan(ctx context.Context, in *Intent) error {
 	if e := a.Store.Get(ctx, "import_plan", in.ImportPlanID, &plan); e != nil {
 		return e
 	}
-	if plan.State != "preview" {
-		return nil
-	}
-	for _, f := range plan.Files {
-		if f.Status != "ready" && f.Status != "already_imported" && f.Status != "imported" {
-			return nil
-		}
-	}
-	var n int
-	if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, plan.ID).Scan(&n); e != nil {
-		return e
-	}
-	if n > 0 {
-		return nil
-	}
-	_, e := a.executeImport(ctx, plan.ID, nil)
-	return e
+	return a.enqueueCompletedImportFiles(ctx, plan)
 }
 
 func (a *App) saveIntentProgress(ctx context.Context, key string, t download.Task) (Intent, bool, error) {
