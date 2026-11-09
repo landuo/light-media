@@ -916,7 +916,7 @@ func (a *App) importIntentActive(ctx context.Context, plan ImportPlan) error {
 		return e
 	}
 	if intent.ChatWholeUnscoped && len(plan.Files) > 0 {
-		scope, e := a.readCompletedUnscopedPlan(ctx, a.Store.DB, intent, plan)
+		scope, e := a.readCompletedUnscopedPlan(ctx, a.Store.reader(), intent, plan)
 		if e != nil {
 			return e
 		}

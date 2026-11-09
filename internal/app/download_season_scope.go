@@ -373,7 +373,7 @@ func (a *App) saveCompletedSeasonMagnet(ctx context.Context, in Intent, files []
 }
 
 func (a *App) guardSeasonImportPlan(ctx context.Context, in Intent, plan ImportPlan) error {
-	p, e := a.intentSeasonProof(ctx, a.Store.DB, in)
+	p, e := a.intentSeasonProof(ctx, a.Store.reader(), in)
 	if e != nil || p == nil {
 		return e
 	}
@@ -381,7 +381,7 @@ func (a *App) guardSeasonImportPlan(ctx context.Context, in Intent, plan ImportP
 		return e
 	}
 	if p.Magnet && len(plan.Files) != 0 {
-		if e = a.readQualitySealed(ctx, a.Store.DB, completedSeasonMagnetKind, completedSeasonMagnetKey(in), &p.Files); e != nil || len(p.Files) != len(plan.Files) {
+		if e = a.readQualitySealed(ctx, a.Store.reader(), completedSeasonMagnetKind, completedSeasonMagnetKey(in), &p.Files); e != nil || len(p.Files) != len(plan.Files) {
 			return seasonScopeError()
 		}
 	}

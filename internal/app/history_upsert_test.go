@@ -5,10 +5,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"net/http/httptest"
 	"net/url"
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"light-media/internal/catalog"
 )
@@ -265,6 +267,25 @@ func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
 		t.Fatal(err)
 	}
 	initial := historyUpsertOnly(t, a, "status=failed")
+	// History capabilities must not reacquire the single writer through the
+	// download's season/post-add guards, even when the list index is clean.
+	func() {
+		writer, err := a.Store.DB.BeginTx(ctx, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer writer.Rollback()
+		readCtx, cancel := context.WithTimeout(ctx, 2*time.Second)
+		defer cancel()
+		result, err := a.transferHistory(readCtx, httptest.NewRequest("GET", "/api/history/transfers?status=failed", nil).WithContext(readCtx))
+		if err != nil || readCtx.Err() != nil {
+			t.Fatalf("download-linked history waited for writer: %v %v", err, readCtx.Err())
+		}
+		items := result.(map[string]any)["items"].([]transferHistoryItem)
+		if len(items) != 1 || !items[0].CanRetry {
+			t.Fatalf("read-only history lost retry capability: %+v", items)
+		}
+	}()
 	other := filepath.Join(source, "different-resource.mkv")
 	importWrite(t, other, []byte("different source for the same movie"))
 	different, err := a.previewImport(ctx, ImportRequest{MediaType: "movie", TMDBID: movie.ID, RootID: old.RootID, Mode: "hardlink", Files: []ImportFileRequest{{Path: other}}})

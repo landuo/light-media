@@ -203,7 +203,7 @@ func (a *App) guardSourcePostAddReceipt(ctx context.Context, in Intent) error {
 	if in.SourcePostAddVersion == 0 {
 		return nil
 	}
-	r, e := a.sourcePostAddReceipt(ctx, a.Store.DB, in)
+	r, e := a.sourcePostAddReceipt(ctx, a.Store.reader(), in)
 	if e != nil {
 		return e
 	}
