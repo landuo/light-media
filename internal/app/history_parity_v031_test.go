@@ -177,11 +177,11 @@ func TestHistoryParityV031ChineseStatusAndOriginalWildcards(t *testing.T) {
 	}
 }
 
-func TestHistoryParityV031QueueContainsOnlyImportJobsAndTrueStates(t *testing.T) {
+func TestHistoryParityV031QueueContainsOnlyActiveImportJobs(t *testing.T) {
 	a, source, target := importTestApp(t)
 	ctx := context.Background()
 	want := map[string]Job{}
-	for _, state := range []string{"queued", "running", "retry_wait", "failed", "succeeded", "cancelled"} {
+	for _, state := range []string{"queued", "running", "retry_wait", "waiting_paused", "failed", "succeeded", "cancelled"} {
 		fileState := "ready"
 		if state == "succeeded" {
 			fileState = "imported"
@@ -192,7 +192,10 @@ func TestHistoryParityV031QueueContainsOnlyImportJobsAndTrueStates(t *testing.T)
 				t.Fatal(e)
 			}
 		}
-		want[job.ID] = job
+		switch state {
+		case "queued", "running", "retry_wait", "waiting_paused":
+			want[job.ID] = job
+		}
 	}
 	for _, kind := range []string{"download", "scrape", "fnos_sync", "library_scan"} {
 		if _, e := a.enqueue(ctx, kind, map[string]string{"id": "unrelated-" + kind}, "other-workflow"); e != nil {
@@ -201,7 +204,7 @@ func TestHistoryParityV031QueueContainsOnlyImportJobsAndTrueStates(t *testing.T)
 	}
 	groups := historyParityReadQueue(t, a)
 	if len(groups) != len(want) {
-		t.Fatalf("non-import jobs leaked into queue: got=%d want=%d", len(groups), len(want))
+		t.Fatalf("queue did not contain exactly the active import jobs: got=%d want=%d", len(groups), len(want))
 	}
 	for _, group := range groups {
 		job, ok := want[group.ID]
@@ -209,12 +212,28 @@ func TestHistoryParityV031QueueContainsOnlyImportJobsAndTrueStates(t *testing.T)
 			t.Fatalf("queue disguised job state or mixed jobs: %+v", group)
 		}
 		file := group.Files[0]
-		wantCancel := job.State == "queued" || job.State == "running" || job.State == "retry_wait"
-		if file.JobID != job.ID || file.JobState != job.State || file.Size <= 0 || file.Source == "" || file.Target == "" || file.CanCancel != wantCancel {
+		if file.JobID != job.ID || file.JobState != job.State || file.Size <= 0 || file.Source == "" || file.Target == "" || !file.CanCancel {
 			t.Fatalf("per-file queue facts lost: %+v job=%+v", file, job)
 		}
-		if job.State == "failed" && file.Error != "synthetic full disk" && group.Error != "synthetic full disk" {
-			t.Fatalf("failed queue lost actual job error: %+v", group)
+	}
+	for _, job := range want {
+		if _, e := a.Store.DB.Exec(`UPDATE jobs SET state='cancelled' WHERE id=?`, job.ID); e != nil {
+			t.Fatal(e)
+		}
+	}
+	if groups = historyParityReadQueue(t, a); len(groups) != 0 {
+		t.Fatalf("queue retained jobs after all active imports ended: %+v", groups)
+	}
+	history := historyParityReadPage(t, a, "")
+	if history.Total != 7 {
+		t.Fatalf("hiding terminal jobs from the queue lost history: %+v", history)
+	}
+	for _, item := range history.Items {
+		if item.JobState == "failed" && (item.Status != "failed" || item.Error != "synthetic full disk") {
+			t.Fatalf("failed history lost actual job error: %+v", item)
+		}
+		if item.JobState == "succeeded" && item.Status != "success" {
+			t.Fatalf("successful history lost its outcome: %+v", item)
 		}
 	}
 }
@@ -346,7 +365,7 @@ func TestHistoryParityV031CancelReleasesOnlyActualIntentReservation(t *testing.T
 	}
 }
 
-func TestHistoryParityV031QueueKeepsSeparateSelectionsAndOnlyLatestFileRetry(t *testing.T) {
+func TestHistoryParityV031QueueShowsActiveRetryAndKeepsOtherSelectionInHistory(t *testing.T) {
 	a, source, target := importTestApp(t)
 	ctx := context.Background()
 	plan, first := historyParityPlan(t, a, source, target, "separate", "同一计划分别提交", "failed", "ready", "One.mkv", "Two.mkv", "NeverSubmitted.mkv")
@@ -380,7 +399,11 @@ func TestHistoryParityV031QueueKeepsSeparateSelectionsAndOnlyLatestFileRetry(t *
 			files[file.ID] = file
 		}
 	}
-	if len(files) != 2 || files[plan.Files[0].ID].JobID != retry.ID || files[plan.Files[0].ID].JobState != "running" || files[plan.Files[1].ID].JobID != second.ID || files[plan.Files[1].ID].JobState != "failed" {
-		t.Fatalf("queue lost distinct selections or substituted an older retry: %+v", files)
+	if len(files) != 1 || files[plan.Files[0].ID].JobID != retry.ID || files[plan.Files[0].ID].JobState != "running" {
+		t.Fatalf("queue lost the active retry or included an ended selection: %+v", files)
+	}
+	history := historyParityReadPage(t, a, "status=failed")
+	if history.Total != 1 || history.Items[0].ID != plan.Files[1].ID || history.Items[0].JobID != second.ID || history.Items[0].Error != "only second file failed" {
+		t.Fatalf("failed selection did not remain in history: %+v", history)
 	}
 }

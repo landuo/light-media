@@ -104,7 +104,11 @@ func privateOrdinarySearchDownloadJob(j Job) bool {
 }
 
 func (a *App) jobs(ctx context.Context, limit int) ([]Job, error) {
-	rows, e := a.Store.DB.QueryContext(ctx, `SELECT `+jobColumns+` FROM jobs ORDER BY created_at DESC LIMIT ?`, limit)
+	return a.queryJobs(ctx, `SELECT `+jobColumns+` FROM jobs ORDER BY created_at DESC LIMIT ?`, limit)
+}
+
+func (a *App) queryJobs(ctx context.Context, query string, args ...any) ([]Job, error) {
+	rows, e := a.Store.DB.QueryContext(ctx, query, args...)
 	if e != nil {
 		return nil, e
 	}

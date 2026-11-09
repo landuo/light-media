@@ -703,17 +703,17 @@ func (a *App) recognizeBrowserFile(ctx context.Context, path string) (any, error
 	return map[string]any{"media": identity, "parsed": files[0].Parsed, "season": request.Files[0].Season, "episodes": request.Files[0].Episodes}, nil
 }
 
+const activeOrganizeStates = `('queued','running','retry_wait','waiting_paused')`
+
 func (a *App) organizeQueue(ctx context.Context) (any, error) {
-	jobs, e := a.jobs(ctx, 1000)
+	jobs, e := a.queryJobs(ctx, `SELECT `+jobColumns+` FROM jobs
+		WHERE kind='import' AND state IN `+activeOrganizeStates+` ORDER BY created_at DESC, id`)
 	if e != nil {
 		return nil, e
 	}
 	groups := []map[string]any{}
 	seen := map[string]bool{}
 	for _, job := range jobs {
-		if job.Kind != "import" {
-			continue
-		}
 		var payload struct {
 			ID      string   `json:"id"`
 			FileIDs []string `json:"file_ids"`
@@ -735,7 +735,7 @@ func (a *App) organizeQueue(ctx context.Context) (any, error) {
 				continue
 			}
 			seen[fileKey] = true
-			canCancel := len(plan.Files) == 1 && (job.State == "queued" || job.State == "running" || job.State == "retry_wait" || job.State == "waiting_paused")
+			canCancel := len(plan.Files) == 1
 			files = append(files, map[string]any{"id": f.ID, "source": f.Source, "target": f.Target, "size": f.Size, "status": f.Status, "error": f.Reason, "job_id": job.ID, "job_state": job.State, "can_cancel": canCancel})
 		}
 		if len(files) == 0 {
@@ -771,7 +771,7 @@ func (a *App) cancelOrganizeQueueFile(ctx context.Context, key string) (any, err
 		return nil, e
 	}
 	defer tx.Rollback()
-	result, e := tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE id=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), item.JobID)
+	result, e := tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE id=? AND state IN `+activeOrganizeStates, now(), item.JobID)
 	if e != nil {
 		return nil, e
 	}
