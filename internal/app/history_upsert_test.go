@@ -216,6 +216,7 @@ func TestHistoryUpsertRepeatRecoversFailedUnpublishedReservation(t *testing.T) {
 
 func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
 	a, source, target := importTestApp(t)
+	overwriteRule(a, source, target, "latest", true)
 	ctx := context.Background()
 	movie := importFixture(t, a, "movie")
 	path := filepath.Join(source, "Resident.Evil.2026.mkv")
@@ -235,6 +236,21 @@ func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='failed',error_code='TASK_FAILED' WHERE id=?`, oldJob.ID); err != nil {
+		t.Fatal(err)
+	}
+	// Production has the source hardlink at the destination but no committed
+	// asset. A different target must remain protected; this exact inode is reusable.
+	if err := os.MkdirAll(filepath.Dir(old.Files[0].Target), 0750); err != nil {
+		t.Fatal(err)
+	}
+	importWrite(t, old.Files[0].Target, []byte("unrelated preexisting target"))
+	if allowed, err := failedImportSourceUnpublished(ctx, a.Store.DB, old, old.Files[0], 0, true); err != nil || allowed {
+		t.Fatalf("unrelated target was reusable: %v %v", allowed, err)
+	}
+	if err := os.Remove(old.Files[0].Target); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Link(path, old.Files[0].Target); err != nil {
 		t.Fatal(err)
 	}
 	intent := Intent{ID: "dl-retry-own-file", Media: old.Media, RootID: old.RootID, State: "downloaded", ImportPlanID: old.ID}
@@ -285,8 +301,8 @@ func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
 	if err := a.safeRun(ctx, oldJob); err == nil || fileCode(err) != "REVIEW_IMPORT_REPLACED" {
 		t.Fatalf("old job could publish after new submission: %v", err)
 	}
-	if _, err := os.Stat(old.Files[0].Target); !os.IsNotExist(err) {
-		t.Fatalf("old job touched the target: %v", err)
+	if stamp, err := snapshotPath(old.Files[0].Target); err != nil || stamp != planSnapshot(old.Files[0]) {
+		t.Fatalf("old job changed source hardlink: %v", err)
 	}
 	if _, err := a.finishJob(ctx, oldJob, "failed", "IMPORT_CONFLICT", "old execution no longer owns the slot", 0); err != nil {
 		t.Fatal(err)

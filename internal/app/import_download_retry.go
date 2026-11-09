@@ -56,7 +56,7 @@ func findDownloadImportRetry(ctx context.Context, q qualityReader, owner string,
 		if reserved != owner {
 			return nil, nil
 		}
-		allowed, err := failedImportSourceUnpublished(ctx, q, old, file, episode)
+		allowed, err := failedImportSourceUnpublished(ctx, q, old, file, episode, true)
 		if err != nil || !allowed {
 			return nil, err
 		}
