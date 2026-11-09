@@ -51,7 +51,10 @@ func (a *App) originalChatTransferAlias(ctx context.Context, history transferHis
 		return 0, err
 	}
 	defer tx.Rollback()
-	current, err := scanTransferHistory(tx.QueryRowContext(ctx, transferHistoryBySource, history.ResourceSource))
+	if err = refreshTransferHistoryIndex(ctx, tx); err != nil {
+		return 0, err
+	}
+	current, err := scanTransferHistory(tx.QueryRowContext(ctx, transferHistoryIndexedBySource, history.ResourceSource))
 	if errors.Is(err, sql.ErrNoRows) {
 		return 0, originalTransferRetryStale()
 	}
@@ -182,8 +185,16 @@ func (a *App) originalChatRetryTransferWithMedia(ctx context.Context, number int
 		return bad("TRANSFER_RETRY_FAILED", message)
 	}
 	var published bool
-	if err := a.Store.DB.QueryRowContext(ctx, transferHistoryBaseCTE+`SELECT EXISTS(
+	tx, err := a.transferHistoryReadTx(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	if err := tx.QueryRowContext(ctx, transferHistoryIndexedBase+`SELECT EXISTS(
 		SELECT 1 FROM attempts WHERE job_id=? AND resource_source=? AND status='success')`, job.ID, history.ResourceSource).Scan(&published); err != nil {
+		return err
+	}
+	if err = tx.Commit(); err != nil {
 		return err
 	}
 	if !published {

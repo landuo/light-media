@@ -142,7 +142,7 @@ func (a *App) completeOriginalTransferCallback(ctx context.Context, job Job, pla
 	if file.ID == primaryID {
 		history, err = a.transferHistoryPlanFile(ctx, plan.ID, file.ID)
 	} else {
-		history, err = scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryBySourceFile, historyFile.Source, historyFile.ID))
+		history, err = a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedBySourceFile, historyFile.Source, historyFile.ID)
 	}
 	if err != nil {
 		return err

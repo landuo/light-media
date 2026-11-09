@@ -97,7 +97,7 @@ const transferHistoryAuxiliaryFiles = `), auxiliary_seed AS MATERIALIZED (
  CASE WHEN json_extract(cb.payload,'$.file.status')='imported' THEN 'success' ELSE 'failed' END AS status
  FROM records r,json_each(r.payload,'$.files') f
  JOIN import_jobs j ON ` + transferHistoryJobMatch + `
- JOIN records cb ON cb.kind='original_transfer_callback' AND json_extract(cb.payload,'$.plan_id')=r.id
+ JOIN records cb ON cb.kind='original_transfer_callback' AND json_extract(cb.payload,'$.plan_id')=(r.id||'')
  AND json_extract(cb.payload,'$.parent_file_id')=json_extract(f.value,'$.id')
  AND json_extract(cb.payload,'$.file.id')!=json_extract(f.value,'$.id') AND json_extract(cb.payload,'$.job_id')=j.id
  WHERE r.kind='import_plan'`
@@ -246,7 +246,12 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 	where := ` WHERE (?='' OR status=?) AND (?='' OR lower(COALESCE(title,'')||' '||COALESCE(source_path,'')||' '||COALESCE(target_path,'')) LIKE lower(?) ESCAPE '\')`
 	args := []any{status, status, query, pattern}
 	var total int
-	rows, e := a.Store.DB.QueryContext(ctx, transferHistoryCTE+`, page AS MATERIALIZED (
+	tx, e := a.transferHistoryReadTx(ctx)
+	if e != nil {
+		return nil, e
+	}
+	defer tx.Rollback()
+	rows, e := tx.QueryContext(ctx, transferHistoryIndexedCTE+`, page AS MATERIALIZED (
  SELECT h.*,COUNT(*) OVER () AS total FROM history h`+where+transferHistoryOrder+` LIMIT ? OFFSET ?
 ) SELECT `+transferHistoryColumns+`,h.total FROM page h`+transferHistoryHydrate, append(args, size, (page-1)*size)...)
 	if e != nil {
@@ -269,9 +274,12 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 	// An out-of-range page has no row carrying the total. Return the count
 	// so the caller can navigate to the new last page after rows are removed.
 	if len(items) == 0 && page > 1 {
-		if e = a.Store.DB.QueryRowContext(ctx, transferHistoryCTE+`SELECT COUNT(*) FROM history`+where, args...).Scan(&total); e != nil {
+		if e = tx.QueryRowContext(ctx, transferHistoryIndexedCTE+`SELECT COUNT(*) FROM history`+where, args...).Scan(&total); e != nil {
 			return nil, e
 		}
+	}
+	if e = tx.Commit(); e != nil {
+		return nil, e
 	}
 	// Keep the page order without sending the hydrated documents through
 	// another SQLite sorter, even when the caller requests 1,000 rows.
@@ -324,7 +332,7 @@ func scanTransferHistory(row interface{ Scan(...any) error }, extra ...any) (tra
 	return transferHistoryItem{ID: historyID, FileID: file.ID, ResourceSource: resourceSource, ExecutionKey: executionKey, PlanID: plan.ID, WorkflowID: plan.WorkflowID, JobID: jobID, JobState: jobState, Media: plan.Media, Season: file.Season, Episodes: file.Episodes, Part: file.Part, Source: file.Source, Target: file.Target, Mode: mode, Size: file.Size, Status: status, FileStatus: file.Status, Error: message, CreatedAt: createdAt, UpdatedAt: updated, CanRetry: status == "failed" && jobState != "running" && jobState != "queued" && jobState != "retry_wait" && jobState != "waiting_paused" && file.Status != "blocked"}, nil
 }
 func (a *App) transferHistoryItem(ctx context.Context, id string) (transferHistoryItem, error) {
-	item, e := scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryCTE+transferHistorySelect+` WHERE h.history_id=? OR h.resource_source=(SELECT resource_source FROM attempts WHERE execution_file_id=? LIMIT 1) LIMIT 1`, id, id))
+	item, e := a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedCTE+transferHistorySelect+` WHERE h.history_id=? OR h.resource_source=(SELECT resource_source FROM attempts WHERE execution_file_id=? LIMIT 1) LIMIT 1`, id, id)
 	if e != nil {
 		return item, e
 	}
@@ -356,7 +364,12 @@ func (a *App) transferHistorySelections(ctx context.Context, ids []string) ([]tr
 	if err != nil {
 		return nil, err
 	}
-	rows, err := a.Store.DB.QueryContext(ctx, transferHistoryCTE+`, selected AS MATERIALIZED (
+	tx, err := a.transferHistoryReadTx(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+	rows, err := tx.QueryContext(ctx, transferHistoryIndexedCTE+`, selected AS MATERIALIZED (
  SELECT CAST(requested.key AS INTEGER) AS position,
  (SELECT resource_source FROM attempts WHERE execution_file_id=requested.value LIMIT 1) AS source
  FROM json_each(?) requested
@@ -378,7 +391,8 @@ func (a *App) transferHistorySelections(ctx context.Context, ids []string) ([]tr
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
-	return items, nil
+	rows.Close()
+	return items, tx.Commit()
 }
 
 func (a *App) transferHistoryPlanFile(ctx context.Context, planID, fileID string) (transferHistoryItem, error) {
@@ -389,12 +403,12 @@ func (a *App) transferHistoryPlanFile(ctx context.Context, planID, fileID string
 		WHERE r.kind='import_plan' AND r.id=? AND json_extract(f.value,'$.id')=?`, planID, fileID).Scan(&source); err != nil {
 		return transferHistoryItem{}, err
 	}
-	return scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryBySourceFile, source, fileID))
+	return a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedBySourceFile, source, fileID)
 }
 
 // Queue controls address an exact execution, never a stable-history redirect.
 func (a *App) transferHistoryExecution(ctx context.Context, fileID string) (transferHistoryItem, error) {
-	return scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryBaseCTE+`SELECT `+transferHistoryJSON+`,h.job_id,h.job_state,h.job_error,h.updated_at,h.status,h.execution_file_id,h.plan_created_at,h.resource_source,h.execution_key FROM attempts h`+transferHistoryHydrate+` WHERE h.execution_file_id=? LIMIT 1`, fileID))
+	return a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedBase+`SELECT `+transferHistoryJSON+`,h.job_id,h.job_state,h.job_error,h.updated_at,h.status,h.execution_file_id,h.plan_created_at,h.resource_source,h.execution_key FROM attempts h`+transferHistoryHydrate+` WHERE h.execution_file_id=? LIMIT 1`, fileID)
 }
 func (a *App) transferHistoryCapabilities(ctx context.Context, item *transferHistoryItem) {
 	_, e := snapshotTransferPath(item.Source)
