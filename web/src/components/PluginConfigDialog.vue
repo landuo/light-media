@@ -34,6 +34,7 @@ const emit = defineEmits<{ close: []; saved: []; switch: []; changed: [] }>();
 const display = useDisplay();
 const renderMode = ref<"vuetify" | "vue">("vuetify");
 const remote = shallowRef<Component>();
+const remoteMaxWidth = ref<string>();
 const controller = new AbortController();
 const remoteAPI = shallowRef<ReturnType<typeof createPluginRemoteAPI>>();
 let active = true;
@@ -48,6 +49,13 @@ const supportNotice = computed(() =>
 );
 const issues = computed(() => pluginFormIssues(nodes.value));
 const base = "/plugins/" + encodeURIComponent(props.plugin.instance_id);
+function applyRemoteLayout(layout?: { maxWidth?: unknown }) {
+  const width = layout?.maxWidth;
+  if (typeof width === "string" && /^\d+(?:\.\d+)?(?:px|rem|em|vw|%)$/.test(width)) {
+    const size = Number.parseFloat(width);
+    if (Number.isFinite(size) && size > 0) remoteMaxWidth.value = width;
+  }
+}
 function pointerControl(event: MouseEvent): HTMLElement | null {
   if (!(event.target instanceof Element)) return null;
   const control = event.target.closest('button, input[type="checkbox"]');
@@ -139,7 +147,7 @@ onUnmounted(() => {
   <VDialog
     :model-value="true"
     scrollable
-    max-width="60rem"
+    :max-width="remoteMaxWidth ?? '60rem'"
     :fullscreen="!display.mdAndUp.value"
     :persistent="saving"
     content-class="plugin-dialog-surface"
@@ -255,15 +263,17 @@ onUnmounted(() => {
           indeterminate
           aria-label="正在保存配置"
         />
-        <component
-          v-if="remote && !loading && !error"
-          :is="remote"
-          :initial-config="model"
-          :api="remoteAPI"
-          @save="saveRemote"
-          @switch="!saving && emit('switch')"
-          @close="!saving && emit('close')"
-        />
+        <div v-if="remote && !loading" class="plugin-remote-config">
+          <component
+            :is="remote"
+            :initial-config="model"
+            :api="remoteAPI"
+            @layout="applyRemoteLayout"
+            @save="saveRemote"
+            @switch="!saving && emit('switch')"
+            @close="!saving && emit('close')"
+          />
+        </div>
       </VCardText>
     </VCard>
   </VDialog>

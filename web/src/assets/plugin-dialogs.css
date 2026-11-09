@@ -166,7 +166,9 @@
 /* Original remote components also use native buttons. Recreate the original
    Tailwind/preflight baseline instead of inheriting the host's centered app
    button layout. Component classes and their scoped styles take precedence. */
-:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) button:not(.v-btn) {
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface)
+  button:not(.v-btn, :where(.plugin-remote-config *)),
+:where(.plugin-remote-config button:not(.v-btn)) {
   display: inline-block;
   min-height: 0;
   align-items: normal;

@@ -55,13 +55,13 @@ a {
   color: inherit;
   text-decoration: none;
 }
-button,
-input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
-select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
-textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)) {
+button:not(:where(.plugin-remote-config *)),
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)),
+select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)),
+textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)) {
   font: inherit;
 }
-button,
+button:not(:where(.plugin-remote-config *)),
 .button {
   border: 1px solid var(--line);
   background: var(--surface);
@@ -84,31 +84,31 @@ button,
   line-height: 1.3;
   white-space: nowrap;
 }
-button:hover,
+button:not(:where(.plugin-remote-config *)):hover,
 .button:hover {
   background: rgba(58, 53, 65, 0.04);
   border-color: rgba(58, 53, 65, 0.3);
 }
-button:active {
+button:not(:where(.plugin-remote-config *)):active {
   transform: translateY(1px);
 }
-button:disabled {
+button:not(:where(.plugin-remote-config *)):disabled {
   opacity: 0.45;
   cursor: not-allowed;
   transform: none;
 }
-button.primary,
+button:not(:where(.plugin-remote-config *)).primary,
 .button.primary {
   background: var(--accent);
   color: #fff;
   border-color: var(--accent);
   box-shadow: none;
 }
-button.primary:hover {
+button:not(:where(.plugin-remote-config *)).primary:hover {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
 }
-button.danger {
+button:not(:where(.plugin-remote-config *)).danger {
   color: var(--danger);
   background: rgba(255, 76, 81, 0.08);
   border-color: transparent;
@@ -147,9 +147,9 @@ button.danger {
   text-decoration: underline;
   background: transparent;
 }
-input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
-select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
-textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)) {
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)),
+select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)),
+textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)) {
   width: 100%;
   min-width: 0;
   border: 1px solid rgba(58, 53, 65, 0.22);
@@ -164,34 +164,34 @@ textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor 
     border-color 0.15s,
     box-shadow 0.15s;
 }
-input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)):focus,
-select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)):focus,
-textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)):focus {
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)):focus,
+select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)):focus,
+textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)):focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 1px var(--accent);
 }
-input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *))::placeholder,
-textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *))::placeholder {
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *))::placeholder,
+textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *))::placeholder {
   color: rgba(58, 53, 65, 0.38);
 }
-input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *))[readonly] {
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *))[readonly] {
   background: #f4f6f7;
   color: #6b778a;
 }
-input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *))[type='checkbox'] {
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *))[type='checkbox'] {
   width: 16px;
   height: 16px;
   accent-color: var(--accent);
   flex-shrink: 0;
   margin: 0;
 }
-input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *))[type='number'] {
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *))[type='number'] {
   min-width: 70px;
 }
-textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)) {
+textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)) {
   resize: vertical;
 }
-label:not(.v-label) {
+label:not(.v-label, :where(.plugin-remote-config *)) {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -367,7 +367,7 @@ td small {
   width: auto;
   max-width: 210px;
 }
-.inline-form > label:not(.v-label),
+.inline-form > label:not(.v-label, :where(.plugin-remote-config *)),
 .inline-form > .v-input {
   flex: 1;
 }
@@ -1554,7 +1554,7 @@ details .panel {
   font-size: 27px;
   color: var(--text);
 }
-.auth-card label:not(.v-label) {
+.auth-card label:not(.v-label, :where(.plugin-remote-config *)) {
   margin-top: 19px;
 }
 .auth-card button.full {
@@ -1849,12 +1849,12 @@ details .panel {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 15px;
   }
-  label:not(.v-label) {
+  label:not(.v-label, :where(.plugin-remote-config *)) {
     font-size: 11px;
   }
-  input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
-  select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
-  textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)) {
+  input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)),
+  select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)),
+  textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)) {
     font-size: 12px;
     padding: 10px;
   }
@@ -2405,10 +2405,10 @@ small,
   .panel {
     padding: 20px;
   }
-  input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
-  select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
-  textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
-  label:not(.v-label) {
+  input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)),
+  select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)),
+  textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *, .plugin-remote-config *)),
+  label:not(.v-label, :where(.plugin-remote-config *)) {
     font-size: 14px;
   }
 }
