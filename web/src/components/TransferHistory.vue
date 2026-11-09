@@ -91,10 +91,10 @@ const queueFiles = computed(() => queueGroups.value.flatMap((group) => group.fil
   activeQueueGroup = computed(() =>
     queueGroups.value.find((group) => group.id === activeQueue.value),
   );
-let generation = 0,
-  queueGeneration = 0,
+let queueGeneration = 0,
   timer: number,
-  searchTimer: number;
+  searchTimer: number | undefined,
+  historyRequest: AbortController | undefined;
 function isQueueComplete(status: string) {
   return ['success', 'imported', 'already_imported', 'completed', 'succeeded'].includes(status);
 }
@@ -214,39 +214,58 @@ async function remove(deleteSource: boolean, deleteTarget: boolean) {
   deleting.value = false;
 }
 async function load(silent = false) {
-  const run = ++generation;
-  if (!silent) loading.value = true;
+  if (silent && (historyRequest || searchTimer !== undefined || composing.value)) return;
+  clearSearchTimer();
+  historyRequest?.abort();
+  const request = new AbortController();
+  historyRequest = request;
+  loading.value = !silent;
   error.value = '';
   try {
-    const next = await api<{ items: HistoryRow[]; total: number }>(
-      '/history/transfers?' + historyQuery(viewState()),
-    );
-    if (run !== generation) return;
-    result.value = next;
-    for (const item of next.items) knownRows.value.set(item.id, item);
-    const lastPage = Math.max(1, Math.ceil(next.total / pageSize.value));
-    if (page.value > lastPage) {
-      page.value = lastPage;
-      syncURL();
-      await load(silent);
+    while (!request.signal.aborted) {
+      const next = await api<{ items: HistoryRow[]; total: number }>(
+        '/history/transfers?' + historyQuery(viewState()),
+        undefined,
+        undefined,
+        request.signal,
+      );
+      if (request.signal.aborted) return;
+      const lastPage = Math.max(1, Math.ceil(next.total / pageSize.value));
+      if (page.value > lastPage) {
+        page.value = lastPage;
+        syncURL();
+        continue;
+      }
+      result.value = next;
+      for (const item of next.items) knownRows.value.set(item.id, item);
+      break;
     }
   } catch (e) {
-    if (run === generation) error.value = errorText(e);
+    if (!request.signal.aborted) error.value = errorText(e);
   } finally {
-    if (run === generation) loading.value = false;
+    if (historyRequest === request) {
+      historyRequest = undefined;
+      loading.value = false;
+    }
   }
 }
-function search() {
+function clearSearchTimer() {
   clearTimeout(searchTimer);
+  searchTimer = undefined;
+}
+function beginComposition() {
+  composing.value = true;
+  clearSearchTimer();
+  historyRequest?.abort();
+}
+function search() {
   if (composing.value) return;
-  searchTimer = window.setTimeout(() => {
-    page.value = 1;
-    syncURL();
-    void load();
-  }, 1000);
+  clearSearchTimer();
+  historyRequest?.abort();
+  searchTimer = window.setTimeout(searchNow, 280);
 }
 function searchNow() {
-  clearTimeout(searchTimer);
+  if (composing.value) return;
   page.value = 1;
   syncURL();
   void load();
@@ -354,10 +373,10 @@ onMounted(() => {
   }, 3000);
 });
 onUnmounted(() => {
-  generation++;
+  historyRequest?.abort();
   queueGeneration++;
   clearInterval(timer);
-  clearTimeout(searchTimer);
+  clearSearchTimer();
   window.removeEventListener('hashchange', restoreURL);
   document.removeEventListener('click', dismissMenu);
   document.removeEventListener('keydown', escape);
@@ -381,7 +400,7 @@ onUnmounted(() => {
             placeholder="搜索（支持 * ? 通配符）"
             aria-label="搜索（支持 * ? 通配符）"
             @input="search"
-            @compositionstart="composing = true"
+            @compositionstart="beginComposition"
             @compositionend="
               composing = false;
               search();

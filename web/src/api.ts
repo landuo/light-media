@@ -95,7 +95,12 @@ export function errorText(e: unknown) {
   const err = e as APIError;
   return `${err.message || '操作失败'}${err.requestId ? ' · 请求 ' + err.requestId : ''}`;
 }
-export async function api<T = any>(path: string, body?: any, method?: string): Promise<T> {
+export async function api<T = any>(
+  path: string,
+  body?: any,
+  method?: string,
+  signal?: AbortSignal,
+): Promise<T> {
   ui.busy++;
   try {
     const r = await fetch(apiURL(path), {
@@ -103,6 +108,7 @@ export async function api<T = any>(path: string, body?: any, method?: string): P
       credentials: 'same-origin',
       headers: body === undefined ? {} : { 'Content-Type': 'application/json' },
       body: body === undefined ? undefined : JSON.stringify(body),
+      signal,
     });
     let j: any;
     try {

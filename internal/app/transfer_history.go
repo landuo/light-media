@@ -57,11 +57,10 @@ const transferHistoryPlanSource = `COALESCE(NULLIF(json_extract(f.value,'$.histo
  NULLIF(json_extract(meta.payload,'$.reorganize.asset.source_path'),''),
  NULLIF(json_extract(f.value,'$.source'),''),'file:'||json_extract(f.value,'$.id'))`
 
-const transferHistoryExecutedFiles = `, executed_files AS (
+const transferHistoryExecutedFiles = `, executed_seed AS MATERIALIZED (
  SELECT r.id AS plan_id, json_remove(r.payload,'$.files','$.media.cast','$.media.recommendations','$.media.seasons') AS plan, COALESCE(json_extract(cb.payload,'$.file'),f.value) AS file, COALESCE(cb.updated_at,r.updated_at) AS updated_at,
  j.id AS job_id,j.state AS job_state,j.error_message AS job_error,j.created_at AS executed_at,j.execution_key,
- MIN(j.execution_key) OVER (PARTITION BY r.id,json_extract(f.value,'$.id')) AS first_execution_key,
- ROW_NUMBER() OVER (PARTITION BY r.id,json_extract(f.value,'$.id') ORDER BY j.execution_key DESC) AS file_rank,
+ json_extract(f.value,'$.id') AS file_id,
  ` + transferHistoryPlanSource + ` AS resource_source,
  CASE WHEN json_extract(cb.payload,'$.file.status')='imported' THEN 'success'
  WHEN json_extract(cb.payload,'$.file.status')='error' THEN 'failed'
@@ -74,12 +73,11 @@ const transferHistoryExecutedFiles = `, executed_files AS (
  LEFT JOIN records cb ON cb.kind='original_transfer_callback' AND cb.id=r.id||'/'||json_extract(f.value,'$.id') AND json_extract(cb.payload,'$.job_id')=j.id
  WHERE r.kind='import_plan'`
 
-const transferHistoryAuxiliaryFiles = `), auxiliary_files AS (
+const transferHistoryAuxiliaryFiles = `), auxiliary_seed AS MATERIALIZED (
  SELECT r.id AS plan_id, json_remove(r.payload,'$.files','$.media.cast','$.media.recommendations','$.media.seasons') AS plan,
  json_extract(cb.payload,'$.file') AS file,cb.updated_at AS updated_at,
  j.id AS job_id,j.state AS job_state,j.error_message AS job_error,j.created_at AS executed_at,j.execution_key,
- MIN(j.execution_key) OVER (PARTITION BY r.id,json_extract(cb.payload,'$.file.id')) AS first_execution_key,
- ROW_NUMBER() OVER (PARTITION BY r.id,json_extract(cb.payload,'$.file.id') ORDER BY j.execution_key DESC) AS file_rank,
+ json_extract(cb.payload,'$.file.id') AS file_id,
  json_extract(cb.payload,'$.file.source') AS resource_source,
  CASE WHEN json_extract(cb.payload,'$.file.status')='imported' THEN 'success' ELSE 'failed' END AS status
  FROM records r,json_each(r.payload,'$.files') f
@@ -89,7 +87,14 @@ const transferHistoryAuxiliaryFiles = `), auxiliary_files AS (
  AND json_extract(cb.payload,'$.file.id')!=json_extract(f.value,'$.id') AND json_extract(cb.payload,'$.job_id')=j.id
  WHERE r.kind='import_plan'`
 
-const transferHistoryAttempts = `), attempts AS (SELECT * FROM executed_files WHERE file_rank=1 UNION ALL SELECT * FROM auxiliary_files WHERE file_rank=1) `
+// Project the compact rows before ranking. Sorting with the untrimmed plan
+// payloads is expensive, especially when one plan contains many files.
+const transferHistoryRankFile = `SELECT *, MIN(execution_key) OVER (PARTITION BY plan_id,file_id) AS first_execution_key,
+ ROW_NUMBER() OVER (PARTITION BY plan_id,file_id ORDER BY execution_key DESC) AS file_rank FROM `
+
+const transferHistoryAttempts = `), executed_files AS (` + transferHistoryRankFile + `executed_seed),
+ auxiliary_files AS (` + transferHistoryRankFile + `auxiliary_seed),
+ attempts AS (SELECT * FROM executed_files WHERE file_rank=1 UNION ALL SELECT * FROM auxiliary_files WHERE file_rank=1) `
 
 const transferHistoryBaseCTE = transferHistoryJobsCTE + transferHistoryExecutedFiles + transferHistoryAuxiliaryFiles + transferHistoryAttempts
 
@@ -216,16 +221,13 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 	where := ` WHERE (?='' OR status=?) AND (?='' OR lower(COALESCE(json_extract(plan,'$.media.title'),'')||' '||COALESCE(json_extract(file,'$.source'),'')||' '||COALESCE(json_extract(file,'$.target'),'')) LIKE lower(?) ESCAPE '\')`
 	args := []any{status, status, query, pattern}
 	var total int
-	if e := a.Store.DB.QueryRowContext(ctx, transferHistoryCTE+`SELECT COUNT(*) FROM history`+where, args...).Scan(&total); e != nil {
-		return nil, e
-	}
-	rows, e := a.Store.DB.QueryContext(ctx, transferHistoryCTE+`SELECT `+transferHistoryColumns+` FROM history`+where+` ORDER BY updated_at DESC,execution_key DESC,history_id LIMIT ? OFFSET ?`, append(args, size, (page-1)*size)...)
+	rows, e := a.Store.DB.QueryContext(ctx, transferHistoryCTE+`SELECT `+transferHistoryColumns+`,COUNT(*) OVER () FROM history`+where+` ORDER BY updated_at DESC,execution_key DESC,history_id LIMIT ? OFFSET ?`, append(args, size, (page-1)*size)...)
 	if e != nil {
 		return nil, e
 	}
 	items := []transferHistoryItem{}
 	for rows.Next() {
-		item, e := scanTransferHistory(rows)
+		item, e := scanTransferHistory(rows, &total)
 		if e != nil {
 			rows.Close()
 			return nil, e
@@ -237,18 +239,29 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 	if e != nil {
 		return nil, e
 	}
+	// An out-of-range page has no row carrying the total. Return the count
+	// so the caller can navigate to the new last page after rows are removed.
+	if len(items) == 0 && page > 1 {
+		if e = a.Store.DB.QueryRowContext(ctx, transferHistoryCTE+`SELECT COUNT(*) FROM history`+where, args...).Scan(&total); e != nil {
+			return nil, e
+		}
+	}
 	// Filesystem checks happen after closing the single-connection SQL cursor.
 	for i := range items {
+		if e = ctx.Err(); e != nil {
+			return nil, e
+		}
 		a.transferHistoryCapabilities(ctx, &items[i])
 	}
 	return map[string]any{"items": items, "total": total, "page": page, "page_size": size}, nil
 }
-func scanTransferHistory(row interface{ Scan(...any) error }) (transferHistoryItem, error) {
+func scanTransferHistory(row interface{ Scan(...any) error }, extra ...any) (transferHistoryItem, error) {
 	var planRaw, fileRaw []byte
 	var jobID, jobState, jobError, updated, status string
 	var historyID, createdAt, resourceSource string
 	var executionKey string
-	if e := row.Scan(&planRaw, &fileRaw, &jobID, &jobState, &jobError, &updated, &status, &historyID, &createdAt, &resourceSource, &executionKey); e != nil {
+	columns := []any{&planRaw, &fileRaw, &jobID, &jobState, &jobError, &updated, &status, &historyID, &createdAt, &resourceSource, &executionKey}
+	if e := row.Scan(append(columns, extra...)...); e != nil {
 		return transferHistoryItem{}, e
 	}
 	var plan ImportPlan

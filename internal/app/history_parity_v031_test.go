@@ -126,6 +126,12 @@ func TestHistoryParityV031SupportsThousandRowPages(t *testing.T) {
 	if first.Total != 1005 || first.PageSize != 1000 || len(first.Items) != 1000 || second.Total != 1005 || second.Page != 2 || second.PageSize != 1000 || len(second.Items) != 5 {
 		t.Fatalf("wrong large-page boundaries: first=%d/%d size=%d second=%d/%d size=%d", len(first.Items), first.Total, first.PageSize, len(second.Items), second.Total, second.PageSize)
 	}
+	if outside := historyParityReadPage(t, a, "page=3&page_size=1000&q=page-"); outside.Total != 1005 || outside.Page != 3 || len(outside.Items) != 0 {
+		t.Fatalf("empty page must still report the matching total: %+v", outside)
+	}
+	if none := historyParityReadPage(t, a, "q=does-not-exist"); none.Total != 0 || len(none.Items) != 0 {
+		t.Fatalf("no-match search must report an empty first page: %+v", none)
+	}
 	seen := map[string]bool{}
 	for _, item := range append(first.Items, second.Items...) {
 		if seen[item.ID] {
