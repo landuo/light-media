@@ -337,6 +337,7 @@ Object.assign(labels, {
   visible: '飞牛可见',
   download: '下载提交',
   import: '文件整理',
+  organize_prepare: '准备整理目录',
   scrape: '元数据刮削',
   fnos_sync: '飞牛同步',
   library_scan: '媒体库核对',

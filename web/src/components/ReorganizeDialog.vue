@@ -21,6 +21,7 @@ type OrganizeResponse = {
   total: number;
   submitted: number;
   failed: number;
+  preparation_job_id?: string;
 };
 const props = defineProps<{
   paths: string[];
@@ -206,6 +207,11 @@ async function organize(background: boolean) {
   try {
     const response = await api<OrganizeResponse>('/files/organize', payload(false, background));
     if (!alive) return;
+    if (response.preparation_job_id) {
+      toast('目录已提交，正在后台准备整理');
+      emit('done');
+      return;
+    }
     result.value = response;
     if (
       !response.submitted &&

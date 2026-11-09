@@ -36,7 +36,7 @@ type jobView struct {
 
 var jobTypeLabels = map[string]string{
 	"native_download": "提交资源下载", "download": "提交影视下载", "lark_download": "提交影视下载",
-	"import": "整理文件", "reorganize_cleanup": "清理旧整理文件", "quality_cleanup": "清理洗版旧文件", "subscription_completion_prepare": "判定订阅完成", "subscription_completion": "发送订阅完成通知", "subscription_stats": "提交订阅统计", "subscription_add": "新增订阅通知与统计",
+	"import": "整理文件", "organize_prepare": "准备整理目录", "reorganize_cleanup": "清理旧整理文件", "quality_cleanup": "清理洗版旧文件", "subscription_completion_prepare": "判定订阅完成", "subscription_completion": "发送订阅完成通知", "subscription_stats": "提交订阅统计", "subscription_add": "新增订阅通知与统计",
 	"subscription_download":            "提交订阅资源下载",
 	"subscription_acquisition_receipt": "登记已接收下载",
 	"scrape":                           "刮削元数据", "fnos_sync": "飞牛入库核对",
@@ -94,6 +94,15 @@ func (a *App) jobView(ctx context.Context, job Job) (jobView, error) {
 			s.Subject = "核对下载任务并请求默认下载器保留数据删种"
 		case "site_refresh":
 			s.Subject = "所有启用站点"
+		case "organize_prepare":
+			var item organizePreparationPayload
+			if json.Unmarshal(job.Payload, &item) == nil && len(item.Request.Paths) > 0 {
+				s.Source = item.Request.Paths[0]
+				s.Subject = filepath.Base(s.Source)
+				if len(item.Request.Paths) > 1 {
+					s.Subject += fmt.Sprintf(" 等 %d 项", len(item.Request.Paths))
+				}
+			}
 		case "download", "lark_download", "subscription_download", "subscription_acquisition_receipt":
 			var item Intent
 			if err := read("intent", payload.ID, &item); err != nil {

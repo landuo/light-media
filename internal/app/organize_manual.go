@@ -59,19 +59,19 @@ type manualOrganizeItem struct {
 	JobID     string        `json:"job_id,omitempty"`
 }
 type manualOrganizeOutput struct {
-	Items     []manualOrganizeItem `json:"items"`
-	Total     int                  `json:"total"`
-	Submitted int                  `json:"submitted"`
-	Failed    int                  `json:"failed"`
+	Items            []manualOrganizeItem `json:"items"`
+	Total            int                  `json:"total"`
+	Submitted        int                  `json:"submitted"`
+	Failed           int                  `json:"failed"`
+	PreparationJobID string               `json:"preparation_job_id,omitempty"`
 }
 
-func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out manualOrganizeOutput, returnErr error) {
-	out = manualOrganizeOutput{Items: []manualOrganizeItem{}}
+func normalizeManualOrganize(in *manualOrganizeRequest) (*regexp.Regexp, error) {
 	if in.TargetStorage != "" && in.TargetStorage != "local" {
-		return out, bad("INVALID_STORAGE", "请选择本地存储")
+		return nil, bad("INVALID_STORAGE", "请选择本地存储")
 	}
 	if len(in.Paths)+len(in.HistoryIDs) == 0 || len(in.Paths) > 2000 || len(in.HistoryIDs) > 1000 || in.MinFilesize < 0 || in.MinFilesize > 1<<30 {
-		return out, bad("INVALID_ORGANIZE", "请选择文件或整理历史，并检查最小文件大小")
+		return nil, bad("INVALID_ORGANIZE", "请选择文件或整理历史，并检查最小文件大小")
 	}
 	if in.MediaType == "auto" {
 		in.MediaType = ""
@@ -80,12 +80,17 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		in.Mode = ""
 	}
 	if in.Season != nil && (*in.Season < 0 || *in.Season > 1000) {
-		return out, bad("INVALID_SEASON", "季号须在0至1000之间")
+		return nil, bad("INVALID_SEASON", "季号须在0至1000之间")
 	}
 	if in.TMDBID != 0 && !validMedia(in.MediaType, in.TMDBID) {
-		return out, bad("INVALID_MEDIA", "请先选择媒体类型，再填写TMDB ID")
+		return nil, bad("INVALID_MEDIA", "请先选择媒体类型，再填写TMDB ID")
 	}
-	format, err := organizeEpisodeTemplate(in.EpisodeFormat)
+	return organizeEpisodeTemplate(in.EpisodeFormat)
+}
+
+func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out manualOrganizeOutput, returnErr error) {
+	out = manualOrganizeOutput{Items: []manualOrganizeItem{}}
+	format, err := normalizeManualOrganize(&in)
 	if err != nil {
 		return out, err
 	}
@@ -176,6 +181,15 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		}
 	}
 	wf := id("wf_")
+	var prepared map[string]bool
+	preparation, _ := ctx.Value(organizePreparationKey{}).(Job)
+	if preparation.ID != "" {
+		wf = preparation.WorkflowID
+		prepared, err = a.preparedOrganizeSources(ctx, preparation.ID, &out)
+		if err != nil {
+			return out, err
+		}
+	}
 	if !in.Preview {
 		batchID := id("scrape_batch_")
 		if err := a.Store.Put(ctx, "original_scrape_batch", batchID, originalScrapeBatch{ID: batchID}); err != nil {
@@ -208,8 +222,13 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 	files := []importScanFile{}
 	seen := map[string]bool{}
 	for _, path := range paths {
-		if seen[path] {
+		if seen[path] || prepared[path] {
 			continue
+		}
+		if preparation.ID != "" {
+			if e := a.jobCancelled(ctx, preparation); e != nil {
+				return out, e
+			}
 		}
 		seen[path] = true
 		scan, e := a.manualOrganizeScan(ctx, path, in)
@@ -244,8 +263,16 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 	}
 	for _, file := range files {
 		err = nil
+		if prepared[file.Path] {
+			continue
+		}
 		if ctx.Err() != nil {
 			return out, ctx.Err()
+		}
+		if preparation.ID != "" {
+			if e := a.jobCancelled(ctx, preparation); e != nil {
+				return out, e
+			}
 		}
 		// The original transfer filter exempts subtitle and audio tasks from the video size threshold.
 		if !file.originalDirectoryPlanned && file.materialKind == "" && in.MinFilesize > 0 && file.Size <= in.MinFilesize*1024*1024 {
@@ -491,7 +518,11 @@ func (a *App) recordManualOrganizeFailure(ctx context.Context, path, wf string, 
 	if e = txPut(ctx, tx, "import_plan", plan.ID, plan); e != nil {
 		return Job{}, e
 	}
-	job, e := enqueueTx(ctx, tx, "import", map[string]any{"id": plan.ID, "file_ids": []string{plan.Files[0].ID}}, wf)
+	payload := map[string]any{"id": plan.ID, "file_ids": []string{plan.Files[0].ID}}
+	if _, ok := ctx.Value(organizePreparationKey{}).(Job); ok {
+		payload["manual_preparation_failed"] = true
+	}
+	job, e := enqueueTx(ctx, tx, "import", payload, wf)
 	if e != nil {
 		return Job{}, e
 	}

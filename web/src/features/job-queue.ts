@@ -15,6 +15,7 @@ const typeLabels: Record<string, string> = {
   native_download: '下载资源',
   download: '下载资源',
   import: '整理文件',
+  organize_prepare: '准备整理目录',
   reorganize_cleanup: '清理重整旧文件',
   scrape: '刮削媒体资料',
   fnos_sync: '同步飞牛影视',

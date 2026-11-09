@@ -13,6 +13,11 @@ import (
 )
 
 func enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload any, wf string) (Job, error) {
+	if kind == "import" {
+		if err := guardOrganizePreparation(ctx, tx); err != nil {
+			return Job{}, err
+		}
+	}
 	b, e := json.Marshal(payload)
 	if e != nil {
 		return Job{}, e
@@ -254,6 +259,8 @@ func (a *App) safeRun(ctx context.Context, j Job) (err error) {
 		return a.runDownload(ctx, j, p.ID)
 	case "import":
 		return a.runImport(ctx, j, p.ID, p.FileIDs)
+	case "organize_prepare":
+		return a.runOrganizePreparation(ctx, j)
 	case "quality_cleanup":
 		return a.runQualityCleanup(ctx, j, p.ID)
 	case "reorganize_cleanup":
