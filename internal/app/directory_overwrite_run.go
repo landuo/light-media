@@ -393,6 +393,9 @@ func (a *App) commitDirectoryOverwriteFileTx(ctx context.Context, tx *sql.Tx, id
 				if own.Kind == "video" {
 					continue
 				}
+				if run := parallelImport(ctx); run != nil && run.owned[own.Path] != own {
+					return bad("REVIEW_IMPORT_SCOPE_CHANGED", "原资产的旁车归属已超出当前整理范围")
+				}
 				actual, err := snapshotPath(own.Path)
 				if err != nil || actual != own.Snapshot {
 					return bad("REVIEW_OVERWRITE_OWNER", "原旁车已变化，未转移其归属")

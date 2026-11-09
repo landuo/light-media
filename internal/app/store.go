@@ -115,6 +115,7 @@ func OpenStore(dir string) (*Store, error) {
  CREATE INDEX IF NOT EXISTS organize_queue_source ON records(json_extract(payload,'$.source')) WHERE kind='organize_queue_member';
  CREATE INDEX IF NOT EXISTS organize_queue_group ON records(json_extract(payload,'$.group')) WHERE kind='organize_queue_member';
  CREATE INDEX IF NOT EXISTS organize_queue_job ON records(json_extract(payload,'$.job')) WHERE kind='organize_queue_member';
+ CREATE INDEX IF NOT EXISTS managed_file_asset ON records(json_extract(payload,'$.asset_id')) WHERE kind='managed_file';
  CREATE INDEX IF NOT EXISTS jobs_due ON jobs(state,run_at);
  CREATE INDEX IF NOT EXISTS jobs_subject ON jobs(kind,json_extract(payload,'$.id'),created_at);
  CREATE TABLE IF NOT EXISTS events(seq INTEGER PRIMARY KEY AUTOINCREMENT,time TEXT NOT NULL,workflow_id TEXT NOT NULL,job_id TEXT NOT NULL,level TEXT NOT NULL,module TEXT NOT NULL,event TEXT NOT NULL,message TEXT NOT NULL);
@@ -122,6 +123,7 @@ func OpenStore(dir string) (*Store, error) {
  CREATE TABLE IF NOT EXISTS reservations(media_key TEXT NOT NULL,season INTEGER NOT NULL,episode INTEGER NOT NULL,intent_id TEXT NOT NULL,PRIMARY KEY(media_key,season,episode));
  CREATE INDEX IF NOT EXISTS reservations_intent ON reservations(intent_id);
  CREATE TABLE IF NOT EXISTS asset_slots(media_key TEXT NOT NULL,season INTEGER NOT NULL,episode INTEGER NOT NULL,asset_id TEXT NOT NULL,PRIMARY KEY(media_key,season,episode,asset_id));
+ CREATE INDEX IF NOT EXISTS asset_slots_owner ON asset_slots(asset_id);
  CREATE TABLE IF NOT EXISTS site_usage(site_id TEXT NOT NULL,ts INTEGER NOT NULL);
  CREATE INDEX IF NOT EXISTS site_usage_window ON site_usage(site_id,ts);
  CREATE TABLE IF NOT EXISTS quota(site_id TEXT NOT NULL,day TEXT NOT NULL,used INTEGER NOT NULL,PRIMARY KEY(site_id,day));

@@ -31,6 +31,8 @@ type importAdmission struct {
 	exclusive     bool
 	scanVersions  bool
 	versionScopes map[string]importVersionScope
+	owned         map[string]managedFile
+	extraTargets  map[string]bool
 	identity      func(string) (transferoverwrite.Identity, error)
 	sourcePaths   map[string]struct{}
 	slots         map[importSlot]struct{}
@@ -163,6 +165,7 @@ func (a *App) importJobScope(ctx context.Context, job Job, native bool) *importA
 		return run
 	}
 	run.versionScopes = make(map[string]importVersionScope)
+	run.extraTargets = make(map[string]bool)
 	run.sourcePaths = make(map[string]struct{})
 	run.slots, run.paths = make(map[importSlot]struct{}), make(map[string]struct{})
 	run.sources, run.targets = make(map[string]struct{}), make(map[string]struct{})
@@ -171,6 +174,7 @@ func (a *App) importJobScope(ctx context.Context, job Job, native bool) *importA
 		if file.DirectoryDigest != "" || !run.addFile(file.Source, file.Target, meta) {
 			return run
 		}
+		run.extraTargets[file.Target] = auxiliaryMaterialKind(file.MaterialKind)
 		for _, episode := range importEpisodes(file.Episodes) {
 			run.slots[importSlot{mediaKey(plan.Media), file.Season, episode}] = struct{}{}
 		}
@@ -179,30 +183,25 @@ func (a *App) importJobScope(ctx context.Context, job Job, native bool) *importA
 			if err != nil || !run.addTarget(target, meta) {
 				return run
 			}
+			run.extraTargets[target] = auxiliaryMaterialKind(file.MaterialKind)
 		}
 		for i, side := range meta.Sidecars[file.ID] {
 			if !run.addFile(side.Source, side.Target, meta) {
 				return run
 			}
+			run.extraTargets[side.Target] = true
 			if side.Original != nil && side.NamingBase != "" {
 				extra := originalTransferSideFile(file, side, i)
 				target, err := a.originalTransferNativeRename(ctx, plan.Media, extra, side.NamingBase, *side.Original, nil, false)
 				if err != nil || !run.addTarget(target, meta) {
 					return run
 				}
+				run.extraTargets[target] = true
 			}
 		}
 	}
 	if meta.Overwrite != nil {
-		// A same-path managed video replacement can transfer ownership of
-		// the old asset's metadata and sidecars beyond the new file plan.
-		hashes := make([]string, 0, len(run.targets))
-		for target := range run.targets {
-			hashes = append(hashes, tokenHash(target))
-		}
-		raw, _ := json.Marshal(hashes)
-		if err := a.Store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE kind='managed_file'
- AND id IN (SELECT value FROM json_each(?)))`, raw).Scan(&special); err != nil || special {
+		if err := run.includeOverwriteOwners(ctx, meta); err != nil {
 			return run
 		}
 	}
@@ -282,8 +281,8 @@ func guardParallelOverwrite(ctx context.Context, op directoryOverwriteOperation)
 		return bad("REVIEW_IMPORT_SCOPE_CHANGED", "覆盖收据的路径已超出当前整理范围")
 	}
 	for _, old := range op.Targets {
-		if old.Path == op.Target && old.Owner != nil {
-			return bad("REVIEW_IMPORT_SCOPE_CHANGED", "同路径受管文件替换需要独占整理")
+		if old.Owner != nil && run.owned[old.Path] != *old.Owner {
+			return bad("REVIEW_IMPORT_SCOPE_CHANGED", "待覆盖文件的归属已超出当前整理范围")
 		}
 		if old.Path != op.Target && !run.coversVersion(op, old.Path) {
 			return bad("REVIEW_IMPORT_SCOPE_CHANGED", "覆盖旧文件已超出当前整理范围")

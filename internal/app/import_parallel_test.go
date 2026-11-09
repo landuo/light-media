@@ -148,12 +148,16 @@ func assertParallelAsset(t *testing.T, a *App, plan ImportPlan) string {
 }
 
 func TestImportQueueRunsIndependentEpisodesInParallel(t *testing.T) {
-	for _, mode := range []string{"never", "latest"} {
+	for _, mode := range []string{"never", "latest", "replace-owned"} {
 		t.Run(mode, func(t *testing.T) { testImportQueueIndependentEpisodes(t, mode) })
 	}
 }
 func testImportQueueIndependentEpisodes(t *testing.T, mode string) {
 	a, source, target := importTestApp(t)
+	replaceOwned := mode == "replace-owned"
+	if replaceOwned {
+		mode = "latest"
+	}
 	overwriteRule(a, source, target, mode, true)
 	media := importFixture(t, a, "tv")
 	importCache(t, a, "season:123:1", catalog.Season{ID: 901, SeriesID: media.ID, SeasonNumber: 1, Episodes: []catalog.Episode{
@@ -173,6 +177,35 @@ func testImportQueueIndependentEpisodes(t *testing.T, mode string) {
 		}
 		// Directory preparation freezes the parsed metadata for native naming.
 		return queueParallelImport(t, a, media, ImportFileRequest{Path: path, Season: 1, Episodes: []int{episode}, originalResolvedMeta: meta}, resolved)
+	}
+	if replaceOwned {
+		// Publish an initial pair plus owned metadata, then replace both episodes.
+		for i, path := range []string{firstPath, secondPath} {
+			plan, queued := queue(path, i+1)
+			claimed := claimParallelImport(t, a, queued.ID)
+			var workers sync.WaitGroup
+			if err := awaitParallelImport(t, runParallelImport(a, t.Context(), &workers, claimed)); err != nil {
+				t.Fatal(err)
+			}
+			workers.Wait()
+			var owned managedFile
+			if err := a.Store.Get(t.Context(), "managed_file", tokenHash(plan.Files[0].Target), &owned); err != nil {
+				t.Fatal(err)
+			}
+			nfo := plan.Files[0].Target + ".nfo"
+			importWrite(t, nfo, []byte("existing owned metadata"))
+			owned.Path, owned.Kind = nfo, "nfo"
+			var err error
+			owned.Snapshot, err = snapshotPath(nfo)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err = a.Store.Put(t.Context(), "managed_file", tokenHash(nfo), owned); err != nil {
+				t.Fatal(err)
+			}
+		}
+		firstPath = filepath.Join(source, "replacement", filepath.Base(firstPath))
+		secondPath = filepath.Join(source, "replacement", filepath.Base(secondPath))
 	}
 	firstPlan, firstQueued := queue(firstPath, 1)
 	secondPlan, secondQueued := queue(secondPath, 2)
@@ -205,6 +238,21 @@ func testImportQueueIndependentEpisodes(t *testing.T, mode string) {
 	}
 	if firstTarget := assertParallelAsset(t, a, firstPlan); firstTarget == secondTarget {
 		t.Fatal("the two episodes were published to the same target")
+	}
+	if replaceOwned {
+		for _, plan := range []ImportPlan{firstPlan, secondPlan} {
+			var current, nfo managedFile
+			path := plan.Files[0].Target
+			if err := a.Store.Get(t.Context(), "managed_file", tokenHash(path), &current); err != nil {
+				t.Fatal(err)
+			}
+			if err := a.Store.Get(t.Context(), "managed_file", tokenHash(path+".nfo"), &nfo); err != nil || nfo.AssetID != current.AssetID {
+				t.Fatal("replacement lost metadata ownership", err)
+			}
+			if content, err := os.ReadFile(path + ".nfo"); err != nil || string(content) != "existing owned metadata" {
+				t.Fatal("replacement modified existing metadata", err)
+			}
+		}
 	}
 }
 
@@ -258,9 +306,9 @@ func TestImportQueueSerializesSameTargetAndSkipsItForIndependentWork(t *testing.
 				assertNoParallelImportClaim(t, a, "cancelled job was claimed")
 			} else {
 				second := claimParallelImport(t, a, secondQueued.ID)
-				if !second.importRun.exclusive {
+				if second.importRun.exclusive || second.importRun.owned[secondPlan.Files[0].Target].AssetID == "" {
 					second.importRun.release()
-					t.Fatal("replacement of an existing managed target must run exclusively")
+					t.Fatal("replacement must lock the old ownership set")
 				}
 				secondDone := runParallelImport(a, ctx, &workers, second)
 				if err := awaitParallelImport(t, secondDone); err == nil {
