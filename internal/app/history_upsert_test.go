@@ -2,7 +2,9 @@ package app
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -105,6 +107,48 @@ func TestHistoryUpsertRepeatedFailuresThenSuccessUpdatesOriginalRecord(t *testin
 	}
 	if got, err := os.ReadFile(path); err != nil || string(got) != "same isolated resource retained through retries" {
 		t.Fatal("history upsert changed source bytes", err)
+	}
+}
+
+func TestTransferHistoryItemsForOrganizeKeepsSelectionOrderAndResolvesAliases(t *testing.T) {
+	a, source, _ := importTestApp(t)
+	ctx := context.Background()
+	seed := func(name string) ImportPlan {
+		t.Helper()
+		job, err := a.recordManualOrganizeFailure(ctx, filepath.Join(source, name), id("wf_"), bad("REVIEW_IMPORT", "整理失败"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		plan, _ := historyUpsertAttempt(t, a, job.ID)
+		return plan
+	}
+	first := seed("first.mkv")
+	legacy := seed("first.mkv")
+	second := seed("second.mkv")
+	latest := seed("first.mkv")
+	selected := []string{second.Files[0].ID, legacy.Files[0].ID, first.Files[0].ID}
+	items, err := a.transferHistoryItemsForOrganize(ctx, selected)
+	if err != nil || len(items) != len(selected) {
+		t.Fatalf("expected each selected history in the result: %+v %v", items, err)
+	}
+	want := []struct{ history, execution, plan string }{
+		{second.Files[0].ID, second.Files[0].ID, second.ID},
+		{first.Files[0].ID, latest.Files[0].ID, latest.ID},
+		{first.Files[0].ID, latest.Files[0].ID, latest.ID},
+	}
+	for i, item := range items {
+		if item.ID != want[i].history || item.FileID != want[i].execution || item.PlanID != want[i].plan {
+			t.Fatalf("selection %d resolved the wrong history or execution: %+v, want %+v", i, item, want[i])
+		}
+	}
+	if _, err := a.transferHistoryItemsForOrganize(ctx, []string{selected[0], "missing"}); !errors.Is(err, sql.ErrNoRows) {
+		t.Fatalf("missing selection must fail the entire lookup: %v", err)
+	}
+	if _, err := a.deleteTransferHistory(ctx, items[0], historyDeleteRequest{Confirm: true}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.transferHistoryItemsForOrganize(ctx, selected); !errors.Is(err, sql.ErrNoRows) {
+		t.Fatalf("hidden history must not be available for organization: %v", err)
 	}
 }
 

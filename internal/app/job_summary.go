@@ -160,7 +160,14 @@ func summarizeJob(job Job, input jobSummaryInput, settings Settings) (jobView, e
 			s.Subject = "所有启用站点"
 		case "organize_prepare":
 			var item organizePreparationPayload
-			if json.Unmarshal(job.Payload, &item) == nil && len(item.Request.Paths) > 0 {
+			if json.Unmarshal(job.Payload, &item) != nil {
+				break
+			}
+			if len(item.Request.HistoryIDs) > 0 {
+				s.TypeLabel = "准备重新整理"
+				s.Subject = fmt.Sprintf("%d 条整理记录", len(item.Request.HistoryIDs))
+				s.FileCount = len(item.Request.HistoryIDs)
+			} else if len(item.Request.Paths) > 0 {
 				s.Source = item.Request.Paths[0]
 				s.Subject = filepath.Base(s.Source)
 				if len(item.Request.Paths) > 1 {

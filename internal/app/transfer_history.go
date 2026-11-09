@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"net/http"
 	"slices"
@@ -327,6 +328,46 @@ func (a *App) transferHistoryItem(ctx context.Context, id string) (transferHisto
 	}
 	a.transferHistoryCapabilities(ctx, &item)
 	return item, nil
+}
+
+// Both stable history IDs and execution aliases appear in attempts. Resolve
+// their sources together, then hydrate only the current visible selections.
+func (a *App) transferHistoryItemsForOrganize(ctx context.Context, ids []string) ([]transferHistoryItem, error) {
+	if len(ids) == 0 {
+		return nil, nil
+	}
+	raw, err := json.Marshal(ids)
+	if err != nil {
+		return nil, err
+	}
+	rows, err := a.Store.DB.QueryContext(ctx, transferHistoryCTE+`, selected AS MATERIALIZED (
+ SELECT CAST(requested.key AS INTEGER) AS position,
+ (SELECT resource_source FROM attempts WHERE execution_file_id=requested.value LIMIT 1) AS source
+ FROM json_each(?) requested
+) SELECT `+transferHistoryColumns+`,selected.position FROM history h
+ JOIN selected ON selected.source=h.resource_source`+transferHistoryHydrate, string(raw))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := make([]transferHistoryItem, len(ids))
+	matched := 0
+	for rows.Next() {
+		var position int
+		item, err := scanTransferHistory(rows, &position)
+		if err != nil {
+			return nil, err
+		}
+		items[position] = item
+		matched++
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	if matched != len(ids) {
+		return nil, sql.ErrNoRows
+	}
+	return items, nil
 }
 
 func (a *App) transferHistoryPlanFile(ctx context.Context, planID, fileID string) (transferHistoryItem, error) {

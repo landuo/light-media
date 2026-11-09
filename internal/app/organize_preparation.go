@@ -19,6 +19,9 @@ func (a *App) submitManualOrganize(ctx context.Context, in manualOrganizeRequest
 	if _, err := normalizeManualOrganize(&in); err != nil {
 		return out, err
 	}
+	if len(in.HistoryIDs) != 0 {
+		return a.enqueueOrganizePreparation(ctx, in, out)
+	}
 	for _, path := range in.Paths {
 		if !a.importSourceAllowed(path, true) || browserInternal(path) {
 			continue
@@ -27,25 +30,30 @@ func (a *App) submitManualOrganize(ctx context.Context, in manualOrganizeRequest
 		if err != nil || !info.IsDir() {
 			continue
 		}
-		// Persist the request before scanning or looking up any episode metadata.
-		raw, err := json.Marshal(in)
-		if err != nil {
-			return out, err
-		}
-		job, err := a.enqueue(ctx, "organize_prepare", organizePreparationPayload{ID: tokenHash(string(raw)), Request: in}, id("wf_"))
-		if err != nil {
-			return out, err
-		}
-		out.PreparationJobID = job.ID
-		return out, nil
+		return a.enqueueOrganizePreparation(ctx, in, out)
 	}
 	return a.manualOrganize(ctx, in)
 }
 
+// Acknowledge submission once the request is durable, before scanning,
+// resolving history or looking up media metadata.
+func (a *App) enqueueOrganizePreparation(ctx context.Context, in manualOrganizeRequest, out manualOrganizeOutput) (manualOrganizeOutput, error) {
+	raw, err := json.Marshal(in)
+	if err != nil {
+		return out, err
+	}
+	job, err := a.enqueue(ctx, "organize_prepare", organizePreparationPayload{ID: tokenHash(string(raw)), Request: in}, id("wf_"))
+	if err != nil {
+		return out, err
+	}
+	out.PreparationJobID = job.ID
+	return out, nil
+}
+
 func (a *App) runOrganizePreparation(ctx context.Context, job Job) error {
 	var payload organizePreparationPayload
-	if err := json.Unmarshal(job.Payload, &payload); err != nil || !payload.Request.Background || payload.Request.Preview || len(payload.Request.HistoryIDs) != 0 {
-		return bad("INVALID_JOB", "目录整理准备参数无效")
+	if err := json.Unmarshal(job.Payload, &payload); err != nil || !payload.Request.Background || payload.Request.Preview {
+		return bad("INVALID_JOB", "整理准备参数无效")
 	}
 	if err := a.jobCancelled(ctx, job); err != nil {
 		return err
@@ -74,24 +82,30 @@ func (a *App) runOrganizePreparation(ctx context.Context, job Job) error {
 }
 
 // Each child is saved with its preparation ID in the same transaction as its
-// plan. Resuming the parent after a restart must not submit those paths again.
-func (a *App) preparedOrganizeSources(ctx context.Context, jobID string, out *manualOrganizeOutput) (map[string]bool, error) {
-	rows, err := a.Store.DB.QueryContext(ctx, `SELECT json_extract(p.payload,'$.files[0].source'), j.id,
+// plan. Resuming the parent must skip both paths and original history sources,
+// since a completed reorganization can change the latest attempt's path.
+func (a *App) preparedOrganizeSources(ctx context.Context, jobID string, out *manualOrganizeOutput) (paths, historySources map[string]bool, err error) {
+	rows, err := a.Store.DB.QueryContext(ctx, `SELECT json_extract(p.payload,'$.files[0].source'),
+			COALESCE(json_extract(p.payload,'$.files[0].history_source'),''), j.id,
 			COALESCE(json_extract(j.payload,'$.manual_preparation_failed'),0), j.error_message
 		FROM jobs j JOIN records p ON p.kind='import_plan' AND p.id=json_extract(j.payload,'$.id')
 		WHERE j.kind='import' AND json_extract(j.payload,'$._parent_job_id')=?`, jobID)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	defer rows.Close()
-	prepared := map[string]bool{}
+	paths, historySources = map[string]bool{}, map[string]bool{}
 	for rows.Next() {
 		var item manualOrganizeItem
+		var historySource string
 		var failed bool
-		if err := rows.Scan(&item.Source, &item.JobID, &failed, &item.Error); err != nil {
-			return nil, err
+		if err := rows.Scan(&item.Source, &historySource, &item.JobID, &failed, &item.Error); err != nil {
+			return nil, nil, err
 		}
-		prepared[item.Source] = true
+		paths[item.Source] = true
+		if historySource != "" {
+			historySources[historySource] = true
+		}
 		if failed {
 			item.Status = "failed"
 			out.Failed++
@@ -101,7 +115,7 @@ func (a *App) preparedOrganizeSources(ctx context.Context, jobID string, out *ma
 		}
 		out.Items = append(out.Items, item)
 	}
-	return prepared, rows.Err()
+	return paths, historySources, rows.Err()
 }
 
 func guardOrganizePreparation(ctx context.Context, tx *sql.Tx) error {
@@ -115,7 +129,7 @@ func guardOrganizePreparation(ctx context.Context, tx *sql.Tx) error {
 		return err
 	}
 	if !active {
-		return bad("JOB_CANCELLED", "目录整理准备已取消")
+		return bad("JOB_CANCELLED", "整理准备已取消")
 	}
 	return nil
 }

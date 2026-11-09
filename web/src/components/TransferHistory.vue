@@ -27,7 +27,14 @@ const preparationLabels = {
   retry_wait: '等待重试',
   waiting_paused: '已暂停',
 };
-type QueuePreparation = { id: string; paths: string[]; state: keyof typeof preparationLabels };
+type QueuePreparation = {
+  id: string;
+  paths: string[];
+  state: keyof typeof preparationLabels;
+  history_count?: number;
+};
+const failedPreparationStates = ['failed', 'cancelled', 'needs_review'];
+const finishedPreparationStates = ['succeeded', ...failedPreparationStates];
 
 // Legacy page events remain compatible; reorganization now opens in place.
 defineEmits<{ organize: [paths: string[]]; job: [id: string] }>();
@@ -91,10 +98,13 @@ const queueFiles = computed(() => queueGroups.value.flatMap((group) => group.fil
   activeQueueGroup = computed(() =>
     queueGroups.value.find((group) => group.id === activeQueue.value),
   );
+const pendingPreparations = new Set<string>();
 let queueGeneration = 0,
   timer: number,
   searchTimer: number | undefined,
-  historyRequest: AbortController | undefined;
+  historyRequest: AbortController | undefined,
+  preparationRequest: AbortController | undefined,
+  refreshAfterPreparation = false;
 function isQueueComplete(status: string) {
   return ['success', 'imported', 'already_imported', 'completed', 'succeeded'].includes(status);
 }
@@ -166,9 +176,13 @@ function reorganize(rows: HistoryRow[]) {
   openMenu.value = '';
   reorganizeItems.value = rows;
 }
-async function reorganized() {
+async function reorganized(preparationJobID?: string) {
   reorganizeItems.value = [];
   selected.value = [];
+  if (preparationJobID) {
+    pendingPreparations.add(preparationJobID);
+    return;
+  }
   await load();
 }
 function openDelete(rows: HistoryRow[]) {
@@ -215,6 +229,7 @@ async function remove(deleteSource: boolean, deleteTarget: boolean) {
 }
 async function load(silent = false) {
   if (silent && (historyRequest || searchTimer !== undefined || composing.value)) return;
+  refreshAfterPreparation = false;
   clearSearchTimer();
   historyRequest?.abort();
   const request = new AbortController();
@@ -301,6 +316,33 @@ function numbers(item: HistoryRow) {
     ? `S${String(item.season).padStart(2, '0')}${item.episodes?.map((ep) => 'E' + String(ep).padStart(2, '0')).join('') || ''}`
     : '';
 }
+async function pollPreparations() {
+  if (!pendingPreparations.size || preparationRequest) return;
+  const request = new AbortController();
+  preparationRequest = request;
+  try {
+    await Promise.allSettled(
+      [...pendingPreparations].map(async (id) => {
+        const { job } = await api<{ job: { state: string; error_message?: string } }>(
+          '/jobs/' + encodeURIComponent(id),
+          undefined,
+          undefined,
+          request.signal,
+        );
+        if (request.signal.aborted || !finishedPreparationStates.includes(job.state)) return;
+        pendingPreparations.delete(id);
+        refreshAfterPreparation = true;
+        if (failedPreparationStates.includes(job.state)) {
+          const reason = job.state === 'cancelled' ? '任务已取消' : '请查看关联任务';
+          toast(`重新整理准备未完成：${job.error_message || reason}`, true);
+        }
+      }),
+    );
+    if (!request.signal.aborted && refreshAfterPreparation) void load(true);
+  } finally {
+    preparationRequest = undefined;
+  }
+}
 async function loadQueue() {
   const run = ++queueGeneration;
   queueLoading.value = true;
@@ -369,11 +411,14 @@ onMounted(() => {
   timer = window.setInterval(() => {
     if (document.hidden) return;
     if (queueOpen.value && !queueLoading.value) void loadQueue();
-    if (items.value.some((item) => item.status === 'pending')) void load(true);
+    void pollPreparations();
+    if (refreshAfterPreparation || items.value.some((item) => item.status === 'pending'))
+      void load(true);
   }, 3000);
 });
 onUnmounted(() => {
   historyRequest?.abort();
+  preparationRequest?.abort();
   queueGeneration++;
   clearInterval(timer);
   clearSearchTimer();
@@ -729,10 +774,16 @@ onUnmounted(() => {
         <div v-if="queuePreparations.length" class="th-queue-body">
           <div v-for="preparation in queuePreparations" :key="preparation.id" class="th-queue-file">
             <div class="th-queue-file-name">
-              {{ preparation.paths[0] }}
-              <small v-if="preparation.paths.length > 1"
-                >共 {{ preparation.paths.length }} 个选中路径</small
-              >
+              <template v-if="preparation.history_count">
+                重新整理 {{ preparation.history_count }} 条记录
+                <small v-if="preparation.paths[0]">{{ preparation.paths[0] }}</small>
+              </template>
+              <template v-else>
+                {{ preparation.paths[0] }}
+                <small v-if="preparation.paths.length > 1"
+                  >共 {{ preparation.paths.length }} 个选中路径</small
+                >
+              </template>
             </div>
             <span class="th-status" :class="preparation.state">
               {{ preparationLabels[preparation.state] }}

@@ -35,7 +35,7 @@ const props = defineProps<{
     [key: string]: any;
   };
 }>();
-const emit = defineEmits<{ close: []; done: []; historyChanged: [] }>();
+const emit = defineEmits<{ close: []; done: [preparationJobID?: string]; historyChanged: [] }>();
 const targetListID = 'organize-targets-' + useId();
 const storage = ref(props.initial?.target_path ? 'local' : ''),
   mode = ref(''),
@@ -208,8 +208,13 @@ async function organize(background: boolean) {
     const response = await api<OrganizeResponse>('/files/organize', payload(false, background));
     if (!alive) return;
     if (response.preparation_job_id) {
-      toast('目录已提交，正在后台准备整理');
-      emit('done');
+      if (props.historyIds?.length) {
+        toast(`已提交 ${props.historyIds.length} 条整理记录，正在后台准备`);
+        emit('done', response.preparation_job_id);
+      } else {
+        toast('目录已提交，正在后台准备整理');
+        emit('done');
+      }
       return;
     }
     result.value = response;

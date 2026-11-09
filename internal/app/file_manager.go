@@ -184,7 +184,7 @@ func (a *App) fileManagerAPI(r *http.Request, p string) (any, error) {
 		if e := decodeBody(nil, r, &in); e != nil {
 			return nil, e
 		}
-		if in.Background && !in.Preview && len(in.HistoryIDs) == 0 {
+		if in.Background && !in.Preview {
 			return a.submitManualOrganize(ctx, in)
 		}
 		return a.manualOrganize(ctx, in)

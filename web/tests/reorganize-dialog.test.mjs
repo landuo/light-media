@@ -19,6 +19,7 @@ const compiled = ts.transpileModule(script.content, {
 function openDialog(t, initial = {}, options = {}) {
   const requests = [];
   const events = [];
+  const toasts = [];
   const apiModule = {
     ui: {
       settings: {
@@ -35,7 +36,7 @@ function openDialog(t, initial = {}, options = {}) {
     label: (value) => value,
     errorText: (error) => error.message,
     image: (path) => path,
-    toast: () => {},
+    toast: (message) => toasts.push(message),
   };
   const module = { exports: {} };
   new Function('require', 'exports', compiled)((name) => {
@@ -59,8 +60,8 @@ function openDialog(t, initial = {}, options = {}) {
   const scope = vue.effectScope();
   const render = scope.run(() =>
     module.exports.default.setup(
-      { paths: ['/downloads/Test.mkv'], initial },
-      { expose: () => {}, emit: (event) => events.push(event) },
+      { paths: ['/downloads/Test.mkv'], historyIds: options.historyIds, initial },
+      { expose: () => {}, emit: (...event) => events.push(event) },
     ),
   );
   t.after(() => scope.stop());
@@ -85,6 +86,7 @@ function openDialog(t, initial = {}, options = {}) {
   return {
     requests,
     events,
+    toasts,
     nodes,
     pathInput,
     selects,
@@ -112,9 +114,13 @@ function openDialog(t, initial = {}, options = {}) {
       await vue.nextTick();
       return requests.at(-1).body;
     },
-    async organize() {
+    async organize(background = false) {
       await nodes()
-        .find((node) => node.type === 'button' && renderedText(node).includes('立即整理'))
+        .find((node) =>
+          background
+            ? node.props?.class === 'queue-action'
+            : node.type === 'button' && renderedText(node).includes('立即整理'),
+        )
         .props.onClick();
       await vue.nextTick();
     },
@@ -180,9 +186,28 @@ test('pinned per-task failure keeps successful siblings and updates the rendered
   assert.equal(dialog.requests.length, 2, 'one submission and actual job poll');
   assert.deepEqual(
     dialog.events,
-    ['historyChanged'],
+    [['historyChanged']],
     'refresh history and keep the failed dialog open',
   );
+});
+
+test('queuing history closes the dialog as soon as background preparation is accepted', async (t) => {
+  const dialog = openDialog(
+    t,
+    {},
+    {
+      historyIds: ['first-history', 'second-history'],
+      api: async () => ({ preparation_job_id: 'history-preparation' }),
+    },
+  );
+  await dialog.organize(true);
+  assert.equal(dialog.requests.length, 1);
+  assert.equal(dialog.requests[0].path, '/files/organize');
+  assert.equal(dialog.requests[0].body.background, true);
+  assert.deepEqual(dialog.requests[0].body.history_ids, ['first-history', 'second-history']);
+  assert.deepEqual(dialog.events, [['done', 'history-preparation']]);
+  assert.deepEqual(dialog.toasts, ['已提交 2 条整理记录，正在后台准备']);
+  assert.ok(!dialog.nodes().some((node) => node.props?.class === 'organize-progress'));
 });
 
 test('manual target can be edited and cleared without changing storage, mode, or explicit switches', async (t) => {

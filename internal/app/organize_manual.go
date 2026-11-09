@@ -94,6 +94,20 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 	if err != nil {
 		return out, err
 	}
+	wf := id("wf_")
+	var prepared, preparedHistorySources map[string]bool
+	preparation, _ := ctx.Value(organizePreparationKey{}).(Job)
+	work, isFileJob := ctx.Value(organizeFileKey{}).(organizeFileWork)
+	if isFileJob {
+		wf = work.Job.WorkflowID
+	}
+	if preparation.ID != "" {
+		wf = preparation.WorkflowID
+		prepared, preparedHistorySources, err = a.preparedOrganizeSources(ctx, preparation.ID, &out)
+		if err != nil {
+			return out, err
+		}
+	}
 	histories := map[string]transferHistoryItem{}
 	historyOwners := map[string]string{}
 	historySources := map[string]string{}
@@ -108,19 +122,28 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 	paths := append([]string{}, in.Paths...)
 	if len(in.HistoryIDs) > 0 {
 		paths = nil
-		for _, key := range in.HistoryIDs {
-			var h transferHistoryItem
-			var e error
-			if in.originalRetryAttempt != nil {
+		var selected []transferHistoryItem
+		if in.originalRetryAttempt != nil {
+			for _, key := range in.HistoryIDs {
 				if key != in.originalRetryAttempt.HistoryID {
 					return out, originalTransferRetryStale()
 				}
-				h, e = a.originalCurrentTransferRetry(ctx, *in.originalRetryAttempt, false)
-			} else {
-				h, e = a.transferHistoryItem(ctx, key)
 			}
-			if e != nil {
-				return out, e
+			var item transferHistoryItem
+			item, err = a.originalCurrentTransferRetry(ctx, *in.originalRetryAttempt, false)
+			selected = []transferHistoryItem{item}
+		} else {
+			selected, err = a.transferHistoryItemsForOrganize(ctx, in.HistoryIDs)
+			if preparation.ID != "" && errors.Is(err, sql.ErrNoRows) {
+				return out, bad("REVIEW_ORGANIZE_HISTORY", "所选整理历史已变化，请刷新后重新选择")
+			}
+		}
+		if err != nil {
+			return out, err
+		}
+		for _, h := range selected {
+			if preparedHistorySources[h.ResourceSource] {
+				continue
 			}
 			path := h.Source
 			if _, e := snapshotTransferPath(path); errors.Is(e, os.ErrNotExist) && h.Target != "" {
@@ -130,7 +153,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			histories[path] = h
 			historySources[path] = h.ResourceSource
 			var original ImportPlan
-			if e = a.Store.Get(ctx, "import_plan", h.PlanID, &original); e != nil {
+			if e := a.Store.Get(ctx, "import_plan", h.PlanID, &original); e != nil {
 				return out, e
 			}
 			file, auxiliary, key, e := a.historyPlannedFile(ctx, original, h)
@@ -180,21 +203,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 
 		}
 	}
-	wf := id("wf_")
-	var prepared map[string]bool
-	preparation, _ := ctx.Value(organizePreparationKey{}).(Job)
-	work, isFileJob := ctx.Value(organizeFileKey{}).(organizeFileWork)
-	if isFileJob {
-		wf = work.Job.WorkflowID
-	}
-	if preparation.ID != "" {
-		wf = preparation.WorkflowID
-		prepared, err = a.preparedOrganizeSources(ctx, preparation.ID, &out)
-		if err != nil {
-			return out, err
-		}
-	}
-	if !in.Preview && !isFileJob && preparation.ID == "" {
+	if !in.Preview && !isFileJob && (preparation.ID == "" || len(in.HistoryIDs) > 0) {
 		batchID := id("scrape_batch_")
 		if err := a.Store.Put(ctx, "original_scrape_batch", batchID, originalScrapeBatch{ID: batchID}); err != nil {
 			return out, err
@@ -272,7 +281,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 	if len(files) > 2000 {
 		return out, bad("FILE_SELECTION_LIMIT", "一次最多整理2000个视频")
 	}
-	if preparation.ID != "" {
+	if preparation.ID != "" && len(in.HistoryIDs) == 0 {
 		if in.EpisodeDetail != "" && format == nil && len(files) > 1 {
 			return out, bad("INVALID_EPISODE_RANGE_REQUIRES_FORMAT", "多个文件指定集数时，请填写集数定位")
 		}
@@ -506,6 +515,11 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			// destination before starting the explicitly requested transfer.
 			// Preview does not delete anything; no parent video is selected.
 			if prior, ok := priorHistories[file.Path]; ok && prior.item.Target != "" && prior.item.Target != file.Path {
+				if preparation.ID != "" {
+					if e := a.jobCancelled(ctx, preparation); e != nil {
+						return out, e
+					}
+				}
 				if e := a.prepareOriginalHistoryTransfer(ctx, plan, prior.item, prior.plan, prior.file, prior.key, prior.auxiliary, in.originalRetry); e != nil {
 					// Source cleanup rejection returns failure without replacing the
 					// existing successful history with a failed preparation record.
@@ -792,9 +806,10 @@ func (a *App) recognizeBrowserFile(ctx context.Context, path string) (any, error
 const activeOrganizeStates = `('queued','running','retry_wait','waiting_paused')`
 
 type organizeQueuePreparation struct {
-	ID    string   `json:"id"`
-	Paths []string `json:"paths"`
-	State string   `json:"state"`
+	ID           string   `json:"id"`
+	Paths        []string `json:"paths"`
+	State        string   `json:"state"`
+	HistoryCount int      `json:"history_count,omitempty"`
 }
 
 func (a *App) organizeQueue(ctx context.Context) (any, error) {
@@ -811,8 +826,9 @@ func (a *App) organizeQueue(ctx context.Context) (any, error) {
 	for _, job := range jobs {
 		if job.Kind == "organize_prepare" {
 			var payload organizePreparationPayload
-			if json.Unmarshal(job.Payload, &payload) == nil && len(payload.Request.Paths) > 0 {
-				preparations = append(preparations, organizeQueuePreparation{ID: job.ID, Paths: payload.Request.Paths, State: job.State})
+			if json.Unmarshal(job.Payload, &payload) == nil && len(payload.Request.Paths)+len(payload.Request.HistoryIDs) > 0 {
+				paths := append([]string{}, payload.Request.Paths...)
+				preparations = append(preparations, organizeQueuePreparation{ID: job.ID, Paths: paths, State: job.State, HistoryCount: len(payload.Request.HistoryIDs)})
 			}
 			continue
 		}
