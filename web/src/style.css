@@ -509,6 +509,18 @@ td small {
 }
 .app-shell {
   min-height: 100vh;
+  min-height: 100dvh;
+}
+.app-interface,
+.toasts.above-app-footer {
+  --app-footer-inset: calc(64px + env(safe-area-inset-bottom, 0px));
+  --app-floating-bottom: calc(var(--app-footer-inset) + 12px);
+}
+.app-interface {
+  --content-bottom: calc(var(--app-footer-inset) + 24px);
+}
+.toasts.above-app-footer {
+  bottom: var(--app-floating-bottom);
 }
 .sidebar {
   width: var(--nav-width);
@@ -631,6 +643,7 @@ td small {
   margin-left: var(--nav-width);
   min-width: 0;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -2325,6 +2338,9 @@ small,
   font-size: 12px;
 }
 @media (max-width: 1279px) {
+  body:has(.drawer-open) {
+    overflow: hidden;
+  }
   .sidebar {
     width: var(--nav-width);
     transform: translateX(-100%);
@@ -2367,6 +2383,14 @@ small,
   }
 }
 @media (max-width: 600px) {
+  .topbar .icon-button,
+  .topbar .bell-button {
+    width: 44px;
+    height: 44px;
+  }
+  .topbar .global-search {
+    height: 44px;
+  }
   .global-search {
     flex: 1;
     width: auto;
@@ -2381,8 +2405,16 @@ small,
   .topbar-actions {
     gap: 0;
   }
-  .global-search input {
-    font-size: 14px;
+  .topbar .global-search input {
+    font-size: 16px;
+  }
+  .notification-panel {
+    inset-inline: 8px;
+    top: calc(var(--topbar-height) + 4px);
+    width: auto;
+    max-width: none;
+    max-height: min(75dvh, calc(100dvh - var(--topbar-height) - 12px));
+    padding: 16px;
   }
   .modal-backdrop {
     padding: 8px;

@@ -7,7 +7,6 @@ import ts from 'typescript';
 import * as Vue from 'vue';
 import * as realAPI from '../src/api.ts';
 import * as forms from '../src/features/plugin-forms.ts';
-import * as runtimeSupport from '../src/features/plugin-runtime-support.ts';
 import * as navigation from '../src/features/plugin-navigation.ts';
 import * as remoteAPI from '../src/features/plugin-remote-api.ts';
 import { createPluginRemoteLoader, loadPluginAppRemote } from '../src/features/plugin-federation.ts';
@@ -53,7 +52,6 @@ function fixture(name, { descriptor = meta, navKey = 'archive', getEntry, getFor
     if (path === 'vuetify') return { useDisplay: () => ({ mdAndUp: Vue.ref(true) }) };
     if (path === '../api') return realAPI;
     if (path === '../features/plugin-forms') return forms;
-    if (path === '../features/plugin-runtime-support') return runtimeSupport;
     if (path === '../features/plugin-navigation') return navigation;
     if (path === '../features/plugin-remote-api') return remoteAPI;
     if (path === '../features/plugin-federation') return { loadPluginRemote: load, loadPluginAppRemote: (instance, key, options) => loadPluginAppRemote(instance, key, options, load) };

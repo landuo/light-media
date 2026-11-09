@@ -510,7 +510,7 @@ onUnmounted(() => {
 }
 .explore-scroll-top {
   position: fixed;
-  bottom: 2rem;
+  bottom: max(2rem, var(--app-floating-bottom, 0px));
   right: 2rem;
   width: 44px;
   height: 44px;

@@ -5,6 +5,7 @@ import { VBtn } from 'vuetify/components/VBtn';
 import { VIcon } from 'vuetify/components/VIcon';
 import { VList, VListItem, VListItemTitle, VListItemSubtitle } from 'vuetify/components/VList';
 import { interfaceMode, setInterfaceMode, type InterfaceMode } from '../features/interface-mode';
+defineProps<{ labeled?: boolean }>();
 const menu = ref(false),
   layoutMenu = ref(false);
 const modes: { value: InterfaceMode; title: string; icon: string }[] = [
@@ -27,7 +28,9 @@ function choose(value: InterfaceMode) {
     <template #activator="{ props }"
       ><VBtn
         v-bind="props"
-        icon="mdi-account-circle-outline"
+        :icon="labeled ? undefined : 'mdi-account-circle-outline'"
+        :prepend-icon="labeled ? 'mdi-devices' : undefined"
+        :text="labeled ? '界面布局' : undefined"
         variant="text"
         aria-label="用户界面设置"
     /></template>

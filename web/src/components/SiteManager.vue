@@ -1319,7 +1319,7 @@ onUnmounted(() => {
 .site-floating-actions {
   position: fixed;
   right: max(16px, env(safe-area-inset-right));
-  bottom: max(16px, env(safe-area-inset-bottom));
+  bottom: max(16px, env(safe-area-inset-bottom), var(--app-floating-bottom, 0px));
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -1795,15 +1795,16 @@ td {
   .limit-fields {
     grid-template-columns: 1fr;
   }
-  .manager-form-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .manager-form-grid,
+  .site-editor .manager-form-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
   .half {
-    grid-column: span 2;
+    grid-column: 1 / -1;
   }
   .site-floating-actions {
     right: 14px;
-    bottom: 14px;
+    bottom: max(14px, var(--app-floating-bottom, 0px));
   }
   .site-metrics {
     grid-template-columns: repeat(2, 1fr);

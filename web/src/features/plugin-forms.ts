@@ -1,6 +1,5 @@
 import { pluginPageStyles } from './plugin-page-styles.ts';
 import { pluginJSONComponents } from './plugin-json-components.ts';
-import type { PluginRuntimeSupport } from './plugin-runtime-support';
 export type PluginFormNode = {
   component: string;
   props?: Record<string, any>;
@@ -364,7 +363,7 @@ export function pluginFieldProps(
 export type PluginCard = {
   available?: boolean;
   unavailable_reason?: string;
-  runtime_support?: PluginRuntimeSupport;
+  runtime_support?: { platforms?: string[]; storage_types?: string[] };
   plugin_id: string;
   instance_id: string;
   name: string;

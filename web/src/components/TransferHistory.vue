@@ -1052,7 +1052,7 @@ input[type='checkbox'] {
 .th-fab-stack {
   position: fixed;
   right: 28px;
-  bottom: 70px;
+  bottom: max(70px, var(--app-floating-bottom, 0px));
   z-index: 20;
   display: flex;
   flex-direction: column;

@@ -620,7 +620,7 @@ onUnmounted(() => {
 .dashboard-actions {
   position: fixed;
   right: 24px;
-  bottom: 32px;
+  bottom: max(32px, var(--app-floating-bottom, 0px));
   display: flex;
   flex-direction: column;
   gap: 12px;

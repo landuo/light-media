@@ -27,8 +27,6 @@ import PluginFormRenderer from "./PluginFormRenderer.vue";
 import { loadPluginRemote } from "../features/plugin-federation";
 import { createPluginRemoteAPI } from "../features/plugin-remote-api";
 
-import { pluginRuntimeSupportNotice } from "../features/plugin-runtime-support";
-
 const props = defineProps<{ plugin: PluginCard }>();
 const emit = defineEmits<{ close: []; saved: []; switch: []; changed: [] }>();
 const display = useDisplay();
@@ -44,9 +42,6 @@ const nodes = ref<PluginFormNode[]>([]),
 const loading = ref(true),
   saving = ref(false),
   error = ref("");
-const supportNotice = computed(() =>
-  pluginRuntimeSupportNotice(props.plugin.runtime_support),
-);
 const issues = computed(() => pluginFormIssues(nodes.value));
 const base = "/plugins/" + encodeURIComponent(props.plugin.instance_id);
 function applyRemoteLayout(layout?: { maxWidth?: unknown }) {
@@ -167,14 +162,6 @@ onUnmounted(() => {
       />
       <VDivider />
       <VCardText class="plugin-dialog-content">
-        <VAlert
-          v-if="supportNotice"
-          type="warning"
-          variant="tonal"
-          class="mb-4"
-          data-testid="plugin-runtime-support"
-          >{{ supportNotice }}</VAlert
-        >
         <p v-if="loading" role="status">正在加载配置…</p>
         <VAlert
           v-if="plugin.available === false"
@@ -239,14 +226,6 @@ onUnmounted(() => {
     <VCard v-else class="plugin-config-card">
       <PluginDialogCloseBtn v-if="!remote || error" :disabled="saving" aria-label="关闭配置" @click="emit('close')" />
       <VCardText class="pa-0">
-        <VAlert
-          v-if="supportNotice"
-          type="warning"
-          variant="tonal"
-          class="mb-4"
-          data-testid="plugin-runtime-support"
-          >{{ supportNotice }}</VAlert
-        >
         <p v-if="loading" class="pa-4" role="status">正在加载配置…</p>
         <VAlert
           v-if="plugin.available === false"

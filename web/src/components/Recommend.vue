@@ -474,7 +474,7 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  bottom: max(1rem, calc(env(safe-area-inset-bottom) + 1rem));
+  bottom: max(calc(env(safe-area-inset-bottom) + 1rem), var(--app-floating-bottom, 0px));
   right: max(1rem, calc(env(safe-area-inset-right) + 1rem));
 }
 .recommend-tune {
@@ -510,7 +510,7 @@ onUnmounted(() => {
 }
 @media (max-width: 768px) {
   .recommend-fab-stack {
-    bottom: max(0.875rem, calc(env(safe-area-inset-bottom) + 0.875rem));
+    bottom: max(calc(env(safe-area-inset-bottom) + 0.875rem), var(--app-floating-bottom, 0px));
     right: max(0.875rem, calc(env(safe-area-inset-right) + 0.875rem));
   }
   .recommend-tune {

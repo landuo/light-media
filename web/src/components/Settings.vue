@@ -482,4 +482,10 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
     min-height: 42px;
   }
 }
+@media (max-width: 600px) {
+  .settings-page .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+}
 </style>

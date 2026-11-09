@@ -1146,7 +1146,7 @@ onActivated(() => {
 .plugin-folder-fab {
   position: fixed;
   inset-inline-end: 24px;
-  inset-block-end: 24px;
+  inset-block-end: max(24px, var(--app-floating-bottom, 0px));
   z-index: 10;
 }
 .sortable-chosen {
@@ -1186,6 +1186,14 @@ onActivated(() => {
   .plugin-toolbar :deep(.v-tab) {
     min-width: 0;
     padding-inline: 10px;
+  }
+}
+@media (max-width: 360px) {
+  .plugin-toolbar {
+    flex-wrap: wrap;
+  }
+  .plugin-toolbar-actions {
+    margin-inline-start: auto;
   }
 }
 </style>

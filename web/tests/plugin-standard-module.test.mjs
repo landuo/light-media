@@ -138,8 +138,6 @@ function configFixture(response, { status = 200, pending } = {}) {
       return { ...realApi.exports, toast: (s) => toasts.push(s) };
     if (name === "../features/plugin-forms")
       return { pluginFormIssues: () => [] };
-    if (name === "../features/plugin-runtime-support")
-      return { pluginRuntimeSupportNotice: () => "" };
     if (name === "../features/plugin-remote-api")
       return { createPluginRemoteAPI: () => ({}) };
     if (

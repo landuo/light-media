@@ -60,6 +60,7 @@ const pwa = ref(environment());
 export const appInterface = computed(() =>
   isAppInterface(interfaceMode.value, pwa.value, viewport.value),
 );
+export const compactAppInterface = computed(() => appInterface.value && viewport.value <= 600);
 export function setInterfaceMode(value: InterfaceMode, storage?: Pick<Storage, 'setItem'>) {
   if (!['auto', 'desktop', 'app'].includes(value)) throw new Error('界面布局无效');
   interfaceMode.value = value;
@@ -71,17 +72,20 @@ export function setInterfaceMode(value: InterfaceMode, storage?: Pick<Storage, '
 }
 export function observeInterfaceEnvironment() {
   let active = true;
+  let hasServiceWorker = false;
   const resize = () => {
     viewport.value = window.innerWidth;
+    pwa.value = environment(hasServiceWorker);
   };
   resize();
-  pwa.value = environment();
   window.addEventListener('resize', resize);
   if (navigator.serviceWorker?.getRegistrations) {
     navigator.serviceWorker
       .getRegistrations()
       .then((registrations) => {
-        if (active) pwa.value = environment(registrations.length > 0);
+        if (!active) return;
+        hasServiceWorker = registrations.length > 0;
+        resize();
       })
       .catch(() => {});
   }

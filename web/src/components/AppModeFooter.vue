@@ -41,7 +41,7 @@ const selected = computed(() =>
 <style scoped>
 .app-mode-footer {
   position: fixed;
-  z-index: 1999;
+  z-index: 40;
   inset: auto 0 0;
   display: flex;
   justify-content: center;

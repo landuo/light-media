@@ -4,7 +4,7 @@ import { ref, onMounted, onUnmounted, computed, defineAsyncComponent } from 'vue
 import { api, action, ui, refreshSettings, refreshStatus, go, errorText, date } from './api';
 import { createPluginNavigation, pluginNavigationTarget } from './features/plugin-navigation';
 import { abortPluginAPIRequests } from './features/plugin-remote-api';
-import { appInterface, observeInterfaceEnvironment } from './features/interface-mode';
+import { appInterface, compactAppInterface, observeInterfaceEnvironment } from './features/interface-mode';
 import {
   createSystemMessageFeed,
   systemMessageIcon,
@@ -55,6 +55,7 @@ const route = ref(normalizeRoute(location.hash.slice(1))),
   authError = ref(''),
   starting = ref(true),
   mobile = ref(false);
+const mobileToggle = ref<HTMLButtonElement>();
 const globalQuery = ref(''),
   searchMenuOpen = ref(false),
   searchInput = ref<HTMLInputElement>(),
@@ -176,7 +177,13 @@ function searchBlur(event: FocusEvent) {
     searchMenuOpen.value = false;
 }
 function searchShortcut(e: KeyboardEvent) {
-  if (e.key === 'Escape') notificationsOpen.value = false;
+  if (e.key === 'Escape') {
+    notificationsOpen.value = false;
+    if (mobile.value) {
+      mobile.value = false;
+      mobileToggle.value?.focus();
+    }
+  }
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
     e.preventDefault();
     searchInput.value?.focus();
@@ -309,10 +316,10 @@ onUnmounted(() => {
       <PluginAuthLogin v-if="!auth?.setup_required" @authenticated="bootstrap" />
     </form>
   </div>
-  <div v-else :class="['app-shell', { 'app-interface': appInterface }]">
+  <div v-else :class="['app-shell', { 'app-interface': appInterface, 'drawer-open': mobile && !appInterface }]">
     <div v-if="mobile && !appInterface" class="sidebar-shade" @click="mobile = false"></div>
-    <aside v-if="!appInterface" :class="['sidebar', { open: mobile }]">
-      <a class="brand" href="#discover"
+    <aside v-if="!appInterface" id="main-navigation" :class="['sidebar', { open: mobile }]">
+      <a class="brand" href="#discover" @click="mobile = false"
         ><span class="brand-mark"><BrandMark /></span><span>光影<small>LIGHT MEDIA</small></span></a
       >
       <nav>
@@ -324,6 +331,7 @@ onUnmounted(() => {
             :href="navHref(n[0]!)"
             :class="{ active: activeNav(n[0]!) }"
             :aria-current="activeNav(n[0]!) ? 'page' : undefined"
+            @click="mobile = false"
             ><span class="nav-icon"><AppIcon :name="n[1]!" /></span>{{ n[2]
             }}<span v-if="n[0] === 'jobs' && ui.status?.counts?.active_jobs" class="counter">{{
               ui.status.counts.active_jobs
@@ -335,6 +343,7 @@ onUnmounted(() => {
             :href="'#' + pluginNavigationTarget(item)"
             :class="{ active: route === pluginNavigationTarget(item) }"
             :aria-current="route === pluginNavigationTarget(item) ? 'page' : undefined"
+            @click="mobile = false"
           >
             <span class="nav-icon"><VIcon :icon="item.icon" size="22" /></span>{{ item.title }}
           </a>
@@ -345,9 +354,11 @@ onUnmounted(() => {
       <header class="topbar">
         <button
           v-if="!appInterface"
+          ref="mobileToggle"
           class="icon-button mobile-toggle"
-          aria-label="打开导航"
+          :aria-label="mobile ? '关闭导航' : '打开导航'"
           :aria-expanded="mobile"
+          aria-controls="main-navigation"
           @click="mobile = !mobile"
         >
           <AppIcon name="menu" />
@@ -367,7 +378,7 @@ onUnmounted(() => {
             ref="searchInput"
             v-model="globalQuery"
             aria-label="搜索电影、剧集"
-            placeholder="搜索电影、剧集…"
+            :placeholder="compactAppInterface ? '搜索影视…' : '搜索电影、剧集…'"
             @focus="searchMenuOpen = true"
             @input="searchMenuOpen = true"
           />
@@ -387,7 +398,7 @@ onUnmounted(() => {
           </div>
         </form>
         <div class="topbar-actions">
-          <InterfaceModeMenu />
+          <InterfaceModeMenu v-if="!compactAppInterface" />
           <ShortcutTools />
           <span v-if="ui.busy" class="loading-dot" aria-label="正在加载"></span
           ><button
@@ -404,7 +415,7 @@ onUnmounted(() => {
               class="notification-unread-dot"
               aria-label="有未读通知"
             ></span></button
-          ><button class="icon-button" title="退出登录" aria-label="退出登录" @click="logout">
+          ><button v-if="!compactAppInterface" class="icon-button" title="退出登录" aria-label="退出登录" @click="logout">
             <AppIcon name="logout" />
           </button>
         </div>
@@ -531,6 +542,12 @@ onUnmounted(() => {
       </section>
       <main>
         <PluginQuickAccess v-if="pageKey === 'dashboard' && appInterface" @visibility="quickAccessOpen = $event" @pull="quickAccessPull = $event" />
+        <div v-if="pageKey === 'apps' && compactAppInterface" class="mobile-account-actions">
+          <InterfaceModeMenu labeled />
+          <button type="button" class="mobile-logout" @click="logout">
+            <AppIcon name="logout" />退出登录
+          </button>
+        </div>
         <PluginApplicationCenter v-if="pageKey === 'apps'" :navigation="nav" :plugins="pluginNavItems.items" :error="pluginNavItems.error" :search-route="searchSession.lastRoute" @retry="pluginNavigation.ensure(true)" />
         <KeepAlive>
           <Recommend v-if="pageKey === 'discover'" />
@@ -594,7 +611,7 @@ onUnmounted(() => {
     </div>
     <AppModeFooter v-if="appInterface && !quickAccessOpen" :route="route" />
   </div>
-  <div class="toasts" role="status">
+  <div :class="['toasts', { 'above-app-footer': auth?.authenticated && appInterface && !quickAccessOpen }]" role="status">
     <button
       v-for="t in ui.toasts"
       :key="t.id"
@@ -610,8 +627,20 @@ onUnmounted(() => {
 </template>
 <style scoped>
 .app-interface .main-shell { margin-left: 0; }
-.app-interface :deep(.dashboard-actions) { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
-.app-interface main { padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)); }
+.mobile-account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 8px;
+  padding: 4px;
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.mobile-account-actions :deep(.v-btn),
+.mobile-logout { min-height: 44px; }
+.mobile-logout { border: 0; background: transparent; }
+.mobile-logout svg { width: 20px; height: 20px; }
 .explore-tabs-host {
   position: sticky;
   top: var(--topbar-height);
@@ -644,6 +673,7 @@ onUnmounted(() => {
   height: auto;
   padding: 12px 16px;
   text-align: left;
+  white-space: normal;
   border: 0;
   border-radius: 6px;
   background: transparent;
@@ -653,7 +683,9 @@ onUnmounted(() => {
 }
 .global-search-menu span {
   display: grid;
+  min-width: 0;
   gap: 4px;
+  overflow-wrap: anywhere;
 }
 .global-search-menu small {
   color: var(--muted);
@@ -662,5 +694,15 @@ onUnmounted(() => {
   flex: none;
   width: 24px;
   height: 24px;
+}
+@media (max-width: 600px) {
+  .global-search { position: static; }
+  .global-search-menu {
+    inset-inline: 8px;
+    top: 100%;
+    width: auto;
+    max-height: min(320px, calc(100dvh - var(--topbar-height) - 8px));
+    overflow-y: auto;
+  }
 }
 </style>

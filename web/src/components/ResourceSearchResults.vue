@@ -103,7 +103,7 @@ defineEmits<{
 }
 .resource-view-toggle {
   position: fixed;
-  inset-block-end: max(20px, env(safe-area-inset-bottom));
+  inset-block-end: max(20px, env(safe-area-inset-bottom), var(--app-floating-bottom, 0px));
   inset-inline-end: max(20px, env(safe-area-inset-right));
   z-index: 5;
 }

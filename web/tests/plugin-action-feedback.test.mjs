@@ -511,7 +511,6 @@ test('config draft survives availability change; local and remote saves do not s
     if (name === 'vuetify') return { useDisplay: () => ({ mobile: vue.ref(false) }) };
     if (name === '../api') return { api: (...args) => { requests.push(args); }, errorText: String, toast: () => {} };
     if (name === '../features/plugin-forms') return { pluginFormIssues: () => [] };
-    if (name === '../features/plugin-runtime-support') return { pluginRuntimeSupportNotice: () => '' };
     if (name === '../features/plugin-remote-api') return { createPluginRemoteAPI: () => ({}) };
     if (name === '../features/plugin-federation') return {};
     if (name.startsWith('vuetify/') || name.endsWith('.vue')) return {};
@@ -558,9 +557,11 @@ test('unavailable card template disables mutations but keeps source link and uni
   assert.equal(f.state.selected.value.instance_id, plugin.instance_id);
 });
 
-test('configuration template with unavailable notice and disabled save compiles', () => {
+test('configuration template reports unavailable plugins without a generic build notice', () => {
   const { descriptor: config } = parse(readFileSync(new URL('../src/components/PluginConfigDialog.vue', import.meta.url), 'utf8'));
   assert.deepEqual(compileTemplate({ source: config.template.content, filename: 'PluginConfigDialog.vue', id: 'Config' }).errors, []);
+  assert.doesNotMatch(config.template.content, /plugin-runtime-support|当前构建声明/);
+  assert.match(config.template.content, /plugin.unavailable_reason/);
   assert.match(config.template.content, /:disabled="\s*plugin.available === false/);
 });
 
