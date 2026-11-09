@@ -1,0 +1,656 @@
+{
+  "test_kind": "NAS real runtime and browser; local synthetic/race evidence listed separately",
+  "scope": "Concurrent independent transfers, read-only UI isolation, own completed-download retry",
+  "runtime_commit": "77b80ac4",
+  "page_measurement_commit": "bb3d2b31 (same read/query changes as f1818724)",
+  "method": "Chrome observed response header times, milliseconds. One visit per page plus automatic polling during the existing batch. Different batch phases, not a controlled throughput benchmark; not total page render time.",
+  "browser_after": {
+    "homepage": {
+      "samples": 4,
+      "first_ms": 171.713,
+      "min_ms": 171.713,
+      "max_ms": 1054.67,
+      "median_ms": 186.877,
+      "responses": [
+        {
+          "path": "/api/catalog/recommend?id=douban_showing&page=1",
+          "status": 200,
+          "ms": 171.713
+        },
+        {
+          "path": "/api/catalog/recommend?id=anilist_trending&page=1",
+          "status": 200,
+          "ms": 183.97
+        },
+        {
+          "path": "/api/catalog/recommend?id=bangumi_calendar&page=1",
+          "status": 200,
+          "ms": 189.784
+        },
+        {
+          "path": "/api/catalog/recommend?id=tmdb_trending&page=1",
+          "status": 200,
+          "ms": 1054.67
+        }
+      ]
+    },
+    "file_list": {
+      "samples": 1,
+      "first_ms": 387.403,
+      "min_ms": 387.403,
+      "max_ms": 387.403,
+      "median_ms": 387.403,
+      "responses": [
+        {
+          "path": "/api/files/list?root_id=root_3cf51dd5dbe8e258&path=%2Fmedia%2Fdownload&sort=name&order=asc",
+          "status": 200,
+          "ms": 387.403
+        }
+      ]
+    },
+    "jobs": {
+      "samples": 2,
+      "first_ms": 643.466,
+      "min_ms": 259.985,
+      "max_ms": 643.466,
+      "median_ms": 451.7255,
+      "responses": [
+        {
+          "path": "/api/jobs",
+          "status": 200,
+          "ms": 643.466
+        },
+        {
+          "path": "/api/jobs",
+          "status": 200,
+          "ms": 259.985
+        }
+      ]
+    },
+    "history_first_page": {
+      "samples": 20,
+      "first_ms": 1684.286,
+      "min_ms": 214.957,
+      "max_ms": 1684.286,
+      "median_ms": 652.0550000000001,
+      "responses": [
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 1684.286
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 679.813
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 815.14
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 813.427
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 895.349
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 706.067
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 606.108
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 670.289
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 708.263
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 672.955
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 599.943
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 687.844
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 284.531
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 573.245
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 214.957
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 614.882
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 573.138
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 510.769
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 604.768
+        },
+        {
+          "path": "/api/history/transfers?q=&status=&page=1&page_size=50",
+          "status": 200,
+          "ms": 633.821
+        }
+      ]
+    }
+  },
+  "browser_before_selected": [
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 4315.951
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 7685.785
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 8009.812
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 14233.568
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 7796.591
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 9350.86
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 9377.899
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 11387.866
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 8568.557
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 10736.359
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 7402.181
+    },
+    {
+      "url": "/api/jobs",
+      "status": 200,
+      "ms": 13916.332
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 14752.679
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 10822.679
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 8042.616
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 9125.25
+    },
+    {
+      "url": "/api/status",
+      "status": 200,
+      "ms": 4545.413
+    }
+  ],
+  "import_overlap_observed": {
+    "since": "2026-11-09T17:42:38Z",
+    "completed_imports": 45,
+    "actual_import_overlaps": [
+      [
+        {
+          "id": "job_WirZ87rJmJh6RGrk2S5MFhTB",
+          "updated_at": "2026-11-09T17:42:58.07256244Z",
+          "started": "2026-11-09T17:42:56.913131333Z",
+          "title": "生活大爆炸",
+          "season": 9,
+          "episodes": [
+            5
+          ],
+          "source": "/media/download/电视剧/[生活大爆炸 第九季].The.Big.Bang.Theory.2015.S09.Complete.1080p.NF.WEB-DL.H264.DDP5.1-UBWEB/[生活大爆炸 第九季].The.Big.Bang.Theory.2015.S09E05.1080p.NF.WEB-DL.H264.DDP5.1-UBWEB.mkv",
+          "target": "/media/新电视剧/欧美剧/生活大爆炸 (2007)/Season 9/生活大爆炸 - S09E05 - 第 5 集.mkv"
+        },
+        {
+          "id": "job_3irf66V-KAhb-qh1W0bzE-TI",
+          "updated_at": "2026-11-09T17:42:58.153750336Z",
+          "started": "2026-11-09T17:42:57.851568789Z",
+          "title": "生活大爆炸",
+          "season": 9,
+          "episodes": [
+            24
+          ],
+          "source": "/media/download/电视剧/[生活大爆炸 第九季].The.Big.Bang.Theory.2015.S09.Complete.1080p.NF.WEB-DL.H264.DDP5.1-UBWEB/[生活大爆炸 第九季].The.Big.Bang.Theory.2015.S09E24.1080p.NF.WEB-DL.H264.DDP5.1-UBWEB.mkv",
+          "target": "/media/新电视剧/欧美剧/生活大爆炸 (2007)/Season 9/生活大爆炸 - S09E24 - 第 24 集.mkv"
+        }
+      ],
+      [
+        {
+          "id": "job_3pFimu53WNbwcdX93CesBjHR",
+          "updated_at": "2026-11-09T17:43:02.419611332Z",
+          "started": "2026-11-09T17:43:01.55569764Z",
+          "title": "生活大爆炸",
+          "season": 9,
+          "episodes": [
+            21
+          ],
+          "source": "/media/download/电视剧/[生活大爆炸 第九季].The.Big.Bang.Theory.2015.S09.Complete.1080p.NF.WEB-DL.H264.DDP5.1-UBWEB/[生活大爆炸 第九季].The.Big.Bang.Theory.2015.S09E21.1080p.NF.WEB-DL.H264.DDP5.1-UBWEB.mkv",
+          "target": "/media/新电视剧/欧美剧/生活大爆炸 (2007)/Season 9/生活大爆炸 - S09E21 - 第 21 集.mkv"
+        },
+        {
+          "id": "job_kKkJIVe2ayQ5SwGVo-muZVMU",
+          "updated_at": "2026-11-09T17:43:02.611140718Z",
+          "started": "2026-11-09T17:43:02.349730508Z",
+          "title": "生活大爆炸",
+          "season": 9,
+          "episodes": [
+            18
+          ],
+          "source": "/media/download/电视剧/[生活大爆炸 第九季].The.Big.Bang.Theory.2015.S09.Complete.1080p.NF.WEB-DL.H264.DDP5.1-UBWEB/[生活大爆炸 第九季].The.Big.Bang.Theory.2015.S09E18.1080p.NF.WEB-DL.H264.DDP5.1-UBWEB.mkv",
+          "target": "/media/新电视剧/欧美剧/生活大爆炸 (2007)/Season 9/生活大爆炸 - S09E18 - 第 18 集.mkv"
+        }
+      ],
+      [
+        {
+          "id": "job_15OFJu1a7UFbvUAOOOTpbMUh",
+          "updated_at": "2026-11-09T17:43:07.628508894Z",
+          "started": "2026-11-09T17:43:06.466533801Z",
+          "title": "生活大爆炸",
+          "season": 9,
+          "episodes": [
+            15
+          ],
+          "source": "/media/download/电视剧/[生活大爆炸 第九季].The.Big.Bang.Theory.2015.S09.Complete.1080p.NF.WEB-DL.H264.DDP5.1-UBWEB/[生活大爆炸 第九季].The.Big.Bang.Theory.2015.S09E15.1080p.NF.WEB-DL.H264.DDP5.1-UBWEB.mkv",
+          "target": "/media/新电视剧/欧美剧/生活大爆炸 (2007)/Season 9/生活大爆炸 - S09E15 - 第 15 集.mkv"
+        },
+        {
+          "id": "job_IvyKwTDotZTZZ93iuW3y6Qmf",
+          "updated_at": "2026-11-09T17:43:07.826330009Z",
+          "started": "2026-11-09T17:43:07.527119637Z",
+          "title": "生活大爆炸",
+          "season": 9,
+          "episodes": [
+            10
+          ],
+          "source": "/media/download/电视剧/[生活大爆炸 第九季].The.Big.Bang.Theory.2015.S09.Complete.1080p.NF.WEB-DL.H264.DDP5.1-UBWEB/[生活大爆炸 第九季].The.Big.Bang.Theory.2015.S09E10.1080p.NF.WEB-DL.H264.DDP5.1-UBWEB.mkv",
+          "target": "/media/新电视剧/欧美剧/生活大爆炸 (2007)/Season 9/生活大爆炸 - S09E10 - 第 10 集.mkv"
+        }
+      ]
+    ],
+    "failures": [],
+    "active": [
+      {
+        "kind": "import",
+        "state": "queued",
+        "count": 56
+      },
+      {
+        "kind": "import",
+        "state": "running",
+        "count": 1
+      },
+      {
+        "kind": "organize_file",
+        "state": "queued",
+        "count": 505
+      },
+      {
+        "kind": "organize_file",
+        "state": "running",
+        "count": 2
+      }
+    ],
+    "deployment": {
+      "started": "2026-11-09T17:42:38.091794347Z",
+      "health": "healthy",
+      "restarts": 0,
+      "cpu_limit": 1.0,
+      "memory_limit": 536870912
+    }
+  },
+  "synthetic_tests": {
+    "read_isolation_and_download_retry_race_seconds": 5.98,
+    "download_review_regression_race_seconds": 6.622,
+    "owned_overwrite_parallel_race_seconds": 33.637,
+    "exact_source_hardlink_recovery_race_seconds": 4.662,
+    "bounded_history_refresh_race_seconds": 3.672,
+    "download_linked_history_reader_race_seconds": 6.408,
+    "download_proof_boundary_regressions_seconds": 1.978,
+    "manual_changed_directory_retry_race_seconds": 3.878
+  },
+  "resource_limits_unchanged": {
+    "cpus": 1,
+    "memory_mib": 512,
+    "sample_cpu_throttled_periods": 4821,
+    "sample_cpu_periods": 7514
+  },
+  "limitations": [
+    "Cached homepage sources were used; external source cold fetch may take longer.",
+    "First dirty history refresh measured 1.684s and failed filter 2.672s; ordinary subsequent pages 0.215–0.895s.",
+    "The file list was already fast in one before sample (0.128s); this is not evidence of a filesystem throughput increase."
+  ],
+  "retry_results": [
+    {
+      "source": "/media/download/国漫/Swallowed.Star.S01.2020.2160p.TX.WEB-DL.H.265.DDP2.0-HHWEB/Swallowed.Star.S01E249.2020.2160p.TX.WEB-DL.H.265.DDP2.0-HHWEB.mkv",
+      "history_id": "file_fmyZ646GN3igOKohkOcX3Bvy",
+      "source_before": {
+        "inode": 55693382,
+        "size": 2165609907,
+        "mtime_ns": 1794224712866562593
+      },
+      "history_id_after": "file_fmyZ646GN3igOKohkOcX3Bvy",
+      "history_id_unchanged": true,
+      "latest_plan": "plan_JtXRTHyBwlK1U1Kp1rl0t5c9",
+      "job_id": "job_sPcyx_LkhJyP0D6ZnbkFldQM",
+      "history_status": "failed",
+      "target": "",
+      "job_state": "failed",
+      "error": "overwrite policy or synchronous event dependency is unknown",
+      "source_after": {
+        "inode": 55693382,
+        "size": 2165609907,
+        "mtime_ns": 1794224712866562593
+      },
+      "source_unchanged": true
+    },
+    {
+      "source": "/media/download/电视剧/[老友记 第五季].Friends.1998.S05.Complete.2160p.MAX.WEB-DL.DoVi.HDR10.H265.10bit.DDP5.1-UBWEB/[老友记 第五季].Friends.1998.S05E24.2160p.MAX.WEB-DL.DoVi.HDR10.H265.10bit.DDP5.1-UBWEB.mkv",
+      "history_id": "file_gNiFdT16_NEzlyul1GyNgrrQ",
+      "source_before": {
+        "inode": 55576233,
+        "size": 3675460545,
+        "mtime_ns": 1788168462188116130
+      },
+      "history_id_after": "file_gNiFdT16_NEzlyul1GyNgrrQ",
+      "history_id_unchanged": true,
+      "latest_plan": "plan_CV9jJgN7yJNCe1OGs9yEaAmN",
+      "job_id": "job_qu4D4BNGaMsFtNM6-JOSNd5b",
+      "history_status": "success",
+      "target": "/media/新电视剧/欧美剧/老友记 (1994)/Season 5/老友记 - S05E24 - 第 24 集.mkv",
+      "job_state": "succeeded",
+      "error": "",
+      "source_after": {
+        "inode": 55576233,
+        "size": 3675460545,
+        "mtime_ns": 1788168462188116130
+      },
+      "source_unchanged": true,
+      "target_is_source_hardlink": true
+    }
+  ],
+  "remaining_configuration": {
+    "source": "/media/download/国漫",
+    "directory_id": "directory_PrLldG77GKvUaYm2lH-tJf1Z",
+    "overwrite_mode_known": false,
+    "overwrite_mode": null,
+    "status": "blocked pending user selection; not changed",
+    "reason": "Own download reservation now continues correctly, but the real transfer rejects an unknown overwrite policy."
+  },
+  "cold_start_observations": [
+    {
+      "commit": "348e8b61",
+      "path": "history failed filter",
+      "ms": 62251.082
+    },
+    {
+      "commit": "d13da0fe",
+      "path": "history failed filter",
+      "ms": 18436.46
+    }
+  ],
+  "pre_final_lookup_proof": {
+    "query_plan": [
+      "SEARCH j USING INDEX jobs_due (state=?)",
+      "SEARCH p USING INDEX sqlite_autoindex_records_1 (kind=? AND id=?)"
+    ],
+    "measured_native_sqlite_ms": 67.219,
+    "note": "read-only query replay on live NAS database, not the Go HTTP endpoint"
+  },
+  "final_cold_start": {
+    "commit": "77b80ac4",
+    "cold_history_response_ms": 17098.946,
+    "source": "real Chrome HTTP response timing; failed filter; after NAS restart",
+    "request_timing": {
+      "connectEnd": 3.676,
+      "connectStart": 0.392,
+      "dnsEnd": 0.392,
+      "dnsStart": 0.385,
+      "proxyEnd": -1,
+      "proxyStart": -1,
+      "pushEnd": 0,
+      "pushStart": 0,
+      "receiveHeadersEnd": 17098.946,
+      "receiveHeadersStart": 17098.629,
+      "requestTime": 3561645.750693,
+      "sendEnd": 3.79,
+      "sendStart": 3.716,
+      "sslEnd": -1,
+      "sslStart": -1,
+      "workerFetchStart": -1,
+      "workerReady": -1,
+      "workerRespondWithSettled": -1,
+      "workerStart": -1
+    },
+    "remaining_failure": "Swallowed Star S01E249: unknown overwrite policy; user selection pending"
+  },
+  "history_query_replay": {
+    "native_sql_ms": 147.17846899293363,
+    "rows": 1,
+    "query_plan": [
+      [
+        3,
+        0,
+        0,
+        "MATERIALIZE page"
+      ],
+      [
+        6,
+        3,
+        0,
+        "CO-ROUTINE (subquery-7)"
+      ],
+      [
+        8,
+        6,
+        0,
+        "CO-ROUTINE ranked_history"
+      ],
+      [
+        12,
+        8,
+        0,
+        "CO-ROUTINE (subquery-8)"
+      ],
+      [
+        15,
+        12,
+        0,
+        "CO-ROUTINE (subquery-9)"
+      ],
+      [
+        18,
+        15,
+        0,
+        "MATERIALIZE attempts"
+      ],
+      [
+        21,
+        18,
+        0,
+        "SCAN transfer_history_attempts"
+      ],
+      [
+        50,
+        15,
+        0,
+        "SCAN attempts"
+      ],
+      [
+        77,
+        15,
+        0,
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      [
+        113,
+        12,
+        0,
+        "SCAN (subquery-9)"
+      ],
+      [
+        198,
+        12,
+        0,
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      [
+        238,
+        8,
+        0,
+        "SCAN (subquery-8)"
+      ],
+      [
+        384,
+        6,
+        0,
+        "SCAN h"
+      ],
+      [
+        413,
+        6,
+        0,
+        "CORRELATED SCALAR SUBQUERY 3"
+      ],
+      [
+        431,
+        413,
+        0,
+        "SEARCH old USING AUTOMATIC COVERING INDEX (resource_source=?)"
+      ],
+      [
+        437,
+        413,
+        0,
+        "SEARCH hidden USING INDEX sqlite_autoindex_records_1 (kind=? AND id=?)"
+      ],
+      [
+        507,
+        3,
+        0,
+        "SCAN (subquery-7)"
+      ],
+      [
+        601,
+        3,
+        0,
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      [
+        616,
+        0,
+        0,
+        "SCAN h"
+      ],
+      [
+        618,
+        0,
+        0,
+        "SEARCH hp USING INDEX sqlite_autoindex_records_1 (kind=? AND id=?)"
+      ],
+      [
+        625,
+        0,
+        0,
+        "SEARCH hc USING INDEX sqlite_autoindex_records_1 (kind=? AND id=?) LEFT-JOIN"
+      ]
+    ],
+    "dirty": 0
+  },
+  "status": "partial: independent parallel imports and hot UI responses verified; cold history first read unresolved; one file blocked on unset overwrite policy",
+  "remaining_performance": {
+    "observation": "After restart the failed-history request still takes 17.099 seconds. Native SQLite replay of the indexed page after warming was 147 ms; this is not a cold Go endpoint measurement and does not locate the complete delay.",
+    "next_diagnostic": "Measure handler stages and read/write connection wait during a cold first request before attempting another change.",
+    "stop_rule": "AGENTS.md: after three failed fixes, stop and name the doubtful assumption. The assumption that writer contention and the job join alone explain cold history latency was not confirmed."
+  },
+  "deployment": {
+    "code_commit": "77b80ac4",
+    "runtime_sha256": "191b83086cf7d841317138a4651d8fe08a0292b7c9d1e37888cfbbecea0ca3c5",
+    "started_at": "2026-11-09T18:32:20.507719542Z",
+    "health": "healthy",
+    "branch": "origin/main",
+    "version": "0.4.19",
+    "cpu_limit": 1,
+    "memory_mib": 512,
+    "original_service_changed": false
+  }
+}
