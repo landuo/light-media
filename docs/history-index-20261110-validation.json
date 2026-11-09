@@ -107,7 +107,8 @@
       "TestOriginalTransferModuleActualReturnedTarget"
     ],
     "baseline_same_failures_verified": true,
-    "baseline_method": "Go source overlay of exactly the changed tracked product files at baseline commit, same fixtures and test assertions. No separate clone."
+    "baseline_method": "Go source overlay of exactly the changed tracked product files at baseline commit, same fixtures and test assertions. No separate clone.",
+    "baseline_same_failing_assertion_locations_verified": true
   },
   "final_callback_index_check": {
     "passed_top_level": [
@@ -122,5 +123,104 @@
     "failed": [],
     "elapsed_seconds": 12.658
   },
-  "testing_scope": "Synthetic files/SQLite and protocol fixtures; actual NAS retries and latency evidence to be appended after deployment."
+  "testing_scope": "Synthetic regression and protocol-fixture tests are separate from the explicitly authorized real NAS retry above.",
+  "production_retry": {
+    "kind": "Actual NAS browser submission and real existing files, explicitly authorized by user",
+    "title": "老友记",
+    "selected": [
+      {
+        "season": 6,
+        "episode": 24,
+        "history_id_before": "file_pNHn855U_2tjEpRtHMFr3QKX",
+        "history_id_after": "file_pNHn855U_2tjEpRtHMFr3QKX"
+      },
+      {
+        "season": 6,
+        "episode": 25,
+        "history_id_before": "file_KFT3rMWTc8pKzkjPNu6K0038",
+        "history_id_after": "file_KFT3rMWTc8pKzkjPNu6K0038"
+      },
+      {
+        "season": 8,
+        "episode": 24,
+        "history_id_before": "file_iwEfzQ1xVZiMOoj_Fgsk6RGB",
+        "history_id_after": "file_iwEfzQ1xVZiMOoj_Fgsk6RGB"
+      }
+    ],
+    "one_post": true,
+    "submit_ack_ms": 2139.63,
+    "submit_path": "/api/files/organize",
+    "preparation_job_id": "job_H7ylrHBkkActT6oeNK7FDS7z",
+    "dialog_closed_after_ack": true,
+    "visible_queue_file_count": 3,
+    "final_queue_text": "没有正在整理的任务",
+    "history_total_before": 1262,
+    "history_total_after": 1262,
+    "failed_total_before": 7,
+    "failed_total_after": 4,
+    "selected_results": "3 succeeded; original IDs preserved; no duplicate visible histories",
+    "physical_verification": {
+      "files": [
+        {
+          "job_id": "job_ESwXT0PXf-5dLO_qqyehaxUX",
+          "job_state": "succeeded",
+          "season": 6,
+          "episodes": [
+            24
+          ],
+          "file_status": "imported",
+          "same_inode_and_device": true,
+          "source_size": 3639991776,
+          "target_size": 3639991776,
+          "source_unchanged_since_admission": true,
+          "target_name": "老友记 - S06E24 - 第 24 集.mkv"
+        },
+        {
+          "job_id": "job_Yd_YfFmibEPdYkDi8Rt5pya-",
+          "job_state": "succeeded",
+          "season": 8,
+          "episodes": [
+            24
+          ],
+          "file_status": "imported",
+          "same_inode_and_device": true,
+          "source_size": 3631352832,
+          "target_size": 3631352832,
+          "source_unchanged_since_admission": true,
+          "target_name": "老友记 - S08E24 - 第 24 集.mkv"
+        },
+        {
+          "job_id": "job_qYPDs43HD8n2wivKwfah-3if",
+          "job_state": "succeeded",
+          "season": 6,
+          "episodes": [
+            25
+          ],
+          "file_status": "imported",
+          "same_inode_and_device": true,
+          "source_size": 3655615369,
+          "target_size": 3655615369,
+          "source_unchanged_since_admission": true,
+          "target_name": "老友记 - S06E25 - 第 25 集.mkv"
+        }
+      ],
+      "dirty_plans": 0,
+      "active_organize_jobs": []
+    },
+    "last_job_finished_at": "2026-11-10T00:56:03.106210577+08:00",
+    "remaining_four_failed_histories_not_retried": true,
+    "no_download_started": true
+  },
+  "production_latency_after": {
+    "method": "Chrome Network response timing, actual page requests",
+    "first_index_backfill_ms": 16056.533,
+    "subsequent_failed_history_page_ms": 285.891,
+    "all_history_first_page_50_rows_ms": 1674.251,
+    "during_active_reorganization_failed_history_requests_ms": [
+      2859.625,
+      604.991,
+      1667.695
+    ],
+    "limitations": "Single observations, not percentile benchmarks. Initial one-time index backfill is reported separately; these are request timings, not metadata recognition or whole-transfer duration."
+  }
 }
