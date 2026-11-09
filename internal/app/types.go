@@ -321,6 +321,7 @@ type ImportPlan struct {
 	CreatedAt              string        `json:"created_at"`
 }
 type Job struct {
+	importRun    *importAdmission
 	ParentJobID  string          `json:"parent_job_id,omitempty"`
 	RequestID    string          `json:"request_id,omitempty"`
 	ID           string          `json:"id"`

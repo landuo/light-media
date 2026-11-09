@@ -33,13 +33,14 @@ func TestSubscriptionCheckRunsWhileOrganizeWorkersAreBlocked(t *testing.T) {
 		workers.Wait()
 	}()
 
-	// Both general workers enter the real import path and hold their slots
-	// until the test releases the import lock.
+	// Occupy both worker slots via the unrestricted worker path. The import
+	// lane leaves conflicting work queued, while these deliberately incomplete
+	// jobs need to reach the execution lock for this isolation test.
 	for i := range 2 {
 		if _, err := a.enqueue(ctx, "import", map[string]string{"id": fmt.Sprintf("blocked-import-%d", i)}, "organize-test"); err != nil {
 			t.Fatal(err)
 		}
-		workers.Go(func() { a.jobWorker(ctx, generalJobs) })
+		workers.Go(func() { a.jobWorker(ctx, allJobs) })
 	}
 	waitForSubscriptionWorker(t, ctx, func() (bool, error) {
 		var active int

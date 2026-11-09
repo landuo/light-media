@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"path/filepath"
 	"reflect"
 )
 
@@ -41,6 +42,13 @@ func (a *App) transitionOriginalTransferTargetAt(ctx context.Context, job Job, p
 	}
 	if receipt.ID != plan.ID+"/"+file.ID || receipt.Source != file.Source || receipt.SourceSnapshot != planSnapshot(file) || !importPath(receipt.Target) || !within(meta.RootPath, receipt.Target) || receipt.Target == file.Source {
 		return deny()
+	}
+	if run := parallelImport(ctx); run != nil {
+		_, allowed := run.targets[receipt.Target]
+		reuseInScopedDirectory := !published && receipt.ReusedHardlink && run.scanVersions && filepath.Dir(receipt.Target) == filepath.Dir(file.Target)
+		if !allowed && !reuseInScopedDirectory {
+			return bad("REVIEW_IMPORT_SCOPE_CHANGED", "整理目标已超出当前任务的写入范围，请重新提交")
+		}
 	}
 	if published && (receipt.State != "published" || !receipt.OriginalModuleStarted || len(receipt.OriginalModuleResult) == 0) || !published && (receipt.State != "planned" || !receipt.OriginalNamingResolved || receipt.StageSnapshot != (importSnapshot{}) || receipt.SHA256 != "" || len(receipt.OriginalModuleResult) > 0 && !receipt.OriginalNativeInterrupted) {
 		return deny()

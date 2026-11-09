@@ -53,8 +53,16 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 	if err := a.guardDownloadReviewPlan(ctx, planID); err != nil {
 		return Job{}, err
 	}
-	a.importMu.Lock()
-	defer a.importMu.Unlock()
+	work, organizing := ctx.Value(organizeFileKey{}).(organizeFileWork)
+	if organizing {
+		// A recognition job has just created its own plan. Promotion only
+		// changes durable queue/slot records and commits before import claims it.
+		a.importMu.RLock()
+		defer a.importMu.RUnlock()
+	} else {
+		a.importMu.Lock()
+		defer a.importMu.Unlock()
+	}
 	var plan ImportPlan
 	if err := a.Store.Get(ctx, "import_plan", planID, &plan); err != nil {
 		return Job{}, err
@@ -66,7 +74,6 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 	if err != nil {
 		return Job{}, err
 	}
-	work, organizing := ctx.Value(organizeFileKey{}).(organizeFileWork)
 	if organizing {
 		for _, index := range selected {
 			file := plan.Files[index]
@@ -315,8 +322,15 @@ func importExcludedTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, file Pla
 }
 
 func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []string) (returnErr error) {
-	a.importMu.Lock()
-	defer a.importMu.Unlock()
+	admission := job.importRun
+	if admission != nil && !admission.exclusive {
+		a.importMu.RLock()
+		defer a.importMu.RUnlock()
+		ctx = context.WithValue(ctx, importAdmissionKey{}, admission)
+	} else {
+		a.importMu.Lock()
+		defer a.importMu.Unlock()
+	}
 	var plan ImportPlan
 	if err := a.Store.Get(ctx, "import_plan", planID, &plan); err != nil {
 		return err
@@ -351,6 +365,9 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 	indices, err := selectImportFiles(plan, fileIDs)
 	if err != nil {
 		return err
+	}
+	if run := parallelImport(ctx); run != nil && (quality != nil || !run.covers(plan, meta, indices)) {
+		return bad("REVIEW_IMPORT_SCOPE_CHANGED", "整理计划的写入范围已变化，请重新提交")
 	}
 	if err = a.startImportRun(ctx, job, &plan, indices); err != nil {
 		return err

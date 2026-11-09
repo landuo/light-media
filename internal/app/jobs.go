@@ -148,6 +148,7 @@ const (
 	allJobs jobLane = iota
 	generalJobs
 	subscriptionJobs
+	importJobs
 )
 
 func (a *App) claim(ctx context.Context) (Job, error) {
@@ -155,6 +156,9 @@ func (a *App) claim(ctx context.Context) (Job, error) {
 }
 
 func (a *App) claimJob(ctx context.Context, lane jobLane) (Job, error) {
+	if lane == importJobs {
+		return a.claimImportJob(ctx)
+	}
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
 		return Job{}, e
@@ -173,7 +177,7 @@ func (a *App) claimJob(ctx context.Context, lane jobLane) (Job, error) {
 	case subscriptionJobs:
 		j, e = find(` AND kind='subscription'`)
 	case generalJobs:
-		j, e = find(` AND kind!='subscription'`)
+		j, e = find(` AND kind NOT IN ('subscription','import')`)
 		if e != nil {
 			break
 		}
@@ -181,7 +185,7 @@ func (a *App) claimJob(ctx context.Context, lane jobLane) (Job, error) {
 		// can submit ahead of bulk organizing. Preserve FIFO for other work.
 		// Look up the intent so jobs already queued by older builds also qualify.
 		switch j.Kind {
-		case "organize_prepare", "organize_file", "import", "reorganize_cleanup", "quality_cleanup", "scrape", "fnos_sync":
+		case "organize_prepare", "organize_file", "reorganize_cleanup", "quality_cleanup", "scrape", "fnos_sync":
 			download, err := find(` AND kind='download' AND EXISTS (
 				SELECT 1 FROM records AS intent WHERE intent.kind='intent'
 				AND intent.id=json_extract(jobs.payload,'$.id')
@@ -217,8 +221,8 @@ func (a *App) jobWorker(ctx context.Context, lane jobLane) {
 	timer := time.NewTicker(2 * time.Second)
 	defer timer.Stop()
 	wake := (<-chan struct{})(a.jobWake)
-	if lane == subscriptionJobs {
-		wake = nil // File submissions do not need to wake the subscription lane.
+	if lane == subscriptionJobs || lane == importJobs {
+		wake = nil // Leave general job wakeups for the workers that can claim them.
 	}
 	for {
 		select {
@@ -236,65 +240,73 @@ func (a *App) jobWorker(ctx context.Context, lane jobLane) {
 			}
 			continue
 		}
-		if a.paused() && j.Kind != "asset_check" {
-			_, _ = a.Store.DB.ExecContext(ctx, `UPDATE jobs SET state='waiting_paused',attempt=attempt-1,updated_at=? WHERE id=? AND generation=?`, now(), j.ID, j.Generation)
-			continue
+		a.runClaimedJob(ctx, j)
+	}
+}
+
+func (a *App) runClaimedJob(ctx context.Context, j Job) {
+	if j.importRun != nil {
+		defer j.importRun.release()
+	}
+	if a.paused() && j.Kind != "asset_check" {
+		_, _ = a.Store.DB.ExecContext(ctx, `UPDATE jobs SET state='waiting_paused',attempt=attempt-1,updated_at=? WHERE id=? AND generation=?`, now(), j.ID, j.Generation)
+		return
+	}
+	a.event(ctx, j, "INFO", j.Kind, "started", "开始执行任务")
+	e := a.safeRun(a.traceContext(ctx, j.WorkflowID, j.ID, j.RequestID), j)
+	if ctx.Err() != nil {
+		return
+	}
+	var currentState string
+	var currentGeneration int
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT state,generation FROM jobs WHERE id=?`, j.ID).Scan(&currentState, &currentGeneration); err != nil || currentState != "running" || currentGeneration != j.Generation {
+		return
+	}
+	state, code, message := "succeeded", "", ""
+	runAt := time.Now().Unix()
+	if e != nil {
+		message = a.clean(e.Error())
+		state = "failed"
+		code = "TASK_FAILED"
+		var api *APIError
+		if errors.As(e, &api) {
+			code = api.Code
 		}
-		a.event(ctx, j, "INFO", j.Kind, "started", "开始执行任务")
-		e = a.safeRun(a.traceContext(ctx, j.WorkflowID, j.ID, j.RequestID), j)
-		if ctx.Err() != nil {
-			return
+		// The pinned transfer task ends on an explicit false result;
+		// only a new user action retries that rejected operation.
+		if code == "PLUGIN_REFRESH_PENDING" {
+			state = "retry_wait"
+			runAt = time.Now().Add(2 * time.Second).Unix()
+		} else if code == "DOWNLOADER_DISABLED" {
+			state = "retry_wait"
+			runAt = time.Now().Add(time.Minute).Unix()
+		} else if code == "AUTOMATION_PAUSED" {
+			state = "waiting_paused"
+		} else if code != "PLUGIN_ADAPTER_UNAVAILABLE" && code != "PLUGIN_TRANSFER_FAILED" && (j.Kind != "import" || code != "TRANSFER_OVERWRITE_DENIED") && j.Attempt < 3 && !strings.Contains(code, "REVIEW") && !strings.Contains(code, "CONFLICT") && !strings.Contains(code, "INVALID") && !strings.Contains(code, "EXCLUDED") {
+			state = "retry_wait"
+			runAt = time.Now().Add(time.Duration(1<<j.Attempt) * 30 * time.Second).Unix()
 		}
-		var currentState string
-		var currentGeneration int
-		if err := a.Store.DB.QueryRowContext(ctx, `SELECT state,generation FROM jobs WHERE id=?`, j.ID).Scan(&currentState, &currentGeneration); err != nil || currentState != "running" || currentGeneration != j.Generation {
-			continue
-		}
-		state, code, message := "succeeded", "", ""
-		runAt := time.Now().Unix()
-		if e != nil {
-			message = a.clean(e.Error())
-			state = "failed"
-			code = "TASK_FAILED"
-			var api *APIError
-			if errors.As(e, &api) {
-				code = api.Code
-			}
-			// The pinned transfer task ends on an explicit false result;
-			// only a new user action retries that rejected operation.
-			if code == "PLUGIN_REFRESH_PENDING" {
-				state = "retry_wait"
-				runAt = time.Now().Add(2 * time.Second).Unix()
-			} else if code == "DOWNLOADER_DISABLED" {
-				state = "retry_wait"
-				runAt = time.Now().Add(time.Minute).Unix()
-			} else if code == "AUTOMATION_PAUSED" {
-				state = "waiting_paused"
-			} else if code != "PLUGIN_ADAPTER_UNAVAILABLE" && code != "PLUGIN_TRANSFER_FAILED" && (j.Kind != "import" || code != "TRANSFER_OVERWRITE_DENIED") && j.Attempt < 3 && !strings.Contains(code, "REVIEW") && !strings.Contains(code, "CONFLICT") && !strings.Contains(code, "INVALID") && !strings.Contains(code, "EXCLUDED") {
-				state = "retry_wait"
-				runAt = time.Now().Add(time.Duration(1<<j.Attempt) * 30 * time.Second).Unix()
-			}
-		}
-		changed, updateErr := a.finishJob(ctx, j, state, code, message, runAt)
-		if updateErr != nil {
-			a.log("ERROR", "jobs", "state_persist_failed", "任务状态无法保存，自动化已暂停，请检查配置盘", j.WorkflowID, j.ID)
-			_ = a.setControl(ctx, true)
-			continue
-		}
-		if changed && state == "failed" {
-			a.notifyFailed(ctx, j, message)
-		}
-		if changed {
-			if code == "PLUGIN_REFRESH_PENDING" {
-				a.log("DEBUG", j.Kind, code, message, j.WorkflowID, j.ID)
-			} else if e != nil {
-				a.log("ERROR", j.Kind, code, message, j.WorkflowID, j.ID)
-			} else {
-				a.log("INFO", j.Kind, "completed", "任务完成", j.WorkflowID, j.ID)
-			}
+	}
+	changed, updateErr := a.finishJob(ctx, j, state, code, message, runAt)
+	if updateErr != nil {
+		a.log("ERROR", "jobs", "state_persist_failed", "任务状态无法保存，自动化已暂停，请检查配置盘", j.WorkflowID, j.ID)
+		_ = a.setControl(ctx, true)
+		return
+	}
+	if changed && state == "failed" {
+		a.notifyFailed(ctx, j, message)
+	}
+	if changed {
+		if code == "PLUGIN_REFRESH_PENDING" {
+			a.log("DEBUG", j.Kind, code, message, j.WorkflowID, j.ID)
+		} else if e != nil {
+			a.log("ERROR", j.Kind, code, message, j.WorkflowID, j.ID)
+		} else {
+			a.log("INFO", j.Kind, "completed", "任务完成", j.WorkflowID, j.ID)
 		}
 	}
 }
+
 func (a *App) safeRun(ctx context.Context, j Job) (err error) {
 	defer func() {
 		if recover() != nil {

@@ -119,7 +119,9 @@ type App struct {
 	authAttempts                     map[string][]time.Time
 	jobWake                          chan struct{}
 	wg                               sync.WaitGroup
-	importMu                         sync.Mutex
+	importMu                         sync.RWMutex
+	importAdmissionsMu               sync.Mutex
+	importAdmissions                 map[string]*importAdmission
 	importSourceLink                 func(int, string, int, string, int) error // Owned syscall-failure seam; nil uses actual Linkat.
 	importAutoCommit                 func(*sql.Tx) error                       // Owned lost-ack seam; nil uses actual Commit.
 	subMu                            sync.Mutex
@@ -314,6 +316,10 @@ func (a *App) Start(parent context.Context) {
 	for i := 0; i < 2; i++ {
 		a.wg.Add(1)
 		go func() { defer a.wg.Done(); a.jobWorker(ctx, generalJobs) }()
+	}
+	for i := 0; i < 2; i++ {
+		a.wg.Add(1)
+		go func() { defer a.wg.Done(); a.jobWorker(ctx, importJobs) }()
 	}
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.jobWorker(ctx, subscriptionJobs) }()

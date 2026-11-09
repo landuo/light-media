@@ -29,6 +29,12 @@ func (a *App) originalTransferModulePublish(ctx context.Context, plan ImportPlan
 	} else if !errors.Is(err, sql.ErrNoRows) {
 		return receipt, err
 	}
+	if parallelImport(ctx) != nil {
+		if receipt.OriginalModuleStarted {
+			return receipt, bad("REVIEW_PLUGIN_TRANSFER", "整理插件收据需要独占恢复")
+		}
+		return native()
+	}
 	var groups []originalPluginModuleGroup
 	if !receipt.OriginalModuleStarted {
 		// Recover a publication's frozen facts even if its provider was later

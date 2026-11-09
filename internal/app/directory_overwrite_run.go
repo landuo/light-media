@@ -90,6 +90,9 @@ func (a *App) publishDirectoryOverwrite(ctx context.Context, key, source, target
 		if e != nil {
 			return importReceipt{}, e
 		}
+		if e = guardParallelOverwrite(ctx, op); e != nil {
+			return importReceipt{}, e
+		}
 		if e = a.saveDirectoryOverwrite(ctx, op); e != nil {
 			return importReceipt{}, e
 		}
@@ -98,6 +101,9 @@ func (a *App) publishDirectoryOverwrite(ctx context.Context, key, source, target
 	}
 	if op.Source != source || op.Target != target || op.RootID != rootID || op.Method != method || op.SourceSnapshot != locked || !sameOverwritePolicy(op.Policy, policy) {
 		return importReceipt{}, bad("REVIEW_OVERWRITE_RECEIPT", "覆盖重试与封存输入不一致")
+	}
+	if e = guardParallelOverwrite(ctx, op); e != nil {
+		return importReceipt{}, e
 	}
 	if known, e := a.knownDirectoryOverwritePublication(ctx, &op); e != nil {
 		return importReceipt{}, e
@@ -431,6 +437,9 @@ func (a *App) finishDirectoryOverwrite(ctx context.Context, id string) error {
 	}
 	if op.State == "complete" {
 		return nil
+	}
+	if e = guardParallelOverwrite(ctx, op); e != nil {
+		return e
 	}
 	if op.State != "registered" {
 		return bad("REVIEW_OVERWRITE_RECEIPT", "覆盖资产尚未在事务中登记")

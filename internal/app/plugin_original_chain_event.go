@@ -98,9 +98,12 @@ func (a *App) sendOriginalChainEventObserved(ctx context.Context, event *plugins
 		priority := 10
 		event.Priority = &priority
 	}
-	a.pluginOriginalEventsMu.Lock()
-	handlers := append([]originalMutableEventHandler(nil), a.pluginOriginalChainHandlers[event.Type]...)
-	a.pluginOriginalEventsMu.Unlock()
+	var handlers []originalMutableEventHandler
+	if parallelImport(ctx) == nil || !importMutationEvent(event.Type) {
+		a.pluginOriginalEventsMu.Lock()
+		handlers = append(handlers, a.pluginOriginalChainHandlers[event.Type]...)
+		a.pluginOriginalEventsMu.Unlock()
+	}
 	if observe != nil {
 		for i := range handlers {
 			handler := handlers[i]

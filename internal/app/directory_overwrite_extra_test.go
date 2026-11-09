@@ -70,10 +70,14 @@ func TestDirectoryOverwriteUnknownPolicyCanReuseExistingHardlink(t *testing.T) {
 			} else {
 				importWrite(t, existing, content)
 			}
-			job, err := a.claim(ctx)
+			job, err := a.claimJob(ctx, importJobs)
 			if err != nil || job.ID != item.JobID {
 				t.Fatalf("claim submitted job: %v %v", job.ID, err)
 			}
+			if job.importRun == nil || job.importRun.exclusive {
+				t.Fatal("ordinary unknown-policy import should use a directory-scoped admission")
+			}
+			defer job.importRun.release()
 			err = a.safeRun(ctx, job)
 			if !sameFile {
 				if fileCode(err) != "REVIEW_OVERWRITE_POLICY" {
