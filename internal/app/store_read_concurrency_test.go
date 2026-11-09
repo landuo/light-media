@@ -14,6 +14,10 @@ func TestUIReadsContinueDuringOrganizeWrite(t *testing.T) {
 	if err := a.Store.Put(ctx, "read_test", "main", map[string]int{"value": 1}); err != nil {
 		t.Fatal(err)
 	}
+	job, err := a.enqueue(ctx, "read_test", map[string]string{"id": "read_test"}, "")
+	if err != nil {
+		t.Fatal(err)
+	}
 	history, err := a.transferHistoryReadTx(ctx)
 	if err != nil {
 		t.Fatal(err)
@@ -35,6 +39,9 @@ func TestUIReadsContinueDuringOrganizeWrite(t *testing.T) {
 	}
 	if _, err = a.jobQueue(ctx); err != nil {
 		t.Fatal(err)
+	}
+	if _, err = a.jobAPI(httptest.NewRecorder(), httptest.NewRequest("GET", "/api/jobs/"+job.ID, nil).WithContext(ctx), job.ID); err != nil {
+		t.Fatal("single job progress waited for organizer:", err)
 	}
 	if _, err = a.transferHistory(ctx, httptest.NewRequest("GET", "/api/history/transfers", nil)); err != nil {
 		t.Fatal(err)

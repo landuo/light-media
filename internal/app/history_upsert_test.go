@@ -214,6 +214,107 @@ func TestHistoryUpsertRepeatRecoversFailedUnpublishedReservation(t *testing.T) {
 	}
 }
 
+func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
+	a, source, target := importTestApp(t)
+	ctx := context.Background()
+	movie := importFixture(t, a, "movie")
+	path := filepath.Join(source, "Resident.Evil.2026.mkv")
+	importWrite(t, path, []byte("video that was never published by the old plan"))
+	noScrape := false
+	request := manualOrganizeRequest{Paths: []string{path}, TargetPath: target, Mode: "hardlink", MediaType: "movie", TMDBID: movie.ID, Scraping: &noScrape}
+	first := historyUpsertSubmit(t, a, request, false)
+	old, oldJob := historyUpsertAttempt(t, a, first.JobID)
+	old.State, old.Files[0].Status = "partial", "error"
+	old.Files[0].Reason = "overwrite policy or synchronous event dependency is unknown"
+	receipt := originalTransferPlannedReceipt(old, old.Files[0])
+	receipt.OriginalNamingResolved = true
+	if err := a.Store.Put(ctx, "import_plan", old.ID, old); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.Store.Put(ctx, "import_receipt", receipt.ID, receipt); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='failed',error_code='TASK_FAILED' WHERE id=?`, oldJob.ID); err != nil {
+		t.Fatal(err)
+	}
+	intent := Intent{ID: "dl-retry-own-file", Media: old.Media, RootID: old.RootID, State: "downloaded", ImportPlanID: old.ID}
+	old.IntentID = intent.ID
+	if err := a.Store.Put(ctx, "intent", intent.ID, intent); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.Store.Put(ctx, "import_plan", old.ID, old); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.Store.DB.Exec(`UPDATE reservations SET intent_id=? WHERE intent_id=?`, intent.ID, old.ID); err != nil {
+		t.Fatal(err)
+	}
+	initial := historyUpsertOnly(t, a, "status=failed")
+	other := filepath.Join(source, "different-resource.mkv")
+	importWrite(t, other, []byte("different source for the same movie"))
+	different, err := a.previewImport(ctx, ImportRequest{MediaType: "movie", TMDBID: movie.ID, RootID: old.RootID, Mode: "hardlink", Files: []ImportFileRequest{{Path: other}}})
+	if err != nil || len(different.Files) != 1 || different.Files[0].Status != "blocked" {
+		t.Fatalf("an unrelated source took over the old reservation: %+v %v", different.Files, err)
+	}
+
+	// A running original transfer cannot be taken over, even for the same file.
+	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='running' WHERE id=?`, oldJob.ID); err != nil {
+		t.Fatal(err)
+	}
+	blocked, err := a.manualOrganize(ctx, manualOrganizeRequest{Paths: []string{path}, TargetPath: target, Mode: "hardlink", MediaType: "movie", TMDBID: movie.ID, Scraping: &noScrape, Preview: true})
+	if err != nil || blocked.Failed != 1 {
+		t.Fatalf("active download import was replaced: %+v %v", blocked, err)
+	}
+	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='failed' WHERE id=?`, oldJob.ID); err != nil {
+		t.Fatal(err)
+	}
+	// Preview binds neither the intent nor its reservation to the new plan.
+	preview, err := a.manualOrganize(ctx, manualOrganizeRequest{Paths: []string{path}, TargetPath: target, Mode: "hardlink", MediaType: "movie", TMDBID: movie.ID, Scraping: &noScrape, Preview: true})
+	if err != nil || preview.Failed != 0 {
+		t.Fatalf("own downloaded source preview blocked: %+v %v", preview, err)
+	}
+	var unchanged Intent
+	if err := a.Store.Get(ctx, "intent", intent.ID, &unchanged); err != nil || unchanged.ImportPlanID != old.ID {
+		t.Fatalf("preview changed download: %+v %v", unchanged, err)
+	}
+	next := historyUpsertSubmit(t, a, request, false)
+	replacement, newJob := historyUpsertAttempt(t, a, next.JobID)
+	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, oldJob.ID); err != nil {
+		t.Fatal(err)
+	}
+	oldJob = reorgJob(t, a, "import", old.ID)
+	if err := a.safeRun(ctx, oldJob); err == nil || fileCode(err) != "REVIEW_IMPORT_REPLACED" {
+		t.Fatalf("old job could publish after new submission: %v", err)
+	}
+	if _, err := os.Stat(old.Files[0].Target); !os.IsNotExist(err) {
+		t.Fatalf("old job touched the target: %v", err)
+	}
+	if _, err := a.finishJob(ctx, oldJob, "failed", "IMPORT_CONFLICT", "old execution no longer owns the slot", 0); err != nil {
+		t.Fatal(err)
+	}
+	reorgRunJob(t, a, newJob)
+	var completed Intent
+	if err := a.Store.Get(ctx, "intent", intent.ID, &completed); err != nil || completed.State != "imported" || completed.ImportPlanID != replacement.ID {
+		t.Fatalf("download was not completed: %+v %v", completed, err)
+	}
+	var asset Asset
+	if err := a.Store.DB.QueryRow(`SELECT json_extract(payload,'$.intent_id') FROM records WHERE kind='asset' AND json_extract(payload,'$.path')=?`, replacement.Files[0].Target).Scan(&asset.IntentID); err != nil || asset.IntentID != intent.ID {
+		t.Fatalf("asset lost download provenance: %+v %v", asset, err)
+	}
+	latest := historyUpsertOnly(t, a, "status=success")
+	if latest.ID != initial.ID || latest.PlanID != replacement.ID {
+		t.Fatalf("fresh result did not update the same history: %+v", latest)
+	}
+	var kept importReceipt
+	if err := a.Store.Get(ctx, "import_receipt", receipt.ID, &kept); err != nil || kept.ID != receipt.ID || kept.State != "planned" {
+		t.Fatalf("old recovery receipt was changed: %+v %v", kept, err)
+	}
+	before, err1 := os.Stat(path)
+	after, err2 := os.Stat(replacement.Files[0].Target)
+	if err1 != nil || err2 != nil || !os.SameFile(before, after) {
+		t.Fatalf("successful retry did not publish a hardlink: %v %v", err1, err2)
+	}
+}
+
 func TestHistoryUpsertNewFailureReplacesSuccessBeforeStatusFiltering(t *testing.T) {
 	a, path, old := reorgFixture(t)
 	first := historyUpsertOnly(t, a, "")

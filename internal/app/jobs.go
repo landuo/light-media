@@ -400,12 +400,12 @@ func (a *App) jobAPI(w http.ResponseWriter, r *http.Request, p string) (any, err
 	if len(parts) > 2 || parts[0] == "" {
 		return nil, bad("INVALID_JOB", "任务ID无效")
 	}
-	j, e := scanJob(a.Store.DB.QueryRowContext(r.Context(), `SELECT `+jobColumns+` FROM jobs WHERE id=?`, parts[0]))
+	j, e := scanJob(a.Store.reader().QueryRowContext(r.Context(), `SELECT `+jobColumns+` FROM jobs WHERE id=?`, parts[0]))
 	if e != nil {
 		return nil, e
 	}
 	if len(parts) == 1 && r.Method == "GET" {
-		rows, e := a.Store.DB.QueryContext(r.Context(), `SELECT seq,time,workflow_id,job_id,level,module,event,message FROM events WHERE job_id=? ORDER BY seq LIMIT 1000`, j.ID)
+		rows, e := a.Store.reader().QueryContext(r.Context(), `SELECT seq,time,workflow_id,job_id,level,module,event,message FROM events WHERE job_id=? ORDER BY seq LIMIT 1000`, j.ID)
 		if e != nil {
 			return nil, e
 		}

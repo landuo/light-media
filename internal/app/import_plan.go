@@ -73,6 +73,7 @@ type importSidecar struct {
 }
 
 type importMetadata struct {
+	DownloadRetry       *downloadImportRetry                   `json:"download_retry,omitempty"`
 	OriginalPreview     bool                                   `json:"original_preview,omitempty"`
 	OriginalNamingBases map[string]string                      `json:"original_naming_bases,omitempty"`
 	OriginalTransfer    map[string]originalTransferFileContext `json:"original_transfer,omitempty"`
@@ -712,6 +713,10 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 						reusable := false
 						if request.IntentID == "" {
 							reusable, e = canReplaceFailedImportReservation(ctx, a.Store.DB, owner, mediaKey(identity), file, episode)
+							if e == nil && !reusable && request.Manual && len(request.Files) == 1 {
+								meta.DownloadRetry, e = findDownloadImportRetry(ctx, a.Store.DB, owner, plan, file)
+								reusable = meta.DownloadRetry != nil
+							}
 							if e != nil {
 								return ImportPlan{}, e
 							}
@@ -769,6 +774,9 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			}
 		}
 		plan.Files = append(plan.Files, file)
+	}
+	if meta.DownloadRetry != nil {
+		plan.IntentID = meta.DownloadRetry.IntentID
 	}
 	plan.SpaceNeeded = importSpaceEstimate(plan, meta)
 	if plan.SpaceNeeded > plan.SpaceAvailable && !request.originalModulePreview {

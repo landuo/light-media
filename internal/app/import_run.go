@@ -132,6 +132,11 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 	} else if !errors.Is(findErr, sql.ErrNoRows) {
 		return Job{}, findErr
 	}
+	if meta.DownloadRetry != nil {
+		if err = confirmDownloadImportRetry(ctx, tx, plan, *meta.DownloadRetry); err != nil {
+			return Job{}, err
+		}
+	}
 	if plan.IntentID != "" {
 		intent, err := importIntentTx(ctx, tx, plan)
 		if err != nil {

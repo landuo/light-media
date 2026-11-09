@@ -58,6 +58,12 @@ func canReplaceFailedImportReservation(ctx context.Context, q qualityReader, own
 	if old.ID != owner || old.IntentID != "" || mediaKey(old.Media) != key || (old.State != "partial" && old.State != "failed") {
 		return false, nil
 	}
+	return failedImportSourceUnpublished(ctx, q, old, file, episode)
+}
+
+// Shared by local retries and a completed download's own manual retry. Neither
+// may discard a receipt that could already have published or replaced a file.
+func failedImportSourceUnpublished(ctx context.Context, q qualityReader, old ImportPlan, file PlanFile, episode int) (bool, error) {
 	var retryable PlanFile
 	for _, previous := range old.Files {
 		if previous.Season != file.Season || previous.MaterialKind != "" || !slices.Contains(importEpisodes(previous.Episodes), episode) {
@@ -81,7 +87,7 @@ func canReplaceFailedImportReservation(ctx context.Context, q qualityReader, own
 	}
 	want := originalTransferPlannedReceipt(old, retryable)
 	var receipt importReceipt
-	err = qualityRecord(ctx, q, "import_receipt", want.ID, &receipt)
+	err := qualityRecord(ctx, q, "import_receipt", want.ID, &receipt)
 	if err == nil {
 		if receipt.ID != want.ID || receipt.Source != want.Source || receipt.Target != want.Target || receipt.SourceSnapshot != want.SourceSnapshot ||
 			receipt.Stage != want.Stage || receipt.State != "planned" || receipt.StageSnapshot != (importSnapshot{}) || receipt.SHA256 != "" ||
