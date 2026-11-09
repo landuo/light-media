@@ -42,7 +42,8 @@ type originalCustomHostsSaved struct {
 }
 
 func originalCustomHostsInstallation(in PluginInstallation) bool {
-	return in.PluginID == "CustomHosts" && in.Version == "1.2.2"
+	// The first Light Media release retains the same Hosts write contract.
+	return in.PluginID == "CustomHosts" && (in.Version == "1.0.0" || in.Version == "1.2.2")
 }
 
 func originalCustomHostsReload(raw json.RawMessage, instance string) bool {
