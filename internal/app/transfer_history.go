@@ -49,11 +49,12 @@ const transferHistoryJobMatch = `j.kind='import' AND json_extract(j.payload,'$.i
 
 // Normalize RFC3339Nano fractions before comparing creation times. This key
 // survives VACUUM/backup restoration, unlike SQLite's implicit job rowid.
-const transferHistoryJobsCTE = `WITH import_jobs AS NOT MATERIALIZED (
+const transferHistoryJobsSelect = `WITH import_jobs AS NOT MATERIALIZED (
  SELECT *,substr(created_at,1,19)||'.'||substr(
  CASE WHEN substr(created_at,20,1)='.' THEN substr(created_at,21,length(created_at)-21) ELSE '' END
- ||'000000000',1,9)||'/'||id AS execution_key FROM jobs WHERE kind='import'
-)`
+ ||'000000000',1,9)||'/'||id AS execution_key FROM jobs WHERE kind='import'`
+
+const transferHistoryJobsCTE = transferHistoryJobsSelect + `)`
 
 const transferHistoryPlanSource = `COALESCE(NULLIF(json_extract(f.value,'$.history_source'),''),
  NULLIF(json_extract(meta.payload,'$.reorganize.asset.source_path'),''),

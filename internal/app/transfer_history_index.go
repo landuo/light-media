@@ -82,7 +82,11 @@ func refreshTransferHistoryIndex(ctx context.Context, tx *sql.Tx) error {
 		return err
 	}
 	const changed = ` AND r.id IN (SELECT plan_id FROM transfer_history_dirty)`
-	query := transferHistoryJobsCTE + transferHistoryExecutedFiles + changed +
+	// Bound both sides of the join. Filtering only r.id lets SQLite walk every
+	// archived import job before finding the few dirty plans, especially with a
+	// cold disk cache. jobs_subject can seek kind + plan ID directly.
+	jobs := transferHistoryJobsSelect + ` AND json_extract(payload,'$.id') IN (SELECT plan_id FROM transfer_history_dirty))`
+	query := jobs + transferHistoryExecutedFiles + changed +
 		transferHistoryAuxiliaryFiles + changed + transferHistoryAttempts +
 		`INSERT INTO transfer_history_attempts (` + transferHistoryIndexColumns + `) SELECT ` + transferHistoryIndexColumns + ` FROM attempts`
 	if _, err := tx.ExecContext(ctx, query); err != nil {
