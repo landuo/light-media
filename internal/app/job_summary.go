@@ -64,7 +64,7 @@ const jobSummaryJoins = `
 func (a *App) jobQueue(ctx context.Context) ([]jobView, error) {
 	// Limit before reading payloads. Running and other pending work stay
 	// visible when a directory adds hundreds of recent file jobs.
-	rows, err := a.Store.DB.QueryContext(ctx, `WITH selected AS MATERIALIZED (
+	rows, err := a.Store.reader().QueryContext(ctx, `WITH selected AS MATERIALIZED (
  SELECT id,CASE
    WHEN state='running' THEN 0
    WHEN state IN `+activeOrganizeStates+` AND kind NOT IN ('import','organize_file') THEN 1
@@ -116,7 +116,7 @@ func (a *App) jobQueue(ctx context.Context) ([]jobView, error) {
 
 func (a *App) jobView(ctx context.Context, job Job) (jobView, error) {
 	var input jobSummaryInput
-	err := a.Store.DB.QueryRowContext(ctx, `SELECT `+jobSummaryColumns+` FROM (SELECT ? AS id,? AS kind,? AS payload) j`+jobSummaryJoins,
+	err := a.Store.reader().QueryRowContext(ctx, `SELECT `+jobSummaryColumns+` FROM (SELECT ? AS id,? AS kind,? AS payload) j`+jobSummaryJoins,
 		job.ID, job.Kind, []byte(job.Payload)).Scan(&input.subject, &input.oldAsset, &input.activity, &input.activityAt)
 	if err != nil {
 		return jobView{}, err

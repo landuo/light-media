@@ -21,7 +21,7 @@ func (a *App) resourceMetadataSettings(ctx context.Context) (int64, resourceMeta
 	config := resourceMetadataConfiguration{SourceMode: "rust", ReleaseGroups: []string{}, Customization: []string{}}
 	var revision int64
 	var sealed []byte
-	err := a.Store.DB.QueryRowContext(ctx, `SELECT revision,sealed FROM resource_metadata_settings WHERE id='main'`).Scan(&revision, &sealed)
+	err := a.Store.reader().QueryRowContext(ctx, `SELECT revision,sealed FROM resource_metadata_settings WHERE id='main'`).Scan(&revision, &sealed)
 	if errors.Is(err, sql.ErrNoRows) {
 		return 0, config, nil
 	}

@@ -95,6 +95,23 @@ func refreshTransferHistoryIndex(ctx context.Context, tx *sql.Tx) error {
 // Refresh and read in one snapshot: a writer cannot slip between invalidation
 // and hydration and pair a new plan with the previous attempt's state/ID.
 func (a *App) transferHistoryReadTx(ctx context.Context) (*sql.Tx, error) {
+	// A clean index can be read entirely from a WAL snapshot. Inspect dirtiness
+	// inside that snapshot, so a later writer cannot mix new JSON with old rows.
+	if a.Store.readDB != nil {
+		read, err := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+		if err != nil {
+			return nil, err
+		}
+		var dirty bool
+		err = read.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM transfer_history_dirty)`).Scan(&dirty)
+		if err == nil && !dirty {
+			return read, nil
+		}
+		read.Rollback()
+		if err != nil {
+			return nil, err
+		}
+	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err

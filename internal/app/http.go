@@ -406,7 +406,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		if e == nil {
 			var saved Subscription
 			var username string
-			e = a.Store.DB.QueryRowContext(ctx, `SELECT username FROM admin WHERE id=1`).Scan(&username)
+			e = a.Store.reader().QueryRowContext(ctx, `SELECT username FROM admin WHERE id=1`).Scan(&username)
 			if e == nil {
 				saved, e = a.createUISubscription(ctx, in, username)
 			}
@@ -561,12 +561,12 @@ func (a *App) status(ctx context.Context) map[string]any {
 	counts := map[string]int{}
 	for _, k := range []string{"subscription", "intent", "asset", "import_plan"} {
 		var n int
-		_ = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind=?`, k).Scan(&n)
+		_ = a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind=?`, k).Scan(&n)
 		counts[k] = n
 	}
 	var active, failed int
-	_ = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE state IN ('queued','running','retry_wait','waiting_paused')`).Scan(&active)
-	_ = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE state='failed'`).Scan(&failed)
+	_ = a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE state IN ('queued','running','retry_wait','waiting_paused')`).Scan(&active)
+	_ = a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE state='failed'`).Scan(&failed)
 	counts["active_jobs"] = active
 	counts["failed_jobs"] = failed
 	a.controlMu.Lock()

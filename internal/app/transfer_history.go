@@ -419,7 +419,7 @@ func (a *App) transferHistoryCapabilities(ctx context.Context, item *transferHis
 	}
 	if item.CanRetry {
 		var active int
-		if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, item.PlanID).Scan(&active); e != nil || active > 0 {
+		if e := a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, item.PlanID).Scan(&active); e != nil || active > 0 {
 			item.CanRetry = false
 			return
 		}

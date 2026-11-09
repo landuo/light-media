@@ -80,7 +80,7 @@ func (a *App) notifications(ctx context.Context) (any, error) {
 		}
 	}
 	var unread int
-	e = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='notification' AND json_extract(payload,'$.read')=0`).Scan(&unread)
+	e = a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='notification' AND json_extract(payload,'$.read')=0`).Scan(&unread)
 	return map[string]any{"items": items, "unread": unread}, e
 }
 func (a *App) notificationAPI(r *http.Request, p string) (any, error) {
@@ -102,7 +102,7 @@ func (a *App) auditRequest(ctx context.Context, operation, request string, statu
 	_ = a.Store.Put(ctx, "audit", id("audit_"), map[string]any{"time": now(), "actor": "admin", "operation": operation, "request_id": request, "http_status": status})
 }
 func (a *App) decisionRecords(ctx context.Context, wf string) ([]json.RawMessage, error) {
-	rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind='decision' AND json_extract(payload,'$.workflow_id')=? ORDER BY updated_at LIMIT 10`, wf)
+	rows, e := a.Store.reader().QueryContext(ctx, `SELECT payload FROM records WHERE kind='decision' AND json_extract(payload,'$.workflow_id')=? ORDER BY updated_at LIMIT 10`, wf)
 	if e != nil {
 		return nil, e
 	}

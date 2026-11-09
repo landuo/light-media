@@ -866,7 +866,7 @@ func (a *App) organizeQueue(ctx context.Context) (any, error) {
 			}
 			seen[fileKey] = true
 			var cancelled bool
-			if err := a.Store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE kind='organize_file_cancel' AND id=?)`, job.ID+"/"+f.ID).Scan(&cancelled); err != nil {
+			if err := a.Store.reader().QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE kind='organize_file_cancel' AND id=?)`, job.ID+"/"+f.ID).Scan(&cancelled); err != nil {
 				return nil, err
 			}
 			if cancelled {

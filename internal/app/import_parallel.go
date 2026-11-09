@@ -10,6 +10,8 @@ import (
 	"slices"
 	"syscall"
 	"time"
+
+	"light-media/internal/transferoverwrite"
 )
 
 type importSlot struct {
@@ -17,16 +19,24 @@ type importSlot struct {
 	season, episode int
 }
 
+type importVersionScope struct {
+	parents  map[string]struct{}
+	identity transferoverwrite.Identity
+}
+
 type importAdmission struct {
-	app          *App
-	job, plan    string
-	intent       string
-	exclusive    bool
-	scanVersions bool
-	slots        map[importSlot]struct{}
-	paths        map[string]struct{}
-	sources      map[string]struct{}
-	targets      map[string]struct{}
+	app           *App
+	job, plan     string
+	intent        string
+	exclusive     bool
+	scanVersions  bool
+	versionScopes map[string]importVersionScope
+	identity      func(string) (transferoverwrite.Identity, error)
+	sourcePaths   map[string]struct{}
+	slots         map[importSlot]struct{}
+	paths         map[string]struct{}
+	sources       map[string]struct{}
+	targets       map[string]struct{}
 }
 
 type importAdmissionKey struct{}
@@ -148,6 +158,12 @@ func (a *App) importJobScope(ctx context.Context, job Job, native bool) *importA
 		return run
 	}
 	run.plan, run.intent, run.scanVersions = plan.ID, plan.IntentID, importScansVersions(meta)
+	run.identity, err = a.overwriteIdentityParser(ctx)
+	if err != nil {
+		return run
+	}
+	run.versionScopes = make(map[string]importVersionScope)
+	run.sourcePaths = make(map[string]struct{})
 	run.slots, run.paths = make(map[importSlot]struct{}), make(map[string]struct{})
 	run.sources, run.targets = make(map[string]struct{}), make(map[string]struct{})
 	for _, index := range indices {
@@ -198,6 +214,10 @@ func (run *importAdmission) addFile(source, target string, meta importMetadata) 
 	if !run.addPath(source) || !run.addTarget(target, meta) {
 		return false
 	}
+	scope := &importAdmission{paths: run.sourcePaths}
+	if !scope.addPath(source) {
+		return false
+	}
 	run.sources[source] = struct{}{}
 	return true
 }
@@ -207,7 +227,16 @@ func (run *importAdmission) addTarget(path string, meta importMetadata) bool {
 		return false
 	}
 	run.targets[path] = struct{}{}
-	return !importScansVersions(meta) || run.addPath(filepath.Dir(path))
+	parents := &importAdmission{paths: make(map[string]struct{})}
+	if !parents.addPath(filepath.Dir(path)) {
+		return false
+	}
+	identity, err := run.identity(path)
+	if err != nil {
+		return false
+	}
+	run.versionScopes[path] = importVersionScope{parents: parents.paths, identity: identity}
+	return true
 }
 
 func importScansVersions(meta importMetadata) bool {
@@ -256,7 +285,7 @@ func guardParallelOverwrite(ctx context.Context, op directoryOverwriteOperation)
 		if old.Path == op.Target && old.Owner != nil {
 			return bad("REVIEW_IMPORT_SCOPE_CHANGED", "同路径受管文件替换需要独占整理")
 		}
-		if old.Path != op.Target && (!run.scanVersions || !op.Decision.DeleteVersions || filepath.Dir(old.Path) != filepath.Dir(op.Target)) {
+		if old.Path != op.Target && !run.coversVersion(op, old.Path) {
 			return bad("REVIEW_IMPORT_SCOPE_CHANGED", "覆盖旧文件已超出当前整理范围")
 		}
 	}
@@ -292,6 +321,42 @@ func (run *importAdmission) addPath(path string) bool {
 	}
 }
 
+func (run *importAdmission) coversVersion(op directoryOverwriteOperation, path string) bool {
+	want, ok := run.versionScopes[op.Target]
+	if !ok || !run.scanVersions || !op.Decision.DeleteVersions || filepath.Dir(path) != filepath.Dir(op.Target) {
+		return false
+	}
+	old, err := run.identity(path)
+	return err == nil && transferoverwrite.VersionMatches(want.identity, old)
+}
+
+// Latest replacement matches season/episode/part within the target directory,
+// not every video in that season. Keep source files protected even if a second
+// task reads an older version through another bind mount.
+func (run *importAdmission) versionConflict(other *importAdmission) bool {
+	if !run.scanVersions {
+		return false
+	}
+	for _, scope := range run.versionScopes {
+		if importPathScopesOverlap(other.sourcePaths, scope.parents) {
+			return true
+		}
+		for _, next := range other.versionScopes {
+			sameParent := false
+			for parent := range scope.parents {
+				if _, ok := next.parents[parent]; ok {
+					sameParent = true
+					break
+				}
+			}
+			if sameParent && transferoverwrite.VersionMatches(scope.identity, next.identity) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func (run *importAdmission) conflicts(other *importAdmission) bool {
 	if run.exclusive || other.exclusive || run.plan == other.plan || run.intent != "" && run.intent == other.intent {
 		return true
@@ -301,7 +366,7 @@ func (run *importAdmission) conflicts(other *importAdmission) bool {
 			return true
 		}
 	}
-	return importPathScopesOverlap(run.paths, other.paths) || importPathScopesOverlap(other.paths, run.paths)
+	return run.versionConflict(other) || other.versionConflict(run) || importPathScopesOverlap(run.paths, other.paths) || importPathScopesOverlap(other.paths, run.paths)
 }
 
 func importPathScopesOverlap(paths, other map[string]struct{}) bool {

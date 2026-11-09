@@ -15,6 +15,8 @@ import (
 
 	"golang.org/x/sys/unix"
 	"light-media/internal/catalog"
+	"light-media/internal/releasemeta"
+	"light-media/internal/transferoverwrite"
 )
 
 func queueParallelImport(t *testing.T, a *App, media catalog.Media, file ImportFileRequest, resolved json.RawMessage) (ImportPlan, Job) {
@@ -146,7 +148,13 @@ func assertParallelAsset(t *testing.T, a *App, plan ImportPlan) string {
 }
 
 func TestImportQueueRunsIndependentEpisodesInParallel(t *testing.T) {
-	a, source, _ := importTestApp(t)
+	for _, mode := range []string{"never", "latest"} {
+		t.Run(mode, func(t *testing.T) { testImportQueueIndependentEpisodes(t, mode) })
+	}
+}
+func testImportQueueIndependentEpisodes(t *testing.T, mode string) {
+	a, source, target := importTestApp(t)
+	overwriteRule(a, source, target, mode, true)
 	media := importFixture(t, a, "tv")
 	importCache(t, a, "season:123:1", catalog.Season{ID: 901, SeriesID: media.ID, SeasonNumber: 1, Episodes: []catalog.Episode{
 		{ID: 9101, SeasonNumber: 1, EpisodeNumber: 1, Name: "第一集"},
@@ -168,6 +176,13 @@ func TestImportQueueRunsIndependentEpisodesInParallel(t *testing.T) {
 	}
 	firstPlan, firstQueued := queue(firstPath, 1)
 	secondPlan, secondQueued := queue(secondPath, 2)
+
+	if mode == "latest" {
+		// MP deletes only matching episode versions, even when another episode is
+		// being published in the same season directory.
+		importWrite(t, filepath.Join(filepath.Dir(firstPlan.Files[0].Target), "Old.S01E01.720p.mkv"), []byte("old first episode"))
+		importWrite(t, filepath.Join(filepath.Dir(secondPlan.Files[0].Target), "Old.S01E02.720p.mkv"), []byte("old second episode"))
+	}
 	entered, release := holdParallelImport(t, a, firstPath)
 	ctx, cancel := context.WithCancel(t.Context())
 	var workers sync.WaitGroup
@@ -340,16 +355,26 @@ func TestImportQueueLatestPolicyProtectsTargetDirectory(t *testing.T) {
 	policy.Policy.Known, policy.Policy.Mode = true, &mode
 	newScope := func(id, target string, policy *importOverwritePolicy) *importAdmission {
 		t.Helper()
-		run := &importAdmission{plan: id, paths: map[string]struct{}{}, targets: map[string]struct{}{}}
+		parse, err := transferoverwrite.PathIdentityParser(releasemeta.Options{SourceMode: "legacy"})
+		if err != nil {
+			t.Fatal(err)
+		}
+		run := &importAdmission{plan: id, paths: map[string]struct{}{}, targets: map[string]struct{}{}, sourcePaths: map[string]struct{}{}, versionScopes: map[string]importVersionScope{}, identity: parse, scanVersions: importScansVersions(importMetadata{Overwrite: policy})}
 		if !run.addTarget(filepath.Join(root, target), importMetadata{RootPath: root, Overwrite: policy}) {
 			t.Fatalf("could not scope target %s", target)
 		}
 		return run
 	}
+	firstEpisode := newScope("episode-1", "Season 1/Show.S01E01.1080p.mkv", &policy)
+	secondEpisode := newScope("episode-2", "Season 1/Show.S01E02.1080p.mkv", &policy)
+	sameEpisode := newScope("episode-1-alt", "Season 1/Show.S01E01.2160p.mkv", nil)
+	if firstEpisode.conflicts(secondEpisode) || !firstEpisode.conflicts(sameEpisode) {
+		t.Fatal("latest episode version scope differs from MP's season/episode comparison")
+	}
 	latest := newScope("latest", "film/new.mkv", &policy)
 	sibling := newScope("sibling", "film/other.mkv", nil)
 	independent := newScope("independent", "another/new.mkv", nil)
 	if !latest.conflicts(sibling) || latest.conflicts(independent) {
-		t.Fatal("latest replacement must protect its target directory and allow a different directory")
+		t.Fatal("latest replacement must protect matching movie versions and allow a different directory")
 	}
 }

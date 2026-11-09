@@ -133,7 +133,15 @@ func TestJobSummaryMissingRecordsKeepReadableFallback(t *testing.T) {
 	a := newTestApp(t)
 	for _, kind := range []string{"native_download", "download", "import", "reorganize_cleanup", "scrape", "fnos_sync", "subscription", "library_scan", "asset_check"} {
 		t.Run(kind, func(t *testing.T) {
+			if kind == "import" {
+				summaryRecord(t, a, "import_plan", "missing-record", ImportPlan{ID: "missing-record"})
+			}
 			job := summaryJob(t, a, kind, map[string]string{"id": "missing-record", "root_id": "missing-root"}, "missing-"+kind)
+			if kind == "import" {
+				if err := a.Store.Delete(t.Context(), "import_plan", "missing-record"); err != nil {
+					t.Fatal(err)
+				}
+			}
 			view, err := a.jobView(context.Background(), job)
 			if err != nil {
 				t.Fatal(err)
@@ -149,6 +157,7 @@ func TestJobSummaryActivityBelongsToTheExactJob(t *testing.T) {
 	a := newTestApp(t)
 	ctx := context.Background()
 	job := summaryJob(t, a, "download", map[string]string{"id": "event-intent"}, "shared-workflow")
+	summaryRecord(t, a, "import_plan", "event-plan", ImportPlan{ID: "event-plan"})
 	sibling := summaryJob(t, a, "import", map[string]string{"id": "event-plan"}, job.WorkflowID)
 	insert := func(time, jobID, message string) {
 		t.Helper()

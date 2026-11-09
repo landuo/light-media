@@ -109,9 +109,17 @@ func overwriteFileItem(path string, stamp importSnapshot) transferoverwrite.File
 }
 
 func (a *App) overwritePathIdentity(ctx context.Context, path string, supplied ...fileextensions.Snapshot) (transferoverwrite.Identity, error) {
+	parse, err := a.overwriteIdentityParser(ctx, supplied...)
+	if err != nil {
+		return transferoverwrite.Identity{}, err
+	}
+	return parse(path)
+}
+
+func (a *App) overwriteIdentityParser(ctx context.Context, supplied ...fileextensions.Snapshot) (func(string) (transferoverwrite.Identity, error), error) {
 	options, e := a.globalRecognitionOptions(ctx)
 	if e != nil {
-		return transferoverwrite.Identity{}, e
+		return nil, e
 	}
 	snapshot, e := a.sourceFileExtensions(ctx)
 	if len(supplied) > 0 {
@@ -119,16 +127,16 @@ func (a *App) overwritePathIdentity(ctx context.Context, path string, supplied .
 		e = nil
 	}
 	if e != nil {
-		return transferoverwrite.Identity{}, e
+		return nil, e
 	}
 	if !snapshot.Valid() {
-		return transferoverwrite.Identity{}, transferextensions.ErrDependency
+		return nil, transferextensions.ErrDependency
 	}
 	options.MediaExts, e = fileextensions.ParserMediaExtensions(snapshot)
 	if e != nil {
-		return transferoverwrite.Identity{}, e
+		return nil, e
 	}
-	return transferoverwrite.PathIdentity(path, options)
+	return transferoverwrite.PathIdentityParser(options)
 }
 
 type directoryOverwriteTarget struct {
@@ -288,7 +296,11 @@ func (a *App) directoryOverwriteLatestCandidates(ctx context.Context, target str
 	if e != nil {
 		return nil, e
 	}
-	want, e := a.overwritePathIdentity(ctx, target, snapshot)
+	parse, e := a.overwriteIdentityParser(ctx, snapshot)
+	if e != nil {
+		return nil, e
+	}
+	want, e := parse(target)
 	if e != nil {
 		return nil, e
 	}
@@ -317,7 +329,7 @@ func (a *App) directoryOverwriteLatestCandidates(ctx context.Context, target str
 		if path == target || entry.IsDir() || !media {
 			continue
 		}
-		old, e := a.overwritePathIdentity(ctx, path, snapshot)
+		old, e := parse(path)
 		if e != nil {
 			return nil, e
 		}

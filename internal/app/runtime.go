@@ -616,7 +616,7 @@ func (a *App) readLogs(q map[string]string) ([]map[string]any, error) {
 func tokenHash(s string) string { h := sha256.Sum256([]byte(s)); return hex.EncodeToString(h[:]) }
 func (a *App) hasAdmin() bool {
 	var n int
-	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM admin`).Scan(&n)
+	_ = a.Store.reader().QueryRow(`SELECT COUNT(*) FROM admin`).Scan(&n)
 	return n > 0
 }
 func (a *App) auth(w http.ResponseWriter, r *http.Request) (bool, error) {
@@ -684,7 +684,7 @@ func (a *App) authenticated(r *http.Request) bool {
 		return false
 	}
 	var expires int64
-	e = a.Store.DB.QueryRowContext(r.Context(), `SELECT expires_at FROM sessions WHERE token_hash=?`, tokenHash(cookie.Value)).Scan(&expires)
+	e = a.Store.reader().QueryRowContext(r.Context(), `SELECT expires_at FROM sessions WHERE token_hash=?`, tokenHash(cookie.Value)).Scan(&expires)
 	return e == nil && expires > time.Now().Unix()
 }
 func (a *App) cached(ctx context.Context, key string, ttl time.Duration, dst any, fetch func() (any, error)) (time.Time, error) {

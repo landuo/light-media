@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -23,6 +24,7 @@ import (
 type Store struct {
 	RecoveredJobs int64
 	DB            *sql.DB
+	readDB        *sql.DB
 	key           []byte
 	lock          *os.File
 	mu            sync.Mutex
@@ -136,9 +138,43 @@ func OpenStore(dir string) (*Store, error) {
 	}
 	recovered, _ := recovery.RowsAffected()
 	_ = os.Chmod(filepath.Join(dir, "light-media.db"), 0600)
-	return &Store{DB: db, key: key, lock: lock, RecoveredJobs: recovered}, nil
+	// WAL readers do not wait for the organizer's single writer connection.
+	// Keep writes serialized; configure every reader connection through its DSN.
+	readURL := url.URL{Scheme: "file", Path: dbPath}
+	params := url.Values{"mode": {"ro"}, "_pragma": {"busy_timeout(5000)", "query_only(ON)", "foreign_keys(ON)", "cache_size(-8192)"}}
+	readURL.RawQuery = params.Encode()
+	readDB, err := sql.Open("sqlite", readURL.String())
+	if err == nil {
+		readDB.SetMaxOpenConns(4)
+		readDB.SetMaxIdleConns(4)
+		err = readDB.Ping()
+	}
+	if err != nil {
+		if readDB != nil {
+			readDB.Close()
+		}
+		db.Close()
+		return fail(err)
+	}
+	return &Store{DB: db, readDB: readDB, key: key, lock: lock, RecoveredJobs: recovered}, nil
 }
-func (s *Store) Close() error { err := s.DB.Close(); s.lock.Close(); return err }
+func (s *Store) reader() *sql.DB {
+	if s.readDB != nil {
+		return s.readDB
+	}
+	return s.DB
+}
+func (s *Store) Close() error {
+	var readErr error
+	if s.readDB != nil {
+		readErr = s.readDB.Close()
+	}
+	err := s.DB.Close()
+	if s.lock != nil {
+		s.lock.Close()
+	}
+	return errors.Join(readErr, err)
+}
 func (s *Store) Seal(value any) ([]byte, error) {
 	b, e := json.Marshal(value)
 	if e != nil {
@@ -200,7 +236,7 @@ func (s *Store) Put(ctx context.Context, kind, key string, value any) error {
 }
 func (s *Store) Get(ctx context.Context, kind, key string, dst any) error {
 	var b []byte
-	e := s.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, kind, key).Scan(&b)
+	e := s.reader().QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, kind, key).Scan(&b)
 	if e != nil {
 		return e
 	}
@@ -219,7 +255,7 @@ func (s *Store) List(ctx context.Context, kind string, limit, offset int) ([]jso
 	return s.listRecordPayloads(ctx, `SELECT payload FROM records WHERE kind=? ORDER BY updated_at DESC,id LIMIT ? OFFSET ?`, kind, limit, offset)
 }
 func (s *Store) listRecordPayloads(ctx context.Context, query string, args ...any) ([]json.RawMessage, error) {
-	rows, e := s.DB.QueryContext(ctx, query, args...)
+	rows, e := s.reader().QueryContext(ctx, query, args...)
 	if e != nil {
 		return nil, e
 	}

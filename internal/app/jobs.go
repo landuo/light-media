@@ -136,7 +136,7 @@ func (a *App) jobs(ctx context.Context, limit int) ([]Job, error) {
 }
 
 func (a *App) queryJobs(ctx context.Context, query string, args ...any) ([]Job, error) {
-	rows, e := a.Store.DB.QueryContext(ctx, query, args...)
+	rows, e := a.Store.reader().QueryContext(ctx, query, args...)
 	if e != nil {
 		return nil, e
 	}

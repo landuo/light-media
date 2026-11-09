@@ -32,7 +32,7 @@ func (a *App) loadRecognitionWords(ctx context.Context) error {
 func (a *App) recognitionWords(ctx context.Context) (int64, []string, error) {
 	var revision int64
 	var sealed []byte
-	err := a.Store.DB.QueryRowContext(ctx, `SELECT revision,sealed FROM recognition_words WHERE id='CustomIdentifiers'`).Scan(&revision, &sealed)
+	err := a.Store.reader().QueryRowContext(ctx, `SELECT revision,sealed FROM recognition_words WHERE id='CustomIdentifiers'`).Scan(&revision, &sealed)
 	if errors.Is(err, sql.ErrNoRows) {
 		return 0, []string{}, nil
 	}
