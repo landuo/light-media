@@ -63,7 +63,7 @@ func verifyOwnedProductionDownloaderAdd(t *testing.T, dir string, request func(s
 	settings.AllowedRoots = []string{dir}
 	settings.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "owned-add", Kind: "qb", BaseURL: peer.URL, ForceResume: true}, Name: "Owned downloader", DownloadPath: dir}}
 	settings.DefaultDownloader = "owned-add"
-	settings.Sites = []SiteConfig{{Config: sites.Config{ID: "owned-add-site", Kind: "ubits", BaseURL: site.URL, Name: "Owned add site", Cookie: "owned-cookie"}, Enabled: true, DailyBudget: 1000}}
+	settings.Sites = []SiteConfig{{Config: sites.Config{ID: "owned-add-site", Kind: "ubits", BaseURL: site.URL, Name: "Owned add site", Cookie: "owned-cookie"}, Enabled: true}}
 	if err = seed.saveSettings(context.Background(), settings); err != nil {
 		t.Fatal(err)
 	}

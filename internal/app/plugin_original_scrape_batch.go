@@ -244,7 +244,7 @@ func flushOriginalScrapeBatchTx(ctx context.Context, tx *sql.Tx, key string, clo
 		batch.Closed = true
 	}
 	var pending int
-	if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind IN ('import','reorganize_cleanup','quality_cleanup') AND json_extract(payload,'$.original_scrape_batch')=? AND state NOT IN ('succeeded','failed','cancelled','needs_review')`, key).Scan(&pending); err != nil {
+	if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind IN ('import','organize_file','reorganize_cleanup','quality_cleanup') AND json_extract(payload,'$.original_scrape_batch')=? AND state NOT IN ('succeeded','failed','cancelled','needs_review')`, key).Scan(&pending); err != nil {
 		return nil, err
 	}
 	var events []json.RawMessage

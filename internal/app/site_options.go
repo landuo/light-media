@@ -67,7 +67,7 @@ func (s *SiteConfig) UnmarshalJSON(raw []byte) error {
 			fields[key], _ = json.Marshal(parsed)
 		}
 	}
-	for _, key := range []string{"daily_budget", "pri", "timeout", "limit_interval", "limit_count", "limit_seconds"} {
+	for _, key := range []string{"pri", "timeout", "limit_interval", "limit_count", "limit_seconds"} {
 		if value, ok := fields[key]; ok {
 			parsed, err := siteImportInt(value)
 			if err != nil {

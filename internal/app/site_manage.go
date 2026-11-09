@@ -166,11 +166,7 @@ func (a *App) managedSites(ctx context.Context) (any, error) {
 		configured := siteCredentialConfigured(s)
 		credentials := siteSecretState(s)
 		hideSiteSecrets(&s)
-		var used int
-		if e := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM site_usage WHERE site_id=? AND ts>?`, s.ID, time.Now().Add(-24*time.Hour).Unix()).Scan(&used); e != nil {
-			return nil, e
-		}
-		rows = append(rows, map[string]any{"config": s, "credential_configured": configured, "credential_state": credentials, "connection": latest.Connection, "stats": stats, "stale": stats != nil && latest.Connection.Status != "ok", "usage_24h": used})
+		rows = append(rows, map[string]any{"config": s, "credential_configured": configured, "credential_state": credentials, "connection": latest.Connection, "stats": stats, "stale": stats != nil && latest.Connection.Status != "ok"})
 	}
 	if err = tx.Commit(); err != nil {
 		return nil, err

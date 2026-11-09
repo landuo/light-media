@@ -8,7 +8,6 @@ import (
 	"errors"
 	"slices"
 	"sort"
-	"time"
 
 	"light-media/internal/catalog"
 	"light-media/internal/subscriptionquality"
@@ -235,7 +234,7 @@ func (a *App) prepareSubscriptionCompletion(ctx context.Context, j Job, key stri
 		return e
 	}
 	if check.Cancel {
-		return a.recordSubscriptionCheck(ctx, s, "完成被 "+check.Source+" 否决："+check.Reason, nil, time.Time{})
+		return a.recordSubscriptionCheck(ctx, s, "完成被 "+check.Source+" 否决："+check.Reason, nil)
 	}
 	input := subscriptionCompletionInput{Version: 1, Source: source, Accepted: accepted}
 	if basis != nil {

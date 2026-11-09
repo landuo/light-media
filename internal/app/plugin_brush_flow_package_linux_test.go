@@ -130,7 +130,7 @@ func TestBrushFlowInstalledAMD64Package(t *testing.T) {
 	}))
 	t.Cleanup(tracker.Close)
 	settings := a.Settings()
-	settings.Sites = []SiteConfig{{Config: sites.Config{ID: "owned-brush-site", Name: "Owned brush site", Kind: "jiayuan", BaseURL: tracker.URL, Cookie: "owned=brush-fixture"}, Enabled: true, DailyBudget: 50}}
+	settings.Sites = []SiteConfig{{Config: sites.Config{ID: "owned-brush-site", Name: "Owned brush site", Kind: "jiayuan", BaseURL: tracker.URL, Cookie: "owned=brush-fixture"}, Enabled: true}}
 	settings.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "owned-brush-qb", Kind: "qbittorrent", BaseURL: qb.URL}, Name: "Owned qB", DownloadPath: downloadRoot}}
 	settings.AllowedRoots = []string{downloadRoot}
 	if err := a.saveSettings(t.Context(), settings); err != nil {

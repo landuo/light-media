@@ -46,7 +46,7 @@ func (a *App) finishJob(ctx context.Context, j Job, state, code, message string,
 		}
 	}
 	var events []json.RawMessage
-	if j.Kind == "import" || j.Kind == "reorganize_cleanup" || j.Kind == "quality_cleanup" {
+	if j.Kind == "import" || j.Kind == "organize_file" || j.Kind == "reorganize_cleanup" || j.Kind == "quality_cleanup" {
 		events, e = flushOriginalScrapeBatchTx(ctx, tx, originalScrapeBatchID(j), false)
 		if e != nil {
 			return false, e

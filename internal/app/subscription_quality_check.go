@@ -102,7 +102,7 @@ func (a *App) checkQualitySubscription(ctx context.Context, j Job, s Subscriptio
 		releaseDate = info.Media.ReleaseDate
 	}
 	if s.Media.MediaType == "movie" && releaseDate > time.Now().In(shanghai()).Format("2006-01-02") {
-		return a.recordSubscriptionCheck(ctx, s, "电影尚未到上映日期，保持洗版订阅", metadataDates, time.Time{})
+		return a.recordSubscriptionCheck(ctx, s, "电影尚未到上映日期，保持洗版订阅", metadataDates)
 	}
 	settings := a.Settings()
 	request := SearchRequest{originalSubscription: &s, originalSearchInfo: info, Query: s.Keyword, MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: available, Policy: s.Policy, SiteIDs: subscriptionSiteControls(settings.RSSSites, s.SiteIDs), Mappings: s.Mappings, AllowEarly: s.AllowEarly, EpisodeDates: dates}
@@ -136,7 +136,7 @@ func (a *App) checkQualitySubscription(ctx context.Context, j Job, s Subscriptio
 }
 
 func (a *App) recordQualitySubscriptionCheck(ctx context.Context, job Job, s Subscription, reason string, dates []string) error {
-	if err := a.recordSubscriptionCheck(ctx, s, reason, dates, time.Time{}); err != nil {
+	if err := a.recordSubscriptionCheck(ctx, s, reason, dates); err != nil {
 		return err
 	}
 	return a.requestPausedQualityCompletion(ctx, job, s)

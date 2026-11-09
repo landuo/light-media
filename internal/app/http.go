@@ -518,7 +518,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		out, e = a.assetAPI(w, r, strings.TrimPrefix(p, "assets/"))
 	case p == "jobs" && method == "GET":
 		var jobs []Job
-		jobs, e = a.jobs(ctx, 100)
+		jobs, e = a.jobQueue(ctx)
 		if e == nil {
 			out, e = a.jobViews(ctx, jobs)
 		}
@@ -845,9 +845,6 @@ func validateSettings(c Settings) error {
 			if e := validateManagedSiteConfig(s.Config); e != nil {
 				return bad("INVALID_SITE", e.Error())
 			}
-		}
-		if s.DailyBudget < 0 || s.DailyBudget > 10000 {
-			return bad("INVALID_BUDGET", "站点每日预算无效")
 		}
 	}
 	for _, d := range c.Downloaders {

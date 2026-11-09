@@ -114,7 +114,7 @@ func TestSiteImportMoviePilotNumericIDsAndSpecificDomain(t *testing.T) {
 func TestSiteImportSameOriginMigratesLegacyAdapterWithoutChangingID(t *testing.T) {
 	a := newTestApp(t)
 	// Legacy configurations could select a classic adapter for another tracker.
-	old := SiteConfig{Config: sites.Config{ID: "legacy-site", Kind: "ubits", Name: "旧名称", BaseURL: "https://tracker.example.com", Cookie: "synthetic-legacy-cookie"}, Enabled: true, DailyBudget: 888}
+	old := SiteConfig{Config: sites.Config{ID: "legacy-site", Kind: "ubits", Name: "旧名称", BaseURL: "https://tracker.example.com", Cookie: "synthetic-legacy-cookie"}, Enabled: true}
 	a.cfgMu.Lock()
 	a.config.Sites = []SiteConfig{old}
 	a.cfgMu.Unlock()
@@ -123,14 +123,14 @@ func TestSiteImportSameOriginMigratesLegacyAdapterWithoutChangingID(t *testing.T
 		t.Fatal("same-origin legacy adapter was duplicated during migration")
 	}
 	stored := a.Settings().Sites[0]
-	if stored.ID != old.ID || stored.Kind != "nexusphp" || stored.Cookie != old.Cookie || stored.DailyBudget != old.DailyBudget {
+	if stored.ID != old.ID || stored.Kind != "nexusphp" || stored.Cookie != old.Cookie {
 		t.Fatal("same-origin migration lost stable identity or credentials")
 	}
 }
 
 func TestManagedSiteEditKeepsLegacySameOriginCredentials(t *testing.T) {
 	a := newTestApp(t)
-	old := SiteConfig{Config: sites.Config{ID: "legacy-site", Kind: "ubits", Name: "旧名称", BaseURL: "https://tracker.example.com/", Cookie: "synthetic-legacy-cookie"}, Enabled: true, DailyBudget: 888}
+	old := SiteConfig{Config: sites.Config{ID: "legacy-site", Kind: "ubits", Name: "旧名称", BaseURL: "https://tracker.example.com/", Cookie: "synthetic-legacy-cookie"}, Enabled: true}
 	a.cfgMu.Lock()
 	a.config.Sites = []SiteConfig{old}
 	a.cfgMu.Unlock()

@@ -487,7 +487,7 @@ func newRecognitionSelectionFixture(t *testing.T, configure ...func(*recognition
 			t.Fatal(pathErr)
 		}
 	}
-	settings.Sites = []SiteConfig{{Config: sites.Config{ID: "continuation-site", Name: "合成站点", Kind: "jiayuan", BaseURL: site.URL, Cookie: "synthetic-cookie"}, Enabled: true, DailyBudget: 10000}}
+	settings.Sites = []SiteConfig{{Config: sites.Config{ID: "continuation-site", Name: "合成站点", Kind: "jiayuan", BaseURL: site.URL, Cookie: "synthetic-cookie"}, Enabled: true}}
 	settings.RSSSites = []string{"continuation-site"}
 	if err := a.saveSettings(ctx, settings); err != nil {
 		t.Fatal(err)

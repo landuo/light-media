@@ -18,7 +18,16 @@ import {
   groupTransferQueue,
   type HistoryRow,
   type HistorySort,
+  type TransferQueueGroup,
 } from '../features/transfer-history';
+
+const preparationLabels = {
+  queued: '等待准备',
+  running: '正在准备整理',
+  retry_wait: '等待重试',
+  waiting_paused: '已暂停',
+};
+type QueuePreparation = { id: string; paths: string[]; state: keyof typeof preparationLabels };
 
 // Legacy page events remain compatible; reorganization now opens in place.
 defineEmits<{ organize: [paths: string[]]; job: [id: string] }>();
@@ -48,6 +57,7 @@ const query = ref(initialState.search),
   queueError = ref(''),
   queueCancelling = ref(''),
   queueGroups = ref<any[]>([]),
+  queuePreparations = ref<QueuePreparation[]>([]),
   activeQueue = ref('');
 const items = computed(() => result.value?.items || []),
   total = computed(() => result.value?.total || 0),
@@ -82,12 +92,15 @@ const queueFiles = computed(() => queueGroups.value.flatMap((group) => group.fil
     queueGroups.value.find((group) => group.id === activeQueue.value),
   );
 let generation = 0,
+  queueGeneration = 0,
   timer: number,
   searchTimer: number;
 function isQueueComplete(status: string) {
   return ['success', 'imported', 'already_imported', 'completed', 'succeeded'].includes(status);
 }
 function queueStatusLabel(file: any) {
+  const state = transferQueueState(file);
+  if (state === 'running' && file.recognizing) return '正在识别';
   const labels: Record<string, string> = {
     waiting: '等待中',
     running: '正在整理',
@@ -96,7 +109,7 @@ function queueStatusLabel(file: any) {
     cancelled: '已取消',
     unknown: '未知',
   };
-  return labels[transferQueueState(file)];
+  return labels[state];
 }
 function viewState() {
   return {
@@ -270,17 +283,37 @@ function numbers(item: HistoryRow) {
     : '';
 }
 async function loadQueue() {
+  const run = ++queueGeneration;
   queueLoading.value = true;
   queueError.value = '';
   try {
-    const next = await api('/history/transfers/queue');
-    queueGroups.value = groupTransferQueue(next.groups || []);
+    const next = await api<{ groups: TransferQueueGroup[]; preparations?: QueuePreparation[] }>(
+      '/history/transfers/queue',
+    );
+    if (run !== queueGeneration) return;
+    const preparations = next.preparations || [];
+    const preparationEnded = queuePreparations.value.some(
+      ({ id }) => !preparations.some((preparation) => preparation.id === id),
+    );
+    const groups = groupTransferQueue(next.groups || []);
+    const activeFiles = new Set(
+      groups.flatMap((group) => group.files.map((file) => file.job_id || file.id)),
+    );
+    const fileEnded = queueFiles.value.some((file) => !activeFiles.has(file.job_id || file.id));
+    queuePreparations.value = preparations;
+    queueGroups.value = groups;
     if (!queueGroups.value.some((group) => group.id === activeQueue.value))
       activeQueue.value = queueGroups.value[0]?.id || '';
+    if (
+      (preparationEnded || fileEnded) &&
+      !loading.value &&
+      !items.value.some((item) => item.status === 'pending')
+    )
+      void load(true);
   } catch (e) {
-    queueError.value = errorText(e);
+    if (run === queueGeneration) queueError.value = errorText(e);
   } finally {
-    queueLoading.value = false;
+    if (run === queueGeneration) queueLoading.value = false;
   }
 }
 async function showQueue() {
@@ -316,12 +349,13 @@ onMounted(() => {
   document.addEventListener('keydown', escape);
   timer = window.setInterval(() => {
     if (document.hidden) return;
-    if (queueOpen.value) void loadQueue();
+    if (queueOpen.value && !queueLoading.value) void loadQueue();
     if (items.value.some((item) => item.status === 'pending')) void load(true);
   }, 3000);
 });
 onUnmounted(() => {
   generation++;
+  queueGeneration++;
   clearInterval(timer);
   clearTimeout(searchTimer);
   window.removeEventListener('hashchange', restoreURL);
@@ -673,6 +707,19 @@ onUnmounted(() => {
           <button class="th-close" aria-label="关闭整理队列" @click="queueOpen = false">×</button>
         </header>
         <p v-if="queueError" class="th-error th-notice" role="alert">{{ queueError }}</p>
+        <div v-if="queuePreparations.length" class="th-queue-body">
+          <div v-for="preparation in queuePreparations" :key="preparation.id" class="th-queue-file">
+            <div class="th-queue-file-name">
+              {{ preparation.paths[0] }}
+              <small v-if="preparation.paths.length > 1"
+                >共 {{ preparation.paths.length }} 个选中路径</small
+              >
+            </div>
+            <span class="th-status" :class="preparation.state">
+              {{ preparationLabels[preparation.state] }}
+            </span>
+          </div>
+        </div>
         <div v-if="queueGroups.length" class="th-queue-body">
           <progress :value="completedQueue" :max="queueFiles.length || 1" />
           <p class="th-queue-count">{{ completedQueue }} / {{ queueFiles.length }}</p>
@@ -733,7 +780,9 @@ onUnmounted(() => {
             >
           </div>
         </div>
-        <p v-else class="th-empty">{{ queueLoading ? '加载中…' : '没有正在整理的任务' }}</p>
+        <p v-else-if="!queuePreparations.length" class="th-empty">
+          {{ queueLoading ? '加载中…' : '没有正在整理的任务' }}
+        </p>
       </section>
     </div>
   </section>
@@ -1196,6 +1245,9 @@ progress {
 }
 .th-queue-body {
   padding: 18px 22px 25px;
+}
+.th-queue-body + .th-queue-body {
+  padding-top: 0;
 }
 .th-queue-count {
   text-align: right;

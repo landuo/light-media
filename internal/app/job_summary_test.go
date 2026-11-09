@@ -305,3 +305,28 @@ func TestJobSummaryHTTPListAndDetailStayConsistent(t *testing.T) {
 		t.Fatalf("HTTP response omitted real task summary: %+v", detailBody.Data.Job.Summary)
 	}
 }
+
+func TestJobQueueKeepsSubscriptionVisibleDuringBulkOrganize(t *testing.T) {
+	a := newTestApp(t)
+	cookie := setupTestAdmin(t, a)
+	running := summaryJob(t, a, "subscription", map[string]any{"id": "currently-checking"}, "subscriptions")
+	waiting := summaryJob(t, a, "subscription", map[string]any{"id": "waiting-for-check"}, "subscriptions")
+	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='running' WHERE id=?`, running.ID); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.Store.DB.Exec(`WITH RECURSIVE seq(i) AS (VALUES(1) UNION ALL SELECT i+1 FROM seq WHERE i<125)
+		INSERT INTO jobs(id,workflow_id,kind,state,payload,run_at,created_at,updated_at)
+		SELECT 'new-file-'||i,'bulk-organize','import',CASE WHEN i%2=0 THEN 'failed' ELSE 'queued' END,CAST('{}' AS BLOB),0,?,? FROM seq`, now(), now()); err != nil {
+		t.Fatal(err)
+	}
+	response := callTest(t, a.Handler(), "GET", "/api/jobs", "", cookie, "")
+	var body struct {
+		Data []jobView `json:"data"`
+	}
+	if err := json.Unmarshal(response.Body.Bytes(), &body); err != nil || response.Code != 200 {
+		t.Fatalf("jobs list status=%d error=%v", response.Code, err)
+	}
+	if len(body.Data) != 100 || body.Data[0].ID != running.ID || body.Data[1].ID != waiting.ID {
+		t.Fatal("bulk organizing tasks hid a running or waiting subscription")
+	}
+}

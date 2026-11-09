@@ -3,12 +3,94 @@ package app
 import (
 	"context"
 	"encoding/json"
+	"net/http"
 	"os"
+	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 
+	"light-media/internal/catalog"
 	"light-media/internal/plugins"
 )
+
+func TestManualTVTransferRecognitionUsesMoviePilotMatcher(t *testing.T) {
+	for _, sample := range []struct {
+		file, name, title, premiere, seasonDate string
+		id, season, episode                     int
+		legacy                                  map[string]catalog.Page
+		searchResults                           string
+	}{
+		{
+			file: "[老友记 第四季].Friends.1997.S04E21.2160p.MAX.WEB-DL.DoVi.HDR10.H265.10bit.DDP5.1-UBWEB.mkv",
+			name: "Friends", title: "老友记", premiere: "1994-09-22", seasonDate: "1997-09-25",
+			id: 1668, season: 4, episode: 21,
+			legacy: map[string]catalog.Page{
+				"Friends 1997": {Page: 1, TotalPages: 1},
+				"老友记 第四季":      {Page: 1, TotalPages: 1},
+				"Friends":      {Page: 1, TotalPages: 6},
+			},
+			searchResults: `[{"id":1668,"name":"老友记","original_name":"Friends","first_air_date":"1994-09-22"}]`,
+		},
+		{
+			file: "Fallout.S02E01.2160p.BluRay.DoVi.x265.10bit.Atmos.TrueHD7.1-WiKi.mkv",
+			name: "Fallout", title: "辐射", premiere: "2024-04-10", seasonDate: "2025-12-16",
+			id: 106379, season: 2, episode: 1,
+			legacy: map[string]catalog.Page{"Fallout": {
+				Page: 1, TotalPages: 1, TotalResults: 2, Results: []catalog.Media{
+					{ID: 106379, MediaType: "tv", Title: "辐射", OriginalTitle: "Fallout", Year: 2024},
+					{ID: 32366, MediaType: "tv", Title: "Fallout", OriginalTitle: "Fallout", Year: 2006},
+				},
+			}},
+			searchResults: `[{"id":32366,"name":"Fallout","original_name":"Fallout","first_air_date":"2006-01-01"},{"id":106379,"name":"辐射","original_name":"Fallout","first_air_date":"2024-04-10"}]`,
+		},
+	} {
+		t.Run(sample.name, func(t *testing.T) {
+			a, source, target := importTestApp(t)
+			for name, page := range sample.legacy {
+				importCache(t, a, "directory-identify:tv:"+name, page)
+			}
+			detail, err := json.Marshal(map[string]any{
+				"id": sample.id, "name": sample.title, "original_name": sample.name, "first_air_date": sample.premiere,
+				"seasons": []map[string]any{{"season_number": sample.season, "air_date": sample.seasonDate, "episode_count": sample.episode}},
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			id := strconv.Itoa(sample.id)
+			searches := 0
+			originalHostMediaInstallOwnedTransport(t, a, func(r *http.Request) (int, string) {
+				switch r.URL.Path {
+				case "/3/search/tv":
+					searches++
+					if r.URL.Query().Get("query") != sample.name || r.URL.Query().Get("first_air_date_year") != "" {
+						t.Errorf("expected MoviePilot clean title and season-date lookup, got %s", r.URL.RawQuery)
+					}
+					return http.StatusOK, `{"results":` + sample.searchResults + `}`
+				case "/3/tv/" + id:
+					return http.StatusOK, string(detail)
+				case "/3/tv/" + id + "/images":
+					return http.StatusOK, `{}`
+				default:
+					t.Errorf("unexpected TV recognition endpoint: %s", r.URL.Path)
+					return http.StatusNotFound, `{}`
+				}
+			})
+			path := filepath.Join(source, "电视剧", sample.file)
+			importWrite(t, path, []byte("isolated TV transfer identity fixture"))
+			got, err := a.prepareManualImport(context.Background(), ImportRequest{
+				Manual: true, TargetPath: target, MediaType: "tv", Files: []ImportFileRequest{{Path: path}},
+			})
+			if err != nil || got.TMDBID != int64(sample.id) || searches != 1 {
+				t.Fatalf("MoviePilot recognition picked %d after %d searches: %v", got.TMDBID, searches, err)
+			}
+			f := got.Files[0]
+			if f.Season != sample.season || len(f.Episodes) != 1 || f.Episodes[0] != sample.episode {
+				t.Fatalf("season or episode changed during recognition: %+v", f)
+			}
+		})
+	}
+}
 
 // Expected recognition/image ordering comes from the pinned ordinary task
 // prefix, not a fabricated successful import response.

@@ -186,8 +186,8 @@ func TestSeedRescueInstalledLinuxAMD64ManualDownload(t *testing.T) {
 	t.Cleanup(qb.Close)
 	settings := a.Settings()
 	settings.Sites = []SiteConfig{
-		{Config: sites.Config{ID: "owned-seed-rescue-target", Name: targetName, Kind: "jiayuan", BaseURL: target.URL, Cookie: "session=owned-seed-rescue-target"}, Enabled: true, DailyBudget: 20},
-		{Config: sites.Config{ID: "owned-seed-rescue-source", Name: sourceName, Kind: "ubits", BaseURL: sourceURL, Cookie: "session=owned-seed-rescue-source"}, Enabled: true, DailyBudget: 20},
+		{Config: sites.Config{ID: "owned-seed-rescue-target", Name: targetName, Kind: "jiayuan", BaseURL: target.URL, Cookie: "session=owned-seed-rescue-target"}, Enabled: true},
+		{Config: sites.Config{ID: "owned-seed-rescue-source", Name: sourceName, Kind: "ubits", BaseURL: sourceURL, Cookie: "session=owned-seed-rescue-source"}, Enabled: true},
 	}
 	settings.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "owned-seed-rescue-qb", Kind: "qbittorrent", BaseURL: qb.URL}, Name: downloaderName, DownloadPath: downloadRoot}}
 	settings.AllowedRoots = []string{downloadRoot}

@@ -79,7 +79,7 @@ func workflowJSON(w http.ResponseWriter, v any) {
 }
 func workflowConfigure(t *testing.T, a *App, siteURL, downloaderURL string) {
 	t.Helper()
-	a.config.Sites = []SiteConfig{{Config: sites.Config{ID: "fixture-site", Name: "fixture", Kind: "ubits", BaseURL: siteURL, Cookie: "fixture-cookie"}, Enabled: true, DailyBudget: 10000}}
+	a.config.Sites = []SiteConfig{{Config: sites.Config{ID: "fixture-site", Name: "fixture", Kind: "ubits", BaseURL: siteURL, Cookie: "fixture-cookie"}, Enabled: true}}
 	a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "fixture-qb", Kind: "qb", BaseURL: downloaderURL}, DownloadPath: "/downloads"}}
 	a.config.DefaultDownloader = "fixture-qb"
 	a.config.DefaultRoot = "root"
@@ -437,7 +437,7 @@ func TestSiteLockWaitRechecksSubscriptionBeforeBudget(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	site := SiteConfig{Config: sites.Config{ID: "locked-site", Kind: "ubits", BaseURL: "http://127.0.0.1:1", Cookie: "fixture"}, Enabled: true, DailyBudget: 1000}
+	site := SiteConfig{Config: sites.Config{ID: "locked-site", Kind: "ubits", BaseURL: "http://127.0.0.1:1", Cookie: "fixture"}, Enabled: true}
 	lock := make(chan struct{}, 1)
 	lock <- struct{}{}
 	a.siteLocks.Store(site.ID, lock)

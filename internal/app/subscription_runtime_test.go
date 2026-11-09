@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"slices"
 	"testing"
@@ -263,39 +262,6 @@ func TestPausedGuardAndContextFailBeforeNetwork(t *testing.T) {
 		t.Fatal("paused subscription consumed quota")
 	}
 }
-func TestQuotaDeferralPersistsActualNextCheck(t *testing.T) {
-	a := subscriptionTestApp(t)
-	ctx := context.Background()
-	s, e := a.saveSubscription(ctx, "", subscriptionRequest(t))
-	if e != nil {
-		t.Fatal(e)
-	}
-	used := time.Now().Add(-time.Hour).Unix()
-	_, e = a.Store.DB.ExecContext(ctx, `INSERT INTO site_usage VALUES(?,?)`, "mteam", used)
-	if e != nil {
-		t.Fatal(e)
-	}
-	reset := a.quotaReset(ctx, []string{"mteam"})
-	if reset.Unix() != used+24*3600+2 {
-		t.Fatalf("rolling quota reset %v", reset)
-	}
-	if e = a.recordSubscriptionCheck(ctx, s, "预算不足，延期检查", nil, reset); e != nil {
-		t.Fatal(e)
-	}
-	var latest Subscription
-	if e = a.Store.Get(ctx, "subscription", s.ID, &latest); e != nil {
-		t.Fatal(e)
-	}
-	next, e := time.Parse(time.RFC3339Nano, latest.NextCheck)
-	if e != nil || !next.Equal(reset) {
-		t.Fatalf("next_check not actual deferral %+v %v", latest, e)
-	}
-	b, _ := json.Marshal(latest)
-	if string(b) == "" {
-		t.Fatal("serialization failed")
-	}
-}
-
 func TestPauseDoesNotRequireMetadataProvider(t *testing.T) {
 	a := subscriptionTestApp(t)
 	ctx := context.Background()

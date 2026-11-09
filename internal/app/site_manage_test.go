@@ -16,7 +16,7 @@ import (
 func TestManagedSiteCRUDProtectsCredentialsAndAdaptation(t *testing.T) {
 	a := newTestApp(t)
 	ctx := context.Background()
-	s := SiteConfig{Config: sites.Config{Kind: "jiayuan", Name: "家园", BaseURL: "https://hdhome.org", Cookie: "synthetic-cookie-not-live"}, Enabled: true, DailyBudget: 600}
+	s := SiteConfig{Config: sites.Config{Kind: "jiayuan", Name: "家园", BaseURL: "https://hdhome.org", Cookie: "synthetic-cookie-not-live"}, Enabled: true}
 	result, e := a.saveManagedSite(ctx, s)
 	if e != nil {
 		t.Fatal(e)
@@ -175,6 +175,9 @@ func TestManagedConnectionsHTTPCRUDAndSecretResponses(t *testing.T) {
 	w := request("GET", "/api/sites/manage", "")
 	if !strings.Contains(w.Body.String(), `"credential_configured":true`) || !strings.Contains(w.Body.String(), `"stats":null`) {
 		t.Fatal("missing observable configuration", w.Body)
+	}
+	if strings.Contains(w.Body.String(), `"daily_budget"`) || strings.Contains(w.Body.String(), `"usage_24h"`) {
+		t.Fatal("management API still exposes obsolete request budget")
 	}
 	request("POST", "/api/sites/manage", `{"id":"http-home","kind":"jiayuan","name":"家园 编辑","base_url":"https://hdhome.org","enabled":false,"daily_budget":600}`)
 	request("GET", "/api/sites/manage/http-home/history", "")

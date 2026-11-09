@@ -156,6 +156,14 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 				inferred, err = a.originalManualTransferIdentity(ctx, request, file, scanned)
 			} else {
 				inferred, err = a.directoryFileIdentity(ctx, DirectoryRule{MediaType: "mixed", Mode: request.Mode}, scanned)
+				if request.Manual && manualTVRecognitionFallback(request, file, scanned, err) {
+					matched, fallbackErr := a.originalManualTransferIdentity(ctx, request, file, scanned)
+					if fallbackErr == nil {
+						inferred, err = matched, nil
+					} else if ctx.Err() != nil {
+						err = ctx.Err()
+					}
+				}
 			}
 			if err != nil {
 				return request, err

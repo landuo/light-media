@@ -25,7 +25,7 @@ func siteImportJSON(t *testing.T, value any) json.RawMessage {
 func TestSiteImportMoviePilotNativeArrayAndPartialResults(t *testing.T) {
 	a := newTestApp(t)
 	ctx := context.Background()
-	old := SiteConfig{Config: sites.Config{ID: "existing-home", Kind: "jiayuan", Name: "old home", BaseURL: "https://hdhome.org", Cookie: "synthetic-original-cookie"}, Enabled: true, DailyBudget: 900}
+	old := SiteConfig{Config: sites.Config{ID: "existing-home", Kind: "jiayuan", Name: "old home", BaseURL: "https://hdhome.org", Cookie: "synthetic-original-cookie"}, Enabled: true}
 	if _, err := a.saveManagedSite(ctx, old); err != nil {
 		t.Fatal(err)
 	}
@@ -34,7 +34,7 @@ func TestSiteImportMoviePilotNativeArrayAndPartialResults(t *testing.T) {
 	}
 	entries := []map[string]any{
 		{"name": "馒头", "domain": "m-team.cc", "url": "https://kp.m-team.cc/", "apikey": "synthetic-mteam-key", "cookie": nil, "token": nil, "ua": "fixture-browser", "is_active": true, "pri": 1, "timeout": 15, "note": map[string]any{"unused": "fixture"}},
-		{"name": "憨憨", "domain": "hhanclub.net", "url": "https://hhanclub.net", "cookie": "synthetic-hhan-cookie", "is_active": true},
+		{"name": "憨憨", "domain": "hhanclub.net", "url": "https://hhanclub.net", "cookie": "synthetic-hhan-cookie", "is_active": true, "_light_media": map[string]any{"version": 1, "daily_budget": 600}},
 		{"name": "UBits", "domain": "ubits.club", "url": "https://ubits.club", "cookie": "synthetic-ubits-cookie", "is_active": true},
 		{"name": "家园新名称", "domain": "hdhome.org", "url": "https://hdhome.org/", "cookie": "synthetic-replaced-cookie", "is_active": false},
 		{"name": "1PTBA", "domain": "1ptba.com", "url": "https://1ptba.com", "cookie": "synthetic-1ptba-cookie", "is_active": true},
@@ -52,7 +52,7 @@ func TestSiteImportMoviePilotNativeArrayAndPartialResults(t *testing.T) {
 		t.Fatal("generic site or working MoviePilot options were not imported")
 	}
 	home := a.Settings().Sites[0]
-	if home.ID != old.ID || home.Cookie != "synthetic-replaced-cookie" || home.Enabled || home.DailyBudget != 900 || home.Name != "家园新名称" {
+	if home.ID != old.ID || home.Cookie != "synthetic-replaced-cookie" || home.Enabled || home.Name != "家园新名称" {
 		t.Fatal("existing site identity/settings were not preserved correctly")
 	}
 	if a.Settings().Sites[1].BaseURL != "https://api.m-team.cc" {
@@ -81,8 +81,8 @@ func TestSiteExportImportRoundTripAuthenticationAndPrivateResponses(t *testing.T
 	a := newTestApp(t)
 	ctx := context.Background()
 	for _, config := range []SiteConfig{
-		{Config: sites.Config{ID: "stable-home", Kind: "jiayuan", Name: "家园", BaseURL: "https://hdhome.org", Cookie: "synthetic-roundtrip-cookie"}, Enabled: true, DailyBudget: 721},
-		{Config: sites.Config{ID: "stable-mteam", Kind: "mteam", Name: "馒头", BaseURL: "https://api.m-team.io", APIKey: "synthetic-roundtrip-key"}, Enabled: false, DailyBudget: 431},
+		{Config: sites.Config{ID: "stable-home", Kind: "jiayuan", Name: "家园", BaseURL: "https://hdhome.org", Cookie: "synthetic-roundtrip-cookie"}, Enabled: true},
+		{Config: sites.Config{ID: "stable-mteam", Kind: "mteam", Name: "馒头", BaseURL: "https://api.m-team.io", APIKey: "synthetic-roundtrip-key"}, Enabled: false},
 	} {
 		if _, err := a.saveManagedSite(ctx, config); err != nil {
 			t.Fatal(err)
@@ -102,6 +102,9 @@ func TestSiteExportImportRoundTripAuthenticationAndPrivateResponses(t *testing.T
 	exported := callTest(t, handler, "GET", "/api/sites/export", "", cookie, "")
 	if exported.Code != 200 || exported.Header().Get("Cache-Control") != "no-store" || !strings.HasPrefix(exported.Header().Get("Content-Disposition"), `attachment; filename="light-media-sites-`) {
 		t.Fatal("export lacks private attachment response")
+	}
+	if strings.Contains(exported.Body.String(), "daily_budget") || strings.Contains(exported.Body.String(), "_light_media") {
+		t.Fatal("export still contains obsolete request budget")
 	}
 	var document []json.RawMessage
 	if err := json.Unmarshal(exported.Body.Bytes(), &document); err != nil || len(document) != len(a.Settings().Sites) {
@@ -187,7 +190,7 @@ func TestSiteImportOriginAndCredentialBinding(t *testing.T) {
 func TestSiteImportRejectsDuplicatesWithoutOverwritingOtherSites(t *testing.T) {
 	a := newTestApp(t)
 	ctx := context.Background()
-	other := SiteConfig{Config: sites.Config{ID: "untouched", Kind: "ubits", Name: "keep", BaseURL: "https://ubits.club", Cookie: "synthetic-untouched-cookie"}, Enabled: true, DailyBudget: 900}
+	other := SiteConfig{Config: sites.Config{ID: "untouched", Kind: "ubits", Name: "keep", BaseURL: "https://ubits.club", Cookie: "synthetic-untouched-cookie"}, Enabled: true}
 	if _, err := a.saveManagedSite(ctx, other); err != nil {
 		t.Fatal(err)
 	}
@@ -204,8 +207,8 @@ func TestSiteImportRejectsDuplicatesWithoutOverwritingOtherSites(t *testing.T) {
 
 func TestSiteImportNativeMultipleOriginsRoundTrip(t *testing.T) {
 	original := []SiteConfig{
-		{Config: sites.Config{ID: "from-cc", Kind: "mteam", Name: "馒头 CC", BaseURL: "https://api.m-team.cc", APIKey: "synthetic-cc-key"}, SiteOptions: SiteOptions{Domain: "m-team.cc"}, Enabled: true, DailyBudget: 821},
-		{Config: sites.Config{ID: "from-io", Kind: "mteam", Name: "馒头 IO", BaseURL: "https://api.m-team.io", APIKey: "synthetic-io-key"}, SiteOptions: SiteOptions{Domain: "m-team.io"}, Enabled: false, DailyBudget: 532},
+		{Config: sites.Config{ID: "from-cc", Kind: "mteam", Name: "馒头 CC", BaseURL: "https://api.m-team.cc", APIKey: "synthetic-cc-key"}, SiteOptions: SiteOptions{Domain: "m-team.cc"}, Enabled: true},
+		{Config: sites.Config{ID: "from-io", Kind: "mteam", Name: "馒头 IO", BaseURL: "https://api.m-team.io", APIKey: "synthetic-io-key"}, SiteOptions: SiteOptions{Domain: "m-team.io"}, Enabled: false},
 	}
 	raw := siteImportJSON(t, siteExportDocument{Format: siteExportFormat, Version: 1, Sites: original})
 	a := newTestApp(t)

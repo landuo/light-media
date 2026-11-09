@@ -188,7 +188,7 @@ func TestBrushFlowInstalledAMD64LongPass(t *testing.T) {
 	}))
 	t.Cleanup(qb.Close)
 	settings := a.Settings()
-	settings.Sites = []SiteConfig{{Config: sites.Config{ID: "owned-stream-site", Name: "Owned stream site", Kind: "jiayuan", BaseURL: tracker.URL, Cookie: "owned=stream-fixture"}, Enabled: true, DailyBudget: 80}}
+	settings.Sites = []SiteConfig{{Config: sites.Config{ID: "owned-stream-site", Name: "Owned stream site", Kind: "jiayuan", BaseURL: tracker.URL, Cookie: "owned=stream-fixture"}, Enabled: true}}
 	settings.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "owned-stream-qb", Kind: "qbittorrent", BaseURL: qb.URL}, Name: "Owned stream qB", DownloadPath: downloadRoot}}
 	settings.AllowedRoots = []string{downloadRoot}
 	if err := a.saveSettings(t.Context(), settings); err != nil {

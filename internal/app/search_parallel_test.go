@@ -19,7 +19,7 @@ import (
 )
 
 func parallelSearchSite(key, baseURL string) SiteConfig {
-	return SiteConfig{Config: sites.Config{ID: key, Kind: "ubits", Name: key, BaseURL: baseURL, Cookie: "synthetic-search-cookie"}, Enabled: true, DailyBudget: 100}
+	return SiteConfig{Config: sites.Config{ID: key, Kind: "ubits", Name: key, BaseURL: baseURL, Cookie: "synthetic-search-cookie"}, Enabled: true}
 }
 
 // The first configured site deliberately waits until the second site's results

@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"light-media/internal/catalog"
 )
@@ -28,7 +29,7 @@ func TestManualOrganizeDirectoryQueuePreparesAndReplays(t *testing.T) {
 	originalHostMediaInstallOwnedTransport(t, a, metadataFixture)
 	selected := filepath.Join(source, "电视剧")
 	season := catalog.Season{ID: 20, SeriesID: identity.ID, SeasonNumber: 2}
-	for _, episode := range []int{3, 4} {
+	for _, episode := range []int{3, 4, 5} {
 		season.Episodes = append(season.Episodes, catalog.Episode{ID: int64(200 + episode), SeasonNumber: 2, EpisodeNumber: episode})
 		path := filepath.Join(selected, "Original Show", fmt.Sprintf("Original.Show.S02E%02d.mkv", episode))
 		importWrite(t, path, []byte("isolated manual directory queue test"))
@@ -57,6 +58,21 @@ func TestManualOrganizeDirectoryQueuePreparesAndReplays(t *testing.T) {
 	if metadataRequests != 0 {
 		t.Fatalf("directory submit did %d metadata lookups before the worker claimed it", metadataRequests)
 	}
+	readQueue := func(app *App) []organizeQueuePreparation {
+		t.Helper()
+		value, err := app.organizeQueue(ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var queue struct {
+			Preparations []organizeQueuePreparation `json:"preparations"`
+		}
+		historyParityDecode(t, value, &queue)
+		return queue.Preparations
+	}
+	if entries := readQueue(a); len(entries) != 1 || entries[0].ID != jobs[0].ID || entries[0].State != "queued" || len(entries[0].Paths) != 1 || entries[0].Paths[0] != selected {
+		t.Fatalf("organize queue should show the selected folder before any file job exists: %+v", entries)
+	}
 	parent, err := a.claim(ctx)
 	if err != nil || parent.ID != out.Data.PreparationJobID {
 		t.Fatalf("worker did not claim preparation: %+v %v", parent, err)
@@ -65,27 +81,28 @@ func TestManualOrganizeDirectoryQueuePreparesAndReplays(t *testing.T) {
 	if err := a.safeRun(workerCtx, parent); err != nil {
 		t.Fatal(err)
 	}
-	query := `SELECT ` + jobColumns + ` FROM jobs WHERE kind='import' ORDER BY id`
-	children, err := a.queryJobs(ctx, query)
-	if err != nil || len(children) != 2 {
-		t.Fatalf("preparation should queue one import for each episode, got %+v: %v", children, err)
+	query := `SELECT ` + jobColumns + ` FROM jobs WHERE kind IN ('organize_file','import') ORDER BY id`
+	candidates, err := a.queryJobs(ctx, query)
+	if err != nil || len(candidates) != 3 || metadataRequests != 0 {
+		t.Fatalf("all episodes must be queued before metadata lookup, got %d jobs and %d lookups: %v", len(candidates), metadataRequests, err)
 	}
-	for _, child := range children {
-		if child.ParentJobID != parent.ID || child.State != "queued" {
-			t.Fatalf("expected a queued child of preparation %s, got %+v", parent.ID, child)
+	queuedIDs := map[string]bool{}
+	for _, candidate := range candidates {
+		if candidate.Kind != "organize_file" || candidate.ParentJobID != parent.ID || candidate.State != "queued" {
+			t.Fatalf("expected a waiting file job, got %s %s %s", candidate.ID, candidate.Kind, candidate.State)
 		}
-		reorgRunJob(t, a, child)
+		queuedIDs[candidate.ID] = true
 	}
-	for _, episode := range []int{3, 4} {
-		path := filepath.Join(selected, "Original Show", fmt.Sprintf("Original.Show.S02E%02d.mkv", episode))
-		result := filepath.Join(target, "测试剧集 (2024)", "Season 2", fmt.Sprintf("测试剧集 - S02E%02d - 第 %d 集.mkv", episode, episode))
-		src, srcErr := os.Stat(path)
-		dst, dstErr := os.Stat(result)
-		if srcErr != nil || dstErr != nil || !os.SameFile(src, dst) {
-			t.Fatalf("episode %d was not hardlinked to %s: source=%v destination=%v", episode, result, srcErr, dstErr)
+	groups := historyParityReadQueue(t, a)
+	if len(groups) != 3 || len(readQueue(a)) != 0 {
+		t.Fatalf("expected three waiting files and no scanning row: %+v", groups)
+	}
+	for _, group := range groups {
+		if len(group.Files) != 1 || !queuedIDs[group.Files[0].JobID] || group.Files[0].Source == "" {
+			t.Fatalf("missing waiting source file: %+v", group)
 		}
 	}
-	// Restart after the children completed while preparation is still marked running.
+	// Restart after all files are committed but before the scanning job ends.
 	settings := a.Settings()
 	if err := a.Close(); err != nil {
 		t.Fatal(err)
@@ -104,13 +121,42 @@ func TestManualOrganizeDirectoryQueuePreparesAndReplays(t *testing.T) {
 	if err := reopened.safeRun(reopened.traceContext(ctx, recovered.WorkflowID, recovered.ID, recovered.RequestID), recovered); err != nil {
 		t.Fatal(err)
 	}
-	replayed, err := reopened.queryJobs(ctx, query)
-	if err != nil || len(replayed) != len(children) {
-		t.Fatalf("preparation replay queued duplicate imports, got %+v: %v", replayed, err)
+	if changed, err := reopened.finishJob(ctx, recovered, "succeeded", "", "", time.Now().Unix()); err != nil || !changed {
+		t.Fatalf("finish preparation: changed=%v error=%v", changed, err)
 	}
-	for i, child := range replayed {
-		if child.ID != children[i].ID || child.State != "succeeded" {
-			t.Fatalf("preparation replay replaced a completed import: %+v", child)
+	if err := os.Remove(filepath.Join(selected, "Original Show", "Original.Show.S02E05.mkv")); err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < 5; i++ { // Three recognitions and two actual imports.
+		job, err := reopened.claim(ctx)
+		if err != nil || !queuedIDs[job.ID] {
+			t.Fatalf("unexpected execution after restart: %+v %v", job, err)
 		}
+		if err := reopened.safeRun(reopened.traceContext(ctx, job.WorkflowID, job.ID, job.RequestID), job); err != nil {
+			t.Fatal(err)
+		}
+		if changed, err := reopened.finishJob(ctx, job, "succeeded", "", "", time.Now().Unix()); err != nil || changed != (job.Kind == "import") {
+			t.Fatalf("finish %s: changed=%v error=%v", job.Kind, changed, err)
+		}
+	}
+	for _, episode := range []int{3, 4} {
+		path := filepath.Join(selected, "Original Show", fmt.Sprintf("Original.Show.S02E%02d.mkv", episode))
+		result := filepath.Join(target, "测试剧集 (2024)", "Season 2", fmt.Sprintf("测试剧集 - S02E%02d - 第 %d 集.mkv", episode, episode))
+		src, srcErr := os.Stat(path)
+		dst, dstErr := os.Stat(result)
+		if srcErr != nil || dstErr != nil || !os.SameFile(src, dst) {
+			t.Fatalf("episode %d was not hardlinked: source=%v destination=%v", episode, srcErr, dstErr)
+		}
+	}
+	if groups := historyParityReadQueue(t, reopened); len(groups) != 0 {
+		t.Fatalf("terminal files should leave the organize queue: %+v", groups)
+	}
+	history := historyParityReadPage(t, reopened, "")
+	states := map[string]int{}
+	for _, item := range history.Items {
+		states[item.Status]++
+	}
+	if history.Total != 3 || states["success"] != 2 || states["failed"] != 1 {
+		t.Fatalf("expected two successes and one failed file in history, got %+v", states)
 	}
 }

@@ -132,7 +132,7 @@ func invalidSiteImportText(value string, limit int) bool {
 }
 
 func decodeSiteImportEntry(raw json.RawMessage, native bool) (SiteConfig, []string, error) {
-	in := SiteConfig{Enabled: true, DailyBudget: 600}
+	in := SiteConfig{Enabled: true}
 	warnings := []string{}
 	var fields map[string]json.RawMessage
 	if json.Unmarshal(raw, &fields) != nil || fields == nil {
@@ -144,9 +144,6 @@ func decodeSiteImportEntry(raw json.RawMessage, native bool) (SiteConfig, []stri
 	config, _ := json.Marshal(fields)
 	if json.Unmarshal(config, &in) != nil {
 		return in, warnings, bad("INVALID_SITE_ENTRY", "站点字段格式无效，请核对地址、数值及开关字段")
-	}
-	if own, budget := siteImportExtension(raw); own {
-		in.DailyBudget = budget
 	}
 	if in.Proxy || in.Render {
 		warnings = append(warnings, "代理与浏览器仿真选项已保留；当前连接不启用这两项能力")
@@ -177,23 +174,7 @@ func decodeSiteImportEntry(raw json.RawMessage, native bool) (SiteConfig, []stri
 	if invalidSiteImportText(in.Cookie, 64<<10) || invalidSiteImportText(in.APIKey, 8192) || invalidSiteImportText(in.Token, 8192) || invalidSiteImportText(in.UserAgent, 8192) {
 		return in, warnings, bad("INVALID_SITE_CREDENTIAL", "站点登录信息格式无效或过长")
 	}
-	if in.DailyBudget < 0 || in.DailyBudget > 10000 {
-		return in, warnings, bad("INVALID_SITE_BUDGET", "每日请求预算须在 0 至 10000 之间")
-	}
 	return in, warnings, nil
-}
-
-func siteImportExtension(raw json.RawMessage) (bool, int) {
-	var entry struct {
-		Extension *struct {
-			Version     int `json:"version"`
-			DailyBudget int `json:"daily_budget"`
-		} `json:"_light_media"`
-	}
-	if json.Unmarshal(raw, &entry) == nil && entry.Extension != nil && entry.Extension.Version == 1 {
-		return true, entry.Extension.DailyBudget
-	}
-	return false, 0
 }
 
 func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (siteImportReport, error) {
@@ -232,7 +213,6 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 	sourceInputs := map[string]json.RawMessage{}
 	documentFingerprint := a.Store.siteIdentityMAC("import-document", []byte(raw))
 	for index, entry := range entries {
-		own, _ := siteImportExtension(entry)
 		result := siteImportResult{Index: index + 1, Name: fmt.Sprintf("第 %d 项", index+1), Status: "failed", Warnings: []string{}}
 		in, warnings, err := decodeSiteImportEntry(entry, native)
 		originalNumericID, identityErr := importedNumericSiteID(entry)
@@ -272,9 +252,6 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 				in.ID = old.ID
 				if touched[old.ID] {
 					err = bad("DUPLICATE_SITE_IMPORT", "文件中多个条目对应同一已有站点，后续条目未导入")
-				}
-				if !native && !own {
-					in.DailyBudget = old.DailyBudget
 				}
 				// A changed origin must supply its own credential; do not move the
 				// saved cookie/API key based only on a site name or adapter kind.
@@ -350,7 +327,6 @@ func (a *App) exportManagedSites(w http.ResponseWriter, r *http.Request) {
 			"proxy": s.Proxy, "render": s.Render, "public": s.Public, "note": s.Note,
 			"timeout": s.Timeout, "pri": s.Priority, "is_active": s.Enabled,
 			"limit_interval": s.LimitInterval, "limit_count": s.LimitCount, "limit_seconds": s.LimitSeconds,
-			"_light_media": map[string]any{"version": 1, "daily_budget": s.DailyBudget},
 		})
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")

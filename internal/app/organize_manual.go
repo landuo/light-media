@@ -183,6 +183,10 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 	wf := id("wf_")
 	var prepared map[string]bool
 	preparation, _ := ctx.Value(organizePreparationKey{}).(Job)
+	work, isFileJob := ctx.Value(organizeFileKey{}).(organizeFileWork)
+	if isFileJob {
+		wf = work.Job.WorkflowID
+	}
 	if preparation.ID != "" {
 		wf = preparation.WorkflowID
 		prepared, err = a.preparedOrganizeSources(ctx, preparation.ID, &out)
@@ -190,7 +194,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			return out, err
 		}
 	}
-	if !in.Preview {
+	if !in.Preview && !isFileJob && preparation.ID == "" {
 		batchID := id("scrape_batch_")
 		if err := a.Store.Put(ctx, "original_scrape_batch", batchID, originalScrapeBatch{ID: batchID}); err != nil {
 			return out, err
@@ -203,6 +207,9 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		}()
 	}
 	fail := func(source string, e error) error {
+		if isFileJob && (ctx.Err() != nil || organizeFileInterrupted(e)) {
+			return e
+		}
 		item := manualOrganizeItem{Source: source, Status: "failed", Error: a.clean(e.Error())}
 		var api *APIError
 		if errors.As(e, &api) {
@@ -220,6 +227,10 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		return nil
 	}
 	files := []importScanFile{}
+	if isFileJob {
+		files = append(files, work.File)
+		paths = nil // The directory already enumerated and froze this candidate.
+	}
 	seen := map[string]bool{}
 	for _, path := range paths {
 		if seen[path] || prepared[path] {
@@ -261,6 +272,39 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 	if len(files) > 2000 {
 		return out, bad("FILE_SELECTION_LIMIT", "一次最多整理2000个视频")
 	}
+	if preparation.ID != "" {
+		if in.EpisodeDetail != "" && format == nil && len(files) > 1 {
+			return out, bad("INVALID_EPISODE_RANGE_REQUIRES_FORMAT", "多个文件指定集数时，请填写集数定位")
+		}
+		var limit []int
+		if format != nil && in.EpisodeDetail != "" {
+			limit, err = organizeEpisodeRange(in.EpisodeDetail)
+			if err != nil {
+				return out, err
+			}
+		}
+		files = slices.DeleteFunc(files, func(file importScanFile) bool {
+			if !file.originalDirectoryPlanned && file.materialKind == "" && in.MinFilesize > 0 && file.Size <= in.MinFilesize*1024*1024 {
+				return true
+			}
+			if format == nil {
+				return false
+			}
+			match := format.FindStringSubmatch(manualOrganizeFileName(file))
+			if match == nil {
+				return true
+			}
+			if len(limit) > 0 {
+				episodes, e := organizeEpisodeRange(match[format.SubexpIndex("ep")])
+				return e == nil && (episodes[0] < limit[0] || episodes[0] > limit[len(limit)-1])
+			}
+			return false
+		})
+		if len(files) == 0 && out.Submitted == 0 && out.Failed == 0 {
+			return out, bad("REVIEW_ORGANIZE_PREPARATION", "未找到符合整理条件的文件")
+		}
+		return a.enqueueOrganizeFiles(ctx, preparation, files, prepared, out)
+	}
 	for _, file := range files {
 		err = nil
 		if prepared[file.Path] {
@@ -268,11 +312,6 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		}
 		if ctx.Err() != nil {
 			return out, ctx.Err()
-		}
-		if preparation.ID != "" {
-			if e := a.jobCancelled(ctx, preparation); e != nil {
-				return out, e
-			}
 		}
 		// The original transfer filter exempts subtitle and audio tasks from the video size threshold.
 		if !file.originalDirectoryPlanned && file.materialKind == "" && in.MinFilesize > 0 && file.Size <= in.MinFilesize*1024*1024 {
@@ -328,11 +367,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		}
 		episodes := []int{}
 		if format != nil {
-			name := filepath.Base(file.Path)
-			if file.originalItem != nil {
-				_ = json.Unmarshal(file.originalItem.Fields["name"], &name)
-			}
-			matches := format.FindStringSubmatch(name)
+			matches := format.FindStringSubmatch(manualOrganizeFileName(file))
 			if matches == nil {
 				out.Items = append(out.Items, manualOrganizeItem{Source: file.Path, Status: "skipped", Error: "不符合指定的集数定位"})
 				continue
@@ -501,6 +536,14 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 	return out, nil
 }
 
+func manualOrganizeFileName(file importScanFile) string {
+	name := filepath.Base(file.Path)
+	if file.originalItem != nil {
+		_ = json.Unmarshal(file.originalItem.Fields["name"], &name)
+	}
+	return name
+}
+
 func (a *App) recordManualOrganizeFailure(ctx context.Context, path, wf string, cause error, historySource ...string) (Job, error) {
 	plan := ImportPlan{ID: id("plan_"), WorkflowID: wf, State: "failed", CreatedAt: now(), Files: []PlanFile{{ID: id("file_"), Source: path, Status: "blocked", Reason: a.clean(cause.Error())}}}
 	if len(historySource) > 0 {
@@ -522,22 +565,34 @@ func (a *App) recordManualOrganizeFailure(ctx context.Context, path, wf string, 
 	if _, ok := ctx.Value(organizePreparationKey{}).(Job); ok {
 		payload["manual_preparation_failed"] = true
 	}
-	job, e := enqueueTx(ctx, tx, "import", payload, wf)
-	if e != nil {
-		return Job{}, e
-	}
 	code := "ORGANIZE_PREPARATION_FAILED"
 	var api *APIError
 	if errors.As(cause, &api) {
 		code = api.Code
 	}
-	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='failed',attempt=1,error_code=?,error_message=?,updated_at=? WHERE id=?`, code, a.clean(cause.Error()), now(), job.ID); e != nil {
+	reason := a.clean(cause.Error())
+	var job Job
+	work, isFileJob := ctx.Value(organizeFileKey{}).(organizeFileWork)
+	var events []json.RawMessage
+	if isFileJob {
+		job, e = promoteOrganizeFileTx(ctx, tx, work, plan.ID, []string{plan.Files[0].ID}, "failed", code, reason)
+		if e == nil {
+			events, e = flushOriginalScrapeBatchTx(ctx, tx, work.BatchID, false)
+		}
+	} else {
+		job, e = enqueueTx(ctx, tx, "import", payload, wf)
+		if e == nil {
+			_, e = tx.ExecContext(ctx, `UPDATE jobs SET state='failed',attempt=1,error_code=?,error_message=?,updated_at=? WHERE id=?`, code, reason, now(), job.ID)
+		}
+	}
+	if e != nil {
 		return Job{}, e
 	}
 	if e = tx.Commit(); e != nil {
 		return Job{}, e
 	}
 	job.State, job.ErrorCode, job.ErrorMessage = "failed", code, a.clean(cause.Error())
+	a.broadcastOriginalScrapeBatch(ctx, events)
 	a.log("WARN", "import", "preparation_failed", job.ErrorMessage, wf, job.ID)
 	if code == "MEDIA_NOT_FOUND" {
 		history, err := a.transferHistoryItem(ctx, plan.Files[0].ID)
@@ -736,15 +791,40 @@ func (a *App) recognizeBrowserFile(ctx context.Context, path string) (any, error
 
 const activeOrganizeStates = `('queued','running','retry_wait','waiting_paused')`
 
+type organizeQueuePreparation struct {
+	ID    string   `json:"id"`
+	Paths []string `json:"paths"`
+	State string   `json:"state"`
+}
+
 func (a *App) organizeQueue(ctx context.Context) (any, error) {
 	jobs, e := a.queryJobs(ctx, `SELECT `+jobColumns+` FROM jobs
-		WHERE kind='import' AND state IN `+activeOrganizeStates+` ORDER BY created_at DESC, id`)
+		WHERE kind IN ('import','organize_prepare','organize_file') AND state IN `+activeOrganizeStates+`
+		AND (kind!='organize_prepare' OR NOT EXISTS(SELECT 1 FROM records WHERE kind='organize_file_listing' AND records.id=jobs.id))
+		ORDER BY created_at DESC, id`)
 	if e != nil {
 		return nil, e
 	}
 	groups := []map[string]any{}
+	preparations := []organizeQueuePreparation{}
 	seen := map[string]bool{}
 	for _, job := range jobs {
+		if job.Kind == "organize_prepare" {
+			var payload organizePreparationPayload
+			if json.Unmarshal(job.Payload, &payload) == nil && len(payload.Request.Paths) > 0 {
+				preparations = append(preparations, organizeQueuePreparation{ID: job.ID, Paths: payload.Request.Paths, State: job.State})
+			}
+			continue
+		}
+		if job.Kind == "organize_file" {
+			var payload organizeFilePayload
+			if json.Unmarshal(job.Payload, &payload) != nil || payload.File.Path == "" {
+				continue
+			}
+			file := map[string]any{"id": job.ID, "source": payload.File.Path, "size": payload.File.Size, "status": "pending", "job_id": job.ID, "job_state": job.State, "can_cancel": true, "recognizing": true}
+			groups = append(groups, map[string]any{"id": job.ID, "title": payload.Title, "media": map[string]string{"title": payload.Title}, "status": job.State, "files": []map[string]any{file}})
+			continue
+		}
 		var payload struct {
 			ID      string   `json:"id"`
 			FileIDs []string `json:"file_ids"`
@@ -778,7 +858,7 @@ func (a *App) organizeQueue(ctx context.Context) (any, error) {
 		}
 		groups = append(groups, map[string]any{"id": job.ID, "title": title, "media": plan.Media, "status": job.State, "error": job.ErrorMessage, "files": files})
 	}
-	return map[string]any{"groups": groups}, nil
+	return map[string]any{"groups": groups, "preparations": preparations}, nil
 }
 
 func historySearchPattern(value string) string {
@@ -786,6 +866,25 @@ func historySearchPattern(value string) string {
 }
 
 func (a *App) cancelOrganizeQueueFile(ctx context.Context, key string) (any, error) {
+	if strings.HasPrefix(key, "job_") {
+		job, err := scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=? AND kind IN ('organize_file','import')`, key))
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, bad("QUEUE_FILE_FINISHED", "此文件整理任务已经结束")
+		}
+		if err != nil {
+			return nil, err
+		}
+		if job.Kind == "organize_file" {
+			return a.cancelOrganizeFile(ctx, job)
+		}
+		var payload struct {
+			FileIDs []string `json:"file_ids"`
+		}
+		if json.Unmarshal(job.Payload, &payload) != nil || len(payload.FileIDs) != 1 {
+			return nil, bad("QUEUE_FILE_CHANGED", "文件已完成识别，请刷新整理队列后操作")
+		}
+		key = payload.FileIDs[0]
+	}
 	item, e := a.transferHistoryExecution(ctx, key)
 	if e != nil {
 		return nil, e

@@ -60,7 +60,7 @@ func nativeProducerFixture(t *testing.T) (*App, NativeDownloadRequest, *atomic.I
 	t.Cleanup(site.Close)
 	c := a.Settings()
 	c.Downloaders[0].BaseURL = qb.URL
-	c.Sites = []SiteConfig{{Config: sites.Config{ID: "producer-site", Kind: "jiayuan", Name: "合成站点", BaseURL: site.URL, Cookie: "synthetic-cookie"}, Enabled: true, DailyBudget: 100}}
+	c.Sites = []SiteConfig{{Config: sites.Config{ID: "producer-site", Kind: "jiayuan", Name: "合成站点", BaseURL: site.URL, Cookie: "synthetic-cookie"}, Enabled: true}}
 	c.AllowedRoots = []string{source}
 	c.RSSSites = []string{"producer-site"}
 	if err := a.saveSettings(context.Background(), c); err != nil {

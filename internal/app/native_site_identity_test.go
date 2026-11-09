@@ -16,7 +16,7 @@ import (
 )
 
 func identityTestSite(name, host string) SiteConfig {
-	return SiteConfig{Config: sites.Config{Name: name, Kind: "nexusphp", BaseURL: "https://" + host}, Enabled: true, DailyBudget: 600}
+	return SiteConfig{Config: sites.Config{Name: name, Kind: "nexusphp", BaseURL: "https://" + host}, Enabled: true}
 }
 func identityHTTP(t *testing.T, a *App, cookie *http.Cookie, method, path string, value any) int {
 	t.Helper()

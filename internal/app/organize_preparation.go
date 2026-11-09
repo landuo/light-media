@@ -50,6 +50,10 @@ func (a *App) runOrganizePreparation(ctx context.Context, job Job) error {
 	if err := a.jobCancelled(ctx, job); err != nil {
 		return err
 	}
+	var committed bool
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE kind='organize_file_listing' AND id=?)`, job.ID).Scan(&committed); err != nil || committed {
+		return err
+	}
 	ctx = context.WithValue(ctx, organizePreparationKey{}, job)
 	out, err := a.manualOrganize(ctx, payload.Request)
 	if err != nil {

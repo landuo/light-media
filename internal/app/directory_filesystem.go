@@ -9,6 +9,8 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"regexp"
+	"strings"
 	"time"
 
 	"light-media/internal/catalog"
@@ -571,6 +573,84 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 func directoryTitle(s string) string {
 	return media.NormalizeTitle(s)
 }
+
+var directoryTVReleaseYear = regexp.MustCompile(`^(.+) ((?:19|20)[0-9]{2})$`)
+
+func (a *App) directoryTitleMatches(ctx context.Context, kind string, year int, names []string) (map[int64]catalog.Media, error) {
+	matches := map[int64]catalog.Media{}
+	titles := map[string]bool{}
+	queries := []string{}
+	for _, title := range names {
+		if normalized := directoryTitle(title); normalized != "" && !titles[normalized] {
+			titles[normalized] = true
+			queries = append(queries, title)
+		}
+	}
+	for _, query := range queries {
+		totalPages, totalResults := 1, 0
+		for number := 1; number <= totalPages; number++ {
+			key := "directory-identify:" + kind + ":" + query
+			if number > 1 {
+				key += fmt.Sprintf(":page:%d", number)
+			}
+			var page catalog.Page
+			at, err := a.cached(ctx, key, 24*time.Hour, &page, func() (any, error) { return a.catalog().Search(ctx, query, kind, number) })
+			if err != nil {
+				return nil, err
+			}
+			// Stale search fallback is useful for browsing, but cannot prove
+			// uniqueness when recognition requires the complete result set.
+			if time.Since(at) >= 24*time.Hour || page.Page != number || page.TotalPages < 1 || page.TotalPages > 5 || number > 1 && (page.TotalPages != totalPages || page.TotalResults != totalResults) || page.TotalPages > 1 && len(page.Results) == 0 {
+				return nil, bad("DIRECTORY_IDENTITY_REVIEW", "影视搜索分页不完整或结果过多，请在“手动整理”中选择电影或电视剧类型，并查询或填写TheMovieDb编号")
+			}
+			if number == 1 {
+				totalPages, totalResults = page.TotalPages, page.TotalResults
+			}
+			for _, m := range page.Results {
+				if m.MediaType != kind || year > 0 && year != m.Year {
+					continue
+				}
+				if titles[directoryTitle(m.Title)] || titles[directoryTitle(m.OriginalTitle)] {
+					matches[m.ID] = m
+				}
+			}
+		}
+	}
+	return matches, nil
+}
+
+func (a *App) directoryTVReleaseMatches(ctx context.Context, p media.ParseResult) (map[int64]catalog.Media, error) {
+	if p.Original == nil || p.Original.Form != "season_episode" || p.Original.Season == nil {
+		return nil, nil
+	}
+	release := directoryTVReleaseYear.FindStringSubmatch(p.Title)
+	if release == nil {
+		return nil, nil
+	}
+	// A year preceding SxxExx can describe that season. Keep literal-title
+	// recognition first and search the stripped title without a premiere year.
+	matches, err := a.directoryTitleMatches(ctx, "tv", 0, []string{release[1]})
+	if err != nil || len(matches) <= 1 {
+		return matches, err
+	}
+	// As in MoviePilot, check the requested season's year when the title alone
+	// is inconclusive. Require a single candidate before using the identity.
+	seasonMatches := map[int64]catalog.Media{}
+	for id, candidate := range matches {
+		detail, err := a.media(ctx, "tv", id)
+		if err != nil {
+			return nil, err
+		}
+		for _, season := range detail.Seasons {
+			if season.SeasonNumber == *p.Original.Season && strings.HasPrefix(season.AirDate, release[2]+"-") {
+				seasonMatches[id] = candidate
+				break
+			}
+		}
+	}
+	return seasonMatches, nil
+}
+
 func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, file importScanFile) (ImportRequest, error) {
 	request := ImportRequest{RootID: rule.RootID, Mode: rule.Mode, Renaming: rule.Renaming, Scraping: rule.Scraping, LibraryTypeFolder: rule.LibraryTypeFolder, WorkflowID: id("wf_"), Files: []ImportFileRequest{{Path: file.Path}}}
 	if rule.ID != "" {
@@ -597,43 +677,14 @@ func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, fil
 		if kind == "movie" && p.Year == 0 {
 			return request, bad("DIRECTORY_IDENTITY_REVIEW", "电影文件名缺少年份，请在“手动整理”中选择电影类型，并查询或填写TheMovieDb编号")
 		}
-		matches := map[int64]catalog.Media{}
-		titles := map[string]bool{}
-		queries := []string{}
-		for _, title := range append([]string{p.Title}, p.AlternateTitles...) {
-			if normalized := directoryTitle(title); normalized != "" && !titles[normalized] {
-				titles[normalized] = true
-				queries = append(queries, title)
-			}
+		matches, err := a.directoryTitleMatches(ctx, kind, p.Year, append([]string{p.Title}, p.AlternateTitles...))
+		if err != nil {
+			return request, err
 		}
-		for _, query := range queries {
-			totalPages, totalResults := 1, 0
-			for number := 1; number <= totalPages; number++ {
-				key := "directory-identify:" + kind + ":" + query
-				if number > 1 {
-					key += fmt.Sprintf(":page:%d", number)
-				}
-				var page catalog.Page
-				at, e := a.cached(ctx, key, 24*time.Hour, &page, func() (any, error) { return a.catalog().Search(ctx, query, kind, number) })
-				if e != nil {
-					return request, e
-				}
-				// Stale search fallback is useful for browsing, but cannot prove
-				// uniqueness when recognition requires the complete result set.
-				if time.Since(at) >= 24*time.Hour || page.Page != number || page.TotalPages < 1 || page.TotalPages > 5 || number > 1 && (page.TotalPages != totalPages || page.TotalResults != totalResults) || page.TotalPages > 1 && len(page.Results) == 0 {
-					return request, bad("DIRECTORY_IDENTITY_REVIEW", "影视搜索分页不完整或结果过多，请在“手动整理”中选择电影或电视剧类型，并查询或填写TheMovieDb编号")
-				}
-				if number == 1 {
-					totalPages, totalResults = page.TotalPages, page.TotalResults
-				}
-				for _, m := range page.Results {
-					if m.MediaType != kind || p.Year > 0 && p.Year != m.Year {
-						continue
-					}
-					if titles[directoryTitle(m.Title)] || titles[directoryTitle(m.OriginalTitle)] {
-						matches[m.ID] = m
-					}
-				}
+		if len(matches) == 0 && kind == "tv" {
+			matches, err = a.directoryTVReleaseMatches(ctx, p)
+			if err != nil {
+				return request, err
 			}
 		}
 		if len(matches) != 1 {

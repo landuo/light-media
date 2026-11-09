@@ -50,7 +50,7 @@ func TestSiteRequestLimitsWindowSpacingAndCancellation(t *testing.T) {
 	}
 }
 
-func TestSiteRequestLimitBlocksNetworkWithoutConsumingQuota(t *testing.T) {
+func TestSiteRequestLimitBlocksNetworkWithoutRecordingRequest(t *testing.T) {
 	a := newTestApp(t)
 	var calls atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { calls.Add(1) }))
@@ -72,7 +72,36 @@ func TestSiteRequestLimitBlocksNetworkWithoutConsumingQuota(t *testing.T) {
 	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM site_usage WHERE site_id=?`, site.ID).Scan(&used)
 	var apiError *APIError
 	if !errors.As(err, &apiError) || apiError.Code != "SITE_REQUEST_LIMIT" || calls.Load() != 0 || used != 1 {
-		t.Fatalf("limited request reached network or consumed quota: %v / %d / %d", err, calls.Load(), used)
+		t.Fatalf("limited request reached the network or was counted: %v / %d / %d", err, calls.Load(), used)
+	}
+}
+
+func TestAutomaticSiteSearchAllowsHeavyRecentUsage(t *testing.T) {
+	a := newTestApp(t)
+	fixture, err := os.ReadFile("../sites/testdata/ubits-search.sanitized.html")
+	if err != nil {
+		t.Fatal(err)
+	}
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, _ = w.Write(fixture)
+	}))
+	defer server.Close()
+	site := SiteConfig{Config: sites.Config{ID: "busy-site", Kind: "ubits", Name: "Synthetic", BaseURL: server.URL, Cookie: "synthetic-cookie"}, Enabled: true}
+	a.config.Sites = []SiteConfig{site}
+	if _, err := a.Store.DB.Exec(`WITH RECURSIVE requests(n) AS (VALUES(1) UNION ALL SELECT n+1 FROM requests WHERE n<610)
+		INSERT INTO site_usage SELECT ?, ? FROM requests`, site.ID, time.Now().Add(-time.Hour).Unix()); err != nil {
+		t.Fatal(err)
+	}
+	ctx := context.Background()
+	err = a.withSite(ctx, site, true, func(client *sites.Client) error {
+		result, err := client.Search(ctx, "fixture", 1)
+		if err == nil && len(result.Resources) == 0 {
+			t.Fatal("automatic search reached the fixture but returned no resources")
+		}
+		return err
+	})
+	if err != nil {
+		t.Fatalf("historical usage blocked automatic search: %v", err)
 	}
 }
 

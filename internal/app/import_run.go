@@ -66,6 +66,15 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 	if err != nil {
 		return Job{}, err
 	}
+	work, organizing := ctx.Value(organizeFileKey{}).(organizeFileWork)
+	if organizing {
+		for _, index := range selected {
+			file := plan.Files[index]
+			if file.Source != work.File.Path || planSnapshot(file) != work.Stamp {
+				return Job{}, bad("REVIEW_SOURCE_CHANGED", "源文件在识别过程中发生变化")
+			}
+		}
+	}
 	root, err := a.importRoot(plan.RootID)
 	if err != nil {
 		return Job{}, err
@@ -141,13 +150,24 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		return Job{}, err
 	}
 	batchID, _ := ctx.Value(originalScrapeBatchKey{}).(string)
+	if organizing {
+		batchID = work.BatchID
+	}
 	if batchID == "" {
 		batchID = id("scrape_batch_")
 		if err = txPut(ctx, tx, "original_scrape_batch", batchID, originalScrapeBatch{ID: batchID, Closed: true}); err != nil {
 			return Job{}, err
 		}
 	}
-	job, err := enqueueTx(ctx, tx, "import", map[string]any{"id": plan.ID, "file_ids": fileIDs, "original_scrape_batch": batchID}, plan.WorkflowID)
+	var job Job
+	if organizing {
+		if len(fileIDs) == 0 && len(selected) == 1 {
+			fileIDs = []string{plan.Files[selected[0]].ID}
+		}
+		job, err = promoteOrganizeFileTx(ctx, tx, work, plan.ID, fileIDs, "queued", "", "")
+	} else {
+		job, err = enqueueTx(ctx, tx, "import", map[string]any{"id": plan.ID, "file_ids": fileIDs, "original_scrape_batch": batchID}, plan.WorkflowID)
+	}
 	if err != nil {
 		return Job{}, err
 	}

@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 	"testing"
 	"time"
@@ -68,6 +69,54 @@ func TestDirectoryFileIdentitySearchPagination(t *testing.T) {
 				}
 			} else if err == nil || request.TMDBID != 0 {
 				t.Fatalf("incomplete or ambiguous search selected an identity: %+v %v", request, err)
+			}
+		})
+	}
+}
+
+func TestDirectoryFileIdentityUsesTVSeasonReleaseYear(t *testing.T) {
+	friends := catalog.Media{ID: 1668, MediaType: "tv", Title: "老友记", OriginalTitle: "Friends", Year: 1994,
+		Seasons: []catalog.SeasonSummary{{SeasonNumber: 4, AirDate: "1997-09-25"}}}
+	namesake := catalog.Media{ID: 900001, MediaType: "tv", Title: "Friends", Year: 1995,
+		Seasons: []catalog.SeasonSummary{{SeasonNumber: 4, AirDate: "1998-01-01"}}}
+	literal := catalog.Media{ID: 900002, MediaType: "tv", Title: "Friends 1997", Year: 1997}
+	for _, tc := range []struct {
+		name   string
+		direct []catalog.Media
+		clean  []catalog.Media
+		want   int64
+	}{
+		{name: "unique clean title", clean: []catalog.Media{friends}, want: friends.ID},
+		{name: "same title resolved by the season year", clean: []catalog.Media{friends, namesake}, want: friends.ID},
+		{name: "literal title stays first", direct: []catalog.Media{literal}, clean: []catalog.Media{friends}, want: literal.ID},
+		{name: "same title and season year stays ambiguous", clean: []catalog.Media{friends, {
+			ID: namesake.ID, MediaType: "tv", Title: "Friends", Year: 1995, Seasons: friends.Seasons,
+		}}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			a, source, _ := importTestApp(t)
+			page := func(items []catalog.Media) catalog.Page {
+				return catalog.Page{Page: 1, TotalPages: 1, TotalResults: len(items), Results: items}
+			}
+			importCache(t, a, "directory-identify:tv:Friends 1997", page(tc.direct))
+			importCache(t, a, "directory-identify:tv:老友记 第四季", page(nil))
+			importCache(t, a, "directory-identify:tv:Friends", page(tc.clean))
+			for _, detail := range tc.clean {
+				importCache(t, a, fmt.Sprintf("media:tv:%d", detail.ID), detail)
+			}
+			name := "[老友记 第四季].Friends.1997.S04E21.2160p.MAX.WEB-DL.DoVi.HDR10.H265.10bit.DDP5.1-UBWEB.mkv"
+			got, err := a.directoryFileIdentity(context.Background(), DirectoryRule{MediaType: "tv"}, importScanFile{Path: filepath.Join(source, name), Parsed: media.Parse(name)})
+			if tc.want == 0 {
+				if err == nil || got.TMDBID != 0 {
+					t.Fatalf("ambiguous release should require review: %+v %v", got, err)
+				}
+				return
+			}
+			if err != nil || got.TMDBID != tc.want {
+				t.Fatalf("unexpected release identity: %+v %v", got, err)
+			}
+			if file := got.Files[0]; file.Season != 4 || len(file.Episodes) != 1 || file.Episodes[0] != 21 {
+				t.Fatalf("release numbering changed: %+v", file)
 			}
 		})
 	}

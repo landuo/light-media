@@ -34,7 +34,7 @@ func TestOriginalSubscriptionFiltersPersistAndAffectRealSearchBeforeProgress(t *
 	}))
 	defer site.Close()
 	c := a.Settings()
-	c.Sites = []SiteConfig{{Config: sites.Config{ID: "filter-fixture", Kind: "jiayuan", Name: "Filter fixture", BaseURL: site.URL, Cookie: "synthetic-cookie"}, Enabled: true, DailyBudget: 100}}
+	c.Sites = []SiteConfig{{Config: sites.Config{ID: "filter-fixture", Kind: "jiayuan", Name: "Filter fixture", BaseURL: site.URL, Cookie: "synthetic-cookie"}, Enabled: true}}
 	if err := a.saveSettings(ctx, c); err != nil {
 		t.Fatal(err)
 	}

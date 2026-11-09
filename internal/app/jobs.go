@@ -46,7 +46,12 @@ func enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload any, wf str
 	_ = json.Unmarshal(b, &identity)
 	if identity.ID != "" {
 		var found string
-		e = tx.QueryRowContext(ctx, `SELECT id FROM jobs WHERE kind=? AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused') LIMIT 1`, kind, identity.ID).Scan(&found)
+		active := "state IN " + activeOrganizeStates
+		if kind == "organize_prepare" {
+			active = `(` + active + ` OR EXISTS(SELECT 1 FROM jobs child WHERE child.kind IN ('organize_file','import')
+				AND child.state IN ` + activeOrganizeStates + ` AND json_extract(child.payload,'$._parent_job_id')=jobs.id))`
+		}
+		e = tx.QueryRowContext(ctx, `SELECT id FROM jobs WHERE kind=? AND json_extract(payload,'$.id')=? AND `+active+` LIMIT 1`, kind, identity.ID).Scan(&found)
 		if e == nil {
 			return Job{}, bad("JOB_EXISTS", "已有该对象的任务正在等待或执行")
 		}
@@ -110,6 +115,16 @@ func privateOrdinarySearchDownloadJob(j Job) bool {
 
 func (a *App) jobs(ctx context.Context, limit int) ([]Job, error) {
 	return a.queryJobs(ctx, `SELECT `+jobColumns+` FROM jobs ORDER BY created_at DESC LIMIT ?`, limit)
+}
+
+func (a *App) jobQueue(ctx context.Context) ([]Job, error) {
+	// A directory submission can create hundreds of recent file jobs. Keep
+	// running jobs and pending work outside that batch visible in the queue.
+	return a.queryJobs(ctx, `SELECT `+jobColumns+` FROM jobs ORDER BY CASE
+		WHEN state='running' THEN 0
+		WHEN state IN `+activeOrganizeStates+` AND kind NOT IN ('import','organize_file') THEN 1
+		WHEN state IN `+activeOrganizeStates+` THEN 2
+		ELSE 3 END, created_at DESC, id LIMIT 100`)
 }
 
 func (a *App) queryJobs(ctx context.Context, query string, args ...any) ([]Job, error) {
@@ -261,6 +276,8 @@ func (a *App) safeRun(ctx context.Context, j Job) (err error) {
 		return a.runImport(ctx, j, p.ID, p.FileIDs)
 	case "organize_prepare":
 		return a.runOrganizePreparation(ctx, j)
+	case "organize_file":
+		return a.runOrganizeFile(ctx, j)
 	case "quality_cleanup":
 		return a.runQualityCleanup(ctx, j, p.ID)
 	case "reorganize_cleanup":
@@ -377,7 +394,7 @@ func (a *App) jobAPI(w http.ResponseWriter, r *http.Request, p string) (any, err
 		if n, _ := result.RowsAffected(); n != 1 {
 			return nil, bad("JOB_CHANGED", "任务状态已变化，请刷新后操作")
 		}
-		if (j.Kind == "import" || j.Kind == "reorganize_cleanup" || j.Kind == "quality_cleanup") && parts[1] == "cancel" {
+		if (j.Kind == "import" || j.Kind == "organize_file" || j.Kind == "reorganize_cleanup" || j.Kind == "quality_cleanup") && parts[1] == "cancel" {
 			if e = a.closeOriginalScrapeBatch(r.Context(), originalScrapeBatchID(j), false); e != nil {
 				return nil, e
 			}
@@ -431,7 +448,11 @@ func (a *App) scheduler(ctx context.Context) {
 				continue
 			}
 			t, e := time.Parse(time.RFC3339Nano, s.NextCheck)
-			if e == nil && t.After(time.Now()) {
+			// Earlier versions could store a delay caused by the retired daily
+			// site budget. Let that check run and calculate its normal schedule.
+			oldBudgetDelay := s.LastReason == "站点调用预算不足，已按最早恢复时间延期检查" ||
+				strings.HasSuffix(s.LastReason, "；部分站点预算不足，检查将按恢复时间延期")
+			if !oldBudgetDelay && e == nil && t.After(time.Now()) {
 				continue
 			}
 			_, e = a.enqueue(ctx, "subscription", map[string]any{"id": s.ID, "revision": s.Revision}, id("wf_"))

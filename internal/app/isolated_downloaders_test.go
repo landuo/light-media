@@ -198,7 +198,7 @@ func TestIsolatedDownloadersRealTransferAndImport(t *testing.T) {
 			}))
 			defer site.Close()
 			a.config.AllowedRoots = []string{source}
-			a.config.Sites = []SiteConfig{{Config: sites.Config{ID: "isolated-site", Name: "owned fixture", Kind: "ubits", BaseURL: site.URL, Cookie: "owned-fixture"}, Enabled: true, DailyBudget: 1000}}
+			a.config.Sites = []SiteConfig{{Config: sites.Config{ID: "isolated-site", Name: "owned fixture", Kind: "ubits", BaseURL: site.URL, Cookie: "owned-fixture"}, Enabled: true}}
 			a.config.Downloaders = []DownloaderConfig{{Config: config, DownloadPath: source, Mappings: []PathMapping{{From: source, To: source}}}}
 			a.config.DefaultDownloader = config.ID
 			a.config.DefaultRoot = "root"

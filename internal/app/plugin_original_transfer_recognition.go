@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"strconv"
 
 	"light-media/internal/catalog"
@@ -12,7 +13,8 @@ import (
 
 // TransferChain.__handle_transfer uses the ordinary synchronous recognition
 // chain, then obtains images on that same MediaInfo before planning a transfer.
-// Keep the existing native identity checks as the system-provider fallback.
+// Keep existing native identity checks first, then use MoviePilot's TV
+// matcher when the strict directory lookup cannot identify the file.
 func (a *App) originalManualTransferIdentity(ctx context.Context, request ImportRequest, file ImportFileRequest, scanned importScanFile) (ImportRequest, error) {
 	options, err := a.globalRecognitionOptions(ctx)
 	if err != nil {
@@ -54,7 +56,18 @@ func (a *App) originalManualTransferIdentity(ctx context.Context, request Import
 		}
 		native, err := a.directoryFileIdentity(ctx, DirectoryRule{MediaType: "mixed", Mode: request.Mode}, scanned)
 		if err != nil {
-			return nil, err
+			if !manualTVRecognitionFallback(request, file, scanned, err) {
+				return nil, err
+			}
+			fields, err := current.ToDict()
+			if err != nil {
+				return nil, err
+			}
+			kwargs, err := originalCatalogRecognitionCallKwargs(fields, map[string]any{"source": "themoviedb", "mtype": "电视剧"})
+			if err != nil {
+				return nil, err
+			}
+			return a.originalHostMediaRecognizeTMDB(ctx, kwargs)
 		}
 		full, err := a.sourceRecognizeTMDBCore(ctx, catalog.Media{ID: native.TMDBID, MediaType: native.MediaType})
 		return full.MediaInfo, err
@@ -96,6 +109,18 @@ func (a *App) originalManualTransferIdentity(ctx context.Context, request Import
 		}
 	}
 	return out, nil
+}
+
+func manualTVRecognitionFallback(request ImportRequest, file ImportFileRequest, scanned importScanFile, err error) bool {
+	if request.MediaType == "movie" || scanned.InferredMedia != nil || scanned.IdentityReason != "" {
+		return false
+	}
+	var api *APIError
+	if !errors.As(err, &api) || api.Code != "DIRECTORY_IDENTITY_REVIEW" {
+		return false
+	}
+	return request.MediaType == "tv" || scanned.Parsed.Type == "episode" ||
+		file.originalResolvedMeta != nil && file.originalResolvedMeta.Text("type") == "电视剧"
 }
 
 func (a *App) originalManualRecognitionAvailable() bool {

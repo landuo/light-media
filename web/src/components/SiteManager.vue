@@ -160,7 +160,6 @@ function create() {
     pri: data.value.sites.length + 1,
     timeout: 25,
     downloader: '',
-    daily_budget: 600,
     proxy: false,
     render: false,
     limit_interval: 0,

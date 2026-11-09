@@ -143,7 +143,7 @@ func (a *App) withSite(ctx context.Context, s SiteConfig, auto bool, fn func(*si
 
 // MoviePilot's synchronous userdata refresh has no search/connection cooldown.
 // Only the host-owned SourceResult collector selects false; identity, request
-// guards, locks, request spacing and daily budgets are unchanged below.
+// guards, locks and configured request spacing still apply.
 func (a *App) withSiteCooldown(ctx context.Context, s SiteConfig, auto, ordinaryCooldown bool, fn func(*sites.Client) error) error {
 	if e := a.guardSubscriptionContext(ctx); e != nil {
 		return e
@@ -216,26 +216,11 @@ func (a *App) withSiteCooldown(ctx context.Context, s SiteConfig, auto, ordinary
 		if a.managedSiteKey(current) != a.managedSiteKey(s) {
 			return bad("SITE_CHANGED", "站点设置已变化，请重新发起请求")
 		}
-		budget := current.DailyBudget
-		if budget == 0 {
-			budget = 600
-		}
-		limit := budget
-		if auto {
-			limit = budget * 8 / 10
-		}
 		tx, e := a.Store.DB.BeginTx(requestCtx, nil)
 		if e != nil {
 			return e
 		}
 		defer tx.Rollback()
-		var used int
-		if e = tx.QueryRowContext(requestCtx, `SELECT COUNT(*) FROM site_usage WHERE site_id=? AND ts>?`, s.ID, time.Now().Add(-24*time.Hour).Unix()).Scan(&used); e != nil {
-			return e
-		}
-		if used >= limit {
-			return bad("SITE_QUOTA", "站点近24小时调用预算已用尽，已保留手动额度")
-		}
 		if _, e = tx.ExecContext(requestCtx, `INSERT INTO site_usage VALUES(?,?)`, s.ID, time.Now().Unix()); e != nil {
 			return e
 		}

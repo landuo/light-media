@@ -795,7 +795,7 @@ func (a *App) subscriptionList(ctx context.Context) (any, error) {
 	}
 	return map[string]any{"items": items, "total": len(items)}, nil
 }
-func (a *App) recordSubscriptionCheck(ctx context.Context, s Subscription, reason string, metadataDates []string, deferUntil time.Time) error {
+func (a *App) recordSubscriptionCheck(ctx context.Context, s Subscription, reason string, metadataDates []string) error {
 	a.subMu.Lock()
 	defer a.subMu.Unlock()
 	var current Subscription
@@ -817,31 +817,11 @@ func (a *App) recordSubscriptionCheck(ctx context.Context, s Subscription, reaso
 		return err
 	}
 	next := nextScheduleCheck(current.Schedule, time.Now(), metadataDates)
-	if !deferUntil.IsZero() && (next.IsZero() || deferUntil.After(next)) {
-		next = deferUntil
-	}
 	current.NextCheck = ""
 	if !next.IsZero() {
 		current.NextCheck = next.UTC().Format(time.RFC3339Nano)
 	}
 	return a.Store.Put(ctx, "subscription", s.ID, current)
-}
-
-func (a *App) quotaReset(ctx context.Context, siteIDs []string) time.Time {
-	var earliest int64
-	for _, site := range siteIDs {
-		var oldest sql.NullInt64
-		if a.Store.DB.QueryRowContext(ctx, `SELECT MIN(ts) FROM site_usage WHERE site_id=? AND ts>?`, site, time.Now().Add(-24*time.Hour).Unix()).Scan(&oldest) == nil && oldest.Valid {
-			value := oldest.Int64 + 24*3600 + 2
-			if earliest == 0 || value < earliest {
-				earliest = value
-			}
-		}
-	}
-	if earliest == 0 {
-		return time.Now().Add(time.Hour)
-	}
-	return time.Unix(earliest, 0)
 }
 
 func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision int) error {
@@ -901,7 +881,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		}
 		season, err = a.season(ctx, s.Media.ID, s.Season)
 		if err != nil {
-			_ = a.recordSubscriptionCheck(ctx, s, "元数据暂不可用，下次继续检查", nil, time.Time{})
+			_ = a.recordSubscriptionCheck(ctx, s, "元数据暂不可用，下次继续检查", nil)
 			return err
 		}
 	}
@@ -910,7 +890,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	if e != nil {
 		var apiErr *APIError
 		if errors.As(e, &apiErr) && apiErr.Code == "SUBSCRIPTION_FNOS_INVENTORY_UNAVAILABLE" {
-			_ = a.recordSubscriptionCheck(ctx, s, "飞牛影视库存暂不可用，稍后重新核对", nil, time.Time{})
+			_ = a.recordSubscriptionCheck(ctx, s, "飞牛影视库存暂不可用，稍后重新核对", nil)
 		}
 		return e
 	}
@@ -976,10 +956,10 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		if len(coverage.Reserved) > 0 {
 			reason = "缺集已有在途下载，保留占位并等待完成"
 		}
-		return a.recordSubscriptionCheck(ctx, s, reason, metadataDates, time.Time{})
+		return a.recordSubscriptionCheck(ctx, s, reason, metadataDates)
 	}
 	if s.Media.MediaType == "movie" && releaseDate > time.Now().In(shanghai()).Format("2006-01-02") {
-		return a.recordSubscriptionCheck(ctx, s, "电影尚未到上映日期，保持订阅", metadataDates, time.Time{})
+		return a.recordSubscriptionCheck(ctx, s, "电影尚未到上映日期，保持订阅", metadataDates)
 	}
 	if _, e := a.downloader(s.DownloaderID); e != nil {
 		return e
@@ -993,9 +973,8 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		}
 	}
 	if enabledSites == 0 {
-		return a.recordSubscriptionCheck(ctx, s, "订阅选择的站点尚未启用，请在站点管理中启用站点", metadataDates, time.Time{})
+		return a.recordSubscriptionCheck(ctx, s, "订阅选择的站点尚未启用，请在站点管理中启用站点", metadataDates)
 	}
-	quotaSites := []string{}
 	created := recovered
 	scheduled := map[int]bool{}
 	checkedPacks := map[string]bool{}
@@ -1033,10 +1012,6 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	for _, status := range result.Sites {
 		if status.Status == "failed" {
 			reason = "站点访问失败，详见任务日志，下次继续补漏"
-		}
-		if strings.Contains(status.Message, "预算") {
-			quotaSites = append(quotaSites, status.ID)
-			reason = "站点调用预算不足，已按最早恢复时间延期检查"
 		}
 	}
 	if searchErr == nil && len(result.Candidates) > 0 {
@@ -1177,10 +1152,6 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 						}
 						failures.active[fingerprint] = true
 					}
-					var api *APIError
-					if errors.As(e, &api) && api.Code == "SITE_QUOTA" {
-						quotaSites = append(quotaSites, site.ID)
-					}
 					a.event(ctx, j, "WARN", "subscriptions", "candidate_rejected", e.Error())
 					if pack {
 						reason = "整季包包含起始集、在库或未知范围，需要人工核对；继续寻找符合条件的资源"
@@ -1239,14 +1210,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 			}
 		}
 	}
-	deferUntil := time.Time{}
-	if len(quotaSites) > 0 {
-		deferUntil = a.quotaReset(ctx, quotaSites)
-		if !strings.Contains(reason, "预算") {
-			reason += "；部分站点预算不足，检查将按恢复时间延期"
-		}
-	}
-	if err := a.recordSubscriptionCheck(ctx, s, reason, metadataDates, deferUntil); err != nil {
+	if err := a.recordSubscriptionCheck(ctx, s, reason, metadataDates); err != nil {
 		return err
 	}
 	if ownedOrdinary && created > 0 && len(missing) == len(coverage.Missing) && !slices.ContainsFunc(missing, func(ep int) bool { return !scheduled[ep] && s.Media.MediaType != "movie" }) {

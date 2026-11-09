@@ -62,7 +62,7 @@ func TestBrushFlowGuardedSourceRecipeSameOrigin(t *testing.T) {
 	}))
 	t.Cleanup(peer.Close)
 	settings := a.Settings()
-	site := SiteConfig{Config: sites.Config{ID: "owned-recipe-site", Kind: "hhanclub", Name: "Owned recipe", BaseURL: peer.URL, Cookie: "owned=fixture"}, Enabled: true, DailyBudget: 50}
+	site := SiteConfig{Config: sites.Config{ID: "owned-recipe-site", Kind: "hhanclub", Name: "Owned recipe", BaseURL: peer.URL, Cookie: "owned=fixture"}, Enabled: true}
 	settings.Sites = []SiteConfig{site}
 	if err := a.saveSettings(t.Context(), settings); err != nil {
 		t.Fatal(err)

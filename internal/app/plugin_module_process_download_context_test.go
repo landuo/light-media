@@ -189,7 +189,7 @@ func verifyOwnedProductionDownloadContext(t *testing.T, dir string, request func
 	settings.Roots = nil
 	settings.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "owned-context-qb", Kind: "qb", BaseURL: qb.URL, APIKey: "owned-context-protocol-key"}, Name: "Owned context downloader"}}
 	settings.DefaultDownloader = "owned-context-qb"
-	settings.Sites = []SiteConfig{{Config: sites.Config{ID: "owned-context-site", Kind: "jiayuan", Name: "Owned context site", BaseURL: site.URL, Cookie: "synthetic-context-cookie"}, Enabled: true, DailyBudget: 100}}
+	settings.Sites = []SiteConfig{{Config: sites.Config{ID: "owned-context-site", Kind: "jiayuan", Name: "Owned context site", BaseURL: site.URL, Cookie: "synthetic-context-cookie"}, Enabled: true}}
 	request("PUT", "/api/settings", settings, 200)
 	media, err := sourceTMDBMediaInfo([]byte(`{"id":123,"title":"Owned context media","original_title":"Owned Context","release_date":"2024-01-01","genres":[],"credits":{"cast":[],"crew":[]},"images":{},"external_ids":{},"owned_private":"source-provider-payload"}`), "movie", "image.tmdb.org", "")
 	if err != nil {
