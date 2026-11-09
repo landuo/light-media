@@ -255,7 +255,8 @@ func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
 	if err := os.Link(path, old.Files[0].Target); err != nil {
 		t.Fatal(err)
 	}
-	intent := Intent{ID: "dl-retry-own-file", Media: old.Media, RootID: old.RootID, State: "downloaded", ImportPlanID: old.ID}
+	originalRule := a.Settings().Directories[0]
+	intent := Intent{ID: "dl-retry-own-file", Media: old.Media, RootID: old.RootID, State: "downloaded", ImportPlanID: old.ID, DirectoryID: originalRule.ID, DirectorySnapshot: directoryFingerprint(originalRule)}
 	old.IntentID = intent.ID
 	if err := a.Store.Put(ctx, "intent", intent.ID, intent); err != nil {
 		t.Fatal(err)
@@ -313,13 +314,16 @@ func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
 	if err := a.Store.Get(ctx, "intent", intent.ID, &unchanged); err != nil || unchanged.ImportPlanID != old.ID {
 		t.Fatalf("preview changed download: %+v %v", unchanged, err)
 	}
+	// A confirmed directory-policy correction must use the new manual
+	// selection without erasing the original download destination snapshot.
+	overwriteRule(a, source, target, "always", true)
 	next := historyUpsertSubmit(t, a, request, false)
 	replacement, newJob := historyUpsertAttempt(t, a, next.JobID)
 	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, oldJob.ID); err != nil {
 		t.Fatal(err)
 	}
 	oldJob = reorgJob(t, a, "import", old.ID)
-	if err := a.safeRun(ctx, oldJob); err == nil || fileCode(err) != "REVIEW_IMPORT_REPLACED" {
+	if err := a.safeRun(ctx, oldJob); err == nil || (fileCode(err) != "REVIEW_IMPORT_REPLACED" && fileCode(err) != "REVIEW_DIRECTORY_CHANGED") {
 		t.Fatalf("old job could publish after new submission: %v", err)
 	}
 	if stamp, err := snapshotPath(old.Files[0].Target); err != nil || stamp != planSnapshot(old.Files[0]) {
@@ -330,7 +334,7 @@ func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
 	}
 	reorgRunJob(t, a, newJob)
 	var completed Intent
-	if err := a.Store.Get(ctx, "intent", intent.ID, &completed); err != nil || completed.State != "imported" || completed.ImportPlanID != replacement.ID {
+	if err := a.Store.Get(ctx, "intent", intent.ID, &completed); err != nil || completed.State != "imported" || completed.ImportPlanID != replacement.ID || completed.DirectorySnapshot != intent.DirectorySnapshot {
 		t.Fatalf("download was not completed: %+v %v", completed, err)
 	}
 	var asset Asset

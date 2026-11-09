@@ -92,6 +92,19 @@ func (a *App) guardImportDirectory(ctx context.Context, plan ImportPlan) error {
 	if plan.IntentID == "" {
 		return nil
 	}
+	if plan.Manual {
+		var meta importMetadata
+		if err := a.Store.Get(ctx, "import_meta", plan.ID, &meta); err != nil {
+			return err
+		}
+		if meta.DownloadRetry != nil && meta.DownloadRetry.IntentID == plan.IntentID && meta.Overwrite != nil {
+			// The manual retry seals the currently selected directory. Requiring
+			// the old automatic download's directory fingerprint would reject
+			// exactly the policy correction for which manual retry is needed.
+			// Submission still atomically proves the same source/download owner.
+			return a.guardNativeDirectorySelectionReference(ctx, meta.Overwrite.Selection)
+		}
+	}
 	var in Intent
 	if e := a.Store.Get(ctx, "intent", plan.IntentID, &in); e != nil {
 		return e
