@@ -29,19 +29,27 @@ func findDownloadImportRetry(ctx context.Context, q qualityReader, owner string,
 	// A partial pack may have several failed files. Earlier failed plans remain
 	// evidence after another file is retried; no active attempt may be replaced.
 	var active bool
-	if err := q.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM jobs j JOIN records p ON p.kind='import_plan' AND p.id=json_extract(j.payload,'$.id') WHERE j.kind='import' AND j.state IN ('queued','running','retry_wait','waiting_paused') AND json_extract(p.payload,'$.intent_id')=?)`, owner).Scan(&active); err != nil || active {
-		return nil, err
-	}
-	var raw []byte
-	err := q.QueryRowContext(ctx, `SELECT p.payload FROM records p WHERE p.kind='import_plan' AND json_extract(p.payload,'$.intent_id')=? AND json_extract(p.payload,'$.state') IN ('partial','failed','superseded') AND EXISTS(SELECT 1 FROM json_each(p.payload,'$.files') f WHERE json_extract(f.value,'$.source')=? AND json_extract(f.value,'$.status')='error') ORDER BY json_extract(p.payload,'$.created_at') DESC LIMIT 1`, owner, file.Source).Scan(&raw)
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
-	}
-	if err != nil {
+	if err := q.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM jobs j INDEXED BY jobs_due CROSS JOIN records p ON p.kind='import_plan' AND p.id=json_extract(j.payload,'$.id') WHERE j.kind='import' AND j.state IN ('queued','running','retry_wait','waiting_paused') AND json_extract(p.payload,'$.intent_id')=?)`, owner).Scan(&active); err != nil || active {
 		return nil, err
 	}
 	var old ImportPlan
-	if json.Unmarshal(raw, &old) != nil || old.IntentID != owner || old.RootID != plan.RootID || mediaKey(old.Media) != mediaKey(plan.Media) {
+	if err := qualityRecord(ctx, q, "import_plan", intent.ImportPlanID, &old); err != nil {
+		return nil, err
+	}
+	if !failedDownloadSource(old, file.Source) {
+		var raw []byte
+		err := q.QueryRowContext(ctx, `SELECT p.payload FROM records p WHERE p.kind='import_plan' AND json_extract(p.payload,'$.intent_id')=? AND json_extract(p.payload,'$.state') IN ('partial','failed','superseded') AND EXISTS(SELECT 1 FROM json_each(p.payload,'$.files') f WHERE json_extract(f.value,'$.source')=? AND json_extract(f.value,'$.status')='error') ORDER BY json_extract(p.payload,'$.created_at') DESC LIMIT 1`, owner, file.Source).Scan(&raw)
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		if err != nil {
+			return nil, err
+		}
+		if json.Unmarshal(raw, &old) != nil {
+			return nil, nil
+		}
+	}
+	if old.IntentID != owner || old.RootID != plan.RootID || mediaKey(old.Media) != mediaKey(plan.Media) {
 		return nil, nil
 	}
 	for _, episode := range importEpisodes(file.Episodes) {
@@ -62,6 +70,18 @@ func findDownloadImportRetry(ctx context.Context, q qualityReader, owner string,
 		}
 	}
 	return &downloadImportRetry{IntentID: owner, SourcePlanID: old.ID, Fingerprint: downloadReviewFingerprint(intent)}, nil
+}
+
+func failedDownloadSource(plan ImportPlan, source string) bool {
+	if plan.State != "partial" && plan.State != "failed" && plan.State != "superseded" {
+		return false
+	}
+	for _, file := range plan.Files {
+		if file.Source == source && file.Status == "error" {
+			return true
+		}
+	}
+	return false
 }
 
 func confirmDownloadImportRetry(ctx context.Context, tx *sql.Tx, plan ImportPlan, proof downloadImportRetry) error {
