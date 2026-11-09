@@ -19,12 +19,13 @@ const pluginBaseSDKContract = "light-media.sdk-base/v1"
 const pluginResourcesSDKContract = "light-media.sdk-resources/v1"
 
 type pluginImplementation struct {
-	Manifest      plugins.Manifest
-	Command       plugins.Command
-	Digest        string
-	PackageSHA256 string // complete installed frontend package identity, not a lifecycle gate
-	External      bool
-	HostContract  string
+	Manifest       plugins.Manifest
+	Command        plugins.Command
+	Digest         string
+	PackageSHA256  string // complete installed frontend package identity, not a lifecycle gate
+	External       bool
+	HostContract   string
+	frontendReader artifacts.FrontendReader
 }
 
 func validatePluginArtifactContract(m plugins.Manifest, contract string) error {
@@ -65,7 +66,10 @@ func (a *App) resolvePluginImplementation(ctx context.Context, in PluginInstalla
 	if codeErr != nil && !errors.Is(codeErr, os.ErrNotExist) {
 		return pluginImplementation{}, codeErr
 	}
-	acquired, err := artifacts.ReadInstalled(a.pluginPackageRoot(), in.InstanceID, validatePluginArtifactContract)
+	// A fresh reader verifies every byte before a process can start. The
+	// loaded object can reuse that verification when opening its frontend.
+	var frontendReader artifacts.FrontendReader
+	acquired, err := frontendReader.ReadInstalled(a.pluginPackageRoot(), in.InstanceID, validatePluginArtifactContract)
 	if err == nil && acquired.Manifest.Frontend != nil && in.InstanceID != in.PluginID && acquired.FrontendClass != in.InstanceID {
 		acquired, err = artifacts.DeriveInstalledFrontend(ctx, a.pluginPackageRoot(), in.InstanceID, validatePluginArtifactContract)
 	}
@@ -73,7 +77,7 @@ func (a *App) resolvePluginImplementation(ctx context.Context, in PluginInstalla
 		if acquired.Manifest.PluginID != in.PluginID || acquired.Manifest.Version != in.Version {
 			return pluginImplementation{}, bad("PLUGIN_IMPLEMENTATION_MISMATCH", "实例与实际插件制品版本不一致")
 		}
-		return pluginImplementation{Manifest: acquired.Manifest, Command: acquired.Command, Digest: acquired.SHA256, PackageSHA256: acquired.PackageSHA256, External: true, HostContract: acquired.HostContract}, nil
+		return pluginImplementation{Manifest: acquired.Manifest, Command: acquired.Command, Digest: acquired.SHA256, PackageSHA256: acquired.PackageSHA256, External: true, HostContract: acquired.HostContract, frontendReader: frontendReader}, nil
 	}
 	if codePresent || !errors.Is(err, os.ErrNotExist) {
 		return pluginImplementation{}, err

@@ -25,16 +25,13 @@ func ReadInstalled(root, codeID string, validate func(plugins.Manifest, string) 
 	return readInstalled(root, codeID, validate)
 }
 
-func readInstalled(root, codeID string, validate func(plugins.Manifest, string) error) (Acquired, error) {
-	bad := func(err error) (Acquired, error) {
-		return Acquired{}, fmt.Errorf("installed plugin validation: %w", err)
-	}
+func installedTarget(root, codeID string, validate func(plugins.Manifest, string) error) (string, error) {
 	if root == "" || !idPattern.MatchString(codeID) || validate == nil {
-		return bad(errors.New("root, valid ID and trusted validator required"))
+		return "", errors.New("root, valid ID and trusted validator required")
 	}
 	abs, err := filepath.Abs(root)
 	if err != nil {
-		return bad(err)
+		return "", err
 	}
 	cur := filepath.VolumeName(abs) + string(filepath.Separator)
 	for _, part := range strings.Split(strings.TrimPrefix(abs, cur), string(filepath.Separator)) {
@@ -44,14 +41,28 @@ func readInstalled(root, codeID string, validate func(plugins.Manifest, string) 
 		cur = filepath.Join(cur, part)
 		info, err := os.Lstat(cur)
 		if err != nil {
-			return bad(err)
+			return "", err
 		}
 		if !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {
-			return bad(errors.New("unsafe root ancestor"))
+			return "", errors.New("unsafe root ancestor")
 		}
 	}
-	target := filepath.Join(abs, codeID)
-	if err = safeExistingTree(target); err != nil {
+	return filepath.Join(abs, codeID), nil
+}
+
+func readInstalled(root, codeID string, validate func(plugins.Manifest, string) error) (Acquired, error) {
+	target, err := installedTarget(root, codeID, validate)
+	if err != nil {
+		return Acquired{}, fmt.Errorf("installed plugin validation: %w", err)
+	}
+	return readInstalledTarget(target, validate)
+}
+
+func readInstalledTarget(target string, validate func(plugins.Manifest, string) error) (Acquired, error) {
+	bad := func(err error) (Acquired, error) {
+		return Acquired{}, fmt.Errorf("installed plugin validation: %w", err)
+	}
+	if err := safeExistingTree(target); err != nil {
 		return bad(err)
 	}
 	receiptFile, err := os.Open(filepath.Join(target, ".acquired.json"))
@@ -120,17 +131,29 @@ func readInstalled(root, codeID string, validate func(plugins.Manifest, string) 
 	if !info.Mode().IsRegular() || info.Size() <= 0 || info.Size() > MaxExpandedBytes {
 		return bad(errors.New("invalid executable type or size"))
 	}
+	workerSHA := strings.ToLower(receipt.SHA256)
+	// The validated inventory binds the worker's path, size and digest to the
+	// receipt, and verifyPackageTree already verified those bytes above.
+	if len(files) == 0 {
+		if err = verifyLegacyWorker(executable, workerSHA); err != nil {
+			return bad(err)
+		}
+	}
+	return Acquired{FrontendClass: frontendClass, Manifest: receipt.Manifest, ExecutablePath: executable, SHA256: workerSHA, HostContract: receipt.HostContract, RepositoryURL: receipt.RepositoryURL, PackageSHA256: packageSHA, Files: files, Command: plugins.Command{Path: executable, Dir: target}}, nil
+}
+
+func verifyLegacyWorker(executable, sha256 string) error {
 	f, err := os.Open(executable)
 	if err != nil {
-		return bad(err)
+		return err
 	}
 	b, err := io.ReadAll(io.LimitReader(f, MaxExpandedBytes+1))
 	err = errors.Join(err, f.Close())
 	if err != nil {
-		return bad(err)
+		return err
 	}
-	if int64(len(b)) > MaxExpandedBytes || digest(b) != strings.ToLower(receipt.SHA256) {
-		return bad(errors.New("installed executable digest mismatch"))
+	if int64(len(b)) > MaxExpandedBytes || digest(b) != sha256 {
+		return errors.New("installed executable digest mismatch")
 	}
-	return Acquired{FrontendClass: frontendClass, Manifest: receipt.Manifest, ExecutablePath: executable, SHA256: digest(b), HostContract: receipt.HostContract, RepositoryURL: receipt.RepositoryURL, PackageSHA256: packageSHA, Files: files, Command: plugins.Command{Path: executable, Dir: target}}, nil
+	return nil
 }

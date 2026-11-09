@@ -15,6 +15,7 @@ import (
 	"strings"
 	"sync"
 	"testing"
+	"time"
 
 	"light-media/internal/plugins"
 )
@@ -176,24 +177,41 @@ func TestFrontendPackageMetadataAndContentRejections(t *testing.T) {
 }
 
 func TestFrontendInstalledTamperAndPathRejections(t *testing.T) {
-	for _, change := range []string{"chunk", "css", "font", "extra", "missing", "symlink", "receipt_pin", "receipt_inventory"} {
+	for _, change := range []string{"worker", "chunk", "css", "font", "extra", "missing", "symlink", "receipt_pin", "receipt_inventory"} {
 		t.Run(change, func(t *testing.T) {
 			req, client, _, _ := frontendFixture(t, "zip")
 			installed, err := Acquire(context.Background(), req, client)
 			if err != nil {
 				t.Fatal(err)
 			}
+			time.Sleep(frontendStampMinAge)
+			var reader FrontendReader
+			check := func(actual Acquired) error {
+				if actual.PackageSHA256 != installed.PackageSHA256 {
+					return errors.New("package pin changed")
+				}
+				return nil
+			}
+			if _, err := reader.ReadAsset(req.Root, req.PluginID, "remoteEntry.js", req.Validate, check); err != nil || len(reader.verified) == 0 {
+				t.Fatal("expected a verified frontend snapshot", err)
+			}
 			root := installed.Command.Dir
 			switch change {
-			case "chunk", "css", "font":
-				name := map[string]string{"chunk": "chunk.js", "css": "style.css", "font": "fonts/test.woff2"}[change]
-				p := filepath.Join(root, "frontend/assets", name)
+			case "worker", "chunk", "css", "font":
+				name := map[string]string{"worker": "bin/worker", "chunk": "frontend/assets/chunk.js", "css": "frontend/assets/style.css", "font": "frontend/assets/fonts/test.woff2"}[change]
+				p := filepath.Join(root, name)
 				b, e := os.ReadFile(p)
 				if e != nil {
 					t.Fatal(e)
 				}
+				info, e := os.Stat(p)
+				if e != nil {
+					t.Fatal(e)
+				}
 				b[0] ^= 1
-				err = os.WriteFile(p, b, 0600)
+				if err = os.WriteFile(p, b, info.Mode().Perm()); err == nil {
+					err = os.Chtimes(p, info.ModTime(), info.ModTime())
+				}
 			case "extra":
 				err = os.WriteFile(filepath.Join(root, "frontend/assets/extra.js"), []byte("extra"), 0600)
 			case "missing":
@@ -232,6 +250,9 @@ func TestFrontendInstalledTamperAndPathRejections(t *testing.T) {
 			}
 			if _, err := ReadFrontendAsset(req.Root, req.PluginID, installed.PackageSHA256, "remoteEntry.js", req.Validate); err == nil {
 				t.Fatal("asset served from invalid graph")
+			}
+			if _, err := reader.ReadAsset(req.Root, req.PluginID, "remoteEntry.js", req.Validate, check); !errors.Is(err, ErrInstalledFrontendPackage) {
+				t.Fatal("asset served from invalid cached graph", err)
 			}
 		})
 	}

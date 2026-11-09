@@ -77,7 +77,7 @@ func (a *App) serveOriginalPluginFrontend(w http.ResponseWriter, r *http.Request
 		a.writeError(w, r, err)
 		return true
 	}
-	resource, err := artifacts.ReadInstalledFrontendAsset(a.pluginPackageRoot(), instance, asset[2], object.validateFrontendManifest, func(installed artifacts.Acquired) error {
+	resource, err := object.frontendReader.ReadAsset(a.pluginPackageRoot(), instance, asset[2], object.validateFrontendManifest, func(installed artifacts.Acquired) error {
 		if !object.frontendPackageMatches(installed) {
 			return &APIError{"PLUGIN_FRONTEND_INVALID", "插件界面制品校验失败", 409}
 		}
@@ -107,7 +107,8 @@ func (a *App) serveOriginalPluginFrontend(w http.ResponseWriter, r *http.Request
 	w.Header().Set("X-Content-Type-Options", "nosniff")
 	w.Header().Set("Cache-Control", "private, no-cache")
 	w.Header().Set("ETag", etag)
-	// Authentication, exact version and complete bytes are checked before 304.
+	// Authentication, exact version, package verification and the requested
+	// bytes are checked before 304.
 	if frontendETagMatches(r.Header.Get("If-None-Match"), etag) {
 		w.WriteHeader(http.StatusNotModified)
 		return true

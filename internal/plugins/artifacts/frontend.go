@@ -246,12 +246,26 @@ func ReadFrontendAsset(root, codeID, packageSHA, relative string, validate func(
 // check must bind the verified package to the caller's authority before reading
 // the member and must not call an artifact operation that takes the same lock.
 func ReadInstalledFrontendAsset(root, codeID, relative string, validate func(plugins.Manifest, string) error, check func(Acquired) error) (FrontendAsset, error) {
+	return readInstalledFrontendAsset(relative, check, func() (Acquired, error) {
+		return readInstalled(root, codeID, validate)
+	})
+}
+
+// ReadAsset checks the current package binding and reads the requested member.
+// As in ReadInstalled, check must treat the verified package as read-only.
+func (r *FrontendReader) ReadAsset(root, codeID, relative string, validate func(plugins.Manifest, string) error, check func(Acquired) error) (FrontendAsset, error) {
+	return readInstalledFrontendAsset(relative, check, func() (Acquired, error) {
+		return r.readInstalled(root, codeID, validate)
+	})
+}
+
+func readInstalledFrontendAsset(relative string, check func(Acquired) error, resolve func() (Acquired, error)) (FrontendAsset, error) {
 	if !plugins.ValidFrontendPath(relative) || check == nil {
 		return FrontendAsset{}, errors.New("valid frontend path and package check required")
 	}
 	operationMu.Lock()
 	defer operationMu.Unlock()
-	installed, err := readInstalled(root, codeID, validate)
+	installed, err := resolve()
 	if err != nil {
 		return FrontendAsset{}, fmt.Errorf("%w: %w", ErrInstalledFrontendPackage, err)
 	}

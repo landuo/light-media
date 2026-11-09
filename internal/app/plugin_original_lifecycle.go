@@ -4,10 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"light-media/internal/plugins"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"light-media/internal/plugins"
+	"light-media/internal/plugins/artifacts"
 )
 
 // originalPluginInstance is the loaded Go calling object corresponding to the
@@ -27,6 +29,7 @@ type originalPluginInstance struct {
 	external              bool
 	hostContract          string
 	frontendPackageSHA256 atomic.Pointer[string] // verified resource identity may advance without replacing the backend object
+	frontendReader        artifacts.FrontendReader
 	sessionMu             sync.Mutex
 	session               *plugins.Client
 	sessionStarted        bool
@@ -135,7 +138,7 @@ func (a *App) prepareOriginalPluginObject(ctx context.Context, in PluginInstalla
 		return nil, originalPluginClass{}, err
 	}
 	class := originalPluginClass{installation: in, isClone: meta.SourceInstanceID != "", external: implementation.External}
-	object := &originalPluginInstance{app: a, installation: in, manifest: implementation.Manifest, external: implementation.External, hostContract: implementation.HostContract}
+	object := &originalPluginInstance{app: a, installation: in, manifest: implementation.Manifest, external: implementation.External, hostContract: implementation.HostContract, frontendReader: implementation.frontendReader}
 	object.setFrontendPackageHash(implementation.PackageSHA256)
 	return object, class, nil
 }

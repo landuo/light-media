@@ -70,7 +70,7 @@ func (a *App) originalFrontendLocked(ctx context.Context, instance string) (*ori
 	if err != nil {
 		return nil, artifacts.Acquired{}, err
 	}
-	installed, err := artifacts.ReadInstalled(a.pluginPackageRoot(), instance, object.validateFrontendManifest)
+	installed, err := object.frontendReader.ReadInstalled(a.pluginPackageRoot(), instance, object.validateFrontendManifest)
 	if err != nil || !object.frontendPackageMatches(installed) {
 		// Do not publish filesystem paths or detailed validation errors to callers.
 		return nil, artifacts.Acquired{}, &APIError{"PLUGIN_FRONTEND_INVALID", "插件界面制品校验失败", 409}
