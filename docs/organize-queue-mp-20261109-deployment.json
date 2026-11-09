@@ -1,0 +1,59 @@
+{
+  "recorded_at": "2026-11-09T15:59:20.347493+00:00",
+  "product_commit": "a89397b049f3fb5b417753b8fe31e62cd1856097",
+  "remote": "https://github.com/landuo/light-media",
+  "branch": "main",
+  "remote_product_commit_verified": "a89397b049f3fb5b417753b8fe31e62cd1856097",
+  "publication": "Fast-forward of origin/main; includes the three previously deployed organize/history commits 105fdd18, 54ccc474 and 62393601. This record is a later documentation-only commit.",
+  "platform": "linux/amd64; CGO_ENABLED=0; modernconly",
+  "nas": {
+    "service": "light-media",
+    "address": "http://192.168.8.129:3120",
+    "started_at": "2026-11-09T15:56:52.899680614Z",
+    "container_state": "running",
+    "health": "healthy",
+    "restart_count": 0,
+    "healthz": {
+      "status": "ok",
+      "version": "0.4.19"
+    },
+    "host_binary_sha256": "78bb1c60d2328edb2239b03aebcdc7fa623081e8a0ac6bb187cec1a57b64041f",
+    "running_binary_sha256": "78bb1c60d2328edb2239b03aebcdc7fa623081e8a0ac6bb187cec1a57b64041f",
+    "served_frontend_index_sha256": "9c77ccc7c96348d64bef95445cd99b369ce7094ad0b4672a5ecf0a61b88efec8",
+    "queue_indexes": [
+      "organize_queue_source",
+      "organize_queue_group",
+      "organize_queue_job"
+    ],
+    "active_organize_jobs_before_stop": [],
+    "active_organize_jobs_after_restart": []
+  },
+  "backup": {
+    "directory": "/vol2/1000/docker/light-media/deployment-backups/main-a89397b0-20261109T155530Z-de5c6a",
+    "contains": [
+      "previous executable",
+      "consistent SQLite backup",
+      "deployment metadata"
+    ],
+    "sqlite_quick_check": "ok",
+    "previous_binary_sha256": "ea8b68da6080a0e83ffa2b61c26dbc71bee0e7e0127f8287ee87559ed8fd6370"
+  },
+  "production_browser": {
+    "kind": "read-only inspection with existing logged-in browser",
+    "history": {
+      "loaded": true,
+      "page_rows": 50,
+      "total": 1262,
+      "previous_success_and_failure_results_preserved": true
+    },
+    "queue": {
+      "opened": true,
+      "text": "没有正在整理的任务"
+    },
+    "no_existing_media_reorganized_for_validation": true,
+    "no_download_started_for_validation": true,
+    "no_loading_latency_claim": "History loaded after initial startup; this check does not establish a latency bound."
+  },
+  "validation": "See organize-queue-mp-20261109-validation.json for isolated application browser execution, real hardlinks, recovery and failure tests. Production page inspection is not counted as a production media-write test.",
+  "cleanup": "Own isolated fixture stopped; local test executables, temporary data/logs and dependency symlink removed after evidence recorded. Shared dependency caches and NAS rollback backup retained."
+}
