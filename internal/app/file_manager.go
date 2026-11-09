@@ -23,14 +23,21 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-// Browser roots are capabilities derived from the current configuration. A
-// request cannot invent an arbitrary path or keep using a removed root.
+// Configured browser roots grant file operations. The container root is only
+// accepted by the directory listing endpoint.
 type browserRoot struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 	Path string `json:"path"`
 	Kind string `json:"kind"`
 }
+
+const containerBrowserRootID = "container"
+
+func containerBrowserRoot() browserRoot {
+	return browserRoot{ID: containerBrowserRootID, Name: "本地", Path: "/", Kind: "container"}
+}
+
 type browserEntry struct {
 	sourceNatural []originalBrowserNaturalPart
 	Name          string `json:"name"`
@@ -187,7 +194,11 @@ func (a *App) fileManagerAPI(r *http.Request, p string) (any, error) {
 		}
 		return a.recognizeBrowserFile(ctx, in.Path)
 	case p == "roots" && r.Method == "GET":
-		return a.browserRoots(), nil
+		roots := a.browserRoots()
+		if r.URL.Query().Get("scope") == "container" {
+			roots = append(roots, containerBrowserRoot())
+		}
+		return roots, nil
 	case p == "list" && r.Method == "GET":
 		return a.browserList(ctx, r.URL.Query().Get("root_id"), r.URL.Query().Get("path"), r.URL.Query().Get("sort"), r.URL.Query().Get("order"))
 	case p == "scan" && r.Method == "POST":
@@ -256,15 +267,22 @@ func (a *App) browserList(ctx context.Context, rootID, path, sorting, order stri
 	if e != nil {
 		return nil, e
 	}
-	root, e := a.browserRoot(rootID, path)
-	if e != nil {
-		return nil, e
-	}
-	if entries, truncated, handled, err := a.originalBrowserStorageList(ctx, path, display); handled {
-		if err != nil {
-			return nil, err
+	root := containerBrowserRoot()
+	if rootID == containerBrowserRootID {
+		if !importPath(path) || browserInternal(path) {
+			return nil, bad("INVALID_PATH", "容器目录路径无效")
 		}
-		return browserListResult(root, path, sorting, order, entries, truncated), nil
+	} else {
+		root, e = a.browserRoot(rootID, path)
+		if e != nil {
+			return nil, e
+		}
+		if entries, truncated, handled, err := a.originalBrowserStorageList(ctx, path, display); handled {
+			if err != nil {
+				return nil, err
+			}
+			return browserListResult(root, path, sorting, order, entries, truncated), nil
+		}
 	}
 	f, e := importDir(path, false)
 	if e != nil {
@@ -303,7 +321,11 @@ func (a *App) browserList(ctx context.Context, rootID, path, sorting, order stri
 			}
 			name := filepath.Join(path, item.Name())
 			if protected == "" {
-				protected = a.browserStaticProtection(name)
+				if rootID == containerBrowserRootID {
+					protected = "容器目录仅供浏览"
+				} else {
+					protected = a.browserStaticProtection(name)
+				}
 			}
 			video, _ := display.Media(transferextensions.PathFile(name))
 			entries = append(entries, browserEntry{Name: item.Name(), Path: name, Type: kind, Size: info.Size(), Modified: info.ModTime().UTC().Format(time.RFC3339), Video: video, Protected: protected})

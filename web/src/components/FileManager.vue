@@ -34,6 +34,7 @@ const tree = ref(localStorage.getItem('fileBrowser.showDirTree') === 'true'),
   selected = ref<string[]>([]),
   refreshKey = ref(0);
 const activeRoot = computed(() => browserRootForPath(roots.value, currentPath.value));
+const canManage = computed(() => !!activeRoot.value && activeRoot.value.kind !== 'container');
 const items = computed(() => {
   const rows = filterBrowserItems(listing.value, filter.value, ignoreCase.value);
   return [
@@ -89,7 +90,7 @@ async function load(path = currentPath.value) {
       listing.value = virtualBrowserChildren(roots.value, currentPath.value);
       truncated.value = false;
     }
-    selected.value = retainBrowserSelection(selected.value, listing.value);
+    selected.value = canManage.value ? retainBrowserSelection(selected.value, listing.value) : [];
     refreshKey.value++;
   } catch (e) {
     if (run === generation) {
@@ -102,7 +103,7 @@ async function load(path = currentPath.value) {
   }
 }
 function openItem(item: BrowserItem) {
-  if (selectMode.value && isSelectableBrowserItem(item)) {
+  if (canManage.value && selectMode.value && isSelectableBrowserItem(item)) {
     select(item.path);
     return;
   }
@@ -114,7 +115,10 @@ function openItem(item: BrowserItem) {
   }
 }
 function select(path: string, checked = !selected.value.includes(path)) {
-  if (!listing.value.some((item) => item.path === path && isSelectableBrowserItem(item))) return;
+  if (
+    !canManage.value ||
+    !listing.value.some((item) => item.path === path && isSelectableBrowserItem(item))
+  ) return;
   selected.value = checked
     ? [...new Set([...selected.value, path])]
     : selected.value.filter((value) => value !== path);
@@ -143,7 +147,8 @@ async function organized() {
 }
 async function initial(paths?: string[]) {
   if (!paths?.length) return;
-  if (!browserRootForPath(roots.value, paths[0]!)) {
+  const root = browserRootForPath(roots.value, paths[0]!);
+  if (!root || root.kind === 'container') {
     error.value = '源路径已不在允许目录内，请检查容器挂载和目录配置。';
     return;
   }
@@ -162,7 +167,7 @@ function openOperation(action: string, paths: string[] = []) {
   operationError.value = '';
 }
 async function executeOperation() {
-  if (operationBusy.value || !activeRoot.value) return;
+  if (operationBusy.value || !canManage.value || !activeRoot.value) return;
   operationBusy.value = true;
   operationError.value = '';
   try {
@@ -265,7 +270,7 @@ watch(
 onMounted(async () => {
   try {
     const [rootList, settings] = await Promise.all([
-      api<BrowserRoot[]>('/files/roots'),
+      api<BrowserRoot[]>('/files/roots?scope=container'),
       ui.settings ? Promise.resolve(ui.settings) : api('/settings'),
     ]);
     roots.value = rootList;
@@ -322,7 +327,7 @@ onUnmounted(() => {
           class="file-icon-button"
           aria-label="新建目录"
           title="新建目录"
-          :disabled="loading || !activeRoot || !!detailFile"
+          :disabled="loading || !canManage || !!detailFile"
           @click="openOperation('mkdir')"
         >
           <FileManagerIcon name="mkdir" />
@@ -391,6 +396,7 @@ onUnmounted(() => {
               >
                 <FileManagerIcon name="delete" /></button></span
             ><button
+              v-if="activeRoot?.kind !== 'container' || selectMode"
               class="file-icon-button"
               :class="{ active: selectMode }"
               :aria-pressed="selectMode"
@@ -399,7 +405,7 @@ onUnmounted(() => {
               @click="toggleSelection"
             >
               <FileManagerIcon :name="selectMode ? 'select-remove' : 'select'" /></button></template
-          ><template v-else
+          ><template v-else-if="canManage"
             ><span class="toolbar-space"></span
             ><button
               class="file-icon-button"
@@ -422,7 +428,7 @@ onUnmounted(() => {
         <div v-if="loading" class="file-loading" role="status">正在读取目录…</div>
         <div v-else-if="detailFile" class="file-detail">
           <img
-            v-if="detailImage"
+            v-if="canManage && detailImage"
             class="file-image"
             :src="contentURL(detailFile)"
             :alt="detailFile.name"
@@ -444,7 +450,7 @@ onUnmounted(() => {
             @click="openItem(item)"
           >
             <label
-              v-if="selectMode && isSelectableBrowserItem(item)"
+              v-if="canManage && selectMode && isSelectableBrowserItem(item)"
               class="file-selection-control"
               @click.stop
             >
@@ -462,7 +468,7 @@ onUnmounted(() => {
               ><small v-if="item.type === 'file' && item.size">{{ bytes(item.size) }}</small>
             </button>
             <div
-              v-if="!selectMode && !item.virtual && ['dir', 'file'].includes(item.type)"
+              v-if="canManage && !selectMode && !item.virtual && ['dir', 'file'].includes(item.type)"
               class="file-row-actions"
               @click.stop
             >
@@ -504,7 +510,7 @@ onUnmounted(() => {
               </button>
             </div>
             <details
-              v-if="!selectMode && !item.virtual && ['dir', 'file'].includes(item.type)"
+              v-if="canManage && !selectMode && !item.virtual && ['dir', 'file'].includes(item.type)"
               class="file-mobile-menu"
               @click.stop
             >

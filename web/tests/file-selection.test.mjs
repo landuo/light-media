@@ -13,7 +13,7 @@ const compiled = ts.transpileModule(script.content, {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
 }).outputText;
 
-async function openFiles(t, { initialPath = '/media/download' } = {}) {
+async function openFiles(t, { initialPath = '/media/download', container = false } = {}) {
   const fixture = {
     items: [
       { path: '/media/download/one.mkv', name: 'one.mkv', type: 'file' },
@@ -26,10 +26,17 @@ async function openFiles(t, { initialPath = '/media/download' } = {}) {
   const apiModule = {
     api: async (path) => {
       fixture.requests.push(path);
-      if (path === '/files/roots')
-        return [{ id: 'download', path: '/media/download', name: 'download' }];
+      if (path === '/files/roots?scope=container') {
+        const roots = [{ id: 'download', path: '/media/download', name: 'download' }];
+        if (container) roots.push({ id: 'container', path: '/', name: '本地', kind: 'container' });
+        return roots;
+      }
       if (path.startsWith('/files/list?')) {
         const location = new URLSearchParams(path.split('?')[1]).get('path');
+        if (container && location === '/')
+          return { items: [{ path: '/BT_backup', name: 'BT_backup', type: 'dir' }] };
+        if (container && location === '/BT_backup')
+          return { items: [{ path: '/BT_backup/example.torrent', name: 'example.torrent', type: 'file' }] };
         return { items: location === '/media/download' ? [...fixture.items] : [] };
       }
       throw new Error('Unexpected request: ' + path);
@@ -139,6 +146,18 @@ test('virtual mount parents navigate even in selection mode and cannot enter bat
   await files.clickName('/media/download');
   assert.ok(files.checkbox('one.mkv'));
   assert.equal(files.button('整理所选 1 项'), undefined);
+});
+
+test('container-only folders expose metadata without download or mutation controls', async (t) => {
+  const files = await openFiles(t, { initialPath: '', container: true });
+  assert.ok(files.button('新建目录').props.disabled);
+  assert.equal(files.button('多选文件'), undefined);
+  await files.clickName('/BT_backup');
+  assert.ok(files.fixture.requests.some((path) => path.includes('root_id=container&path=%2FBT_backup')));
+  assert.equal(files.button('删除 example.torrent'), undefined);
+  await files.clickName('/BT_backup/example.torrent');
+  assert.ok(files.nodes().some((node) => node.type === 'h2' && node.children === 'example.torrent'));
+  assert.equal(files.button('下载文件'), undefined);
 });
 
 test('selection reconciliation excludes virtual or unsupported items and deduplicates paths', () => {

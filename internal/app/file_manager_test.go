@@ -86,6 +86,48 @@ func TestFileBrowserNavigationContainmentSortAndScan(t *testing.T) {
 	}
 }
 
+func TestFileBrowserContainerRootIsReadOnly(t *testing.T) {
+	a, _, _ := importTestApp(t)
+	cookie := setupTestAdmin(t, a)
+	outside := t.TempDir()
+	file := filepath.Join(outside, "example.torrent")
+	importWrite(t, file, []byte("container-only fixture"))
+	link := filepath.Join(outside, "linked")
+	if err := os.Symlink(outside, link); err != nil {
+		t.Fatal(err)
+	}
+	listing := func(path string) string {
+		return "/api/files/list?" + url.Values{"root_id": {containerBrowserRootID}, "path": {path}}.Encode()
+	}
+	h := a.Handler()
+	if r := callTest(t, h, "GET", listing(outside), "", nil, ""); r.Code != 401 {
+		t.Fatal("unauthenticated container listing", r.Code)
+	}
+	if r := callTest(t, h, "GET", "/api/files/roots", "", cookie, ""); r.Code != 200 || bytes.Contains(r.Body.Bytes(), []byte(`"kind":"container"`)) {
+		t.Fatal("container root leaked into managed path pickers", r.Code)
+	}
+	if r := callTest(t, h, "GET", "/api/files/roots?scope=container", "", cookie, ""); r.Code != 200 || !bytes.Contains(r.Body.Bytes(), []byte(`"kind":"container"`)) {
+		t.Fatal("missing container root", r.Code)
+	}
+	if r := callTest(t, h, "GET", listing("/"), "", cookie, ""); r.Code != 200 {
+		t.Fatal("container / is not browsable", r.Code)
+	}
+	if r := callTest(t, h, "GET", listing(outside), "", cookie, ""); r.Code != 200 || !bytes.Contains(r.Body.Bytes(), []byte(`"name":"example.torrent"`)) || bytes.Contains(r.Body.Bytes(), []byte("container-only fixture")) {
+		t.Fatal("container listing did not expose metadata only", r.Code)
+	}
+	if r := callTest(t, h, "GET", listing(link), "", cookie, ""); r.Code == 200 {
+		t.Fatal("container listing followed a symlink")
+	}
+	content := "/api/files/content?" + url.Values{"root_id": {containerBrowserRootID}, "path": {file}}.Encode()
+	if r := callTest(t, h, "GET", content, "", cookie, ""); r.Code == 200 {
+		t.Fatal("container listing granted file downloads")
+	}
+	mutation, _ := json.Marshal(browserOperationRequest{Action: "delete", RootID: containerBrowserRootID, Path: outside, Paths: []string{file}})
+	if r := callTest(t, h, "POST", "/api/files/operation-preview", string(mutation), cookie, ""); r.Code == 200 {
+		t.Fatal("container listing granted file mutations")
+	}
+}
+
 func TestFileOperationsPreviewConfirmAndQuarantinePreserveBytes(t *testing.T) {
 	a, source, _ := importTestApp(t)
 	ctx := context.Background()
