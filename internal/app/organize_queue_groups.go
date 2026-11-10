@@ -25,13 +25,34 @@ const liveOrganizeGroups = `SELECT DISTINCT json_extract(m.payload,'$.group')
  WHERE j.state IN ` + activeOrganizeStates + ` AND m.kind='organize_queue_member'
  AND json_extract(m.payload,'$.job')=(j.id||'')`
 
+// Writes already know which group to check. Seek that group's members instead
+// of rebuilding the set of every active group for each incoming file.
+const activeOrganizeGroup = `EXISTS(
+ SELECT 1 FROM records member INDEXED BY organize_queue_group
+ CROSS JOIN jobs active
+ WHERE member.kind='organize_queue_member' AND json_extract(member.payload,'$.group')=(m.group_id||'')
+ AND active.id=json_extract(member.payload,'$.job') AND active.state IN ` + activeOrganizeStates + `
+)`
+
+const matchingOrganizeGroups = `WITH matches(group_id) AS (
+ SELECT json_extract(payload,'$.group') FROM records INDEXED BY organize_queue_meta
+ WHERE kind='organize_queue_member' AND ?1!='' AND json_extract(payload,'$.meta')=?1
+ UNION
+ SELECT json_extract(payload,'$.group') FROM records INDEXED BY organize_queue_media
+ WHERE kind='organize_queue_member' AND ?2!='' AND json_extract(payload,'$.media')=?2
+)
+SELECT m.group_id FROM matches m WHERE ` + activeOrganizeGroup
+
 func activeOrganizeSourceTx(ctx context.Context, tx *sql.Tx, source string) (string, error) {
 	var job string
-	err := tx.QueryRowContext(ctx, `SELECT json_extract(m.payload,'$.job') FROM records m
-	 JOIN jobs j ON j.id=json_extract(m.payload,'$.job')
-	 WHERE m.kind='organize_queue_member' AND json_extract(m.payload,'$.source')=? AND j.state!='cancelled'
-	 AND NOT EXISTS(SELECT 1 FROM records c WHERE c.kind='organize_file_cancel' AND c.id=j.id||'/'||json_extract(m.payload,'$.file'))
-	 AND json_extract(m.payload,'$.group') IN (`+liveOrganizeGroups+`) LIMIT 1`, source).Scan(&job)
+	err := tx.QueryRowContext(ctx, `WITH candidates AS (
+	 SELECT json_extract(payload,'$.job') AS job_id,json_extract(payload,'$.file') AS file_id,json_extract(payload,'$.group') AS group_id
+	 FROM records WHERE kind='organize_queue_member' AND json_extract(payload,'$.source')=?
+	)
+	SELECT m.job_id FROM candidates m JOIN jobs j ON j.id=m.job_id
+	WHERE j.state!='cancelled' AND NOT EXISTS(
+	 SELECT 1 FROM records c WHERE c.kind='organize_file_cancel' AND c.id=j.id||'/'||m.file_id
+	) AND `+activeOrganizeGroup+` LIMIT 1`, source).Scan(&job)
 	if errors.Is(err, sql.ErrNoRows) {
 		return "", nil
 	}
@@ -102,9 +123,7 @@ func registerOrganizeQueueTx(ctx context.Context, tx *sql.Tx, job Job) error {
 			}
 			continue // MP removes recognition failures directly; history retains them.
 		}
-		rows, err := tx.QueryContext(ctx, `SELECT DISTINCT json_extract(payload,'$.group') FROM records WHERE kind='organize_queue_member'
-		 AND ((?<>'' AND json_extract(payload,'$.meta')=?) OR (?<>'' AND json_extract(payload,'$.media')=?))
-		 AND json_extract(payload,'$.group') IN (`+liveOrganizeGroups+`)`, member.Meta, member.Meta, member.Media, member.Media)
+		rows, err := tx.QueryContext(ctx, matchingOrganizeGroups, member.Meta, member.Media)
 		if err != nil {
 			return err
 		}

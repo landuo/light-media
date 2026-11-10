@@ -2,6 +2,8 @@ package app
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"slices"
 	"strings"
 	"testing"
@@ -24,7 +26,8 @@ func TestOrganizeQueueSeeksActiveGroupsAndKeepsUnfinishedBatch(t *testing.T) {
 			t.Fatal(err)
 		}
 		if row.group != "" {
-			if err := a.Store.Put(ctx, "organize_queue_member", row.id, organizeQueueMember{Job: row.id, Group: row.group, File: row.id}); err != nil {
+			member := organizeQueueMember{Job: row.id, Group: row.group, File: row.id, Source: "/fixture/" + row.id, Meta: "meta", Media: "media"}
+			if err := a.Store.Put(ctx, "organize_queue_member", row.id, member); err != nil {
 				t.Fatal(err)
 			}
 		}
@@ -48,11 +51,32 @@ func TestOrganizeQueueSeeksActiveGroupsAndKeepsUnfinishedBatch(t *testing.T) {
 			t.Fatalf("queue=%v want=%v", got, want)
 		}
 	}
+	assertSubmission := func(wantGroup, wantJob string) {
+		t.Helper()
+		tx, err := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer tx.Rollback()
+		for _, input := range [][2]string{{"meta", ""}, {"", "media"}} {
+			var group string
+			err := tx.QueryRowContext(ctx, matchingOrganizeGroups, input[0], input[1]).Scan(&group)
+			if group != wantGroup || err != nil && !errors.Is(err, sql.ErrNoRows) {
+				t.Fatalf("submission group=%q want=%q err=%v", group, wantGroup, err)
+			}
+		}
+		job, err := activeOrganizeSourceTx(ctx, tx, "/fixture/completed-peer")
+		if err != nil || job != wantJob {
+			t.Fatalf("active duplicate job=%q want=%q err=%v", job, wantJob, err)
+		}
+	}
 	assertIDs([]string{"active", "failed-peer", "completed-peer", "prepare"})
+	assertSubmission("live", "completed-peer")
 	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='succeeded' WHERE id='active'`); err != nil {
 		t.Fatal(err)
 	}
 	assertIDs([]string{"prepare"})
+	assertSubmission("", "")
 	rows, err := a.Store.reader().QueryContext(ctx, "EXPLAIN QUERY PLAN "+liveOrganizeGroups)
 	if err != nil {
 		t.Fatal(err)

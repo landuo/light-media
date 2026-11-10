@@ -121,6 +121,7 @@ type App struct {
 	jobWake                          chan struct{}
 	wg                               sync.WaitGroup
 	importMu                         sync.RWMutex
+	importTargetProbe                importTargetProbe
 	importAdmissionsMu               sync.Mutex
 	importAdmissions                 map[string]*importAdmission
 	importSourceLink                 func(int, string, int, string, int) error // Owned syscall-failure seam; nil uses actual Linkat.

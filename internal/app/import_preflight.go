@@ -1,12 +1,59 @@
 package app
 
 import (
+	"context"
 	"math"
 	"os"
 	"path/filepath"
+	"sync"
+	"syscall"
+	"time"
 
 	"golang.org/x/sys/unix"
 )
+
+const organizeProbeMaxAge = 30 * time.Second
+
+type importTargetProbe struct {
+	mu        sync.Mutex
+	key       importTargetProbeKey
+	checkedAt time.Time
+}
+
+type importTargetProbeKey struct {
+	batch, path   string
+	device, inode uint64
+	mode          os.FileMode
+	uid, gid      uint32
+}
+
+// A directory batch may reuse its own recent successful probe for the same
+// opened root. Space and file identity checks still run for each plan, and
+// actual publication continues to validate and write the target normally.
+func (p *importTargetProbe) check(ctx context.Context, directory *os.File, info os.FileInfo) error {
+	work, ok := ctx.Value(organizeFileKey{}).(organizeFileWork)
+	stat, haveStat := info.Sys().(*syscall.Stat_t)
+	if !ok || work.Job.ParentJobID == "" || work.BatchID == "" || !haveStat {
+		return importProbeWrite(directory)
+	}
+	key := importTargetProbeKey{
+		batch: work.BatchID, path: directory.Name(), device: uint64(stat.Dev), inode: uint64(stat.Ino),
+		mode: info.Mode(), uid: stat.Uid, gid: stat.Gid,
+	}
+	p.mu.Lock()
+	recent := p.key == key && time.Since(p.checkedAt) < organizeProbeMaxAge
+	p.mu.Unlock()
+	if recent && unix.Faccessat(int(directory.Fd()), ".", unix.W_OK|unix.X_OK, unix.AT_EACCESS) == nil {
+		return nil
+	}
+	if err := importProbeWrite(directory); err != nil {
+		return err
+	}
+	p.mu.Lock()
+	p.key, p.checkedAt = key, time.Now()
+	p.mu.Unlock()
+	return nil
+}
 
 func importAvailableSpace(directory *os.File) (int64, error) {
 	var state unix.Statfs_t

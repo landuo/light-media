@@ -273,6 +273,10 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		return ImportPlan{}, err
 	}
 	rootInfo, err := rootDir.Stat()
+	if err != nil {
+		rootDir.Close()
+		return ImportPlan{}, err
+	}
 	availableSpace, spaceErr := importAvailableSpace(rootDir)
 	if spaceErr == nil && !request.originalModulePreview {
 		if ctx.Err() != nil {
@@ -281,7 +285,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			var finish func()
 			finish, spaceErr = a.beginWrite()
 			if spaceErr == nil {
-				spaceErr = importProbeWrite(rootDir)
+				spaceErr = a.importTargetProbe.check(ctx, rootDir, rootInfo)
 				finish()
 			}
 		}
@@ -289,9 +293,6 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	rootDir.Close()
 	if spaceErr != nil {
 		return ImportPlan{}, spaceErr
-	}
-	if err != nil {
-		return ImportPlan{}, err
 	}
 	rootStat, ok := rootInfo.Sys().(*syscall.Stat_t)
 	if !ok {

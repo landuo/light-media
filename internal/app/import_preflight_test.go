@@ -6,9 +6,47 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"light-media/internal/catalog"
 )
+
+func TestImportBatchReusesProbeOnlyForRecentSameRootAndBatch(t *testing.T) {
+	dir, err := os.Open(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer dir.Close()
+	probe := importTargetProbe{}
+	stamp := time.Unix(1000, 0)
+	check := func(batch string, wantReuse bool) {
+		t.Helper()
+		if err := os.Chtimes(dir.Name(), stamp, stamp); err != nil {
+			t.Fatal(err)
+		}
+		info, err := dir.Stat()
+		if err != nil {
+			t.Fatal(err)
+		}
+		ctx := context.WithValue(t.Context(), organizeFileKey{}, organizeFileWork{Job: Job{ParentJobID: "parent"}, BatchID: batch})
+		if err := probe.check(ctx, dir, info); err != nil {
+			t.Fatal(err)
+		}
+		info, err = dir.Stat()
+		if err != nil || info.ModTime().Equal(stamp) != wantReuse {
+			t.Fatalf("batch %q reuse=%t, info=%v, err=%v", batch, wantReuse, info, err)
+		}
+	}
+	check("first", false)
+	check("first", true)
+	check("second", false)
+	probe.checkedAt = time.Now().Add(-organizeProbeMaxAge)
+	check("second", false)
+	if err := os.Chmod(dir.Name(), 0750); err != nil {
+		t.Fatal(err)
+	}
+	check("second", false)
+}
 
 func TestImportPreflightSpaceAndProbeLeavesNoFormalTarget(t *testing.T) {
 	a, source, target := importTestApp(t)
