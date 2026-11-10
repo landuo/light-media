@@ -19,3 +19,12 @@
 主要实现：internal/app/store.go、job_summary.go、jobs.go、transfer_history.go、transfer_history_index.go、import_parallel.go、import_parallel_owners.go、directory_overwrite.go、import_download_retry.go、import_reservation.go、directory_download.go、download_season_scope.go、source_post_add.go；internal/transferoverwrite/path_identity.go。未改前端，未增加不受限并发，未增加工作流或 AI 功能。
 
 后续：国漫规则和第249集重试已完成；冷态历史首读、目录保存及手动提交等待继续保留为未解决项。恢复上下文先读此文档和同名证据，先记录请求各阶段耗时及锁/数据库连接等待，不重复第249集或已通过的整批测试。
+
+2026-11-10 后续排查（进行中，尚未全量验收）：
+- 首页复现持续显示连接页，但status轮询约0.009–0.028秒。bootstrap等待settings；publicSettings调用sourceSiteMessagePolicy，后者仍使用单写连接做只读事务。改为reader只读事务，新增持有写连接时设置策略读取不阻塞的测试。
+- browserMutationReferences每个路径读取所有旧计划，仅在Go解码后排除已结束计划。实机3947个计划、约25.5MB，没有queued/running计划。改为按状态索引只读活跃计划，asset/managed_file及原有归属和路径核验保持。
+- NAS实测磁盘压力IO some avg10=96.36%、full=84.13%，iostat dm-1利用率100%、队列11.48、写等待1856ms；只读统计98.0秒、计划状态分组35.0秒。这是当前实机环境观察，不等于已经证明全部延迟由磁盘导致。
+- 针对设置连接等待、媒体文件保护、站点消息策略测试通过（1.987s）。Linux amd64候选程序已构建，正在部署验收；尚未推送，不宣称剩余性能问题解决。
+- 候选实机浏览器：auth/status 0.007秒、settings 0.01664秒、status 0.0098秒；首页立即显示应用布局。可见缓存榜单0.048–0.079秒，但TMDB外部榜单11.470秒，不能把外部请求也宣称已加速。文件列表0.0906秒，历史首读3.6215秒，任务列表首次0.4117秒、随后0.2278–0.2692秒。均为响应头耗时，页面实际显示数据已核对。
+- 查询计划检查发现SQLite仍可能选records主键扫描，因此明确INDEXED BY import_plan_state；实机EXPLAIN确认按状态索引，活跃计划0行、查询0.00304秒。调整后针对性测试2.069秒通过，候选重新构建部署。
+- 本轮尚未验收234秒整理提交问题，也未宣布历史冷首读解决。已向用户询问是否允许临时暂停光影刷流及刷流下载（保留文件/种子并恢复），以隔离磁盘拥堵；没有擅自暂停任何下载任务。等待该决定时保留现有修复和证据，后续继续定位而非重复已成功的249集。

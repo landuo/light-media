@@ -116,6 +116,7 @@ func OpenStore(dir string) (*Store, error) {
  CREATE INDEX IF NOT EXISTS organize_queue_group ON records(json_extract(payload,'$.group')) WHERE kind='organize_queue_member';
  CREATE INDEX IF NOT EXISTS organize_queue_job ON records(json_extract(payload,'$.job')) WHERE kind='organize_queue_member';
  CREATE INDEX IF NOT EXISTS managed_file_asset ON records(json_extract(payload,'$.asset_id')) WHERE kind='managed_file';
+ CREATE INDEX IF NOT EXISTS import_plan_state ON records(json_extract(payload,'$.state')) WHERE kind='import_plan';
  CREATE INDEX IF NOT EXISTS import_plan_intent ON records(json_extract(payload,'$.intent_id')) WHERE kind='import_plan';
  CREATE INDEX IF NOT EXISTS jobs_due ON jobs(state,run_at);
  CREATE INDEX IF NOT EXISTS jobs_subject ON jobs(kind,json_extract(payload,'$.id'),created_at);

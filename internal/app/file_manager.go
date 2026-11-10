@@ -554,9 +554,9 @@ func (a *App) browserMutationReferences(ctx context.Context, path string, protec
 	contains := func(referenced string) bool {
 		return referenced != "" && sharedDirectoryContainsWithIdentity(path, referenced, identity)
 	}
-	query := `SELECT kind,payload FROM records WHERE kind IN ('asset','import_plan','managed_file')`
+	query := `SELECT kind,payload FROM records WHERE kind IN ('asset','managed_file') UNION ALL SELECT kind,payload FROM records INDEXED BY import_plan_state WHERE kind='import_plan' AND json_extract(payload,'$.state') IN ('queued','running')`
 	if !protectReferences {
-		query = `SELECT kind,payload FROM records WHERE kind='import_plan'`
+		query = `SELECT kind,payload FROM records INDEXED BY import_plan_state WHERE kind='import_plan' AND json_extract(payload,'$.state') IN ('queued','running')`
 	}
 	rows, e := a.Store.DB.QueryContext(ctx, query)
 	if e != nil {
