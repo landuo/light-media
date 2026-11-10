@@ -1,7 +1,7 @@
 {
   "test_kind": "NAS real runtime and browser; local synthetic/race evidence listed separately",
   "scope": "Concurrent independent transfers, read-only UI isolation, own completed-download retry",
-  "runtime_commit": "77b80ac4",
+  "runtime_commit": "40bf8199",
   "page_measurement_commit": "bb3d2b31 (same read/query changes as f1818724)",
   "method": "Chrome observed response header times, milliseconds. One visit per page plus automatic polling during the existing batch. Different batch phases, not a controlled throughput benchmark; not total page render time.",
   "browser_after": {
@@ -670,31 +670,164 @@
     ],
     "dirty": 0
   },
-  "status": "partial: directory policy and both selected retries verified; cold history read and newly measured save/submission delays remain unresolved",
+  "status": "Targeted performance fixes deployed and browser-verified; variable cold disk and external metadata latency remains, no universal latency guarantee.",
   "remaining_performance": {
-    "observation": "After restart the failed-history request still takes 17.099 seconds. Native SQLite replay of the indexed page after warming was 147 ms; this is not a cold Go endpoint measurement and does not locate the complete delay.",
-    "next_diagnostic": "Measure handler stages and read/write connection wait during a cold first request before attempting another change.",
-    "stop_rule": "AGENTS.md: after three failed fixes, stop and name the doubtful assumption. The assumption that writer contention and the job join alone explain cold history latency was not confirmed.",
-    "additional_observation": {
-      "directory_put_response_headers_seconds": 101.156094,
-      "single_manual_submit_response_headers_seconds": 233.809993,
-      "preview_ready_at": "2026-11-10T00:55:39.557860355Z",
-      "job_created_at": "2026-11-10T00:59:19.845505271Z",
-      "observed_server_cpu_percent_of_one_core": 100.85,
-      "running_imports_during_wait": 0,
-      "cause": "not established; snapshot was taken after directory save completed, so it does not prove deadlock or identify the waiting stage"
-    }
+    "bounds": [
+      "History first page after final restarts: 370.383ms and 1942.402ms; these are different load phases, not a controlled benchmark.",
+      "Task page first response 2127.652ms; subsequent polling 136.180ms and 395.795ms.",
+      "External TMDB cold recommendation request previously 11.470s; not changed by this patch."
+    ],
+    "not_claimed": [
+      "The exact earlier 233.810s request was not captured in a blocking stack; a later 204s test job directly showed plugin deletion holding the import lock.",
+      "Production plugin torrent deletions were not manually replayed; safety behavior was verified with the SDK process and synthetic downloader protocol fixtures.",
+      "Not all pre-existing identification failures or the old auxiliary integration fixture have been resolved."
+    ]
   },
   "deployment": {
-    "code_commit": "77b80ac4",
-    "runtime_sha256": "191b83086cf7d841317138a4651d8fe08a0292b7c9d1e37888cfbbecea0ca3c5",
-    "started_at": "2026-11-10T00:53:06.707520057Z",
-    "health": "healthy",
-    "branch": "origin/main",
+    "code_commit": "40bf8199",
+    "runtime_sha256": "2af341a35b3f1031c12c22a05e5a457b306a53d5beef5a8a42ff0951758af08c",
+    "started_at": "2026-11-10T02:13:43.234658042Z",
+    "health": "healthz ok; container running",
+    "branch": "codex/fix-directory-organize-preparation; remote main push pending at documentation write",
     "version": "0.4.19",
     "cpu_limit": 1,
     "memory_mib": 512,
-    "original_service_changed": false,
-    "diagnostic_restart": "One SIGQUIT stack capture followed by docker start; configuration had already saved, no jobs were running; service recovered healthy. No code replacement in this follow-up."
+    "original_service_changed": false
+  },
+  "earlier_delivery": {
+    "runtime_commit": "77b80ac4",
+    "status": "partial: directory policy and both selected retries verified; cold history read and newly measured save/submission delays remain unresolved",
+    "remaining_performance": {
+      "observation": "After restart the failed-history request still takes 17.099 seconds. Native SQLite replay of the indexed page after warming was 147 ms; this is not a cold Go endpoint measurement and does not locate the complete delay.",
+      "next_diagnostic": "Measure handler stages and read/write connection wait during a cold first request before attempting another change.",
+      "stop_rule": "AGENTS.md: after three failed fixes, stop and name the doubtful assumption. The assumption that writer contention and the job join alone explain cold history latency was not confirmed.",
+      "additional_observation": {
+        "directory_put_response_headers_seconds": 101.156094,
+        "single_manual_submit_response_headers_seconds": 233.809993,
+        "preview_ready_at": "2026-11-10T00:55:39.557860355Z",
+        "job_created_at": "2026-11-10T00:59:19.845505271Z",
+        "observed_server_cpu_percent_of_one_core": 100.85,
+        "running_imports_during_wait": 0,
+        "cause": "not established; snapshot was taken after directory save completed, so it does not prove deadlock or identify the waiting stage"
+      }
+    },
+    "deployment": {
+      "code_commit": "77b80ac4",
+      "runtime_sha256": "191b83086cf7d841317138a4651d8fe08a0292b7c9d1e37888cfbbecea0ca3c5",
+      "started_at": "2026-11-10T00:53:06.707520057Z",
+      "health": "healthy",
+      "branch": "origin/main",
+      "version": "0.4.19",
+      "cpu_limit": 1,
+      "memory_mib": 512,
+      "original_service_changed": false,
+      "diagnostic_restart": "One SIGQUIT stack capture followed by docker start; configuration had already saved, no jobs were running; service recovered healthy. No code replacement in this follow-up."
+    }
+  },
+  "followup_20261110": {
+    "pause_restoration": {
+      "light_media_task": "f2648c9fbb334ffd89ce5487b0582ed8",
+      "light_media_enabled_restored": true,
+      "other_brush_tag": "刷流-aa94b5e9",
+      "exact_original_downloading_count": 5,
+      "all_five_restored_state": "downloading",
+      "original_paused_and_ordinary_downloads_unchanged": true
+    },
+    "isolation_observation": {
+      "before_disk_util_percent": 100,
+      "before_write_await_ms": 1056,
+      "after_disk_util_percent": 22.4,
+      "after_write_await_ms": 6.67,
+      "after_history_ms": 224.273,
+      "test_kind": "live NAS isolation, not identical concurrent load"
+    },
+    "blocking_stack": {
+      "job_id": "job_kWxMcKT7Hz8dk984b1yzMCEx",
+      "plan_id": "plan_Kr-JpFr4p0H_GXy-ZG_OmCmv",
+      "waiter": "runImportFileSelection / importMu.RLock",
+      "holder": "originalHostDownloaderDeleteFiles / browserMutationReferences / json.Unmarshal(Asset)",
+      "job_recovered": "succeeded at 2026-11-10T01:58:36.222284428Z after diagnostic restart"
+    },
+    "history_index_before": {
+      "operation": "history_snapshot/index_refresh",
+      "duration_ms": 21606,
+      "change": "Bound auxiliary callbacks by dirty plan and transfer_history_callback_plan index; materialize deletion markers once per history query."
+    },
+    "organize_actual": {
+      "test_kind": "NAS runtime with own synthetic 1-second video; not user media",
+      "request_id": "req_46ND10WzaMlLs1LHrNA0uIyf",
+      "submit_headers_ms": 1745.163,
+      "job_id": "job_s50gniU7ZVKGITX5cQPRR5NE",
+      "created_at": "2026-11-10T02:05:33.188060998Z",
+      "completed_at": "2026-11-10T02:05:35.606214901Z",
+      "state": "succeeded",
+      "dialog_closed": true,
+      "history_status": "success",
+      "history_id": "file_V0cNFgriMU3_bbouIXI_c2Es",
+      "history_id_matches_first_attempt": true,
+      "inode": 55697586,
+      "size": 1375,
+      "hardlink_names": 2,
+      "note": "Same transfer code as final build; subsequent changes only optimize history and queue reads."
+    },
+    "browser_final": {
+      "measurement": "response header milliseconds, verified visible data; not total rendering time",
+      "auth_status_ms": 9.87,
+      "settings_ms": 9.636,
+      "status_ms": 13.781,
+      "homepage_loading_screen_cleared": true,
+      "file_list_ms": 170.105,
+      "history_first_page_ms": [
+        370.383,
+        1942.402
+      ],
+      "history_search_ms": 321.055,
+      "jobs_ms": [
+        2127.652,
+        136.18,
+        395.795
+      ],
+      "organize_queue_ms": [
+        76.672,
+        41.181,
+        118.189,
+        42.258
+      ],
+      "organize_queue_empty": true,
+      "history_rows_after_test_cleanup": 1262
+    },
+    "tests": [
+      {
+        "kind": "local SDK process and synthetic downloader protocol",
+        "selection": "TestFileLibrary|TestFileReferenceBatch|TestHostDownloaderDeleteFiles",
+        "passed": true,
+        "seconds": 7.495
+      },
+      {
+        "kind": "local synthetic indexed history, stable ID, repeated results and reader contention",
+        "selection": "TestHistory(Index|Refresh|Upsert)|TestTransferRepeatResultRequiresCompletedJob|TestAssetAtPath|TestFileReferenceBatch",
+        "passed": true,
+        "seconds": 5.821
+      },
+      {
+        "kind": "local synthetic queue membership, directory recovery and async history submission",
+        "selection": "TestOrganizeQueueSeeksActiveGroupsAndKeepsUnfinishedBatch|TestManualOrganizeDirectoryQueuePreparesAndReplays|TestManualOrganizeHistoryQueueAcknowledgesBatchBeforeRecognition",
+        "passed": true,
+        "seconds": 3.038
+      },
+      {
+        "kind": "old auxiliary integration fixture",
+        "passed": false,
+        "diagnosis": "Only one primary callback emitted; baseline original SQL=1, indexed SQL=1. Did not claim this existing fixture passed. Independent auxiliary callback parity test passed."
+      }
+    ],
+    "cleanup": {
+      "generated_video_names_removed": 2,
+      "empty_fixture_directories_removed": 3,
+      "synthetic_asset_retired": 1,
+      "history_hidden_via_normal_API": true,
+      "audit_plans_and_test_root_reference_retained": true,
+      "user_media_untouched": true
+    }
   }
 }
