@@ -687,12 +687,13 @@
     "code_commit": "40bf8199",
     "runtime_sha256": "2af341a35b3f1031c12c22a05e5a457b306a53d5beef5a8a42ff0951758af08c",
     "started_at": "2026-11-10T02:13:43.234658042Z",
-    "health": "healthz ok; container running",
-    "branch": "codex/fix-directory-organize-preparation; remote main push pending at documentation write",
+    "health": "running healthy; healthz ok",
+    "branch": "origin/main",
     "version": "0.4.19",
     "cpu_limit": 1,
     "memory_mib": 512,
-    "original_service_changed": false
+    "original_service_changed": false,
+    "pushed_code_and_evidence_commit": "ea14ac07"
   },
   "earlier_delivery": {
     "runtime_commit": "77b80ac4",
@@ -827,7 +828,9 @@
       "synthetic_asset_retired": 1,
       "history_hidden_via_normal_API": true,
       "audit_plans_and_test_root_reference_retained": true,
-      "user_media_untouched": true
+      "user_media_untouched": true,
+      "local_task_binaries_and_temp_directories_removed": true,
+      "nas_staged_binary_removed": true
     }
   }
 }
