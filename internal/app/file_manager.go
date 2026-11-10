@@ -541,6 +541,64 @@ func (a *App) browserMutationAllowedWithReferences(ctx context.Context, path str
 }
 
 func (a *App) browserMutationReferences(ctx context.Context, path string, protectReferences bool) error {
+	check, err := a.browserMutationReferenceCheck(ctx, protectReferences)
+	if err != nil {
+		return err
+	}
+	return check(path)
+}
+
+// Read one reference snapshot per guarded batch, not the entire media catalog
+// for every torrent file. Callers must rebuild it for each confirmation/dispatch
+// and retain their mutation locks; this is deliberately not a global cache.
+func (a *App) browserMutationReferenceCheck(ctx context.Context, protectReferences bool) (func(string) error, error) {
+	query := `SELECT kind,payload FROM records WHERE kind IN ('asset','managed_file') UNION ALL SELECT kind,payload FROM records INDEXED BY import_plan_state WHERE kind='import_plan' AND json_extract(payload,'$.state') IN ('queued','running')`
+	if !protectReferences {
+		query = `SELECT kind,payload FROM records INDEXED BY import_plan_state WHERE kind='import_plan' AND json_extract(payload,'$.state') IN ('queued','running')`
+	}
+	rows, e := a.Store.reader().QueryContext(ctx, query)
+	if e != nil {
+		return nil, e
+	}
+	defer rows.Close()
+	assets := []Asset{}
+	states := map[string]string{}
+	plans := []ImportPlan{}
+	managed := []managedFile{}
+	for rows.Next() {
+		var kind string
+		var raw []byte
+		if e = rows.Scan(&kind, &raw); e != nil {
+			return nil, e
+		}
+		switch kind {
+		case "asset":
+			var asset Asset
+			if e = json.Unmarshal(raw, &asset); e != nil {
+				return nil, e
+			}
+			states[asset.ID] = asset.State
+			if asset.State == "removed" || asset.State == "superseded" {
+				continue
+			}
+			assets = append(assets, asset)
+		case "managed_file":
+			var file managedFile
+			if e = json.Unmarshal(raw, &file); e != nil {
+				return nil, e
+			}
+			managed = append(managed, file)
+		case "import_plan":
+			var plan ImportPlan
+			if e = json.Unmarshal(raw, &plan); e != nil {
+				return nil, e
+			}
+			plans = append(plans, plan)
+		}
+	}
+	if e = rows.Err(); e != nil {
+		return nil, e
+	}
 	identities := map[string]mountedDirectoryID{}
 	identityErrors := map[string]error{}
 	identity := func(dir string) (mountedDirectoryID, error) {
@@ -551,82 +609,45 @@ func (a *App) browserMutationReferences(ctx context.Context, path string, protec
 		identities[dir], identityErrors[dir] = value, err
 		return value, err
 	}
-	contains := func(referenced string) bool {
-		return referenced != "" && sharedDirectoryContainsWithIdentity(path, referenced, identity)
-	}
-	query := `SELECT kind,payload FROM records WHERE kind IN ('asset','managed_file') UNION ALL SELECT kind,payload FROM records INDEXED BY import_plan_state WHERE kind='import_plan' AND json_extract(payload,'$.state') IN ('queued','running')`
-	if !protectReferences {
-		query = `SELECT kind,payload FROM records INDEXED BY import_plan_state WHERE kind='import_plan' AND json_extract(payload,'$.state') IN ('queued','running')`
-	}
-	rows, e := a.Store.DB.QueryContext(ctx, query)
-	if e != nil {
-		return e
-	}
-	defer rows.Close()
-	assets := []Asset{}
-	states := map[string]string{}
-	managed := []managedFile{}
-	for rows.Next() {
-		var kind string
-		var raw []byte
-		if e = rows.Scan(&kind, &raw); e != nil {
-			return e
+	return func(path string) error {
+		if err := ctx.Err(); err != nil {
+			return err
 		}
-		switch kind {
-		case "asset":
-			var asset Asset
-			if e = json.Unmarshal(raw, &asset); e != nil {
-				return e
-			}
-			states[asset.ID] = asset.State
-			if asset.State == "removed" || asset.State == "superseded" {
-				continue
-			}
-			assets = append(assets, asset)
+		contains := func(referenced string) bool {
+			return referenced != "" && sharedDirectoryContainsWithIdentity(path, referenced, identity)
+		}
+		for _, asset := range assets {
 			if asset.Path != "" && (contains(asset.Path) || contains(asset.SourcePath)) {
 				return bad("FILE_IN_USE", "文件被有效整理记录引用，请通过整理历史操作")
 			}
-		case "managed_file":
-			var file managedFile
-			if e = json.Unmarshal(raw, &file); e != nil {
-				return e
-			}
-			if file.Path != "" && contains(file.Path) {
-				managed = append(managed, file)
-			}
-		case "import_plan":
-			var plan ImportPlan
-			if e = json.Unmarshal(raw, &plan); e != nil {
-				return e
-			}
-			if plan.State == "queued" || plan.State == "running" {
-				for _, f := range plan.Files {
-					if contains(f.Source) || contains(f.Target) {
-						return bad("FILE_IN_USE", "文件正在整理任务中使用")
-					}
+		}
+		for _, plan := range plans {
+			for _, file := range plan.Files {
+				if contains(file.Source) || contains(file.Target) {
+					return bad("FILE_IN_USE", "文件正在整理任务中使用")
 				}
 			}
 		}
-	}
-	if e = rows.Err(); e != nil {
-		return e
-	}
-	for _, file := range managed {
-		if file.AssetID != "" {
-			if states[file.AssetID] != "removed" && states[file.AssetID] != "superseded" {
-				return bad("FILE_IN_USE", "文件属于自管视频或旁车，请通过整理历史操作")
+		for _, file := range managed {
+			if file.Path == "" || !contains(file.Path) {
+				continue
 			}
-			continue
-		}
-		// Show NFOs and season/show images are shared by episodes rather than
-		// owned by one asset. Keep them protected while their show is in use.
-		for _, asset := range assets {
-			if asset.RootID == file.RootID && mediaKey(asset.Media) == file.MediaKey && within(filepath.Dir(file.Path), asset.Path) {
-				return bad("FILE_IN_USE", "文件属于仍在使用的影视元数据，请通过整理历史操作")
+			if file.AssetID != "" {
+				if states[file.AssetID] != "removed" && states[file.AssetID] != "superseded" {
+					return bad("FILE_IN_USE", "文件属于自管视频或旁车，请通过整理历史操作")
+				}
+				continue
+			}
+			// Show NFOs and season/show images are shared by episodes rather than
+			// owned by one asset. Keep them protected while their show is in use.
+			for _, asset := range assets {
+				if asset.RootID == file.RootID && mediaKey(asset.Media) == file.MediaKey && within(filepath.Dir(file.Path), asset.Path) {
+					return bad("FILE_IN_USE", "文件属于仍在使用的影视元数据，请通过整理历史操作")
+				}
 			}
 		}
-	}
-	return nil
+		return nil
+	}, nil
 }
 func browserManifest(ctx context.Context, path string) ([]browserStamp, error) {
 	return browserManifestWithHardlinkGuard(ctx, path, true)

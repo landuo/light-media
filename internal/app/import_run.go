@@ -51,9 +51,12 @@ type managedFile struct {
 }
 
 func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string) (Job, error) {
+	phase := a.performanceStages(ctx, "import_submit", "download_guard")
+	defer phase("")
 	if err := a.guardDownloadReviewPlan(ctx, planID); err != nil {
 		return Job{}, err
 	}
+	phase("import_lock")
 	work, organizing := ctx.Value(organizeFileKey{}).(organizeFileWork)
 	if ctx.Value(importSubmissionKey{}) == true {
 		// The completed-pack submitter owns the lock until every file is queued.
@@ -66,6 +69,7 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		a.importMu.Lock()
 		defer a.importMu.Unlock()
 	}
+	phase("plan_and_directory")
 	var plan ImportPlan
 	if err := a.Store.Get(ctx, "import_plan", planID, &plan); err != nil {
 		return Job{}, err
@@ -107,14 +111,17 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 			return Job{}, err
 		}
 	}
+	phase("writer_wait")
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return Job{}, err
 	}
 	defer tx.Rollback()
+	phase("directory_authorization")
 	if err = a.requireNativeDirectoryAuthorizationTx(ctx, tx, plan, meta); err != nil {
 		return Job{}, err
 	}
+	phase("existing_job")
 	// A lost HTTP response must not turn the same confirmation into another
 	// execution or a misleading error. Different selections remain separate.
 	existing, findErr := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused','succeeded') AND (COALESCE(json_array_length(payload,'$.file_ids'),0)=0 OR json_extract(payload,'$.file_ids')=?) ORDER BY created_at DESC LIMIT 1`, plan.ID, importSelectionJSON(plan, selected)))
@@ -132,11 +139,13 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 	} else if !errors.Is(findErr, sql.ErrNoRows) {
 		return Job{}, findErr
 	}
+	phase("download_retry_proof")
 	if meta.DownloadRetry != nil {
 		if err = confirmDownloadImportRetry(ctx, tx, plan, *meta.DownloadRetry); err != nil {
 			return Job{}, err
 		}
 	}
+	phase("intent")
 	if plan.IntentID != "" {
 		intent, err := importIntentTx(ctx, tx, plan)
 		if err != nil {
@@ -148,6 +157,7 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 			}
 		}
 	}
+	phase("reservations")
 	for _, index := range selected {
 		file := plan.Files[index]
 		if file.Status == "imported" || file.Status == "already_imported" {
@@ -160,6 +170,7 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 			return Job{}, err
 		}
 	}
+	phase("persist_queue")
 	plan.State = "queued"
 	if err = txPut(ctx, tx, "import_plan", plan.ID, plan); err != nil {
 		return Job{}, err
@@ -186,6 +197,7 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 	if err != nil {
 		return Job{}, err
 	}
+	phase("commit")
 	if err = tx.Commit(); err != nil {
 		return Job{}, err
 	}

@@ -226,6 +226,8 @@ func (a *App) scanImportFiles(ctx context.Context, directory string, recursive b
 }
 
 func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportPlan, error) {
+	phase := a.performanceStages(ctx, "import_prepare", "extensions_and_settings")
+	defer phase("")
 	if request.originalDirectoryListings != nil {
 		ctx = context.WithValue(ctx, originalTransferDirectoryListingsKey{}, request.originalDirectoryListings)
 	}
@@ -251,6 +253,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		return ImportPlan{}, bad("INVALID_IMPORT", "请选择明确影视身份、1–2000 个源文件及有效整理方式")
 	}
 	if request.TargetPath != "" {
+		phase("target_configuration")
 		rootID, err := a.ensureImportTarget(ctx, request.TargetPath, request.MediaType, request.Files, request.Manual)
 		if err != nil {
 			return ImportPlan{}, err
@@ -264,6 +267,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	if root.Kind != "mixed" && root.Kind != request.MediaType {
 		return ImportPlan{}, bad("INVALID_ROOT_KIND", "媒体类型与目标库类型不符")
 	}
+	phase("target_write_probe")
 	rootDir, err := importDir(root.Path, false)
 	if err != nil {
 		return ImportPlan{}, err
@@ -293,6 +297,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	if !ok {
 		return ImportPlan{}, bad("INVALID_ROOT", "无法确定目标文件系统")
 	}
+	phase("metadata")
 	var identity catalog.Media
 	var originalMedia json.RawMessage
 	if providerImport {
@@ -321,6 +326,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			return ImportPlan{}, err
 		}
 	}
+	phase("ownership_and_policy")
 	qualityDownload, err := a.qualityImportDownload(ctx, request)
 	if err != nil {
 		return ImportPlan{}, err
@@ -355,6 +361,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	seasons := map[int]catalog.Season{}
 	seenSources, seenTargets, seenSlots := map[string]bool{}, map[string]bool{}, map[string]bool{}
 	seenSourceInodes := map[string]bool{}
+	phase("file_plans")
 	for _, requested := range request.Files {
 		file := PlanFile{ID: id("file_"), Source: requested.Path, Season: requested.Season, Episodes: append([]int(nil), requested.Episodes...), Part: strings.TrimSpace(requested.Part), Status: "ready"}
 		if len(request.Files) == 1 {
@@ -700,7 +707,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					}
 					seenSlots[slot] = true
 					var count int
-					if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=?`, mediaKey(identity), file.Season, episode, request.ReorganizeAssetID).Scan(&count); e != nil {
+					if e := a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=?`, mediaKey(identity), file.Season, episode, request.ReorganizeAssetID).Scan(&count); e != nil {
 						return ImportPlan{}, e
 					}
 					if count > 0 && qualityDownload == nil && meta.Overwrite == nil {
@@ -708,13 +715,13 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 						break
 					}
 					var owner string
-					e := a.Store.DB.QueryRowContext(ctx, `SELECT intent_id FROM reservations WHERE media_key=? AND season=? AND episode=?`, mediaKey(identity), file.Season, episode).Scan(&owner)
+					e := a.Store.reader().QueryRowContext(ctx, `SELECT intent_id FROM reservations WHERE media_key=? AND season=? AND episode=?`, mediaKey(identity), file.Season, episode).Scan(&owner)
 					if e == nil && owner != request.IntentID {
 						reusable := false
 						if request.IntentID == "" {
-							reusable, e = canReplaceFailedImportReservation(ctx, a.Store.DB, owner, mediaKey(identity), file, episode)
+							reusable, e = canReplaceFailedImportReservation(ctx, a.Store.reader(), owner, mediaKey(identity), file, episode)
 							if e == nil && !reusable && request.Manual && len(request.Files) == 1 {
-								meta.DownloadRetry, e = findDownloadImportRetry(ctx, a.Store.DB, owner, plan, file)
+								meta.DownloadRetry, e = findDownloadImportRetry(ctx, a.Store.reader(), owner, plan, file)
 								reusable = meta.DownloadRetry != nil
 							}
 							if e != nil {
@@ -788,11 +795,13 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			}
 		}
 	}
+	phase("writer_wait")
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return ImportPlan{}, err
 	}
 	defer tx.Rollback()
+	phase("persist_plan")
 	if err = txPut(ctx, tx, "import_plan", plan.ID, plan); err == nil {
 		err = txPut(ctx, tx, "import_meta", plan.ID, meta)
 	}
@@ -878,8 +887,10 @@ func scanImportSidecars(file PlanFile, existing func(string) error) ([]importSid
 }
 
 func (a *App) assetAtPath(ctx context.Context, path string, dst *Asset) error {
+	phase := a.performanceStages(ctx, "asset_lookup", "read_by_path")
+	defer phase("")
 	var raw []byte
-	err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='asset' AND json_extract(payload,'$.path')=? AND json_extract(payload,'$.state') NOT IN ('removed','superseded') LIMIT 1`, path).Scan(&raw)
+	err := a.Store.reader().QueryRowContext(ctx, `SELECT payload FROM records INDEXED BY asset_path WHERE kind='asset' AND json_extract(payload,'$.path')=? AND json_extract(payload,'$.state') NOT IN ('removed','superseded') LIMIT 1`, path).Scan(&raw)
 	if err != nil {
 		return err
 	}

@@ -75,6 +75,10 @@ func (a *App) originalTransferJobResult(ctx context.Context, job Job) (*manualOr
 				}
 				if err == nil && receipt.State == "published" {
 					item.Status, item.Target = "success", receipt.Target
+				} else if job.State == "succeeded" && task.ID == primary.ID && primary.Status == "already_imported" {
+					// A verified repeat uses the existing asset and has no new
+					// publication receipt. Its completed job is still successful.
+					item.Status = "success"
 				} else if terminal || err == nil && len(receipt.OriginalModuleResult) > 0 {
 					item.Status, item.Error = "failed", job.ErrorMessage
 					if task.ID == primary.ID && primary.Reason != "" {

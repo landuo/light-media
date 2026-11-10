@@ -450,19 +450,24 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 		}
 		c.Downloaders[i].ClearAPIKey = false
 	}
+	phase := a.performanceStages(ctx, "settings_save", "download_lock")
+	defer phase("")
 	a.downloadMu.Lock()
 	defer a.downloadMu.Unlock()
+	phase("import_lock")
 	a.importMu.Lock()
 	defer a.importMu.Unlock()
 	if err := ctx.Err(); err != nil {
 		return err
 	}
 	previous := a.Settings()
+	phase("writer_wait")
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
+	phase("validate_and_persist")
 	if effect != nil {
 		if err := effect(ctx, tx, &c); err != nil {
 			return err
@@ -506,9 +511,11 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 			}
 		}
 	}
+	phase("commit")
 	if err := tx.Commit(); err != nil {
 		return err
 	}
+	phase("publish_and_plugins")
 	a.cfgMu.Lock()
 	a.config = c
 	a.cfgMu.Unlock()

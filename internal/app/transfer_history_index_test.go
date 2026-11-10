@@ -4,8 +4,36 @@ import (
 	"context"
 	"encoding/json"
 	"path/filepath"
+	"strings"
 	"testing"
 )
+
+func TestHistoryRefreshSeeksCallbacksForDirtyPlans(t *testing.T) {
+	a, _, _ := importTestApp(t)
+	rows, err := a.Store.DB.Query(`EXPLAIN QUERY PLAN ` + transferHistoryRefreshSQL())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer rows.Close()
+	var callbackSeek bool
+	for rows.Next() {
+		var id, parent, unused int
+		var detail string
+		if err := rows.Scan(&id, &parent, &unused, &detail); err != nil {
+			t.Fatal(err)
+		}
+		if strings.Contains(detail, "SCAN cb") || strings.Contains(detail, "SEARCH cb USING INDEX sqlite_autoindex_records_1 (kind=?)") {
+			t.Fatalf("one dirty plan still scans every callback: %s", detail)
+		}
+		callbackSeek = callbackSeek || strings.Contains(detail, "SEARCH cb USING INDEX transfer_history_callback_plan (<expr>=?)")
+	}
+	if err := rows.Err(); err != nil {
+		t.Fatal(err)
+	}
+	if !callbackSeek {
+		t.Fatal("auxiliary callbacks must be sought by dirty plan ID")
+	}
+}
 
 func historyIndexMatchesExecutionRecords(t *testing.T, a *App) {
 	t.Helper()
@@ -84,6 +112,19 @@ func TestHistoryIndexIncrementalUpdatesAndTransactionalInvalidation(t *testing.T
 		t.Fatal(err)
 	}
 	historyIndexMatchesExecutionRecords(t, a)
+	// An auxiliary callback belongs to the primary plan but has its own file
+	// identity/history. Bounding the callback lookup must retain that row.
+	callback.File.ID = "subtitle-file"
+	callback.File.Source = filepath.Join(source, "one.srt")
+	callback.File.Target = filepath.Join(target, "one.srt")
+	if err := a.Store.Put(ctx, "original_transfer_callback", first.ID+"/subtitle-file", callback); err != nil {
+		t.Fatal(err)
+	}
+	historyIndexMatchesExecutionRecords(t, a)
+	var auxiliary int
+	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM transfer_history_attempts WHERE plan_id=? AND execution_file_id='subtitle-file' AND source_path=? AND status='success'`, first.ID, callback.File.Source).Scan(&auxiliary); err != nil || auxiliary != 1 {
+		t.Fatalf("auxiliary history lost by bounded refresh: %d %v", auxiliary, err)
+	}
 	for _, query := range []string{
 		`DELETE FROM records WHERE kind='original_transfer_callback'`,
 		`DELETE FROM jobs WHERE id='` + job.ID + `'`,

@@ -42,10 +42,14 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 		pathAllowed = a.brushSourceAllowed
 	}
 	hashes, _ := (plugins.DownloaderTasksRequestV1{DownloaderID: request.DownloaderID, Hashes: request.Hashes}).CanonicalSelection()
+	phase := a.performanceStages(ctx, "plugin_delete_files", "download_lock")
+	defer phase("")
 	a.downloadMu.Lock()
 	defer a.downloadMu.Unlock()
+	phase("import_lock")
 	a.importMu.Lock()
 	defer a.importMu.Unlock()
+	phase("validate_and_delete")
 	reader, kind, baseGuard, err := a.originalHostDownloaderMutationClient(ctx, scope, request.DownloaderID)
 	if err != nil {
 		return nil, err
@@ -106,6 +110,10 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 		for _, task := range tasks {
 			byHash[task.Hash] = task
 		}
+		checkReferences, err := a.browserMutationReferenceCheck(ctx, true)
+		if err != nil {
+			return nil, err
+		}
 		facts := []originalDownloaderDeleteFact{}
 		for _, hash := range hashes {
 			task, ok := byHash[hash]
@@ -132,7 +140,10 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 				if !importPath(path) || !within(directory, path) || path == directory || !pathAllowed(path) || browserInternal(path) {
 					return nil, bad("FILE_ROOT_REJECTED", "任务文件超出授权资源目录")
 				}
-				if err := a.browserMutationAllowed(ctx, path); err != nil {
+				if reason := a.browserStaticProtection(path); reason != "" {
+					return nil, bad("FILE_PROTECTED", reason)
+				}
+				if err := checkReferences(path); err != nil {
 					return nil, err
 				}
 				manifest, err := readManifest(ctx, path)
@@ -176,6 +187,10 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 		if err != nil {
 			return err
 		}
+		checkReferences, err := a.browserMutationReferenceCheck(ctx, true)
+		if err != nil {
+			return err
+		}
 		for _, fact := range frozen {
 			// Preserve the original task's ownership snapshot, including its tag;
 			// durable ownership may be revoked while this call is in progress.
@@ -189,7 +204,10 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 				if !pathAllowed(path) {
 					return bad("FILE_ROOT_REJECTED", "资源目录授权已变化")
 				}
-				if err := a.browserMutationAllowed(ctx, path); err != nil {
+				if reason := a.browserStaticProtection(path); reason != "" {
+					return bad("FILE_PROTECTED", reason)
+				}
+				if err := checkReferences(path); err != nil {
 					return err
 				}
 				actual, err := readManifest(ctx, path)

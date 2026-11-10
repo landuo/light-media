@@ -18,9 +18,12 @@ type organizeQueueMember struct {
 	Source string `json:"source"`
 }
 
-const liveOrganizeGroups = `SELECT DISTINCT json_extract(m.payload,'$.group') FROM records m
- JOIN jobs j ON j.id=json_extract(m.payload,'$.job')
- WHERE m.kind='organize_queue_member' AND j.state IN ` + activeOrganizeStates
+// Start at active jobs, then seek their membership. Starting at all archived
+// members makes an empty queue walk the whole job history on every UI poll.
+const liveOrganizeGroups = `SELECT DISTINCT json_extract(m.payload,'$.group')
+ FROM jobs j INDEXED BY jobs_due CROSS JOIN records m INDEXED BY organize_queue_job
+ WHERE j.state IN ` + activeOrganizeStates + ` AND m.kind='organize_queue_member'
+ AND json_extract(m.payload,'$.job')=(j.id||'')`
 
 func activeOrganizeSourceTx(ctx context.Context, tx *sql.Tx, source string) (string, error) {
 	var job string
@@ -144,7 +147,7 @@ func registerOrganizeQueueTx(ctx context.Context, tx *sql.Tx, job Job) error {
 // leaving historic completed batches outside the current queue.
 func (a *App) seedOrganizeQueue(ctx context.Context) error {
 	jobs, err := a.queryJobs(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind IN ('import','organize_file') AND state IN `+activeOrganizeStates+`
-	 AND NOT EXISTS(SELECT 1 FROM records m WHERE m.kind='organize_queue_member' AND json_extract(m.payload,'$.job')=jobs.id)`)
+	 AND NOT EXISTS(SELECT 1 FROM records m INDEXED BY organize_queue_job WHERE m.kind='organize_queue_member' AND json_extract(m.payload,'$.job')=(jobs.id||''))`)
 	if err != nil || len(jobs) == 0 {
 		return err
 	}

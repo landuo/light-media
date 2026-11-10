@@ -81,24 +81,32 @@ func refreshTransferHistoryIndex(ctx context.Context, tx *sql.Tx) error {
 	if _, err := tx.ExecContext(ctx, `DELETE FROM transfer_history_attempts WHERE plan_id IN (SELECT plan_id FROM transfer_history_dirty)`); err != nil {
 		return err
 	}
-	const changed = ` AND r.id IN (SELECT plan_id FROM transfer_history_dirty)`
-	// Bound both sides of the join. Filtering only r.id lets SQLite walk every
-	// archived import job before finding the few dirty plans, especially with a
-	// cold disk cache. jobs_subject can seek kind + plan ID directly.
-	jobs := transferHistoryJobsSelect + ` AND json_extract(payload,'$.id') IN (SELECT plan_id FROM transfer_history_dirty))`
-	query := jobs + transferHistoryExecutedFiles + changed +
-		transferHistoryAuxiliaryFiles + changed + transferHistoryAttempts +
-		`INSERT INTO transfer_history_attempts (` + transferHistoryIndexColumns + `) SELECT ` + transferHistoryIndexColumns + ` FROM attempts`
-	if _, err := tx.ExecContext(ctx, query); err != nil {
+	if _, err := tx.ExecContext(ctx, transferHistoryRefreshSQL()); err != nil {
 		return err
 	}
 	_, err := tx.ExecContext(ctx, `DELETE FROM transfer_history_dirty`)
 	return err
 }
 
+func transferHistoryRefreshSQL() string {
+	const changed = ` AND r.id IN (SELECT plan_id FROM transfer_history_dirty)`
+	// Bound both sides of the join. Filtering only r.id lets SQLite walk every
+	// archived import job before finding the few dirty plans, especially with a
+	// cold disk cache. jobs_subject can seek kind + plan ID directly.
+	jobs := transferHistoryJobsSelect + ` AND json_extract(payload,'$.id') IN (SELECT plan_id FROM transfer_history_dirty))`
+	// SQLite can otherwise start the auxiliary join at every callback, even
+	// when only one plan is dirty. Bound that side too and seek its plan index.
+	auxiliary := strings.Replace(transferHistoryAuxiliaryFiles, "JOIN records cb ON", "JOIN records cb INDEXED BY transfer_history_callback_plan ON", 1)
+	return jobs + transferHistoryExecutedFiles + changed +
+		auxiliary + changed + ` AND json_extract(cb.payload,'$.plan_id') IN (SELECT plan_id FROM transfer_history_dirty)` + transferHistoryAttempts +
+		`INSERT INTO transfer_history_attempts (` + transferHistoryIndexColumns + `) SELECT ` + transferHistoryIndexColumns + ` FROM attempts`
+}
+
 // Refresh and read in one snapshot: a writer cannot slip between invalidation
 // and hydration and pair a new plan with the previous attempt's state/ID.
 func (a *App) transferHistoryReadTx(ctx context.Context) (*sql.Tx, error) {
+	phase := a.performanceStages(ctx, "history_snapshot", "reader_wait")
+	defer phase("")
 	// A clean index can be read entirely from a WAL snapshot. Inspect dirtiness
 	// inside that snapshot, so a later writer cannot mix new JSON with old rows.
 	if a.Store.readDB != nil {
@@ -106,6 +114,7 @@ func (a *App) transferHistoryReadTx(ctx context.Context) (*sql.Tx, error) {
 		if err != nil {
 			return nil, err
 		}
+		phase("dirty_check")
 		var dirty bool
 		err = read.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM transfer_history_dirty)`).Scan(&dirty)
 		if err == nil && !dirty {
@@ -116,10 +125,12 @@ func (a *App) transferHistoryReadTx(ctx context.Context) (*sql.Tx, error) {
 			return nil, err
 		}
 	}
+	phase("writer_wait")
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
+	phase("index_refresh")
 	if err = refreshTransferHistoryIndex(ctx, tx); err != nil {
 		tx.Rollback()
 		return nil, err

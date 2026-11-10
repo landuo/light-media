@@ -88,6 +88,8 @@ func normalizeManualOrganize(in *manualOrganizeRequest) (*regexp.Regexp, error) 
 }
 
 func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out manualOrganizeOutput, returnErr error) {
+	phase := a.performanceStages(ctx, "manual_organize", "prepare_history")
+	defer phase("")
 	out = manualOrganizeOutput{Items: []manualOrganizeItem{}}
 	format, err := normalizeManualOrganize(&in)
 	if err != nil {
@@ -240,6 +242,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		paths = nil // The directory already enumerated and froze this candidate.
 	}
 	seen := map[string]bool{}
+	phase("scan_files")
 	for _, path := range paths {
 		if seen[path] || prepared[path] {
 			continue
@@ -313,6 +316,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		}
 		return a.enqueueOrganizeFiles(ctx, preparation, files, prepared, out)
 	}
+	phase("plan_and_submit")
 	for _, file := range files {
 		err = nil
 		if prepared[file.Path] {
@@ -811,18 +815,27 @@ type organizeQueuePreparation struct {
 	HistoryCount int      `json:"history_count,omitempty"`
 }
 
+const organizeQueueJobsSQL = `SELECT ` + jobColumns + ` FROM jobs
+ WHERE id IN (
+ SELECT id FROM jobs INDEXED BY jobs_due WHERE kind IN ('import','organize_prepare','organize_file') AND state IN ` + activeOrganizeStates + `
+ UNION SELECT json_extract(payload,'$.job') FROM records INDEXED BY organize_queue_group
+ WHERE kind='organize_queue_member' AND json_extract(payload,'$.group') IN (` + liveOrganizeGroups + `))
+ AND kind IN ('import','organize_prepare','organize_file') AND state!='cancelled'
+ AND (kind!='organize_prepare' OR NOT EXISTS(SELECT 1 FROM records WHERE kind='organize_file_listing' AND records.id=jobs.id))
+ ORDER BY created_at DESC, id`
+
 func (a *App) organizeQueue(ctx context.Context) (any, error) {
+	phase := a.performanceStages(ctx, "organize_queue", "seed_legacy")
+	defer phase("")
 	if err := a.seedOrganizeQueue(ctx); err != nil {
 		return nil, err
 	}
-	jobs, e := a.queryJobs(ctx, `SELECT `+jobColumns+` FROM jobs
-		WHERE kind IN ('import','organize_prepare','organize_file') AND state!='cancelled' AND (state IN `+activeOrganizeStates+` OR id IN (
-		 SELECT json_extract(payload,'$.job') FROM records WHERE kind='organize_queue_member' AND json_extract(payload,'$.group') IN (`+liveOrganizeGroups+`)))
-		AND (kind!='organize_prepare' OR NOT EXISTS(SELECT 1 FROM records WHERE kind='organize_file_listing' AND records.id=jobs.id))
-		ORDER BY created_at DESC, id`)
+	phase("active_jobs")
+	jobs, e := a.queryJobs(ctx, organizeQueueJobsSQL)
 	if e != nil {
 		return nil, e
 	}
+	phase("hydrate")
 	groups := []map[string]any{}
 	preparations := []organizeQueuePreparation{}
 	seen := map[string]bool{}

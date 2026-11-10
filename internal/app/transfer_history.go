@@ -114,7 +114,11 @@ const transferHistoryAttempts = `), executed_files AS (` + transferHistoryRankFi
 
 const transferHistoryBaseCTE = transferHistoryJobsCTE + transferHistoryExecutedFiles + transferHistoryAuxiliaryFiles + transferHistoryAttempts
 
-const transferHistoryRanked = `, ranked_history AS (
+// Materialize the small deletion-marker set once. Probing the main records
+// B-tree for every historical attempt adds thousands of cold random reads.
+const transferHistoryRanked = `, hidden_history AS MATERIALIZED (
+ SELECT id,payload,updated_at FROM records WHERE kind='transfer_history_hidden'
+), ranked_history AS (
  SELECT *,
  FIRST_VALUE(execution_file_id) OVER (PARTITION BY resource_source ORDER BY first_execution_key,execution_file_id) AS history_id,
  FIRST_VALUE(plan_created_at) OVER (PARTITION BY resource_source ORDER BY first_execution_key,execution_file_id) AS history_created_at,
@@ -122,8 +126,8 @@ const transferHistoryRanked = `, ranked_history AS (
  FROM attempts
 ), history AS (
  SELECT * FROM ranked_history h WHERE history_rank=1 AND NOT EXISTS (
- SELECT 1 FROM records hidden JOIN attempts old ON hidden.id=old.execution_file_id
- WHERE hidden.kind='transfer_history_hidden' AND old.resource_source=h.resource_source
+ SELECT 1 FROM hidden_history hidden JOIN attempts old ON hidden.id=old.execution_file_id
+ WHERE old.resource_source=h.resource_source
  AND (CASE WHEN COALESCE(json_extract(hidden.payload,'$.execution_key'),'')!=''
  THEN json_extract(hidden.payload,'$.execution_key')>=h.execution_key
  ELSE julianday(hidden.updated_at)>=julianday(h.executed_at) END)
@@ -215,6 +219,8 @@ func (a *App) transferHistoryAPI(r *http.Request, p string) (any, error) {
 	return nil, &APIError{"NOT_FOUND", "接口不存在", 404}
 }
 func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error) {
+	phase := a.performanceStages(ctx, "history_list", "read_snapshot")
+	defer phase("")
 	q := r.URL.Query()
 	page, _ := strconv.Atoi(q.Get("page"))
 	size, _ := strconv.Atoi(q.Get("page_size"))
@@ -252,6 +258,7 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 		return nil, e
 	}
 	defer tx.Rollback()
+	phase("query_and_hydrate")
 	rows, e := tx.QueryContext(ctx, transferHistoryIndexedCTE+`, page AS MATERIALIZED (
  SELECT h.*,COUNT(*) OVER () AS total FROM history h`+where+transferHistoryOrder+` LIMIT ? OFFSET ?
 ) SELECT `+transferHistoryColumns+`,h.total FROM page h`+transferHistoryHydrate, append(args, size, (page-1)*size)...)
@@ -279,6 +286,7 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 			return nil, e
 		}
 	}
+	phase("commit")
 	if e = tx.Commit(); e != nil {
 		return nil, e
 	}
@@ -293,6 +301,7 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 		}
 		return strings.Compare(a.ID, b.ID)
 	})
+	phase("file_capabilities")
 	// Filesystem checks happen after closing the single-connection SQL cursor.
 	for i := range items {
 		if e = ctx.Err(); e != nil {

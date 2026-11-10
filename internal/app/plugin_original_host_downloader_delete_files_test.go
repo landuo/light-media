@@ -17,7 +17,7 @@ import (
 )
 
 func TestHostDownloaderDeleteFilesActualSDKOwnedAndFailures(t *testing.T) {
-	for _, mode := range []string{"confirmed", "unowned", "outside_root", "symlink", "hardlink", "shared_task", "shared_metadata_unknown", "snapshot_changed", "daemon_unknown", "bookkeeping_failed"} {
+	for _, mode := range []string{"confirmed", "unowned", "outside_root", "symlink", "hardlink", "shared_task", "shared_metadata_unknown", "snapshot_changed", "reference_added", "daemon_unknown", "bookkeeping_failed"} {
 		t.Run(mode, func(t *testing.T) {
 			a, _, object := hostDownloaderFixture(t)
 			root := t.TempDir()
@@ -90,6 +90,11 @@ func TestHostDownloaderDeleteFilesActualSDKOwnedAndFailures(t *testing.T) {
 						workflowJSON(w, []any{row})
 					}
 				case "/api/v2/torrents/files":
+					if mode == "reference_added" && filesReads.Add(1) == 2 {
+						if err := a.Store.Put(context.Background(), "asset", "new-owner", Asset{ID: "new-owner", State: "present", Path: file}); err != nil {
+							t.Error(err)
+						}
+					}
 					if mode == "shared_metadata_unknown" && r.URL.Query().Get("hash") == other {
 						workflowJSON(w, []any{})
 						return
@@ -128,7 +133,7 @@ func TestHostDownloaderDeleteFilesActualSDKOwnedAndFailures(t *testing.T) {
 			a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "owned", Kind: "qbittorrent", BaseURL: server.URL}}}
 			var out plugins.DownloaderDeleteFilesV1
 			err := hostDownloaderCall(t, object, "delete_files", plugins.DownloaderDeleteFilesRequestV1{DownloaderID: "owned", Hashes: []string{hash}}, &out)
-			rejected := mode == "unowned" || mode == "outside_root" || mode == "symlink" || mode == "hardlink" || mode == "shared_task" || mode == "shared_metadata_unknown" || mode == "snapshot_changed"
+			rejected := mode == "unowned" || mode == "outside_root" || mode == "symlink" || mode == "hardlink" || mode == "shared_task" || mode == "shared_metadata_unknown" || mode == "snapshot_changed" || mode == "reference_added"
 			if rejected {
 				if err == nil || writes.Load() != 0 {
 					t.Fatalf("unsafe selection dispatched: receipt=%+v err=%v writes=%d", out, err, writes.Load())
