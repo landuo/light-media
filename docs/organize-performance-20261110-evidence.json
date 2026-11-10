@@ -410,18 +410,50 @@
       },
       "history_id_after": "file_fmyZ646GN3igOKohkOcX3Bvy",
       "history_id_unchanged": true,
-      "latest_plan": "plan_JtXRTHyBwlK1U1Kp1rl0t5c9",
-      "job_id": "job_sPcyx_LkhJyP0D6ZnbkFldQM",
-      "history_status": "failed",
-      "target": "",
-      "job_state": "failed",
-      "error": "overwrite policy or synchronous event dependency is unknown",
+      "latest_plan": "plan_3qwF5qWDdAJMmoZ0DZbZ1MvD",
+      "job_id": "job_Gym9KeVw36lKuVzIwOAvyG_K",
+      "history_status": "success",
+      "target": "/media/国漫/吞噬星空 (2020)/Season 1/吞噬星空 - S01E249 - 第 249 集.mkv",
+      "job_state": "succeeded",
+      "error": "",
       "source_after": {
         "inode": 55693382,
         "size": 2165609907,
         "mtime_ns": 1794224712866562593
       },
-      "source_unchanged": true
+      "source_unchanged": true,
+      "before_policy_confirmation": {
+        "latest_plan": "plan_JtXRTHyBwlK1U1Kp1rl0t5c9",
+        "job_id": "job_sPcyx_LkhJyP0D6ZnbkFldQM",
+        "history_status": "failed",
+        "job_state": "failed",
+        "error": "overwrite policy or synchronous event dependency is unknown"
+      },
+      "execution_file_id": "file_vnaAtSi3344JCRobKt_sO_XP",
+      "plan_state": "complete",
+      "file_status": "imported",
+      "intent_state": "imported",
+      "asset_state": "present",
+      "asset_id": "asset_DyK2YhwhDmwncmDQLgYfU8sw",
+      "target_is_source_hardlink": true,
+      "active_imports_after": 0,
+      "same_episode_target_videos": 1,
+      "observed_at": "2026-11-10T01:00:26.825249Z",
+      "job_created_at": "2026-11-10T00:59:19.845505271Z",
+      "job_completed_at": "2026-11-10T00:59:37.938022567Z",
+      "identity_input": {
+        "media_type": "tv",
+        "tmdb_id": 101172,
+        "season": 1,
+        "episodes": [
+          249
+        ]
+      },
+      "browser_evidence": "work/performance-20261110/nas-249-success.png",
+      "limitations": [
+        "Single explicit manual retry; the preceding automatic recognition failure was not fixed by this configuration change.",
+        "Only one same-episode target video existed, so this was not an actual multi-version removal test."
+      ]
     },
     {
       "source": "/media/download/电视剧/[老友记 第五季].Friends.1998.S05.Complete.2160p.MAX.WEB-DL.DoVi.HDR10.H265.10bit.DDP5.1-UBWEB/[老友记 第五季].Friends.1998.S05E24.2160p.MAX.WEB-DL.DoVi.HDR10.H265.10bit.DDP5.1-UBWEB.mkv",
@@ -451,10 +483,12 @@
   "remaining_configuration": {
     "source": "/media/download/国漫",
     "directory_id": "directory_PrLldG77GKvUaYm2lH-tJf1Z",
-    "overwrite_mode_known": false,
-    "overwrite_mode": null,
-    "status": "blocked pending user selection; not changed",
-    "reason": "Own download reservation now continues correctly, but the real transfer rejects an unknown overwrite policy."
+    "overwrite_mode_known": true,
+    "overwrite_mode": "latest",
+    "status": "resolved: user selected latest; saved through NAS directory UI and verified by successful import",
+    "reason": "Explicit user selection: 仅保留最新版本，清理同集旧版本",
+    "saved_at": "2026-11-10T00:52:30.183782803Z",
+    "browser_evidence": "work/performance-20261110/nas-latest-policy.png"
   },
   "cold_start_observations": [
     {
@@ -636,21 +670,31 @@
     ],
     "dirty": 0
   },
-  "status": "partial: independent parallel imports and hot UI responses verified; cold history first read unresolved; one file blocked on unset overwrite policy",
+  "status": "partial: directory policy and both selected retries verified; cold history read and newly measured save/submission delays remain unresolved",
   "remaining_performance": {
     "observation": "After restart the failed-history request still takes 17.099 seconds. Native SQLite replay of the indexed page after warming was 147 ms; this is not a cold Go endpoint measurement and does not locate the complete delay.",
     "next_diagnostic": "Measure handler stages and read/write connection wait during a cold first request before attempting another change.",
-    "stop_rule": "AGENTS.md: after three failed fixes, stop and name the doubtful assumption. The assumption that writer contention and the job join alone explain cold history latency was not confirmed."
+    "stop_rule": "AGENTS.md: after three failed fixes, stop and name the doubtful assumption. The assumption that writer contention and the job join alone explain cold history latency was not confirmed.",
+    "additional_observation": {
+      "directory_put_response_headers_seconds": 101.156094,
+      "single_manual_submit_response_headers_seconds": 233.809993,
+      "preview_ready_at": "2026-11-10T00:55:39.557860355Z",
+      "job_created_at": "2026-11-10T00:59:19.845505271Z",
+      "observed_server_cpu_percent_of_one_core": 100.85,
+      "running_imports_during_wait": 0,
+      "cause": "not established; snapshot was taken after directory save completed, so it does not prove deadlock or identify the waiting stage"
+    }
   },
   "deployment": {
     "code_commit": "77b80ac4",
     "runtime_sha256": "191b83086cf7d841317138a4651d8fe08a0292b7c9d1e37888cfbbecea0ca3c5",
-    "started_at": "2026-11-09T18:32:20.507719542Z",
+    "started_at": "2026-11-10T00:53:06.707520057Z",
     "health": "healthy",
     "branch": "origin/main",
     "version": "0.4.19",
     "cpu_limit": 1,
     "memory_mib": 512,
-    "original_service_changed": false
+    "original_service_changed": false,
+    "diagnostic_restart": "One SIGQUIT stack capture followed by docker start; configuration had already saved, no jobs were running; service recovered healthy. No code replacement in this follow-up."
   }
 }
