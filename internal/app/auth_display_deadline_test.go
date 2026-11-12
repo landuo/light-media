@@ -23,7 +23,10 @@ func TestNativeDisplayAuthenticationDeadline(t *testing.T) {
 		{"expired caller with valid session", "/api/subscriptions", true, true, false, http.StatusGatewayTimeout, "REQUEST_TIMEOUT"},
 		{"ordinary unauthenticated", "/api/subscriptions", false, false, false, http.StatusUnauthorized, "UNAUTHORIZED"},
 		{"cancelled caller is not a deadline", "/api/subscriptions", true, false, true, http.StatusUnauthorized, "UNAUTHORIZED"},
-		{"non display retains authentication behavior", "/api/settings", true, true, false, http.StatusUnauthorized, "UNAUTHORIZED"},
+		{"settings bootstrap deadline", "/api/settings", true, true, false, http.StatusGatewayTimeout, "REQUEST_TIMEOUT"},
+		{"readiness bootstrap deadline", "/api/ready", true, true, false, http.StatusGatewayTimeout, "REQUEST_TIMEOUT"},
+		{"statistics bootstrap deadline", "/api/status", true, true, false, http.StatusGatewayTimeout, "REQUEST_TIMEOUT"},
+		{"non display retains authentication behavior", "/api/logging", true, true, false, http.StatusUnauthorized, "UNAUTHORIZED"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			ctx := context.Background()

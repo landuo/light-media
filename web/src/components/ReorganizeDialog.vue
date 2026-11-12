@@ -3,6 +3,7 @@ import { VSelect } from 'vuetify/components/VSelect';
 import { VTextField } from 'vuetify/components/VTextField';
 import { computed, nextTick, onMounted, onUnmounted, ref, useId, watch } from 'vue';
 import { api, errorText, image, label, toast, ui } from '../api';
+import { boundedRead } from '../features/bounded-read';
 import FileManagerIcon from './FileManagerIcon.vue';
 import DirectoryPathPicker from './DirectoryPathPicker.vue';
 
@@ -72,11 +73,13 @@ const subtitle = computed(() =>
       ? props.paths[0]
       : `共 ${props.paths.length} 项`,
 );
+const localSettings = ref<any>(null);
+const settingsRead = new AbortController();
 const targetPaths = computed(
   () =>
     [
       ...new Set(
-        (ui.settings?.directories || [])
+        ((ui.settings || localSettings.value)?.directories || [])
           .map((directory: any) => directory.library_path)
           .filter(Boolean),
       ),
@@ -338,13 +341,20 @@ function choose(media: any) {
 }
 onMounted(async () => {
   try {
-    if (!ui.settings) ui.settings = await api('/settings');
+    if (!ui.settings) {
+      const settings = await boundedRead(
+        (signal) => api('/settings', undefined, 'GET', signal),
+        settingsRead.signal,
+      );
+      if (alive) localSettings.value = settings;
+    }
   } catch (e) {
-    error.value = errorText(e);
+    if (alive) error.value = errorText(e);
   }
 });
 onUnmounted(() => {
   alive = false;
+  settingsRead.abort();
   if (sleepTimer) clearTimeout(sleepTimer);
   wake?.();
 });

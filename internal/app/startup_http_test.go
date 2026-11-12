@@ -23,12 +23,12 @@ func TestStartupHTTPKeepsAuthenticatedDiagnosticsAvailable(t *testing.T) {
 			t.Fatalf("shell %s: %d %s", path, w.Code, w.Body)
 		}
 	}
-	for _, path := range []string{"/api/auth/status", "/api/status", "/api/settings", "/api/logs"} {
+	for _, path := range []string{"/api/auth/status", "/api/ready", "/api/status", "/api/settings", "/api/logs"} {
 		w := callTest(t, handler, "GET", path, "", cookie, "")
 		if w.Code != 200 {
 			t.Fatalf("diagnostic %s: %d %s", path, w.Code, w.Body)
 		}
-		if path == "/api/status" && !strings.Contains(w.Body.String(), `"starting":true`) {
+		if (path == "/api/status" || path == "/api/ready") && !strings.Contains(w.Body.String(), `"starting":true`) {
 			t.Fatalf("missing starting flag: %s", w.Body)
 		}
 	}
@@ -76,7 +76,7 @@ func TestStartupHTTPProxyLoginRetainsCookieScope(t *testing.T) {
 }
 
 func TestNativeDisplayDeadlineBoundsCooperativeReads(t *testing.T) {
-	for _, path := range []string{"/api/catalog/explore", "/api/downloads", "/api/subscriptions", "/api/directories/manage", "/api/files/list", "/api/history/transfers", "/api/jobs"} {
+	for _, path := range []string{"/api/auth/status", "/api/ready", "/api/settings", "/api/status", "/api/catalog/explore", "/api/downloads", "/api/subscriptions", "/api/directories/manage", "/api/files/list", "/api/history/transfers", "/api/jobs"} {
 		t.Run(path, func(t *testing.T) {
 			h := nativeDisplayDeadline(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				<-r.Context().Done()

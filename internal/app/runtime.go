@@ -629,9 +629,13 @@ func (a *App) readLogs(q map[string]string) ([]map[string]any, error) {
 }
 func tokenHash(s string) string { h := sha256.Sum256([]byte(s)); return hex.EncodeToString(h[:]) }
 func (a *App) hasAdmin() bool {
+	ok, _ := a.hasAdminContext(context.Background())
+	return ok
+}
+func (a *App) hasAdminContext(ctx context.Context) (bool, error) {
 	var n int
-	_ = a.Store.reader().QueryRow(`SELECT COUNT(*) FROM admin`).Scan(&n)
-	return n > 0
+	err := a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM admin`).Scan(&n)
+	return n > 0, err
 }
 func (a *App) auth(w http.ResponseWriter, r *http.Request) (bool, error) {
 	var in struct {

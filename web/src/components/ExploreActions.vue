@@ -14,6 +14,7 @@ import { VList, VListItem, VListItemTitle, VListItemSubtitle } from 'vuetify/com
 import { VProgressLinear } from 'vuetify/components/VProgressLinear';
 import { VSwitch } from 'vuetify/components/VSwitch';
 import { api, errorText, image, label, toast, ui } from '../api';
+import { boundedRead } from '../features/bounded-read';
 import { startSearch } from '../features/search-session';
 import {
   cancelExploreSubscriptions,
@@ -55,6 +56,7 @@ const visible = ref(false),
   selectedSites = ref<string[]>([]),
   seasons = ref<ExploreSeasonRow[]>([]);
 let generation = 0;
+let settingsRead = new AbortController();
 let existing: any[] = [];
 let movieIntent: ExploreMovieIntent | null = null;
 let cancelSeasonIDs: string[] | null = null;
@@ -82,6 +84,7 @@ function close() {
   hide();
 }
 function hide() {
+  settingsRead.abort();
   generation++;
   visible.value = false;
   loading.value = false;
@@ -103,6 +106,8 @@ function fail(cause: unknown, token: number) {
 }
 async function open(media: ExploreActionMedia, nextAction: Action) {
   if (saving.value) return;
+  settingsRead.abort();
+  settingsRead = new AbortController();
   const token = ++generation;
   original.value = media;
   action.value = nextAction;
@@ -161,10 +166,19 @@ async function prepare(media: ExploreActionMedia, token: number) {
   resolved.value = media;
   phase.value = 'loading';
   if (action.value === 'search') {
+    // Settings now load independently of browsing. Never treat pending defaults as empty.
+    const settings =
+      ui.settings ||
+      (await boundedRead(
+        (signal) => api('/settings', undefined, 'GET', signal),
+        settingsRead.signal,
+      ));
+    if (token !== generation) return;
+    if (!settings) throw new Error('无法读取站点设置，请重试');
     const response = await api('/sites/manage');
     if (token !== generation) return;
     sites.value = enabledExploreSites(response);
-    selectedSites.value = selectedExploreSites(sites.value, ui.settings?.indexer_sites);
+    selectedSites.value = selectedExploreSites(sites.value, settings.indexer_sites);
     phase.value = 'sites';
     return;
   }
@@ -333,7 +347,7 @@ async function subscribeSeasons() {
   }
 }
 onDeactivated(hide);
-onUnmounted(() => generation++);
+onUnmounted(hide);
 defineExpose({ open });
 </script>
 

@@ -18,6 +18,8 @@ const compiled = ts.transpileModule(script.content, {
 
 function openDialog(t, initial = {}, options = {}) {
   const requests = [];
+  let mounted = () => {},
+    unmounted = () => {};
   const events = [];
   const toasts = [];
   const apiModule = {
@@ -28,8 +30,8 @@ function openDialog(t, initial = {}, options = {}) {
         ],
       },
     },
-    api: async (path, body) => {
-      requests.push({ path, body });
+    api: async (path, body, method, signal) => {
+      requests.push({ path, body, ...(signal ? { signal } : {}) });
       if (options.api) return options.api(path, body, requests.length);
       return { items: [], total: 0, submitted: 0, failed: 0 };
     },
@@ -38,9 +40,11 @@ function openDialog(t, initial = {}, options = {}) {
     image: (path) => path,
     toast: (message) => toasts.push(message),
   };
+  if (options.noSettings) apiModule.ui.settings = null;
   const module = { exports: {} };
   new Function('require', 'exports', compiled)((name) => {
     if (name === '../api') return apiModule;
+    if (name === '../features/bounded-read') return { boundedRead: (read, signal) => read(signal) };
     if (name === './FileManagerIcon.vue') return { default: {} };
     if (name === './DirectoryPathPicker.vue') return { name: 'DirectoryPathPicker' };
     if (/^vuetify\/components\/(VTextField|VSelect|VTextarea)$/.test(name)) {
@@ -50,8 +54,12 @@ function openDialog(t, initial = {}, options = {}) {
     if (name === 'vue')
       return {
         ...vue,
-        onMounted: () => {},
-        onUnmounted: () => {},
+        onMounted: (fn) => {
+          mounted = fn;
+        },
+        onUnmounted: (fn) => {
+          unmounted = fn;
+        },
         useId: () => 'organize-test',
         withDirectives: (vnode) => vnode,
       };
@@ -85,6 +93,9 @@ function openDialog(t, initial = {}, options = {}) {
   const previewButton = () => nodes().find((node) => node.props?.class === 'preview-action');
   return {
     requests,
+    ui: apiModule.ui,
+    mount: () => mounted(),
+    unmount: () => unmounted(),
     events,
     toasts,
     nodes,
@@ -404,4 +415,39 @@ test('failed refresh clears old preview results, retains the form, and allows an
   await dialog.preview();
   assert.equal(dialog.requests.length, 3);
   assert.ok(dialog.nodes().some((node) => renderedText(node).includes('result-3.mkv')));
+});
+
+test('settings read after early history render stays local and cannot repopulate a logged-out session', async (t) => {
+  let resolve;
+  const pending = new Promise((done) => {
+    resolve = done;
+  });
+  const dialog = openDialog(t, {}, { noSettings: true, api: () => pending });
+  const mounted = dialog.mount();
+  assert.equal(dialog.requests[0].path, '/settings');
+  assert.equal(dialog.requests[0].signal.aborted, false);
+  dialog.unmount();
+  assert.equal(dialog.requests[0].signal.aborted, true);
+  resolve({ directories: [{ library_path: '/old-session' }] });
+  await mounted;
+  assert.equal(dialog.ui.settings, null, 'late response must not populate global settings');
+  assert.equal(
+    dialog.nodes().some((node) => node.type === 'option' && node.props?.value === '/old-session'),
+    false,
+  );
+});
+
+test('early history dialog can use local settings without replacing shared configuration', async (t) => {
+  const dialog = openDialog(
+    t,
+    {},
+    { noSettings: true, api: async () => ({ directories: [{ library_path: '/local-choice' }] }) },
+  );
+  await dialog.mount();
+  await vue.nextTick();
+  assert.equal(dialog.ui.settings, null);
+  assert.ok(
+    dialog.nodes().some((node) => node.type === 'option' && node.props?.value === '/local-choice'),
+  );
+  dialog.unmount();
 });

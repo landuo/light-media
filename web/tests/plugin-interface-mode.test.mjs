@@ -40,7 +40,9 @@ function mount(t, filename, props = {}, extras = {}) {
       };
     if (name.endsWith('/interface-mode')) return modes;
     if (name.endsWith('/plugin-navigation')) return navigation;
-    if (name.endsWith('/plugin-remote-api')) return { abortPluginAPIRequests: () => extras.abort?.() };
+    if (name.endsWith('/bounded-read')) return { boundedRead: (read, signal) => read(signal) };
+    if (name.endsWith('/plugin-remote-api'))
+      return { abortPluginAPIRequests: () => extras.abort?.() };
     if (name.endsWith('/api'))
       return { ui, api: async (path) => extras.api?.(path) ?? [], errorText: (e) => e.message };
     if (name.endsWith('/system-messages'))
@@ -155,12 +157,14 @@ test('actual App footer More opens apps and the application center shares the au
     {},
     {
       api: async (path) => {
+        if (path === '/status' || path === '/notifications') return {};
         assert.equal(path, '/plugins/navigation');
         calls++;
         return [plugin];
       },
     },
   );
+  app.state.readiness.value = true;
   app.state.starting.value = false;
   app.state.auth.value = { authenticated: true };
   await app.state.pluginNavigation.ensure();

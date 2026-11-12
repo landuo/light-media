@@ -66,7 +66,7 @@ func startupManagementRequest(r *http.Request) bool {
 		return false
 	}
 	switch r.URL.Path {
-	case "/api/auth/status", "/api/status", "/api/settings", "/api/logs", "/api/logs/stream", "/api/logs/export", "/api/logging":
+	case "/api/auth/status", "/api/ready", "/api/status", "/api/settings", "/api/logs", "/api/logs/stream", "/api/logs/export", "/api/logging":
 		return true
 	}
 	return false
@@ -85,7 +85,7 @@ func nativeDisplayRequest(r *http.Request) bool {
 		return true
 	}
 	switch path {
-	case "/api/downloads", "/api/subscriptions", "/api/directories/manage", "/api/directories/options", "/api/directories/transfer-types", "/api/files/list", "/api/files/roots", "/api/history/transfers", "/api/history/transfers/queue", "/api/jobs":
+	case "/api/auth/status", "/api/ready", "/api/settings", "/api/status", "/api/downloads", "/api/subscriptions", "/api/directories/manage", "/api/directories/options", "/api/directories/transfer-types", "/api/files/list", "/api/files/roots", "/api/history/transfers", "/api/history/transfers/queue", "/api/jobs":
 		return true
 	}
 	return false

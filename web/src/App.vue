@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { VTextField } from 'vuetify/components/VTextField';
 import { ref, onMounted, onUnmounted, computed, watch, defineAsyncComponent } from 'vue';
-import { api, action, ui, refreshSettings, refreshStatus, go, errorText, date } from './api';
+import { api, action, ui, go, errorText, date } from './api';
 import { createPluginNavigation, pluginNavigationTarget } from './features/plugin-navigation';
+import { boundedRead } from './features/bounded-read';
 import { abortPluginAPIRequests } from './features/plugin-remote-api';
-import { appInterface, compactAppInterface, observeInterfaceEnvironment } from './features/interface-mode';
+import {
+  appInterface,
+  compactAppInterface,
+  observeInterfaceEnvironment,
+} from './features/interface-mode';
 import {
   createSystemMessageFeed,
   systemMessageIcon,
@@ -34,7 +39,9 @@ const Plugins = defineAsyncComponent(() => import('./components/Plugins.vue'));
 const PluginAppPage = defineAsyncComponent(() => import('./components/PluginAppPage.vue'));
 const PluginDashboard = defineAsyncComponent(() => import('./components/PluginDashboard.vue'));
 const PluginQuickAccess = defineAsyncComponent(() => import('./components/PluginQuickAccess.vue'));
-const PluginApplicationCenter = defineAsyncComponent(() => import('./components/PluginApplicationCenter.vue'));
+const PluginApplicationCenter = defineAsyncComponent(
+  () => import('./components/PluginApplicationCenter.vue'),
+);
 const InterfaceModeMenu = defineAsyncComponent(() => import('./components/InterfaceModeMenu.vue'));
 const AppModeFooter = defineAsyncComponent(() => import('./components/AppModeFooter.vue'));
 const quickAccessOpen = ref(false);
@@ -162,7 +169,9 @@ function change() {
   window.scrollTo(0, 0);
   if (pageKey.value !== 'files') initialFilePaths.value = [];
 }
-function goBack() { window.history.back(); }
+function goBack() {
+  window.history.back();
+}
 function searchMedia(resource = false) {
   const query = globalQuery.value.trim();
   if (!query) return;
@@ -191,7 +200,76 @@ function organizePaths(paths: string[]) {
   initialFilePaths.value = paths;
   go('files');
 }
+let sessionReads = new AbortController();
+let readyTimer: ReturnType<typeof setTimeout> | undefined;
+const readiness = ref<boolean | null>(null);
+const readinessError = ref('');
+const settingsError = ref('');
+let settingsPending: Promise<void> | undefined;
+let statusPending = false;
+function cancelSessionReads() {
+  sessionReads.abort();
+  sessionReads = new AbortController();
+  clearTimeout(readyTimer);
+  settingsPending = undefined;
+  statusPending = false;
+}
+function readSession(path: string) {
+  return boundedRead((signal) => api(path, undefined, 'GET', signal), sessionReads.signal);
+}
+async function loadSettings() {
+  if (settingsPending) return settingsPending;
+  const generation = authGeneration;
+  settingsError.value = '';
+  const pending = (async () => {
+    try {
+      const settings = await readSession('/settings');
+      if (!settings || typeof settings !== 'object') throw new Error('设置响应无效，请重试');
+      if (generation === authGeneration && auth.value?.authenticated) ui.settings = settings;
+    } catch (e) {
+      if (generation === authGeneration) settingsError.value = errorText(e);
+    }
+  })();
+  settingsPending = pending;
+  await pending;
+  if (settingsPending === pending) settingsPending = undefined;
+}
+async function loadStatus() {
+  if (statusPending) return;
+  statusPending = true;
+  const generation = authGeneration;
+  try {
+    const status = await readSession('/status');
+    if (generation === authGeneration && auth.value?.authenticated) {
+      ui.status = status;
+      if (status?.starting === true && readiness.value === true) {
+        readiness.value = false;
+        void checkReadiness();
+      }
+    }
+  } catch {
+    /* Optional statistics must not hide the page. */
+  } finally {
+    if (generation === authGeneration) statusPending = false;
+  }
+}
+async function checkReadiness() {
+  clearTimeout(readyTimer);
+  const generation = authGeneration;
+  readinessError.value = '';
+  try {
+    const status = await readSession('/ready');
+    if (generation !== authGeneration || !auth.value?.authenticated) return;
+    if (typeof status?.starting !== 'boolean') throw new Error('服务状态无法确认，请重试');
+    readiness.value = !status.starting;
+    if (!readiness.value) readyTimer = setTimeout(() => void checkReadiness(), 1500);
+  } catch (e) {
+    if (generation === authGeneration) readinessError.value = errorText(e);
+  }
+}
 function expired() {
+  cancelSessionReads();
+  readiness.value = null;
   abortPluginAPIRequests();
   authGeneration++;
   systemMessageFeed.setAuthenticated(false);
@@ -201,17 +279,25 @@ function expired() {
   starting.value = false;
   auth.value = { authenticated: false, setup_required: false };
   ui.settings = null;
+  ui.status = null;
   clearSearchSession();
   pluginNavigation.reset();
 }
 async function bootstrap() {
+  cancelSessionReads();
+  authGeneration++;
+  readiness.value = null;
+  starting.value = true;
+  authError.value = '';
   const generation = authGeneration;
   try {
-    const status = await api('/auth/status');
+    const status = await readSession('/auth/status');
+    if (typeof status?.authenticated !== 'boolean') throw new Error('登录状态无法确认，请重试');
     if (generation !== authGeneration) return;
     auth.value = status;
     if (auth.value.authenticated) {
-      await Promise.all([refreshSettings(), refreshStatus()]);
+      void loadSettings();
+      await checkReadiness();
       if (generation !== authGeneration || !auth.value?.authenticated) return;
     } else {
       systemMessageFeed.setAuthenticated(false);
@@ -222,25 +308,48 @@ async function bootstrap() {
     if (generation === authGeneration) starting.value = false;
   }
 }
-const serviceStarting = computed(() => ui.status?.starting === true);
-const businessReady = computed(() => !!auth.value?.authenticated && !starting.value && !!ui.status && !serviceStarting.value);
+const serviceStarting = computed(() => readiness.value !== true);
+const businessReady = computed(
+  () => !!auth.value?.authenticated && !starting.value && readiness.value === true,
+);
+// Pages that initialize settings-dependent selections retain a local gate.
+const needsSettings = computed(
+  () =>
+    ![
+      'discover',
+      'recommend-browse',
+      'explore',
+      'explore-detail',
+      'dashboard',
+      'apps',
+      'plugins',
+      'plugin-app',
+      'history',
+      'logs',
+    ].includes(pageKey.value),
+);
+const pageReady = computed(() => businessReady.value && (!needsSettings.value || !!ui.settings));
 watch(businessReady, (ready) => {
   systemMessageFeed.setAuthenticated(ready);
   if (ready) {
+    void loadStatus();
     loadNotifications().catch(() => {});
     pluginNavigation.ensure();
   }
 });
 async function login() {
   authError.value = '';
+  const setup = auth.value?.setup_required;
   try {
-    await api(auth.value.setup_required ? '/auth/setup' : '/auth/login', {
+    await api(auth.value?.setup_required ? '/auth/setup' : '/auth/login', {
       username: username.value,
       password: password.value,
     });
     password.value = '';
     await bootstrap();
-    if (auth.value.setup_required === false && !ui.settings?.sites?.length) go('settings');
+    // Loading settings are not an empty configuration.
+    if (auth.value?.authenticated && (setup || (ui.settings && !ui.settings.sites?.length)))
+      go('settings');
   } catch (e) {
     authError.value = (e as Error).message;
   }
@@ -263,12 +372,13 @@ onMounted(() => {
   timer = window.setInterval(() => {
     if (auth.value?.authenticated && !document.hidden) {
       notificationTime.value = Date.now();
-      refreshStatus().catch(() => {});
+      if (businessReady.value) void loadStatus();
       if (businessReady.value) loadNotifications().catch(() => {});
     }
   }, 15000);
 });
 onUnmounted(() => {
+  cancelSessionReads();
   stopInterfaceMode();
   authGeneration++;
   systemMessageFeed.destroy();
@@ -314,13 +424,20 @@ onUnmounted(() => {
       />
       <p v-if="auth?.setup_required" class="hint">管理员密码至少 12 位。</p>
       <p v-if="authError" class="error-box">{{ authError }}</p>
+      <button v-if="authError && !auth" type="button" @click="bootstrap">重试连接</button>
       <button class="primary full" :disabled="ui.busy > 0">
         {{ auth?.setup_required ? '创建并开始' : '登录' }}
       </button>
       <PluginAuthLogin v-if="!auth?.setup_required" @authenticated="bootstrap" />
     </form>
   </div>
-  <div v-else :class="['app-shell', { 'app-interface': appInterface, 'drawer-open': mobile && !appInterface }]">
+  <div
+    v-else
+    :class="[
+      'app-shell',
+      { 'app-interface': appInterface, 'drawer-open': mobile && !appInterface },
+    ]"
+  >
     <div v-if="mobile && !appInterface" class="sidebar-shade" @click="mobile = false"></div>
     <aside v-if="!appInterface" id="main-navigation" :class="['sidebar', { open: mobile }]">
       <a class="brand" href="#discover" @click="mobile = false"
@@ -367,7 +484,9 @@ onUnmounted(() => {
         >
           <AppIcon name="menu" />
         </button>
-        <button v-else class="icon-button" aria-label="返回" @click="goBack"><VIcon icon="mdi-arrow-left" /></button>
+        <button v-else class="icon-button" aria-label="返回" @click="goBack">
+          <VIcon icon="mdi-arrow-left" />
+        </button>
         <form
           class="global-search"
           role="search"
@@ -420,7 +539,13 @@ onUnmounted(() => {
               class="notification-unread-dot"
               aria-label="有未读通知"
             ></span></button
-          ><button v-if="!compactAppInterface" class="icon-button" title="退出登录" aria-label="退出登录" @click="logout">
+          ><button
+            v-if="!compactAppInterface"
+            class="icon-button"
+            title="退出登录"
+            aria-label="退出登录"
+            @click="logout"
+          >
             <AppIcon name="logout" />
           </button>
         </div>
@@ -547,83 +672,122 @@ onUnmounted(() => {
       </section>
       <main>
         <div v-if="serviceStarting" class="service-alert" role="status">
-          服务正在初始化，完成后将自动载入。你可以先查看日志。
+          {{ readinessError || '服务正在初始化，完成后将自动载入。你可以先查看日志。' }}
+          <button v-if="readinessError" @click="checkReadiness">重试连接</button>
           <button v-if="pageKey !== 'logs'" @click="go('logs')">查看日志</button>
         </div>
         <Operations v-if="serviceStarting && pageKey === 'logs'" view="logs" />
-        <template v-if="!serviceStarting">
-        <PluginQuickAccess v-if="pageKey === 'dashboard' && appInterface" @visibility="quickAccessOpen = $event" @pull="quickAccessPull = $event" />
-        <div v-if="pageKey === 'apps' && compactAppInterface" class="mobile-account-actions">
-          <InterfaceModeMenu labeled />
-          <button type="button" class="mobile-logout" @click="logout">
-            <AppIcon name="logout" />退出登录
-          </button>
+        <div
+          v-if="businessReady && needsSettings && !ui.settings"
+          class="service-alert"
+          role="status"
+        >
+          {{ settingsError || '正在载入此页面所需的设置…' }}
+          <button v-if="settingsError" @click="loadSettings">重试</button>
         </div>
-        <PluginApplicationCenter v-if="pageKey === 'apps'" :navigation="nav" :plugins="pluginNavItems.items" :error="pluginNavItems.error" :search-route="searchSession.lastRoute" @retry="pluginNavigation.ensure(true)" />
-        <KeepAlive>
-          <Recommend v-if="pageKey === 'discover'" />
-        </KeepAlive>
-        <KeepAlive :max="15">
-          <RecommendBrowse v-if="pageKey === 'recommend-browse'" :key="route" :route="route" />
-        </KeepAlive>
-        <KeepAlive>
-          <Explore v-if="pageKey === 'explore'" />
-        </KeepAlive>
-        <KeepAlive>
-          <Plugins v-if="pageKey === 'plugins'" @changed="pluginNavigation.ensure(true)" />
-        </KeepAlive>
-        <div :style="quickAccessPull">
+        <template v-if="pageReady">
+          <PluginQuickAccess
+            v-if="pageKey === 'dashboard' && appInterface"
+            @visibility="quickAccessOpen = $event"
+            @pull="quickAccessPull = $event"
+          />
+          <div v-if="pageKey === 'apps' && compactAppInterface" class="mobile-account-actions">
+            <InterfaceModeMenu labeled />
+            <button type="button" class="mobile-logout" @click="logout">
+              <AppIcon name="logout" />退出登录
+            </button>
+          </div>
+          <PluginApplicationCenter
+            v-if="pageKey === 'apps'"
+            :navigation="nav"
+            :plugins="pluginNavItems.items"
+            :error="pluginNavItems.error"
+            :search-route="searchSession.lastRoute"
+            @retry="pluginNavigation.ensure(true)"
+          />
           <KeepAlive>
-            <PluginDashboard v-if="pageKey === 'dashboard'" />
+            <Recommend v-if="pageKey === 'discover'" />
           </KeepAlive>
-        </div>
-        <ExploreDetail v-if="pageKey === 'explore-detail'" :key="route" :route="route" />
-        <KeepAlive :max="24">
-          <component :is="searchComponent" v-if="searchComponent" :key="route" :route="route" />
-        </KeepAlive>
-        <Catalog
-          v-if="['detail', 'person'].includes(pageKey)"
-          :key="route"
-          :route="route"
-        /><Subscriptions
-          v-else-if="route.startsWith('subscriptions') || route === 'calendar'"
-          :key="route"
-          :view="route"
-        /><SiteManager v-else-if="pageKey === 'sites'" />
-        <PluginAppPage
-          v-else-if="pageKey === 'plugin-app'"
-          :key="route"
-          :route="route"
-          @changed="pluginNavigation.ensure(true)"
-        />
-        <FileManager
-          v-else-if="pageKey === 'files' || pageKey === 'organize'"
-          :key="route"
-          :initial-paths="initialFilePaths"
-          @history="go('history')"
-          @job="(job: string) => go('jobs/' + encodeURIComponent(job))"
-        />
-        <TransferHistory
-          v-else-if="pageKey === 'history'"
-          @organize="organizePaths"
-          @job="(job: string) => go('jobs/' + encodeURIComponent(job))"
-        />
-        <Settings v-else-if="pageKey === 'settings'" /><DownloaderTasks
-          v-else-if="pageKey === 'downloads'"
-        /><Operations
-          v-else-if="!searchComponent && !['discover', 'recommend-browse', 'explore', 'explore-detail', 'apps', 'plugins', 'dashboard'].includes(pageKey)"
-          :key="route"
-          :view="route.split('/')[0]!"
-          :initial-job="
-            route.startsWith('jobs/') || route.startsWith('logs/') ? route.split('/')[1] : undefined
-          "
-        />
+          <KeepAlive :max="15">
+            <RecommendBrowse v-if="pageKey === 'recommend-browse'" :key="route" :route="route" />
+          </KeepAlive>
+          <KeepAlive>
+            <Explore v-if="pageKey === 'explore'" />
+          </KeepAlive>
+          <KeepAlive>
+            <Plugins v-if="pageKey === 'plugins'" @changed="pluginNavigation.ensure(true)" />
+          </KeepAlive>
+          <div :style="quickAccessPull">
+            <KeepAlive>
+              <PluginDashboard v-if="pageKey === 'dashboard'" />
+            </KeepAlive>
+          </div>
+          <ExploreDetail v-if="pageKey === 'explore-detail'" :key="route" :route="route" />
+          <KeepAlive :max="24">
+            <component :is="searchComponent" v-if="searchComponent" :key="route" :route="route" />
+          </KeepAlive>
+          <Catalog
+            v-if="['detail', 'person'].includes(pageKey)"
+            :key="route"
+            :route="route"
+          /><Subscriptions
+            v-else-if="route.startsWith('subscriptions') || route === 'calendar'"
+            :key="route"
+            :view="route"
+          /><SiteManager v-else-if="pageKey === 'sites'" />
+          <PluginAppPage
+            v-else-if="pageKey === 'plugin-app'"
+            :key="route"
+            :route="route"
+            @changed="pluginNavigation.ensure(true)"
+          />
+          <FileManager
+            v-else-if="pageKey === 'files' || pageKey === 'organize'"
+            :key="route"
+            :initial-paths="initialFilePaths"
+            @history="go('history')"
+            @job="(job: string) => go('jobs/' + encodeURIComponent(job))"
+          />
+          <TransferHistory
+            v-else-if="pageKey === 'history'"
+            @organize="organizePaths"
+            @job="(job: string) => go('jobs/' + encodeURIComponent(job))"
+          />
+          <Settings v-else-if="pageKey === 'settings'" /><DownloaderTasks
+            v-else-if="pageKey === 'downloads'"
+          /><Operations
+            v-else-if="
+              !searchComponent &&
+              ![
+                'discover',
+                'recommend-browse',
+                'explore',
+                'explore-detail',
+                'apps',
+                'plugins',
+                'dashboard',
+              ].includes(pageKey)
+            "
+            :key="route"
+            :view="route.split('/')[0]!"
+            :initial-job="
+              route.startsWith('jobs/') || route.startsWith('logs/')
+                ? route.split('/')[1]
+                : undefined
+            "
+          />
         </template>
       </main>
     </div>
     <AppModeFooter v-if="appInterface && !quickAccessOpen" :route="route" />
   </div>
-  <div :class="['toasts', { 'above-app-footer': auth?.authenticated && appInterface && !quickAccessOpen }]" role="status">
+  <div
+    :class="[
+      'toasts',
+      { 'above-app-footer': auth?.authenticated && appInterface && !quickAccessOpen },
+    ]"
+    role="status"
+  >
     <button
       v-for="t in ui.toasts"
       :key="t.id"
@@ -638,7 +802,9 @@ onUnmounted(() => {
   </div>
 </template>
 <style scoped>
-.app-interface .main-shell { margin-left: 0; }
+.app-interface .main-shell {
+  margin-left: 0;
+}
 .mobile-account-actions {
   display: flex;
   flex-wrap: wrap;
@@ -650,9 +816,17 @@ onUnmounted(() => {
   background: var(--surface);
 }
 .mobile-account-actions :deep(.v-btn),
-.mobile-logout { min-height: 44px; }
-.mobile-logout { border: 0; background: transparent; }
-.mobile-logout svg { width: 20px; height: 20px; }
+.mobile-logout {
+  min-height: 44px;
+}
+.mobile-logout {
+  border: 0;
+  background: transparent;
+}
+.mobile-logout svg {
+  width: 20px;
+  height: 20px;
+}
 .explore-tabs-host {
   position: sticky;
   top: var(--topbar-height);
@@ -708,7 +882,9 @@ onUnmounted(() => {
   height: 24px;
 }
 @media (max-width: 600px) {
-  .global-search { position: static; }
+  .global-search {
+    position: static;
+  }
   .global-search-menu {
     inset-inline: 8px;
     top: 100%;

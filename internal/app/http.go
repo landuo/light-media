@@ -164,7 +164,12 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	case p == "plugins" || strings.HasPrefix(p, "plugins/"):
 		out, e = a.originalManagerHTTP(w, r, strings.TrimPrefix(strings.TrimPrefix(p, "plugins"), "/"))
 	case p == "auth/status" && method == "GET":
-		out = map[string]any{"setup_required": !a.hasAdmin(), "authenticated": a.authenticated(r)}
+		var hasAdmin bool
+		hasAdmin, e = a.hasAdminContext(ctx)
+		if e == nil {
+			out = map[string]any{"setup_required": !hasAdmin, "authenticated": a.authenticated(r)}
+			e = ctx.Err()
+		}
 	case p == "auth/providers" && method == http.MethodGet:
 		out, e = a.originalAuthProviders(ctx)
 	case p == "auth/exchange" && method == http.MethodPost:
@@ -178,8 +183,13 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		}
 		http.SetCookie(w, sessionCookie(r, "", -1))
 		out = map[string]bool{"authenticated": false}
+	case p == "ready" && method == "GET":
+		// Readiness is independent of full statistics and settings. The normal
+		// session gate still runs before this endpoint, including during startup.
+		out = map[string]any{"starting": a.startupPending.Load()}
 	case p == "status" && method == "GET":
 		out = a.status(ctx)
+		e = ctx.Err()
 	case p == "control" && method == "POST":
 		var in struct {
 			Paused bool `json:"paused"`
@@ -190,7 +200,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		}
 		out = a.status(ctx)
 	case p == "settings" && method == "GET":
-		out = a.publicSettings()
+		out, e = a.publicSettingsContext(ctx)
 	case p == "settings/rules" || strings.HasPrefix(p, "settings/rules/"):
 		out, e = a.priorityRulesAPI(w, r, strings.TrimPrefix(strings.TrimPrefix(p, "settings/rules"), "/"))
 	case p == "settings/resource-metadata":
@@ -593,6 +603,13 @@ func (a *App) status(ctx context.Context) map[string]any {
 	return map[string]any{"logging": map[string]string{"status": logStatus, "error": logErr}, "control": state, "active_writes": n, "counts": counts, "version": appVersion, "time": now(), "starting": a.startupPending.Load()}
 }
 func (a *App) publicSettings() map[string]any {
+	out, _ := a.publicSettingsContext(context.Background())
+	return out
+}
+func (a *App) publicSettingsContext(ctx context.Context) (map[string]any, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
 	c := a.Settings()
 	secretState := map[string]any{"tmdb": c.TMDB.APIKey != "" || c.TMDB.AccessToken != "", "fnos": c.FNOS.Password != "", "api_token": c.APIToken != ""}
 	secretState["proxy_host"] = c.ProxyHost != ""
@@ -650,14 +667,17 @@ func (a *App) publicSettings() map[string]any {
 	// Keep the stored nullable preference distinct from the effective value.
 	// Unrelated settings saves must not turn an inherited source flag into an
 	// explicit user choice merely because the UI displayed it.
-	policy, err := a.sourceSiteMessagePolicy(context.Background(), c)
+	policy, err := a.sourceSiteMessagePolicy(ctx, c)
+	if ctx.Err() != nil {
+		return nil, ctx.Err()
+	}
 	if err != nil {
 		m["effective_read_site_messages"] = nil
 		m["read_site_messages_error"] = "站点消息设置无法确认，请检查迁移数据；站点刷新已停止读取消息"
 	} else {
 		m["effective_read_site_messages"] = policy.enabled
 	}
-	return m
+	return m, nil
 }
 
 func sameFNOSCredentialEndpoint(incoming, previous string) bool {
