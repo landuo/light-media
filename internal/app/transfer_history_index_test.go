@@ -51,6 +51,16 @@ func historyIndexMatchesExecutionRecords(t *testing.T, a *App) {
 			t.Fatalf("index differs from original execution projection: %d %v", differences, err)
 		}
 	}
+	columns := transferHistoryIndexColumns + `,history_id,history_created_at`
+	for _, query := range []string{
+		transferHistoryCTE + `SELECT COUNT(*) FROM (SELECT ` + columns + ` FROM history EXCEPT SELECT ` + columns + ` FROM transfer_history_current)`,
+		transferHistoryCTE + `SELECT COUNT(*) FROM (SELECT ` + columns + ` FROM transfer_history_current EXCEPT SELECT ` + columns + ` FROM history)`,
+	} {
+		var differences int
+		if err := tx.QueryRow(query).Scan(&differences); err != nil || differences != 0 {
+			t.Fatalf("current projection differs from original ranking: %d %v", differences, err)
+		}
+	}
 	if err := tx.Commit(); err != nil {
 		t.Fatal(err)
 	}

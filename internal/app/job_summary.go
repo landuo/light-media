@@ -61,15 +61,17 @@ const jobSummaryJoins = `
  LEFT JOIN records old_asset ON j.kind='reorganize_cleanup' AND old_asset.kind='asset'
    AND old_asset.id=CASE WHEN json_valid(subject.payload) THEN NULLIF(json_extract(subject.payload,'$.old_asset_id'),'') END`
 
+const jobDisplayPriority = `CASE
+   WHEN state='running' THEN 0
+   WHEN state IN ` + activeOrganizeStates + ` AND kind NOT IN ('import','organize_file') THEN 1
+   WHEN state IN ` + activeOrganizeStates + ` THEN 2
+   ELSE 3 END`
+
 func (a *App) jobQueue(ctx context.Context) ([]jobView, error) {
 	// Limit before reading payloads. Running and other pending work stay
 	// visible when a directory adds hundreds of recent file jobs.
 	rows, err := a.Store.reader().QueryContext(ctx, `WITH selected AS MATERIALIZED (
- SELECT id,CASE
-   WHEN state='running' THEN 0
-   WHEN state IN `+activeOrganizeStates+` AND kind NOT IN ('import','organize_file') THEN 1
-   WHEN state IN `+activeOrganizeStates+` THEN 2
-   ELSE 3 END AS priority FROM jobs ORDER BY priority,created_at DESC,id LIMIT 100
+ SELECT id,`+jobDisplayPriority+` AS priority FROM jobs ORDER BY priority,created_at DESC,id LIMIT 100
 ), page AS (SELECT `+jobColumns+`,selected.priority FROM selected JOIN jobs USING(id))
  SELECT j.*,`+jobSummaryColumns+` FROM page j`+jobSummaryJoins+` ORDER BY j.priority,j.created_at DESC,j.id`)
 	if err != nil {

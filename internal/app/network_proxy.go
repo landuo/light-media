@@ -9,7 +9,10 @@ import (
 )
 
 func (a *App) proxyConfig() (networkproxy.Config, error) {
-	return resolveProxyConfig(a.Settings().ProxyHost)
+	a.cfgMu.RLock()
+	setting := a.config.ProxyHost
+	a.cfgMu.RUnlock()
+	return resolveProxyConfig(setting)
 }
 
 func resolveProxyConfig(setting string) (networkproxy.Config, error) {
@@ -75,4 +78,31 @@ func proxySecrets(raw string) []string {
 		values = append(values, u.User.String(), u.User.Username(), password)
 	}
 	return values
+}
+
+// Keep the pool across requests, replacing it only when outbound routing changes.
+func (a *App) metadataAPITransportForConfig() (http.RoundTripper, error) {
+	config, err := a.proxyConfig()
+	if err != nil {
+		return nil, err
+	}
+	a.metadataProxyMu.Lock()
+	defer a.metadataProxyMu.Unlock()
+	if a.metadataAPITransport == nil || a.metadataAPIConfig != config {
+		transport, err := config.Transport(nil)
+		if err != nil {
+			return nil, err
+		}
+		if a.metadataAPITransport != nil {
+			a.closeMetadataAPITransportLocked()
+		}
+		a.metadataAPITransport, a.metadataAPIConfig = transport, config
+	}
+	return a.metadataAPITransport, nil
+}
+
+func (a *App) closeMetadataAPITransportLocked() {
+	if closer, ok := a.metadataAPITransport.(interface{ CloseIdleConnections() }); ok {
+		closer.CloseIdleConnections()
+	}
 }

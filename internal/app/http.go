@@ -66,6 +66,8 @@ func (a *App) writeError(w http.ResponseWriter, r *http.Request, e error) {
 		out = &APIError{Code: "FNOS_" + strings.ToUpper(fn.Code), Message: fn.Error(), Status: 502}
 	} else if errors.As(e, &dl) {
 		out = &APIError{Code: "DOWNLOADER_" + strings.ToUpper(dl.Code), Message: dl.Error(), Status: 502}
+	} else if r.Method == http.MethodGet && errors.Is(e, context.DeadlineExceeded) {
+		out = &APIError{"REQUEST_TIMEOUT", "读取超时，请稍后重试或查看服务日志", http.StatusGatewayTimeout}
 	} else if errors.Is(e, sql.ErrNoRows) {
 		out = &APIError{"NOT_FOUND", "记录不存在", 404}
 	}
@@ -76,7 +78,9 @@ func (a *App) writeError(w http.ResponseWriter, r *http.Request, e error) {
 	w.WriteHeader(out.Status)
 	_ = json.NewEncoder(w).Encode(map[string]any{"error": out, "request_id": w.Header().Get("X-Request-ID")})
 }
-func (a *App) Handler() http.Handler { return mountEntrypoints(a.requestLogged(a.handler())) }
+func (a *App) Handler() http.Handler {
+	return mountEntrypoints(a.requestLogged(nativeDisplayDeadline(a.handler(), 30*time.Second)))
+}
 func (a *App) handler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
@@ -112,6 +116,13 @@ func (a *App) handler() http.Handler {
 				}
 			}
 			if r.URL.Path != "/api/auth/status" && r.URL.Path != "/api/auth/login" && r.URL.Path != "/api/auth/setup" && r.URL.Path != "/api/auth/providers" && r.URL.Path != "/api/auth/exchange" && !a.authenticated(r) {
+				// A display budget can expire while the session query waits for a
+				// reader. Do not misreport that timeout as an invalid session or
+				// attempt anonymous plugin discovery with an expired context.
+				if nativeDisplayRequest(r) && errors.Is(r.Context().Err(), context.DeadlineExceeded) {
+					a.writeError(w, r, context.DeadlineExceeded)
+					return
+				}
 				if a.serveOriginalPluginFrontend(w, r) || a.serveOriginalAuthFrontendDescriptor(w, r) {
 					return
 				}
@@ -579,7 +590,7 @@ func (a *App) status(ctx context.Context) map[string]any {
 	if logErr != "" {
 		logStatus = "failed"
 	}
-	return map[string]any{"logging": map[string]string{"status": logStatus, "error": logErr}, "control": state, "active_writes": n, "counts": counts, "version": appVersion, "time": now()}
+	return map[string]any{"logging": map[string]string{"status": logStatus, "error": logErr}, "control": state, "active_writes": n, "counts": counts, "version": appVersion, "time": now(), "starting": a.startupPending.Load()}
 }
 func (a *App) publicSettings() map[string]any {
 	c := a.Settings()

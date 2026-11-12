@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { nextTick, reactive, watch } from 'vue';
+import { defineAsyncComponent, nextTick, reactive, watch } from 'vue';
 import { VInfiniteScroll } from 'vuetify/components/VInfiniteScroll';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VProgressCircular } from 'vuetify/components/VProgressCircular';
 import { errorText } from '../api';
-import PluginFormRenderer from './PluginFormRenderer.vue';
+const PluginFormRenderer = defineAsyncComponent(() => import('./PluginFormRenderer.vue'));
 import MediaCards from './MediaCards.vue';
 import {
   createExploreFeed,

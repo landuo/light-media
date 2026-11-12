@@ -554,3 +554,5 @@ onUnmounted(() => {
   height: 100%;
 }
 </style>
+
+<style src="../assets/plugin-utilities.css"></style>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { VVirtualScroll } from 'vuetify/components/VVirtualScroll';
 import { VTextField } from 'vuetify/components/VTextField';
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import { api, apiURL, bytes, date, errorText, image, label, toast, ui } from '../api';
 import {
   browserRootForPath,
@@ -33,6 +34,32 @@ const tree = ref(localStorage.getItem('fileBrowser.showDirTree') === 'true'),
   selectMode = ref(false),
   selected = ref<string[]>([]),
   refreshKey = ref(0);
+const virtualList = ref<InstanceType<typeof VVirtualScroll>>();
+const selectedSet = computed(() => new Set(selected.value));
+const selectablePaths = computed(
+  () => new Set(listing.value.filter(isSelectableBrowserItem).map((item) => item.path)),
+);
+async function navigateRows(event: KeyboardEvent, index: number) {
+  const target =
+    event.key === 'ArrowDown'
+      ? index + 1
+      : event.key === 'ArrowUp'
+        ? index - 1
+        : event.key === 'Home'
+          ? 0
+          : event.key === 'End'
+            ? items.value.length - 1
+            : -1;
+  if (target < 0 || target >= items.value.length) return;
+  event.preventDefault();
+  virtualList.value?.scrollToIndex(target);
+  await nextTick();
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      if (alive) virtualList.value?.$el.querySelector(`[data-file-index="${target}"]`)?.focus();
+    }),
+  );
+}
 const activeRoot = computed(() => browserRootForPath(roots.value, currentPath.value));
 const canManage = computed(() => !!activeRoot.value && activeRoot.value.kind !== 'container');
 const items = computed(() => {
@@ -64,6 +91,7 @@ const detailImage = computed(() =>
 let generation = 0;
 let alive = true;
 async function load(path = currentPath.value) {
+  if (!alive) return;
   const run = ++generation;
   const nextPath = cleanBrowserPath(path);
   loading.value = true;
@@ -114,11 +142,8 @@ function openItem(item: BrowserItem) {
     filter.value = '';
   }
 }
-function select(path: string, checked = !selected.value.includes(path)) {
-  if (
-    !canManage.value ||
-    !listing.value.some((item) => item.path === path && isSelectableBrowserItem(item))
-  ) return;
+function select(path: string, checked = !selectedSet.value.has(path)) {
+  if (!canManage.value || !selectablePaths.value.has(path)) return;
   selected.value = checked
     ? [...new Set([...selected.value, path])]
     : selected.value.filter((value) => value !== path);
@@ -273,6 +298,7 @@ onMounted(async () => {
       api<BrowserRoot[]>('/files/roots?scope=container'),
       ui.settings ? Promise.resolve(ui.settings) : api('/settings'),
     ]);
+    if (!alive) return;
     roots.value = rootList;
     ui.settings = settings;
     if (props.initialPaths?.length) await initial(props.initialPaths);
@@ -291,6 +317,7 @@ onMounted(async () => {
 });
 onUnmounted(() => {
   alive = false;
+  generation++;
 });
 </script>
 <template>
@@ -441,91 +468,114 @@ onUnmounted(() => {
             }}
           </p>
         </div>
-        <div v-else class="file-manager-list" aria-label="文件列表">
-          <div
-            v-for="item in items"
-            :key="item.path"
-            class="file-row"
-            :class="{ selected: selected.includes(item.path) }"
-            @click="openItem(item)"
+        <div v-else class="file-manager-list" role="list" aria-label="文件列表">
+          <VVirtualScroll
+            v-if="items.length"
+            ref="virtualList"
+            :key="currentPath + '|' + filter + '|' + ignoreCase"
+            :items="items"
+            :item-height="62"
+            height="100%"
           >
-            <label
-              v-if="canManage && selectMode && isSelectableBrowserItem(item)"
-              class="file-selection-control"
-              @click.stop
-            >
-              <input
-                type="checkbox"
-                :aria-label="'选择 ' + item.name"
-                :checked="selected.includes(item.path)"
-                @change="select(item.path, ($event.target as HTMLInputElement).checked)"
-              /> </label
-            ><FileManagerIcon
-              v-else
-              :name="item.type === 'dir' ? 'folder' : item.video ? 'video' : 'file'"
-            /><button class="file-row-name" :title="item.path" @click.stop="openItem(item)">
-              <strong>{{ item.name }}</strong
-              ><small v-if="item.type === 'file' && item.size">{{ bytes(item.size) }}</small>
-            </button>
-            <div
-              v-if="canManage && !selectMode && !item.virtual && ['dir', 'file'].includes(item.type)"
-              class="file-row-actions"
-              @click.stop
-            >
-              <button
-                class="file-icon-button"
-                :aria-label="'识别 ' + item.name"
-                title="识别"
-                @click="recognize(item)"
+            <template #default="{ item, index }">
+              <div
+                :key="item.path"
+                class="file-row"
+                role="listitem"
+                :aria-posinset="index + 1"
+                :aria-setsize="items.length"
+                :class="{ selected: selectedSet.has(item.path) }"
+                @click="openItem(item)"
               >
-                <FileManagerIcon name="recognize" /></button
-              ><button
-                class="file-icon-button"
-                :aria-label="'刮削 ' + item.name"
-                title="刮削"
-                @click="openScrape([item.path])"
-              >
-                <FileManagerIcon name="scrape" /></button
-              ><button
-                class="file-icon-button"
-                :aria-label="'重命名 ' + item.name"
-                title="重命名"
-                @click="openOperation('rename', [item.path])"
-              >
-                <FileManagerIcon name="rename" /></button
-              ><button
-                class="file-icon-button"
-                :aria-label="'整理 ' + item.name"
-                title="整理"
-                @click="openOrganize([item.path])"
-              >
-                <FileManagerIcon name="organize" /></button
-              ><button
-                class="file-icon-button danger-action"
-                :aria-label="'删除 ' + item.name"
-                title="删除"
-                @click="openOperation('delete', [item.path])"
-              >
-                <FileManagerIcon name="delete" />
-              </button>
-            </div>
-            <details
-              v-if="canManage && !selectMode && !item.virtual && ['dir', 'file'].includes(item.type)"
-              class="file-mobile-menu"
-              @click.stop
-            >
-              <summary :aria-label="item.name + ' 操作'"><AppIcon name="more" /></summary>
-              <div>
-                <button @click="recognize(item)">识别</button
-                ><button @click="openScrape([item.path])">刮削</button
-                ><button @click="openOperation('rename', [item.path])">重命名</button
-                ><button @click="openOrganize([item.path])">整理</button
-                ><button class="danger-action" @click="openOperation('delete', [item.path])">
-                  删除
+                <label
+                  v-if="canManage && selectMode && isSelectableBrowserItem(item)"
+                  class="file-selection-control"
+                  @click.stop
+                >
+                  <input
+                    type="checkbox"
+                    :aria-label="'选择 ' + item.name"
+                    :checked="selectedSet.has(item.path)"
+                    @change="select(item.path, ($event.target as HTMLInputElement).checked)"
+                  /> </label
+                ><FileManagerIcon
+                  v-else
+                  :name="item.type === 'dir' ? 'folder' : item.video ? 'video' : 'file'"
+                /><button
+                  class="file-row-name"
+                  :title="item.path"
+                  :data-file-index="index"
+                  @keydown="navigateRows($event, index)"
+                  @click.stop="openItem(item)"
+                >
+                  <strong>{{ item.name }}</strong
+                  ><small v-if="item.type === 'file' && item.size">{{ bytes(item.size) }}</small>
                 </button>
+                <div
+                  v-if="
+                    canManage && !selectMode && !item.virtual && ['dir', 'file'].includes(item.type)
+                  "
+                  class="file-row-actions"
+                  @click.stop
+                >
+                  <button
+                    class="file-icon-button"
+                    :aria-label="'识别 ' + item.name"
+                    title="识别"
+                    @click="recognize(item)"
+                  >
+                    <FileManagerIcon name="recognize" /></button
+                  ><button
+                    class="file-icon-button"
+                    :aria-label="'刮削 ' + item.name"
+                    title="刮削"
+                    @click="openScrape([item.path])"
+                  >
+                    <FileManagerIcon name="scrape" /></button
+                  ><button
+                    class="file-icon-button"
+                    :aria-label="'重命名 ' + item.name"
+                    title="重命名"
+                    @click="openOperation('rename', [item.path])"
+                  >
+                    <FileManagerIcon name="rename" /></button
+                  ><button
+                    class="file-icon-button"
+                    :aria-label="'整理 ' + item.name"
+                    title="整理"
+                    @click="openOrganize([item.path])"
+                  >
+                    <FileManagerIcon name="organize" /></button
+                  ><button
+                    class="file-icon-button danger-action"
+                    :aria-label="'删除 ' + item.name"
+                    title="删除"
+                    @click="openOperation('delete', [item.path])"
+                  >
+                    <FileManagerIcon name="delete" />
+                  </button>
+                </div>
+                <details
+                  v-if="
+                    canManage && !selectMode && !item.virtual && ['dir', 'file'].includes(item.type)
+                  "
+                  class="file-mobile-menu"
+                  @click.stop
+                >
+                  <summary :aria-label="item.name + ' 操作'"><AppIcon name="more" /></summary>
+                  <div>
+                    <button @click="recognize(item)">识别</button
+                    ><button @click="openScrape([item.path])">刮削</button
+                    ><button @click="openOperation('rename', [item.path])">重命名</button
+                    ><button @click="openOrganize([item.path])">整理</button
+                    ><button class="danger-action" @click="openOperation('delete', [item.path])">
+                      删除
+                    </button>
+                  </div>
+                </details>
               </div>
-            </details>
-          </div>
+            </template>
+          </VVirtualScroll>
           <div v-if="!items.length && !error" class="file-empty">
             {{ filter ? '没有符合条件的文件' : '空目录' }}
           </div>

@@ -69,3 +69,5 @@ onUnmounted(auth.destroy);
     </VThemeProvider>
   </VDialog>
 </template>
+
+<style src="../assets/plugin-utilities.css"></style>

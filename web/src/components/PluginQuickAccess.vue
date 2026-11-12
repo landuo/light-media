@@ -408,3 +408,5 @@ onUnmounted(() => {
   line-height: 1.2;
 }
 </style>
+
+<style src="../assets/plugin-utilities.css"></style>

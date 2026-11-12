@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "node scripts/build-icons.mjs && node scripts/build-plugin-utilities.mjs && vue-tsc --noEmit && vite build",
+    "build": "node scripts/build-icons.mjs && node scripts/build-plugin-utilities.mjs && vue-tsc --noEmit && vite build && node scripts/precompress.mjs",
     "check": "node scripts/build-icons.mjs && node scripts/build-plugin-utilities.mjs && vue-tsc --noEmit",
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --experimental-transform-types --disable-warning=ExperimentalWarning --test tests/*.test.mjs",

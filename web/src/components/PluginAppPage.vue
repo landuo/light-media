@@ -61,3 +61,5 @@ onUnmounted(() => {
     </section>
   </VThemeProvider>
 </template>
+
+<style src="../assets/plugin-utilities.css"></style>

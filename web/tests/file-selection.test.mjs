@@ -13,7 +13,10 @@ const compiled = ts.transpileModule(script.content, {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
 }).outputText;
 
-async function openFiles(t, { initialPath = '/media/download', container = false } = {}) {
+async function openFiles(
+  t,
+  { initialPath = '/media/download', container = false, items, windowSize = Infinity } = {},
+) {
   const fixture = {
     items: [
       { path: '/media/download/one.mkv', name: 'one.mkv', type: 'file' },
@@ -21,7 +24,9 @@ async function openFiles(t, { initialPath = '/media/download', container = false
       { path: '/media/download/folder', name: 'folder', type: 'dir' },
     ],
     requests: [],
+    windowStart: 0,
   };
+  if (items) fixture.items = items;
   const mounted = [];
   const apiModule = {
     api: async (path) => {
@@ -36,7 +41,9 @@ async function openFiles(t, { initialPath = '/media/download', container = false
         if (container && location === '/')
           return { items: [{ path: '/BT_backup', name: 'BT_backup', type: 'dir' }] };
         if (container && location === '/BT_backup')
-          return { items: [{ path: '/BT_backup/example.torrent', name: 'example.torrent', type: 'file' }] };
+          return {
+            items: [{ path: '/BT_backup/example.torrent', name: 'example.torrent', type: 'file' }],
+          };
         return { items: location === '/media/download' ? [...fixture.items] : [] };
       }
       throw new Error('Unexpected request: ' + path);
@@ -57,7 +64,7 @@ async function openFiles(t, { initialPath = '/media/download', container = false
     if (name === '../api') return apiModule;
     if (name === '../features/file-browser') return browser;
     if (name.endsWith('.vue')) return { default: { name } };
-    if (/^vuetify\/components\/(VTextField|VSelect|VTextarea)$/.test(name)) {
+    if (/^vuetify\/components\/(VTextField|VSelect|VTextarea|VVirtualScroll)$/.test(name)) {
       const component = name.split('/').at(-1);
       return { [component]: { name: component } };
     }
@@ -82,7 +89,13 @@ async function openFiles(t, { initialPath = '/media/download', container = false
       if (!node || typeof node !== 'object') return;
       if (Array.isArray(node)) return node.forEach(visit);
       result.push(node);
-      visit(node.children);
+      if (node.type?.name === 'VVirtualScroll') {
+        node.props.items
+          .slice(fixture.windowStart, fixture.windowStart + windowSize)
+          .forEach((item, offset) =>
+            visit(node.children.default({ item, index: fixture.windowStart + offset })),
+          );
+      } else visit(node.children);
     }
     visit(render({}, []));
     return result;
@@ -153,10 +166,14 @@ test('container-only folders expose metadata without download or mutation contro
   assert.ok(files.button('新建目录').props.disabled);
   assert.equal(files.button('多选文件'), undefined);
   await files.clickName('/BT_backup');
-  assert.ok(files.fixture.requests.some((path) => path.includes('root_id=container&path=%2FBT_backup')));
+  assert.ok(
+    files.fixture.requests.some((path) => path.includes('root_id=container&path=%2FBT_backup')),
+  );
   assert.equal(files.button('删除 example.torrent'), undefined);
   await files.clickName('/BT_backup/example.torrent');
-  assert.ok(files.nodes().some((node) => node.type === 'h2' && node.children === 'example.torrent'));
+  assert.ok(
+    files.nodes().some((node) => node.type === 'h2' && node.children === 'example.torrent'),
+  );
   assert.equal(files.button('下载文件'), undefined);
 });
 
@@ -173,4 +190,31 @@ test('selection reconciliation excludes virtual or unsupported items and dedupli
     ),
     ['/media/file.mkv'],
   );
+});
+
+// Slot viewport is synthetic here; the actual Vuetify window bound is exercised
+// separately in file-virtual-window.test.mjs.
+test('offscreen selection survives virtual row recycling and full-list refresh', async (t) => {
+  const files = await openFiles(t, {
+    windowSize: 15,
+    items: Array.from({ length: 10000 }, (_, i) => ({
+      path: `/media/download/${i}.mkv`,
+      name: `${i}.mkv`,
+      type: 'file',
+    })),
+  });
+  files.button('多选文件').props.onClick();
+  await files.clickName('/media/download/5.mkv');
+  files.fixture.windowStart = 9990;
+  assert.equal(files.checkbox('5.mkv'), undefined);
+  await files.clickName('/media/download/9995.mkv');
+  assert.ok(files.button('整理所选 2 项'));
+  await files.button('改为按时间排序').props.onClick();
+  assert.ok(files.button('整理所选 2 项'));
+  assert.equal(files.checkbox('9995.mkv').props.checked, true);
+  files.fixture.windowStart = 0;
+  assert.equal(files.checkbox('5.mkv').props.checked, true);
+  files.button('上一级').props.onClick();
+  await vue.nextTick();
+  assert.equal(files.button('整理所选 2 项'), undefined);
 });

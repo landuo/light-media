@@ -127,13 +127,28 @@ function sortItems() {
   };
   items.value.sort((a, b) => index(a) - index(b));
 }
+function discoverMetadata(next: DashboardMeta[]) {
+  metadata.value = next;
+  const previous = new Map(items.value.map((item) => [dashboardID(item), item]));
+  const ids = new Set(next.map(dashboardID));
+  for (const id of timers.keys()) if (!ids.has(id)) clearTimer(id);
+  // Metadata is sufficient for discovery and settings. Hidden widgets do not
+  // need expensive data requests just to display their name in the picker.
+  items.value = next.map((meta) => ({ ...previous.get(dashboardID(meta)), ...meta }));
+  sortItems();
+}
+async function loadVisibleItems() {
+  await Promise.all(
+    metadata.value.filter((meta) => layout.value.enabled?.[dashboardID(meta)]).map(loadItem),
+  );
+  await syncGrid();
+}
 async function loadMetadata() {
   try {
     const next = await api<DashboardMeta[]>('/plugins/dashboard/meta');
     if (!active) return;
-    metadata.value = next ?? [];
-    await Promise.all(metadata.value.map(loadItem));
-    await syncGrid();
+    discoverMetadata(next ?? []);
+    await loadVisibleItems();
   } catch (e) {
     if (active) error.value = errorText(e);
   }
@@ -154,7 +169,7 @@ function schedule(item: DashboardItem) {
 }
 async function loadItem(meta: DashboardMeta) {
   const id = dashboardID(meta);
-  if (!active || inflight.has(id)) return;
+  if (!active || !requesting.value || !layout.value.enabled?.[id] || inflight.has(id)) return;
   inflight.add(id);
   clearTimer(id);
   try {
@@ -164,7 +179,7 @@ async function loadItem(meta: DashboardMeta) {
         '/dashboard?key=' +
         encodeURIComponent(meta.key || ''),
     );
-    if (!active) return;
+    if (!active || !metadata.value.some((entry) => dashboardID(entry) === id)) return;
     const item = dashboardResponse(meta, result);
     if (item === null) return;
     const index = items.value.findIndex((x) => dashboardID(x) === id);
@@ -350,6 +365,9 @@ async function saveSettings() {
   order.value = ordered as DashboardMeta[];
   const enabled = { ...settingEnabled.value };
   layout.value = { ...layout.value, enabled };
+  for (const item of items.value) schedule(item);
+  // Start newly enabled widgets immediately, independently of persistence.
+  void loadVisibleItems();
   // Source writes both local snapshots before attempting sequential requests.
   rememberSetting('enabled', enabled);
   rememberSetting('order', ordered);
@@ -414,21 +432,28 @@ onMounted(async () => {
   window.addEventListener('resize', switchProfile);
   layout.value = dashboardLayout(local(profile.value)) ?? { items: {} };
   try {
-    const enabled = await loadShared('enabled', dashboardEnabled);
-    if (!active) return;
-    if (enabled !== undefined) layout.value.enabled = enabled;
-    const storedOrder = await loadShared('order', (value) =>
-      Array.isArray(value)
-        ? value
-            .filter((x) => x && typeof x.id === 'string' && x.id)
-            .map((x) => ({ id: x.id, key: typeof x.key === 'string' ? x.key : '' }))
-        : undefined,
-    );
+    const initialProfile = profile.value;
+    const initialSwitch = switching;
+    const [enabled, storedOrder, geometry, nextMetadata] = await Promise.all([
+      loadShared('enabled', dashboardEnabled),
+      loadShared('order', (value) =>
+        Array.isArray(value)
+          ? value
+              .filter((x) => x && typeof x.id === 'string' && x.id)
+              .map((x) => ({ id: x.id, key: typeof x.key === 'string' ? x.key : '' }))
+          : undefined,
+      ),
+      loadShared(initialProfile, dashboardLayout),
+      api<DashboardMeta[]>('/plugins/dashboard/meta'),
+    ]);
     if (!active) return;
     order.value = (storedOrder ?? []) as DashboardMeta[];
-    layout.value = await loadLayout(profile.value);
-    if (!active) return;
-    await loadMetadata();
+    layout.value = {
+      ...(initialSwitch === switching ? (geometry ?? layout.value) : layout.value),
+      enabled: enabled ?? layout.value.enabled,
+    };
+    discoverMetadata(nextMetadata ?? []);
+    await loadVisibleItems();
   } catch (e) {
     if (active) error.value = errorText(e);
   } finally {
@@ -471,6 +496,19 @@ onUnmounted(() => {
       <VAlert v-else-if="!visible.length" type="info" variant="tonal"
         >请在仪表板设置中选择显示内容。</VAlert
       >
+      <VAlert
+        v-for="meta in metadata.filter(
+          (entry) =>
+            errors[dashboardID(entry)] &&
+            layout.enabled?.[dashboardID(entry)] &&
+            !items.find((item) => dashboardID(item) === dashboardID(entry))?.cols,
+        )"
+        :key="dashboardID(meta)"
+        type="error"
+      >
+        {{ meta.name }}：{{ errors[dashboardID(meta)] }}
+        <VBtn variant="text" @click="loadItem(meta)">重试</VBtn>
+      </VAlert>
       <div
         ref="container"
         class="grid-stack plugin-dashboard-grid"

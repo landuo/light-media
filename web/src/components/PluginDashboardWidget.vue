@@ -97,3 +97,5 @@ onUnmounted(() => {
   min-block-size: 0;
 }
 </style>
+
+<style src="../assets/plugin-utilities.css"></style>

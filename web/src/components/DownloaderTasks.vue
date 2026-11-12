@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import AppIcon from './AppIcon.vue';
+import { createSingleFlightRequest } from '../features/single-flight-request';
 import { api, action, bytes, errorText, image, ui, go } from '../api';
 import {
   downloadTaskInfo,
@@ -17,23 +18,23 @@ const selected = ref(clients.value[0]?.id || ''),
   error = ref(''),
   busy = ref<string[]>([]);
 const instance = computed(() => data.value?.instances?.find((d: any) => d.id === selected.value));
-let generation = 0,
-  timer: number;
-async function load(silent = false) {
-  if (!selected.value) return;
-  const seq = ++generation;
+let timer: number;
+let disposed = false;
+const requests = createSingleFlightRequest({
+  request: (id, signal) => api('/downloads?downloader_id=' + encodeURIComponent(id), undefined, undefined, signal),
+  result: (result) => { data.value = result; },
+  error: (e) => { error.value = errorText(e); },
+  settled: () => { loading.value = false; },
+});
+function load(silent = false) {
+  if (disposed || !selected.value) return Promise.resolve();
   if (!silent) loading.value = true;
-  error.value = '';
-  try {
-    const result = await api('/downloads?downloader_id=' + encodeURIComponent(selected.value));
-    if (seq === generation) data.value = result;
-  } catch (e) {
-    if (seq === generation) error.value = errorText(e);
-  } finally {
-    if (seq === generation) loading.value = false;
-  }
+  if (!requests.pending) error.value = '';
+  return requests.run(selected.value);
 }
 function pick(id: string) {
+  if (id === selected.value) return;
+  requests.cancel();
   selected.value = id;
   data.value = null;
   void load();
@@ -64,7 +65,8 @@ onMounted(() => {
   }, 3000);
 });
 onUnmounted(() => {
-  ++generation;
+  disposed = true;
+  requests.cancel();
   clearInterval(timer);
 });
 </script>

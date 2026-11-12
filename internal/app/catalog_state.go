@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"light-media/internal/catalog"
 	"strconv"
@@ -28,6 +29,12 @@ func (a *App) decorateMedia(ctx context.Context, items []catalog.Media) error {
 	if len(keys) == 0 {
 		return nil
 	}
+	// Keep all three badges on the same committed snapshot, without taking the writer.
+	tx, err := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
 	state := map[string]cardState{}
 	params := make([]any, len(keys)+1)
 	for i, k := range keys {
@@ -36,7 +43,7 @@ func (a *App) decorateMedia(ctx context.Context, items []catalog.Media) error {
 	marks := strings.TrimRight(strings.Repeat("?,", len(keys)), ",")
 	for _, kind := range []string{"asset", "subscription", "intent"} {
 		params[0] = kind
-		rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind=? AND (json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id')) IN (`+marks+`)`, params...)
+		rows, e := tx.QueryContext(ctx, `SELECT payload FROM records WHERE kind=? AND (json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id')) IN (`+marks+`)`, params...)
 		if e != nil {
 			return e
 		}

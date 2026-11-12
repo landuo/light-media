@@ -27,16 +27,11 @@ func (a *App) catalogExploreAPI(r *http.Request, action string) (any, error) {
 	if err != nil {
 		return nil, catalogExploreError(err)
 	}
-	proxy, err := a.proxyConfig()
-	if err != nil {
-		return nil, err
-	}
-	transport, err := proxy.Transport(nil)
+	transport, err := a.metadataAPITransportForConfig()
 	if err != nil {
 		return nil, err
 	}
 	explorer := catalog.NewExplorer(a.catalog(), transport)
-	defer explorer.CloseIdleConnections()
 	ctx := r.Context()
 	switch action {
 	case "explore":

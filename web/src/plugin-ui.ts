@@ -3,7 +3,6 @@ import { aliases } from 'vuetify/iconsets/mdi';
 import { h } from 'vue';
 import { Icon, addCollection } from '@iconify/vue';
 import mdiIcons from './assets/material-design-icons.json';
-import './assets/plugin-utilities.css';
 import './assets/plugin-dialogs.css';
 import { pluginRemoteComponents } from './plugin-remote-components';
 

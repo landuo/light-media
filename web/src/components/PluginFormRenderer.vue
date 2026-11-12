@@ -19,8 +19,10 @@ import { VCard, VCardTitle, VCardText } from 'vuetify/components/VCard';
 import { VIcon } from 'vuetify/components/VIcon';
 import { VAvatar } from 'vuetify/components/VAvatar';
 import { VImg } from 'vuetify/components/VImg';
-import { VAceEditor } from 'vue3-ace-editor';
-import '../features/plugin-ace';
+const VAceEditor = Object.assign(defineAsyncComponent(async () => {
+  await import('../features/plugin-ace');
+  return (await import('vue3-ace-editor')).VAceEditor;
+}), { name: 'VAceEditor' });
 import { pluginFieldProps, type PluginFormNode } from '../features/plugin-forms';
 import PluginDialogCloseBtn from './PluginDialogCloseBtn.vue';
 
@@ -178,3 +180,5 @@ function reportError(error: unknown) {
 <template>
   <component :is="render(node)" /><VAlert v-if="renderError" type="error">{{ renderError }}</VAlert>
 </template>
+
+<style src="../assets/plugin-utilities.css"></style>

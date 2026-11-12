@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VTextField } from 'vuetify/components/VTextField';
-import { ref, onMounted, onUnmounted, computed, defineAsyncComponent } from 'vue';
+import { ref, onMounted, onUnmounted, computed, watch, defineAsyncComponent } from 'vue';
 import { api, action, ui, refreshSettings, refreshStatus, go, errorText, date } from './api';
 import { createPluginNavigation, pluginNavigationTarget } from './features/plugin-navigation';
 import { abortPluginAPIRequests } from './features/plugin-remote-api';
@@ -12,20 +12,20 @@ import {
   type SystemMessageState,
 } from './features/system-messages';
 import { VIcon } from 'vuetify/components/VIcon';
-import Catalog from './components/Catalog.vue';
-import Explore from './components/Explore.vue';
-import ExploreDetail from './components/ExploreDetail.vue';
-import Recommend from './components/Recommend.vue';
-import RecommendBrowse from './components/RecommendBrowse.vue';
-import Resources from './components/Resources.vue';
-import DownloaderTasks from './components/DownloaderTasks.vue';
-import KeywordResources from './components/KeywordResources.vue';
-import Subscriptions from './components/Subscriptions.vue';
-import Operations from './components/Operations.vue';
-import Settings from './components/Settings.vue';
-import SiteManager from './components/SiteManager.vue';
-import FileManager from './components/FileManager.vue';
-import TransferHistory from './components/TransferHistory.vue';
+const Catalog = defineAsyncComponent(() => import('./components/Catalog.vue'));
+const Explore = defineAsyncComponent(() => import('./components/Explore.vue'));
+const ExploreDetail = defineAsyncComponent(() => import('./components/ExploreDetail.vue'));
+const Recommend = defineAsyncComponent(() => import('./components/Recommend.vue'));
+const RecommendBrowse = defineAsyncComponent(() => import('./components/RecommendBrowse.vue'));
+const Resources = defineAsyncComponent(() => import('./components/Resources.vue'));
+const DownloaderTasks = defineAsyncComponent(() => import('./components/DownloaderTasks.vue'));
+const KeywordResources = defineAsyncComponent(() => import('./components/KeywordResources.vue'));
+const Subscriptions = defineAsyncComponent(() => import('./components/Subscriptions.vue'));
+const Operations = defineAsyncComponent(() => import('./components/Operations.vue'));
+const Settings = defineAsyncComponent(() => import('./components/Settings.vue'));
+const SiteManager = defineAsyncComponent(() => import('./components/SiteManager.vue'));
+const FileManager = defineAsyncComponent(() => import('./components/FileManager.vue'));
+const TransferHistory = defineAsyncComponent(() => import('./components/TransferHistory.vue'));
 import BrandMark from './components/BrandMark.vue';
 import AppIcon from './components/AppIcon.vue';
 import { searchSession, startSearch, clearSearchSession } from './features/search-session';
@@ -211,11 +211,8 @@ async function bootstrap() {
     if (generation !== authGeneration) return;
     auth.value = status;
     if (auth.value.authenticated) {
-      systemMessageFeed.setAuthenticated(true);
       await Promise.all([refreshSettings(), refreshStatus()]);
       if (generation !== authGeneration || !auth.value?.authenticated) return;
-      loadNotifications().catch(() => {});
-      pluginNavigation.ensure();
     } else {
       systemMessageFeed.setAuthenticated(false);
     }
@@ -225,6 +222,15 @@ async function bootstrap() {
     if (generation === authGeneration) starting.value = false;
   }
 }
+const serviceStarting = computed(() => ui.status?.starting === true);
+const businessReady = computed(() => !!auth.value?.authenticated && !starting.value && !!ui.status && !serviceStarting.value);
+watch(businessReady, (ready) => {
+  systemMessageFeed.setAuthenticated(ready);
+  if (ready) {
+    loadNotifications().catch(() => {});
+    pluginNavigation.ensure();
+  }
+});
 async function login() {
   authError.value = '';
   try {
@@ -258,7 +264,7 @@ onMounted(() => {
     if (auth.value?.authenticated && !document.hidden) {
       notificationTime.value = Date.now();
       refreshStatus().catch(() => {});
-      loadNotifications().catch(() => {});
+      if (businessReady.value) loadNotifications().catch(() => {});
     }
   }, 15000);
 });
@@ -398,7 +404,7 @@ onUnmounted(() => {
         </form>
         <div class="topbar-actions">
           <InterfaceModeMenu v-if="!compactAppInterface" />
-          <ShortcutTools />
+          <ShortcutTools v-if="businessReady" />
           <span v-if="ui.busy" class="loading-dot" aria-label="正在加载"></span
           ><button
             class="bell-button"
@@ -540,6 +546,12 @@ onUnmounted(() => {
         </div>
       </section>
       <main>
+        <div v-if="serviceStarting" class="service-alert" role="status">
+          服务正在初始化，完成后将自动载入。你可以先查看日志。
+          <button v-if="pageKey !== 'logs'" @click="go('logs')">查看日志</button>
+        </div>
+        <Operations v-if="serviceStarting && pageKey === 'logs'" view="logs" />
+        <template v-if="!serviceStarting">
         <PluginQuickAccess v-if="pageKey === 'dashboard' && appInterface" @visibility="quickAccessOpen = $event" @pull="quickAccessPull = $event" />
         <div v-if="pageKey === 'apps' && compactAppInterface" class="mobile-account-actions">
           <InterfaceModeMenu labeled />
@@ -606,6 +618,7 @@ onUnmounted(() => {
             route.startsWith('jobs/') || route.startsWith('logs/') ? route.split('/')[1] : undefined
           "
         />
+        </template>
       </main>
     </div>
     <AppModeFooter v-if="appInterface && !quickAccessOpen" :route="route" />

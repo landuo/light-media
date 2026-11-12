@@ -84,6 +84,7 @@ type App struct {
 	recognitionMu                    sync.Mutex
 	recognitionMatcher               atomic.Pointer[words.Matcher]
 	directoryFileMu                  sync.Mutex
+	startupPending                   atomic.Bool
 	RestartRequested                 chan struct{}
 	logs                             *runtimeLogger
 	logError                         string
@@ -95,6 +96,9 @@ type App struct {
 	metadataProxyMu                  sync.Mutex
 	metadataProxyConfig              networkproxy.Config
 	metadataProxyClient              *http.Client
+	metadataAPITransport             http.RoundTripper
+	metadataAPIConfig                networkproxy.Config
+	imageWork                        catalogImageWork
 	Store                            *Store
 	Dir                              string
 	web                              http.Handler
@@ -396,10 +400,12 @@ func (a *App) Close() error {
 		a.catClient.CloseIdleConnections()
 	}
 	a.catMu.Unlock()
+	a.closeImageWork()
 	a.metadataProxyMu.Lock()
 	if a.metadataProxyClient != nil {
 		a.metadataProxyClient.CloseIdleConnections()
 	}
+	a.closeMetadataAPITransportLocked()
 	a.metadataProxyMu.Unlock()
 	// Source stop_modules disposes its DB before clear_temp. This Go logger
 	// persists shutdown diagnostics in Store, so keep only logger/store open

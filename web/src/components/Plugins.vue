@@ -1197,3 +1197,5 @@ onActivated(() => {
   }
 }
 </style>
+
+<style src="../assets/plugin-utilities.css"></style>

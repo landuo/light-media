@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   computed,
+  defineAsyncComponent,
   nextTick,
   onActivated,
   onDeactivated,
@@ -24,7 +25,7 @@ import Draggable from 'vuedraggable';
 import { api, errorText, toast } from '../api';
 import MediaCards from './MediaCards.vue';
 import ExploreFilters from './ExploreFilters.vue';
-import ExtraSourceView from './ExtraSourceView.vue';
+const ExtraSourceView = defineAsyncComponent(() => import('./ExtraSourceView.vue'));
 import {
   appendExtraDiscoverSources,
   type ExtraDiscoverSource,

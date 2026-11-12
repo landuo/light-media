@@ -57,7 +57,7 @@ func (a *App) saveSubscriptionWordsTx(ctx context.Context, tx *sql.Tx, key strin
 }
 
 func (a *App) subscriptionWords(ctx context.Context, key string) (string, error) {
-	return a.subscriptionWordsFrom(ctx, a.Store.DB, key)
+	return a.subscriptionWordsFrom(ctx, a.Store.reader(), key)
 }
 
 func (a *App) subscriptionWordsFrom(ctx context.Context, q PluginProofReader, key string) (string, error) {

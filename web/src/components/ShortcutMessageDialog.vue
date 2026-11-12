@@ -442,3 +442,5 @@ onUnmounted(() => {
   padding: 16px;
 }
 </style>
+
+<style src="../assets/plugin-utilities.css"></style>

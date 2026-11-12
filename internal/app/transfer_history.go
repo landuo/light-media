@@ -250,8 +250,22 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 		return nil, bad("INVALID_QUERY", "搜索内容过长")
 	}
 	pattern := historySearchPattern(query)
-	where := ` WHERE (?='' OR status=?) AND (?='' OR lower(COALESCE(title,'')||' '||COALESCE(source_path,'')||' '||COALESCE(target_path,'')) LIKE lower(?) ESCAPE '\')`
-	args := []any{status, status, query, pattern}
+	// Concrete predicates let SQLite seek the status/order index. An optional
+	// OR predicate prevents that seek, even when the status is known.
+	predicates := []string{}
+	args := []any{}
+	if status != "" {
+		predicates = append(predicates, `status=?`)
+		args = append(args, status)
+	}
+	if query != "" {
+		predicates = append(predicates, `lower(COALESCE(title,'')||' '||COALESCE(source_path,'')||' '||COALESCE(target_path,'')) LIKE lower(?) ESCAPE '\'`)
+		args = append(args, pattern)
+	}
+	where := ""
+	if len(predicates) > 0 {
+		where = " WHERE " + strings.Join(predicates, " AND ")
+	}
 	var total int
 	tx, e := a.transferHistoryReadTx(ctx)
 	if e != nil {
@@ -259,15 +273,16 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 	}
 	defer tx.Rollback()
 	phase("query_and_hydrate")
-	rows, e := tx.QueryContext(ctx, transferHistoryIndexedCTE+`, page AS MATERIALIZED (
- SELECT h.*,COUNT(*) OVER () AS total FROM history h`+where+transferHistoryOrder+` LIMIT ? OFFSET ?
-) SELECT `+transferHistoryColumns+`,h.total FROM page h`+transferHistoryHydrate, append(args, size, (page-1)*size)...)
+	if e = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM transfer_history_current`+where, args...).Scan(&total); e != nil {
+		return nil, e
+	}
+	rows, e := tx.QueryContext(ctx, transferHistoryPageSQL(where), append(args, size, (page-1)*size)...)
 	if e != nil {
 		return nil, e
 	}
 	items := []transferHistoryItem{}
 	for rows.Next() {
-		item, e := scanTransferHistory(rows, &total)
+		item, e := scanTransferHistory(rows)
 		if e != nil {
 			rows.Close()
 			return nil, e
@@ -278,13 +293,6 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 	rows.Close()
 	if e != nil {
 		return nil, e
-	}
-	// An out-of-range page has no row carrying the total. Return the count
-	// so the caller can navigate to the new last page after rows are removed.
-	if len(items) == 0 && page > 1 {
-		if e = tx.QueryRowContext(ctx, transferHistoryIndexedCTE+`SELECT COUNT(*) FROM history`+where, args...).Scan(&total); e != nil {
-			return nil, e
-		}
 	}
 	phase("commit")
 	if e = tx.Commit(); e != nil {
@@ -311,6 +319,18 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 	}
 	return map[string]any{"items": items, "total": total, "page": page, "page_size": size}, nil
 }
+
+// LIMIT is applied to the scalar projection before hydrating plan JSON.
+// COUNT runs separately in the same snapshot, avoiding a window-function
+// sorter over every row just to return the first page. CROSS JOIN fixes the
+// outer loop to the bounded page; otherwise SQLite can scan every import plan
+// and probe an automatic index on the page, despite the LIMIT.
+func transferHistoryPageSQL(where string) string {
+	return `WITH page AS MATERIALIZED (SELECT h.* FROM transfer_history_current h` + where + transferHistoryOrder +
+		` LIMIT ? OFFSET ?) SELECT ` + transferHistoryColumns + ` FROM page h` +
+		strings.Replace(transferHistoryHydrate, " JOIN records hp", " CROSS JOIN records hp", 1)
+}
+
 func scanTransferHistory(row interface{ Scan(...any) error }, extra ...any) (transferHistoryItem, error) {
 	var planRaw, fileRaw []byte
 	var jobID, jobState, jobError, updated, status string

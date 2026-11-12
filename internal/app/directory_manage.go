@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"crypto/sha256"
+	"database/sql"
 	"encoding/hex"
 	"encoding/json"
 	"net/http"
@@ -258,11 +259,46 @@ func (a *App) resolveDownloadDestinationContext(ctx context.Context, d Downloade
 }
 func (a *App) managedDirectories(ctx context.Context) (any, error) {
 	c := a.Settings()
+	if len(c.Directories) == 0 {
+		return map[string]any{"directories": []map[string]any{}}, nil
+	}
+	tx, err := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+	pendingCounts := map[string]int{}
+	counts, err := tx.QueryContext(ctx, `SELECT json_extract(payload,'$.directory_id'),COUNT(*) FROM records
+ WHERE (kind='intent' AND json_extract(payload,'$.state') NOT IN ('imported','cancelled'))
+ OR (kind='directory_file' AND json_extract(payload,'$.state') NOT IN ('complete','imported','baseline','tracking'))
+ GROUP BY json_extract(payload,'$.directory_id')`)
+	if err != nil {
+		return nil, err
+	}
+	for counts.Next() {
+		var key sql.NullString
+		var count int
+		if err = counts.Scan(&key, &count); err != nil {
+			counts.Close()
+			return nil, err
+		}
+		if key.Valid {
+			pendingCounts[key.String] = count
+		}
+	}
+	err = counts.Err()
+	counts.Close()
+	if err != nil {
+		return nil, err
+	}
 	rows := []map[string]any{}
 	for _, rule := range c.Directories {
 		source, e := a.directorySource(rule)
 		var state managedConnection
-		_ = a.Store.Get(ctx, "directory_status", rule.ID, &state)
+		var status []byte
+		if tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='directory_status' AND id=?`, rule.ID).Scan(&status) == nil {
+			_ = json.Unmarshal(status, &state)
+		}
 		if e != nil {
 			state.Status = "error"
 			state.Error = e.Error()
@@ -273,11 +309,7 @@ func (a *App) managedDirectories(ctx context.Context) (any, error) {
 		} else if state.Status == "" {
 			state.Status = "pending"
 		}
-		var pending int
-		_ = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='intent' AND json_extract(payload,'$.directory_id')=? AND json_extract(payload,'$.state') NOT IN ('imported','cancelled')`, rule.ID).Scan(&pending)
-		var filesPending int
-		_ = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='directory_file' AND json_extract(payload,'$.directory_id')=? AND json_extract(payload,'$.state') NOT IN ('complete','imported','baseline','tracking')`, rule.ID).Scan(&filesPending)
-		pending += filesPending
+		pending := pendingCounts[rule.ID]
 		rows = append(rows, map[string]any{"config": publicDirectory(c, rule), "application_path": source, "connection": state, "pending_count": pending})
 	}
 	for i := range c.Downloaders {

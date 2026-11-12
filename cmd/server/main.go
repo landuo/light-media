@@ -84,11 +84,23 @@ func main() {
 			fatal(e.Error())
 		}
 		ctx, cancel := context.WithCancel(parent)
-		a.Start(ctx)
+		// Bind before starting plugin or downloader side effects. A blocked
+		// initializer must not hide the static shell and diagnostic endpoints.
+		listener, listenErr := net.Listen("tcp", addr)
+		if listenErr != nil {
+			cancel()
+			_ = a.Close()
+			fatal("http_listener_failed")
+		}
+		started := make(chan struct{})
 		httpContext, cancelHTTP := context.WithCancel(context.Background())
-		server := &http.Server{Addr: addr, Handler: a.Handler(), BaseContext: func(net.Listener) context.Context { return httpContext }, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 32 << 10}
+		server := &http.Server{Addr: addr, Handler: a.StartupHandler(started), BaseContext: func(net.Listener) context.Context { return httpContext }, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 32 << 10}
 		errs := make(chan error, 1)
-		go func() { errs <- server.ListenAndServe() }()
+		go func() { errs <- server.Serve(listener) }()
+		go func() {
+			defer close(started)
+			a.Start(ctx)
+		}()
 		fmt.Printf("light-media listening at %s\n", addr)
 		restart := false
 		select {
@@ -99,6 +111,7 @@ func main() {
 			if err != http.ErrServerClosed {
 				cancel()
 				cancelHTTP()
+				<-started
 				_ = a.Close()
 				fatal("http_listener_failed")
 			}
@@ -127,6 +140,8 @@ func main() {
 		}
 		_ = server.Close()
 		cancelHTTP()
+		// Never close stores or sessions concurrently with startup registration.
+		<-started
 		_ = a.Close()
 		if !restart || parent.Err() != nil {
 			return

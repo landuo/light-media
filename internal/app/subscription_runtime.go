@@ -610,6 +610,10 @@ func (a *App) subscriptionCoverage(ctx context.Context, s Subscription, known []
 }
 
 func (a *App) subscriptionCoverageWithExistence(ctx context.Context, s Subscription, known []int, existence *originalSubscriptionExistence) (subscriptionCoverage, error) {
+	return a.subscriptionCoverageLoaded(ctx, s, known, existence, nil)
+}
+
+func (a *App) subscriptionCoverageLoaded(ctx context.Context, s Subscription, known []int, existence *originalSubscriptionExistence, snapshot *subscriptionDisplayCoverage) (subscriptionCoverage, error) {
 	known = subscriptionTargetEpisodes(s, known)
 	out := subscriptionCoverage{Known: append([]int{}, known...), Missing: []int{}, Library: []int{}, Reserved: []int{}, Excluded: append([]int{}, s.Excluded...), Unreleased: []int{}, UnknownDate: []int{}, PendingImport: []int{}}
 	wanted := subscriptionTargetEpisodes(s, s.Episodes)
@@ -624,99 +628,104 @@ func (a *App) subscriptionCoverageWithExistence(ctx context.Context, s Subscript
 	reservedSet := map[int]bool{}
 	pendingImport := map[int]bool{}
 	excludedSet := map[int]bool{}
-	if !existence.replacesLocal() {
-		for _, query := range []struct {
-			sql  string
-			dest map[int]bool
-		}{{`SELECT episode FROM asset_slots WHERE media_key=? AND season=?`, occupied}} {
-			rows, e := a.Store.DB.QueryContext(ctx, query.sql, mediaKey(s.Media), s.Season)
-			if e != nil {
-				return out, e
-			}
-			for rows.Next() {
-				var ep int
-				if e = rows.Scan(&ep); e != nil {
-					rows.Close()
+	dateByEpisode := map[int]string{}
+	if snapshot != nil {
+		occupied, reservedSet, pendingImport, excludedSet = snapshot.library, snapshot.reserved, snapshot.pending, snapshot.excluded
+		dateByEpisode = snapshot.dates
+	} else {
+		if !existence.replacesLocal() {
+			for _, query := range []struct {
+				sql  string
+				dest map[int]bool
+			}{{`SELECT episode FROM asset_slots WHERE media_key=? AND season=?`, occupied}} {
+				rows, e := a.Store.DB.QueryContext(ctx, query.sql, mediaKey(s.Media), s.Season)
+				if e != nil {
 					return out, e
 				}
-				query.dest[ep] = true
+				for rows.Next() {
+					var ep int
+					if e = rows.Scan(&ep); e != nil {
+						rows.Close()
+						return out, e
+					}
+					query.dest[ep] = true
+				}
+				e = rows.Err()
+				rows.Close()
+				if e != nil {
+					return out, e
+				}
 			}
-			e = rows.Err()
-			rows.Close()
-			if e != nil {
+		}
+		if existence != nil {
+			episodes, err := existence.episodes(s)
+			if err != nil {
+				return out, err
+			}
+			for _, episode := range episodes {
+				occupied[episode] = true
+			}
+		}
+		// Reservations are also the ownership boundary for in-flight downloads. A
+		// completed task remains reserved until its import commits an asset slot.
+		// Read its persisted intent in the same query; viewing subscriptions never
+		// polls downloaders or makes one metadata request per episode.
+		rows, e := a.Store.DB.QueryContext(ctx, `SELECT r.episode,COALESCE(json_extract(i.payload,'$.state'),'') FROM reservations r LEFT JOIN records i ON i.kind='intent' AND i.id=r.intent_id WHERE r.media_key=? AND r.season=?`, mediaKey(s.Media), s.Season)
+		if e != nil {
+			return out, e
+		}
+		for rows.Next() {
+			var ep int
+			var state string
+			if e = rows.Scan(&ep, &state); e != nil {
+				rows.Close()
 				return out, e
 			}
+			reservedSet[ep] = true
+			pendingImport[ep] = state == "downloaded"
 		}
-	}
-	if existence != nil {
-		episodes, err := existence.episodes(s)
-		if err != nil {
-			return out, err
-		}
-		for _, episode := range episodes {
-			occupied[episode] = true
-		}
-	}
-	// Reservations are also the ownership boundary for in-flight downloads. A
-	// completed task remains reserved until its import commits an asset slot.
-	// Read its persisted intent in the same query; viewing subscriptions never
-	// polls downloaders or makes one metadata request per episode.
-	rows, e := a.Store.DB.QueryContext(ctx, `SELECT r.episode,COALESCE(json_extract(i.payload,'$.state'),'') FROM reservations r LEFT JOIN records i ON i.kind='intent' AND i.id=r.intent_id WHERE r.media_key=? AND r.season=?`, mediaKey(s.Media), s.Season)
-	if e != nil {
-		return out, e
-	}
-	for rows.Next() {
-		var ep int
-		var state string
-		if e = rows.Scan(&ep, &state); e != nil {
-			rows.Close()
+		e = rows.Err()
+		rows.Close()
+		if e != nil {
 			return out, e
 		}
-		reservedSet[ep] = true
-		pendingImport[ep] = state == "downloaded"
-	}
-	e = rows.Err()
-	rows.Close()
-	if e != nil {
-		return out, e
-	}
-	prefix := fmt.Sprintf("%s:%d:", mediaKey(s.Media), s.Season)
-	rows, e = a.Store.DB.QueryContext(ctx, `SELECT id,payload FROM records WHERE kind='exclusion' AND id LIKE ?`, prefix+"%")
-	if e != nil {
-		return out, e
-	}
-	for rows.Next() {
-		var key string
-		var b []byte
-		if e = rows.Scan(&key, &b); e != nil {
-			rows.Close()
+		prefix := fmt.Sprintf("%s:%d:", mediaKey(s.Media), s.Season)
+		rows, e = a.Store.DB.QueryContext(ctx, `SELECT id,payload FROM records WHERE kind='exclusion' AND id LIKE ?`, prefix+"%")
+		if e != nil {
 			return out, e
 		}
-		var rule struct {
-			Blocked bool `json:"blocked"`
+		for rows.Next() {
+			var key string
+			var b []byte
+			if e = rows.Scan(&key, &b); e != nil {
+				rows.Close()
+				return out, e
+			}
+			var rule struct {
+				Blocked bool `json:"blocked"`
+			}
+			if e = json.Unmarshal(b, &rule); e != nil {
+				rows.Close()
+				return out, e
+			}
+			ep, parseError := strconv.Atoi(strings.TrimPrefix(key, prefix))
+			if parseError == nil && rule.Blocked {
+				excludedSet[ep] = true
+			}
 		}
-		if e = json.Unmarshal(b, &rule); e != nil {
-			rows.Close()
+		e = rows.Err()
+		rows.Close()
+		if e != nil {
 			return out, e
 		}
-		ep, parseError := strconv.Atoi(strings.TrimPrefix(key, prefix))
-		if parseError == nil && rule.Blocked {
-			excludedSet[ep] = true
-		}
-	}
-	e = rows.Err()
-	rows.Close()
-	if e != nil {
-		return out, e
-	}
-	dateByEpisode := map[int]string{}
-	if s.Media.MediaType == "tv" && !providerNativeMedia(s.Media) {
-		var cache struct {
-			Data catalog.Season `json:"data"`
-		}
-		_ = a.Store.Get(ctx, "cache", fmt.Sprintf("season:%d:%d", s.Media.ID, s.Season), &cache)
-		for _, ep := range cache.Data.Episodes {
-			dateByEpisode[ep.EpisodeNumber] = ep.AirDate
+		if s.Media.MediaType == "tv" && !providerNativeMedia(s.Media) {
+			var cache struct {
+				Data catalog.Season `json:"data"`
+			}
+			_ = a.Store.Get(ctx, "cache", fmt.Sprintf("season:%d:%d", s.Media.ID, s.Season), &cache)
+			for _, ep := range cache.Data.Episodes {
+				dateByEpisode[ep.EpisodeNumber] = ep.AirDate
+			}
 		}
 	}
 	today := time.Now().In(shanghai()).Format("2006-01-02")
@@ -770,31 +779,34 @@ func (a *App) cachedSeasonEpisodes(ctx context.Context, s Subscription) []int {
 	return out
 }
 func (a *App) subscriptionList(ctx context.Context) (any, error) {
-	raw, e := a.Store.listRecordPayloads(ctx, `SELECT payload FROM records WHERE kind='subscription'
-		AND json_extract(payload,'$.state') IS NOT 'cancelled' ORDER BY updated_at DESC,id LIMIT 500`)
+	snapshot, e := a.loadSubscriptionDisplay(ctx)
 	if e != nil {
 		return nil, e
 	}
 	items := []map[string]any{}
-	for _, b := range raw {
-		var s Subscription
-		if e = json.Unmarshal(b, &s); e != nil {
-			return nil, e
+	for _, sub := range snapshot.subscriptions {
+		data := snapshot.coverage[subscriptionDisplayKey(sub)]
+		known := data.known
+		if providerNativeMedia(sub.Media) {
+			known = sub.ProviderEpisodes
 		}
-		coverage, e := a.subscriptionCoverage(ctx, s, a.cachedSeasonEpisodes(ctx, s))
+		coverage, e := a.subscriptionCoverageLoaded(ctx, sub, known, nil, data)
 		if e != nil {
 			return nil, e
 		}
-		entry, e := a.subscriptionEditorValue(ctx, s)
-		if e != nil {
+		b, _ := json.Marshal(sub)
+		entry := map[string]any{}
+		if e = json.Unmarshal(b, &entry); e != nil {
 			return nil, e
 		}
+		entry["custom_words"] = snapshot.words[sub.ID]
 		cb, _ := json.Marshal(coverage)
 		_ = json.Unmarshal(cb, &entry)
 		items = append(items, entry)
 	}
 	return map[string]any{"items": items, "total": len(items)}, nil
 }
+
 func (a *App) recordSubscriptionCheck(ctx context.Context, s Subscription, reason string, metadataDates []string) error {
 	a.subMu.Lock()
 	defer a.subMu.Unlock()

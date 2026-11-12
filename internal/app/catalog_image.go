@@ -34,6 +34,7 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 	name := hex.EncodeToString(sum[:]) + ".img"
 	dir := filepath.Join(a.Dir, "catalog-images")
 	cache := filepath.Join(dir, name)
+	var releaseFlight func()
 	serve := func() bool {
 		f, e := importOpen(cache)
 		if e != nil {
@@ -50,6 +51,10 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 		}
 		// The cache uses .img names, whose system MIME mapping is not an image
 		// type on every host. Trust the bounded cache bytes, not that suffix.
+		// The open, validated cache file is stable; slow readers do not hold a flight.
+		if releaseFlight != nil {
+			releaseFlight()
+		}
 		w.Header().Set("Content-Type", contentType)
 		w.Header().Set("Cache-Control", "private, max-age=86400")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
@@ -59,12 +64,23 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 	if serve() {
 		return nil
 	}
-	select {
-	case catalogImageSlots <- struct{}{}:
-	case <-r.Context().Done():
-		return r.Context().Err()
+	ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
+	defer cancel()
+	var flightErr error
+	releaseFlight, flightErr = a.acquireImageFlight(ctx, cache)
+	if flightErr != nil {
+		return flightErr
 	}
-	defer func() { <-catalogImageSlots }()
+	defer releaseFlight()
+	// A preceding request may have populated the cache while we waited.
+	if serve() {
+		return nil
+	}
+	releaseSlot, slotErr := a.acquireImageSlot(ctx, "tmdb")
+	if slotErr != nil {
+		return slotErr
+	}
+	defer releaseSlot()
 	if serve() {
 		return nil
 	}
@@ -73,8 +89,6 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 		return e
 	}
 	d.Close()
-	ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
-	defer cancel()
 	u := url.URL{Scheme: "https", Host: "image.tmdb.org", Path: "/t/p/" + size + relative}
 	req, e := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
 	if e != nil {
@@ -97,6 +111,8 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 	tmpName := tmp.Name()
 	defer os.Remove(tmpName)
 	n, e := io.Copy(tmp, io.LimitReader(response.Body, 8<<20+1))
+	response.Body.Close()
+	releaseSlot()
 	if e == nil && (n <= 0 || n > 8<<20) {
 		e = bad("IMAGE_SIZE", "图片超过大小限制")
 	}
@@ -116,7 +132,7 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 	if e = os.Rename(tmpName, cache); e != nil {
 		return e
 	}
-	a.pruneCatalogImages(dir)
+	a.scheduleCatalogImagePrune(dir)
 	if !serve() {
 		return bad("IMAGE_UNAVAILABLE", "图片缓存不可访问")
 	}

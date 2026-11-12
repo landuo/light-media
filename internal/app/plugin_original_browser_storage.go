@@ -52,9 +52,10 @@ func (a *App) originalBrowserStorageList(ctx context.Context, path string, class
 	if truncated {
 		rows = rows[:10000]
 	}
+	protection := a.browserProtectionSnapshot()
 	entries := make([]browserEntry, 0, len(rows))
 	for _, row := range rows {
-		entry, err := a.originalBrowserStorageEntry(ctx, path, row, classifier)
+		entry, err := a.originalBrowserStorageEntryWithProtection(ctx, path, row, classifier, protection)
 		if err != nil {
 			return nil, false, true, err
 		}
@@ -68,6 +69,10 @@ func originalBrowserStorageInvalid() error {
 }
 
 func (a *App) originalBrowserStorageEntry(ctx context.Context, directory string, raw json.RawMessage, classifier transferextensions.Classifier) (browserEntry, error) {
+	return a.originalBrowserStorageEntryWithProtection(ctx, directory, raw, classifier, a.browserProtectionSnapshot())
+}
+
+func (a *App) originalBrowserStorageEntryWithProtection(ctx context.Context, directory string, raw json.RawMessage, classifier transferextensions.Classifier, protection browserProtection) (browserEntry, error) {
 	var fields map[string]json.RawMessage
 	if json.Unmarshal(raw, &fields) != nil || fields == nil {
 		return browserEntry{}, originalBrowserStorageInvalid()
@@ -131,7 +136,7 @@ func (a *App) originalBrowserStorageEntry(ctx context.Context, directory string,
 		entry.Modified = time.Unix(int64(whole), int64((seconds-whole)*1e9)).UTC().Format(time.RFC3339)
 	}
 	entry.Video, _ = classifier.Media(transferextensions.PathFile(path))
-	entry.Protected = a.browserStaticProtection(path)
+	entry.Protected = protection.reason(path)
 	// Read metadata can be supplied by a module, but existing local operations
 	// still require the real guarded file and their current inode snapshot.
 	if stat, err := os.Lstat(path); err != nil {

@@ -167,16 +167,11 @@ func (a *App) catalogRecommendAPI(r *http.Request) (any, error) {
 	if err != nil {
 		return nil, err
 	}
-	proxy, err := a.proxyConfig()
-	if err != nil {
-		return nil, err
-	}
-	transport, err := proxy.Transport(nil)
+	transport, err := a.metadataAPITransportForConfig()
 	if err != nil {
 		return nil, err
 	}
 	explorer := catalog.NewExplorer(a.catalog(), transport)
-	defer explorer.CloseIdleConnections()
 	ctx := r.Context()
 	var result catalog.ExplorePage
 	method, kwargs := originalCatalogRecommendModule(id, page)

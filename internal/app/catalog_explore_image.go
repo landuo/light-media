@@ -25,6 +25,7 @@ func (a *App) catalogExploreImage(w http.ResponseWriter, r *http.Request) error 
 	name := hex.EncodeToString(sum[:]) + ".img"
 	dir := filepath.Join(a.Dir, "catalog-explore-images")
 	cache := filepath.Join(dir, name)
+	var releaseFlight func()
 	serve := func() bool {
 		f, err := importOpen(cache)
 		if err != nil {
@@ -40,6 +41,10 @@ func (a *App) catalogExploreImage(w http.ResponseWriter, r *http.Request) error 
 			return false
 		}
 		// Cache filenames are not MIME evidence; inspect and rewind the bytes.
+		// The open, validated cache file is stable; slow readers do not hold a flight.
+		if releaseFlight != nil {
+			releaseFlight()
+		}
 		w.Header().Set("Content-Type", contentType)
 		w.Header().Set("Cache-Control", "private, max-age=86400")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
@@ -49,17 +54,26 @@ func (a *App) catalogExploreImage(w http.ResponseWriter, r *http.Request) error 
 	if serve() {
 		return nil
 	}
-	select {
-	case catalogImageSlots <- struct{}{}:
-		defer func() { <-catalogImageSlots }()
-	case <-r.Context().Done():
-		return r.Context().Err()
+	ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
+	defer cancel()
+	var flightErr error
+	releaseFlight, flightErr = a.acquireImageFlight(ctx, cache)
+	if flightErr != nil {
+		return flightErr
 	}
+	defer releaseFlight()
+	// A preceding request may have populated the cache while we waited.
 	if serve() {
 		return nil
 	}
-	ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
-	defer cancel()
+	releaseSlot, slotErr := a.acquireImageSlot(ctx, source)
+	if slotErr != nil {
+		return slotErr
+	}
+	defer releaseSlot()
+	if serve() {
+		return nil
+	}
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, imageURL, nil)
 	if err != nil {
 		return bad("IMAGE_UNAVAILABLE", "无法建立图片请求")
@@ -79,6 +93,8 @@ func (a *App) catalogExploreImage(w http.ResponseWriter, r *http.Request) error 
 		return bad("IMAGE_UNAVAILABLE", "来源图片未返回可用结果")
 	}
 	data, err := io.ReadAll(io.LimitReader(response.Body, (8<<20)+1))
+	response.Body.Close()
+	releaseSlot()
 	if err != nil {
 		return bad("IMAGE_UNAVAILABLE", "来源图片读取失败")
 	}
@@ -111,7 +127,7 @@ func (a *App) catalogExploreImage(w http.ResponseWriter, r *http.Request) error 
 	if err = os.Rename(tmpName, cache); err != nil {
 		return err
 	}
-	a.pruneCatalogImages(dir)
+	a.scheduleCatalogImagePrune(dir)
 	if !serve() {
 		return bad("IMAGE_UNAVAILABLE", "图片缓存不可访问")
 	}

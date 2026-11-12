@@ -86,6 +86,10 @@ type browserOperationRequest struct {
 }
 
 func (a *App) browserRoots() []browserRoot {
+	return browserRootsFromSettings(a.Settings())
+}
+
+func browserRootsFromSettings(settings Settings) []browserRoot {
 	roots := []browserRoot{}
 	seen := map[string]bool{}
 	add := func(path, name, kind string) {
@@ -99,10 +103,10 @@ func (a *App) browserRoots() []browserRoot {
 		h := sha256.Sum256([]byte(path))
 		roots = append(roots, browserRoot{ID: "root_" + hex.EncodeToString(h[:8]), Path: path, Name: name, Kind: kind})
 	}
-	for _, r := range a.Settings().AllowedRoots {
+	for _, r := range settings.AllowedRoots {
 		add(r, filepath.Base(r), "source")
 	}
-	for _, r := range a.Settings().Roots {
+	for _, r := range settings.Roots {
 		add(r.Path, r.Name, "library")
 	}
 	return roots
@@ -292,6 +296,7 @@ func (a *App) browserList(ctx context.Context, rootID, path, sorting, order stri
 		return nil, e
 	}
 	defer f.Close()
+	protection := a.browserProtectionSnapshot()
 	entries := []browserEntry{}
 	truncated := false
 	for {
@@ -327,7 +332,7 @@ func (a *App) browserList(ctx context.Context, rootID, path, sorting, order stri
 				if rootID == containerBrowserRootID {
 					protected = "容器目录仅供浏览"
 				} else {
-					protected = a.browserStaticProtection(name)
+					protected = protection.reason(name)
 				}
 			}
 			video, _ := display.Media(transferextensions.PathFile(name))
@@ -496,21 +501,28 @@ func (a *App) browserCollectFiles(ctx context.Context, path string, recursive bo
 	return files, truncated, e
 }
 
+// Each listing uses one immutable view. Mutation checks build a fresh view.
 func (a *App) browserStaticProtection(path string) string {
-	if within(a.Dir, path) || within(path, a.Dir) {
-		return "应用数据目录受保护"
+	return a.browserProtectionSnapshot().reason(path)
+}
+
+type browserProtection struct {
+	appDir    string
+	libraries []string
+	roots     map[string]bool
+	downloads []string
+}
+
+func (a *App) browserProtectionSnapshot() browserProtection {
+	settings := a.Settings()
+	p := browserProtection{appDir: a.Dir, roots: map[string]bool{}}
+	for _, root := range settings.Roots {
+		p.libraries = append(p.libraries, root.Path)
 	}
-	for _, root := range a.Settings().Roots {
-		if mapped, overlap := sharedDirectoryPath(root.Path, path); overlap && within(mapped, root.Path) {
-			return "媒体库根目录不能改名或删除"
-		}
+	for _, root := range browserRootsFromSettings(settings) {
+		p.roots[root.Path] = true
 	}
-	for _, root := range a.browserRoots() {
-		if path == root.Path {
-			return "允许根目录不能改名或删除"
-		}
-	}
-	for _, d := range a.Settings().Downloaders {
+	for _, d := range settings.Downloaders {
 		paths := []string{d.DownloadPath}
 		for _, m := range d.Mappings {
 			if within(m.From, d.DownloadPath) {
@@ -518,10 +530,29 @@ func (a *App) browserStaticProtection(path string) string {
 				paths = append(paths, filepath.Join(m.To, rel))
 			}
 		}
-		for _, p := range paths {
-			if importPath(p) && (within(p, path) || within(path, p)) {
-				return "下载器目录受保护，防止破坏下载与做种"
+		for _, path := range paths {
+			if importPath(path) {
+				p.downloads = append(p.downloads, path)
 			}
+		}
+	}
+	return p
+}
+func (p browserProtection) reason(path string) string {
+	if within(p.appDir, path) || within(path, p.appDir) {
+		return "应用数据目录受保护"
+	}
+	for _, root := range p.libraries {
+		if mapped, overlap := sharedDirectoryPath(root, path); overlap && within(mapped, root) {
+			return "媒体库根目录不能改名或删除"
+		}
+	}
+	if p.roots[path] {
+		return "允许根目录不能改名或删除"
+	}
+	for _, root := range p.downloads {
+		if within(root, path) || within(path, root) {
+			return "下载器目录受保护，防止破坏下载与做种"
 		}
 	}
 	return ""

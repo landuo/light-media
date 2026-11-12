@@ -89,7 +89,10 @@ func TestFileBrowserNavigationContainmentSortAndScan(t *testing.T) {
 func TestFileBrowserContainerRootIsReadOnly(t *testing.T) {
 	a, _, _ := importTestApp(t)
 	cookie := setupTestAdmin(t, a)
-	outside := t.TempDir()
+	outside, err := filepath.EvalSymlinks(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
 	file := filepath.Join(outside, "example.torrent")
 	importWrite(t, file, []byte("container-only fixture"))
 	link := filepath.Join(outside, "linked")

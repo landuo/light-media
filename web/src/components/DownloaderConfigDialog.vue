@@ -168,3 +168,5 @@ const hostRules = [
   padding: 16px 24px;
 }
 </style>
+
+<style src="../assets/plugin-utilities.css"></style>
