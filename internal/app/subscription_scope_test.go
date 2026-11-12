@@ -79,7 +79,7 @@ func TestSeasonSubscriptionFutureStartWaitsAndLegacyRangesStayBounded(t *testing
 func TestUnifiedCatalogSearchReturnsMixedMediaWithoutTypeSelection(t *testing.T) {
 	a := newTestApp(t)
 	page := catalog.Page{Page: 1, TotalPages: 2, TotalResults: 30, Results: []catalog.Media{{ID: 11, MediaType: "movie", Title: "共同的名字"}, {ID: 12, MediaType: "tv", Title: "共同的名字"}}}
-	if err := a.Store.Put(context.Background(), "cache", "search:::common:1", map[string]any{"at": time.Now(), "data": page}); err != nil {
+	if err := a.Store.Put(context.Background(), "cache", "search::common:1", map[string]any{"at": time.Now(), "data": page}); err != nil {
 		t.Fatal(err)
 	}
 	for _, query := range []string{"q=common", "query=common"} {
@@ -87,9 +87,12 @@ func TestUnifiedCatalogSearchReturnsMixedMediaWithoutTypeSelection(t *testing.T)
 		if err != nil {
 			t.Fatal(err)
 		}
-		out := value.(map[string]any)
-		items := out["results"].([]catalog.Media)
-		if len(items) != 2 || items[0].MediaType != "movie" || items[1].MediaType != "tv" || out["has_more"] != true {
+		out, ok := value.(catalog.ExplorePage)
+		if !ok {
+			t.Fatalf("unexpected search DTO: %T", value)
+		}
+		items := out.Results
+		if len(items) != 2 || items[0].MediaType != "movie" || items[1].MediaType != "tv" || !out.HasMore || out.Page != 1 || out.TotalPages != 2 || out.TotalResults != 30 {
 			t.Fatalf("not unified %+v", out)
 		}
 	}

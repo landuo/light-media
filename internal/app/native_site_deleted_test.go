@@ -142,7 +142,10 @@ func TestNativeSiteDeletedActualProducersRollbackIdentitySettingsCacheAndEvent(t
 			}
 			site := a.Settings().Sites[0]
 			before := identityRequire(t, a, site.ID)
-			if _, err := a.Store.DB.Exec(`INSERT INTO records VALUES('site_connection',?,'{}',?)`, site.ID, now()); err != nil {
+			// Join the creation-triggered refresh before installing a deterministic
+			// cache sentinel for the rollback assertion.
+			a.wg.Wait()
+			if err := a.Store.Put(context.Background(), "site_connection", site.ID, map[string]any{}); err != nil {
 				t.Fatal(err)
 			}
 			if _, err := a.Store.DB.Exec(`CREATE TRIGGER deny_owned_site_delete BEFORE INSERT ON domain_events WHEN json_extract(NEW.payload,'$.event_type')='site.deleted' BEGIN SELECT RAISE(ABORT,'owned delete event failure'); END`); err != nil {

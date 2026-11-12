@@ -31,11 +31,12 @@ func TestFrozenCandidateSourceAndEvidence(t *testing.T) {
 		OwnerReferences     map[string]string `json:"owner_reference_files"`
 		SourceBarrierFiles  map[string]string `json:"source_barrier_go_files"`
 		InitDiagnosticFiles map[string]string `json:"init_diagnostic_go_files"`
+		RetiredFiles        map[string]string `json:"retired_init_diagnostic_files"`
 	}
 	if err = json.Unmarshal(raw, &manifest); err != nil {
 		t.Fatal(err)
 	}
-	if manifest.InstalledSource != "1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4" || len(manifest.Files) != 10 || len(manifest.Evidence) != 3 || len(manifest.FormalEvidence) != 2 || len(manifest.TransitionFiles) != 3 || len(manifest.TransitionEvidence) != 3 || len(manifest.AfterActionFiles) != 1 || len(manifest.RootExpansionFiles) != 2 || len(manifest.OwnerReferences) != 1 || len(manifest.SourceBarrierFiles) != 6 || len(manifest.InitDiagnosticFiles) != 5 {
+	if manifest.InstalledSource != "1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4" || len(manifest.Files) != 10 || len(manifest.Evidence) != 3 || len(manifest.FormalEvidence) != 2 || len(manifest.TransitionFiles) != 3 || len(manifest.TransitionEvidence) != 3 || len(manifest.AfterActionFiles) != 1 || len(manifest.RootExpansionFiles) != 2 || len(manifest.OwnerReferences) != 1 || len(manifest.SourceBarrierFiles) != 6 || len(manifest.InitDiagnosticFiles) != 5 || len(manifest.RetiredFiles) != 2 {
 		t.Fatal("missing installed source/candidate/evidence provenance")
 	}
 	verify := func(path, expected string) {
@@ -85,12 +86,30 @@ func TestFrozenCandidateSourceAndEvidence(t *testing.T) {
 		}
 		verify(filepath.Join("..", "..", "..", "..", name), sum)
 	}
+	// Only the two explicitly retired App adapters use historical bytes. Keep
+	// their original hashes and every active implementation check intact.
+	retired := map[string]string{
+		"internal/app/plugin_remove_link_owner.go":           "retired/plugin_remove_link_owner.go.txt",
+		"internal/app/plugin_remove_link_init_diagnostic.go": "retired/plugin_remove_link_init_diagnostic.go.txt",
+	}
+	for name, snapshot := range retired {
+		if manifest.RetiredFiles[name] != snapshot {
+			t.Fatalf("retired source mapping changed: %s", name)
+		}
+		if _, err := os.Stat(filepath.Join("../../../..", name)); !os.IsNotExist(err) {
+			t.Fatalf("retired source restored or inaccessible; review current implementation: %s (%v)", name, err)
+		}
+	}
 	for _, name := range []string{"internal/plugins/removelink/host/types.go", "internal/plugins/removelink/host/host.go", "internal/plugins/removelink/host/watch_linux.go", "internal/app/plugin_remove_link_owner.go", "internal/app/plugin_remove_link_init_diagnostic.go"} {
 		sum, ok := manifest.InitDiagnosticFiles[name]
 		if !ok {
 			t.Fatalf("missing init-diagnostic provenance: %s", name)
 		}
-		verify(filepath.Join("..", "..", "..", "..", name), sum)
+		if snapshot, historical := retired[name]; historical {
+			verify(filepath.Join(data, snapshot), sum)
+		} else {
+			verify(filepath.Join("..", "..", "..", "..", name), sum)
+		}
 	}
 	for name, sum := range manifest.Evidence {
 		if filepath.Base(name) != name {

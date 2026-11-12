@@ -37,6 +37,29 @@ func TestFormalLarkSourceInventory(t *testing.T) {
 	if json.Unmarshal(raw, &m) != nil || m.Version != 1 || m.Plugin != "LarkMessager" || m.OriginalVersion != "0.9.1" || len(m.Files) != 41 || len(m.Inputs) != 126 {
 		t.Fatal("incomplete formal Lark inventory")
 	}
+	// Keep the original promotion and all candidate inputs immutable. The only
+	// SDK extension is pinned separately and reconstructed exactly below.
+	amendmentRaw, e := os.ReadFile(filepath.Join(root, "testdata/plugins/lark-messager-0.9.1/sdk-source-manifest.json"))
+	if e != nil {
+		t.Fatal(e)
+	}
+	amendmentSum := sha256.Sum256(amendmentRaw)
+	if hex.EncodeToString(amendmentSum[:]) != "5138e0edd5993732c287ed169c94e8e0b04cb98fce2c81ff92604e2680b9f488" {
+		t.Fatal("SDK amendment changed without review")
+	}
+	var amendment struct {
+		Version int
+		Base    string `json:"base_manifest_sha256"`
+		Files   map[string]string
+	}
+	if json.Unmarshal(amendmentRaw, &amendment) != nil || amendment.Version != 1 || amendment.Base != hex.EncodeToString(sum[:]) || len(amendment.Files) != 1 {
+		t.Fatal("invalid SDK amendment")
+	}
+	const sdkPath = "internal/plugins/larkmessager/sdk.go"
+	if amendment.Files[sdkPath] == "" {
+		t.Fatal("missing SDK amendment")
+	}
+	m.Files[sdkPath] = amendment.Files[sdkPath]
 	for _, files := range []map[string]string{m.Files, m.Inputs} {
 		for name, want := range files {
 			if filepath.IsAbs(name) || filepath.ToSlash(filepath.Clean(name)) != name || strings.HasPrefix(name, "../") {
@@ -85,6 +108,12 @@ func TestFormalLarkMatchesFrozenCandidate(t *testing.T) {
 				t.Fatal("SDK signature changed")
 			}
 			text = strings.Replace(text, signature, signature+"\n\tif method != \"stop\" && host == nil { return nil, ErrDependency }", 1)
+			const legacyMethods = `Methods: []string{"config_form", "page", "invoke", "http_api", "stop"}`
+			if strings.Count(text, legacyMethods) != 1 {
+				t.Fatal("SDK methods changed")
+			}
+			text = strings.Replace(text, legacyMethods, `Methods: []string{"config_form", "get_page", "page", "invoke", "http_api", "stop"}`, 1)
+			text = strings.Replace(text, signature, signature+"\n\t// Keep legacy SDK aliases while exposing the canonical extension methods.\n\tif method == \"get_page\" { method = \"page\" }", 1)
 		}
 		adapted, e := format.Source([]byte(text))
 		if e != nil {

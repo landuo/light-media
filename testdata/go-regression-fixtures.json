@@ -1,0 +1,494 @@
+{
+  "schemaVersion": 1,
+  "scope": "Repository root go list ./...; owned synthetic SDK fixtures, not live production acceptance",
+  "fixtures": [
+    {
+      "env": "LIGHT_MEDIA_CONCURRENT_FIXTURE",
+      "command": "./cmd/owned-concurrent-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_AUTH_FIXTURE_BINARY",
+      "command": "./cmd/owned-auth-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_AUTH_FRONTEND_FIXTURE_BINARY",
+      "command": "./cmd/owned-auth-fixture",
+      "ldflags": "-X main.fixtureFrontend=true"
+    },
+    {
+      "env": "OWNED_MODULE_OVERRIDE_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_MODULE_OVERRIDE_V2_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.version=2.0"
+    },
+    {
+      "env": "OWNED_MODULE_NO_DECLARATION_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.declareModules=false"
+    },
+    {
+      "env": "OWNED_MODULE_FIXTURE_BINARY",
+      "command": "./cmd/owned-module-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_MODULE_FIXTURE_BINARY_V2",
+      "command": "./cmd/owned-module-fixture",
+      "ldflags": "-X main.fixtureVersion=2.0"
+    },
+    {
+      "env": "OWNED_MODULE_FIXTURE_BINARY_V3",
+      "command": "./cmd/owned-module-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_STANDARD_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_STANDARD_FIXTURE_V2_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureVersion=2.0"
+    },
+    {
+      "env": "OWNED_STANDARD_DASHBOARD_META_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureDashboardMethods=multi"
+    },
+    {
+      "env": "OWNED_STANDARD_NO_DASHBOARD_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureDashboardMethods=none"
+    },
+    {
+      "env": "OWNED_BASE_FIXTURE_BINARY",
+      "command": "./cmd/owned-base-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "ORIGINAL_API_FIXTURE_BINARY",
+      "command": "./cmd/original-api-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "ORIGINAL_API_REGISTRATION_FIXTURE_BINARY",
+      "command": "./cmd/original-api-registration-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_APP_CONCURRENT_FIXTURE_BINARY",
+      "command": "./cmd/owned-app-concurrent-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_BRUSH_INVENTORY_FIXTURE_BINARY",
+      "command": "./cmd/owned-brush-inventory-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_BRUSH_INVENTORY_DENIED_FIXTURE_BINARY",
+      "command": "./cmd/owned-brush-inventory-fixture",
+      "ldflags": "-X main.fixtureDenied=true"
+    },
+    {
+      "env": "OWNED_COMMAND_INGRESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-command-ingress-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_DOWNLOADER_TASKS_FIXTURE_BINARY",
+      "command": "./cmd/owned-downloader-tasks-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_DOWNLOADER_TASKS_DENIED_FIXTURE_BINARY",
+      "command": "./cmd/owned-downloader-tasks-fixture",
+      "ldflags": "-X main.fixtureDenied=true"
+    },
+    {
+      "env": "OWNED_EVENT_FIXTURE_BINARY",
+      "command": "./cmd/owned-event-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_EVENT_TARGET_FIXTURE_BINARY",
+      "command": "./cmd/owned-event-target-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_FRONTEND_FIXTURE_BINARY",
+      "command": "./cmd/owned-frontend-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_FRONTEND_FIXTURE_BINARY_V2",
+      "command": "./cmd/owned-frontend-fixture",
+      "ldflags": "-X main.fixtureVersion=2.0"
+    },
+    {
+      "env": "OWNED_INSTANCE_LOG_FIXTURE_BINARY",
+      "command": "./cmd/owned-instance-log-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_INSTANCE_LOG_DENIED_FIXTURE_BINARY",
+      "command": "./cmd/owned-instance-log-fixture",
+      "ldflags": "-X main.fixtureDenied=true"
+    },
+    {
+      "env": "OWNED_SUBMITTED_FIXTURE_BINARY",
+      "command": "./cmd/owned-submitted-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_ORDER_ALPHA",
+      "command": "./cmd/owned-handler-order-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_ORDER_BETA",
+      "command": "./cmd/owned-handler-order-fixture",
+      "ldflags": "-X main.pluginID=OwnedOrderBeta -X main.order=-10 -X main.priority=20"
+    },
+    {
+      "env": "OWNED_ORDER_DEFAULT",
+      "command": "./cmd/owned-handler-order-fixture",
+      "ldflags": "-X main.pluginID=OwnedOrderDefault -X main.order=0 -X main.defaultDeclaration=true"
+    },
+    {
+      "env": "OWNED_RESET_MUTATOR",
+      "command": "./cmd/owned-reset-generic-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_RESET_OBSERVER",
+      "command": "./cmd/owned-reset-generic-fixture",
+      "ldflags": "-X main.pluginID=OwnedResetObserver -X main.priority=10 -X main.observer=true"
+    },
+    {
+      "env": "OWNED_COMMAND_MUTATOR",
+      "command": "./cmd/owned-command-register-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_COMMAND_OBSERVER",
+      "command": "./cmd/owned-command-register-fixture",
+      "ldflags": "-X main.pluginID=OwnedCommandObserver -X main.priority=10 -X main.shorthand=true"
+    },
+    {
+      "env": "OWNED_CATALOG_SECOND_BINARY",
+      "command": "./cmd/owned-module-fixture",
+      "ldflags": "-X main.fixturePluginID=OwnedCatalogSecond"
+    },
+    {
+      "env": "OWNED_CATALOG_CLONE_BINARY",
+      "command": "./cmd/owned-module-fixture",
+      "ldflags": "-X main.fixturePluginID=OwnedModuleFixtureexact -X main.fixtureVersion=2.0"
+    },
+    {
+      "env": "OWNED_LICENSE_DENIED_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureVersion=2.0 -X main.fixtureAuthLevel=2"
+    },
+    {
+      "env": "OWNED_INPUT_FIXTURE_BINARY",
+      "command": "./cmd/owned-input-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_NOTICE_FIXTURE_BINARY",
+      "command": "./cmd/owned-notice-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_STANDARD_DASHBOARD_ZERO_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureDashboardParameters=[]"
+    },
+    {
+      "env": "OWNED_STANDARD_DASHBOARD_ONE_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureDashboardParameters=[\"user_agent\"]"
+    },
+    {
+      "env": "OWNED_STANDARD_DASHBOARD_TWO_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureDashboardParameters=[\"key\",\"user_agent\"]"
+    },
+    {
+      "env": "OWNED_STANDARD_DASHBOARD_INVALID_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureDashboardParameters=[\"key\"]"
+    },
+    {
+      "env": "CATEGORYEDITOR_WORKER_BINARY",
+      "command": "./cmd/category-editor",
+      "ldflags": ""
+    },
+    {
+      "env": "PLUGIN_PROCESS_SERVER_BINARY",
+      "command": "./cmd/server",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_CLEANUP_FIXTURE_BINARY",
+      "command": "./cmd/owned-cleanup-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_DOWNLOADER_CONTROL_FIXTURE_BINARY",
+      "command": "./cmd/owned-downloader-control-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_TRANSFER_EVENTS_BINARY",
+      "command": "./cmd/owned-transfer-events-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_LOCAL_FILES_FIXTURE_BINARY",
+      "command": "./cmd/owned-local-files-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "PLUGIN_HOST_DOWNLOADER_FIXTURE_BINARY",
+      "command": "./cmd/plugin-host-downloader-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "PLUGIN_SOURCE_DOWNLOADER_FIXTURE_BINARY",
+      "command": "./cmd/plugin-source-downloader-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "PLUGIN_SOURCE_SITES_FIXTURE_BINARY",
+      "command": "./cmd/plugin-source-sites-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_AUTH_PROCESS_BINARY",
+      "command": "./cmd/owned-auth-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_INPUT_PROCESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-input-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_NOTICE_PROCESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-notice-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_COMMAND_PROCESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-command-register-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_DOWNLOADER_CONTROL_PROCESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-downloader-control-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_WEB_INPUT_BINARY",
+      "command": "./cmd/owned-input-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_WEB_NOTICE_BINARY",
+      "command": "./cmd/owned-notice-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_HOST_BROWSER_FIXTURE_BINARY",
+      "command": "./cmd/plugin-host-browser-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_HOST_BUSINESS_FIXTURE_BINARY",
+      "command": "./cmd/plugin-host-business-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_HOST_MESSAGE_FIXTURE_BINARY",
+      "command": "./cmd/plugin-host-message-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_HOST_NETWORK_FIXTURE_BINARY",
+      "command": "./cmd/plugin-host-network-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_HOST_PROXY_FIXTURE_BINARY",
+      "command": "./cmd/plugin-host-proxy-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_HOST_SERVICES_FIXTURE_BINARY",
+      "command": "./cmd/plugin-host-services-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_HOST_SITE_HTTP_FIXTURE_BINARY",
+      "command": "./cmd/plugin-host-site-http-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_HOST_SERVICES_SERIAL_FIXTURE_BINARY",
+      "command": "./cmd/plugin-host-services-fixture",
+      "ldflags": "-X main.fixtureSerial=true"
+    },
+    {
+      "env": "OWNED_LEGACY_ID_FIXTURE_BINARY",
+      "command": "./cmd/owned-module-fixture",
+      "ldflags": "-X main.fixturePluginID=AutoSignIn"
+    },
+    {
+      "env": "OWNED_COMPLETION_CHECK_FIXTURE_BINARY",
+      "command": "./cmd/owned-command-register-fixture",
+      "ldflags": "-X main.pluginID=OwnedCompletionCheck -X main.eventType=subscribe.completion.check"
+    },
+    {
+      "env": "OWNED_EPISODES_REFRESH_FIXTURE_BINARY",
+      "command": "./cmd/owned-command-register-fixture",
+      "ldflags": "-X main.pluginID=OwnedEpisodesRefresh -X main.eventType=subscribe.episodes.refresh"
+    },
+    {
+      "env": "OWNED_EPISODES_PROCESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-command-register-fixture",
+      "ldflags": "-X main.pluginID=OwnedEpisodesRefresh -X main.eventType=subscribe.episodes.refresh"
+    },
+    {
+      "env": "OWNED_USER_MESSAGE_FIXTURE_BINARY",
+      "command": "./cmd/owned-event-fixture",
+      "ldflags": "-X main.extraEvent=user.message -X main.fixtureProcessAPI=true"
+    },
+    {
+      "env": "OWNED_USER_MESSAGE_PROCESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-event-fixture",
+      "ldflags": "-X main.extraEvent=user.message -X main.fixtureProcessAPI=true"
+    },
+    {
+      "env": "OWNED_FRONTEND_PROCESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-frontend-fixture",
+      "ldflags": "-X main.fixtureProcessAPI=true"
+    },
+    {
+      "env": "OWNED_FRONTEND_PROCESS_FIXTURE_BINARY_V2",
+      "command": "./cmd/owned-frontend-fixture",
+      "ldflags": "-X main.fixtureProcessAPI=true -X main.fixtureVersion=2.0"
+    },
+    {
+      "env": "OWNED_FRONTEND_EXACT_PROCESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-frontend-fixture",
+      "ldflags": "-X main.fixtureProcessAPI=true -X main.fixtureID=OwnedFrontendFixtureresources -X main.fixtureVersion=2.0"
+    },
+    {
+      "env": "OWNED_EXACT_PROCESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixturePluginID=OwnedStandardFixtureexact -X main.fixtureVersion=2.0 -X 'main.fixtureName=Owned exact class'"
+    },
+    {
+      "env": "OWNED_BASE_PROCESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-base-fixture",
+      "ldflags": "-X main.fixtureProcessAPI=true"
+    },
+    {
+      "env": "OWNED_EVENT_PROCESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-event-fixture",
+      "ldflags": "-X main.fixtureProcessAPI=true"
+    },
+    {
+      "env": "OWNED_INSTANCE_LOG_PROCESS_BINARY",
+      "command": "./cmd/owned-instance-log-fixture",
+      "ldflags": "-X main.fixtureProcessAPI=true"
+    },
+    {
+      "env": "OWNED_WEB_CALLER_BINARY",
+      "command": "./cmd/owned-instance-log-fixture",
+      "ldflags": "-X main.fixtureProcessAPI=true"
+    },
+    {
+      "env": "OWNED_BROWSER_STORAGE_PROCESS_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.fixtureProcessAPI=true"
+    },
+    {
+      "env": "OWNED_CATALOG_MODULE_PROCESS_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.fixtureProcessAPI=true"
+    },
+    {
+      "env": "OWNED_METADATA_MODULE_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.fixtureProcessAPI=true"
+    },
+    {
+      "env": "OWNED_RESOURCE_MODULE_PROCESS_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.fixtureProcessAPI=true"
+    },
+    {
+      "env": "OWNED_SITE_MODULE_PROCESS_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.fixtureProcessAPI=true"
+    },
+    {
+      "env": "OWNED_CATALOG_EVENTS_PROCESS_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.fixtureProcessAPI=true -X main.fixtureCatalogEvents=true"
+    },
+    {
+      "env": "OWNED_CATALOG_OPAQUE_PROCESS_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.fixtureProcessAPI=true -X main.fixtureCatalogEvents=true"
+    },
+    {
+      "env": "OWNED_CATALOG_EVENT_OVERRIDE_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.fixtureProcessAPI=true -X main.fixtureCatalogEvents=true"
+    },
+    {
+      "env": "OWNED_TRANSFER_MODULE_PROCESS_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.fixtureProcessAPI=true -X main.fixtureTransferEvents=true"
+    },
+    {
+      "env": "OWNED_TRANSFER_EVENT_OVERRIDE_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.fixtureProcessAPI=true -X main.fixtureTransferEvents=true"
+    },
+    {
+      "env": "OWNED_CORE_EVENT_OBSERVER_PROCESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-command-register-fixture",
+      "ldflags": "-X main.pluginID=OwnedCoreEventObserver"
+    },
+    {
+      "env": "OWNED_MODULE_SOURCE_STUB_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.fixtureSourceStub=true",
+      "manifestAbsentMethods": [
+        "get_module",
+        "get_service",
+        "get_command",
+        "get_dashboard",
+        "get_auth_providers"
+      ]
+    }
+  ],
+  "unresolved": [
+    {
+      "env": "OWNED_RENDER_PROCESS_FIXTURE_BINARY",
+      "reason": "Optional browser market branch requires OwnedRenderFixture; no supported command found."
+    }
+  ]
+}

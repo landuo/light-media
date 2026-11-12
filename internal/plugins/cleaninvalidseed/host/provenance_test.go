@@ -22,11 +22,12 @@ func TestFormalHostSourceAndInstalledFailurePrefixProvenance(t *testing.T) {
 		ProductionSQL bool              `json:"production_sql_backend_included"`
 		Files         map[string]string `json:"files"`
 		Fixtures      map[string]string `json:"fixture_files"`
+		Amendments    map[string]string `json:"amendment_files"`
 	}
-	if json.Unmarshal(body, &manifest) != nil || manifest.Source != "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda" || manifest.AST != "0e8b6823865834f207ba1480bf2f73b91c46a2b7f51ac41c934f3cb7333af40a" || manifest.ProductionSQL || len(manifest.Files) != 14 {
+	if json.Unmarshal(body, &manifest) != nil || manifest.Source != "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda" || manifest.AST != "0e8b6823865834f207ba1480bf2f73b91c46a2b7f51ac41c934f3cb7333af40a" || manifest.ProductionSQL || len(manifest.Files) != 14 || len(manifest.Amendments) != 3 {
 		t.Fatal("invalid host provenance")
 	}
-	for _, files := range []map[string]string{manifest.Files, manifest.Fixtures} {
+	for _, files := range []map[string]string{manifest.Files, manifest.Fixtures, manifest.Amendments} {
 		for name, want := range files {
 			raw, err := os.ReadFile(filepath.Join(root, name))
 			if err != nil {

@@ -295,6 +295,7 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 		return Subscription{}, e
 	}
 	known := map[int]bool{}
+	initialEpisodeDates := map[int]string{}
 	if m.MediaType == "movie" {
 		if in.Season != 0 || len(episodes)+len(excluded)+len(early) > 0 || len(in.Mappings) > 0 || len(in.EpisodeDates) > 0 {
 			return Subscription{}, bad("INVALID_MOVIE_SUBSCRIPTION", "电影订阅不能设置季集或剧集映射")
@@ -328,6 +329,7 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 			}
 			for _, ep := range season.Episodes {
 				known[ep.EpisodeNumber] = true
+				initialEpisodeDates[ep.EpisodeNumber] = ep.AirDate
 			}
 		}
 		for _, values := range [][]int{episodes, excluded, early} {
@@ -489,6 +491,21 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	s.LastCheck = old.LastCheck
 	if state == "active" && schedule.Mode != "manual" {
 		s.NextCheck = now()
+		if old.ID == "" {
+			// Creation is not an implicit check. Start at the next normal
+			// cadence using metadata already loaded for validation, without
+			// searching resources or making another provider request.
+			dates := []string{}
+			for ep := range known {
+				if ep < subscriptionStartEpisode(s) || s.TotalEpisodes > 0 && ep > s.TotalEpisodes {
+					continue
+				}
+				if date, skip := effectiveEpisodeDate(s, ep, initialEpisodeDates[ep]); !skip && date != "" {
+					dates = append(dates, date)
+				}
+			}
+			s.NextCheck = nextScheduleCheck(schedule, time.Now(), dates).UTC().Format(time.RFC3339Nano)
+		}
 		s.LastReason = "已安排检查；窗口外仍会补漏旧缺集"
 	} else {
 		s.LastReason = "已暂停自动检查"

@@ -326,6 +326,12 @@ func qualityActualMovieWorkflow(t *testing.T, boundary string, completion ...fun
 			if err = a.Store.Get(ctx, "import_meta", plan.ID, &meta); err != nil {
 				t.Fatal(err)
 			}
+			if len(plan.Files) != 1 {
+				t.Fatalf("subtitle replacement must plan one video, got %d", len(plan.Files))
+			}
+			if sides := meta.Sidecars[plan.Files[0].ID]; len(sides) != 1 || sides[0].Source != newSubtitle {
+				t.Fatalf("subtitle replacement must gather the new source before tampering, got %+v", sides)
+			}
 			meta.Sidecars[plan.Files[0].ID][0].Source = oldSubtitle
 			if err = a.Store.Put(ctx, "import_meta", plan.ID, meta); err != nil {
 				t.Fatal(err)

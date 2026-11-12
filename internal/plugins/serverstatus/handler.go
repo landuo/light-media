@@ -12,13 +12,20 @@ const ConfigureCapability = "server.status.configure"
 const SnapshotCapability = "server.status.snapshot"
 
 func Manifest() plugins.Manifest {
-	return plugins.Manifest{SchemaVersion: 1, PluginID: "MPServerStatus", Name: "MoviePilot服务监控", Description: "在仪表板中实时显示MoviePilot公共服务器状态。", Icon: "Duplicati_A.png", Author: "jxxghp", AuthorURL: "https://github.com/jxxghp", Version: Version, Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "page", "dashboard", "stop"}, Capabilities: []string{ConfigureCapability, SnapshotCapability}, HasPage: true, Dashboards: []string{"default"}}
+	return plugins.Manifest{SchemaVersion: 1, PluginID: "MPServerStatus", Name: "MoviePilot服务监控", Description: "在仪表板中实时显示MoviePilot公共服务器状态。", Icon: "Duplicati_A.png", Author: "jxxghp", AuthorURL: "https://github.com/jxxghp", Version: Version, Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "get_page", "get_dashboard", "page", "dashboard", "stop"}, Capabilities: []string{ConfigureCapability, SnapshotCapability}, HasPage: true, Dashboards: []string{"default"}}
 }
 
 // Handle leaves the last sample and DNS/TLS caches in the host. A worker may
 // select only the compiled operation and page/detail flag, never an endpoint,
 // timeout, TLS policy, configuration revision or cache contents.
 func Handle(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
+	// Keep legacy SDK aliases while exposing the canonical extension methods.
+	if method == "get_page" {
+		method = "page"
+	}
+	if method == "get_dashboard" {
+		method = "dashboard"
+	}
 	if method == "stop" {
 		return json.RawMessage(`null`), nil
 	}

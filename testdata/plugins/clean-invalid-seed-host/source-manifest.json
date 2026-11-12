@@ -18,7 +18,7 @@
     "internal/plugins/cleaninvalidseed/host/native.go": "20184c98ec653d6734002bacf7d3f7cfe148c5d2bdce9081bf6810045f9d73e4",
     "internal/plugins/cleaninvalidseed/host/native_phase.go": "4ec93577613f7994502c78420ccf54a9924593a43d86b2cc6c540d611fb64068",
     "internal/plugins/cleaninvalidseed/host/native_phase_test.go": "092b39e236fdb96c390a6aedb63bfd97195fd44a9b711cfdf2dcf87460249666",
-    "internal/plugins/cleaninvalidseed/host/owner.go": "5d2391de0af6a665a6759734d4cc79f7a05ef26df36ee4f4c43949ada14d7093",
+    "internal/plugins/cleaninvalidseed/host/owner.go": "055e727cff3b35f81047f887702e3bc2083b74ca5a3d7dd26f0d9882236e384e",
     "internal/plugins/cleaninvalidseed/host/rename.go": "62e105b5d21219904f32d17c46c49788db13200914e57e5e4a77cecb8f63322f",
     "internal/plugins/cleaninvalidseed/host/rename_darwin.go": "5e4fa2664d36c42b69809cf7f3c602b5ed695d27771887a76aa897b3a6d95194",
     "internal/plugins/cleaninvalidseed/host/rename_linux.go": "e53d928f71766cb493418c9ec21337b7292a2bfc860a5185c70d9b88e060ca67",
@@ -34,5 +34,16 @@
     "manifest": "testdata/plugins/clean-invalid-seed-mutation-phase/source-manifest.json",
     "validation_status": "formal_source_migrated_pending_formal_tests",
     "baseline_commit": "28cd053062aebe67918769a238f3d03d6600836c"
+  },
+  "native_object_amendment": {
+    "implementation_commit": "b920eabefc0cb852ae328b2202bb072f79dbd5c8",
+    "previous_owner_sha256": "5d2391de0af6a665a6759734d4cc79f7a05ef26df36ee4f4c43949ada14d7093",
+    "scope": "Bind actual machine after normal BeforeRun/Guard/journal admission; detach host after finish; match original service marker to exact invocation. Historical candidate and original fixtures unchanged.",
+    "review": "docs/plugin-provenance-reconciliation-20261112.md"
+  },
+  "amendment_files": {
+    "internal/plugins/cleaninvalidseed/host/native_object.go": "9b2774493645895ebefa8f0ceb18fbb4c20299fe533c9ce26389a38674168c8b",
+    "internal/plugins/cleaninvalidseed/host/native_object_test.go": "e71db718551ee536052cd779e6bd598c1707298ab8944627de8c022f210dc32c",
+    "internal/plugins/cleaninvalidseed/host/original_service_test.go": "1d5c8fb7fe3111c60e7897169f441152f22122343c2fe5dd7ca2c0cfedaa7fe3"
   }
 }

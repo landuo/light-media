@@ -234,5 +234,6 @@ func TestOriginalLarkMediaInteractionLinuxAMD64(t *testing.T) {
 	if err := a.Store.Get(t.Context(), "subscription", subscriptionID, &saved); err != nil || saved.Media.ID != m.ID || saved.SourceState != "N" || adds.Load() != 1 {
 		t.Fatalf("wrong persisted subscription or stale-card download: source_state=%s media_id=%d adds=%d err=%v", saved.SourceState, saved.Media.ID, adds.Load(), err)
 	}
+	requireDeferredSubscription(t, a, saved, time.Now())
 	t.Logf("verified actual indexed Lark worker: 9 metadata results across 2 pages; other user rejected; %d tracker requests, 1 exact torrent fetch, 1 accepted native download; old callback expired, Unicode numeric selection created N and durable SubscribeAdded", searches.Load())
 }

@@ -15,6 +15,10 @@ import (
 )
 
 var declareModules = "true"
+
+// Source-pass fixture intentionally omits optional getter declarations while
+// retaining the same actual SDK process and observable invocation counters.
+var fixtureSourceStub = ""
 var version = "1.0"
 var fixtureProcessAPI = ""
 var fixtureCatalogEvents = ""
@@ -43,6 +47,16 @@ func manifest() plugins.Manifest {
 		m.Methods = append(m.Methods, "catalog_event")
 		m.ChainHandlers = append(m.ChainHandlers, plugins.ChainHandler{Event: "recommend.source", Method: "catalog_event"}, plugins.ChainHandler{Event: "discover.source", Method: "catalog_event"}, plugins.ChainHandler{Event: "media.recognize.convert", Method: "catalog_event"}, plugins.ChainHandler{Event: "name.recognize", Method: "catalog_event"})
 		m.APIs = append(m.APIs, plugins.HTTPAPI{Key: "feed", Path: "/feed", Methods: []string{"GET"}, Auth: "bear"})
+	}
+	if fixtureSourceStub == "true" {
+		omitted := map[string]bool{"get_module": true, "get_service": true, "get_command": true, "get_dashboard": true, "get_auth_providers": true}
+		methods := m.Methods[:0]
+		for _, method := range m.Methods {
+			if !omitted[method] {
+				methods = append(methods, method)
+			}
+		}
+		m.Methods = methods
 	}
 	return m
 }

@@ -32,7 +32,7 @@ func (c SiteStatisticConfiguration) Validate() error {
 var siteStatisticForm json.RawMessage
 
 func SiteStatisticManifest() plugins.Manifest {
-	return plugins.Manifest{SchemaVersion: 1, PluginID: "SiteStatistic", Name: "站点数据统计", Description: "站点统计数据图表。", Icon: "statistic.png", Version: "1.9.7", Author: "lightolly,jxxghp", AuthorURL: "https://github.com/lightolly", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "page", "dashboard", "stop"}, Capabilities: []string{"site.statistics.read", "site.statistics.configure", "site.statistics.refresh", "site.statistics.notify", "site.statistics.refresh_domain"}, HasPage: true, Dashboards: []string{"default"}, APIs: []plugins.HTTPAPI{{Key: "refresh_by_domain", Path: "/refresh_by_domain", Methods: []string{"GET"}, Auth: "apikey", Query: []plugins.HTTPParameter{{Name: "domain", Kind: "string", Required: true}, {Name: "apikey", Kind: "api_key", Required: true}}}}}
+	return plugins.Manifest{SchemaVersion: 1, PluginID: "SiteStatistic", Name: "站点数据统计", Description: "站点统计数据图表。", Icon: "statistic.png", Version: "1.9.7", Author: "lightolly,jxxghp", AuthorURL: "https://github.com/lightolly", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "get_page", "get_dashboard", "page", "dashboard", "stop"}, Capabilities: []string{"site.statistics.read", "site.statistics.configure", "site.statistics.refresh", "site.statistics.notify", "site.statistics.refresh_domain"}, HasPage: true, Dashboards: []string{"default"}, APIs: []plugins.HTTPAPI{{Key: "refresh_by_domain", Path: "/refresh_by_domain", Methods: []string{"GET"}, Auth: "apikey", Query: []plugins.HTTPParameter{{Name: "domain", Kind: "string", Required: true}, {Name: "apikey", Kind: "api_key", Required: true}}}}}
 }
 
 // OriginalSiteStatistic retains the actual initialized members. Its caller serializes
@@ -69,6 +69,13 @@ func HandleSiteStatistic(ctx context.Context, method string, raw json.RawMessage
 }
 
 func (p *OriginalSiteStatistic) Handle(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
+	// Keep legacy SDK aliases while exposing the canonical extension methods.
+	if method == "get_page" {
+		method = "page"
+	}
+	if method == "get_dashboard" {
+		method = "dashboard"
+	}
 	if method == "stop" {
 		return json.RawMessage(`null`), nil
 	}

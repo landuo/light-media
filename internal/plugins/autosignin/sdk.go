@@ -20,7 +20,7 @@ const (
 )
 
 func Manifest() plugins.Manifest {
-	return plugins.Manifest{SchemaVersion: 1, PluginID: "AutoSignIn", Name: "站点自动签到", Description: "自动模拟登录、签到站点。", Icon: "signin.png", Author: "thsrite", AuthorURL: "https://github.com/thsrite", Version: Version, Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "page", "http", "stop"}, Capabilities: []string{OptionsCapability, ConfigureCapability, RunCapability, SnapshotCapability, DeleteCapability}, Events: []string{"plugin.action", "site.deleted"}, HasPage: true, APIs: []plugins.HTTPAPI{{Key: "signin_by_domain", Path: "/signin_by_domain", Methods: []string{"GET"}, Auth: "anonymous", Query: []plugins.HTTPParameter{{Name: "url", Kind: "string", Required: true}, {Name: "apikey", Kind: "api_key", Required: true}}}}}
+	return plugins.Manifest{SchemaVersion: 1, PluginID: "AutoSignIn", Name: "站点自动签到", Description: "自动模拟登录、签到站点。", Icon: "signin.png", Author: "thsrite", AuthorURL: "https://github.com/thsrite", Version: Version, Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "get_page", "page", "http", "stop"}, Capabilities: []string{OptionsCapability, ConfigureCapability, RunCapability, SnapshotCapability, DeleteCapability}, Events: []string{"plugin.action", "site.deleted"}, HasPage: true, APIs: []plugins.HTTPAPI{{Key: "signin_by_domain", Path: "/signin_by_domain", Methods: []string{"GET"}, Auth: "anonymous", Query: []plugins.HTTPParameter{{Name: "url", Kind: "string", Required: true}, {Name: "apikey", Kind: "api_key", Required: true}}}}}
 }
 func sdkDecode(raw []byte, dst any) error {
 	dec := json.NewDecoder(bytes.NewReader(raw))
@@ -35,6 +35,10 @@ func sdkDecode(raw []byte, dst any) error {
 	return nil
 }
 func Handle(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
+	// Keep legacy SDK aliases while exposing the canonical extension methods.
+	if method == "get_page" {
+		method = "page"
+	}
 	if method == "stop" {
 		return json.RawMessage(`null`), nil
 	}

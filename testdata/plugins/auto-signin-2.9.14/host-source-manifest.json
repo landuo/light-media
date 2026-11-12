@@ -3,7 +3,7 @@
   "base_manifest_sha256": "4943e98b86155e8162102fb8bd74b3490559b9aa3c4889cb93e6c6f87a2b074e",
   "scope": "Reviewed synchronous source boundary and trusted host grants; original installed references unchanged",
   "files": {
-    "internal/plugins/autosignin/durable/controller.go": "a7b120fe61c3a0e3b1804dc0ddcb3bdfde20b3c935418b80614b82e0289ab0d4",
+    "internal/plugins/autosignin/durable/controller.go": "65e81ccbc9de637dbfebd8f0a825f3306026719320d59ccf909b21f64c4c3044",
     "internal/plugins/autosignin/durable/durable_test.go": "ee6d2f341243687b07a699dd1df251be641603407df9aa5e2365301d155854ea",
     "internal/plugins/autosignin/durable/lane.go": "54bae7fc3e0f408d63dc4222f99a684b02bd9784c46e9d79c3c915813c1e737f",
     "internal/plugins/autosignin/durable/source_boundary.go": "a9643f12a6fa3a7f6afdfb4a2a6ef638a61daa861a2770abd58fbad53ee9162c",
@@ -21,6 +21,19 @@
     "internal/plugins/autosignin/requests_proxy_policy_test.go": "6caa2a8089315448c2e67e457c062f75fd387df5013872d98217db0f736bb3aa",
     "internal/plugins/autosignin/tjupt_adapters.go": "d480dbf9f86ef789c6a76ffd1e15f1d1ce133cd94edc9f18330515aae54a4f12",
     "internal/plugins/autosignin/tjupt_public_policy_test.go": "9ee7af9c91dd3294b8e1f19170fb226707682621133b279cbd9a5514e9535169",
-    "internal/plugins/autosignin/tjupt_transport_test.go": "b5f6f07958a33a621a7d73cbd3e284deddc4005bd124d44e145f5bd05cc0607d"
-  }
+    "internal/plugins/autosignin/tjupt_transport_test.go": "b5f6f07958a33a621a7d73cbd3e284deddc4005bd124d44e145f5bd05cc0607d",
+    "internal/plugins/autosignin/durable/native_object_test.go": "6fc81102effddc7cf3f555f61d7f6515df59a052415852c918905035dc58904e",
+    "internal/plugins/autosignin/sdk.go": "3e0bb978199a5dfb2de66bf184d9a714ebea22f72698c46fa431bd81bad93802"
+  },
+  "reviewed_amendments": [
+    {
+      "implementation_commit": "b920eabefc0cb852ae328b2202bb072f79dbd5c8",
+      "previous_controller_sha256": "a7b120fe61c3a0e3b1804dc0ddcb3bdfde20b3c935418b80614b82e0289ab0d4",
+      "scope": "Native Engine identity, partial initialization and invocation-local authority detachment; no original fixture changes."
+    },
+    {
+      "scope": "Canonical get_page SDK method aliases legacy page; capability, host payload and failure propagation unchanged.",
+      "review": "docs/plugin-provenance-reconciliation-20261112.md"
+    }
+  ]
 }

@@ -22,24 +22,28 @@ func TestSiteStatisticsSnapshotAndFactCommitTogether(t *testing.T) {
 	if _, err := a.saveManagedSite(ctx, site); err != nil {
 		t.Fatal(err)
 	}
+	// Creation publishes SiteUpdated asynchronously. Establish the baseline only
+	// after its consumer finishes, so this test measures its explicit refresh.
+	a.wg.Wait()
+	baselineEvents, err := a.domainEvents(ctx, 0, 200)
+	if err != nil {
+		t.Fatal(err)
+	}
+	baselineRecords := siteStatisticsRecordSnapshot(t, a)
 	if _, err := a.Store.DB.Exec(`CREATE TRIGGER fail_site_fact BEFORE INSERT ON domain_events BEGIN SELECT RAISE(ABORT,'synthetic late outbox failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := a.refreshManagedSite(ctx, site.ID); err == nil {
 		t.Fatal("outbox failure reported refresh success")
 	}
-	for _, kind := range []string{"site_connection", "site_stats_latest", "site_stats_history"} {
-		var count int
-		a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind=?`, kind).Scan(&count)
-		if count != 0 {
-			t.Fatal("partial snapshot committed", kind)
-		}
+	if got := siteStatisticsRecordSnapshot(t, a); got != baselineRecords {
+		t.Fatal("failed refresh changed committed snapshots")
 	}
 	a.Store.DB.Exec(`DROP TRIGGER fail_site_fact`)
 	if _, err := a.refreshManagedSite(ctx, site.ID); err != nil {
 		t.Fatal(err)
 	}
-	events, err := a.domainEvents(ctx, 0, 200)
+	events, err := a.domainEvents(ctx, baselineEvents.NextCursor, 200)
 	if err != nil || len(events.Events) != 1 || events.Events[0].Type != "site.refreshed" || events.Events[0].SiteID != site.ID || events.Events[0].Purpose != "site_statistics" {
 		t.Fatal("missing committed fact", events, err)
 	}
@@ -56,6 +60,13 @@ func TestSiteStatisticsErrorDTOEmitsSourceRefreshFactsWhileJobFails(t *testing.T
 	if _, err := a.saveManagedSite(ctx, site); err != nil {
 		t.Fatal(err)
 	}
+	// Creation publishes SiteUpdated asynchronously. Establish the baseline only
+	// after its consumer finishes, so this test measures its explicit refresh.
+	a.wg.Wait()
+	baselineEvents, err := a.domainEvents(ctx, 0, 200)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if _, err := a.enqueue(ctx, "site_refresh", map[string]string{"id": "site_refresh"}, ""); err != nil {
 		t.Fatal(err)
 	}
@@ -66,7 +77,7 @@ func TestSiteStatisticsErrorDTOEmitsSourceRefreshFactsWhileJobFails(t *testing.T
 	if err := a.safeRun(ctx, job); pluginErrorCode(err) != "SITE_STATISTICS_REFRESH_FAILED" {
 		t.Fatal("full failure became success", err)
 	}
-	events, err := a.domainEvents(ctx, 0, 200)
+	events, err := a.domainEvents(ctx, baselineEvents.NextCursor, 200)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -95,4 +106,31 @@ func TestSiteRefreshEventRejectsDownloadAuthority(t *testing.T) {
 			t.Fatal("mixed site event authority accepted", string(raw))
 		}
 	}
+}
+
+// Compare complete records rather than only row counts: a failed refresh must
+// neither insert a new history row nor replace an existing connection/snapshot.
+func siteStatisticsRecordSnapshot(t *testing.T, a *App) string {
+	t.Helper()
+	rows, err := a.Store.DB.Query(`SELECT kind,id,payload,updated_at FROM records WHERE kind IN ('site_connection','site_stats_latest','site_stats_history') ORDER BY kind,id`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer rows.Close()
+	var records [][4]string
+	for rows.Next() {
+		var row [4]string
+		if err := rows.Scan(&row[0], &row[1], &row[2], &row[3]); err != nil {
+			t.Fatal(err)
+		}
+		records = append(records, row)
+	}
+	if err := rows.Err(); err != nil {
+		t.Fatal(err)
+	}
+	raw, err := json.Marshal(records)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return string(raw)
 }

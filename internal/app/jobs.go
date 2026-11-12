@@ -522,31 +522,38 @@ func (a *App) subscriptionScheduler(ctx context.Context) {
 			return
 		case <-ticker.C:
 		}
-		if a.paused() {
+		a.scheduleSubscriptions(ctx, time.Now())
+	}
+}
+
+// scheduleSubscriptions runs one scheduler tick; the supplied clock also makes
+// the exact due boundary testable without waiting for the background ticker.
+func (a *App) scheduleSubscriptions(ctx context.Context, at time.Time) {
+	if a.paused() {
+		return
+	}
+	raw, e := a.Store.List(ctx, "subscription", 500, 0)
+	if e != nil {
+		return
+	}
+	for _, b := range raw {
+		var s Subscription
+		if json.Unmarshal(b, &s) != nil || s.State != "active" || s.Schedule.Mode == "manual" {
 			continue
 		}
-		raw, e := a.Store.List(ctx, "subscription", 500, 0)
+		t, e := time.Parse(time.RFC3339Nano, s.NextCheck)
+		// Earlier versions could store a delay caused by the retired daily
+		// site budget. Let that check run and calculate its normal schedule.
+		oldBudgetDelay := s.LastReason == "站点调用预算不足，已按最早恢复时间延期检查" ||
+			strings.HasSuffix(s.LastReason, "；部分站点预算不足，检查将按恢复时间延期")
+		if !oldBudgetDelay && e == nil && t.After(at) {
+			continue
+		}
+		_, e = a.enqueue(ctx, "subscription", map[string]any{"id": s.ID, "revision": s.Revision}, id("wf_"))
 		if e != nil {
 			continue
 		}
-		for _, b := range raw {
-			var s Subscription
-			if json.Unmarshal(b, &s) != nil || s.State != "active" || s.Schedule.Mode == "manual" {
-				continue
-			}
-			t, e := time.Parse(time.RFC3339Nano, s.NextCheck)
-			// Earlier versions could store a delay caused by the retired daily
-			// site budget. Let that check run and calculate its normal schedule.
-			oldBudgetDelay := s.LastReason == "站点调用预算不足，已按最早恢复时间延期检查" ||
-				strings.HasSuffix(s.LastReason, "；部分站点预算不足，检查将按恢复时间延期")
-			if !oldBudgetDelay && e == nil && t.After(time.Now()) {
-				continue
-			}
-			_, e = a.enqueue(ctx, "subscription", map[string]any{"id": s.ID, "revision": s.Revision}, id("wf_"))
-			if e != nil {
-				continue
-			}
-		}
 	}
 }
+
 func jobErr(code string, e error) error { return bad(code, fmt.Sprint(e)) }

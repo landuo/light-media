@@ -101,6 +101,10 @@ func TestSubscribeGroupInstalledAMD64Package(t *testing.T) {
 		return current
 	}
 	categorized := subscriptionAt(2)
+	if categorized.NextCheck != receipt.Saved.NextCheck {
+		t.Fatal("SubscribeAdded rule consumer reset the initial scheduled check")
+	}
+	requireDeferredSubscription(t, a, categorized, time.Now())
 	if categorized.Policy.Resolution != "1080[pi]|x1080" || categorized.Policy.Exclude != "OwnedFromCategory" ||
 		categorized.Policy.Include != "" || categorized.Policy.Source != "" || len(categorized.SiteIDs) != 0 {
 		t.Fatal("actual SubscribeAdded did not overwrite exactly the configured category fields")

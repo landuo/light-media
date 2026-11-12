@@ -17,11 +17,15 @@ const PageCapability = "lark.page"
 const APICapability = "lark.api"
 
 func Manifest() plugins.Manifest {
-	return plugins.Manifest{SchemaVersion: 1, PluginID: "LarkMessager", Name: "Lark 应用消息通知", Description: "基于国际版飞书 Lark 开放平台应用的通知与消息交互插件，支持文本、卡片消息发送及消息回调交互。", Icon: "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/main/icons/FeiShu_A.png", Version: "0.9.1", Author: "ui-beam-9", AuthorURL: "https://github.com/ui-beam-9", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "page", "invoke", "http_api", "stop"}, Capabilities: []string{ConfigureCapability, ModuleCapability, EventCapability, FormCapability, PageCapability, APICapability}, Events: []string{"message.action"}, HasPage: true, APIs: []plugins.HTTPAPI{{Key: "webhook", Path: "/webhook", Methods: []string{"POST", "GET"}, Auth: "anonymous", Query: []plugins.HTTPParameter{{Name: "token", Kind: "string"}}, Headers: []string{"x-lark-signature", "x-lark-request-timestamp", "x-lark-request-nonce"}, Body: "raw"}, {Key: "test", Path: "/test", Methods: []string{"GET"}, Auth: "bear"}, {Key: "status", Path: "/status", Methods: []string{"GET"}, Auth: "bear"}, {Key: "fetch_chats", Path: "/fetch_chats", Methods: []string{"GET"}, Auth: "bear"}}}
+	return plugins.Manifest{SchemaVersion: 1, PluginID: "LarkMessager", Name: "Lark 应用消息通知", Description: "基于国际版飞书 Lark 开放平台应用的通知与消息交互插件，支持文本、卡片消息发送及消息回调交互。", Icon: "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/main/icons/FeiShu_A.png", Version: "0.9.1", Author: "ui-beam-9", AuthorURL: "https://github.com/ui-beam-9", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "get_page", "page", "invoke", "http_api", "stop"}, Capabilities: []string{ConfigureCapability, ModuleCapability, EventCapability, FormCapability, PageCapability, APICapability}, Events: []string{"message.action"}, HasPage: true, APIs: []plugins.HTTPAPI{{Key: "webhook", Path: "/webhook", Methods: []string{"POST", "GET"}, Auth: "anonymous", Query: []plugins.HTTPParameter{{Name: "token", Kind: "string"}}, Headers: []string{"x-lark-signature", "x-lark-request-timestamp", "x-lark-request-nonce"}, Body: "raw"}, {Key: "test", Path: "/test", Methods: []string{"GET"}, Auth: "bear"}, {Key: "status", Path: "/status", Methods: []string{"GET"}, Auth: "bear"}, {Key: "fetch_chats", Path: "/fetch_chats", Methods: []string{"GET"}, Auth: "bear"}}}
 }
 
 // The worker forwards only opaque host-bound IDs, never recipient or config data.
 func Handle(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
+	// Keep legacy SDK aliases while exposing the canonical extension methods.
+	if method == "get_page" {
+		method = "page"
+	}
 	if method != "stop" && host == nil {
 		return nil, ErrDependency
 	}
