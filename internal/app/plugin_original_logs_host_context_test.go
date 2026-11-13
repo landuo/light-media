@@ -201,8 +201,8 @@ func TestOriginalInstanceLogSynchronousModuleFailureKeepsOriginatingCaller(t *te
 	clone := originalBaseSDKLoaded(t, a, "OwnedNoticemodulelogs")
 	for _, object := range []*originalPluginInstance{source, clone} {
 		out := postOwnedNotice(t, object, context.Background(), `{"title":"owned synchronous module failure","channel":"Telegram","immediately":true}`)
-		if out.Attempted != 1 || out.Failed != 1 {
-			t.Fatal("real module failed-send result changed", out)
+		if out.Attempted != 1 || out.Failed != 0 || len(out.Errors) != 0 || out.Queued != 0 {
+			t.Fatal("source dispatcher-consumed module exception was rethrown", out)
 		}
 	}
 	for _, id := range []string{"OwnedNotice", "OwnedNoticemodulelogs"} {

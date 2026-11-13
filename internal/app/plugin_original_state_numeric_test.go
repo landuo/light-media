@@ -30,6 +30,11 @@ func TestOriginalRawJSONStateSourceTruthActualApp(t *testing.T) {
 		}
 		oracle.Cases = append(oracle.Cases, part.Cases...)
 	}
+	binary := os.Getenv("OWNED_STANDARD_RAW_STATE_FIXTURE_BINARY")
+	if binary == "" {
+		t.Fatal("OWNED_STANDARD_RAW_STATE_FIXTURE_BINARY requires actual raw-state standard worker")
+	}
+	t.Setenv("OWNED_STANDARD_FIXTURE_BINARY", binary)
 	a, cookie, object := ownedStandardSDKFixture(t)
 	ctx := context.Background()
 	for _, c := range oracle.Cases {

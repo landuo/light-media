@@ -179,7 +179,7 @@ func TestPluginAuthProductionCLI(t *testing.T) {
 		}
 		deadline := time.Now().Add(12 * time.Second)
 		for {
-			response, err := admin.Get(origin + "/api/auth/status")
+			response, err := admin.Get(origin + "/healthz")
 			if err == nil {
 				response.Body.Close()
 				if response.StatusCode == 200 {

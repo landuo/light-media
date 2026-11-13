@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync/atomic"
 	"testing"
 
 	"light-media/internal/download"
@@ -55,15 +56,19 @@ func TestManagedSiteCRUDProtectsCredentialsAndAdaptation(t *testing.T) {
 }
 
 func TestManagedSiteFailedRefreshPreservesLastSuccessAndUnknown(t *testing.T) {
-	failed := false
+	var failed atomic.Bool
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if failed {
+		if failed.Load() {
 			http.Error(w, "failure", 503)
 			return
 		}
 		switch r.URL.Path {
 		case "/index.php":
 			fmt.Fprint(w, `<a href="logout.php">退出</a><a href="userdetails.php?id=7">test</a><div>上传：1 GB 下载：0 B 总做种数：0 总做种体积：0 B</div>`)
+		case "/", "/favicon.ico":
+			// SiteUpdated performs the real homepage/icon discovery. This owned
+			// fixture exposes account pages only, not a homepage or icon.
+			http.NotFound(w, r)
 		case "/userdetails.php":
 			fmt.Fprint(w, `<a href="logout.php">退出</a>`)
 		default:
@@ -77,6 +82,8 @@ func TestManagedSiteFailedRefreshPreservesLastSuccessAndUnknown(t *testing.T) {
 	if _, e := a.saveManagedSite(ctx, s); e != nil {
 		t.Fatal(e)
 	}
+	// Join the real save-triggered SiteUpdated work before the explicit refresh phases.
+	a.wg.Wait()
 	if _, e := a.refreshManagedSite(ctx, "home"); e != nil {
 		t.Fatal(e)
 	}
@@ -87,7 +94,7 @@ func TestManagedSiteFailedRefreshPreservesLastSuccessAndUnknown(t *testing.T) {
 	if before.Stats == nil || before.Stats.Seeding == nil || *before.Stats.Seeding != 0 || before.Stats.Bonus != nil {
 		t.Fatalf("missing became zero %+v", before)
 	}
-	failed = true
+	failed.Store(true)
 	if _, e := a.refreshManagedSite(ctx, "home"); e != nil {
 		t.Fatal(e)
 	}

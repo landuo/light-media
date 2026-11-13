@@ -187,7 +187,7 @@ func TestPluginWebMessagesProductionCLI(t *testing.T) {
 		}
 		deadline := time.Now().Add(12 * time.Second)
 		for {
-			r, err := client.Get(origin + "/api/auth/status")
+			r, err := client.Get(origin + "/healthz")
 			if err == nil {
 				r.Body.Close()
 				if r.StatusCode == 200 {
@@ -291,7 +291,21 @@ func TestPluginWebMessagesProductionCLI(t *testing.T) {
 	}
 	success("PUT", "/api/plugins/OwnedNotice", map[string]any{"enabled": true, "endpoint": recipient.URL, "fail": true})
 	beforeFailed := countReceived()
-	post("owned failed delivery stored", true, true)
+	// The source dispatcher consumes sender exceptions; prove the failed call
+	// still executes and is logged, in addition to checking saved history below.
+	beforeLog, err := os.ReadFile(logFile.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	beforeFailures := bytes.Count(beforeLog, []byte(`"event":"module_execution_failed"`))
+	post("owned failed delivery stored", true, false)
+	afterLog, err := os.ReadFile(logFile.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bytes.Count(afterLog, []byte(`"event":"module_execution_failed"`)) != beforeFailures+1 {
+		t.Fatal("failed SDK sender was not invoked and logged exactly once")
+	}
 	if len(history()) != 3 || countReceived() != beforeFailed {
 		t.Fatal("source history-before-failed-delivery order changed")
 	}

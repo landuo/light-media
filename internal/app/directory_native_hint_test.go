@@ -73,17 +73,31 @@ func TestDirectoryMonitorUsesNativeMediaHintBeforeRuleTypeAndRejectsNFOConflict(
 			directoryPoll(t, a, movieRule)
 			directoryAge(t, a, movieRule, path)
 			directoryPoll(t, a, movieRule)
-			observed := directoryObservation(t, a, movieRule, path)
+			observed := directoryRecognize(t, a, movieRule, path)
 			if skipped := directoryObservation(t, a, tvRule, path); skipped.PlanID != "" || skipped.State != "baseline" {
 				t.Fatalf("TV rule captured a movie hint: %+v", skipped)
 			}
 			if conflictingNFO {
-				if observed.State != "needs_review" || observed.PlanID != "" || !strings.Contains(observed.Reason, "疑问") {
+				if observed.State != "error" || observed.PlanID == "" || !strings.Contains(observed.Reason, "疑问") {
 					t.Fatalf("conflicting NFO was not rejected: %+v", observed)
 				}
 				var count int
-				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='import_plan'`).Scan(&count); err != nil || count != 0 {
-					t.Fatal("conflicting hint generated an import plan", count, err)
+				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='import_plan'`).Scan(&count); err != nil || count != 1 {
+					t.Fatal("conflicting hint did not persist exactly one failure", count, err)
+				}
+				var failed ImportPlan
+				if err := a.Store.Get(context.Background(), "import_plan", observed.PlanID, &failed); err != nil || failed.State != "failed" || len(failed.Files) != 1 || failed.Files[0].Status != "blocked" || failed.Files[0].Target != "" {
+					t.Fatal("conflicting hint authorized a target", failed, err)
+				}
+				var state string
+				if err := a.Store.DB.QueryRow(`SELECT state FROM jobs WHERE id=?`, observed.JobID).Scan(&state); err != nil || state != "failed" {
+					t.Fatal("conflict job not failed", state, err)
+				}
+				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM reservations`).Scan(&count); err != nil || count != 0 {
+					t.Fatal("conflicting hint reserved slots", count, err)
+				}
+				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&count); err != nil || count != 0 {
+					t.Fatal("conflicting hint published assets", count, err)
 				}
 			} else {
 				if observed.State != "queued" || observed.PlanID == "" {

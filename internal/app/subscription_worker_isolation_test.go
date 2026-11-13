@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"testing"
@@ -24,6 +26,41 @@ func installSubscriptionJadeDynastyMetadataFixture(t *testing.T, a *App) {
 func TestSubscriptionCheckRunsWhileOrganizeWorkersAreBlocked(t *testing.T) {
 	a := subscriptionTestApp(t)
 	installSubscriptionJadeDynastyMetadataFixture(t, a)
+	// Submit two real, independently reserved imports before holding execution.
+	// Their owned source files and distinct media identities keep queue membership
+	// and reservation validation active without competing for the same asset slot.
+	base, err := filepath.EvalSymlinks(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	source, target := filepath.Join(base, "source"), filepath.Join(base, "library")
+	if err := os.MkdirAll(target, 0750); err != nil {
+		t.Fatal(err)
+	}
+	a.config.AllowedRoots = append(a.config.AllowedRoots, source)
+	a.config.Roots = append(a.config.Roots, Root{ID: "isolation-root", Path: target, Kind: "mixed"})
+	movie := importFixture(t, a, "movie")
+	targets := map[string]bool{}
+	for i := range 2 {
+		identity := movie
+		identity.ID += int64(i)
+		identity.Title = fmt.Sprintf("Isolation Movie %d", i)
+		identity.OriginalTitle = identity.Title
+		importCache(t, a, fmt.Sprintf("media:movie:%d", identity.ID), identity)
+		input := filepath.Join(source, fmt.Sprintf("Blocked.%d.2024.mkv", i))
+		importWrite(t, input, []byte(fmt.Sprintf("owned isolation movie %d", i)))
+		plan, err := a.previewImport(context.Background(), ImportRequest{MediaType: "movie", TMDBID: identity.ID, RootID: "isolation-root", Mode: "hardlink", Scraping: importFlag(false), Files: []ImportFileRequest{{Path: input}}})
+		if err != nil || len(plan.Files) != 1 || plan.Files[0].Status != "ready" {
+			t.Fatal("real isolation preview", plan, err)
+		}
+		if targets[plan.Files[0].Target] {
+			t.Fatal("isolation imports share a destination")
+		}
+		targets[plan.Files[0].Target] = true
+		if _, err = a.executeImport(context.Background(), plan.ID, nil); err != nil {
+			t.Fatal("real isolation submission", err)
+		}
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	var workers sync.WaitGroup
 	a.importMu.Lock()
@@ -33,13 +70,9 @@ func TestSubscriptionCheckRunsWhileOrganizeWorkersAreBlocked(t *testing.T) {
 		workers.Wait()
 	}()
 
-	// Occupy both worker slots via the unrestricted worker path. The import
-	// lane leaves conflicting work queued, while these deliberately incomplete
-	// jobs need to reach the execution lock for this isolation test.
-	for i := range 2 {
-		if _, err := a.enqueue(ctx, "import", map[string]string{"id": fmt.Sprintf("blocked-import-%d", i)}, "organize-test"); err != nil {
-			t.Fatal(err)
-		}
+	// Occupy both unrestricted worker slots with valid queued imports. Both
+	// workers must reach the held execution lock; the subscription lane remains free.
+	for range 2 {
 		workers.Go(func() { a.jobWorker(ctx, allJobs) })
 	}
 	waitForSubscriptionWorker(t, ctx, func() (bool, error) {

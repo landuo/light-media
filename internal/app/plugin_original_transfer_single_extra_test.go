@@ -291,8 +291,10 @@ func originalFileRetryActualSDK(t *testing.T, auxiliary bool) {
 	if e = fresh.initializeOriginalPlugins(ctx); e != nil {
 		t.Fatal(e)
 	}
-	if e = fresh.runImport(ctx, job, next.ID, nil); e != nil {
-		t.Fatal("cold exact successful extra", e)
+	// This job was durably marked succeeded before restart. A completed
+	// execution must stay revoked, not be reclaimed or replayed as recovery.
+	if e = fresh.runImport(ctx, job, next.ID, nil); fileCode(e) != "JOB_CANCELLED" {
+		t.Fatal("cold completed job was not rejected", e)
 	}
 	value, ok := fresh.pluginRunningInstances.Load(ownedModuleID)
 	if !ok {

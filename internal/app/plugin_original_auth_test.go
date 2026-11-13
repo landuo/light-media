@@ -106,7 +106,11 @@ func TestOriginalAuthExchangeRequestValidation(t *testing.T) {
 
 func installOwnedAuthFixture(t *testing.T, a *App) *http.Cookie {
 	t.Helper()
-	binaryPath := os.Getenv("OWNED_AUTH_FIXTURE_BINARY")
+	return installOwnedAuthFixtureBinary(t, a, os.Getenv("OWNED_AUTH_FIXTURE_BINARY"))
+}
+
+func installOwnedAuthFixtureBinary(t *testing.T, a *App, binaryPath string) *http.Cookie {
+	t.Helper()
 	if binaryPath == "" {
 		t.Fatal("OWNED_AUTH_FIXTURE_BINARY must name an actual compiled owned-auth-fixture")
 	}

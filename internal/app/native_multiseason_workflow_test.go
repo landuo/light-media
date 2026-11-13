@@ -131,7 +131,7 @@ func TestManualMultiSeasonHTTPWithoutMediaIdentityThenActualDirectoryOrganize(t 
 	}
 	directoryPoll(t, a, rule)
 	for index, f := range material.Files {
-		observed := directoryObservation(t, a, rule, filepath.Join(source, f.Path))
+		observed := directoryRecognize(t, a, rule, filepath.Join(source, f.Path))
 		if observed.State != "queued" || observed.PlanID == "" {
 			t.Fatal("manual actual completed episode did not reach organizer", observed)
 		}

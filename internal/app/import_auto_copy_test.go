@@ -6,6 +6,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"reflect"
 	"testing"
 
 	"golang.org/x/sys/unix"
@@ -46,12 +47,13 @@ func TestActualAutoEXDEVCopyAndColdSQLRecovery(t *testing.T) {
 			importWrite(t, filepath.Join(source, "Owned.2024.2160p.zh.srt"), []byte("new subtitle"))
 			p := ownedAutoPlan(t, a, input, "auto")
 			j := overwriteStart(t, a, p)
-			calls := 0
+			calls, sideCalls := 0, 0
 			a.importSourceLink = func(ofd int, old string, nfd int, next string, flags int) error {
-				calls++
 				if old == filepath.Base(input) {
+					calls++
 					return unix.EXDEV
 				}
+				sideCalls++
 				return unix.Linkat(ofd, old, nfd, next, flags)
 			}
 			if boundary == "commit_ack_lost" {
@@ -155,6 +157,16 @@ func TestActualAutoEXDEVCopyAndColdSQLRecovery(t *testing.T) {
 			}
 			if calls != 1 && boundary != "transition_sql" || boundary == "transition_sql" && calls != 2 {
 				t.Fatal("unexpected source Linkat count", calls)
+			}
+			wantSideCalls, wantSideMethod := 0, "copy"
+			if boundary == "transition_sql" {
+				// Independent sidecars still publish after a main-task failure.
+				// The retry must retain that registered hardlink, not copy again.
+				wantSideCalls, wantSideMethod = 1, "hardlink"
+			}
+			sideOp, sideErr := a.readDirectoryOverwriteOperation(ctx, op.ID+"/side-0")
+			if sideCalls != wantSideCalls || sideErr != nil || sideOp.Method != wantSideMethod || sideOp.State != "complete" {
+				t.Fatal("independent sidecar publication/retry", sideCalls, sideOp, sideErr)
 			}
 		})
 	}
@@ -311,5 +323,240 @@ func TestPublicCrossDeviceErrorCannotAuthorizeAutoCopy(t *testing.T) {
 	}
 	if _, e := os.Lstat(p.Files[0].Target); !errors.Is(e, os.ErrNotExist) {
 		t.Fatal("unproven auto copied", e)
+	}
+}
+
+func TestOverwriteMixedPublicationCleanupAndColdRetry(t *testing.T) {
+	for _, failMain := range []bool{false, true} {
+		name := "side-fails"
+		if failMain {
+			name = "main-fails"
+		}
+		t.Run(name, func(t *testing.T) {
+			ctx := context.Background()
+			a, source, target := importTestApp(t)
+			importFixture(t, a, "movie")
+			overwriteRule(a, source, target, "always", true)
+			input := filepath.Join(source, "Mixed.2024.mkv")
+			side := filepath.Join(source, "Mixed.2024.zh.srt")
+			importWrite(t, input, []byte("owned video source"))
+			importWrite(t, side, []byte("owned subtitle source"))
+			p := overwritePlan(t, a, input)
+			var meta importMetadata
+			if err := a.Store.Get(ctx, "import_meta", p.ID, &meta); err != nil || len(meta.Sidecars[p.Files[0].ID]) != 1 {
+				t.Fatal("actual sidecar", meta, err)
+			}
+			j := overwriteStart(t, a, p)
+			failedSource := side
+			if failMain {
+				failedSource = input
+			}
+			a.importSourceLink = func(ofd int, old string, nfd int, next string, flags int) error {
+				if old == filepath.Base(failedSource) {
+					return unix.EIO
+				}
+				return unix.Linkat(ofd, old, nfd, next, flags)
+			}
+			err := a.runImport(ctx, j, p.ID, nil)
+			if pluginErrorCode(err) != "IMPORT_LINK_FAILED" {
+				t.Fatal("original publication error masked", err)
+			}
+			mainKey := p.ID + "/" + p.Files[0].ID
+			sideKey := mainKey + "/side-0"
+			successKey, failedKey := mainKey, sideKey
+			successTarget := p.Files[0].Target
+			if failMain {
+				successKey, failedKey = sideKey, mainKey
+				successTarget = meta.Sidecars[p.Files[0].ID][0].Target
+			}
+			success, err := a.readDirectoryOverwriteOperation(ctx, successKey)
+			if err != nil || success.State != "complete" {
+				t.Fatal("successful task not cleaned", success, err)
+			}
+			failed, err := a.readDirectoryOverwriteOperation(ctx, failedKey)
+			if err != nil || failed.State == "registered" || failed.State == "complete" {
+				t.Fatal("failed task falsely registered", failed, err)
+			}
+			if pluginErrorCode(a.finishDirectoryOverwrite(ctx, failedKey)) != "REVIEW_OVERWRITE_RECEIPT" {
+				t.Fatal("unregistered cleanup guard weakened")
+			}
+			for path, want := range map[string]string{input: "owned video source", side: "owned subtitle source"} {
+				b, e := os.ReadFile(path)
+				if e != nil || string(b) != want {
+					t.Fatal("source altered", path, e)
+				}
+			}
+			stamp, err := snapshotPath(successTarget)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if failMain {
+				var sideReceipt importReceipt
+				if err = a.Store.Get(ctx, "import_receipt", sideKey, &sideReceipt); err != nil {
+					t.Fatal(err)
+				}
+				priorJob := j
+				config, dir := a.Settings(), a.Dir
+				if err = a.Close(); err != nil {
+					t.Fatal(err)
+				}
+				a, err = New(Options{DataDir: dir})
+				if err != nil {
+					t.Fatal(err)
+				}
+				defer a.Close()
+				a.config = config
+				j, err = a.claim(ctx)
+				if err != nil || j.ID != priorJob.ID || j.Kind != "import" || j.State != "running" || j.Generation <= priorJob.Generation {
+					t.Fatal("cold retry did not reclaim the real import with a new generation", j, err)
+				}
+				mainLinks := 0
+				a.importSourceLink = func(ofd int, old string, nfd int, next string, flags int) error {
+					if old != filepath.Base(input) {
+						t.Error("cold retry repeated registered sidecar publication")
+						return unix.EIO
+					}
+					mainLinks++
+					return unix.Linkat(ofd, old, nfd, next, flags)
+				}
+				if err = a.runImport(ctx, j, p.ID, nil); err != nil {
+					t.Fatal("cold main recovery failed", err)
+				}
+				if mainLinks != 1 {
+					t.Fatal("cold main recovery publication count", mainLinks)
+				}
+				current, e := snapshotPath(successTarget)
+				if e != nil || current != stamp {
+					t.Fatal("cold main recovery changed sidecar inode", current, e)
+				}
+				var currentReceipt importReceipt
+				if e = a.Store.Get(ctx, "import_receipt", sideKey, &currentReceipt); e != nil || !reflect.DeepEqual(currentReceipt, sideReceipt) {
+					t.Fatal("cold main recovery rewrote the sidecar receipt", currentReceipt, e)
+				}
+				sideOp, e := a.readDirectoryOverwriteOperation(ctx, sideKey)
+				if e != nil || !reflect.DeepEqual(sideOp, success) {
+					t.Fatal("cold main recovery changed completed sidecar operation", sideOp, e)
+				}
+				mainOp, e := a.readDirectoryOverwriteOperation(ctx, mainKey)
+				if e != nil || mainOp.State != "complete" {
+					t.Fatal("recovered main was not registered and completed", mainOp, e)
+				}
+				var recovered ImportPlan
+				if e = a.Store.Get(ctx, "import_plan", p.ID, &recovered); e != nil || recovered.Files[0].Status != "imported" {
+					t.Fatal("recovered main not imported", recovered, e)
+				}
+				var owner managedFile
+				if e = a.Store.Get(ctx, "managed_file", tokenHash(successTarget), &owner); e != nil || owner.AssetID != recovered.Files[0].AssetID || owner.Snapshot != stamp {
+					t.Fatal("cold recovery lost sidecar ownership", owner, e)
+				}
+				for path, want := range map[string]string{input: "owned video source", side: "owned subtitle source", recovered.Files[0].Target: "owned video source"} {
+					b, e := os.ReadFile(path)
+					if e != nil || string(b) != want {
+						t.Fatal("cold recovery source/target bytes", path, e)
+					}
+				}
+				return
+			}
+			config, dir := a.Settings(), a.Dir
+			if err = a.Close(); err != nil {
+				t.Fatal(err)
+			}
+			a, err = New(Options{DataDir: dir})
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer a.Close()
+			a.config = config
+			j = qualityRunningJob(t, a, j)
+			a.importSourceLink = func(int, string, int, string, int) error {
+				t.Error("cold retry repeated failed or successful publication")
+				return unix.EIO
+			}
+			err = a.runImport(ctx, j, p.ID, nil)
+			if pluginErrorCode(err) != "PLUGIN_TRANSFER_FAILED" {
+				t.Fatal("cold retry lost persisted task failure", err)
+			}
+			current, e := snapshotPath(successTarget)
+			if e != nil || current != stamp {
+				t.Fatal("cold retry changed successful publication", e)
+			}
+			failed, e = a.readDirectoryOverwriteOperation(ctx, failedKey)
+			if e != nil || failed.State == "registered" || failed.State == "complete" {
+				t.Fatal("cold retry completed failed overwrite", failed, e)
+			}
+		})
+	}
+}
+
+func TestOverwriteCleanupRecordedScopeAndRegistrationGuards(t *testing.T) {
+	for _, foreign := range []bool{false, true} {
+		t.Run(map[bool]string{false: "unregistered", true: "foreign-plan"}[foreign], func(t *testing.T) {
+			ctx := context.Background()
+			a, source, target := importTestApp(t)
+			importFixture(t, a, "movie")
+			overwriteRule(a, source, target, "always", true)
+			input := filepath.Join(source, "Guard.2024.mkv")
+			importWrite(t, input, []byte("retained source"))
+			p := overwritePlan(t, a, input)
+			j := overwriteStart(t, a, p)
+			a.importSourceLink = func(int, string, int, string, int) error { return unix.EIO }
+			if err := a.runImport(ctx, j, p.ID, nil); pluginErrorCode(err) != "IMPORT_LINK_FAILED" {
+				t.Fatal(err)
+			}
+			key := p.ID + "/" + p.Files[0].ID
+			var results originalTransferTaskFailures
+			if err := a.Store.Get(ctx, "original_transfer_task_failures", key, &results); err != nil {
+				t.Fatal(err)
+			}
+			keys := []string{key}
+			if foreign {
+				keys[0] = "another-plan/another-file"
+			}
+			results.OverwriteCleanupKeys = &keys
+			if err := a.Store.Put(ctx, "original_transfer_task_failures", key, results); err != nil {
+				t.Fatal(err)
+			}
+			var meta importMetadata
+			if err := a.Store.Get(ctx, "import_meta", p.ID, &meta); err != nil {
+				t.Fatal(err)
+			}
+			if err := a.finishImportOverwrites(ctx, p, p.Files[0], meta); pluginErrorCode(err) != "REVIEW_OVERWRITE_RECEIPT" {
+				t.Fatal("invalid cleanup authorized", err)
+			}
+			op, err := a.readDirectoryOverwriteOperation(ctx, key)
+			if err != nil || op.State == "complete" || op.State == "registered" {
+				t.Fatal("guard changed publication", op, err)
+			}
+		})
+	}
+}
+
+func TestAutoCopyRejectsUnknownJobPayloadField(t *testing.T) {
+	ctx := context.Background()
+	a, source, target := importTestApp(t)
+	importFixture(t, a, "movie")
+	overwriteRule(a, source, target, "always", true)
+	input := filepath.Join(source, "Unknown.2024.mkv")
+	importWrite(t, input, []byte("source retained"))
+	p := ownedAutoPlan(t, a, input, "auto")
+	j := overwriteStart(t, a, p)
+	if _, err := a.Store.DB.Exec(`UPDATE jobs SET payload=CAST(json_set(payload,'$.unexpected_authority',true) AS BLOB) WHERE id=?`, j.ID); err != nil {
+		t.Fatal(err)
+	}
+	var err error
+	j, err = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, j.ID))
+	if err != nil {
+		t.Fatal(err)
+	}
+	a.importSourceLink = func(int, string, int, string, int) error { return unix.EXDEV }
+	if err = a.runImport(ctx, j, p.ID, nil); pluginErrorCode(err) != "REVIEW_AUTO_COPY" {
+		t.Fatal("unknown payload allowed", err)
+	}
+	var saved ImportPlan
+	if err = a.Store.Get(ctx, "import_plan", p.ID, &saved); err != nil || saved.Files[0].Method != "hardlink" {
+		t.Fatal("rejected grant changed method", saved, err)
+	}
+	if _, err = os.Lstat(p.Files[0].Target); !errors.Is(err, os.ErrNotExist) {
+		t.Fatal("unknown payload published", err)
 	}
 }

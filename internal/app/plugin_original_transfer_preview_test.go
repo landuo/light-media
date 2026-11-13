@@ -28,7 +28,7 @@ func TestOriginalTransferPreviewActualSDKFixedSource(t *testing.T) {
 	}
 	for _, sample := range oracle.Cases {
 		t.Run(sample.Name, func(t *testing.T) {
-			a, cookie, object := ownedModuleFixture(t, true)
+			a, cookie, object := ownedModuleFixtureVariant(t, true, "OWNED_TRANSFER_EVENT_OVERRIDE_BINARY")
 			ctx := context.Background()
 			source, library := t.TempDir(), t.TempDir()
 			settings := a.Settings()
@@ -131,7 +131,7 @@ func TestOriginalTransferPreviewActualSDKFixedSource(t *testing.T) {
 // MoviePilot's transfer endpoint with preview=true. Keep its auxiliary-file
 // contract; the source preview flag belongs to the manual-organize endpoint.
 func TestOriginalTransferPublicPreparationRetainsSidecars(t *testing.T) {
-	a, cookie, object := ownedModuleFixture(t, true)
+	a, cookie, object := ownedModuleFixtureVariant(t, true, "OWNED_TRANSFER_EVENT_OVERRIDE_BINARY")
 	ctx := context.Background()
 	source, library := t.TempDir(), t.TempDir()
 	settings := a.Settings()

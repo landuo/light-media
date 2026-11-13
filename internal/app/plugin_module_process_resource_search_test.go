@@ -203,7 +203,7 @@ func TestPluginSiteResourceModulesProductionCLI(t *testing.T) {
 		}
 		until := time.Now().Add(12 * time.Second)
 		for {
-			r, err := client.Get(origin + "/api/auth/status")
+			r, err := client.Get(origin + "/healthz")
 			if err == nil {
 				r.Body.Close()
 				if r.StatusCode == 200 {

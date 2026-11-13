@@ -28,6 +28,10 @@ func automaticPackApp(t *testing.T, files []string, future bool) (*App, Subscrip
 	t.Helper()
 	a, _, _ := importTestApp(t)
 	m := importFixture(t, a, "tv")
+	installMetadataFixture(t, a, "synthetic-automatic-pack", []string{"/3/tv/123"}, func(*http.Request) (*http.Response, error) {
+		const body = `{"id":123,"name":"测试剧集","original_name":"Test Film","first_air_date":"2024-01-01","original_language":"zh","origin_country":["CN"],"overview":"测试简介","number_of_seasons":1,"number_of_episodes":3,"seasons":[{"season_number":1,"episode_count":3}],"genres":[{"id":18,"name":"剧情"}],"credits":{"cast":[],"crew":[]},"external_ids":{}}`
+		return &http.Response{StatusCode: http.StatusOK, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(body))}, nil
+	})
 	episodes := []catalog.Episode{}
 	for ep := 1; ep <= 3; ep++ {
 		date := "2024-01-01"
