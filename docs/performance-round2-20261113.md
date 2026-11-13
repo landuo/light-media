@@ -53,3 +53,18 @@ results are not treated as verification of reconstructed files. No production da
 media, site or download client is used in tests. Independent cross-review caught and
 fixed timeout amplification and stale log pagination before publishing. Unrelated
 broad Go fixture failures are not claimed repaired.
+
+## Recovery verification
+
+Reconstructed source was committed as a remote recovery checkpoint before building.
+The reconstructed files passed `TZ=Asia/Shanghai npm test` (600/600), `npm run build`
+(including type checking), and `go test ./web -count=1`.
+The focused backend race run passed (96.870s):
+
+```
+go test -race ./internal/app -run '^(TestCachedRead|TestDisabledDebug|TestLogging|TestDownloadOwnershipAndCalendar|TestNotification|TestUIReadsContinue|TestSubscription(Display|Coverage)|TestNewSubscription|TestSeasonSubscription)' -count=1 -timeout=180s
+```
+
+This is a tested source/build branch, not a deployment to the user's NAS. Proxy
+configuration, season-information fetching and subscription-save latency are a
+separate follow-up and are not represented as completed by this change.
