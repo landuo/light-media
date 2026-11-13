@@ -117,3 +117,43 @@ func TestReviewStaleRawSeasonRenewedAsFreshProjection(t *testing.T) {
 		t.Fatalf("provider attempts %d", calls)
 	}
 }
+
+func TestReviewInvalidSummaryPoisonsRetry(t *testing.T) {
+	a := newTestApp(t)
+	calls := 0
+	installMetadataFixture(t, a, "fixture", []string{"/3/tv/123"}, func(r *http.Request) (*http.Response, error) {
+		calls++
+		body := `{"id":123,"seasons":[{"season_number":1,"episode_count":8,"name":"First"}]}`
+		if calls == 1 {
+			body = `{"id":123,"seasons":[42]}`
+		}
+		return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(body))}, nil
+	})
+	// Older candidates may have persisted malformed raw members. Neither the
+	// legacy summary key nor a malformed full-detail cache may block recovery.
+	if err := a.Store.Put(t.Context(), "cache", "source-season-summaries:123", map[string]any{"at": time.Now(), "data": json.RawMessage(`[42]`)}); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.Store.Put(t.Context(), "cache", "source-detail:tv:123", map[string]any{"at": time.Now(), "data": sourceMediaInformation{ProviderInfo: json.RawMessage(`{"id":123,"seasons":[42]}`)}}); err != nil {
+		t.Fatal(err)
+	}
+	first, e1 := a.originalCatalogSeasons(t.Context(), 123)
+	second, e2 := a.originalCatalogSeasons(t.Context(), 123)
+	t.Logf("first_len=%d first_error=%v second_len=%d second_error=%v provider_calls=%d", len(first), e1, len(second), e2, calls)
+	if len(first) != 0 || e1 != nil || e2 != nil || len(second) != 1 || calls != 2 {
+		t.Fatal("invalid summary prevented a fresh retry")
+	}
+}
+
+func TestSeasonSummaryValidationPreservesMissingAndNull(t *testing.T) {
+	for _, raw := range []string{`[]`, `null`, `[{"name":42}]`, `[{"season_number":null,"name":42}]`, `[{"season_number":1,"name":null}]`} {
+		if err := validateNativeSeasonSummaries(json.RawMessage(raw)); err != nil {
+			t.Fatalf("valid source skip/null rejected: %s %v", raw, err)
+		}
+	}
+	for _, raw := range []string{`[42]`, `[null]`, `[{"season_number":1,"name":42}]`} {
+		if err := validateNativeSeasonSummaries(json.RawMessage(raw)); err == nil {
+			t.Fatalf("invalid row accepted: %s", raw)
+		}
+	}
+}

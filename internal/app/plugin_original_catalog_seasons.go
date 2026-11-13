@@ -70,13 +70,20 @@ func (a *App) originalCatalogSeasons(ctx context.Context, id int64) ([]map[strin
 		}
 		if a.Store.Get(ctx, "cache", "source-detail:tv:"+strconv.FormatInt(id, 10), &cached) == nil && time.Since(cached.At) < 24*time.Hour {
 			var provider map[string]json.RawMessage
-			if json.Unmarshal(cached.Data.ProviderInfo, &provider) == nil && len(provider["seasons"]) > 0 && string(provider["seasons"]) != "null" {
+			if json.Unmarshal(cached.Data.ProviderInfo, &provider) == nil && len(provider["seasons"]) > 0 && string(provider["seasons"]) != "null" && validateNativeSeasonSummaries(provider["seasons"]) == nil {
 				return provider["seasons"], nil
 			}
 		}
 		var rows json.RawMessage
-		_, err := a.cached(ctx, "source-season-summaries:"+strconv.FormatInt(id, 10), 12*time.Hour, &rows, func() (any, error) {
-			return a.catalog().SourceSeasonSummaries(ctx, id)
+		_, err := a.cached(ctx, "source-season-summaries-v2:"+strconv.FormatInt(id, 10), 12*time.Hour, &rows, func() (any, error) {
+			raw, err := a.catalog().SourceSeasonSummaries(ctx, id)
+			if err != nil {
+				return nil, err
+			}
+			if err = validateNativeSeasonSummaries(raw); err != nil {
+				return nil, err
+			}
+			return raw, nil
 		})
 		return rows, err
 	})
@@ -152,4 +159,26 @@ func (a *App) originalCatalogSeasonsWithNative(ctx context.Context, id int64, na
 		rows = append(rows, row)
 	}
 	return append(rows, more...), nil
+}
+
+// Validate before persistence, using the same field/null/skip semantics as the
+// public projection. A malformed HTTP 200 must not poison subsequent retries.
+func validateNativeSeasonSummaries(raw json.RawMessage) error {
+	var list []json.RawMessage
+	if json.Unmarshal(raw, &list) != nil {
+		return originalCatalogMediaInvalid()
+	}
+	for _, item := range list {
+		value, err := decodeSourceJSON(item)
+		if err != nil || sourceMap(value) == nil {
+			return originalCatalogMediaInvalid()
+		}
+		if sourceMap(value)["season_number"] == nil {
+			continue
+		}
+		if _, err := originalCatalogSeasonSummaryProjection(item); err != nil {
+			return err
+		}
+	}
+	return nil
 }
