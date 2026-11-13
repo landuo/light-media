@@ -116,6 +116,7 @@ test('original status search suggestions select status without searching literal
   assert.equal(params.get('status'), 'failed');
   assert.equal(params.get('q'), '');
   assert.equal(params.get('page_size'), '1000');
+  assert.equal(params.get('capabilities'), 'deferred');
   state.search = '*.mkv';
   assert.equal(new URLSearchParams(historyQuery(state)).get('q'), '*.mkv');
 });
@@ -148,4 +149,18 @@ test('history title sorting uses season and episode numbers and grouping retains
     rows.map((row) => row.id),
     ['s10', 'e10', 'e2'],
   );
+});
+
+// The same query builder is used by initial loads, search, pagination and
+// background polling, so no refresh may silently restore source tree scans.
+test('every history page query defers execution capability checks', () => {
+  for (const search of ['', '成功', '失败', '*.mkv']) {
+    for (const pageSize of [25, 50, 100, 500, 1000]) {
+      const query = new URLSearchParams(
+        historyQuery({ search, page: 2, pageSize, grouped: false }),
+      );
+      assert.equal(query.get('capabilities'), 'deferred');
+      assert.equal(query.get('page'), '2');
+    }
+  }
 });

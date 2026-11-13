@@ -13,29 +13,30 @@ import (
 )
 
 type transferHistoryItem struct {
-	ID             string        `json:"id"`
-	FileID         string        `json:"file_id"`
-	ResourceSource string        `json:"-"`
-	ExecutionKey   string        `json:"-"`
-	PlanID         string        `json:"plan_id"`
-	WorkflowID     string        `json:"workflow_id"`
-	JobID          string        `json:"job_id"`
-	JobState       string        `json:"job_state"`
-	Media          catalog.Media `json:"media"`
-	Season         int           `json:"season"`
-	Episodes       []int         `json:"episodes"`
-	Part           string        `json:"part,omitempty"`
-	Source         string        `json:"source"`
-	Target         string        `json:"target"`
-	Mode           string        `json:"mode"`
-	Size           int64         `json:"size"`
-	Status         string        `json:"status"`
-	FileStatus     string        `json:"file_status"`
-	Error          string        `json:"error"`
-	CreatedAt      string        `json:"created_at"`
-	UpdatedAt      string        `json:"updated_at"`
-	CanRetry       bool          `json:"can_retry"`
-	CanRecognize   bool          `json:"can_recognize"`
+	ID                   string        `json:"id"`
+	FileID               string        `json:"file_id"`
+	ResourceSource       string        `json:"-"`
+	ExecutionKey         string        `json:"-"`
+	PlanID               string        `json:"plan_id"`
+	WorkflowID           string        `json:"workflow_id"`
+	JobID                string        `json:"job_id"`
+	JobState             string        `json:"job_state"`
+	Media                catalog.Media `json:"media"`
+	Season               int           `json:"season"`
+	Episodes             []int         `json:"episodes"`
+	Part                 string        `json:"part,omitempty"`
+	Source               string        `json:"source"`
+	Target               string        `json:"target"`
+	Mode                 string        `json:"mode"`
+	Size                 int64         `json:"size"`
+	Status               string        `json:"status"`
+	FileStatus           string        `json:"file_status"`
+	Error                string        `json:"error"`
+	CreatedAt            string        `json:"created_at"`
+	UpdatedAt            string        `json:"updated_at"`
+	CanRetry             bool          `json:"can_retry"`
+	CanRecognize         bool          `json:"can_recognize"`
+	CapabilitiesDeferred bool          `json:"capabilities_deferred,omitempty"`
 }
 
 // The visible record is stable per source resource; execution plans stay
@@ -309,6 +310,18 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 		}
 		return strings.Compare(a.ID, b.ID)
 	})
+	// The page only displays durable history. Do not walk NAS directories or
+	// revalidate execution permissions for every visible row (and every poll).
+	// Opt-in preserves the checked-capability contract of existing API clients;
+	// single-item reads and all actual operations still perform strict checks.
+	if q.Get("capabilities") == "deferred" {
+		for i := range items {
+			items[i].CanRetry = false
+			items[i].CanRecognize = false
+			items[i].CapabilitiesDeferred = true
+		}
+		return map[string]any{"items": items, "total": total, "page": page, "page_size": size}, nil
+	}
 	phase("file_capabilities")
 	// Filesystem checks happen after closing the single-connection SQL cursor.
 	for i := range items {

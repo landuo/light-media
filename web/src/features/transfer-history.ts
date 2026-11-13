@@ -68,6 +68,9 @@ export function historyQuery(state: HistoryViewState): string {
     status,
     page: String(state.page),
     page_size: String(state.pageSize),
+    // Rendering/polling history must not recursively inspect NAS source files.
+    // Operations validate the selected files on the server when requested.
+    capabilities: 'deferred',
   }).toString();
 }
 
