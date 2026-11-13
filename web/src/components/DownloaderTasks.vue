@@ -5,6 +5,7 @@ import { createSingleFlightRequest } from '../features/single-flight-request';
 import { api, action, bytes, errorText, image, ui, go } from '../api';
 import {
   downloadTaskInfo,
+  createDownloadTaskIndex,
   downloadTimeLeft,
   downloadingTaskIsRunning,
   downloadSourceFileSize,
@@ -21,10 +22,17 @@ const instance = computed(() => data.value?.instances?.find((d: any) => d.id ===
 let timer: number;
 let disposed = false;
 const requests = createSingleFlightRequest({
-  request: (id, signal) => api('/downloads?downloader_id=' + encodeURIComponent(id), undefined, undefined, signal),
-  result: (result) => { data.value = result; },
-  error: (e) => { error.value = errorText(e); },
-  settled: () => { loading.value = false; },
+  request: (id, signal) =>
+    api('/downloads?downloader_id=' + encodeURIComponent(id), undefined, undefined, signal),
+  result: (result) => {
+    data.value = result;
+  },
+  error: (e) => {
+    error.value = errorText(e);
+  },
+  settled: () => {
+    loading.value = false;
+  },
 });
 function load(silent = false) {
   if (disposed || !selected.value) return Promise.resolve();
@@ -39,9 +47,13 @@ function pick(id: string) {
   data.value = null;
   void load();
 }
-function identity(task: any) {
-  return downloadTaskInfo(data.value, selected.value, task);
-}
+const taskIndex = computed(() => createDownloadTaskIndex(data.value));
+const taskRows = computed(() =>
+  (instance.value?.tasks || []).map((task: any) => ({
+    task,
+    info: downloadTaskInfo(data.value, selected.value, task, taskIndex.value),
+  })),
+);
 async function control(task: any, operation: string) {
   if (busy.value.includes(task.hash)) return;
   busy.value.push(task.hash);
@@ -99,16 +111,16 @@ onUnmounted(() => {
   </p>
   <p v-if="loading && !instance" class="loading-state">正在读取下载任务…</p>
   <div v-if="instance?.tasks?.length" class="download-grid">
-    <article v-for="task in instance.tasks" :key="task.hash || task.name" class="download-card">
+    <article v-for="{ task, info } in taskRows" :key="task.hash || task.name" class="download-card">
       <img
-        v-if="identity(task).media?.poster_path || identity(task).media?.backdrop_path"
+        v-if="info.media?.poster_path || info.media?.backdrop_path"
         class="download-backdrop"
-        :src="image(identity(task).media.poster_path || identity(task).media.backdrop_path)"
+        :src="image(info.media.poster_path || info.media.backdrop_path)"
         alt=""
       />
       <div class="download-info">
-        <h3>{{ identity(task).title }} {{ identity(task).seasonEpisode }}</h3>
-        <p class="download-filename">{{ identity(task).subtitle }}</p>
+        <h3>{{ info.title }} {{ info.seasonEpisode }}</h3>
+        <p class="download-filename">{{ info.subtitle }}</p>
         <p class="download-speed">
           {{
             task.source_torrent

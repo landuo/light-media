@@ -102,6 +102,20 @@ const filteredSubs = computed(() =>
           : String(b.created_at || '').localeCompare(String(a.created_at || '')),
     ),
 );
+const listPage = ref(1);
+const listPageSize = 24;
+const listPageCount = computed(() =>
+  Math.max(1, Math.ceil(filteredSubs.value.length / listPageSize)),
+);
+const visibleSubs = computed(() =>
+  filteredSubs.value.slice((listPage.value - 1) * listPageSize, listPage.value * listPageSize),
+);
+watch([filterKind, filterState, filterText, sortBy], () => {
+  listPage.value = 1;
+});
+watch(listPageCount, (count) => {
+  listPage.value = Math.min(listPage.value, count);
+});
 function totalEpisodes(s: any) {
   return subscriptionTotal(s);
 }
@@ -596,11 +610,13 @@ watch(() => props.view, applyView);
         ]"
       />
       <button @click="load">刷新</button
-      ><span class="hint push-right">{{ filteredSubs.length }} 个订阅</span>
+      ><span class="hint push-right"
+        >本次载入 {{ subs.length }} 个 · 筛选 {{ filteredSubs.length }} 个</span
+      >
     </div>
     <div class="subscription-grid">
       <article
-        v-for="s in filteredSubs"
+        v-for="s in visibleSubs"
         :key="s.id"
         class="subscription-card"
         :class="{ paused: s.state === 'paused' }"
@@ -608,6 +624,8 @@ watch(() => props.view, applyView);
         <img
           v-if="subscriptionImage(s.media, s.media?.backdrop_path || s.media?.poster_path, 'w780')"
           class="subscription-backdrop"
+          loading="lazy"
+          decoding="async"
           :src="subscriptionImage(s.media, s.media.backdrop_path || s.media.poster_path, 'w780')"
           alt=""
         />
@@ -620,6 +638,8 @@ watch(() => props.view, applyView);
             <img
               v-if="subscriptionImage(s.media, s.media?.poster_path, 'w185')"
               class="subscription-poster"
+              loading="lazy"
+              decoding="async"
               :src="subscriptionImage(s.media, s.media.poster_path, 'w185')"
               :alt="s.media.title"
             />
@@ -739,6 +759,11 @@ watch(() => props.view, applyView);
         ></progress>
       </article>
     </div>
+    <nav v-if="listPageCount > 1" class="button-row" aria-label="订阅分页">
+      <button :disabled="listPage === 1" @click="listPage--">上一页</button>
+      <span>第 {{ listPage }} / {{ listPageCount }} 页 · 每页 {{ listPageSize }} 个</span>
+      <button :disabled="listPage === listPageCount" @click="listPage++">下一页</button>
+    </nav>
     <div v-if="!subs.length && !loading" class="empty-state">
       <span>◉</span>
       <h3>把下一部想看的作品加入这里</h3>

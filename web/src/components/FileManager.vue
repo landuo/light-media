@@ -90,10 +90,16 @@ const detailImage = computed(() =>
 );
 let generation = 0;
 let alive = true;
-async function load(path = currentPath.value) {
+let listingRequest: AbortController | undefined;
+const initialRequest = new AbortController();
+async function load(path?: string) {
   if (!alive) return;
   const run = ++generation;
-  const nextPath = cleanBrowserPath(path);
+  listingRequest?.abort();
+  const request = new AbortController();
+  listingRequest = request;
+  const refreshTree = path === undefined;
+  const nextPath = cleanBrowserPath(path ?? currentPath.value);
   loading.value = true;
   error.value = '';
   detailFile.value = null;
@@ -110,6 +116,9 @@ async function load(path = currentPath.value) {
             sort: sorting.value,
             order: 'asc',
           }),
+        undefined,
+        'GET',
+        request.signal,
       );
       if (run !== generation) return;
       listing.value = response.items || [];
@@ -119,7 +128,7 @@ async function load(path = currentPath.value) {
       truncated.value = false;
     }
     selected.value = canManage.value ? retainBrowserSelection(selected.value, listing.value) : [];
-    refreshKey.value++;
+    if (refreshTree) refreshKey.value++;
   } catch (e) {
     if (run === generation) {
       error.value = errorText(e);
@@ -159,7 +168,7 @@ function toggleTree() {
 async function toggleSort() {
   sorting.value = sorting.value === 'name' ? 'time' : 'name';
   localStorage.setItem('fileBrowser.sort', sorting.value);
-  await load();
+  await load(currentPath.value);
 }
 function openOrganize(paths: string[]) {
   chosenPaths.value = [...new Set(paths)];
@@ -295,8 +304,10 @@ watch(
 onMounted(async () => {
   try {
     const [rootList, settings] = await Promise.all([
-      api<BrowserRoot[]>('/files/roots?scope=container'),
-      ui.settings ? Promise.resolve(ui.settings) : api('/settings'),
+      api<BrowserRoot[]>('/files/roots?scope=container', undefined, 'GET', initialRequest.signal),
+      ui.settings
+        ? Promise.resolve(ui.settings)
+        : api('/settings', undefined, 'GET', initialRequest.signal),
     ]);
     if (!alive) return;
     roots.value = rootList;
@@ -311,13 +322,17 @@ onMounted(async () => {
         ),
       );
   } catch (e) {
-    error.value = errorText(e);
-    loading.value = false;
+    if (alive) {
+      error.value = errorText(e);
+      loading.value = false;
+    }
   }
 });
 onUnmounted(() => {
   alive = false;
   generation++;
+  listingRequest?.abort();
+  initialRequest.abort();
 });
 </script>
 <template>

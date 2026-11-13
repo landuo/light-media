@@ -1,11 +1,25 @@
-export function downloadTaskInfo(data: any, downloaderID: string, task: any) {
+function downloadRecordKey(downloaderID: string, hash: string) {
+  return JSON.stringify([downloaderID, hash]);
+}
+// Preserve first non-cancelled intent before native records, including case normalization.
+export function createDownloadTaskIndex(data: any): Map<string, any> {
+  const result = new Map<string, any>();
+  for (const item of [...(data?.intents || []), ...(data?.native_downloads || [])]) {
+    if (item.state === 'cancelled' || typeof item.downloader_id !== 'string') continue;
+    const key = downloadRecordKey(item.downloader_id, String(item.hash || '').toLowerCase());
+    if (!result.has(key)) result.set(key, item);
+  }
+  return result;
+}
+export function downloadTaskInfo(
+  data: any,
+  downloaderID: string,
+  task: any,
+  index?: Map<string, any>,
+) {
   const hash = String(task.hash || '').toLowerCase();
-  const records = [...(data?.intents || []), ...(data?.native_downloads || [])];
-  const record = records.find(
-    (item: any) =>
-      item.downloader_id === downloaderID &&
-      String(item.hash || '').toLowerCase() === hash &&
-      item.state !== 'cancelled',
+  const record = (index || createDownloadTaskIndex(data)).get(
+    downloadRecordKey(downloaderID, hash),
   );
   const source = task.source_torrent;
   const sourceMedia = source?.media;

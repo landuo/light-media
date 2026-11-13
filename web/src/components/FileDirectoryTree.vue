@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onUnmounted } from 'vue';
 import { api, errorText } from '../api';
 import {
   browserRootForPath,
@@ -25,27 +25,65 @@ const rows = computed(() => {
   visit('/', 0);
   return output;
 });
-async function read(path: string) {
-  if (pending.value.includes(path)) return;
+let generation = 0;
+let alive = true;
+const invalidated = new Set<string>();
+const requests = new Map<string, { controller: AbortController; promise: Promise<void> }>();
+function cancelReads() {
+  generation++;
+  for (const request of requests.values()) request.controller.abort();
+  requests.clear();
+  pending.value = [];
+}
+function read(path: string): Promise<void> {
+  if (
+    !alive ||
+    (Object.prototype.hasOwnProperty.call(children.value, path) && !invalidated.has(path))
+  )
+    return Promise.resolve();
+  const existing = requests.get(path);
+  if (existing) return existing.promise;
+  const run = generation,
+    controller = new AbortController();
+  const request = { controller, promise: Promise.resolve() };
+  requests.set(path, request);
   pending.value.push(path);
   delete errors.value[path];
-  try {
-    const root = browserRootForPath(props.roots, path);
-    children.value[path] = root
-      ? (
-          (
+  request.promise = (async () => {
+    try {
+      const root = browserRootForPath(props.roots, path);
+      const items = root
+        ? (
             await api(
               '/files/list?' +
                 new URLSearchParams({ root_id: root.id, path, sort: 'name', order: 'asc' }),
+              undefined,
+              'GET',
+              controller.signal,
             )
           ).items || []
-        ).filter((item: BrowserItem) => item.type === 'dir')
-      : virtualBrowserChildren(props.roots, path);
-  } catch (e) {
-    errors.value[path] = errorText(e);
-  } finally {
-    pending.value = pending.value.filter((value) => value !== path);
-  }
+        : virtualBrowserChildren(props.roots, path);
+      if (!alive || run !== generation || controller.signal.aborted) return;
+      const directories = items.filter((item: BrowserItem) => item.type === 'dir');
+      const retained = new Set(directories.map((item: BrowserItem) => item.path));
+      for (const old of children.value[path] || []) {
+        if (retained.has(old.path)) continue;
+        for (const key of Object.keys(children.value))
+          if (key === old.path || key.startsWith(old.path + '/')) delete children.value[key];
+      }
+      children.value[path] = directories;
+      invalidated.delete(path);
+    } catch (e) {
+      if (alive && run === generation && !controller.signal.aborted)
+        errors.value[path] = errorText(e);
+    } finally {
+      if (requests.get(path) === request) {
+        requests.delete(path);
+        pending.value = pending.value.filter((value) => value !== path);
+      }
+    }
+  })();
+  return request.promise;
 }
 async function toggle(path: string) {
   if (expanded.value.includes(path))
@@ -56,9 +94,11 @@ async function toggle(path: string) {
   }
 }
 async function exposeCurrent() {
-  await read('/');
+  const run = generation;
   const parts = props.currentPath.split('/').filter(Boolean);
+  await read('/');
   for (let i = 1; i < parts.length; i++) {
+    if (!alive || run !== generation) return;
     const path = '/' + parts.slice(0, i).join('/');
     if (!expanded.value.includes(path)) expanded.value.push(path);
     await read(path);
@@ -66,9 +106,29 @@ async function exposeCurrent() {
 }
 watch(
   () => [props.currentPath, props.refreshKey, props.roots] as const,
-  () => void exposeCurrent(),
+  async (value, previous) => {
+    cancelReads();
+    const run = generation;
+    if (previous && value[2] !== previous[2]) {
+      children.value = {};
+      invalidated.clear();
+    }
+    const refresh = previous && value[1] !== previous[1];
+    if (refresh) {
+      const path = props.currentPath;
+      invalidated.add(path);
+      invalidated.add(path.substring(0, path.lastIndexOf('/')) || '/');
+    }
+    await exposeCurrent();
+    if (refresh && alive && run === generation && expanded.value.includes(props.currentPath))
+      await read(props.currentPath);
+  },
   { immediate: true },
 );
+onUnmounted(() => {
+  alive = false;
+  cancelReads();
+});
 </script>
 <template>
   <aside class="file-tree" aria-label="目录树">

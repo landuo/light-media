@@ -99,6 +99,7 @@ type App struct {
 	metadataAPITransport             http.RoundTripper
 	metadataAPIConfig                networkproxy.Config
 	imageWork                        catalogImageWork
+	cacheReads                       cachedReadFlights
 	Store                            *Store
 	Dir                              string
 	web                              http.Handler
@@ -706,34 +707,13 @@ func (a *App) authenticated(r *http.Request) bool {
 	return e == nil && expires > time.Now().Unix()
 }
 func (a *App) cached(ctx context.Context, key string, ttl time.Duration, dst any, fetch func() (any, error)) (time.Time, error) {
-	var c struct {
-		At   time.Time       `json:"at"`
-		Data json.RawMessage `json:"data"`
+	result := a.cachedRead(ctx, key, ttl, fetch)
+	if result.err != nil {
+		return result.at, result.err
 	}
-	e := a.Store.Get(ctx, "cache", key, &c)
-	cached := e == nil
-	if cached && time.Since(c.At) < ttl {
-		return c.At, json.Unmarshal(c.Data, dst)
-	}
-	value, e := fetch()
-	if e != nil {
-		if cached {
-			a.log("WARN", "catalog", "cache_stale", "元数据服务不可用，使用历史缓存", "", "")
-			return c.At, json.Unmarshal(c.Data, dst)
-		}
-		return time.Time{}, e
-	}
-	b, e := json.Marshal(value)
-	if e != nil {
-		return time.Time{}, e
-	}
-	c.At = time.Now().UTC()
-	c.Data = b
-	if e = a.Store.Put(ctx, "cache", key, c); e != nil {
-		return time.Time{}, e
-	}
-	return c.At, json.Unmarshal(b, dst)
+	return result.at, json.Unmarshal(result.data, dst)
 }
+
 func (a *App) catalog() *catalog.Client {
 	settings := a.Settings()
 	c := settings.TMDB

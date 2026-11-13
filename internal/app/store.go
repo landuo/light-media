@@ -124,6 +124,8 @@ func OpenStore(dir string) (*Store, error) {
  CREATE INDEX IF NOT EXISTS asset_media_key ON records(kind,(json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id'))) WHERE kind='asset';
  CREATE INDEX IF NOT EXISTS subscription_media_key ON records(kind,(json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id'))) WHERE kind='subscription';
  CREATE INDEX IF NOT EXISTS intent_media_key ON records(kind,(json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id'))) WHERE kind='intent';
+ CREATE INDEX IF NOT EXISTS notification_display_order ON records(kind,updated_at DESC,id) WHERE kind='notification';
+ CREATE INDEX IF NOT EXISTS notification_unread ON records(json_extract(payload,'$.read')) WHERE kind='notification';
  CREATE INDEX IF NOT EXISTS subscription_display_order ON records(kind,updated_at DESC,id) WHERE kind='subscription' AND json_extract(payload,'$.state') IS NOT 'cancelled';
  CREATE INDEX IF NOT EXISTS jobs_display_priority ON jobs((` + jobDisplayPriority + `),created_at DESC,id);
  CREATE INDEX IF NOT EXISTS jobs_due ON jobs(state,run_at);

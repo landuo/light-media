@@ -74,7 +74,10 @@ function text(node) {
   );
 }
 
-async function mount(t, { view = 'subscriptions', items = [subscription()], editorOnly = false } = {}) {
+async function mount(
+  t,
+  { view = 'subscriptions', items = [subscription()], editorOnly = false, images = false } = {},
+) {
   const fixture = {
       items,
       before: copy(items),
@@ -127,7 +130,7 @@ async function mount(t, { view = 'subscriptions', items = [subscription()], edit
           ...realApi,
           api,
           ui: { settings, busy: 0 },
-          image: () => '',
+          image: (path) => (images ? path || '' : ''),
           go: (target) => fixture.navigation.push(target),
           action: async (callback, success) => {
             try {
@@ -507,4 +510,38 @@ test('site search clears after keyboard selection and outside focus without clea
   );
   assert.equal(app.fixture.requests.filter((request) => request.method).length, 0);
   assert.deepEqual(app.fixture.items, app.fixture.before);
+});
+
+test('500 subscriptions use bounded lazy-image pages and preserve editing and filtering', async (t) => {
+  const items = Array.from({ length: 500 }, (_, i) => ({
+    ...subscription(),
+    id: 'sub-' + i,
+    media: {
+      ...media,
+      title: 'Series ' + i,
+      poster_path: '/poster' + i,
+      backdrop_path: '/back' + i,
+    },
+  }));
+  const app = await mount(t, { items, images: true }),
+    cards = () => app.nodes().filter((n) => n.type === 'article'),
+    pictures = () => app.nodes().filter((n) => n.type === 'img');
+  assert.equal(cards().length, 24);
+  assert.equal(pictures().length, 48);
+  assert.ok(pictures().every((n) => n.props.loading === 'lazy'));
+  assert.match(text(app.nodes()), /本次载入 500 个/);
+  await app.click('下一页');
+  await app.click('编辑订阅 Series 24');
+  assert.ok(app.dialog());
+  await app.click('关闭');
+  await app.update('搜索订阅', 'Series 499');
+  assert.equal(cards().length, 1);
+  assert.ok(app.label('编辑订阅 Series 499'));
+  await app.update('搜索订阅', '');
+  for (let i = 0; i < 20; i++) await app.click('下一页');
+  assert.equal(cards().length, 20);
+  assert.equal(app.button('下一页').props.disabled, true);
+  app.fixture.items = items.slice(0, 10);
+  await app.click('刷新');
+  assert.equal(cards().length, 10);
 });

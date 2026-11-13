@@ -83,7 +83,9 @@ const selectedJobInfo = computed(() =>
 );
 let timer: number,
   sse: EventSource | null = null,
-  jobListRequest: AbortController | undefined;
+  jobListRequest: AbortController | undefined,
+  logRequest: AbortController | undefined;
+let logSnapshotQuery: string | undefined;
 function logParams() {
   return new URLSearchParams({
     level: logLevel.value,
@@ -97,6 +99,7 @@ function logParams() {
 }
 async function load(silent = false) {
   if (props.view === 'jobs') return loadJobs(silent);
+  if (props.view === 'logs') return loadLogs(silent);
   if (!silent) loading.value = true;
   error.value = '';
   try {
@@ -104,14 +107,41 @@ async function load(silent = false) {
     else if (props.view === 'library') {
       data.value = (await api('/assets')) || [];
       await loadCandidates();
-    } else if (props.view === 'logs') {
-      data.value = await api('/logs?' + logParams());
-      logGap.value = data.value?.gap ? '历史日志存在缺口，当前查询可能不完整。' : '';
     } else if (props.view === 'organize') plans.value = (await api('/import/plans')) || [];
   } catch (e) {
     error.value = errorText(e);
   } finally {
     loading.value = false;
+  }
+}
+function logQueryMatches(query: string) {
+  try {
+    return logParams().toString() === query;
+  } catch {
+    return false;
+  }
+}
+async function loadLogs(silent: boolean) {
+  logSnapshotQuery = undefined;
+  logRequest?.abort();
+  const request = new AbortController();
+  logRequest = request;
+  if (!silent) loading.value = true;
+  error.value = '';
+  try {
+    const query = logParams().toString();
+    const result = await api('/logs?' + query, undefined, undefined, request.signal);
+    if (logRequest !== request || request.signal.aborted || !logQueryMatches(query)) return;
+    data.value = result;
+    logSnapshotQuery = query;
+    logGap.value = result?.gap ? '历史日志存在缺口，当前查询可能不完整。' : '';
+  } catch (e) {
+    if (logRequest === request && !request.signal.aborted) error.value = errorText(e);
+  } finally {
+    if (logRequest === request) {
+      logRequest = undefined;
+      loading.value = false;
+    }
   }
 }
 async function loadJobs(silent: boolean) {
@@ -214,27 +244,46 @@ async function registerAsset() {
   }
 }
 async function moreLogs() {
-  if (!data.value?.next_cursor || loading.value) return;
+  if (!data.value?.next_cursor || loading.value || logRequest) return;
+  // Cursor and form draft must refer to the same submitted result snapshot.
+  if (logSnapshotQuery === undefined || !logQueryMatches(logSnapshotQuery)) return loadLogs(false);
+  const snapshot = data.value,
+    snapshotQuery = logSnapshotQuery,
+    cursor = snapshot.next_cursor;
+  const request = new AbortController();
+  logRequest = request;
   loading.value = true;
+  error.value = '';
+  const current = () =>
+    logRequest === request &&
+    !request.signal.aborted &&
+    data.value === snapshot &&
+    snapshot.next_cursor === cursor &&
+    logSnapshotQuery === snapshotQuery &&
+    logQueryMatches(snapshotQuery);
   try {
-    const query = logParams();
-    query.set('cursor', data.value.next_cursor);
-    const next = await api('/logs?' + query);
+    const query = new URLSearchParams(snapshotQuery);
+    query.set('cursor', cursor);
+    const next = await api('/logs?' + query, undefined, undefined, request.signal);
+    if (!current()) return;
     const seen = new Set(
-      (data.value.entries || []).filter((entry: any) => entry.id).map((entry: any) => entry.id),
+      (snapshot.entries || []).filter((entry: any) => entry.id).map((entry: any) => entry.id),
     );
     data.value = {
       ...next,
       entries: [
-        ...data.value.entries,
+        ...(snapshot.entries || []),
         ...(next.entries || []).filter((entry: any) => !entry.id || !seen.has(entry.id)),
       ].slice(0, 2000),
     };
     if (next.gap) logGap.value = '历史日志存在缺口，当前查询可能不完整。';
   } catch (e) {
-    error.value = errorText(e);
+    if (current()) error.value = errorText(e);
   } finally {
-    loading.value = false;
+    if (logRequest === request) {
+      logRequest = undefined;
+      loading.value = false;
+    }
   }
 }
 async function downloadAction(intent: any, name: string) {
@@ -439,6 +488,8 @@ onMounted(() => {
     }, 15000);
 });
 onUnmounted(() => {
+  logRequest?.abort();
+  logRequest = undefined;
   jobListRequest?.abort();
   clearInterval(timer);
   sse?.close();

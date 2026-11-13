@@ -631,6 +631,12 @@ func (a *App) subscriptionCoverageWithExistence(ctx context.Context, s Subscript
 }
 
 func (a *App) subscriptionCoverageLoaded(ctx context.Context, s Subscription, known []int, existence *originalSubscriptionExistence, snapshot *subscriptionDisplayCoverage) (subscriptionCoverage, error) {
+	return a.subscriptionCoverageLoadedAt(ctx, s, known, existence, snapshot, time.Now().In(shanghai()))
+}
+
+// A list uses one Shanghai calendar date, and individual checks load the location
+// once rather than once per missing episode. Acquisition and schedule rules are unchanged.
+func (a *App) subscriptionCoverageLoadedAt(ctx context.Context, s Subscription, known []int, existence *originalSubscriptionExistence, snapshot *subscriptionDisplayCoverage, at time.Time) (subscriptionCoverage, error) {
 	known = subscriptionTargetEpisodes(s, known)
 	out := subscriptionCoverage{Known: append([]int{}, known...), Missing: []int{}, Library: []int{}, Reserved: []int{}, Excluded: append([]int{}, s.Excluded...), Unreleased: []int{}, UnknownDate: []int{}, PendingImport: []int{}}
 	wanted := subscriptionTargetEpisodes(s, s.Episodes)
@@ -655,7 +661,7 @@ func (a *App) subscriptionCoverageLoaded(ctx context.Context, s Subscription, kn
 				sql  string
 				dest map[int]bool
 			}{{`SELECT episode FROM asset_slots WHERE media_key=? AND season=?`, occupied}} {
-				rows, e := a.Store.DB.QueryContext(ctx, query.sql, mediaKey(s.Media), s.Season)
+				rows, e := a.Store.reader().QueryContext(ctx, query.sql, mediaKey(s.Media), s.Season)
 				if e != nil {
 					return out, e
 				}
@@ -687,7 +693,7 @@ func (a *App) subscriptionCoverageLoaded(ctx context.Context, s Subscription, kn
 		// completed task remains reserved until its import commits an asset slot.
 		// Read its persisted intent in the same query; viewing subscriptions never
 		// polls downloaders or makes one metadata request per episode.
-		rows, e := a.Store.DB.QueryContext(ctx, `SELECT r.episode,COALESCE(json_extract(i.payload,'$.state'),'') FROM reservations r LEFT JOIN records i ON i.kind='intent' AND i.id=r.intent_id WHERE r.media_key=? AND r.season=?`, mediaKey(s.Media), s.Season)
+		rows, e := a.Store.reader().QueryContext(ctx, `SELECT r.episode,COALESCE(json_extract(i.payload,'$.state'),'') FROM reservations r LEFT JOIN records i ON i.kind='intent' AND i.id=r.intent_id WHERE r.media_key=? AND r.season=?`, mediaKey(s.Media), s.Season)
 		if e != nil {
 			return out, e
 		}
@@ -707,7 +713,9 @@ func (a *App) subscriptionCoverageLoaded(ctx context.Context, s Subscription, kn
 			return out, e
 		}
 		prefix := fmt.Sprintf("%s:%d:", mediaKey(s.Media), s.Season)
-		rows, e = a.Store.DB.QueryContext(ctx, `SELECT id,payload FROM records WHERE kind='exclusion' AND id LIKE ?`, prefix+"%")
+		// Match the exact media/season prefix using the primary-key range, just
+		// as the batch display path does; LIKE scans every exclusion of this kind.
+		rows, e = a.Store.reader().QueryContext(ctx, `SELECT id,payload FROM records WHERE kind='exclusion' AND id>=? AND id<?`, prefix, strings.TrimSuffix(prefix, ":")+";")
 		if e != nil {
 			return out, e
 		}
@@ -745,7 +753,7 @@ func (a *App) subscriptionCoverageLoaded(ctx context.Context, s Subscription, kn
 			}
 		}
 	}
-	today := time.Now().In(shanghai()).Format("2006-01-02")
+	today := at.Format("2006-01-02")
 	for _, ep := range wanted {
 		if containsInt(s.Excluded, ep) {
 			continue
@@ -768,7 +776,7 @@ func (a *App) subscriptionCoverageLoaded(ctx context.Context, s Subscription, kn
 			// AllowEarly affects acquisition permission, not its actual air date.
 			if s.Media.MediaType == "tv" {
 				date, _ := effectiveEpisodeDate(s, ep, dateByEpisode[ep])
-				if _, e := parseDay(date, shanghai()); e != nil {
+				if _, e := parseDay(date, at.Location()); e != nil {
 					out.UnknownDate = append(out.UnknownDate, ep)
 				} else if date > today {
 					out.Unreleased = append(out.Unreleased, ep)
@@ -801,13 +809,14 @@ func (a *App) subscriptionList(ctx context.Context) (any, error) {
 		return nil, e
 	}
 	items := []map[string]any{}
+	at := time.Now().In(shanghai())
 	for _, sub := range snapshot.subscriptions {
 		data := snapshot.coverage[subscriptionDisplayKey(sub)]
 		known := data.known
 		if providerNativeMedia(sub.Media) {
 			known = sub.ProviderEpisodes
 		}
-		coverage, e := a.subscriptionCoverageLoaded(ctx, sub, known, nil, data)
+		coverage, e := a.subscriptionCoverageLoadedAt(ctx, sub, known, nil, data, at)
 		if e != nil {
 			return nil, e
 		}

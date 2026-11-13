@@ -237,6 +237,14 @@ func (l *runtimeLogger) encode(entry map[string]any, cfg Settings) encodedLog {
 	return encodedLog{Data: append(b, '\n'), Level: level, Budget: logBudget{days, total, rotate}}
 }
 func (l *runtimeLogger) enqueue(entry map[string]any) {
+	// Most HTTP completions are disabled DEBUG records. Check only the level and
+	// scoped overrides before copying the full secret-bearing settings snapshot.
+	l.app.cfgMu.RLock()
+	level := l.app.config.LogLevel
+	l.app.cfgMu.RUnlock()
+	if !l.enabled(entry, Settings{LogLevel: level}) {
+		return
+	}
 	cfg := l.app.Settings()
 	if !l.enabled(entry, cfg) {
 		return

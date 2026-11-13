@@ -60,8 +60,16 @@ func (a *App) notifyFailed(ctx context.Context, j Job, message string) {
 	n := Notification{ID: "notice_" + j.ID, JobID: j.ID, WorkflowID: j.WorkflowID, Title: "任务需要处理", Message: a.clean(message), CreatedAt: now()}
 	_ = a.Store.Put(ctx, "notification", n.ID, n)
 }
+
+const notificationListSQL = `SELECT payload FROM records INDEXED BY notification_display_order WHERE kind='notification' ORDER BY updated_at DESC,id LIMIT ?`
+const notificationUnreadSQL = `SELECT COUNT(*) FROM records INDEXED BY notification_unread WHERE kind='notification' AND json_extract(payload,'$.read')=0`
+
 func (a *App) notifications(ctx context.Context) (any, error) {
-	items, e := a.Store.List(ctx, "notification", 100, 0)
+	// The literal kind allows SQLite to select the notification-only ordering
+	// index. Pin this dedicated read to its startup-created index: SQLite can
+	// otherwise prefer the primary key and sort the entire history before LIMIT.
+	// Other record kinds may contain encrypted, non-JSON payloads.
+	items, e := a.Store.listRecordPayloads(ctx, notificationListSQL, 100)
 	if e != nil {
 		return nil, e
 	}
@@ -80,7 +88,7 @@ func (a *App) notifications(ctx context.Context) (any, error) {
 		}
 	}
 	var unread int
-	e = a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='notification' AND json_extract(payload,'$.read')=0`).Scan(&unread)
+	e = a.Store.reader().QueryRowContext(ctx, notificationUnreadSQL).Scan(&unread)
 	return map[string]any{"items": items, "unread": unread}, e
 }
 func (a *App) notificationAPI(r *http.Request, p string) (any, error) {
