@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"encoding/json"
-	"light-media/internal/catalog"
 	"math"
 	"strconv"
 	"strings"
@@ -63,21 +62,30 @@ func (a *App) originalCatalogSeasons(ctx context.Context, id int64) ([]map[strin
 		return nil, bad("INVALID_MEDIA", "请选择明确的电视剧身份")
 	}
 	return a.originalCatalogSeasonsWithNative(ctx, id, func() (json.RawMessage, error) {
-		// Compact UI SeasonSummary loses missing/null versus empty strings. Read the
-		// existing full native information cache used by fixed-source recognition.
-		var native sourceMediaInformation
-		_, err := a.cached(ctx, "source-detail:tv:"+strconv.FormatInt(id, 10), 24*time.Hour, &native, func() (any, error) { return a.sourceRecognizeTMDBCore(ctx, catalog.Media{ID: id, MediaType: "tv"}) })
-		if err != nil {
-			return nil, err
+		// A fresh detail response already contains the same season array. On a
+		// cold picker, fetch only the TV header rather than all appendices.
+		var cached struct {
+			At   time.Time              `json:"at"`
+			Data sourceMediaInformation `json:"data"`
 		}
-		var provider map[string]json.RawMessage
-		if json.Unmarshal(native.ProviderInfo, &provider) != nil {
-			return nil, originalCatalogMediaInvalid()
+		if a.Store.Get(ctx, "cache", "source-detail:tv:"+strconv.FormatInt(id, 10), &cached) == nil && time.Since(cached.At) < 24*time.Hour {
+			var provider map[string]json.RawMessage
+			if json.Unmarshal(cached.Data.ProviderInfo, &provider) == nil && len(provider["seasons"]) > 0 && string(provider["seasons"]) != "null" && validateNativeSeasonSummaries(provider["seasons"]) == nil {
+				return provider["seasons"], nil
+			}
 		}
-		if raw := provider["seasons"]; len(raw) > 0 {
+		var rows json.RawMessage
+		_, err := a.cached(ctx, "source-season-summaries-v2:"+strconv.FormatInt(id, 10), 12*time.Hour, &rows, func() (any, error) {
+			raw, err := a.catalog().SourceSeasonSummaries(ctx, id)
+			if err != nil {
+				return nil, err
+			}
+			if err = validateNativeSeasonSummaries(raw); err != nil {
+				return nil, err
+			}
 			return raw, nil
-		}
-		return json.RawMessage(`[]`), nil
+		})
+		return rows, err
 	})
 }
 func (a *App) originalCatalogSeasonsWithNative(ctx context.Context, id int64, native func() (json.RawMessage, error)) ([]map[string]any, error) {
@@ -151,4 +159,26 @@ func (a *App) originalCatalogSeasonsWithNative(ctx context.Context, id int64, na
 		rows = append(rows, row)
 	}
 	return append(rows, more...), nil
+}
+
+// Validate before persistence, using the same field/null/skip semantics as the
+// public projection. A malformed HTTP 200 must not poison subsequent retries.
+func validateNativeSeasonSummaries(raw json.RawMessage) error {
+	var list []json.RawMessage
+	if json.Unmarshal(raw, &list) != nil {
+		return originalCatalogMediaInvalid()
+	}
+	for _, item := range list {
+		value, err := decodeSourceJSON(item)
+		if err != nil || sourceMap(value) == nil {
+			return originalCatalogMediaInvalid()
+		}
+		if sourceMap(value)["season_number"] == nil {
+			continue
+		}
+		if _, err := originalCatalogSeasonSummaryProjection(item); err != nil {
+			return err
+		}
+	}
+	return nil
 }

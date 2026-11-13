@@ -78,3 +78,29 @@ func (c *Client) SourceSeasonInformation(ctx context.Context, id int64, season i
 	}
 	return json.RawMessage(`{}`), nil
 }
+
+// SourceSeasonSummaries reads the TV header without appended credits, images,
+// translations or recommendations. The season picker needs only this array.
+func (c *Client) SourceSeasonSummaries(ctx context.Context, id int64) (json.RawMessage, error) {
+	if !validID(id) {
+		return nil, &Error{Code: "invalid_input"}
+	}
+	var response struct {
+		ID      int64           `json:"id"`
+		Seasons json.RawMessage `json:"seasons"`
+	}
+	if err := c.get(ctx, "tv/"+strconv.FormatInt(id, 10), nil, &response); err != nil {
+		return nil, err
+	}
+	if response.ID != id {
+		return nil, &Error{Code: "invalid_response"}
+	}
+	if len(response.Seasons) == 0 || string(response.Seasons) == "null" {
+		return json.RawMessage(`[]`), nil
+	}
+	var seasons []json.RawMessage
+	if json.Unmarshal(response.Seasons, &seasons) != nil {
+		return nil, &Error{Code: "invalid_response"}
+	}
+	return response.Seasons, nil
+}
