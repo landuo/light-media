@@ -2,6 +2,7 @@ package catalog
 
 import (
 	"context"
+	"encoding/json"
 	"net/url"
 	"sort"
 	"strconv"
@@ -25,10 +26,23 @@ func (c *Client) Season(ctx context.Context, seriesID int64, season int) (Season
 	if !validID(seriesID) || season < 0 || season > 1000 {
 		return Season{}, &Error{Code: "invalid_input"}
 	}
+	raw, err := c.SourceSeasonInformation(ctx, seriesID, season, "")
+	if err != nil {
+		return Season{}, err
+	}
+	return c.SeasonFromInformation(ctx, seriesID, season, raw)
+}
+
+// SeasonFromInformation applies the same identity, episode and fallback checks
+// to an already fetched native response; UI loading and saving share the bytes.
+func (c *Client) SeasonFromInformation(ctx context.Context, seriesID int64, season int, raw json.RawMessage) (Season, error) {
+	if !validID(seriesID) || season < 0 || season > 1000 {
+		return Season{}, &Error{Code: "invalid_input"}
+	}
 	path := "tv/" + strconv.FormatInt(seriesID, 10) + "/season/" + strconv.Itoa(season)
 	var response wireSeason
-	if err := c.get(ctx, path, nil, &response); err != nil {
-		return Season{}, err
+	if decode(raw, &response) != nil {
+		return Season{}, &Error{Code: "invalid_response"}
 	}
 	if !validID(response.ID) || response.SeasonNumber != season || response.Episodes == nil || len(response.Episodes) > 2000 {
 		return Season{}, &Error{Code: "invalid_response"}

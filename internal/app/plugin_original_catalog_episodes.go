@@ -178,7 +178,14 @@ func originalCatalogSeasonProjection(view catalog.Season, rows []map[string]any)
 }
 
 func (a *App) originalCatalogNativeEpisodeRows(ctx context.Context, id int64, season int, group any, view *catalog.Season) (json.RawMessage, error) {
-	info, err := a.catalog().SourceSeasonInformation(ctx, id, season, sourceText(group))
+	var info json.RawMessage
+	var err error
+	if view == nil {
+		// The compatibility API retains its original live-provider semantics.
+		info, err = a.catalog().SourceSeasonInformation(ctx, id, season, sourceText(group))
+	} else {
+		info, err = a.cachedNativeSeasonInformation(ctx, id, season, sourceText(group))
+	}
 	if err != nil {
 		if ctx.Err() != nil {
 			return nil, ctx.Err()

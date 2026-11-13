@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"encoding/json"
-	"light-media/internal/catalog"
 	"math"
 	"strconv"
 	"strings"
@@ -63,21 +62,23 @@ func (a *App) originalCatalogSeasons(ctx context.Context, id int64) ([]map[strin
 		return nil, bad("INVALID_MEDIA", "请选择明确的电视剧身份")
 	}
 	return a.originalCatalogSeasonsWithNative(ctx, id, func() (json.RawMessage, error) {
-		// Compact UI SeasonSummary loses missing/null versus empty strings. Read the
-		// existing full native information cache used by fixed-source recognition.
-		var native sourceMediaInformation
-		_, err := a.cached(ctx, "source-detail:tv:"+strconv.FormatInt(id, 10), 24*time.Hour, &native, func() (any, error) { return a.sourceRecognizeTMDBCore(ctx, catalog.Media{ID: id, MediaType: "tv"}) })
-		if err != nil {
-			return nil, err
+		// A fresh detail response already contains the same season array. On a
+		// cold picker, fetch only the TV header rather than all appendices.
+		var cached struct {
+			At   time.Time              `json:"at"`
+			Data sourceMediaInformation `json:"data"`
 		}
-		var provider map[string]json.RawMessage
-		if json.Unmarshal(native.ProviderInfo, &provider) != nil {
-			return nil, originalCatalogMediaInvalid()
+		if a.Store.Get(ctx, "cache", "source-detail:tv:"+strconv.FormatInt(id, 10), &cached) == nil && time.Since(cached.At) < 24*time.Hour {
+			var provider map[string]json.RawMessage
+			if json.Unmarshal(cached.Data.ProviderInfo, &provider) == nil && len(provider["seasons"]) > 0 && string(provider["seasons"]) != "null" {
+				return provider["seasons"], nil
+			}
 		}
-		if raw := provider["seasons"]; len(raw) > 0 {
-			return raw, nil
-		}
-		return json.RawMessage(`[]`), nil
+		var rows json.RawMessage
+		_, err := a.cached(ctx, "source-season-summaries:"+strconv.FormatInt(id, 10), 12*time.Hour, &rows, func() (any, error) {
+			return a.catalog().SourceSeasonSummaries(ctx, id)
+		})
+		return rows, err
 	})
 }
 func (a *App) originalCatalogSeasonsWithNative(ctx context.Context, id int64, native func() (json.RawMessage, error)) ([]map[string]any, error) {

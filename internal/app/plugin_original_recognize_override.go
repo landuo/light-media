@@ -20,7 +20,7 @@ func (a *App) originalRecognizeTMDBMedia(ctx context.Context, input catalog.Medi
 // Go awaits the existing SDK runner without a coroutine framework.
 func (a *App) sourceAsyncRecognizeTMDBMedia(ctx context.Context, input catalog.Media, meta map[string]any) (sourceMediaInformation, error) {
 	return a.originalRecognizeTMDBModule(ctx, input, "async_recognize_media", meta, strconv.FormatInt(input.ID, 10), originalRecognitionEpisodeGroup(meta, nil), false, func() (sourceMediaInformation, error) {
-		return a.sourceRecognizeTMDBCore(ctx, input)
+		return a.cachedSubscriptionSourceInformation(ctx, input)
 	})
 }
 

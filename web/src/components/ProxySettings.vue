@@ -8,13 +8,19 @@ const value = ref(''),
   configured = ref(false),
   endpoint = ref(''),
   clear = ref(false),
-  saving = ref(false);
+  saving = ref(false),
+  loading = ref(true);
 async function load() {
-  const c = await refreshSettings();
-  value.value = '';
-  configured.value = !!c.secret_state?.proxy_host;
-  endpoint.value = c.proxy_endpoint || '';
-  clear.value = false;
+  loading.value = true;
+  try {
+    const c = await refreshSettings();
+    value.value = '';
+    configured.value = !!c.secret_state?.proxy_host;
+    endpoint.value = c.proxy_endpoint || '';
+    clear.value = false;
+  } finally {
+    loading.value = false;
+  }
 }
 function remove() {
   value.value = '';
@@ -44,6 +50,7 @@ onMounted(() => action(load));
     prepend-inner-icon="mdi-server-network"
     autocomplete="new-password"
     maxlength="8192"
+    :disabled="loading || saving"
     :placeholder="
       configured && !clear ? '已保存：' + endpoint : 'http(s)://ip:port 或 socks5(h)://ip:port'
     "
@@ -67,7 +74,15 @@ onMounted(() => action(load));
         ><VIcon icon="mdi-close-circle" /></VBtn
     ></template>
   </VTextField>
+  <p class="hint">
+    代理用于 TMDB
+    等外部元数据与图片请求；资源站点还需在「站点管理」中开启该站点的代理开关。下载器和媒体库连接不受此设置影响。
+  </p>
+  <p class="hint">
+    NAS / Docker 部署请填写容器能够访问的代理地址，例如 http://192.168.1.2:7890。127.0.0.1
+    指向容器自身，不是 NAS 或电脑。保存后新请求生效，可用上方 TMDB「测试」检查连接。
+  </p>
   <div class="button-row">
-    <button class="primary" :disabled="saving" @click="save">保存</button>
+    <button class="primary" :disabled="loading || saving" @click="save">保存</button>
   </div>
 </template>
