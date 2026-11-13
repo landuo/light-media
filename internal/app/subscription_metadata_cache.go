@@ -8,23 +8,47 @@ import (
 	"time"
 )
 
-// Cache only the native provider, never plugin results. Extension discovery and
-// invocation still run on every request, including edits after plugin changes.
-func (a *App) cachedNativeSeasonInformation(ctx context.Context, id int64, season int, group string) (json.RawMessage, error) {
-	var raw json.RawMessage
-	key := fmt.Sprintf("source-season:%d:%d:%s", id, season, group)
-	_, err := a.cached(ctx, key, 12*time.Hour, &raw, func() (any, error) {
-		return a.catalog().SourceSeasonInformation(ctx, id, season, group)
-	})
-	return raw, err
-}
-
-// Opening detail and submitting a new subscription must not independently
-// download the same native information. Do not trust the browser's media copy.
+// Reuse only trusted provider bytes. Category policy and image domain are live
+// settings, so never reuse the derived MediaInfo or compact Media projection.
 func (a *App) cachedSubscriptionSourceInformation(ctx context.Context, input catalog.Media) (sourceMediaInformation, error) {
-	var info sourceMediaInformation
-	_, err := a.cached(ctx, fmt.Sprintf("source-detail:%s:%d", input.MediaType, input.ID), 24*time.Hour, &info, func() (any, error) {
+	var cached struct {
+		At   time.Time              `json:"at"`
+		Data sourceMediaInformation `json:"data"`
+	}
+	key := fmt.Sprintf("source-detail:%s:%d", input.MediaType, input.ID)
+	if a.Store.Get(ctx, "cache", key, &cached) != nil || time.Since(cached.At) >= 24*time.Hour {
 		return a.sourceRecognizeTMDBCore(ctx, input)
-	})
-	return info, err
+	}
+	policy, err := a.currentMediaCategoryPolicy()
+	if err != nil {
+		return sourceMediaInformation{}, err
+	}
+	fields := policy.extraFields(input.MediaType)
+	var provider map[string]json.RawMessage
+	if json.Unmarshal(cached.Data.ProviderInfo, &provider) != nil {
+		return a.sourceRecognizeTMDBCore(ctx, input)
+	}
+	for _, field := range fields {
+		if _, ok := provider[field]; !ok {
+			return a.sourceRecognizeTMDBCore(ctx, input)
+		}
+	}
+	media, err := a.catalog().ProjectSourceInformation(input.MediaType, input.ID, cached.Data.ProviderInfo, fields)
+	if err != nil {
+		return a.sourceRecognizeTMDBCore(ctx, input)
+	}
+	category, err := policy.categoryWithError(media)
+	if err != nil {
+		return sourceMediaInformation{}, err
+	}
+	projection, err := sourceTMDBMediaInfo(cached.Data.ProviderInfo, input.MediaType, a.Settings().TMDBImageDomain, category)
+	if err != nil {
+		return sourceMediaInformation{}, err
+	}
+	projected, err := decodeSourceJSON(projection)
+	if err != nil {
+		return sourceMediaInformation{}, err
+	}
+	media.Title, media.OriginalTitle = sourceText(sourceMap(projected)["title"]), sourceText(sourceMap(projected)["original_title"])
+	return sourceMediaInformation{ProviderInfo: cached.Data.ProviderInfo, MediaInfo: projection, Media: media}, nil
 }

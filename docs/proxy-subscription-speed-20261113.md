@@ -6,15 +6,15 @@
 
 - 现有「设置 → 系统 → 网络 → 代理服务器」已支持 HTTP、HTTPS、SOCKS5/5h、加密保存和即时切换连接池。本次没有重复增加第二个配置。补充站点代理开关、容器可达地址和 TMDB 测试入口说明；配置读取期间禁止编辑/保存，避免异步加载覆盖输入。
 - 季度列表冷请求此前调用完整识别，包括图片、演员、翻译等附加数据；现在仅获取 TV 头部的原始 seasons 数组。已有有效详情缓存则直接复用；保留原始缺失/null字段投影及插件覆盖。
-- UI 季详情此前每次直接访问提供方。新增 12 小时原始响应缓存，按影视、季度、剧集组隔离；保存通过原有严格投影校验复用同一响应。英文缺失文案回退、错误身份/重复剧集检查均保留。
-- 网页新增订阅此前绕过详情缓存，重新识别原始影视信息。现在原生回退复用既有 24 小时服务器详情缓存，不信任浏览器提交的影视对象。插件仍每次发现和调用，不缓存插件输出。
+- 独立复核后撤回 UI 季原始响应共享缓存：保持原生季严格校验后单层缓存及插件 fallback 实时读取，防止错误原始响应污染缓存和 stale 数据重置缓存年龄。英文缺失文案回退、错误身份/重复剧集检查均保留。
+- 网页新增订阅此前绕过详情缓存，重新识别原始影视信息。现在原生回退只复用既有 24 小时服务器详情缓存中的原始 ProviderInfo，不复用派生 MediaInfo/Media；按当前分类策略与图片域重新投影，新策略所需字段缺失时重新读取提供方。不信任浏览器提交的影视对象。插件仍每次发现和调用，不缓存插件输出。
 - `/api/v1/tmdb` 兼容读取保持实时提供方/错误空列表行为，不套用 UI 季缓存。
 
 ## 验证范围
 
-- 合成 `TestSubscriptionSeasonLoadingAndSaveReuseNativeResponse`：打开季详情、重开、保存前严格季校验，共 1 次提供方请求；剧集组缓存隔离。
+- 新增独立复核回归：错误季号首次失败后第二次必须请求提供方并恢复；25 小时旧 raw 不得被升格为新鲜严格校验季缓存。原来的“一次请求跨打开/重开/保存共享”优化已撤回，不再作为交付效果。
 - 合成 `TestSeasonPickerColdRequestOmitsUnrelatedAppendices`：冷季度列表不携带 append_to_response，第二次读取命中缓存，共 1 次请求。
-- 合成 `TestSubscriptionCreateReusesServerDetailNotBrowserCopy`：新增识别复用服务器详情而非浏览器伪造标题。
+- 合成 `TestSubscriptionCreateReusesServerDetailNotBrowserCopy`：新增识别复用服务器原始详情而非浏览器伪造标题；改变分类/图片域后重新投影；新增分类字段强制取新提供方信息。
 - 前端 `TZ=Asia/Shanghai npm test`：586/586；vue-tsc 与 Vite 生产构建通过（保留旧 hashed assets）。
 - `go test -race ./internal/networkproxy ./internal/catalog` 全通过。包括自有 HTTP/HTTPS CONNECT 代理、代理凭据不泄漏至源站、SOCKS5/5h 和取消测试。MoviePilot 固定源码映射参照 `internal/networkproxy/testdata/original-proxy.json`。
 - 应用现有代理专项验证 TMDB 实际 CONNECT、图片真实代理响应、站点未勾选直连/勾选使用代理、切换后旧路由被拒绝。

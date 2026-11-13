@@ -1057,12 +1057,6 @@ func (a *App) season(ctx context.Context, tmdb int64, n int) (catalog.Season, er
 
 func (a *App) nativeSeason(ctx context.Context, tmdb int64, n int) (catalog.Season, error) {
 	var s catalog.Season
-	_, e := a.cached(ctx, fmt.Sprintf("season:%d:%d", tmdb, n), 12*time.Hour, &s, func() (any, error) {
-		raw, err := a.cachedNativeSeasonInformation(ctx, tmdb, n, "")
-		if err != nil {
-			return nil, err
-		}
-		return a.catalog().SeasonFromInformation(ctx, tmdb, n, raw)
-	})
+	_, e := a.cached(ctx, fmt.Sprintf("season:%d:%d", tmdb, n), 12*time.Hour, &s, func() (any, error) { return a.catalog().Season(ctx, tmdb, n) })
 	return s, e
 }
