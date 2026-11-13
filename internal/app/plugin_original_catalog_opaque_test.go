@@ -13,7 +13,7 @@ import (
 )
 
 func TestOriginalCatalogOpaqueHTTPActualSDKConvertNameAndResolve(t *testing.T) {
-	a, cookie, object := ownedModuleFixture(t, true)
+	a, cookie, object := ownedModuleFixtureVariant(t, true, "OWNED_CATALOG_EVENT_OVERRIDE_BINARY")
 	if len(object.manifest.ChainHandlers) != 4 {
 		t.Fatal("requires actual catalog-event fixture")
 	}

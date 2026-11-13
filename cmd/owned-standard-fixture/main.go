@@ -19,6 +19,7 @@ import (
 
 // fixtureVersion is set only when building a distinct owned test artifact.
 var fixtureVersion = "1.0"
+var fixtureRawState = ""
 var fixturePluginID = "OwnedStandardFixture"
 var fixtureName = "Owned standard fixture"
 
@@ -178,7 +179,9 @@ func (o *object) handle(ctx context.Context, method string, raw json.RawMessage,
 			return nil, err
 		}
 		if enabled, present := fields["enabled"]; present {
-			if err := json.Unmarshal(enabled, &o.enabled); err != nil {
+			if fixtureRawState == "true" {
+				o.enabled = rawValue(enabled)
+			} else if err := json.Unmarshal(enabled, &o.enabled); err != nil {
 				return nil, err
 			}
 		}

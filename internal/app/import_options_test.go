@@ -141,7 +141,7 @@ func TestDirectoryImportOptionsPropagateAndKeepLegacyFingerprint(t *testing.T) {
 	directoryPoll(t, a, rule)
 	directoryAge(t, a, rule, path)
 	directoryPoll(t, a, rule)
-	observation := directoryObservation(t, a, rule, path)
+	observation := directoryRecognize(t, a, rule, path)
 	var plan ImportPlan
 	if e := a.Store.Get(context.Background(), "import_plan", observation.PlanID, &plan); e != nil {
 		t.Fatal(e)

@@ -16,6 +16,8 @@ import (
 	"light-media/internal/plugins"
 )
 
+var fixtureCachedConfig string // -ldflags=-X main.fixtureCachedConfig=true
+
 var fixtureFrontend string // -ldflags=-X main.fixtureFrontend=true
 
 func manifest() plugins.Manifest {
@@ -32,13 +34,27 @@ func manifest() plugins.Manifest {
 type object struct {
 	mu       sync.Mutex
 	retained plugins.HostCaller
+	config   json.RawMessage
 }
 
 func (o *object) handle(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
 	base := plugins.Base{Host: host}
-	config, err := base.GetConfig(ctx)
-	if err != nil {
-		return nil, err
+	var config json.RawMessage
+	var err error
+	if fixtureCachedConfig == "true" && method != "init" {
+		o.mu.Lock()
+		config = append(json.RawMessage(nil), o.config...)
+		o.mu.Unlock()
+	} else {
+		config, err = base.GetConfig(ctx)
+		if err != nil {
+			return nil, err
+		}
+		if fixtureCachedConfig == "true" {
+			o.mu.Lock()
+			o.config = append(json.RawMessage(nil), config...)
+			o.mu.Unlock()
+		}
 	}
 	var options struct {
 		Enabled    bool            `json:"enabled"`

@@ -190,8 +190,11 @@ func (a *App) adoptImportAutoCopy(ctx context.Context, job Job, plan *ImportPlan
 		return bad("JOB_CANCELLED", "任务已取消")
 	}
 	var input struct {
-		ID      string   `json:"id"`
-		FileIDs []string `json:"file_ids"`
+		ID                  string   `json:"id"`
+		FileIDs             []string `json:"file_ids"`
+		OriginalScrapeBatch string   `json:"original_scrape_batch,omitempty"`
+		ParentJobID         string   `json:"_parent_job_id,omitempty"`
+		RequestID           string   `json:"_request_id,omitempty"`
 	}
 	if actualJob.Kind != "import" || actualJob.WorkflowID != plan.WorkflowID || !reflect.DeepEqual(actualJob.Payload, job.Payload) || cleanupJournalStrict(actualJob.Payload, &input) != nil || input.ID != plan.ID {
 		return deny()

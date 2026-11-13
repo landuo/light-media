@@ -484,10 +484,33 @@ func (a *App) finishDirectoryOverwrite(ctx context.Context, id string) error {
 }
 
 func (a *App) finishImportOverwrites(ctx context.Context, plan ImportPlan, file PlanFile, meta importMetadata) error {
+	keys := []string{}
 	for i := range meta.Sidecars[file.ID] {
-		if e := a.finishDirectoryOverwrite(ctx, fmt.Sprintf("%s/%s/side-%d", plan.ID, file.ID, i)); e != nil {
-			return e
+		keys = append(keys, fmt.Sprintf("%s/%s/side-%d", plan.ID, file.ID, i))
+	}
+	keys = append(keys, plan.ID+"/"+file.ID)
+	var results originalTransferTaskFailures
+	if err := a.Store.Get(ctx, "original_transfer_task_failures", plan.ID+"/"+file.ID, &results); err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return err
+	}
+	if results.OverwriteCleanupKeys != nil {
+		allowed := map[string]bool{}
+		for _, key := range keys {
+			allowed[key] = true
+		}
+		keys = *results.OverwriteCleanupKeys
+		for _, key := range keys {
+			if !allowed[key] {
+				return bad("REVIEW_OVERWRITE_RECEIPT", "覆盖清理任务不属于原计划")
+			}
 		}
 	}
-	return a.finishDirectoryOverwrite(ctx, plan.ID+"/"+file.ID)
+	// Only committed successes authorize cleanup. Failed tasks retain their original
+	// error and any recovery evidence, including across a cold main-file retry.
+	for _, key := range keys {
+		if err := a.finishDirectoryOverwrite(ctx, key); err != nil {
+			return err
+		}
+	}
+	return nil
 }

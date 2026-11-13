@@ -26,6 +26,13 @@ func ownedModuleFixture(t *testing.T, declares bool) (*App, *http.Cookie, *origi
 	if !declares {
 		variable = "OWNED_MODULE_NO_DECLARATION_BINARY"
 	}
+	return ownedModuleFixtureVariant(t, declares, variable)
+}
+
+// Variant selection is explicit: event-oracle tests need the worker that actually
+// declares those handlers without changing unrelated generic module fixtures.
+func ownedModuleFixtureVariant(t *testing.T, declares bool, variable string) (*App, *http.Cookie, *originalPluginInstance) {
+	t.Helper()
 	binary := os.Getenv(variable)
 	if binary == "" {
 		t.Fatalf("%s must name an actual separately compiled owned-module-override worker", variable)

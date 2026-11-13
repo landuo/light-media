@@ -796,7 +796,7 @@ func TestFileManagerIndividualMovieHTTPPreviewsPublishSeparateIdentities(t *test
 	}
 }
 
-func TestFileManagerTVBatchNumberingPreviewChecksOfficialEpisodes(t *testing.T) {
+func TestFileManagerTVBatchNumberingPreviewPreservesExplicitEpisodesWithOptionalMetadata(t *testing.T) {
 	a, source, _ := importTestApp(t)
 	identity := importFixture(t, a, "tv")
 	importCache(t, a, "season:123:2", catalog.Season{SeriesID: 123, SeasonNumber: 2, Episodes: []catalog.Episode{{ID: 12302, SeasonNumber: 2, EpisodeNumber: 2, Name: "官方第二集"}}})
@@ -816,8 +816,19 @@ func TestFileManagerTVBatchNumberingPreviewChecksOfficialEpisodes(t *testing.T) 
 	if w.Code != 200 || len(envelope.Data.Files) != 2 {
 		t.Fatalf("TV batch preview %d %s", w.Code, w.Body)
 	}
-	if envelope.Data.Files[0].Status != "ready" || envelope.Data.Files[1].Status != "blocked" {
-		t.Fatalf("official episode not enforced: %+v", envelope.Data.Files)
+	for i, file := range envelope.Data.Files {
+		if file.Status != "ready" || file.Season != 2 || len(file.Episodes) != 1 || file.Episodes[0] != i+2 || file.Source != files[i].Path || file.Target == file.Source {
+			t.Fatalf("explicit numbering lost with optional metadata: %+v", file)
+		}
+		if !strings.Contains(file.Target, "S02E0"+strconv.Itoa(i+2)) {
+			t.Fatalf("target ignored explicit numbering: %+v", file)
+		}
+		if _, err := os.Stat(file.Target); !os.IsNotExist(err) {
+			t.Fatal("preview published a file", err)
+		}
+		if raw, err := os.ReadFile(file.Source); err != nil || string(raw) != "batch-numbering synthetic" {
+			t.Fatal("preview changed source", err)
+		}
 	}
 	var imports int
 	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM jobs WHERE kind='import'`).Scan(&imports)

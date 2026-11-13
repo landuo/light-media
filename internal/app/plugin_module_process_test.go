@@ -337,7 +337,7 @@ func TestPluginModuleProductionProcessLifecycle(t *testing.T) {
 		}
 		deadline := time.Now().Add(20 * time.Second)
 		for time.Now().Before(deadline) {
-			response, err := client.Get(origin + "/api/auth/status")
+			response, err := client.Get(origin + "/healthz")
 			if err == nil {
 				response.Body.Close()
 				if response.StatusCode == 200 {

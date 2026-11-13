@@ -155,7 +155,7 @@ func TestPluginLogsProductionCLI(t *testing.T) {
 		}
 		deadline := time.Now().Add(12 * time.Second)
 		for {
-			response, err := client.Get(origin + "/api/auth/status")
+			response, err := client.Get(origin + "/healthz")
 			if err == nil {
 				response.Body.Close()
 				if response.StatusCode == 200 {

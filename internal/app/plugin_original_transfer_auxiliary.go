@@ -61,7 +61,18 @@ func (a *App) publishOriginalTransferSide(ctx context.Context, job Job, plan *Im
 			return importReceipt{}, err
 		}
 		if meta.Overwrite != nil {
-			return a.publishDirectoryOverwrite(ctx, plan.ID+"/"+extra.ID, side.Source, side.Target, plan.RootID, primary.Method, side.Snapshot, *meta.Overwrite, check)
+			method := primary.Method
+			// A prior partial attempt may have registered this sidecar before
+			// the main file adopted auto-copy. Reuse only that committed fact;
+			// publication still checks every sealed input and actual inode.
+			op, err := a.readDirectoryOverwriteOperation(ctx, plan.ID+"/"+extra.ID)
+			if err != nil && !errors.Is(err, sql.ErrNoRows) {
+				return importReceipt{}, err
+			}
+			if err == nil && plan.Mode == "auto" && primary.Method == "copy" && op.Method == "hardlink" && (op.State == "registered" || op.State == "complete") {
+				method = op.Method
+			}
+			return a.publishDirectoryOverwrite(ctx, plan.ID+"/"+extra.ID, side.Source, side.Target, plan.RootID, method, side.Snapshot, *meta.Overwrite, check)
 		}
 		if quality == nil {
 			return a.publishImport(ctx, plan.ID+"/"+extra.ID, side.Source, side.Target, side.Snapshot, primary.Method, check)

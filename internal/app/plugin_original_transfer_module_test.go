@@ -30,7 +30,7 @@ func TestOriginalTransferModuleActualSDKFixedSource(t *testing.T) {
 	}
 	for _, sample := range oracle.Cases {
 		t.Run(sample.Name, func(t *testing.T) {
-			a, cookie, object := ownedModuleFixture(t, true)
+			a, cookie, object := ownedModuleFixtureVariant(t, true, "OWNED_TRANSFER_EVENT_OVERRIDE_BINARY")
 			ctx := context.Background()
 			source, target := t.TempDir(), t.TempDir()
 			settings := a.Settings()
@@ -158,7 +158,7 @@ func TestOriginalTransferModuleActualSDKFixedSource(t *testing.T) {
 
 func originalTransferModuleFixture(t *testing.T, mode, workerMode string) (*App, *originalPluginInstance, ImportPlan, map[string]any) {
 	t.Helper()
-	a, cookie, object := ownedModuleFixture(t, true)
+	a, cookie, object := ownedModuleFixtureVariant(t, true, "OWNED_TRANSFER_EVENT_OVERRIDE_BINARY")
 	ctx := context.Background()
 	source, target := t.TempDir(), t.TempDir()
 	settings := a.Settings()

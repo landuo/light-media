@@ -663,7 +663,7 @@ func TestSubscriptionQualityActualBatchFullPackFirstKnownFailureFallbackUnknownS
 					if e = a.Store.Get(ctx, "intent", in.ID, &in); e != nil || in.ImportPlanID == "" {
 						t.Fatal("actual full pack did not plan all acquired episodes", in.Error, e)
 					}
-					reorgRunJob(t, a, reorgJob(t, a, "import", in.ImportPlanID))
+					qualityRunCompletedImportFiles(t, a, in.ImportPlanID)
 					var plan ImportPlan
 					if e = a.Store.Get(ctx, "import_plan", in.ImportPlanID, &plan); e != nil || len(plan.Files) != len(acquiredEpisodes) {
 						t.Fatal("extra acquired episode lost from import", len(plan.Files), e)
@@ -700,5 +700,54 @@ func TestSubscriptionQualityActualBatchFullPackFirstKnownFailureFallbackUnknownS
 				}
 			}
 		})
+	}
+}
+
+// Completed packs submit independent durable jobs; exercising only the newest
+// job leaves earlier episodes ready and cannot validate whole-pack organizing.
+func qualityRunCompletedImportFiles(t *testing.T, a *App, planID string) {
+	t.Helper()
+	var plan ImportPlan
+	if err := a.Store.Get(context.Background(), "import_plan", planID, &plan); err != nil {
+		t.Fatal(err)
+	}
+	rows, err := a.Store.DB.Query("SELECT "+jobColumns+" FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? ORDER BY created_at,id", planID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var jobs []Job
+	for rows.Next() {
+		job, err := scanJob(rows)
+		if err != nil {
+			rows.Close()
+			t.Fatal(err)
+		}
+		jobs = append(jobs, job)
+	}
+	err = rows.Err()
+	rows.Close()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(jobs) != len(plan.Files) || len(jobs) == 0 {
+		t.Fatal("completed pack did not submit one job per file", len(jobs), len(plan.Files))
+	}
+	expected := map[string]bool{}
+	for _, file := range plan.Files {
+		expected[file.ID] = true
+	}
+	for _, job := range jobs {
+		var payload struct {
+			ID      string
+			FileIDs []string `json:"file_ids"`
+		}
+		if json.Unmarshal(job.Payload, &payload) != nil || payload.ID != planID || len(payload.FileIDs) != 1 || !expected[payload.FileIDs[0]] || job.State != "queued" {
+			t.Fatal("completed pack job scope/state differs", job.ID, job.State)
+		}
+		delete(expected, payload.FileIDs[0])
+		reorgRunJob(t, a, job)
+	}
+	if len(expected) != 0 {
+		t.Fatal("completed pack lost queued file scope")
 	}
 }

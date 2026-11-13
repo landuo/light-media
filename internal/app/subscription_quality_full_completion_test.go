@@ -214,7 +214,7 @@ func TestSubscriptionQualityActualFullModeNonePackFinishesAndThenOrganizes(t *te
 			if e = a.Store.Get(ctx, "intent", in.ID, &in); e != nil || in.ImportPlanID == "" {
 				t.Fatal("source finish lost real accepted organize authority", in.Error, e)
 			}
-			reorgRunJob(t, a, reorgJob(t, a, "import", in.ImportPlanID))
+			qualityRunCompletedImportFiles(t, a, in.ImportPlanID)
 			var plan ImportPlan
 			if e = a.Store.Get(ctx, "import_plan", in.ImportPlanID, &plan); e != nil || len(plan.Files) != total {
 				t.Fatal("actual full accepted scope lost after source deletion", len(plan.Files), e)

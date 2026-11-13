@@ -10,8 +10,11 @@ import (
 // successful physical task. A committed main file cannot erase an auxiliary
 // rejection when the host resumes the same frozen operation after restart.
 type originalTransferTaskFailures struct {
-	Messages []string                          `json:"messages"`
-	Pending  []originalTransferPendingCallback `json:"pending,omitempty"`
+	// Present only when this transaction recorded the exact successful tasks.
+	// An empty list means no overwrite was registered; nil keeps legacy recovery.
+	OverwriteCleanupKeys *[]string                         `json:"overwrite_cleanup_keys,omitempty"`
+	Messages             []string                          `json:"messages"`
+	Pending              []originalTransferPendingCallback `json:"pending,omitempty"`
 }
 
 type originalTransferPendingCallback struct {

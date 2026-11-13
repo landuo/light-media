@@ -231,7 +231,7 @@ func TestPluginAPI35ProductionCLI(t *testing.T) {
 		}
 		deadline := time.Now().Add(12 * time.Second)
 		for {
-			resp, err := plain.Get(origin + "/api/auth/status")
+			resp, err := plain.Get(origin + "/healthz")
 			if err == nil {
 				resp.Body.Close()
 				if resp.StatusCode == 200 {

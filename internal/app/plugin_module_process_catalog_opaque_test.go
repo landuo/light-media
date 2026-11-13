@@ -134,7 +134,7 @@ func TestPluginCatalogOpaqueProductionCLI(t *testing.T) {
 		}
 		deadline := time.Now().Add(15 * time.Second)
 		for {
-			res, e := client.Get(origin + "/api/auth/status")
+			res, e := client.Get(origin + "/healthz")
 			if e == nil {
 				res.Body.Close()
 				if res.StatusCode == 200 {

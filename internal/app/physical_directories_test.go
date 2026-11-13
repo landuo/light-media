@@ -311,7 +311,7 @@ func TestOrderedPhysicalRulesProcessOnlyFirstMatchAndBlockStalePriorityPlan(t *t
 	directoryAge(t, a, first, p)
 	directoryPoll(t, a, first)
 	directoryPoll(t, a, second)
-	owned := directoryObservation(t, a, first, p)
+	owned := directoryRecognize(t, a, first, p)
 	skipped := directoryObservation(t, a, second, p)
 	if owned.PlanID == "" || skipped.PlanID != "" || skipped.State != "baseline" {
 		t.Fatalf("overlapping watches both organized: first=%+v second=%+v", owned, skipped)

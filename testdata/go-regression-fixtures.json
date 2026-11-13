@@ -275,7 +275,7 @@
     {
       "env": "OWNED_AUTH_PROCESS_BINARY",
       "command": "./cmd/owned-auth-fixture",
-      "ldflags": ""
+      "ldflags": "-X main.fixtureFrontend=true"
     },
     {
       "env": "OWNED_INPUT_PROCESS_FIXTURE_BINARY",
@@ -483,6 +483,135 @@
         "get_dashboard",
         "get_auth_providers"
       ]
+    },
+    {
+      "env": "OWNED_AUTH_CACHED_CONFIG_FIXTURE_BINARY",
+      "command": "./cmd/owned-auth-fixture",
+      "ldflags": "-X main.fixtureCachedConfig=true"
+    },
+    {
+      "env": "OWNED_HOST_SITE_HTTP_PARALLEL_FIXTURE_BINARY",
+      "command": "./cmd/plugin-host-site-http-parallel-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_STANDARD_RAW_STATE_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureRawState=true"
+    },
+    {
+      "env": "SOURCE_UNINSTALL_COUNTER_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "SOURCE_UNINSTALL_BINARY",
+      "command": "./cmd/plugin-uninstall",
+      "ldflags": "",
+      "repositoryEnv": "PLUGINS_ROOT",
+      "repositoryRevision": "6eb29963f4f201b759debcbbd297077bb173c520",
+      "expectedManifest": {
+        "plugin_id": "PluginUnInstall",
+        "version": "2.2"
+      }
+    },
+    {
+      "env": "SOURCE_UNINSTALL_FUTURE_BINARY",
+      "command": "./cmd/mp-server-status",
+      "ldflags": "",
+      "repositoryEnv": "PLUGINS_ROOT",
+      "repositoryRevision": "6eb29963f4f201b759debcbbd297077bb173c520",
+      "expectedManifest": {
+        "plugin_id": "MPServerStatus",
+        "version": "1.4"
+      }
+    },
+    {
+      "env": "SOURCE_VIEW_FIXTURE_BINARY",
+      "command": "./cmd/owned-source-view-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "SOURCE_PRIVATE_ASI",
+      "command": "./cmd/auto-sign-in",
+      "ldflags": "",
+      "repositoryEnv": "PLUGINS_ROOT",
+      "repositoryRevision": "6eb29963f4f201b759debcbbd297077bb173c520",
+      "expectedManifest": {
+        "plugin_id": "AutoSignIn",
+        "version": "2.9.15"
+      }
+    },
+    {
+      "env": "INDEPENDENT_PUBLIC_ASI",
+      "command": "./cmd/auto-sign-in",
+      "ldflags": "",
+      "repositoryEnv": "PLUGINS_ROOT",
+      "repositoryRevision": "6eb29963f4f201b759debcbbd297077bb173c520",
+      "expectedManifest": {
+        "plugin_id": "AutoSignIn",
+        "version": "2.9.15"
+      }
+    },
+    {
+      "env": "SOURCE_PRIVATE_ASI_TRACE",
+      "command": "./cmd/auto-sign-in",
+      "ldflags": "",
+      "repositoryEnv": "PLUGINS_ROOT",
+      "repositoryRevision": "6eb29963f4f201b759debcbbd297077bb173c520",
+      "overlayEntry": "testdata/source-lifecycle-fixtures-20261107/trace-asi.go",
+      "expectedManifest": {
+        "plugin_id": "AutoSignIn",
+        "version": "2.9.15"
+      }
+    },
+    {
+      "env": "SOURCE_PRIVATE_LEGACY_TRACE",
+      "command": "./cmd/owned-stop-order",
+      "ldflags": "",
+      "repositoryEnv": "PLUGINS_ROOT",
+      "repositoryRevision": "6eb29963f4f201b759debcbbd297077bb173c520",
+      "overlayEntry": "testdata/source-lifecycle-fixtures-20261107/trace-legacy.go",
+      "expectedManifest": {
+        "plugin_id": "OwnedStopOrder",
+        "version": "1.0"
+      }
+    },
+    {
+      "env": "SOURCE_PUBLIC_FIXTURE",
+      "command": "./cmd/owned-stop-order",
+      "ldflags": "",
+      "repositoryEnv": "PLUGINS_ROOT",
+      "repositoryRevision": "6eb29963f4f201b759debcbbd297077bb173c520",
+      "overlayEntry": "testdata/source-lifecycle-fixtures-20261107/public.go",
+      "expectedManifest": {
+        "plugin_id": "OwnedPublicService",
+        "version": "1.0"
+      }
+    },
+    {
+      "env": "SOURCE_PUBLIC_SERIAL",
+      "command": "./cmd/owned-stop-order",
+      "ldflags": "-X main.mode=serial",
+      "repositoryEnv": "PLUGINS_ROOT",
+      "repositoryRevision": "6eb29963f4f201b759debcbbd297077bb173c520",
+      "overlayEntry": "testdata/source-lifecycle-fixtures-20261107/public.go",
+      "expectedManifest": {
+        "plugin_id": "OwnedPublicService",
+        "version": "1.0"
+      }
+    },
+    {
+      "env": "SOURCE_PUBLIC_LEGACY",
+      "command": "./cmd/owned-stop-order",
+      "ldflags": "-X main.mode=legacy",
+      "repositoryEnv": "PLUGINS_ROOT",
+      "repositoryRevision": "6eb29963f4f201b759debcbbd297077bb173c520",
+      "overlayEntry": "testdata/source-lifecycle-fixtures-20261107/legacy.go",
+      "expectedManifest": {
+        "plugin_id": "OwnedPublicService",
+        "version": "1.0"
+      }
     }
   ],
   "unresolved": [
@@ -490,5 +619,32 @@
       "env": "OWNED_RENDER_PROCESS_FIXTURE_BINARY",
       "reason": "Optional browser market branch requires OwnedRenderFixture; no supported command found."
     }
-  ]
+  ],
+  "environment": {
+    "PLUGIN_PROCESS_AUTH_UI_ROOT": {
+      "path": "testdata/standard-auth/ui",
+      "requiredFiles": [
+        "remoteEntry.js",
+        "auth.js",
+        "style.css"
+      ]
+    },
+    "PLUGIN_PROCESS_EDITABLE_MARKET": {
+      "value": "true"
+    },
+    "SOURCE_NUMERIC_EVIDENCE_DIR": {
+      "path": "testdata/source-view-oracles-20261106/numeric-success",
+      "requiredFiles": [
+        "cases.json",
+        "source.stdout"
+      ]
+    },
+    "SOURCE_VIEW_EVIDENCE_DIR": {
+      "path": "testdata/source-view-oracles-20261106/serialization",
+      "requiredFiles": [
+        "cases.json",
+        "source.stdout"
+      ]
+    }
+  }
 }

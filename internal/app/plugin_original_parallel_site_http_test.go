@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -14,6 +15,11 @@ import (
 )
 
 func TestWorkParallelActualAppHTTPAndBaseScope(t *testing.T) {
+	binary := os.Getenv("OWNED_HOST_SITE_HTTP_PARALLEL_FIXTURE_BINARY")
+	if binary == "" {
+		t.Fatal("OWNED_HOST_SITE_HTTP_PARALLEL_FIXTURE_BINARY requires separately compiled parallel worker")
+	}
+	t.Setenv("OWNED_HOST_SITE_HTTP_FIXTURE_BINARY", binary)
 	for _, revoke := range []bool{false, true} {
 		t.Run(map[bool]string{false: "normal", true: "configuration-revoked"}[revoke], func(t *testing.T) {
 			a, _, p := ownedSiteHTTP(t)

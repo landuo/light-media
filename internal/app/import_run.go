@@ -502,7 +502,8 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 		}
 		publicationCommitted := false
 		var taskFailures []error
-		failures := originalTransferTaskFailures{}
+		cleanupKeys := []string{}
+		failures := originalTransferTaskFailures{OverwriteCleanupKeys: &cleanupKeys}
 		err = func() error {
 			ctx := ctx
 			var originalMetadataEvent json.RawMessage
@@ -749,11 +750,13 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 				if err = a.commitDirectoryOverwriteExtraTx(ctx, tx, fmt.Sprintf("%s/%s/side-%d", plan.ID, file.ID, i), asset, *material); err != nil {
 					return err
 				}
+				cleanupKeys = append(cleanupKeys, fmt.Sprintf("%s/%s/side-%d", plan.ID, file.ID, i))
 			}
 			if mainSucceeded && file.MaterialKind != "" {
 				if err = a.commitDirectoryOverwriteExtraTx(ctx, tx, plan.ID+"/"+file.ID, asset, owned[0]); err != nil {
 					return err
 				}
+				cleanupKeys = append(cleanupKeys, plan.ID+"/"+file.ID)
 			}
 			if mainSucceeded && file.MaterialKind == "" {
 				if receipt.ReusedHardlink {
@@ -774,6 +777,7 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 				if err = a.commitDirectoryOverwriteTx(ctx, tx, plan.ID+"/"+file.ID, asset); err != nil {
 					return err
 				}
+				cleanupKeys = append(cleanupKeys, plan.ID+"/"+file.ID)
 				for _, episode := range importEpisodes(file.Episodes) {
 					var other string
 					err = tx.QueryRowContext(ctx, `SELECT asset_id FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=? LIMIT 1`, mediaKey(plan.Media), file.Season, episode, assetID).Scan(&other)

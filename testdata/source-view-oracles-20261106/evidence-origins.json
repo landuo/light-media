@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "classification": "Original immutable synthetic source-first captures; not target-generated expectations",
+  "source_project": {
+    "repository": "https://github.com/jxxghp/MoviePilot",
+    "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "sha256_by_repository_relative_path": {
+      "app/api/endpoints/plugin.py": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "app/core/plugin.py": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7"
+    },
+    "verification": "Both file digests independently rechecked with git show at this exact source commit; match embedded capture metadata."
+  },
+  "target_fixture": {
+    "project": "landuo/light-media",
+    "commit": "18b237f08a4f4f4c06fd6130588cd8fa12f07996",
+    "path": "cmd/owned-source-view-fixture/main.go",
+    "sha256": "62b5bdc7f67c0a93949df5d6ab6a10af4cfbf0da5dc423069e34ef15be8811e0"
+  },
+  "files": {
+    "numeric-success/cases.json": {
+      "sha256": "ce7efddff8f0eb2a49dd369e575aa07c2047e5f2290de876999fbc2bde9a17ad",
+      "bytes": 21185,
+      "source_project": "landuo/light-media",
+      "historical_evidence_path": "work/source-view-numeric-success-20261106/cases.json",
+      "historical_evidence_commit": null,
+      "historical_evidence_note": "Retained untracked capture, not regenerated during regression repair.",
+      "verification_host_commit": "18b237f08a4f4f4c06fd6130588cd8fa12f07996"
+    },
+    "numeric-success/source.stdout": {
+      "sha256": "537971199dd4c58c39d772f5864878a7487542f0ba7280b1e1a5e6388207785b",
+      "bytes": 37436,
+      "source_project": "landuo/light-media",
+      "historical_evidence_path": "work/source-view-numeric-success-20261106/source.stdout",
+      "historical_evidence_commit": null,
+      "historical_evidence_note": "Retained untracked capture, not regenerated during regression repair.",
+      "verification_host_commit": "18b237f08a4f4f4c06fd6130588cd8fa12f07996"
+    },
+    "numeric-success/REPORT.md": {
+      "sha256": "7c364c94fafb28e196bb1fa57e3dd5fa216b1b923e0cb7400a4a785952d177fa",
+      "bytes": 2639,
+      "source_project": "landuo/light-media",
+      "historical_evidence_path": "work/source-view-numeric-success-20261106/REPORT.md",
+      "historical_evidence_commit": null,
+      "historical_evidence_note": "Retained untracked capture, not regenerated during regression repair.",
+      "verification_host_commit": "18b237f08a4f4f4c06fd6130588cd8fa12f07996"
+    },
+    "serialization/cases.json": {
+      "sha256": "8665e3250cb8288eb0b47a99c750b6f36615e432cadf109747215d4b58ba4327",
+      "bytes": 3847,
+      "source_project": "landuo/light-media",
+      "historical_evidence_path": "work/source-view-serialization-20261106/cases.json",
+      "historical_evidence_commit": null,
+      "historical_evidence_note": "Retained untracked capture, not regenerated during regression repair.",
+      "verification_host_commit": "18b237f08a4f4f4c06fd6130588cd8fa12f07996"
+    },
+    "serialization/source.stdout": {
+      "sha256": "8f0e27fe137a1c77605f35d6ff096f17908f8a4eb5fdc37202b5b19daaee55e4",
+      "bytes": 10280,
+      "source_project": "landuo/light-media",
+      "historical_evidence_path": "work/source-view-serialization-20261106/source.stdout",
+      "historical_evidence_commit": null,
+      "historical_evidence_note": "Retained untracked capture, not regenerated during regression repair.",
+      "verification_host_commit": "18b237f08a4f4f4c06fd6130588cd8fa12f07996"
+    },
+    "serialization/REPORT.md": {
+      "sha256": "8c192aa9e259f21bfc05e749eed2c20a8e773f2c64bcb4d81817de5c04111228",
+      "bytes": 3411,
+      "source_project": "landuo/light-media",
+      "historical_evidence_path": "work/source-view-serialization-20261106/REPORT.md",
+      "historical_evidence_commit": null,
+      "historical_evidence_note": "Retained untracked capture, not regenerated during regression repair.",
+      "verification_host_commit": "18b237f08a4f4f4c06fd6130588cd8fa12f07996"
+    }
+  },
+  "capture_runs": {
+    "numeric-success": {
+      "cases_file": "numeric-success/cases.json",
+      "result_file": "numeric-success/source.stdout",
+      "case_count": 25,
+      "recorded_row_count": 25,
+      "source_endpoint_sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "source_manager_sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "capture_payload_sha256": "5fdbc6b1a246104981683cce1400ab8f26621f4acd55b0189212e71c1d072636",
+      "capture_payload_historical_path": "work/source-view-numeric-success-20261106/source-payload.py",
+      "capture_exit_code": 0,
+      "container_image": "sha256:33354456e8e19c65193b9ca471e45450a620c541759cc42e76cf00a03b025881",
+      "capture_sandbox": "network none, read-only root, dropped capabilities, unprivileged UID; synthetic method/config objects",
+      "scope": "actual fixed source endpoint AST and real FastAPI/Pydantic; finite synthetic plugin method/config objects, not original service middleware/auth or ASI business"
+    },
+    "serialization": {
+      "cases_file": "serialization/cases.json",
+      "result_file": "serialization/source.stdout",
+      "case_count": 21,
+      "recorded_row_count": 21,
+      "source_endpoint_sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "source_manager_sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "capture_payload_sha256": "0d059156572d114f2cfd272c7509e81e3be4c9cdcb2a3c5974afd2a757e09e57",
+      "capture_payload_historical_path": "work/source-view-serialization-20261106/source-payload.py",
+      "capture_exit_code": 0,
+      "container_image": "sha256:33354456e8e19c65193b9ca471e45450a620c541759cc42e76cf00a03b025881",
+      "capture_sandbox": "network none, read-only root, dropped capabilities, unprivileged UID; synthetic method/config objects",
+      "scope": "actual fixed source endpoint AST and real FastAPI/Pydantic; finite synthetic plugin method/config objects, not original service middleware/auth or ASI business"
+    }
+  },
+  "limitations": "Historical work capture scripts are identified by hashes and relative locations, not represented as committed source. Runtime tests consume included immutable matrices; fresh original-Python source execution is not claimed."
+}

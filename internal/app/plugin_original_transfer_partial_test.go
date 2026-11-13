@@ -200,7 +200,14 @@ func TestOriginalTransferCallbackExceptionContinuesAndColdRecovers(t *testing.T)
 	if err = fresh.initializeOriginalPlugins(ctx); err != nil {
 		t.Fatal(err)
 	}
-	if err = fresh.runImport(ctx, job, plan.ID, nil); err != nil {
+	if err = fresh.jobCancelled(ctx, job); fileCode(err) != "JOB_CANCELLED" {
+		t.Fatal("cold restart did not revoke the old execution generation", err)
+	}
+	recovered, err := fresh.claim(ctx)
+	if err != nil || recovered.ID != job.ID || recovered.Generation <= job.Generation {
+		t.Fatal("cold callback job was not durably reclaimed", recovered, err)
+	}
+	if err = fresh.runImport(ctx, recovered, plan.ID, nil); err != nil {
 		t.Fatal("cold callback-only completion", err)
 	}
 	fresh.wg.Wait()
