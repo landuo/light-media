@@ -208,32 +208,83 @@ watch(
     }
   },
 );
+function applySavedSites(result: any, changedID: string) {
+  if (result.configuration_only) {
+    const previous = new Map(data.value.sites.map((row: any) => [row.config.id, row]));
+    result.sites = result.sites.map((row: any) => {
+      const old = previous.get(row.config.id) as any;
+      if (!old) return row;
+      return {
+        ...row,
+        stats: old.stats,
+        stale: row.config.id === changedID ? !!old.stats : old.stale,
+        connection: row.config.id === changedID ? row.connection : old.connection,
+      };
+    });
+  }
+  data.value = result;
+  // The committed response already contains the updated, redacted site config.
+  // A second global settings read must not delay or invalidate this success.
+  if (ui.settings) {
+    ui.settings.sites = result.sites.map((row: any) => row.config);
+    if (ui.settings.secret_state)
+      ui.settings.secret_state.sites = Object.fromEntries(
+        result.sites.map((row: any) => [
+          row.config.id,
+          !!(row.credential_state?.cookie || row.credential_state?.api_key),
+        ]),
+      );
+  }
+}
+
+let saveRequest: AbortController | null = null;
 async function save() {
   if (transferBusy.value || saving.value) return;
   saving.value = true;
   error.value = '';
+  const controller = new AbortController();
+  saveRequest = controller;
+  const timer = setTimeout(() => controller.abort(), 20000);
+  const savedID = editing.value.id;
   try {
-    data.value = await api('/sites/manage', {
-      ...editing.value,
-      ...(!limitEnabled.value ? { limit_interval: 0, limit_count: 0, limit_seconds: 0 } : {}),
-    });
+    const result = await api(
+      '/sites/manage?response=configuration',
+      {
+        ...editing.value,
+        ...(!limitEnabled.value ? { limit_interval: 0, limit_count: 0, limit_seconds: 0 } : {}),
+      },
+      undefined,
+      controller.signal,
+    );
+    if (disposed || saveRequest !== controller) return;
+    applySavedSites(result, savedID);
     editing.value = null;
-    await refreshSettings();
     toast('站点配置已保存');
   } catch (e) {
-    error.value = errorText(e);
+    if (!disposed && saveRequest === controller)
+      error.value = controller.signal.aborted
+        ? '保存请求超时，结果尚未确认，请刷新站点列表核对后再重试'
+        : errorText(e);
   } finally {
-    saving.value = false;
+    clearTimeout(timer);
+    if (saveRequest === controller) {
+      saveRequest = null;
+      saving.value = false;
+    }
   }
 }
+
 async function toggle(row: any) {
   if (working.value || importVisible.value) return;
   mutations.value++;
   menu.value = '';
   error.value = '';
   try {
-    data.value = await api('/sites/manage', { ...row.config, enabled: !row.config.enabled });
-    await refreshSettings();
+    const result = await api('/sites/manage?response=configuration', {
+      ...row.config,
+      enabled: !row.config.enabled,
+    });
+    if (!disposed) applySavedSites(result, row.config.id);
   } catch (e) {
     error.value = errorText(e);
   } finally {
@@ -424,6 +475,8 @@ function browse(row: any) {
 }
 onMounted(load);
 onUnmounted(() => {
+  saveRequest?.abort();
+  saveRequest = null;
   disposed = true;
   testReloadNeeded = false;
   for (const job of testQueue.splice(0)) {

@@ -175,8 +175,16 @@ func (a *App) managedSites(ctx context.Context) (any, error) {
 }
 
 func (a *App) saveManagedSite(ctx context.Context, in SiteConfig) (any, error) {
+	return a.saveManagedSiteWithResponse(ctx, in, false)
+}
+
+func (a *App) saveManagedSiteWithResponse(ctx context.Context, in SiteConfig, configurationOnly bool) (any, error) {
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	defer cancel()
 	sourceInput := in
-	a.settingsMu.Lock()
+	if err := lockSettingsContext(ctx, &a.settingsMu); err != nil {
+		return nil, err
+	}
 	defer a.settingsMu.Unlock()
 	c := a.Settings()
 	if in.ID == "" {
@@ -213,10 +221,13 @@ func (a *App) saveManagedSite(ctx context.Context, in SiteConfig) (any, error) {
 	}
 	sourceInput.ID = in.ID
 	ctx = context.WithValue(ctx, nativeSourceSiteEditKey{}, &sourceInput)
-	if e := a.saveSettings(ctx, c); e != nil {
+	if e := a.saveManagedSiteSettings(ctx, c); e != nil {
 		return nil, e
 	}
 	a.emitStandardSiteUpdated(ctx, in, found < 0)
+	if configurationOnly {
+		return a.managedSiteConfiguration(c), nil
+	}
 	return a.managedSites(ctx)
 }
 

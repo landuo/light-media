@@ -256,7 +256,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	case p == "sites/manage" && method == "POST":
 		var in SiteConfig
 		if e = decodeBody(w, r, &in); e == nil {
-			out, e = a.saveManagedSite(ctx, in)
+			out, e = a.saveManagedSiteWithResponse(ctx, in, r.URL.Query().Get("response") == "configuration")
 		}
 	case strings.HasPrefix(p, "sites/manage/"):
 		parts := strings.Split(strings.TrimPrefix(p, "sites/manage/"), "/")

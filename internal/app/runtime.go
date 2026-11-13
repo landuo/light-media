@@ -441,6 +441,10 @@ func (a *App) saveSettings(ctx context.Context, c Settings) error {
 // Callers hold settingsMu. The existing download/import lock order also binds
 // plugin site changes to the same publication boundary as all other settings.
 func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect func(context.Context, *sql.Tx, *Settings) error) error {
+	return a.persistSettingsWithEffect(ctx, c, effect, false)
+}
+
+func (a *App) persistSettingsWithEffect(ctx context.Context, c Settings, effect func(context.Context, *sql.Tx, *Settings) error, credentialsOnly bool) error {
 	if a.pluginMarketOverride != nil {
 		a.cfgMu.RLock()
 		c.PluginMarkets = append([]string(nil), a.config.PluginMarkets...)
@@ -458,13 +462,35 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 		}
 		c.Downloaders[i].ClearAPIKey = false
 	}
+	// Effects may mutate configuration inside the transaction, so they never
+	// qualify for the authentication-only lock bypass. Normalize every enabled
+	// site before deciding: a legacy *other* site can change identity too.
+	credentialsOnly = credentialsOnly && effect == nil
+	if credentialsOnly {
+		for i := range c.Sites {
+			if c.Sites[i].Enabled {
+				if err := normalizeManagedSite(&c.Sites[i]); err != nil {
+					return err
+				}
+			}
+		}
+	}
+	// Normalization can change non-site settings too; never let a legacy
+	// configuration silently widen the credential-only bypass.
+	credentialsOnly = credentialsOnly && siteCredentialsOnly(a.Settings(), c)
 	phase := a.performanceStages(ctx, "settings_save", "download_lock")
 	defer phase("")
-	a.downloadMu.Lock()
-	defer a.downloadMu.Unlock()
-	phase("import_lock")
-	a.importMu.Lock()
-	defer a.importMu.Unlock()
+	if !credentialsOnly {
+		if err := lockSettingsContext(ctx, &a.downloadMu); err != nil {
+			return err
+		}
+		defer a.downloadMu.Unlock()
+		phase("import_lock")
+		if err := lockSettingsContext(ctx, &a.importMu); err != nil {
+			return err
+		}
+		defer a.importMu.Unlock()
+	}
 	if err := ctx.Err(); err != nil {
 		return err
 	}

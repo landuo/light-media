@@ -81,17 +81,18 @@ async function mount(t, name, options = {}) {
   const fixture = { requests: [], events: [], toasts: [], downloads: 0, data: fixtures() },
     mounted = [],
     unmounted = [];
-  const api = async (path, body, method) => {
+  const api = async (path, body, method, signal) => {
     fixture.requests.push({
       path,
       body: body === undefined ? undefined : JSON.parse(JSON.stringify(body)),
       method,
     });
     if (options.api) {
-      const result = await options.api(path, body, method, fixture);
+      const result = await options.api(path, body, method, fixture, signal);
       if (result !== undefined) return result;
     }
-    if (path === '/sites/manage') return fixture.data;
+    if (path === '/sites/manage' || path === '/sites/manage?response=configuration')
+      return fixture.data;
     if (path === '/sites/priorities')
       return {
         ...fixture.data,
@@ -146,7 +147,7 @@ async function mount(t, name, options = {}) {
         errorText: (error) => error.message,
         toast: (text) => fixture.toasts.push(text),
         ui: { settings: { sites: [], downloaders: [] } },
-        refreshSettings: async () => ({}),
+        refreshSettings: options.refreshSettings || (async () => ({})),
       };
     if (dependency === '../features/site-transfer')
       return {
@@ -427,7 +428,7 @@ test('site creation starts from a URL, with original credential tabs and effecti
   await view.update('访问间隔（秒）', 2);
   await view.submit();
   const body = view.fixture.requests.find(
-    (request) => request.path === '/sites/manage' && request.body,
+    (request) => request.path === '/sites/manage?response=configuration' && request.body,
   ).body;
   assert.equal(body.base_url, 'https://new-nexus.invalid');
   assert.equal(body.kind, undefined);
@@ -451,8 +452,9 @@ test('editing preserves a valid zero priority and accepts priorities above one h
   assert.equal(view.label('优先级').props.max, '10000');
   await view.submit();
   assert.equal(
-    view.fixture.requests.find((request) => request.path === '/sites/manage' && request.body).body
-      .pri,
+    view.fixture.requests.find(
+      (request) => request.path === '/sites/manage?response=configuration' && request.body,
+    ).body.pri,
     0,
   );
   await view.click('示例一 更多操作');
@@ -461,7 +463,7 @@ test('editing preserves a valid zero priority and accepts priorities above one h
   await view.submit();
   assert.equal(
     view.fixture.requests
-      .filter((request) => request.path === '/sites/manage' && request.body)
+      .filter((request) => request.path === '/sites/manage?response=configuration' && request.body)
       .at(-1).body.pri,
     128,
   );
@@ -780,7 +782,9 @@ test('Rousi edit opens API credentials and submits its independent mailbox token
   await view.update('Authorization', 'synthetic-new-mailbox-token');
   await view.update('API Key', 'synthetic-profile-key');
   await view.submit();
-  const body = view.fixture.requests.find((r) => r.path === '/sites/manage' && r.body).body;
+  const body = view.fixture.requests.find(
+    (r) => r.path === '/sites/manage?response=configuration' && r.body,
+  ).body;
   assert.equal(body.token, 'synthetic-new-mailbox-token');
   assert.equal(body.api_key, 'synthetic-profile-key');
   assert.equal(body.cookie, '');
@@ -803,4 +807,86 @@ test('site toolbar has only all-site testing, cards use icons, and statistics re
     false,
     'native template elements make dialog contents inert',
   );
+});
+
+test('site save acknowledges committed configuration without awaiting global settings or losing other statistics', async (t) => {
+  let refreshes = 0;
+  const view = await mount(t, 'SiteManager', {
+    refreshSettings: async () => {
+      refreshes++;
+      throw new Error('unrelated settings failure');
+    },
+    api: async (path, body, method, fixture) => {
+      if (path === '/sites/manage?response=configuration' && body)
+        return {
+          ...copy(fixture.data),
+          configuration_only: true,
+          sites: fixture.data.sites.map((row) => ({
+            ...row,
+            config: { ...row.config, cookie: '' },
+            stats: null,
+            connection: {},
+            credential_state: { cookie: true },
+          })),
+        };
+    },
+  });
+  await view.click('示例一 更多操作');
+  await view.click('编辑');
+  await view.update('Cookie', 'synthetic-new-cookie');
+  await view.submit();
+  assert.equal(refreshes, 0);
+  assert.deepEqual(view.fixture.toasts, ['站点配置已保存']);
+  assert.ok(!view.label('关闭站点编辑'));
+  assert.ok(!view.text().includes('unrelated settings failure'));
+});
+
+test('pending site save rejects duplicate submission and discards success after unmount', async (t) => {
+  let complete, signal;
+  const view = await mount(t, 'SiteManager', {
+    api: async (path, body, method, fixture, requestSignal) => {
+      if (path === '/sites/manage?response=configuration' && body) {
+        signal = requestSignal;
+        return new Promise((resolve) => {
+          complete = () => resolve(fixture.data);
+        });
+      }
+    },
+  });
+  await view.click('示例一 更多操作');
+  await view.click('编辑');
+  const first = view.submit();
+  await Promise.resolve();
+  await view.submit();
+  assert.equal(
+    view.fixture.requests.filter((r) => r.path === '/sites/manage?response=configuration' && r.body)
+      .length,
+    1,
+  );
+  view.unmount();
+  assert.equal(signal.aborted, true);
+  complete();
+  await first;
+  assert.deepEqual(view.fixture.toasts, []);
+});
+
+test('site save timeout retains the editor and reports unknown outcome instead of success', async (t) => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const view = await mount(t, 'SiteManager', {
+    api: async (path, body, method, fixture, signal) => {
+      if (path === '/sites/manage?response=configuration' && body)
+        return new Promise((resolve, reject) => {
+          signal.addEventListener('abort', () => reject(new Error('aborted')), { once: true });
+        });
+    },
+  });
+  await view.click('示例一 更多操作');
+  await view.click('编辑');
+  const pending = view.submit();
+  await Promise.resolve();
+  t.mock.timers.tick(20000);
+  await pending;
+  assert.ok(view.label('关闭站点编辑'));
+  assert.match(view.text(), /结果尚未确认/);
+  assert.equal(view.fixture.toasts.length, 0);
 });
