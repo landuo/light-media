@@ -173,16 +173,11 @@ function sortIndicator(key: HistorySort) {
 }
 function reorganize(rows: HistoryRow[]) {
   openMenu.value = '';
-  // A single-row action must only retry that row. Batch actions follow
-  // MoviePilot's semantics: only failed records are retried, never successes.
-  const chosen = rows.length === 1 ? rows : rows.filter((row) => row.status === 'failed');
-  if (!chosen.length) {
-    toast('所选记录中没有失败项，无需重新整理', true);
-    return;
-  }
-  if (chosen.length > 1 && !window.confirm(`将重新整理 ${chosen.length} 条失败记录，是否继续？`)) return;
+  // Selection is authoritative: organize exactly the chosen rows, no expansion.
+  if (!rows.length) return;
+  if (rows.length > 1 && !window.confirm(`将重新整理所选的 ${rows.length} 条记录，是否继续？`)) return;
   if (rows.length === 1) selected.value = [];
-  reorganizeItems.value = chosen;
+  reorganizeItems.value = rows;
 }
 async function reorganized(preparationJobID?: string) {
   reorganizeItems.value = [];

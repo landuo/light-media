@@ -23,16 +23,10 @@ func (a *App) prepareOrganizeHistory(ctx context.Context, job Job, in manualOrga
 	}
 	files := []importScanFile{}
 	seen := map[string]bool{}
-	batchRetry := len(histories) > 1
 	for _, history := range histories {
 		if history.ID == "" {
 			out.Failed++
 			out.Items = append(out.Items, manualOrganizeItem{Status: "failed", Error: "所选整理历史已不存在，其余记录继续处理"})
-			continue
-		}
-		// Batch retry only failed records, matching MoviePilot. A single
-		// explicitly selected record may still be re-organized (e.g. version swap).
-		if batchRetry && history.Status != "failed" {
 			continue
 		}
 		if seen[history.ResourceSource] {
