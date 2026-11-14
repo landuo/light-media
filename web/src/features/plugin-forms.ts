@@ -91,10 +91,6 @@ const larkPasswordAction = {
 function originalPasswordAction(props: Record<string, any>): boolean {
   return Object.entries(larkPasswordAction).every(([key, value]) => props[key] === value);
 }
-function passwordVisible(model: Record<string, any>): boolean {
-  const value = model.app_secret_visible;
-  return Object.hasOwn(model, 'app_secret_visible') && !!value;
-}
 
 function validModelKey(value: unknown): boolean {
   // These are literal JSON object keys, not paths or JavaScript identifiers.
@@ -330,13 +326,11 @@ export function pluginFieldProps(
         model[value] = updated;
       };
     } else if (passwordAction && key === 'type') {
-      bound.type = passwordVisible(model) ? 'text' : 'password';
+      bound.type = 'text';
     } else if (passwordAction && key === 'append-inner-icon') {
-      bound[key] = passwordVisible(model) ? 'mdi-eye-off' : 'mdi-eye';
+      bound[key] = undefined;
     } else if (passwordAction && key === 'onClick:append-inner') {
-      bound[key] = () => {
-        model.app_secret_visible = !passwordVisible(model);
-      };
+      bound[key] = undefined;
     } else if (['show', 'v-show'].includes(key)) {
       if (!bound.style) bound.style = {};
       bound.style.display = pluginNodeVisible({ [key]: value }, model) ? '' : 'none';

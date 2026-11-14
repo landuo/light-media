@@ -723,6 +723,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		fileChoice := a.evaluateResourceContext(ctx, fileResource, fileTarget, decision.Policy{})
 		if !fileChoice.Accepted || fileChoice.NeedsConfirmation {
 			if auto {
+				a.log("WARN", "download", "file_identity_rejected", filepath.Base(f.Path)+" | "+strings.Join(fileChoice.Reasons, ","), "", "")
 				return p, bad("REVIEW_FILE_IDENTITY", "种子实际视频文件名不能确认目标身份，请手动核对")
 			}
 			p.Warnings = append(p.Warnings, "需要核对实际文件身份："+filepath.Base(f.Path))
@@ -738,7 +739,8 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 			for _, ep := range t.KnownEpisodes {
 				known = append(known, media.Episode{Season: in.Season, Episode: ep})
 			}
-			resolved := media.Resolve(mediaKey(t.Media), *parsed.Original, media.Source{Site: site.ID}, in.Mappings, known, nil)
+			original := decision.AliasSeasonNumbering(t.Media, in.Season, *parsed.Original)
+			resolved := media.Resolve(mediaKey(t.Media), original, media.Source{Site: site.ID}, in.Mappings, known, nil)
 			if resolved.Status != media.Parsed {
 				p.ExtraFiles = true
 				continue
@@ -2081,7 +2083,7 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 			for _, ep := range season.Episodes {
 				known = append(known, media.Episode{Season: in.Season, Episode: ep.EpisodeNumber})
 			}
-			resolved := media.Resolve(mediaKey(in.Media), *parsed.Original, media.Source{Site: in.SiteID}, rules, known, nil)
+			resolved := media.Resolve(mediaKey(in.Media), decision.AliasSeasonNumbering(in.Media, in.Season, *parsed.Original), media.Source{Site: in.SiteID}, rules, known, nil)
 			if resolved.Status != media.Parsed {
 				continue
 			}

@@ -142,8 +142,9 @@ function systemMessageRelativeTime(date: string | null, _renderTick: number) {
 }
 let authGeneration = 0;
 async function loadNotifications() {
+  notificationTime.value = Date.now();
   const generation = authGeneration;
-  const result = await api('/notifications');
+  const result = await api('/notifications', undefined, 'GET', undefined, true);
   if (generation === authGeneration && auth.value?.authenticated) notifications.value = result;
 }
 function readAllSystemMessages() {
@@ -162,6 +163,7 @@ async function readNotification(n: any, jump = false) {
   }
 }
 function change() {
+  notificationTime.value = Date.now();
   abortPluginAPIRequests();
   route.value = normalizeRoute(location.hash.slice(1));
   if (searchComponent.value) searchSession.lastRoute = route.value;
@@ -214,8 +216,8 @@ function cancelSessionReads() {
   settingsPending = undefined;
   statusPending = false;
 }
-function readSession(path: string) {
-  return boundedRead((signal) => api(path, undefined, 'GET', signal), sessionReads.signal);
+function readSession(path: string, quiet = false) {
+  return boundedRead((signal) => api(path, undefined, 'GET', signal, quiet), sessionReads.signal);
 }
 async function loadSettings() {
   if (settingsPending) return settingsPending;
@@ -239,7 +241,7 @@ async function loadStatus() {
   statusPending = true;
   const generation = authGeneration;
   try {
-    const status = await readSession('/status');
+    const status = await readSession('/status', true);
     if (generation === authGeneration && auth.value?.authenticated) {
       ui.status = status;
       if (status?.starting === true && readiness.value === true) {
@@ -360,7 +362,6 @@ async function logout() {
   expired();
   await action(() => api('/auth/logout', {}));
 }
-let timer: number;
 let stopInterfaceMode = () => {};
 onMounted(() => {
   stopInterfaceMode = observeInterfaceEnvironment();
@@ -369,20 +370,12 @@ onMounted(() => {
   window.addEventListener('session-expired', expired);
   window.addEventListener('keydown', searchShortcut);
   bootstrap();
-  timer = window.setInterval(() => {
-    if (auth.value?.authenticated && !document.hidden) {
-      notificationTime.value = Date.now();
-      if (businessReady.value) void loadStatus();
-      if (businessReady.value) loadNotifications().catch(() => {});
-    }
-  }, 15000);
 });
 onUnmounted(() => {
   cancelSessionReads();
   stopInterfaceMode();
   authGeneration++;
   systemMessageFeed.destroy();
-  clearInterval(timer);
   window.removeEventListener('hashchange', change);
   window.removeEventListener('session-expired', expired);
   window.removeEventListener('keydown', searchShortcut);

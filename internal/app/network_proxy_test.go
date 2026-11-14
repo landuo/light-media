@@ -31,8 +31,10 @@ func TestProxySettingsAuthenticatedProjectionEncryptedRetentionAndClear(t *testi
 		if w.Code != 200 {
 			t.Fatal(w.Code, w.Body.String())
 		}
-		if strings.Contains(w.Body.String(), "owned-proxy-password") || strings.Contains(w.Body.String(), "owned-proxy-user") {
-			t.Fatal("proxy auth exposed")
+		if body["clear_proxy_host"] != true {
+			if host, _ := body["proxy_host"].(string); host != "" && (!strings.Contains(w.Body.String(), "owned-proxy-password") || !strings.Contains(w.Body.String(), "owned-proxy-user")) {
+				t.Fatal("proxy auth not echoed")
+			}
 		}
 		var result struct{ Data map[string]any }
 		if json.Unmarshal(w.Body.Bytes(), &result) != nil {

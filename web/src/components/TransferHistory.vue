@@ -100,7 +100,6 @@ const queueFiles = computed(() => queueGroups.value.flatMap((group) => group.fil
   );
 const pendingPreparations = new Set<string>();
 let queueGeneration = 0,
-  timer: number,
   searchTimer: number | undefined,
   historyRequest: AbortController | undefined,
   preparationRequest: AbortController | undefined,
@@ -408,19 +407,11 @@ onMounted(() => {
   window.addEventListener('hashchange', restoreURL);
   document.addEventListener('click', dismissMenu);
   document.addEventListener('keydown', escape);
-  timer = window.setInterval(() => {
-    if (document.hidden) return;
-    if (queueOpen.value && !queueLoading.value) void loadQueue();
-    void pollPreparations();
-    if (refreshAfterPreparation || items.value.some((item) => item.status === 'pending'))
-      void load(true);
-  }, 3000);
 });
 onUnmounted(() => {
   historyRequest?.abort();
   preparationRequest?.abort();
   queueGeneration++;
-  clearInterval(timer);
   clearSearchTimer();
   window.removeEventListener('hashchange', restoreURL);
   document.removeEventListener('click', dismissMenu);
@@ -467,6 +458,19 @@ onUnmounted(() => {
             <option v-for="hint in hints" :key="hint" :value="hint" />
           </datalist>
         </form>
+        <button
+          class="th-group-toggle"
+          aria-label="刷新"
+          title="刷新"
+          :disabled="loading"
+          @click="load(true)"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M17.65 6.35A7.95 7.95 0 0 0 12 4a8 8 0 1 0 7.73 10h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+            />
+          </svg>
+        </button>
         <button
           class="th-group-toggle"
           :aria-label="grouped ? '列表模式' : '分组模式'"

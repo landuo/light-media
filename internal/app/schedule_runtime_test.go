@@ -29,8 +29,8 @@ func TestScheduleOldMissingEpisodesCheckedBeforeFriday(t *testing.T) {
 	s := fridaySchedule(t)
 	monday := scheduleTime(t, "2026-10-12 10:00", "Asia/Shanghai")
 	next := nextScheduleCheck(s, monday, nil)
-	if !next.Equal(monday.Add(6 * time.Hour)) {
-		t.Fatalf("old misses must use fallback before Friday: %v", next)
+	if !next.Equal(monday.Add(24 * time.Hour)) {
+		t.Fatalf("old misses must use the 24-hour fallback before Friday: %v", next)
 	}
 	friday := scheduleTime(t, "2026-10-16 17:00", "Asia/Shanghai")
 	next = nextScheduleCheck(s, friday, nil)

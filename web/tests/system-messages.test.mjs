@@ -700,8 +700,8 @@ test('actual App rendering reads the current clock after login/background while 
   tick.value = wallClock;
   assert.equal(displayed, '4 分钟前');
   assert.equal(renders, 2);
-  assert.match(script, /if \(auth\.value\?\.authenticated && !document\.hidden\) \{\s*notificationTime\.value = Date\.now\(\);/);
-  assert.match(script, /\}, 15000\);/);
+  assert.match(script, /notificationTime\.value = Date\.now\(\)/);
+  assert.doesNotMatch(script, /setInterval/);
 });
 
 

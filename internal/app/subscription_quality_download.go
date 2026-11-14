@@ -49,7 +49,7 @@ func (a *App) validateQualityOrAutomaticFiles(ctx context.Context, p *qualityDow
 		if parsed.Original == nil {
 			return bad("QUALITY_FILE_IDENTITY_CHANGED", "实际洗版文件缺少可确认集号")
 		}
-		resolved := media.Resolve(mediaKey(target.Media), *parsed.Original, media.Source{Site: site}, target.Mappings, known, nil)
+		resolved := media.Resolve(mediaKey(target.Media), decision.AliasSeasonNumbering(target.Media, target.Season, *parsed.Original), media.Source{Site: site}, target.Mappings, known, nil)
 		if resolved.Status != media.Parsed {
 			return bad("QUALITY_FILE_IDENTITY_CHANGED", "洗版文件季集映射无法确认")
 		}
@@ -217,7 +217,7 @@ func (a *App) qualityCompletedFileSelected(ctx context.Context, in Intent, path 
 	for _, ep := range season.Episodes {
 		known = append(known, media.Episode{Season: in.Season, Episode: ep.EpisodeNumber})
 	}
-	resolved := media.Resolve(mediaKey(in.Media), *parsed.Original, media.Source{Site: in.SiteID}, in.Request.Mappings, known, nil)
+	resolved := media.Resolve(mediaKey(in.Media), decision.AliasSeasonNumbering(in.Media, in.Season, *parsed.Original), media.Source{Site: in.SiteID}, in.Request.Mappings, known, nil)
 	if resolved.Status != media.Parsed {
 		return false, bad("QUALITY_FILE_IDENTITY_CHANGED", "下载器文件的季集映射无法确认")
 	}

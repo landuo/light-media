@@ -70,7 +70,6 @@ func (a *App) managedSiteConfiguration(c Settings) any {
 	rows := []map[string]any{}
 	for _, s := range c.Sites {
 		configured, state := siteCredentialConfigured(s), siteSecretState(s)
-		hideSiteSecrets(&s)
 		rows = append(rows, map[string]any{"config": s, "credential_configured": configured, "credential_state": state, "connection": managedConnection{}, "stats": nil, "stale": false})
 	}
 	return map[string]any{"configuration_only": true, "sites": rows, "supported": nativeSiteTemplates, "capabilities": map[string]bool{"rss": false, "token": true, "proxy": false, "render": false, "downloader": false, "filter": false, "limit": true, "timeout": true, "user_agent": true}}

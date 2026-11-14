@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	"time"
 )
 
 // This is a rebuildable index of submitted attempts, not another history
@@ -94,59 +95,182 @@ INSERT OR IGNORE INTO transfer_history_index_version VALUES(2);
 
 const transferHistoryDirtySQL = `SELECT EXISTS(SELECT 1 FROM transfer_history_dirty) OR EXISTS(SELECT 1 FROM transfer_history_dirty_sources)`
 
+// A cold NAS volume can spend minutes ranking thousands of dirty plans, far
+// beyond the 30s display deadline. Refresh therefore commits bounded batches:
+// request reads advance as many batches as their remaining budget allows, and
+// the idle prewarmer drains the rest in the background.
+const (
+	transferHistoryBatchPlans   = 150
+	transferHistoryBatchBudget  = 5 * time.Second
+	transferHistoryPrewarmPlans = 400
+)
+
 func refreshTransferHistoryIndex(ctx context.Context, tx *sql.Tx) error {
+	_, err := refreshTransferHistoryIndexBatch(ctx, tx, 0)
+	return err
+}
+
+// refreshTransferHistoryIndexBatch refreshes at most planLimit dirty plans and
+// reports whether more work remains. planLimit <= 0 refreshes everything so
+// existing callers keep the original all-or-nothing behaviour.
+func refreshTransferHistoryIndexBatch(ctx context.Context, tx *sql.Tx, planLimit int) (bool, error) {
+	planRef, sourceRef := "transfer_history_dirty", "transfer_history_dirty_sources"
+	if planLimit > 0 {
+		if _, e := tx.ExecContext(ctx, `CREATE TEMP TABLE IF NOT EXISTS transfer_history_dirty_batch(plan_id TEXT PRIMARY KEY)`); e != nil {
+			return false, e
+		}
+		if _, e := tx.ExecContext(ctx, `CREATE TEMP TABLE IF NOT EXISTS transfer_history_dirty_sources_batch(resource_source TEXT PRIMARY KEY)`); e != nil {
+			return false, e
+		}
+		if e := transferHistorySnapshotDirty(ctx, tx, planLimit); e != nil {
+			return false, e
+		}
+		planRef, sourceRef = "temp.transfer_history_dirty_batch", "temp.transfer_history_dirty_sources_batch"
+	}
 	var dirty bool
-	if err := tx.QueryRowContext(ctx, transferHistoryDirtySQL).Scan(&dirty); err != nil || !dirty {
-		return err
+	if e := tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM `+planRef+`) OR EXISTS(SELECT 1 FROM `+sourceRef+`)`).Scan(&dirty); e != nil || !dirty {
+		return false, e
 	}
 	// Capture both old and new source identities. A source change or removal
 	// must also remove/reselect the previous visible group.
-	const markSources = `INSERT OR IGNORE INTO transfer_history_dirty_sources
- SELECT resource_source FROM transfer_history_attempts WHERE plan_id IN (SELECT plan_id FROM transfer_history_dirty)`
+	markSources := `INSERT OR IGNORE INTO transfer_history_dirty_sources
+ SELECT resource_source FROM transfer_history_attempts WHERE plan_id IN (SELECT plan_id FROM ` + planRef + `)`
 	for _, query := range []string{
 		markSources,
-		`DELETE FROM transfer_history_attempts WHERE plan_id IN (SELECT plan_id FROM transfer_history_dirty)`,
-		transferHistoryRefreshSQL(),
+		`DELETE FROM transfer_history_attempts WHERE plan_id IN (SELECT plan_id FROM ` + planRef + `)`,
+		transferHistoryRefreshSQL(planRef),
 		markSources,
-		`DELETE FROM transfer_history_current WHERE resource_source IN (SELECT resource_source FROM transfer_history_dirty_sources)`,
-		transferHistoryCurrentRefreshSQL(),
-		`DELETE FROM transfer_history_dirty`,
-		`DELETE FROM transfer_history_dirty_sources`,
 	} {
-		if _, err := tx.ExecContext(ctx, query); err != nil {
-			return err
+		if _, e := tx.ExecContext(ctx, query); e != nil {
+			return false, e
 		}
 	}
-	return nil
+	// Re-snapshot source groups: marking above may have added rows that were
+	// not part of the first snapshot.
+	if planLimit > 0 {
+		if e := transferHistorySnapshotDirtySources(ctx, tx, planLimit); e != nil {
+			return false, e
+		}
+	}
+	for _, query := range []string{
+		`DELETE FROM transfer_history_current WHERE resource_source IN (SELECT resource_source FROM ` + sourceRef + `)`,
+		transferHistoryCurrentRefreshSQL(sourceRef),
+	} {
+		if _, e := tx.ExecContext(ctx, query); e != nil {
+			return false, e
+		}
+	}
+	if planLimit > 0 {
+		if _, e := tx.ExecContext(ctx, `DELETE FROM main.transfer_history_dirty WHERE plan_id IN (SELECT plan_id FROM temp.transfer_history_dirty_batch)`); e != nil {
+			return false, e
+		}
+		if _, e := tx.ExecContext(ctx, `DELETE FROM main.transfer_history_dirty_sources WHERE resource_source IN (SELECT resource_source FROM temp.transfer_history_dirty_sources_batch)`); e != nil {
+			return false, e
+		}
+	} else {
+		if _, e := tx.ExecContext(ctx, `DELETE FROM transfer_history_dirty`); e != nil {
+			return false, e
+		}
+		if _, e := tx.ExecContext(ctx, `DELETE FROM transfer_history_dirty_sources`); e != nil {
+			return false, e
+		}
+	}
+	var remaining bool
+	if e := tx.QueryRowContext(ctx, transferHistoryDirtySQL).Scan(&remaining); e != nil {
+		return false, e
+	}
+	return remaining, nil
 }
 
-func transferHistoryCurrentRefreshSQL() string {
+func transferHistorySnapshotDirty(ctx context.Context, tx *sql.Tx, limit int) error {
+	if _, e := tx.ExecContext(ctx, `DELETE FROM transfer_history_dirty_batch`); e != nil {
+		return e
+	}
+	if _, e := tx.ExecContext(ctx, `INSERT OR IGNORE INTO transfer_history_dirty_batch SELECT plan_id FROM main.transfer_history_dirty ORDER BY rowid LIMIT ?`, limit); e != nil {
+		return e
+	}
+	return transferHistorySnapshotDirtySources(ctx, tx, limit)
+}
+
+func transferHistorySnapshotDirtySources(ctx context.Context, tx *sql.Tx, limit int) error {
+	if _, e := tx.ExecContext(ctx, `DELETE FROM transfer_history_dirty_sources_batch`); e != nil {
+		return e
+	}
+	_, e := tx.ExecContext(ctx, `INSERT OR IGNORE INTO transfer_history_dirty_sources_batch SELECT resource_source FROM main.transfer_history_dirty_sources ORDER BY rowid LIMIT ?`, limit)
+	return e
+}
+
+// PrewarmTransferHistory drains the dirty projection outside request
+// deadlines so a cold first build does not wait for the history page to be
+// opened and then time out on the display deadline.
+func (a *App) PrewarmTransferHistory(ctx context.Context) {
+	if a.Store == nil {
+		return
+	}
+	select {
+	case <-time.After(20 * time.Second):
+	case <-ctx.Done():
+		return
+	}
+	for ctx.Err() == nil {
+		tx, err := a.Store.DB.BeginTx(ctx, nil)
+		if err != nil {
+			time.Sleep(10 * time.Second)
+			continue
+		}
+		remaining, err := refreshTransferHistoryIndexBatch(ctx, tx, transferHistoryPrewarmPlans)
+		if err != nil {
+			tx.Rollback()
+			a.log("WARN", "runtime", "history_prewarm_failed", "整理历史索引预热中断，稍后重试", "", "")
+			time.Sleep(15 * time.Second)
+			continue
+		}
+		if err = tx.Commit(); err != nil {
+			time.Sleep(15 * time.Second)
+			continue
+		}
+		if !remaining {
+			a.log("INFO", "runtime", "history_prewarm_done", "整理历史索引预热完成", "", "")
+			return
+		}
+		select {
+		case <-time.After(150 * time.Millisecond):
+		case <-ctx.Done():
+			return
+		}
+	}
+}
+
+func transferHistoryCurrentRefreshSQL(dirtySources string) string {
 	// Seek only changed source groups. Hidden markers use the records primary
 	// key rather than materializing every marker on each incremental refresh.
 	ranked := strings.Replace(transferHistoryRanked, "hidden_history AS MATERIALIZED", "hidden_history AS NOT MATERIALIZED", 1)
 	return `WITH attempts AS (SELECT * FROM transfer_history_attempts WHERE resource_source IN
- (SELECT resource_source FROM transfer_history_dirty_sources)) ` + ranked +
+ (SELECT resource_source FROM ` + dirtySources + `)) ` + ranked +
 		`INSERT INTO transfer_history_current (` + transferHistoryIndexColumns + `,history_id,history_created_at)
  SELECT ` + transferHistoryIndexColumns + `,history_id,history_created_at FROM history`
 }
 
-func transferHistoryRefreshSQL() string {
-	const changed = ` AND r.id IN (SELECT plan_id FROM transfer_history_dirty)`
+func transferHistoryRefreshSQL(dirtyTable string) string {
+	changed := ` AND r.id IN (SELECT plan_id FROM ` + dirtyTable + `)`
 	// Bound both sides of the join. Filtering only r.id lets SQLite walk every
 	// archived import job before finding the few dirty plans, especially with a
 	// cold disk cache. jobs_subject can seek kind + plan ID directly.
-	jobs := transferHistoryJobsSelect + ` AND json_extract(payload,'$.id') IN (SELECT plan_id FROM transfer_history_dirty))`
+	jobs := transferHistoryJobsSelect + ` AND json_extract(payload,'$.id') IN (SELECT plan_id FROM ` + dirtyTable + `))`
 	// SQLite can otherwise start the auxiliary join at every callback, even
 	// when only one plan is dirty. Bound that side too and seek its plan index.
 	auxiliary := strings.Replace(transferHistoryAuxiliaryFiles, "JOIN records cb ON", "JOIN records cb INDEXED BY transfer_history_callback_plan ON", 1)
 	return jobs + transferHistoryExecutedFiles + changed +
-		auxiliary + changed + ` AND json_extract(cb.payload,'$.plan_id') IN (SELECT plan_id FROM transfer_history_dirty)` + transferHistoryAttempts +
+		auxiliary + changed + ` AND json_extract(cb.payload,'$.plan_id') IN (SELECT plan_id FROM ` + dirtyTable + `)` + transferHistoryAttempts +
 		`INSERT INTO transfer_history_attempts (` + transferHistoryIndexColumns + `) SELECT ` + transferHistoryIndexColumns + ` FROM attempts`
 }
 
 // Validate dirtiness inside the read snapshot used for hydration. After a
 // refresh commits, a concurrent writer may invalidate the projection again;
 // retry rather than combining old projected state with newer execution JSON.
+// Refresh advances in bounded batches so a cold first build cannot consume
+// the whole request deadline; when the budget runs out the committed
+// projection is served and later reads (or the prewarmer) continue.
 func (a *App) transferHistoryReadTx(ctx context.Context) (*sql.Tx, error) {
 	phase := a.performanceStages(ctx, "history_snapshot", "reader_wait")
 	defer phase("")
@@ -171,13 +295,21 @@ func (a *App) transferHistoryReadTx(ctx context.Context) (*sql.Tx, error) {
 				return nil, err
 			}
 		}
+		// Not enough budget left to finish another batch: serve the committed
+		// projection instead of letting the deadline kill the request.
+		if deadline, ok := ctx.Deadline(); ok && time.Until(deadline) < transferHistoryBatchBudget {
+			if a.Store.readDB != nil {
+				return a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+			}
+			return a.Store.DB.BeginTx(ctx, nil)
+		}
 		phase("writer_wait")
 		tx, err := a.Store.DB.BeginTx(ctx, nil)
 		if err != nil {
 			return nil, err
 		}
 		phase("index_refresh")
-		if err = refreshTransferHistoryIndex(ctx, tx); err != nil {
+		if _, err = refreshTransferHistoryIndexBatch(ctx, tx, transferHistoryBatchPlans); err != nil {
 			tx.Rollback()
 			return nil, err
 		}

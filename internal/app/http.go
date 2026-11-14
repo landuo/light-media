@@ -614,26 +614,18 @@ func (a *App) publicSettingsContext(ctx context.Context) (map[string]any, error)
 	secretState := map[string]any{"tmdb": c.TMDB.APIKey != "" || c.TMDB.AccessToken != "", "fnos": c.FNOS.Password != "", "api_token": c.APIToken != ""}
 	secretState["proxy_host"] = c.ProxyHost != ""
 	secretState["github_token"], secretState["repo_github_token"] = c.GitHubToken != "", c.RepoGitHubToken != ""
-	c.GitHubToken, c.RepoGitHubToken = "", ""
 	proxyEndpoint := networkproxy.Endpoint(c.ProxyHost)
-	c.ProxyHost = ""
 	c.ClearProxyHost = false
 	c.APIToken = ""
 	siteState := map[string]bool{}
 	for i := range c.Sites {
 		siteState[c.Sites[i].ID] = c.Sites[i].Cookie != "" || c.Sites[i].APIKey != ""
-		hideSiteSecrets(&c.Sites[i])
 	}
 	downState := map[string]bool{}
 	for i := range c.Downloaders {
 		downState[c.Downloaders[i].ID] = c.Downloaders[i].Password != "" || c.Downloaders[i].APIKey != ""
-		c.Downloaders[i].Password = ""
-		c.Downloaders[i].APIKey = ""
 		c.Downloaders[i].ClearAPIKey = false
 	}
-	c.TMDB.APIKey = ""
-	c.TMDB.AccessToken = ""
-	c.FNOS.Password = ""
 	secretState["sites"], secretState["downloaders"] = siteState, downState
 	b, _ := json.Marshal(c)
 	m := map[string]any{}

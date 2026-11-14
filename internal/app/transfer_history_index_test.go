@@ -10,7 +10,7 @@ import (
 
 func TestHistoryRefreshSeeksCallbacksForDirtyPlans(t *testing.T) {
 	a, _, _ := importTestApp(t)
-	rows, err := a.Store.DB.Query(`EXPLAIN QUERY PLAN ` + transferHistoryRefreshSQL())
+	rows, err := a.Store.DB.Query(`EXPLAIN QUERY PLAN ` + transferHistoryRefreshSQL("transfer_history_dirty"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -196,5 +196,47 @@ func TestHistoryIndexUpgradeAndRestartPreserveStableHistory(t *testing.T) {
 	after, _ := json.Marshal(afterItem)
 	if err != nil || string(before) != string(after) {
 		t.Fatalf("unchanged restart changed visible history: %v", err)
+	}
+}
+
+func TestHistoryRefreshBatchDrainsDirtyPlansInBoundedSteps(t *testing.T) {
+	a, _, _ := importTestApp(t)
+	ctx := context.Background()
+	for i := 0; i < 12; i++ {
+		if _, err := a.Store.DB.Exec(`INSERT INTO transfer_history_dirty(plan_id) VALUES(?)`, "batch-plan-"+strings.Repeat("0", 2)+string(rune('a'+i))); err != nil {
+			t.Fatal(err)
+		}
+	}
+	steps := 0
+	for {
+		tx, err := a.Store.DB.BeginTx(ctx, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		remaining, err := refreshTransferHistoryIndexBatch(ctx, tx, 5)
+		if err != nil {
+			tx.Rollback()
+			t.Fatal(err)
+		}
+		if err = tx.Commit(); err != nil {
+			t.Fatal(err)
+		}
+		steps++
+		if !remaining {
+			break
+		}
+		if steps > 20 {
+			t.Fatal("batch refresh did not converge")
+		}
+	}
+	if steps < 3 {
+		t.Fatalf("expected at least 3 batches for 12 plans at limit 5, got %d", steps)
+	}
+	var left int
+	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM transfer_history_dirty`).Scan(&left); err != nil {
+		t.Fatal(err)
+	}
+	if left != 0 {
+		t.Fatalf("dirty plans left: %d", left)
 	}
 }

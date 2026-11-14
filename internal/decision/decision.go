@@ -3,6 +3,7 @@
 package decision
 
 import (
+	"unicode"
 	"context"
 	"fmt"
 	"path/filepath"
@@ -206,7 +207,8 @@ func EvaluateContext(ctx context.Context, resource sites.Resource, target Target
 	if providerSearch {
 		mediaID = target.ProviderSearchKey
 	}
-	mapping := media.Resolve(mediaID, *parsed.Original, source, target.Mappings, authoritative, nil)
+	original := AliasSeasonNumbering(target.Media, target.Season, *parsed.Original)
+	mapping := media.Resolve(mediaID, original, source, target.Mappings, authoritative, nil)
 	if mapping.Status != media.Parsed {
 		review("numbering_" + mapping.Reason)
 		return finish()
@@ -384,6 +386,123 @@ func episodeSet(values []int) (map[int]bool, bool) {
 func normalizeTitle(value string) string {
 	return media.NormalizeTitle(value)
 }
+// trailingSeasonMarker matches a normalized alias' trailing season numbering
+// ("Soul Land 2" -> "2", "Soul Land S02" -> "s02", "Rocky II" -> "ii").
+// Franchise releases often drop that suffix ("Soul Land" for "Soul Land 2"),
+// so the base form is accepted as identity evidence too.
+var trailingSeasonMarker = regexp.MustCompile(`(?:s\d{1,2}|\d{1,2}|iii|ii|iv)$`)
+
+func aliasBase(normalized string) string {
+	loc := trailingSeasonMarker.FindStringIndex(normalized)
+	if loc == nil || loc[1] != len(normalized) {
+		return ""
+	}
+	// A tail that continues a longer number (2049) is part of the title, not
+	// season numbering; only strip a 1-2 digit token that stands alone.
+	if loc[0] > 0 && normalized[loc[0]] >= '0' && normalized[loc[0]] <= '9' {
+		prev := normalized[loc[0]-1]
+		if prev >= '0' && prev <= '9' {
+			return ""
+		}
+	}
+	base := normalized[:loc[0]]
+	if len([]rune(base)) < 2 {
+		return ""
+	}
+	return base
+}
+
+var aliasSeasonSuffix = regexp.MustCompile(`(?:s(\d{1,2})|(\d{1,2})|(iii|ii|iv))$`)
+
+// aliasSeasonNumbers reports the franchise season numbers the media aliases
+// declare for release naming ("Soul Land 2" -> 2, "Soul Land S02" -> 2). A
+// release using that season number describes this media even when the
+// provider renumbers it as season 1.
+func aliasSeasonNumbers(m catalog.Media) map[int]bool {
+	out := map[int]bool{}
+	names := append([]string{m.Title, m.OriginalTitle}, m.Aliases...)
+	for i, name := range names {
+		if i > 33 || len(name) > 512 {
+			break
+		}
+		n := normalizeTitle(name)
+		loc := aliasSeasonSuffix.FindStringSubmatchIndex(n)
+		if loc == nil || loc[1] != len(n) {
+			continue
+		}
+		season := 0
+		switch {
+		case loc[2] >= 0:
+			season, _ = strconv.Atoi(n[loc[2]:loc[3]])
+		case loc[4] >= 0:
+			if loc[4] == 0 || n[loc[4]-1] < '0' || n[loc[4]-1] > '9' {
+				season, _ = strconv.Atoi(n[loc[4]:loc[5]])
+			}
+		case loc[6] >= 0:
+			switch n[loc[6]:loc[7]] {
+			case "ii":
+				season = 2
+			case "iii":
+				season = 3
+			case "iv":
+				season = 4
+			}
+		}
+		if season > 0 && season < 100 {
+			out[season] = true
+		}
+	}
+	return out
+}
+
+func startsDigit(value string) bool {
+	for _, r := range value {
+		return r >= '0' && r <= '9'
+	}
+	return false
+}
+
+func containsHan(value string) bool {
+	for _, r := range value {
+		if unicode.Is(unicode.Han, r) {
+			return true
+		}
+	}
+	return false
+}
+
+// bilingualTitleEvidence accepts releases that concatenate a CJK title with
+// the provider title ("斗罗大陆.Soul.Land.S02E179"). Latin-only releases keep
+// the strict equality rule so unrelated sequels cannot match by prefix.
+func bilingualTitleEvidence(value, candidate string, names []string) bool {
+	if !containsHan(value) {
+		return false
+	}
+	for _, n := range names {
+		if len([]rune(n)) < 4 || len(candidate) <= len(n) {
+			continue
+		}
+		if strings.HasPrefix(candidate, n) && !startsDigit(candidate[len(n):]) {
+			return true
+		}
+		if strings.HasSuffix(candidate, n) {
+			return true
+		}
+	}
+	return false
+}
+
+// AliasSeasonNumbering rebases provider season numbering onto the target
+// season when the media aliases themselves declare that franchise season
+// ("Soul Land S02E179" for a media stored as season 1).
+func AliasSeasonNumbering(m catalog.Media, targetSeason int, n media.Numbering) media.Numbering {
+	if n.Season != nil && *n.Season != targetSeason && aliasSeasonNumbers(m)[*n.Season] {
+		season := targetSeason
+		n.Season = &season
+	}
+	return n
+}
+
 func matchesTitle(value string, m catalog.Media) bool {
 	aliases := []string{normalizeTitle(m.Title), normalizeTitle(m.OriginalTitle)}
 	for i, alias := range m.Aliases {
@@ -394,12 +513,26 @@ func matchesTitle(value string, m catalog.Media) bool {
 			aliases = append(aliases, normalizeTitle(alias))
 		}
 	}
+	bases := []string{}
+	for _, a := range aliases {
+		if b := aliasBase(a); b != "" {
+			bases = append(bases, b)
+		}
+	}
 	for n := 0; n < 3; n++ {
 		candidate := normalizeTitle(value)
 		for _, a := range aliases {
 			if a != "" && candidate == a {
 				return true
 			}
+		}
+		for _, b := range bases {
+			if candidate == b {
+				return true
+			}
+		}
+		if bilingualTitleEvidence(value, candidate, append(append([]string{}, aliases...), bases...)) {
+			return true
 		}
 		if aliases[0] != "" && aliases[1] != "" && (candidate == aliases[0]+aliases[1] || candidate == aliases[1]+aliases[0]) {
 			return true

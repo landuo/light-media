@@ -51,7 +51,8 @@ async function load() {
     savedGitHubProxy.value = githubProxy.value || '';
     githubTokenSet.value = result.github_token_set === true;
     repoGitHubTokenSet.value = result.repo_github_token_set === true;
-    githubToken.value = repoGitHubToken.value = '';
+    githubToken.value = typeof result.github_token === 'string' ? result.github_token : '';
+    repoGitHubToken.value = typeof result.repo_github_token === 'string' ? result.repo_github_token : '';
     clearGitHubToken.value = clearRepoGitHubToken.value = false;
     loaded.value = true;
   } catch (value) {
@@ -86,7 +87,6 @@ async function save() {
     else if (githubToken.value?.trim()) githubTokenSet.value = true;
     if (clearRepoGitHubToken.value) repoGitHubTokenSet.value = false;
     else if (repoGitHubToken.value?.trim()) repoGitHubTokenSet.value = true;
-    githubToken.value = repoGitHubToken.value = '';
     clearGitHubToken.value = clearRepoGitHubToken.value = false;
     toast('插件系统设置已保存');
     emit('saved');
@@ -105,7 +105,7 @@ onMounted(load);
     <p v-if="error" class="error" role="alert">{{ error }}</p>
     <VTabs v-model="tab"><VTab value="basic">基础</VTab><VTab value="advanced">高级</VTab><VTab value="dev">开发</VTab></VTabs>
     <div v-show="tab === 'basic'" class="form-grid mt-4">
-      <VTextField v-model="githubToken" label="Github Token" type="password" autocomplete="new-password" prepend-inner-icon="mdi-github" :disabled="loading || saving" :placeholder="githubTokenSet && !clearGitHubToken ? '已保存；留空保留' : 'ghp_**** 或 github_pat_****'" persistent-placeholder hint="用于提高访问Github API时的限流阈值" persistent-hint :clearable="!!githubToken" @click:clear="removeGitHubToken" @update:model-value="inputGitHubToken">
+      <VTextField v-model="githubToken" label="Github Token" type="text" prepend-inner-icon="mdi-github" :disabled="loading || saving" :placeholder="githubTokenSet && !clearGitHubToken ? '已保存；留空保留' : 'ghp_**** 或 github_pat_****'" persistent-placeholder hint="用于提高访问Github API时的限流阈值" persistent-hint :clearable="!!githubToken" @click:clear="removeGitHubToken" @update:model-value="inputGitHubToken">
         <template v-if="githubTokenSet && !clearGitHubToken && !githubToken" #append-inner><VBtn icon size="x-small" variant="text" aria-label="清除已保存的Github Token" @click.stop="removeGitHubToken"><VIcon icon="mdi-close-circle" /></VBtn></template>
       </VTextField>
     </div>
@@ -127,7 +127,7 @@ onMounted(load);
       />
     </div>
     <div v-show="tab === 'dev'" class="form-grid mt-4">
-      <VTextField v-model="repoGitHubToken" label="指定仓库Github Token" type="password" autocomplete="new-password" prepend-inner-icon="mdi-github" :disabled="loading || saving" :placeholder="repoGitHubTokenSet && !clearRepoGitHubToken ? '已保存；留空保留' : 'owner/repo:ghp_****'" persistent-placeholder hint="多个仓库用逗号分隔" persistent-hint :clearable="!!repoGitHubToken" @click:clear="removeRepoGitHubToken" @update:model-value="inputRepoGitHubToken">
+      <VTextField v-model="repoGitHubToken" label="指定仓库Github Token" type="text" prepend-inner-icon="mdi-github" :disabled="loading || saving" :placeholder="repoGitHubTokenSet && !clearRepoGitHubToken ? '已保存；留空保留' : 'owner/repo:ghp_****'" persistent-placeholder hint="多个仓库用逗号分隔" persistent-hint :clearable="!!repoGitHubToken" @click:clear="removeRepoGitHubToken" @update:model-value="inputRepoGitHubToken">
         <template v-if="repoGitHubTokenSet && !clearRepoGitHubToken && !repoGitHubToken" #append-inner><VBtn icon size="x-small" variant="text" aria-label="清除已保存的指定仓库Github Token" @click.stop="removeRepoGitHubToken"><VIcon icon="mdi-close-circle" /></VBtn></template>
       </VTextField>
       <VTextField

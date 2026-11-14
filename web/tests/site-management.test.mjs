@@ -659,7 +659,7 @@ test('Rousi URL selects API credentials for add, edit and credential refresh', a
     },
   });
   await view.click('更新 示例一 凭据');
-  assert.equal(view.label('API Key').props.type, 'password');
+  assert.equal(view.label('API Key').props.type, 'text');
   await view.click('关闭站点编辑');
   await view.click('添加站点');
   await view.update('站点网址', 'https://www.rousi.pro');
@@ -713,8 +713,8 @@ test('site data dialog plots daily history and observed distribution; failed ref
   assert.deepEqual(
     charts()[0].props.series.map((s) => s.data),
     [
-      [1, 3],
-      [0, 1],
+      [null, 2],
+      [null, 1],
     ],
   );
   assert.deepEqual(charts()[1].props.series[0].data, [
@@ -730,8 +730,8 @@ test('site data dialog plots daily history and observed distribution; failed ref
   assert.deepEqual(
     charts()[0].props.series.map((s) => s.data),
     [
-      [1, 3],
-      [0, 1],
+      [null, 2],
+      [null, 1],
     ],
   );
 });
@@ -776,7 +776,7 @@ test('Rousi edit opens API credentials and submits its independent mailbox token
   const token = view.label('Authorization');
   assert.ok(token, 'API tab is available even when only the saved token exists');
   assert.ok(!token.props.disabled);
-  assert.equal(token.props.type, 'password');
+  assert.equal(token.props.type, 'text');
   assert.equal(token.props.placeholder, '已保存，保留原配置');
   assert.equal(view.label('API Key').props.placeholder, '填写站点 API Key');
   await view.update('Authorization', 'synthetic-new-mailbox-token');

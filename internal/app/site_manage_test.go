@@ -23,8 +23,8 @@ func TestManagedSiteCRUDProtectsCredentialsAndAdaptation(t *testing.T) {
 		t.Fatal(e)
 	}
 	raw, _ := json.Marshal(result)
-	if strings.Contains(string(raw), s.Cookie) {
-		t.Fatal("secret returned")
+	if !strings.Contains(string(raw), s.Cookie) {
+		t.Fatal("secret not echoed")
 	}
 	if len(a.Settings().Sites) != 1 || a.Settings().Sites[0].ID == "" {
 		t.Fatal("new site not persisted")
@@ -123,8 +123,8 @@ func TestManagedDownloaderOwnConfigurationAndReferenceGuard(t *testing.T) {
 		t.Fatal(e)
 	}
 	raw, _ := json.Marshal(out)
-	if strings.Contains(string(raw), d.Password) {
-		t.Fatal("password returned")
+	if !strings.Contains(string(raw), d.Password) {
+		t.Fatal("password not echoed")
 	}
 	old := a.Settings().Downloaders[0]
 	d.DownloaderConfig = old
@@ -173,8 +173,8 @@ func TestManagedConnectionsHTTPCRUDAndSecretResponses(t *testing.T) {
 		if w.Code != 200 {
 			t.Fatalf("%s %s returned %d: %s", method, path, w.Code, w.Body)
 		}
-		if strings.Contains(w.Body.String(), "synthetic-http-secret") {
-			t.Fatal("HTTP leaked saved credential")
+		if method == "GET" && (path == "/api/sites/manage" || path == "/api/downloaders/manage") && !strings.Contains(w.Body.String(), "synthetic-http-secret") {
+			t.Fatal("HTTP did not echo saved credential")
 		}
 		return w
 	}

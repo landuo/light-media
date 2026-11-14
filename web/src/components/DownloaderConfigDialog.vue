@@ -92,7 +92,7 @@ const hostRules = [
               <VCol v-if="qb" cols="12"
                 ><VTextField
                   v-model.trim="value.api_key"
-                  type="password"
+                  type="text"
                   label="API Key"
                   :placeholder="savedKey ? '已保存，留空保留' : ''"
                   persistent-placeholder
@@ -127,7 +127,7 @@ const hostRules = [
               <VCol cols="12" md="6"
                 ><VTextField
                   v-model="value.password"
-                  type="password"
+                  type="text"
                   label="密码"
                   prepend-inner-icon="mdi-lock"
                   :disabled="apiKeyActive"

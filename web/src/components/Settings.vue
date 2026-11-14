@@ -198,14 +198,14 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
         <div class="form-grid">
           <VTextField
             v-model="form.tmdb.api_key"
-            type="password"
+            type="text"
             autocomplete="off"
             placeholder="留空保留已保存值"
             label="API Key"
           />
           <VTextField
             v-model="form.tmdb.access_token"
-            type="password"
+            type="text"
             autocomplete="off"
             placeholder="与 API Key 二选一"
             label="Access Token"
@@ -277,7 +277,7 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
           <VTextField v-model="form.fnos.username" autocomplete="off" label="用户名" />
           <VTextField
             v-model="form.fnos.password"
-            type="password"
+            type="text"
             autocomplete="new-password"
             :placeholder="form.secret_state?.fnos ? '已保存，留空保留' : '登录密码'"
             label="密码"

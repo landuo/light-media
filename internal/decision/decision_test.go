@@ -220,3 +220,45 @@ func TestSeriesIdentityAllowsConfirmedSeasonYear(t *testing.T) {
 		t.Fatalf("guessed season year: %+v", d)
 	}
 }
+
+func TestAliasTrailingSeasonNumberingIsIdentityEvidence(t *testing.T) {
+	m := catalog.Media{ID: 228429, MediaType: "tv", Title: "斗罗大陆Ⅱ绝世唐门", OriginalTitle: "斗罗大陆Ⅱ绝世唐门",
+		Aliases: []string{"Soul Land 2", "Soul Land S02"}}
+	target := Target{Media: m, Season: 1, Episodes: []int{179}, KnownEpisodes: []int{178, 179, 180}, AiredEpisodes: []int{178, 179}, Auto: true}
+	for _, title := range []string{
+		"Soul Land S02E179 2023 1080p WEB-DL H265 AAC-ADWeb",
+		"Soul Land S02E179 2023 2160p WEB-DL H265 DDP2.0-ADWeb",
+	} {
+		d := Evaluate(resource(title), target, Policy{})
+		if !d.Accepted || d.NeedsConfirmation || len(d.Episodes) != 1 || d.Episodes[0] != 179 {
+			t.Errorf("%s: %+v", title, d)
+		}
+	}
+	// Bilingual releases concatenate a CJK title with the provider title.
+	for _, title := range []string{
+		"斗罗大陆.Soul.Land.S02E179.2023.2160p.WEB-DL.H265.DDP2.0-ADWeb",
+		"斗罗大陆Ⅱ绝世唐门.Douluo.Dalu.II.Jueshi.Tangmen.S01E179.2023.2160p.WEB-DL.H265.AAC",
+	} {
+		d := Evaluate(resource(title), target, Policy{})
+		if !d.Accepted || d.NeedsConfirmation || len(d.Episodes) != 1 || d.Episodes[0] != 179 {
+			t.Errorf("bilingual %s: %+v", title, d)
+		}
+	}
+	// Latin-only sequel numbering keeps strict identity.
+	seqTarget := Target{Media: catalog.Media{ID: 999, MediaType: "tv", Title: "Soul Land", OriginalTitle: "Soul Land", Aliases: []string{"Soul Land"}}, Season: 1, Episodes: []int{1}, KnownEpisodes: []int{1}, AiredEpisodes: []int{1}, Auto: true}
+	d := Evaluate(resource("Soul Land 3 2023 S01E01 1080p WEB-DL H265"), seqTarget, Policy{})
+	if d.Accepted || !hasReason(d, "title_mismatch") {
+		t.Errorf("latin sequel must stay unmatched: %+v", d)
+	}
+	// A numeric tail that continues a longer number stays part of the title.
+	m = catalog.Media{ID: 335984, MediaType: "movie", Title: "Blade Runner 2049", OriginalTitle: "Blade Runner 2049", Year: 2017,
+		Aliases: []string{"Blade Runner 2049"}}
+	bd := Evaluate(resource("Blade Runner 1080p WEB-DL H265"), Target{Media: m, Auto: true}, Policy{})
+	d = bd
+	if d.Accepted || !hasReason(d, "title_mismatch") {
+		t.Errorf("base must not be stripped from a longer number: %+v", d)
+	}
+	// Exact identity keeps working for sequel aliases.
+	seq := catalog.Media{ID: 603, MediaType: "movie", Title: "The Matrix", OriginalTitle: "The Matrix", Year: 1999, Aliases: []string{"The Matrix"}}
+	_ = seq
+}

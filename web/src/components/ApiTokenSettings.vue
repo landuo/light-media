@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { VThemeProvider } from 'vuetify/components/VThemeProvider';
 import { VTextField } from 'vuetify/components/VTextField';
 import { VBtn } from 'vuetify/components/VBtn';
@@ -54,7 +54,6 @@ async function save() {
     delete settings.secret_state;
     const result = await api('/settings', settings, 'PUT');
     ui.settings = result;
-    draft.value = '';
     error.value = '';
     emit('saved', result);
     toast('设置已保存');
@@ -64,6 +63,15 @@ async function save() {
     busy.value = false;
   }
 }
+
+onMounted(async () => {
+  if (!props.configured) return;
+  try {
+    draft.value = (await api('/settings/api-token/reveal', {}, 'POST')).token || '';
+  } catch {
+    // 保留空输入，用户仍可重新生成
+  }
+});
 </script>
 <template>
   <VThemeProvider theme="light">
@@ -73,7 +81,7 @@ async function save() {
           <VTextField
             v-model="draft"
             label="API令牌"
-            type="password"
+            type="text"
             autocomplete="new-password"
             :placeholder="configured ? '已保存，留空保留' : '不能小于16位字符'"
             hint="设置外部请求 API 时使用的 token 值"

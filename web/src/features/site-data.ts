@@ -44,6 +44,40 @@ export function siteDataDelta(days: SiteDay[], key: keyof SiteStats): number | n
   return typeof before === 'number' && Number.isFinite(before) ? value - before : null;
 }
 
+export function siteDataDailySeries(days: SiteDay[], key: keyof SiteStats): (number | null)[] {
+  return days.map((day, index) => {
+    if (index === 0) return null;
+    const previous = days[index - 1];
+    const a = Date.parse(day.day + 'T00:00:00Z'),
+      b = Date.parse(previous.day + 'T00:00:00Z');
+    if (!Number.isFinite(a) || !Number.isFinite(b) || Math.round((a - b) / 86400000) !== 1)
+      return null;
+    const latestValue = day.stats[key],
+      previousValue = previous.stats[key];
+    if (typeof latestValue !== 'number' || typeof previousValue !== 'number') return null;
+    return latestValue - previousValue;
+  });
+}
+
+export function siteDataLatestDailyDelta(days: SiteDay[], key: keyof SiteStats): number | null {
+  const series = siteDataDailySeries(days, key);
+  return series.length ? series[series.length - 1] : null;
+}
+
+export function siteDataDeltaSpan(days: SiteDay[]): number | null {
+  const latest = days.at(-1)?.day,
+    previous = days.at(-2)?.day;
+  if (!latest || !previous) return null;
+  const a = Date.parse(latest + 'T00:00:00Z'),
+    b = Date.parse(previous + 'T00:00:00Z');
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+  return Math.round((a - b) / 86400000);
+}
+
+export function siteDataPreviousDay(days: SiteDay[]): string | null {
+  return days.at(-2)?.day || null;
+}
+
 export function siteDataBytes(value: number, signed = false): string {
   let size = Math.abs(value),
     unit = 0;

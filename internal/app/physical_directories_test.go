@@ -285,7 +285,7 @@ func TestSharedDirectoryMonitorIgnoresUnrelatedTasksAndUsesActualSaveDirectories
 	}))
 	defer qb.Close()
 	a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "qb", Kind: "qb", BaseURL: qb.URL}, DownloadPath: "/old-default", Mappings: []PathMapping{{From: "/legacy", To: "/old-visible"}}, SharedPaths: true}}
-	files, err := a.directoryDownloadFiles(context.Background(), DirectoryRule{SourcePath: source}, source)
+	files, _, err := a.directoryDownloadFiles(context.Background(), DirectoryRule{SourcePath: source}, source, nil, nil)
 	entry, ok := files[filepath.Join(source, "partial.mkv")]
 	if err != nil || !ok || entry.Complete || fileCalls.Load() != 1 {
 		t.Fatalf("actual shared save directory not checked correctly: files=%+v error=%v calls=%d", files, err, fileCalls.Load())

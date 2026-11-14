@@ -49,7 +49,7 @@ func validateAutomaticSeasonPackFilesWithWords(material metainfo.Material, targe
 		if parsed.Status != media.Parsed || parsed.Original == nil {
 			return bad("REVIEW_SEASON_PACK", "整季包含未知文件，无法自动获取")
 		}
-		resolved := media.Resolve(mediaKey(target.Media), *parsed.Original, media.Source{Site: siteID}, target.Mappings, known, nil)
+		resolved := media.Resolve(mediaKey(target.Media), decision.AliasSeasonNumbering(target.Media, target.Season, *parsed.Original), media.Source{Site: siteID}, target.Mappings, known, nil)
 		if resolved.Status != media.Parsed {
 			return bad("REVIEW_SEASON_PACK", "整季包季集映射无法确认")
 		}

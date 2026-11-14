@@ -9,7 +9,9 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -36,10 +38,12 @@ type DirectoryObservedFile struct {
 	Snapshot            importSnapshot `json:"snapshot"`
 	RuleFingerprint     string         `json:"rule_fingerprint"`
 	EvidenceFingerprint string         `json:"evidence_fingerprint"`
+	OwnerHash           string         `json:"owner_hash,omitempty"`
 }
 type directoryBaseline struct {
-	Fingerprint string `json:"fingerprint"`
-	LastScan    string `json:"last_scan"`
+	Fingerprint string            `json:"fingerprint"`
+	LastScan    string            `json:"last_scan"`
+	Tasks       map[string]string `json:"tasks,omitempty"`
 }
 type directoryImportGuard struct {
 	Rule               DirectoryRule `json:"rule"`
@@ -53,6 +57,7 @@ type directoryDownloadFile struct {
 	Size             int64
 	Hint             *importInferredMedia
 	IdentityConflict bool
+	OwnerHash        string
 }
 
 func mergeDirectoryDownloadFile(entry, old directoryDownloadFile) directoryDownloadFile {
@@ -151,7 +156,29 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 		return a.recordDirectoryInspectionFailure(ctx, rule, fingerprint, path, cause)
 	}
-	raw, e := a.scanImportFiles(ctx, source, true, inspectFailed)
+	var baseline directoryBaseline
+	baselineErr := a.Store.Get(ctx, "directory_file_state", rule.ID, &baseline)
+	if baselineErr != nil && !errors.Is(baselineErr, sql.ErrNoRows) {
+		return baselineErr
+	}
+	initial := baseline.Fingerprint != fingerprint
+	allObserved, stored, e := a.directoryObservations(ctx, rule.ID)
+	if e != nil {
+		return e
+	}
+	fingerprints := baseline.Tasks
+	if initial {
+		fingerprints = map[string]string{}
+		stored = map[string]map[string]directoryDownloadFile{}
+	}
+	unchanged := func(path string, stamp importSnapshot) bool {
+		existing, ok := allObserved[path]
+		if !ok {
+			return false
+		}
+		return existing.RuleFingerprint == fingerprint && existing.State != directoryInspectionPending && existing.State != "needs_review" && existing.State != "error" && sameDirectorySnapshot(existing.Snapshot, stamp)
+	}
+	raw, e := a.scanImportFiles(ctx, source, true, inspectFailed, unchanged)
 	if e != nil {
 		return e
 	}
@@ -160,7 +187,7 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 	if truncated, _ := scan["truncated"].(bool); truncated {
 		return bad("DIRECTORY_SCAN_LIMIT", "监听目录超过2000个视频或扫描上限，请拆分目录；本轮未执行整理")
 	}
-	downloads, e := a.directoryDownloadFiles(ctx, rule, source)
+	downloads, taskFingerprints, e := a.directoryDownloadFiles(ctx, rule, source, fingerprints, stored)
 	if e != nil {
 		return e
 	}
@@ -172,12 +199,6 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 		guard.DownloaderSnapshot = downloaderSnapshot(d)
 	}
-	var baseline directoryBaseline
-	baselineErr := a.Store.Get(ctx, "directory_file_state", rule.ID, &baseline)
-	if baselineErr != nil && !errors.Is(baselineErr, sql.ErrNoRows) {
-		return baselineErr
-	}
-	initial := baseline.Fingerprint != fingerprint
 	for _, file := range files {
 		if owner, ok := downloads[file.Path]; ok {
 			if owner.IdentityConflict {
@@ -195,21 +216,19 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 		if !a.directoryRuleOwnsFile(rule, file) {
 			key := directoryFileID(rule.ID, file.Path)
-			var existing DirectoryObservedFile
-			if err := a.Store.Get(ctx, "directory_file", key, &existing); errors.Is(err, sql.ErrNoRows) || err == nil && existing.State == directoryInspectionPending {
+			existing, seen := allObserved[file.Path]
+			if !seen || existing.State == directoryInspectionPending {
 				stamp, snapshotErr := snapshotPath(file.Path)
 				if snapshotErr != nil {
-					if err = inspectFailed(file.Path, snapshotErr); err != nil {
+					if err := inspectFailed(file.Path, snapshotErr); err != nil {
 						return err
 					}
 					continue
 				}
 				baseline := DirectoryObservedFile{ID: key, DirectoryID: rule.ID, Path: file.Path, State: "baseline", Reason: "由列表中更靠前的目录规则处理", Snapshot: stamp, StableSince: time.Now().UnixNano(), RuleFingerprint: fingerprint, LastSeen: now()}
-				if err = a.Store.Put(ctx, "directory_file", key, baseline); err != nil {
+				if err := a.Store.Put(ctx, "directory_file", key, baseline); err != nil {
 					return err
 				}
-			} else if err != nil {
-				return err
 			}
 			continue
 		}
@@ -228,10 +247,15 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 		key := directoryFileID(rule.ID, file.Path)
 		var f DirectoryObservedFile
-		e = a.Store.Get(ctx, "directory_file", key, &f)
+		if cached, ok := allObserved[file.Path]; ok && cached.ID == key {
+			f = cached
+		} else {
+			e = a.Store.Get(ctx, "directory_file", key, &f)
+		}
 		if e != nil && !errors.Is(e, sql.ErrNoRows) {
 			return e
 		}
+		before := f
 		fresh := e != nil || f.RuleFingerprint != fingerprint || f.State == directoryInspectionPending
 		changed := !fresh && !sameDirectorySnapshot(f.Snapshot, stamp)
 
@@ -242,7 +266,7 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}{file.InferredMedia, file.Numbering, file.IdentityReason})
 		evidenceSum := sha256.Sum256(evidenceJSON)
 		evidence := hex.EncodeToString(evidenceSum[:])
-		retryIdentity := !fresh && !changed && (f.State == "needs_review" || f.State == "error") && f.EvidenceFingerprint != evidence
+		retryIdentity := !file.Unchanged && !fresh && !changed && (f.State == "needs_review" || f.State == "error") && f.EvidenceFingerprint != evidence
 		if fresh || changed || retryIdentity {
 			f = DirectoryObservedFile{ID: key, DirectoryID: rule.ID, Path: file.Path, State: "observing", Reason: "等待文件至少60秒保持稳定", Snapshot: stamp, StableSince: time.Now().UnixNano(), RuleFingerprint: fingerprint, EvidenceFingerprint: evidence}
 			if fresh && initial && !rule.IncludeExisting {
@@ -250,7 +274,9 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 				f.Reason = "启用监听时已存在，已跳过；需要时从文件管理手动整理"
 			}
 		}
-		f.LastSeen = now()
+		if last, err := time.Parse(time.RFC3339, f.LastSeen); err != nil || time.Since(last) >= 5*time.Minute {
+			f.LastSeen = now()
+		}
 		if f.JobID != "" && f.PlanID == "" {
 			var planID string
 			if a.Store.DB.QueryRowContext(ctx, `SELECT json_extract(payload,'$.id') FROM jobs WHERE id=? AND kind='import'`, f.JobID).Scan(&planID) == nil {
@@ -280,19 +306,54 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 				f.State = "observing"
 				f.Reason = "空文件不参与整理"
 			} else {
+				if file.Unchanged {
+					file.Parsed = a.parseMediaName(filepath.Base(file.Path))
+					mediaHint, numbering, reason := a.importNFOEvidence(file.Path)
+					if mediaHint != nil {
+						file.InferredMedia = mediaHint
+						file.IdentitySource = "nfo"
+					}
+					if numbering != nil {
+						file.Numbering = numbering
+					}
+					if reason != "" {
+						file.IdentityReason = reason
+					}
+					if owner, ok := downloads[file.Path]; ok {
+						if owner.IdentityConflict {
+							file.IdentityReason = "下载任务的影视身份存在冲突"
+						} else if owner.Hint != nil {
+							if file.InferredMedia != nil && (file.InferredMedia.ID != owner.Hint.ID || file.InferredMedia.Type != owner.Hint.Type) {
+								file.IdentityReason = "下载任务与NFO影视身份存在冲突"
+							} else if file.IdentityReason == "" {
+								file.InferredMedia = owner.Hint
+								if file.Numbering == nil {
+									file.Numbering = file.Parsed.Original
+								}
+							}
+						}
+					}
+				}
 				if e = a.enqueueDirectoryOrganizeFile(ctx, guard, file, &f); e != nil {
 					return e
 				}
 			}
 		}
-		if e = a.Store.Put(ctx, "directory_file", f.ID, f); e != nil {
-			return e
+		if owner, ok := downloads[file.Path]; ok {
+			f.OwnerHash = owner.OwnerHash
+		} else {
+			f.OwnerHash = ""
+		}
+		if !reflect.DeepEqual(before, f) {
+			if e = a.Store.Put(ctx, "directory_file", f.ID, f); e != nil {
+				return e
+			}
 		}
 	}
 	if inspectionError != nil {
 		return inspectionError
 	}
-	return a.Store.Put(ctx, "directory_file_state", rule.ID, directoryBaseline{Fingerprint: fingerprint, LastScan: now()})
+	return a.Store.Put(ctx, "directory_file_state", rule.ID, directoryBaseline{Fingerprint: fingerprint, LastScan: now(), Tasks: taskFingerprints})
 }
 
 func (a *App) recordDirectoryInspectionFailure(ctx context.Context, rule DirectoryRule, fingerprint, path string, cause error) error {
@@ -383,13 +444,13 @@ func (a *App) guardDirectoryFilePlan(ctx context.Context, planID string) error {
 	return nil
 }
 
-func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, source string) (map[string]directoryDownloadFile, error) {
+func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, source string, fingerprints map[string]string, stored map[string]map[string]directoryDownloadFile) (map[string]directoryDownloadFile, map[string]string, error) {
 	out := map[string]directoryDownloadFile{}
 	configs := []DownloaderConfig{}
 	if rule.DownloaderID != "" {
 		d, e := a.downloader(rule.DownloaderID)
 		if e != nil {
-			return nil, e
+			return nil, nil, e
 		}
 		configs = append(configs, d)
 	} else {
@@ -397,14 +458,14 @@ func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, so
 			if !downloaderEnabled(d) {
 				rows, err := a.Store.DB.QueryContext(ctx, `SELECT json_extract(payload,'$.download_path') FROM records WHERE kind IN ('intent','native_download') AND json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state') NOT IN ('cancelled','imported')`, d.ID)
 				if err != nil {
-					return nil, err
+					return nil, nil, err
 				}
 				blocked := false
 				for rows.Next() {
 					var path sql.NullString
 					if err = rows.Scan(&path); err != nil {
 						rows.Close()
-						return nil, err
+						return nil, nil, err
 					}
 					if path.String == "" {
 						path.String = d.DownloadPath
@@ -417,10 +478,10 @@ func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, so
 				err = rows.Err()
 				rows.Close()
 				if err != nil {
-					return nil, err
+					return nil, nil, err
 				}
 				if blocked {
-					return nil, bad("DOWNLOADER_DISABLED", "此目录有停用下载器的在途任务，启用后继续核对与整理")
+					return nil, nil, bad("DOWNLOADER_DISABLED", "此目录有停用下载器的在途任务，启用后继续核对与整理")
 				}
 				continue
 			}
@@ -435,10 +496,17 @@ func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, so
 			}
 		}
 	}
+	next := map[string]string{}
+	for hash, fingerprint := range fingerprints {
+		next[hash] = fingerprint
+	}
 	for _, d := range configs {
-		files, err := a.directoryFilesForDownloader(ctx, d, source)
+		files, updated, err := a.directoryFilesForDownloader(ctx, d, source, next, stored)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
+		}
+		for hash, fingerprint := range updated {
+			next[hash] = fingerprint
 		}
 		for path, entry := range files {
 			if old, ok := out[path]; ok {
@@ -447,36 +515,135 @@ func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, so
 			out[path] = entry
 		}
 	}
-	return out, nil
+	return out, next, nil
 }
-func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfig, source string) (map[string]directoryDownloadFile, error) {
+
+// directoryObservations loads the persisted per-file observations once; both
+// the downloader mapping and the filesystem incremental scan share it.
+func (a *App) directoryObservations(ctx context.Context, ruleID string) (map[string]DirectoryObservedFile, map[string]map[string]directoryDownloadFile, error) {
+	all := map[string]DirectoryObservedFile{}
+	stored := map[string]map[string]directoryDownloadFile{}
+	rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind='directory_file' AND json_extract(payload,'$.directory_id')=?`, ruleID)
+	if e != nil {
+		return nil, nil, e
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var b []byte
+		var f DirectoryObservedFile
+		if e = rows.Scan(&b); e != nil {
+			return nil, nil, e
+		}
+		if json.Unmarshal(b, &f) != nil {
+			continue
+		}
+		all[f.Path] = f
+		if f.OwnerHash != "" {
+			if stored[f.OwnerHash] == nil {
+				stored[f.OwnerHash] = map[string]directoryDownloadFile{}
+			}
+			stored[f.OwnerHash][f.Path] = directoryDownloadFile{Size: f.Snapshot.Size, OwnerHash: f.OwnerHash}
+		}
+	}
+	return all, stored, rows.Err()
+}
+type directoryTaskState struct {
+	Files    int
+	Imported int
+}
+
+// directoryDownloadTaskState loads intent/native state for one downloader in
+// two queries instead of two queries per task.
+func (a *App) directoryDownloadTaskState(ctx context.Context, downloaderID string) (map[string]directoryTaskState, map[string]NativeDownload, error) {
+	states := map[string]directoryTaskState{}
+	rows, e := a.Store.reader().QueryContext(ctx, `SELECT lower(json_extract(payload,'$.hash')), count(*), coalesce(max(json_extract(payload,'$.state')='imported'),0) FROM records WHERE kind='intent' AND json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')!='cancelled' GROUP BY 1`, downloaderID)
+	if e != nil {
+		return nil, nil, e
+	}
+	for rows.Next() {
+		var hash string
+		var count, imported int
+		if e = rows.Scan(&hash, &count, &imported); e != nil {
+			rows.Close()
+			return nil, nil, e
+		}
+		states[hash] = directoryTaskState{Files: count, Imported: imported}
+	}
+	if e = rows.Err(); e != nil {
+		rows.Close()
+		return nil, nil, e
+	}
+	rows.Close()
+	natives := map[string]NativeDownload{}
+	nrows, e := a.Store.reader().QueryContext(ctx, `SELECT payload FROM records WHERE kind='native_download' AND json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')!='cancelled' ORDER BY updated_at DESC`, downloaderID)
+	if e != nil {
+		return nil, nil, e
+	}
+	defer nrows.Close()
+	for nrows.Next() {
+		var payload []byte
+		if e = nrows.Scan(&payload); e != nil {
+			return nil, nil, e
+		}
+		var native NativeDownload
+		if json.Unmarshal(payload, &native) != nil {
+			continue
+		}
+		key := strings.ToLower(native.Hash)
+		if _, ok := natives[key]; !ok && key != "" {
+			natives[key] = native
+		}
+	}
+	return states, natives, nrows.Err()
+}
+
+func directoryTaskFingerprint(t download.Task) string {
+	return fmt.Sprintf("%s|%.6f|%d|%d|%s", t.Status, t.Progress, t.Completed, t.TotalSize, t.Name)
+}
+
+func directoryNativeHint(native NativeDownload) *importInferredMedia {
+	if !validMedia(native.MediaType, native.TMDBID) {
+		return nil
+	}
+	return &importInferredMedia{Type: native.MediaType, MediaType: native.MediaType, ID: native.TMDBID}
+}
+
+// directoryFilesForDownloader maps downloader tasks to their files. One task
+// fingerprint is persisted per hash; when it is unchanged the per-file
+// observations already carry the ownership mapping, so no per-task file
+// listing is needed. This is the single incremental state shared with the
+// filesystem side.
+func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfig, source string, fingerprints map[string]string, stored map[string]map[string]directoryDownloadFile) (map[string]directoryDownloadFile, map[string]string, error) {
 	out := map[string]directoryDownloadFile{}
+	next := map[string]string{}
+	for hash, fingerprint := range fingerprints {
+		next[hash] = fingerprint
+	}
 	client, e := download.New(d.Config)
 	if e != nil {
-		return nil, e
+		return nil, nil, e
 	}
 	tasks, e := client.List(ctx)
 	if e != nil {
-		return nil, bad("DIRECTORY_DOWNLOADER_UNAVAILABLE", "无法核对下载器文件是否完成，本轮不执行目录整理")
+		return nil, nil, bad("DIRECTORY_DOWNLOADER_UNAVAILABLE", "无法核对下载器文件是否完成，本轮不执行目录整理")
 	}
-	checked := 0
+	states, natives, e := a.directoryDownloadTaskState(ctx, d.ID)
+	if e != nil {
+		return nil, nil, e
+	}
 	for _, t := range tasks {
 		sharedPath := ""
 		if d.SharedPaths {
-			// Shared container paths are already the file identity. Unrelated
-			// daemon tasks do not require authorization for this source scan.
 			path := cleanDirectoryInput(t.DownloadDir)
 			if err := safeRoot(path); err != nil {
 				if within(source, path) || within(path, source) {
-					return nil, bad("DIRECTORY_PATH_UNVERIFIED", "相关下载任务返回不规范保存目录，本轮未整理")
+					return nil, nil, bad("DIRECTORY_PATH_UNVERIFIED", "相关下载任务返回不规范保存目录，本轮未整理")
 				}
 				continue
 			}
 			var relevant bool
 			sharedPath, relevant = sharedDirectoryPath(source, path)
 			if !relevant && len(d.Mappings) > 0 {
-				// Frozen legacy instances can still report a historical daemon
-				// path before their container mounts have been aligned.
 				if legacy, err := mapPath(path, d.Mappings); err == nil && (within(source, legacy) || within(legacy, source)) {
 					sharedPath, relevant = legacy, true
 				}
@@ -493,67 +660,82 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 		mapped, e := mapDownloaderPath(a.Settings(), d, pathToCheck)
 		if e != nil {
 			if within(source, t.DownloadDir) || within(t.DownloadDir, source) {
-				return nil, bad("DIRECTORY_PATH_UNVERIFIED", "下载器路径不在应用容器可见目录内，本轮未整理")
+				return nil, nil, bad("DIRECTORY_PATH_UNVERIFIED", "下载器路径不在应用容器可见目录内，本轮未整理")
 			}
 			continue
 		}
 		if !within(source, mapped) && !within(mapped, source) {
 			continue
 		}
-		checked++
-		if checked > 200 {
-			return nil, bad("DIRECTORY_TASK_LIMIT", "该目录关联下载任务超过200个，请缩小监听目录")
+		hash := strings.ToLower(t.Hash)
+		state := states[hash]
+		native := natives[hash]
+		entries := stored[hash]
+		count := 0
+		if entries != nil {
+			count = len(entries)
 		}
-		files, e := client.Files(ctx, t.Hash)
-		if e != nil {
-			return nil, e
-		}
-		var managed, imported int
-		e = a.Store.DB.QueryRowContext(ctx, `SELECT count(*),coalesce(max(json_extract(payload,'$.state')='imported'),0) FROM records WHERE kind='intent' AND json_extract(payload,'$.downloader_id')=? AND lower(json_extract(payload,'$.hash'))=lower(?) AND json_extract(payload,'$.state')!='cancelled'`, d.ID, t.Hash).Scan(&managed, &imported)
-		if e != nil {
-			return nil, e
-		}
-		var native NativeDownload
-		var payload []byte
-		nativeErr := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='native_download' AND json_extract(payload,'$.downloader_id')=? AND lower(json_extract(payload,'$.hash'))=lower(?) AND json_extract(payload,'$.state')!='cancelled' ORDER BY updated_at DESC LIMIT 1`, d.ID, t.Hash).Scan(&payload)
-		if nativeErr != nil && !errors.Is(nativeErr, sql.ErrNoRows) {
-			return nil, nativeErr
-		}
-		if nativeErr == nil && json.Unmarshal(payload, &native) != nil {
-			return nil, bad("DOWNLOAD_RECORD_INVALID", "下载记录无法读取")
-		}
-		for _, f := range files {
-			if !filepath.IsLocal(filepath.FromSlash(f.Path)) {
-				return nil, bad("DIRECTORY_UNSAFE_DOWNLOADER_PATH", "下载器返回异常文件路径")
-			}
-			fileRoot := t.DownloadDir
-			if sharedPath != "" {
-				fileRoot = sharedPath
-			}
-			candidate := filepath.Join(fileRoot, filepath.FromSlash(f.Path))
-			if d.SharedPaths && !within(source, candidate) {
+		fingerprint := directoryTaskFingerprint(t) + "|" + strconv.Itoa(count)
+		if fingerprints[hash] != fingerprint || entries == nil {
+			files, err := client.Files(ctx, t.Hash)
+			if err != nil {
+				if ctx.Err() != nil {
+					return nil, nil, ctx.Err()
+				}
+				a.log("WARN", "directories", "directory_files_unavailable", "无法读取部分下载任务文件，已跳过："+t.Hash, "", "")
 				continue
 			}
-			path, e := mapDownloaderPath(a.Settings(), d, candidate)
-			if e != nil {
-				return nil, e
+			entries = map[string]directoryDownloadFile{}
+			ready := directoryTaskComplete(t)
+			for _, f := range files {
+				if !filepath.IsLocal(filepath.FromSlash(f.Path)) {
+					return nil, nil, bad("DIRECTORY_UNSAFE_DOWNLOADER_PATH", "下载器返回异常文件路径")
+				}
+				fileRoot := t.DownloadDir
+				if sharedPath != "" {
+					fileRoot = sharedPath
+				}
+				candidate := filepath.Join(fileRoot, filepath.FromSlash(f.Path))
+				if d.SharedPaths && !within(source, candidate) {
+					continue
+				}
+				path, err := mapDownloaderPath(a.Settings(), d, candidate)
+				if err != nil {
+					return nil, nil, err
+				}
+				if !within(source, path) {
+					continue
+				}
+				entry := directoryDownloadFile{Complete: ready && f.Size > 0 && f.Completed >= f.Size && f.Progress >= 1, Managed: state.Files > 0, Imported: state.Imported > 0, Size: f.Size, OwnerHash: hash}
+				if hint := directoryNativeHint(native); hint != nil {
+					entry.Hint = hint
+				}
+				if old, ok := entries[path]; ok {
+					entry = mergeDirectoryDownloadFile(entry, old)
+				}
+				entries[path] = entry
 			}
-			if !within(source, path) {
-				continue
+			next[hash] = directoryTaskFingerprint(t) + "|" + strconv.Itoa(len(entries))
+		} else {
+			ready := directoryTaskComplete(t)
+			for path, entry := range entries {
+				entry.Managed = state.Files > 0
+				entry.Imported = state.Imported > 0
+				entry.Complete = ready && entry.Size > 0
+				entry.Hint = directoryNativeHint(native)
+				entries[path] = entry
 			}
-			taskReady := directoryTaskComplete(t)
-			entry := directoryDownloadFile{Complete: taskReady && f.Size > 0 && f.Completed >= f.Size && f.Progress >= 1, Managed: managed > 0, Imported: imported > 0, Size: f.Size}
-			if validMedia(native.MediaType, native.TMDBID) {
-				entry.Hint = &importInferredMedia{Type: native.MediaType, MediaType: native.MediaType, ID: native.TMDBID}
-			}
+		}
+		for path, entry := range entries {
 			if old, ok := out[path]; ok {
 				entry = mergeDirectoryDownloadFile(entry, old)
 			}
 			out[path] = entry
 		}
 	}
-	return out, nil
+	return out, next, nil
 }
+
 func directoryTitle(s string) string {
 	return media.NormalizeTitle(s)
 }

@@ -26,7 +26,7 @@ func (a *App) pluginMarketsHTTP(w http.ResponseWriter, r *http.Request) (any, er
 		if local == nil {
 			local = []string{}
 		}
-		return map[string]any{"plugin_markets": sources, "plugin_markets_locked": a.pluginMarketOverride != nil, "plugin_local_repo_paths": local, "plugin_auto_reload": settings.PluginAutoReload, "plugin_server_url": settings.PluginServerURL, "plugin_statistic_share": originalPluginStatisticShared(settings), "github_proxy": settings.GitHubProxy, "github_token_set": settings.GitHubToken != "", "repo_github_token_set": settings.RepoGitHubToken != ""}, nil
+		return map[string]any{"plugin_markets": sources, "plugin_markets_locked": a.pluginMarketOverride != nil, "plugin_local_repo_paths": local, "plugin_auto_reload": settings.PluginAutoReload, "plugin_server_url": settings.PluginServerURL, "plugin_statistic_share": originalPluginStatisticShared(settings), "github_proxy": settings.GitHubProxy, "github_token": settings.GitHubToken, "repo_github_token": settings.RepoGitHubToken, "github_token_set": settings.GitHubToken != "", "repo_github_token_set": settings.RepoGitHubToken != ""}, nil
 	}
 	if r.Method != http.MethodPut {
 		return nil, bad("METHOD_NOT_ALLOWED", "请求方法不支持")

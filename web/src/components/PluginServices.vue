@@ -23,8 +23,7 @@ const items = ref<Service[]>([]),
   loading = ref(true),
   error = ref('');
 let mounted = true,
-  fetching = false,
-  timer: ReturnType<typeof setInterval>;
+  fetching = false;
 const refreshTimers = new Set<ReturnType<typeof setTimeout>>();
 async function load() {
   if (!mounted || fetching || document.hidden) return;
@@ -66,12 +65,10 @@ function visible() {
 }
 onMounted(() => {
   void load();
-  timer = setInterval(() => void load(), 5000);
   document.addEventListener('visibilitychange', visible);
 });
 onUnmounted(() => {
   mounted = false;
-  clearInterval(timer);
   for (const pending of refreshTimers) clearTimeout(pending);
   refreshTimers.clear();
   document.removeEventListener('visibilitychange', visible);

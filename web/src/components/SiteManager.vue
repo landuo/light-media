@@ -785,7 +785,7 @@ onUnmounted(() => {
             <VTextField
               class="half"
               v-model="editing.rss"
-              type="password"
+              type="text"
               disabled
               :placeholder="original?.credential_state?.rss ? '已保存，保留原配置' : '未配置'"
               label="RSS 地址"
@@ -856,7 +856,7 @@ onUnmounted(() => {
                 class="half"
                 v-model="editing.token"
                 aria-label="Authorization"
-                type="password"
+                type="text"
                 autocomplete="new-password"
                 :placeholder="original?.credential_state?.token ? '已保存，保留原配置' : '未配置'"
                 label="Authorization"
@@ -864,7 +864,7 @@ onUnmounted(() => {
                 persistent-hint /><VTextField
                 class="half"
                 v-model="editing.api_key"
-                type="password"
+                type="text"
                 autocomplete="new-password"
                 aria-label="API Key"
                 :placeholder="

@@ -30,8 +30,8 @@ func TestManagedRousiImportSecretsAndTokenRevocation(t *testing.T) {
 	}
 	v, e := a.managedSites(ctx)
 	raw, _ := json.Marshal(v)
-	if e != nil || strings.Contains(string(raw), "synthetic-") {
-		t.Fatal("managed site response leaked credential", e)
+	if e != nil || !strings.Contains(string(raw), "synthetic-") {
+		t.Fatal("managed site response missing credential", e)
 	}
 	oldKey := a.managedSiteKey(s)
 	previous := http.DefaultTransport

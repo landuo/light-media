@@ -14,7 +14,7 @@ async function load() {
   loading.value = true;
   try {
     const c = await refreshSettings();
-    value.value = '';
+    value.value = typeof c.proxy_host === 'string' ? c.proxy_host : '';
     configured.value = !!c.secret_state?.proxy_host;
     endpoint.value = c.proxy_endpoint || '';
     clear.value = false;
@@ -46,7 +46,7 @@ onMounted(() => action(load));
   <VTextField
     v-model.trim="value"
     label="代理服务器"
-    type="password"
+    type="text"
     prepend-inner-icon="mdi-server-network"
     autocomplete="new-password"
     maxlength="8192"

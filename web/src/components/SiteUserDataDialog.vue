@@ -12,7 +12,13 @@ import { VAlert } from 'vuetify/components/VAlert';
 import VueApexCharts from 'vue3-apexcharts';
 import type { ApexOptions } from 'apexcharts';
 import { api, errorText, friendly } from '../api';
-import { siteDataDays, siteDataDelta, siteDataBytes, type SiteStats } from '../features/site-data';
+import {
+  siteDataDays,
+  siteDataLatestDailyDelta,
+  siteDataDailySeries,
+  siteDataBytes,
+  type SiteStats,
+} from '../features/site-data';
 import PluginDialogCloseBtn from './PluginDialogCloseBtn.vue';
 
 const props = defineProps<{ site: any; blocked?: boolean }>();
@@ -58,7 +64,7 @@ function value(key: keyof SiteStats) {
 }
 const cards = computed(() =>
   metrics.map((metric) => {
-    const diff = siteDataDelta(days.value, metric.key);
+    const diff = siteDataLatestDailyDelta(days.value, metric.key);
     return {
       ...metric,
       value: value(metric.key),
@@ -75,10 +81,9 @@ const cards = computed(() =>
 const historySeries = computed(() =>
   ['uploaded', 'downloaded'].map((key, index) => ({
     name: ['上传量', '下载量'][index],
-    data: days.value.map((day) => {
-      const v = day.stats[key as 'uploaded' | 'downloaded'];
-      return typeof v === 'number' ? Math.round(v / 1024 ** 3) : null;
-    }),
+    data: siteDataDailySeries(days.value, key as 'uploaded' | 'downloaded').map((v) =>
+      v == null ? null : Math.round(v / 1024 ** 3),
+    ),
   })),
 );
 const chartBase: ApexOptions = {
@@ -115,7 +120,7 @@ const historyOptions = computed<ApexOptions>(() => ({
     },
   },
   yaxis: {
-    title: { text: 'GB' },
+    title: { text: 'GB / 天' },
     labels: { style: { fontSize: '10px' }, formatter: (val) => val.toLocaleString() },
   },
   fill: {
@@ -151,7 +156,7 @@ const seedingOptions: ApexOptions = {
     },
   },
   yaxis: {
-    title: { text: 'GB' },
+    title: { text: 'GB / 天' },
     labels: { style: { fontSize: '10px' }, formatter: (val) => val.toLocaleString() + ' GB' },
   },
 };
@@ -269,7 +274,7 @@ onUnmounted(() => {
                     ><VIcon icon="mdi-chart-areaspline" size="19" /></VAvatar
                 ></template>
                 <VCardTitle>历史流量</VCardTitle
-                ><template #append><span class="site-data-chart-caption">GB</span></template>
+                ><template #append><span class="site-data-chart-caption">GB（每日增量）</span></template>
               </VCardItem>
               <VCardText class="site-data-chart-content"
                 ><div class="site-data-chart-plot">
@@ -298,7 +303,7 @@ onUnmounted(() => {
                     ><VIcon icon="mdi-chart-scatter-plot" size="19" /></VAvatar
                 ></template>
                 <VCardTitle>做种分布</VCardTitle
-                ><template #append><span class="site-data-chart-caption">GB</span></template>
+                ><template #append><span class="site-data-chart-caption">GB（每日增量）</span></template>
               </VCardItem>
               <VCardText class="site-data-chart-content"
                 ><div class="site-data-chart-plot">

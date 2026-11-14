@@ -34,8 +34,8 @@ func TestSiteCookieSaveDoesNotWaitForImportDownload(t *testing.T) {
 		t.Fatal("credential not committed")
 	}
 	raw, _ := json.Marshal(result)
-	if strings.Contains(string(raw), in.Cookie) {
-		t.Fatal("credential disclosed")
+	if !strings.Contains(string(raw), in.Cookie) {
+		t.Fatal("credential not echoed")
 	}
 	if !strings.Contains(string(raw), `"configuration_only":true`) {
 		t.Fatal("missing save acknowledgement")

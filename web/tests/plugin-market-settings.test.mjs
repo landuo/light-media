@@ -35,7 +35,7 @@ function fixture({
   autoReload = false,
   serverURL = '',
   statisticShare = true,
-  githubProxy = '', githubTokenSet = false, repoGitHubTokenSet = false,
+  githubProxy = '', githubToken = '', repoGitHubToken = '', githubTokenSet = false, repoGitHubTokenSet = false,
   result = { success: true },
   wikiResult = { success: true, repos: [first, second], message: '原版 Python 仓库需 Go 适配' },
   readError,
@@ -66,7 +66,7 @@ function fixture({
               plugin_auto_reload: autoReload,
               plugin_server_url: serverURL,
               plugin_statistic_share: statisticShare,
-              github_proxy: githubProxy, github_token_set: githubTokenSet, repo_github_token_set: repoGitHubTokenSet,
+              github_proxy: githubProxy, github_token: githubToken, repo_github_token: repoGitHubToken, github_token_set: githubTokenSet, repo_github_token_set: repoGitHubTokenSet,
             };
           }
           if (wait) await wait;
@@ -458,12 +458,12 @@ test('fixed-source system fields are outside the repository dialog', async () =>
 
 
 test('GitHub controls load only configured flags and untouched saves omit credential/network fields', async () => {
- const f=systemFixture({githubProxy:'https://owned-mirror.invalid/prefix',githubTokenSet:true,repoGitHubTokenSet:true});await f.state.load();
- assert.equal(f.state.githubToken.value,'');assert.equal(f.state.repoGitHubToken.value,'');
+ const f=systemFixture({githubProxy:'https://owned-mirror.invalid/prefix',githubToken:'owned-default',repoGitHubToken:'owner/repo:owned-specific',githubTokenSet:true,repoGitHubTokenSet:true});await f.state.load();
+ assert.equal(f.state.githubToken.value,'owned-default');assert.equal(f.state.repoGitHubToken.value,'owner/repo:owned-specific');
  assert.equal(f.state.githubTokenSet.value,true);assert.equal(f.state.repoGitHubTokenSet.value,true);
  const controls=f.nodes();
- assert.equal(controls.find(node=>node.props?.label==='Github Token').props.type,'password');
- assert.equal(controls.find(node=>node.props?.label==='指定仓库Github Token').props.type,'password');
+ assert.equal(controls.find(node=>node.props?.label==='Github Token').props.type,'text');
+ assert.equal(controls.find(node=>node.props?.label==='指定仓库Github Token').props.type,'text');
  f.state.githubToken.value = null; f.state.repoGitHubToken.value = null;
  await f.state.save();
  for(const key of ['github_token','repo_github_token','github_proxy','clear_github_token','clear_repo_github_token'])assert.equal(Object.hasOwn(f.requests[1].body,key),false);
@@ -475,7 +475,7 @@ test('GitHub credentials and mirror save through host settings and clear only af
  await f.state.save();
  assert.equal(f.requests[1].body.github_proxy,'https://owned-mirror.invalid/prefix');
  assert.equal(f.requests[1].body.github_token,'owned-default');assert.equal(f.requests[1].body.repo_github_token,'owner/repo:owned-specific');
- assert.equal(f.state.githubToken.value,'');assert.equal(f.state.repoGitHubToken.value,'');
+ assert.equal(f.state.githubToken.value,'owned-default');assert.equal(f.state.repoGitHubToken.value,'owner/repo:owned-specific');
  assert.equal(f.state.githubTokenSet.value,true);assert.equal(f.state.repoGitHubTokenSet.value,true);
  f.state.removeGitHubToken();f.state.removeRepoGitHubToken();await f.state.save();
  assert.equal(f.requests[2].body.clear_github_token,true);assert.equal(f.requests[2].body.clear_repo_github_token,true);

@@ -122,15 +122,10 @@ test('actual Lark form and source dynamic handlers retain the independent model'
   const watcher = effect(() => {
     rendered = pluginFieldProps(props, draft);
   });
-  assert.equal(rendered.type, 'password');
-  assert.equal(rendered['append-inner-icon'], 'mdi-eye');
-  rendered['onClick:append-inner']();
+  // Secret inputs stay plaintext: no password box and no visibility toggle.
   assert.equal(rendered.type, 'text');
-  assert.equal(rendered['append-inner-icon'], 'mdi-eye-off');
-  assert.equal(draft.app_secret, 'owned-synthetic-value');
-  rendered['onClick:append-inner']();
-  assert.equal(rendered.type, 'password');
-  assert.equal(draft.app_secret_visible, false);
+  assert.equal(rendered['append-inner-icon'], undefined);
+  assert.equal(rendered['onClick:append-inner'], undefined);
   assert.equal(draft.app_secret, 'owned-synthetic-value');
   stop(watcher);
   for (const changes of [

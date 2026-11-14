@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"light-media/internal/decision"
 	"os"
 	"path/filepath"
 	"slices"
@@ -101,6 +102,8 @@ type importScanFile struct {
 	Numbering                 *media.Numbering     `json:"numbering,omitempty"`
 	IdentitySource            string               `json:"identity_source,omitempty"`
 	IdentityReason            string               `json:"identity_reason,omitempty"`
+	Snapshot                  *importSnapshot      `json:"-"`
+	Unchanged                 bool                 `json:"-"`
 }
 
 type importInferredMedia struct {
@@ -142,10 +145,10 @@ func parseManualImportName(file ImportFileRequest, name string) media.ParseResul
 }
 
 func (a *App) scanFiles(ctx context.Context, directory string, recursive bool) (any, error) {
-	return a.scanImportFiles(ctx, directory, recursive, nil)
+	return a.scanImportFiles(ctx, directory, recursive, nil, nil)
 }
 
-func (a *App) scanImportFiles(ctx context.Context, directory string, recursive bool, inspectFailed func(string, error) error) (any, error) {
+func (a *App) scanImportFiles(ctx context.Context, directory string, recursive bool, inspectFailed func(string, error) error, unchanged func(string, importSnapshot) bool) (any, error) {
 	if !a.sourceAllowed(directory) {
 		return nil, bad("INVALID_SOURCE", "请扫描允许目录内的规范绝对路径")
 	}
@@ -202,10 +205,15 @@ func (a *App) scanImportFiles(ctx context.Context, directory string, recursive b
 						}
 						continue
 					}
-					file := importScanFile{Path: name, Size: locked.Size, Parsed: a.parseMediaName(entry.Name())}
-					file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(name)
-					if file.InferredMedia != nil {
-						file.IdentitySource = "nfo"
+					file := importScanFile{Path: name, Size: locked.Size, Snapshot: &locked}
+					if unchanged == nil || !unchanged(name, locked) {
+						file.Parsed = a.parseMediaName(entry.Name())
+						file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(name)
+						if file.InferredMedia != nil {
+							file.IdentitySource = "nfo"
+						}
+					} else {
+						file.Unchanged = true
 					}
 					files = append(files, file)
 				}
@@ -223,6 +231,57 @@ func (a *App) scanImportFiles(ctx context.Context, directory string, recursive b
 	}
 	sort.Slice(files, func(i, j int) bool { return files[i].Path < files[j].Path })
 	return map[string]any{"files": files, "truncated": truncated}, nil
+}
+
+// adoptDownloadedIntent lets a manual organize take over reservations left by
+// a completed download that was never imported. Without this the file is
+// permanently reported as "owned by another download" even though the user is
+// organizing exactly that downloaded file.
+func (a *App) adoptDownloadedIntent(ctx context.Context, owner string, plan *ImportPlan, file PlanFile) (bool, error) {
+	var intent Intent
+	if err := a.Store.Get(ctx, "intent", owner, &intent); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return false, nil
+		}
+		return false, err
+	}
+	if intent.State != "downloaded" || mediaKey(intent.Media) != mediaKey(plan.Media) || intent.Season != file.Season {
+		return false, nil
+	}
+	if intent.DownloadPath != "" && !within(intent.DownloadPath, file.Source) {
+		return false, nil
+	}
+	overlap := false
+	for _, episode := range importEpisodes(file.Episodes) {
+		if slices.Contains(intent.Episodes, episode) {
+			overlap = true
+			break
+		}
+	}
+	if !overlap {
+		return false, nil
+	}
+	plan.IntentID = owner
+	return true, nil
+}
+
+func (a *App) managedFileByInode(ctx context.Context, device, inode uint64) (managedFile, bool) {
+	if device == 0 || inode == 0 {
+		return managedFile{}, false
+	}
+	var raw []byte
+	err := a.Store.reader().QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='managed_file'
+		AND json_extract(payload,'$.kind')='video'
+		AND json_extract(payload,'$.snapshot.device')=? AND json_extract(payload,'$.snapshot.inode')=?
+		LIMIT 1`, device, inode).Scan(&raw)
+	if err != nil {
+		return managedFile{}, false
+	}
+	var file managedFile
+	if json.Unmarshal(raw, &file) != nil || file.AssetID == "" {
+		return managedFile{}, false
+	}
+	return file, true
 }
 
 func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportPlan, error) {
@@ -456,7 +515,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					for _, episode := range season.Episodes {
 						known = append(known, media.Episode{Season: seasonNumber, Episode: episode.EpisodeNumber})
 					}
-					resolved := media.Resolve(mediaKey(identity), *parsed.Original, media.Source{}, request.Mappings, known, nil)
+					resolved := media.Resolve(mediaKey(identity), decision.AliasSeasonNumbering(identity, seasonNumber, *parsed.Original), media.Source{}, request.Mappings, known, nil)
 					if resolved.Status == media.Parsed {
 						for _, episode := range resolved.Standard {
 							if file.Season != 0 && file.Season != episode.Season {
@@ -645,6 +704,28 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				continue
 			}
 			inPlace := reorganize != nil && file.Target == reorganize.Asset.Path
+			// A hardlink already owned by this library is not a new transfer.
+			// Match by device/inode so a re-organized download is reported as
+			// already imported instead of failing on an existing target.
+			if file.Status == "ready" && qualityDownload == nil && reorganize == nil {
+				if owner, ok := a.managedFileByInode(ctx, file.Device, file.Inode); ok && owner.AssetID != "" {
+					var existing Asset
+					if a.Store.Get(ctx, "asset", owner.AssetID, &existing) == nil && existing.State == "present" && existing.RootID == root.ID && mediaKey(existing.Media) == mediaKey(identity) {
+						file.Status = "already_imported"
+						file.AssetID = existing.ID
+						file.Target = existing.Path
+					}
+				}
+			}
+			samePhysical := false
+			if targetInfo, statErr := os.Stat(file.Target); statErr == nil && file.Source != "" {
+				if sourceInfo, sourceErr := os.Stat(file.Source); sourceErr == nil {
+					samePhysical = os.SameFile(sourceInfo, targetInfo)
+				}
+			}
+			if file.Status == "ready" && samePhysical {
+				file.Status = "already_imported"
+			}
 			if !importPath(file.Target) || !within(root.Path, file.Target) || file.Source == file.Target && !inPlace || seenTargets[file.Target] {
 				block("目标路径重复、重叠或逃逸")
 			} else {
@@ -671,7 +752,9 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				block(qualityOwnerErr.Error())
 			}
 			if _, e := os.Lstat(file.Target); e == nil {
-				if qualityOwner != nil && file.Status == "ready" {
+				if file.Status == "already_imported" {
+					// Keep the inode-owned asset as the authoritative target.
+				} else if qualityOwner != nil && file.Status == "ready" {
 					stamp, inspectErr := snapshotTransferPath(file.Target)
 					if inspectErr != nil || stamp != qualityOwner.Video.Snapshot {
 						block("洗版原视频在预览时已变化")
@@ -724,6 +807,9 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 							if e == nil && !reusable && request.Manual && len(request.Files) == 1 {
 								meta.DownloadRetry, e = findDownloadImportRetry(ctx, a.Store.reader(), owner, plan, file)
 								reusable = meta.DownloadRetry != nil
+								if e == nil && !reusable {
+									reusable, e = a.adoptDownloadedIntent(ctx, owner, &plan, file)
+								}
 							}
 							if e != nil {
 								return ImportPlan{}, e

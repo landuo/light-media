@@ -1190,7 +1190,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 						}
 						failures.active[fingerprint] = true
 					}
-					a.event(ctx, j, "WARN", "subscriptions", "candidate_rejected", e.Error())
+					a.event(ctx, j, "WARN", "subscriptions", "candidate_rejected", candidate.Resource.Title+" | "+e.Error())
 					if pack {
 						reason = "整季包包含起始集、在库或未知范围，需要人工核对；继续寻找符合条件的资源"
 					}

@@ -250,7 +250,7 @@ func TestHistoryCurrentProjectionUpgradeAndOnlyDirtySources(t *testing.T) {
 	if own != 1 || other != 0 {
 		t.Fatalf("refresh rewrote own=%d unrelated=%d groups", own, other)
 	}
-	rows, err := a.Store.DB.Query(`EXPLAIN QUERY PLAN ` + transferHistoryCurrentRefreshSQL())
+	rows, err := a.Store.DB.Query(`EXPLAIN QUERY PLAN ` + transferHistoryCurrentRefreshSQL("transfer_history_dirty_sources"))
 	if err != nil {
 		t.Fatal(err)
 	}

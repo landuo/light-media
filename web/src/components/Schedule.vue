@@ -91,7 +91,7 @@ async function check() {
     />
   </div>
   <p class="hint">
-    跟随模式保留窗口外的低频兜底检查；到更新窗口后提高检查频率。日期预览来自服务端调度器。
+    对齐 MoviePilot：窗口内按 30 分钟检查（RSS 刷新节奏），窗口外与固定间隔默认 24 小时（订阅搜索节奏）。日期预览来自服务端调度器。
   </p>
   <div class="section-heading">
     <h3>例外日期</h3>

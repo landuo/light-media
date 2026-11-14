@@ -81,8 +81,7 @@ const queueJobs = computed(() =>
 const selectedJobInfo = computed(() =>
   jobDetail.value?.job ? jobQueueInfo(jobDetail.value.job) : null,
 );
-let timer: number,
-  sse: EventSource | null = null,
+let sse: EventSource | null = null,
   jobListRequest: AbortController | undefined,
   logRequest: AbortController | undefined;
 let logSnapshotQuery: string | undefined;
@@ -482,16 +481,11 @@ onMounted(() => {
   load();
   if (props.view === 'jobs' && props.initialJob)
     inspectJob({ id: decodeURIComponent(props.initialJob) });
-  if (props.view === 'jobs' || props.view === 'downloads')
-    timer = window.setInterval(() => {
-      if (!document.hidden) load(true);
-    }, 15000);
 });
 onUnmounted(() => {
   logRequest?.abort();
   logRequest = undefined;
   jobListRequest?.abort();
-  clearInterval(timer);
   sse?.close();
 });
 </script>

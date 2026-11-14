@@ -61,7 +61,8 @@ func normalizeSchedule(in Schedule) (Schedule, error) {
 		s.EveryDays = 1
 	}
 	if s.IntervalMinutes == 0 {
-		s.IntervalMinutes = 360
+		// MoviePilot searches subscriptions once per 24 hours by default.
+		s.IntervalMinutes = 1440
 	}
 	if s.WindowHours == 0 {
 		s.WindowHours = 6
@@ -70,7 +71,8 @@ func normalizeSchedule(in Schedule) (Schedule, error) {
 		s.ActiveMinutes = 30
 	}
 	if s.FallbackMinutes == 0 {
-		s.FallbackMinutes = 360
+		// Outside the update window, follow MoviePilot's 24-hour search cadence.
+		s.FallbackMinutes = 1440
 	}
 	if s.EveryDays < 1 || s.EveryDays > 365 || s.IntervalMinutes < 5 || s.IntervalMinutes > 10080 || s.ActiveMinutes < 5 || s.ActiveMinutes > 1440 || s.FallbackMinutes < 30 || s.FallbackMinutes > 10080 || s.WaitMinutes < 0 || s.WaitMinutes > 1440 || s.WindowHours < 1 || s.WindowHours > 48 {
 		return s, bad("INVALID_SCHEDULE", "检查间隔、活跃窗口或等待时间超出范围")

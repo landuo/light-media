@@ -100,8 +100,9 @@ export async function api<T = any>(
   body?: any,
   method?: string,
   signal?: AbortSignal,
+  quiet = false,
 ): Promise<T> {
-  ui.busy++;
+  if (!quiet) ui.busy++;
   try {
     const r = await fetch(apiURL(path), {
       method: method || (body === undefined ? 'GET' : 'POST'),
@@ -126,7 +127,7 @@ export async function api<T = any>(
     }
     return j.data as T;
   } finally {
-    ui.busy--;
+    if (!quiet) ui.busy--;
   }
 }
 export async function action<T = any>(
@@ -398,10 +399,10 @@ export const emptySchedule = () => ({
   time: '20:00',
   timezone: 'Asia/Shanghai',
   mode: 'follow',
-  interval_minutes: 360,
+  interval_minutes: 1440,
   wait_minutes: 30,
   window_hours: 6,
   active_minutes: 30,
-  fallback_minutes: 360,
+  fallback_minutes: 1440,
   exceptions: [] as Any[],
 });

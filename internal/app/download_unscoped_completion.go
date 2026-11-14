@@ -117,7 +117,7 @@ func (a *App) completedUnscopedFiles(ctx context.Context, in Intent, raw json.Ra
 		if parsed.Status != media.Parsed || parsed.Original == nil {
 			return nil, unscopedCompletionReview()
 		}
-		resolved := media.Resolve(mediaKey(in.Media), *parsed.Original, media.Source{Site: in.SiteID}, in.Request.Mappings, known, nil)
+		resolved := media.Resolve(mediaKey(in.Media), decision.AliasSeasonNumbering(in.Media, in.Season, *parsed.Original), media.Source{Site: in.SiteID}, in.Request.Mappings, known, nil)
 		if resolved.Status != media.Parsed || len(resolved.Standard) == 0 {
 			return nil, unscopedCompletionReview()
 		}

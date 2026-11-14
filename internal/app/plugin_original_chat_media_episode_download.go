@@ -180,7 +180,7 @@ func (a *App) proveOriginalChatEpisodeFiles(ctx context.Context, parse func(stri
 		if parsed.Status != media.Parsed || parsed.Original == nil {
 			return bad("REVIEW_TORRENT_COVERAGE", "选中的视频文件无法核对标准集号")
 		}
-		resolved := media.Resolve(mediaKey(target.Media), *parsed.Original, media.Source{Site: siteID}, target.Mappings, known, nil)
+		resolved := media.Resolve(mediaKey(target.Media), decision.AliasSeasonNumbering(target.Media, target.Season, *parsed.Original), media.Source{Site: siteID}, target.Mappings, known, nil)
 		if resolved.Status != media.Parsed || len(resolved.Standard) != len(episodes) || slices.ContainsFunc(resolved.Standard, func(ep media.Episode) bool {
 			return ep.Season != target.Season || !slices.Contains(episodes, ep.Episode)
 		}) {

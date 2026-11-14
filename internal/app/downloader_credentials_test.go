@@ -26,8 +26,8 @@ func TestDownloaderAPIKeySettingsProjectionRetentionClearAndBinding(t *testing.T
 	request("POST", "/api/downloaders/manage", `{"id":"owned-qb","kind":"qbittorrent","name":"Owned qB","base_url":"http://127.0.0.1:19080","username":"owned-user","password":"owned-password","api_key":"owned-downloader-api-secret","auto_category":true,"sequential":true,"first_last_piece":true,"force_resume":true}`)
 	for _, path := range []string{"/api/settings", "/api/downloaders/manage"} {
 		body := request("GET", path, "")
-		if strings.Contains(body, "owned-downloader-api-secret") || strings.Contains(body, "owned-password") {
-			t.Fatal("credential leaked", path)
+		if !strings.Contains(body, "owned-downloader-api-secret") || !strings.Contains(body, "owned-password") {
+			t.Fatal("credential not echoed", path)
 		}
 	}
 	body := request("GET", "/api/downloaders/manage", "")

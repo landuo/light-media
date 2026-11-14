@@ -19,7 +19,6 @@ const selected = ref(clients.value[0]?.id || ''),
   error = ref(''),
   busy = ref<string[]>([]);
 const instance = computed(() => data.value?.instances?.find((d: any) => d.id === selected.value));
-let timer: number;
 let disposed = false;
 const requests = createSingleFlightRequest({
   request: (id, signal) =>
@@ -72,14 +71,10 @@ async function control(task: any, operation: string) {
 }
 onMounted(() => {
   void load();
-  timer = window.setInterval(() => {
-    if (!document.hidden && !loading.value && !busy.value.length) void load(true);
-  }, 3000);
 });
 onUnmounted(() => {
   disposed = true;
   requests.cancel();
-  clearInterval(timer);
 });
 </script>
 <template>
