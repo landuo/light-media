@@ -173,7 +173,16 @@ function sortIndicator(key: HistorySort) {
 }
 function reorganize(rows: HistoryRow[]) {
   openMenu.value = '';
-  reorganizeItems.value = rows;
+  // A single-row action must only retry that row. Batch actions follow
+  // MoviePilot's semantics: only failed records are retried, never successes.
+  const chosen = rows.length === 1 ? rows : rows.filter((row) => row.status === 'failed');
+  if (!chosen.length) {
+    toast('所选记录中没有失败项，无需重新整理', true);
+    return;
+  }
+  if (chosen.length > 1 && !window.confirm(`将重新整理 ${chosen.length} 条失败记录，是否继续？`)) return;
+  if (rows.length === 1) selected.value = [];
+  reorganizeItems.value = chosen;
 }
 async function reorganized(preparationJobID?: string) {
   reorganizeItems.value = [];
@@ -715,7 +724,7 @@ onUnmounted(() => {
         :disabled="deleting"
         @click="reorganize(selectedItems)"
       >
-        <span aria-hidden="true">↻</span><span>批量重新整理</span></button
+        <span aria-hidden="true">↻</span><span>批量重新整理（{{ selectedItems.length }}）</span></button
       ><button
         class="th-fab th-fab-queue"
         aria-label="整理队列"
