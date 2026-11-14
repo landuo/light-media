@@ -76,6 +76,10 @@ func (c *Client) qb(ctx context.Context, method, endpoint, data, contentType str
 			return nil, err
 		}
 	}
+	// qBittorrent uses 204 for successful operations with no response body.
+	if status == http.StatusNoContent {
+		return nil, nil
+	}
 	if status != http.StatusOK {
 		return nil, statusError(status)
 	}
@@ -118,6 +122,9 @@ func (c *Client) qbListQuery(ctx context.Context, hash, filter string) ([]Task, 
 	body, err := c.qb(ctx, http.MethodGet, endpoint, "", "")
 	if err != nil {
 		return nil, err
+	}
+	if len(bytes.TrimSpace(body)) == 0 {
+		return []Task{}, nil
 	}
 	var raw []qbTask
 	if err := decode(body, &raw); err != nil {
