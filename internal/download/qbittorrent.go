@@ -33,15 +33,17 @@ func (c *Client) qbLogin(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	if status != http.StatusOK {
+	// qBittorrent 5 returns 204 with an empty body after a successful login.
+	if status != http.StatusOK && status != http.StatusNoContent {
 		return statusError(status)
 	}
-	if strings.TrimSpace(string(body)) != "Ok." {
+	if status == http.StatusOK && strings.TrimSpace(string(body)) != "Ok." {
 		return failure("login", "authentication_failed")
 	}
 	found := false
 	for _, cookie := range c.http.Jar.Cookies(u) {
-		if cookie.Name == "SID" && cookie.Value != "" {
+		// qB 4 used SID; qB 5 names the session QBT_SID_<port>.
+		if (cookie.Name == "SID" || strings.HasPrefix(cookie.Name, "QBT_SID_")) && cookie.Value != "" {
 			found = true
 		}
 	}
