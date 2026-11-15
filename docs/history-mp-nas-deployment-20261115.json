@@ -1,0 +1,51 @@
+{
+  "version": "0.4.19",
+  "source_commit": "b40839bcb224ad726ffe1a140e51f26f94eae867",
+  "source_ref": "origin/main",
+  "server_sha256": "9048db5b8cb4d1c591d60c06ad4de1459f12267e32111987c70ba18cf99f6c7e",
+  "server_arch": "linux/arm64",
+  "release": "/vol1/1000/docker/light-media/releases/history-mp-b40839bc",
+  "compose": "/vol1/1000/docker/light-media/compose.yaml",
+  "compose_backup": "/vol1/1000/docker/light-media/deployment-backups/compose.yaml.before-history-mp-b40839bc",
+  "database_backup": "/vol1/1000/docker/light-media/deployment-backups/light-media-db-before-history-mp-b40839bc.db",
+  "previous_entrypoint": "/config/.brushflow-limit-20261115-1609/light-media",
+  "previous_entrypoint_sha256": "400c6805167f951b7dd0b01cd00c590fbf93e61e92b310fe69b26251a8b627ce",
+  "state": "deployed_verified",
+  "preflight": {
+    "active_jobs": 0,
+    "active_plugin_runs": 0,
+    "health": "ok",
+    "version": "0.4.19"
+  },
+  "owned_test": {
+    "container": "light-media-owned-historymp",
+    "network": "none",
+    "health": "ok",
+    "setup_required": true,
+    "cleaned": true
+  },
+  "after": {
+    "container_state": "running",
+    "entrypoint": [
+      "/app/light-media-server"
+    ],
+    "health": "ok",
+    "version": "0.4.19",
+    "auth_status": "setup_required=false",
+    "active_jobs": 0,
+    "active_plugin_runs": 0
+  },
+  "reproducible_build": "git archive b40839bc produces the same arm64 binary sha256",
+  "known_observations": [
+    "startup logged register_apis_failed followed by fast 401 on /api/plugins; initial unauthenticated /api/plugins returned 500/503 during plugin initialization",
+    "BrushFlowLanduo promotion_expiry logged 连接下载器出错 for three tasks about four minutes after start; pre-existing qBittorrent 5 behavior outside the brush-limit list path was not verified against the previous binary",
+    "database integrity_check reports row 19236 missing from index organize_queue_media; the same inconsistency exists in the pre-deployment backup, so it was not introduced by this deployment"
+  ],
+  "not_changed": [
+    "MoviePilot container",
+    "qBittorrent container",
+    "other containers",
+    "media files"
+  ],
+  "rollback": "restore compose backup and run docker compose up -d --force-recreate --no-deps light-media; previous entrypoint binary is still present"
+}
