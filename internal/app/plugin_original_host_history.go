@@ -80,7 +80,7 @@ func (a *App) originalHostHistoryResource(ctx context.Context, scope originalBas
 			query += `target_path=?`
 			value = in.Target
 		}
-		query += ` ORDER BY history_created_at,history_id LIMIT 1) SELECT ` + transferHistoryColumns + ` FROM selected h` + transferHistoryHydrate
+		query += ` ORDER BY history_created_at,history_id LIMIT 1) SELECT ` + transferHistoryStoredColumns + ` FROM selected h`
 		item, err := a.readIndexedTransferHistoryItem(ctx, query, value)
 		out := plugins.TransferHistoryResultV1{SchemaVersion: 1}
 		if errors.Is(err, sql.ErrNoRows) {

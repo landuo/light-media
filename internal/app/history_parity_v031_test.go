@@ -163,8 +163,8 @@ func TestHistoryParityV031ChineseStatusAndOriginalWildcards(t *testing.T) {
 		{"%", []string{"literal-file-0"}},
 		{"_A.mkv", []string{"literal-file-0"}},
 		{"%_", []string{"literal-file-0"}},
-		{"Show*E?1.mkv", []string{"eleven-file-0", "one-file-0"}},
-		{"Release*", []string{"literal-file-0", "near-file-0"}},
+		{"*Show*E?1.mkv", []string{"eleven-file-0", "one-file-0"}},
+		{"*Release*", []string{"literal-file-0", "near-file-0"}},
 		{"成功", []string{"eleven-file-0", "literal-file-0", "near-file-0", "one-file-0", "three-digits-file-0"}},
 		{"失败", []string{failed.Files[0].ID}},
 	} {

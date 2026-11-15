@@ -178,7 +178,7 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 		return existing.RuleFingerprint == fingerprint && existing.State != directoryInspectionPending && existing.State != "needs_review" && existing.State != "error" && sameDirectorySnapshot(existing.Snapshot, stamp)
 	}
-	raw, e := a.scanImportFiles(ctx, source, true, inspectFailed, unchanged)
+	raw, e := a.scanImportFiles(ctx, source, true, inspectFailed, unchanged, true)
 	if e != nil {
 		return e
 	}
@@ -200,6 +200,18 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		guard.DownloaderSnapshot = downloaderSnapshot(d)
 	}
 	for _, file := range files {
+		if file.Snapshot != nil && file.Snapshot.Directory != "" {
+			owner, known, e := automaticDiscDownloadOwner(file.Path, *file.Snapshot, downloads)
+			if e != nil {
+				if err := inspectFailed(file.Path, e); err != nil {
+					return err
+				}
+				continue
+			}
+			if known {
+				downloads[file.Path] = owner
+			}
+		}
 		if owner, ok := downloads[file.Path]; ok {
 			if owner.IdentityConflict {
 				file.IdentityReason = "下载任务的影视身份存在冲突"
@@ -218,7 +230,7 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 			key := directoryFileID(rule.ID, file.Path)
 			existing, seen := allObserved[file.Path]
 			if !seen || existing.State == directoryInspectionPending {
-				stamp, snapshotErr := snapshotPath(file.Path)
+				stamp, snapshotErr := snapshotTransferPath(file.Path)
 				if snapshotErr != nil {
 					if err := inspectFailed(file.Path, snapshotErr); err != nil {
 						return err
@@ -238,7 +250,7 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		if a.paused() {
 			return bad("AUTOMATION_PAUSED", "自动化已暂停")
 		}
-		stamp, e := snapshotPath(file.Path)
+		stamp, e := snapshotTransferPath(file.Path)
 		if e != nil {
 			if e = inspectFailed(file.Path, e); e != nil {
 				return e
@@ -278,15 +290,29 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 			f.LastSeen = now()
 		}
 		if f.JobID != "" && f.PlanID == "" {
-			var planID string
-			if a.Store.DB.QueryRowContext(ctx, `SELECT json_extract(payload,'$.id') FROM jobs WHERE id=? AND kind='import'`, f.JobID).Scan(&planID) == nil {
+			var kind, state, planID string
+			err := a.Store.DB.QueryRowContext(ctx, `SELECT kind,state,COALESCE(json_extract(payload,'$.id'),'') FROM jobs WHERE id=?`, f.JobID).Scan(&kind, &state, &planID)
+			if err != nil && !errors.Is(err, sql.ErrNoRows) {
+				return err
+			}
+			if kind == "import" {
 				f.PlanID = planID
+			} else if kind == "organize_file" && state == "cancelled" {
+				f.State, f.Reason = "cancelled", "整理任务已取消"
 			}
 		}
-		if f.PlanID != "" {
-			a.refreshDirectoryFilePlan(ctx, &f)
+		hasHistory, err := directoryHistoryObservation(ctx, a.Store.DB, &f)
+		if err != nil {
+			return err
 		}
-		terminal := f.State == "baseline" || f.State == "imported" || f.State == "queued" || f.State == "needs_review" || f.State == "error"
+		if !hasHistory && f.PlanID != "" {
+			// History deletion releases the automatic gate. Retain the usual
+			// stability/completeness checks instead of replaying the old plan.
+			f.PlanID, f.JobID = "", ""
+			f.State, f.Reason = "observing", "整理历史已删除，等待源文件稳定后重新检查"
+			f.StableSince = time.Now().UnixNano()
+		}
+		terminal := f.State == "baseline" || f.State == "imported" || f.State == "queued" || f.State == "cancelled" || f.State == "needs_review" || f.State == "error"
 		if !terminal && !fresh && !changed && time.Since(time.Unix(0, f.StableSince)) >= directoryStableTime {
 			if owner, ok := downloads[file.Path]; ok && owner.Managed {
 				f.State = "tracking"
@@ -308,7 +334,11 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 			} else {
 				if file.Unchanged {
 					file.Parsed = a.parseMediaName(filepath.Base(file.Path))
-					mediaHint, numbering, reason := a.importNFOEvidence(file.Path)
+					nfoAnchor := file.Path
+					if stamp.Directory != "" {
+						nfoAnchor = directoryDiscNFOAnchor(file.Path)
+					}
+					mediaHint, numbering, reason := a.importNFOEvidence(nfoAnchor)
 					if mediaHint != nil {
 						file.InferredMedia = mediaHint
 						file.IdentitySource = "nfo"
@@ -538,7 +568,9 @@ func (a *App) directoryObservations(ctx context.Context, ruleID string) (map[str
 			continue
 		}
 		all[f.Path] = f
-		if f.OwnerHash != "" {
+		// A disc observation is an aggregate, not a downloader file row. Its
+		// readiness must be rebuilt from the actual per-leaf torrent inventory.
+		if f.OwnerHash != "" && f.Snapshot.Directory == "" {
 			if stored[f.OwnerHash] == nil {
 				stored[f.OwnerHash] = map[string]directoryDownloadFile{}
 			}
@@ -547,6 +579,7 @@ func (a *App) directoryObservations(ctx context.Context, ruleID string) (map[str
 	}
 	return all, stored, rows.Err()
 }
+
 type directoryTaskState struct {
 	Files    int
 	Imported int
@@ -819,6 +852,11 @@ func (a *App) directoryTVReleaseMatches(ctx context.Context, p media.ParseResult
 
 func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, file importScanFile) (ImportRequest, error) {
 	request := ImportRequest{RootID: rule.RootID, Mode: rule.Mode, Renaming: rule.Renaming, Scraping: rule.Scraping, LibraryTypeFolder: rule.LibraryTypeFolder, WorkflowID: id("wf_"), Files: []ImportFileRequest{{Path: file.Path}}}
+	if file.originalDirectoryPlanned {
+		request.originalDirectoryPlanned = true
+		request.Files[0].originalItem = file.originalItem
+		request.Files[0].originalMetadataPath = file.Path
+	}
 	if rule.ID != "" {
 		copyRule := rule
 		request.directoryRule = &copyRule
@@ -842,6 +880,9 @@ func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, fil
 		}
 		if kind == "movie" && p.Year == 0 {
 			return request, bad("DIRECTORY_IDENTITY_REVIEW", "电影文件名缺少年份，请在“手动整理”中选择电影类型，并查询或填写TheMovieDb编号")
+		}
+		if source := a.effectiveRecognitionSource(); source != "themoviedb" {
+			return a.directoryProviderIdentity(ctx, request, file, source)
 		}
 		matches, err := a.directoryTitleMatches(ctx, kind, p.Year, append([]string{p.Title}, p.AlternateTitles...))
 		if err != nil {

@@ -256,9 +256,10 @@ export function go(path: string) {
 export function image(path: string, size = 'w342') {
   // Source-compatible catalog responses carry a full TMDB image URL.
   // Keep the request on the host's existing authenticated image proxy.
-  const full = /^https:\/\/([^/@?#]+)\/t\/p\/(?:original|w\d+)\/([A-Za-z0-9_-]+\.(?:jpg|jpeg|png|webp))$/.exec(
-    path,
-  );
+  const full =
+    /^https:\/\/([^/@?#]+)\/t\/p\/(?:original|w\d+)\/([A-Za-z0-9_-]+\.(?:jpg|jpeg|png|webp))$/.exec(
+      path,
+    );
   if (full) {
     const domain = full[1]!.toLowerCase();
     const configured = String(ui.settings?.tmdb_image_domain || '').toLowerCase();
@@ -314,7 +315,9 @@ export const labels: Record<string, string> = {
   movie: '电影',
   tv: '剧集',
   hardlink: '硬链接',
+  softlink: '软链接',
   copy: '复制',
+  move: '移动',
   auto: '自动',
   success: '成功',
   retry_wait: '等待重试',

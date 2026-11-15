@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"reflect"
 	"testing"
 )
 
@@ -142,7 +143,7 @@ func TestHistoryUpsertDeleteNeverResumesPreviousExecutionSourceReceipt(t *testin
 		}
 	}
 	var actual historySourceRemoval
-	if err = a.Store.Get(ctx, "history_source_removal", first.executionFileID(), &actual); err != nil || actual != previous {
+	if err = a.Store.Get(ctx, "history_source_removal", first.executionFileID(), &actual); err != nil || !reflect.DeepEqual(actual, previous) {
 		t.Fatal("previous execution receipt was altered", actual, err)
 	}
 	if err = a.Store.Get(ctx, "history_source_removal", latest.executionFileID(), &actual); err == nil {

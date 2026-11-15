@@ -1,0 +1,44 @@
+{
+  "round": 24,
+  "scope": "directory transfer takes over an identical snapshot leaf produced by another asset; supersede old asset ownership",
+  "allowed": "target leaf registered by any asset, actual content equal to its registered snapshot",
+  "refused": [
+    "registered snapshot drifted (same asset or other asset)",
+    "target changed during publish"
+  ],
+  "ownership": {
+    "old_managed_file": "removed after exact compare inside the publish transaction",
+    "old_asset": "state=superseded, asset_slots released",
+    "old_sidecars": "kept untouched",
+    "old_history": "independent success record kept; later deletion refuses on snapshot mismatch",
+    "new_leaf": "owned by the directory receipt shared subset"
+  },
+  "verification": {
+    "takeover": {
+      "log": "work/history-mp-alignment-20261115/round24-takeover.log",
+      "seconds": 11.858,
+      "cases": [
+        "takeover another asset's leaf (real single-file then directory import)",
+        "same-asset member replacement",
+        "drift refusal",
+        "append and native softlink append unchanged"
+      ]
+    },
+    "regression": {
+      "log": "work/history-mp-alignment-20261115/round24-directory-regression.log",
+      "seconds": 70.752
+    },
+    "integration": {
+      "log": "work/history-mp-alignment-20261115/round24-integration.log",
+      "seconds": 355.631
+    },
+    "compile": "work/history-mp-alignment-20261115/round24-compile.log"
+  },
+  "not_claimed": [
+    "external whole-tree softlink incremental adoption",
+    "subscription refresh source integration",
+    "NAS or cloud storage",
+    "production media"
+  ],
+  "whole_objective_complete": false
+}

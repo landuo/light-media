@@ -1,0 +1,49 @@
+{
+  "stage": 14,
+  "baseline": "4a222f0fa0c06848e7924e6614654a38e999fb19",
+  "scope": "Synthetic media and real local filesystem/Go/SQLite execution; no production downloader or NAS writes",
+  "ordinary_and_shared_inventory": {
+    "test": "TestImportSoftlinkOrdinaryCompletionAndSharedInventoryReaders",
+    "branches": ["none", "missing-referent", "replaced-entry"],
+    "asset": "actual imported video/subtitle softlink ownership",
+    "subscription": "actual saved ordinary subscription, not a manufactured completion receipt",
+    "transaction": "one open SQLite connection, caller transaction reader used throughout",
+    "basis": "entry snapshot and complete managed video proof retained",
+    "decoded_frozen_proof": "ownership compared by values, not pointer addresses",
+    "missing_referent_rejected": true,
+    "same_text_new_inode_rejected": true,
+    "inventory_display": "unchanged slots projection; no full-library scan added"
+  },
+  "v3_overwrite": {
+    "route": "new qualityImportProof Version 3 uses existing directoryOverwrite",
+    "decision_file_item": "ordinary referent media bytes/mtime",
+    "physical_snapshot": "actual symlink entry",
+    "old_proof": "complete managedFile sealed in existing Target.Owner",
+    "cleanup": "frozen old entry only, requireReferent=false",
+    "new_target_confirmation": "requireReferent=true",
+    "source_download_guards": "ordinary snapshotPath unchanged",
+    "test": "TestDirectoryOverwriteSoftlinkActualSizeAndOwnership",
+    "branches": ["larger", "smaller", "broken"],
+    "larger_media_bytes": {"old": 3, "new": 16},
+    "smaller_media_bytes": {"old": 8192, "new": 4096},
+    "referent_mtime_verified": true,
+    "old_subtitle_entry_and_proof_retained_under_new_asset": true,
+    "old_backup_link_unlinked": true,
+    "old_and_new_referents_retained": true,
+    "quarantine_resume_and_restore_with_unavailable_old_referent": "real owner and actual old link inode restored",
+    "protocol_boundary": "actual native host used by V3, not a claim of a new full downloader-protocol or NAS run"
+  },
+  "verification": {
+    "completion_and_legacy_tests_seconds": 3.675,
+    "v3_host_and_legacy_modes_regression_seconds": 7.665,
+    "integration_seconds": 254.883,
+    "joint_softlink_inventory_and_v3_tests_seconds": 8.888,
+    "all_package_compile": true,
+    "linux_amd64_compile": true,
+    "linux_binary_executed": false,
+    "new_browser_validation": false
+  },
+  "ui_softlink_option_opened": false,
+  "remaining": ["directory softlink", "storage/external transfer softlink", "delete_file override for softlinks", "mode UI and browser verification", "provider-native web/history identity", "final end-to-end integration"],
+  "legacy_v1_v2": "existing no-new-proof restrictions preserved; not redirected back to legacy whole-slot exchange"
+}

@@ -24,12 +24,27 @@ type originalMetadataDirectory struct {
 	Writes  map[string]originalMetadataDirectoryWrite `json:"writes"`
 }
 type originalMetadataDirectoryWrite struct {
-	Snapshot importSnapshot  `json:"snapshot"`
-	Previous *importSnapshot `json:"previous,omitempty"`
-	Stage    string          `json:"stage"`
-	SHA256   string          `json:"sha256"`
+	Parents  map[string]importSnapshot `json:"parents,omitempty"`
+	Snapshot importSnapshot            `json:"snapshot"`
+	Previous *importSnapshot           `json:"previous,omitempty"`
+	Stage    string                    `json:"stage"`
+	SHA256   string                    `json:"sha256"`
 }
 type originalMetadataDirectoriesKey struct{}
+
+// Finish only an existing durable write journal before strict asset/event
+// checks. Otherwise the known newly written NFO would look like an unknown
+// change to the old aggregate and prevent its own recovery.
+func (a *App) recoverOriginalMetadataDirectory(ctx context.Context, asset Asset) error {
+	var pending originalMetadataDirectory
+	if err := a.Store.Get(ctx, "original_metadata_directory", asset.ID, &pending); errors.Is(err, sql.ErrNoRows) {
+		return nil
+	} else if err != nil {
+		return err
+	}
+	_, err := a.beginOriginalMetadataDirectory(ctx, asset)
+	return err
+}
 
 func (a *App) beginOriginalMetadataDirectory(ctx context.Context, asset Asset) (*originalMetadataDirectory, error) {
 	var owned managedFile
@@ -48,12 +63,22 @@ func (a *App) beginOriginalMetadataDirectory(ctx context.Context, asset Asset) (
 	var pending originalMetadataDirectory
 	err := a.Store.Get(ctx, "original_metadata_directory", asset.ID, &pending)
 	if err == nil {
-		if pending.Owned != owned {
+		if !sameManagedFile(pending.Owned, owned) {
 			return nil, bad("REVIEW_METADATA_CONTEXT", "目录刮削恢复归属不一致")
 		}
 		for path, write := range pending.Writes {
 			stage := filepath.Join(filepath.Dir(filepath.Join(owned.Path, path)), write.Stage)
 			stamp, e := snapshotPath(stage)
+			if e != nil && pending.Owned.Softlink != nil && pending.Owned.Softlink.Directory != nil && write.Previous != nil {
+				if member, ok := pending.Owned.Softlink.Directory.Members[path]; ok && member.Softlink != nil {
+					stamp, e = snapshotOwnedTransferPath(stage, *write.Previous, member.Softlink, false)
+				}
+			}
+			if e != nil && pending.Owned.SharedDirectory != nil && write.Previous != nil {
+				if member, ok := pending.Owned.SharedDirectory.Members[path]; ok && member.Softlink != nil {
+					stamp, e = snapshotOwnedTransferPath(stage, *write.Previous, member.Softlink, false)
+				}
+			}
 			if os.IsNotExist(e) {
 				continue
 			}
@@ -79,7 +104,16 @@ func (a *App) beginOriginalMetadataDirectory(ctx context.Context, asset Asset) (
 	} else if !errors.Is(err, sql.ErrNoRows) {
 		return nil, err
 	}
-	stamp, entries, err := snapshotOriginalDirectory(asset.Path)
+	var stamp importSnapshot
+	var entries []originalDirectoryEntry
+	if owned.SharedDirectory != nil {
+		stamp, entries, err = scanSharedMetadataDirectory(owned.Path, owned.SharedDirectory, nil)
+	} else {
+		stamp, entries, err = scanMetadataDirectory(asset.Path, owned.Softlink)
+	}
+	if err == nil && owned.Softlink != nil {
+		_, err = snapshotOwnedTransferPath(asset.Path, owned.Snapshot, owned.Softlink, true)
+	}
 	if err != nil || stamp != owned.Snapshot {
 		return nil, bad("REVIEW_METADATA_SOURCE_CHANGED", "目录成员在刮削前发生变化")
 	}
@@ -97,7 +131,14 @@ func (a *App) prepareOriginalMetadataDirectoryWrite(ctx context.Context, target,
 			return bad("REVIEW_METADATA_CONTEXT", "旁车不能替换目录资产本身")
 		}
 		digest := sha256.Sum256(content)
-		directory.Writes[rel] = originalMetadataDirectoryWrite{Snapshot: stamp, Previous: previous, Stage: stage, SHA256: hex.EncodeToString(digest[:])}
+		write := originalMetadataDirectoryWrite{Snapshot: stamp, Previous: previous, Stage: stage, SHA256: hex.EncodeToString(digest[:])}
+		if directory.Owned.SharedDirectory != nil {
+			write.Parents, err = freezeSharedMetadataParents(directory.Owned.Path, rel, directory.Owned.SharedDirectory)
+			if err != nil {
+				return err
+			}
+		}
+		directory.Writes[rel] = write
 		if err := a.Store.Put(ctx, "original_metadata_directory", directory.Owned.AssetID, directory); err != nil {
 			return err
 		}
@@ -109,7 +150,14 @@ func (a *App) finishOriginalMetadataDirectory(ctx context.Context, directory *or
 	if len(directory.Writes) == 0 {
 		return nil
 	}
-	actual, entries, err := snapshotOriginalDirectory(directory.Owned.Path)
+	var actual importSnapshot
+	var entries []originalDirectoryEntry
+	var err error
+	if directory.Owned.SharedDirectory != nil {
+		actual, entries, err = scanSharedMetadataDirectory(directory.Owned.Path, directory.Owned.SharedDirectory, directory.Writes)
+	} else {
+		actual, entries, err = scanMetadataDirectory(directory.Owned.Path, directory.Owned.Softlink)
+	}
 	if err != nil || !sameInode(actual, directory.Owned.Snapshot) {
 		return bad("REVIEW_METADATA_SOURCE_CHANGED", "刮削目录已被替换")
 	}
@@ -128,6 +176,14 @@ func (a *App) finishOriginalMetadataDirectory(ctx context.Context, directory *or
 		prior, present := expected[entry.Path]
 		write, written := directory.Writes[entry.Path]
 		valid := present && entry == prior
+		if entry.Directory && !present && directory.Owned.SharedDirectory != nil {
+			for _, write := range directory.Writes {
+				if parent, ok := write.Parents[entry.Path]; ok && parent == entry.Snapshot {
+					valid = true
+					break
+				}
+			}
+		}
 		if entry.Directory && present && prior.Directory && mutableDirs[entry.Path] {
 			valid = sameInode(entry.Snapshot, prior.Snapshot)
 		}
@@ -160,6 +216,26 @@ func (a *App) finishOriginalMetadataDirectory(ctx context.Context, directory *or
 			return bad("REVIEW_METADATA_SOURCE_CHANGED", "刮削期间目录成员丢失")
 		}
 	}
+	var refreshed *importSoftlinkProof
+	if directory.Owned.Softlink != nil && directory.Owned.Softlink.Directory != nil {
+		refreshed, err = refreshMetadataSoftlinkDirectory(directory.Owned.Softlink, actual, entries, directory.Writes)
+		if err != nil {
+			return err
+		}
+		if _, err = snapshotOwnedTransferPath(directory.Owned.Path, actual, refreshed, true); err != nil {
+			return err
+		}
+	}
+	var refreshedShared *importSharedDirectoryProof
+	if directory.Owned.SharedDirectory != nil {
+		refreshedShared, err = refreshMetadataSharedDirectory(directory.Owned.SharedDirectory, entries, directory.Writes)
+		if err != nil {
+			return err
+		}
+		if _, err = snapshotSharedDirectory(directory.Owned.Path, actual, refreshedShared, true); err != nil {
+			return err
+		}
+	}
 	// Persist the managed tree and every matching publication receipt together.
 	// Older receipts with a different snapshot retain their own authority.
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
@@ -172,7 +248,7 @@ func (a *App) finishOriginalMetadataDirectory(ctx context.Context, directory *or
 		return err
 	}
 	var current managedFile
-	if json.Unmarshal(raw, &current) != nil || current != directory.Owned {
+	if json.Unmarshal(raw, &current) != nil || !sameManagedFile(current, directory.Owned) {
 		return bad("REVIEW_METADATA_CONTEXT", "刮削提交时目录归属发生变化")
 	}
 	rows, err := tx.QueryContext(ctx, `SELECT id,payload FROM records WHERE kind='import_receipt' AND json_extract(payload,'$.target')=? AND json_extract(payload,'$.state')='published'`, current.Path)
@@ -191,8 +267,14 @@ func (a *App) finishOriginalMetadataDirectory(ctx context.Context, directory *or
 			rows.Close()
 			return err
 		}
-		if receipt.StageSnapshot == current.Snapshot && receipt.SourceSnapshot == current.SourceSnapshot {
+		if receipt.StageSnapshot == current.Snapshot && receipt.SourceSnapshot == current.SourceSnapshot && sameSoftlinkProof(receipt.Softlink, current.Softlink) && sameSharedDirectoryProof(receipt.SharedDirectory, current.SharedDirectory) {
 			receipt.StageSnapshot = actual
+			if refreshed != nil {
+				receipt.Softlink = refreshed
+			}
+			if refreshedShared != nil {
+				receipt.SharedDirectory = refreshedShared
+			}
 			receipts[key] = receipt
 		}
 	}
@@ -205,6 +287,12 @@ func (a *App) finishOriginalMetadataDirectory(ctx context.Context, directory *or
 		return bad("REVIEW_METADATA_CONTEXT", "目录刮削缺少对应发布收据")
 	}
 	current.Snapshot = actual
+	if refreshedShared != nil {
+		current.SharedDirectory = refreshedShared
+	}
+	if refreshed != nil {
+		current.Softlink = refreshed
+	}
 	if err = txPut(ctx, tx, "managed_file", tokenHash(current.Path), current); err != nil {
 		return err
 	}

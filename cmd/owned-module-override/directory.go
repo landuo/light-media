@@ -22,7 +22,19 @@ func (f *fixture) transferOwnedDirectory(source, target string) error {
 		}
 		output := filepath.Join(target, rel)
 		if entry.IsDir() {
+			if f.config.TransferMode == "softlink" && rel != "." {
+				return nil
+			}
 			return os.MkdirAll(output, 0750)
+		}
+		if f.config.TransferMode == "softlink" {
+			if err := os.MkdirAll(filepath.Dir(output), 0750); err != nil {
+				return err
+			}
+			return os.Symlink(path, output)
+		}
+		if f.config.TransferMode == "move" || f.config.TransferMode == "move_corrupt" {
+			return f.transferOwnedMove(path, output)
 		}
 		if f.config.TransferMode == "copy" || f.config.TransferMode == "corrupt" {
 			data, err := os.ReadFile(path)

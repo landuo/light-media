@@ -11,7 +11,7 @@ func (a *App) serveBrowserContent(w http.ResponseWriter, r *http.Request) error 
 	if _, e := a.browserRoot(r.URL.Query().Get("root_id"), path); e != nil {
 		return e
 	}
-	file, e := importOpen(path)
+	file, e := a.browserReadableItem(r.Context(), path)
 	if e != nil {
 		return e
 	}
@@ -28,7 +28,7 @@ func (a *App) serveBrowserContent(w http.ResponseWriter, r *http.Request) error 
 		return e
 	}
 	if downloadPath != path {
-		file, e = importOpen(downloadPath)
+		file, e = a.browserReadableItem(r.Context(), downloadPath)
 		if e != nil {
 			return e
 		}

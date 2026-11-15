@@ -100,7 +100,7 @@ func (a *App) originalChatLatestRecognize(ctx context.Context, row *originalChat
 		}
 		row.MetaName = meta.Text("org_string")
 		recognized, err := a.originalCatalogRecognizeByMetaMethod(ctx, "recognize_media", meta, func(current *releasemeta.MetaObject) (json.RawMessage, error) {
-			if a.originalHostMediaRecognition.Source == "" || a.originalHostMediaRecognition.Source == "themoviedb" {
+			if a.effectiveRecognitionSource() == "" || a.effectiveRecognitionSource() == "themoviedb" {
 				return a.originalMetadataRecognizeNative(ctx, current)
 			}
 			fields, err := current.ToDict()

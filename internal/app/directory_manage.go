@@ -108,8 +108,8 @@ func validateDirectoryRules(c Settings) error {
 		if r.MediaType != "movie" && r.MediaType != "tv" && r.MediaType != "mixed" {
 			return bad("INVALID_DIRECTORY_TYPE", "请选择电影、剧集或全部类型")
 		}
-		if r.Mode != "hardlink" && r.Mode != "copy" && r.Mode != "auto" {
-			return bad("INVALID_IMPORT_MODE", "整理方式仅支持硬链接、复制或自动选择，源文件始终保留")
+		if r.Mode != "hardlink" && r.Mode != "copy" && r.Mode != "auto" && r.Mode != "move" && r.Mode != "softlink" {
+			return bad("INVALID_IMPORT_MODE", "请选择硬链接、软链接、复制、移动或自动选择")
 		}
 		if r.MonitorType != "monitor" && r.MonitorType != "downloader" && r.MonitorType != "none" {
 			return bad("INVALID_MONITOR_TYPE", "请选择目录监听、下载器完成监听或不监控")

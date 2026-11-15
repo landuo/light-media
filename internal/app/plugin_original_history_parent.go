@@ -60,6 +60,10 @@ func (a *App) completeHistoricalParentCleanup(ctx context.Context, item transfer
 	if !file.Deleted {
 		return nil
 	}
+	if file.SharedDirectory != nil {
+		// Existing containers and unrelated metadata are not deletion targets.
+		return verifySharedDirectoryRemoved(file)
+	}
 	var initial *plugins.ModuleFileItem
 	if file.SourceOperation != "" {
 		var operation browserOperation

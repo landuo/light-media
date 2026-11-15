@@ -162,7 +162,7 @@ func main() {
 					}
 				}
 				if event.Type == "storage.operation" && c.Storage {
-					definition, e := base.LocalStorageOperation(ctx, "owned-local", map[string]string{"get_folder": "storage_op", "get_item": "storage_op", "get_item_strict": "storage_op", "list": "storage_op", "delete": "storage_op", "copy": "storage_op", "link": "storage_op"})
+					definition, e := base.LocalStorageOperation(ctx, "owned-local", map[string]string{"get_folder": "storage_op", "get_item": "storage_op", "get_item_strict": "storage_op", "list": "storage_op", "delete": "storage_op", "copy": "storage_op", "link": "storage_op", "move": "storage_op", "softlink": "storage_op"})
 					if e != nil {
 						return nil, e
 					}

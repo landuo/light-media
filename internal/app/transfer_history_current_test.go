@@ -9,18 +9,20 @@ import (
 	"time"
 )
 
-func TestHistoryCurrentRefreshReleasesWriterAndPreservesSnapshot(t *testing.T) {
+func TestHistoryCurrentReadOnlyPreservesSnapshot(t *testing.T) {
 	a, source, target := importTestApp(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	plan, job := historyParityPlan(t, a, source, target, "snapshot", "Before", "running", "ready", "one.mkv")
-	// This starts dirty, so the refresh-to-reader handoff is exercised.
+	// The execution write has already saved the display snapshot. The reader
+	// holds only a WAL snapshot while a new execution state commits.
+	historyIndexMatchesExecutionRecords(t, a)
 	read, err := a.transferHistoryReadTx(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer read.Rollback()
-	before, err := scanTransferHistory(read.QueryRowContext(ctx, transferHistoryIndexedCTE+transferHistorySelect))
+	before, err := scanTransferHistory(read.QueryRowContext(ctx, transferHistoryIndexedCTE+transferHistoryStoredSelect))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -48,16 +50,16 @@ func TestHistoryCurrentRefreshReleasesWriterAndPreservesSnapshot(t *testing.T) {
 			t.Fatal(err)
 		}
 	case <-ctx.Done():
-		t.Fatal("history reader held writer connection after refresh")
+		t.Fatal("history snapshot held the writer connection")
 	}
-	during, err := scanTransferHistory(read.QueryRowContext(ctx, transferHistoryIndexedCTE+transferHistorySelect))
+	during, err := scanTransferHistory(read.QueryRowContext(ctx, transferHistoryIndexedCTE+transferHistoryStoredSelect))
 	if err != nil || during.Media.Title != "Before" || during.Status != before.Status {
 		t.Fatalf("mixed snapshot: %+v %v", during, err)
 	}
 	if err = read.Commit(); err != nil {
 		t.Fatal(err)
 	}
-	after, err := a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedCTE+transferHistorySelect)
+	after, err := a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedCTE+transferHistoryStoredSelect)
 	if err != nil || after.Media.Title != "After" || after.Status != "success" || after.ID != before.ID {
 		t.Fatalf("completion not projected: %+v %v", after, err)
 	}
@@ -74,7 +76,7 @@ func TestHistoryCurrentHiddenInvalidationAndChangedSource(t *testing.T) {
 		t.Fatal(err)
 	}
 	historyIndexMatchesExecutionRecords(t, a)
-	item, err := a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedCTE+transferHistorySelect)
+	item, err := a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedCTE+transferHistoryStoredSelect)
 	if err != nil || item.ID != first.Files[0].ID || item.PlanID != second.ID {
 		t.Fatalf("repeat source lost stable ID: %+v %v", item, err)
 	}
@@ -86,7 +88,7 @@ func TestHistoryCurrentHiddenInvalidationAndChangedSource(t *testing.T) {
 		}
 		historyIndexMatchesExecutionRecords(t, a)
 	}
-	if _, err := a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedCTE+transferHistorySelect); err != sql.ErrNoRows {
+	if _, err := a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedCTE+transferHistoryStoredSelect); err != sql.ErrNoRows {
 		t.Fatalf("hidden source visible: %v", err)
 	}
 	if _, err := a.Store.DB.Exec(`DELETE FROM records WHERE kind='transfer_history_hidden'`); err != nil {
@@ -143,22 +145,36 @@ func TestHistoryCurrentPageUsesOrderedIndexes(t *testing.T) {
 }
 
 // Synthetic SQL benchmark: 100k distinct sources with minimal plan JSON.
-// Measures count + first 50 hydrated rows, without filesystem capabilities.
+// Measures count + first 50 stored snapshots, without filesystem capabilities.
 func BenchmarkHistoryCurrentPage100K(b *testing.B) {
 	s, err := OpenStore(b.TempDir())
 	if err != nil {
 		b.Fatal(err)
 	}
 	defer s.Close()
+	// This synthetic fixture measures page queries, not 100k submission writes.
+	// Restore the trigger before measuring ordinary writes below.
+	var insertTrigger string
+	if err := s.DB.QueryRow(`SELECT sql FROM sqlite_master WHERE type='trigger' AND name='transfer_history_records_insert'`).Scan(&insertTrigger); err != nil {
+		b.Fatal(err)
+	}
+	if _, err := s.DB.Exec(`DROP TRIGGER transfer_history_records_insert`); err != nil {
+		b.Fatal(err)
+	}
 	const seed = `WITH RECURSIVE n(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM n WHERE x<100000)
  INSERT INTO records(kind,id,payload,updated_at)
  SELECT 'import_plan','bench-'||x,json_object('id','bench-'||x,'files',json_array(json_object('id','file-'||x,'source','/source/'||x,'target','/target/'||x,'status','imported'))),printf('%09d',x) FROM n;
  INSERT INTO transfer_history_attempts
  SELECT id,'$.files[0]',NULL,updated_at,'job-'||id,'succeeded','',updated_at,updated_at,
  'file-'||id,'file-'||id,updated_at,'Title','/source/'||id,'/target/'||id,'/source/'||id,'success',updated_at,1 FROM records WHERE kind='import_plan';
- INSERT INTO transfer_history_current SELECT *,execution_file_id,plan_created_at FROM transfer_history_attempts;
+ INSERT INTO transfer_history_current
+ SELECT h.*,h.execution_file_id,h.plan_created_at,json_remove(p.payload,'$.files'),json_extract(p.payload,'$.files[0]')
+ FROM transfer_history_attempts h JOIN records p ON p.kind='import_plan' AND p.id=h.plan_id;
  DELETE FROM transfer_history_dirty;`
 	if _, err = s.DB.Exec(seed); err != nil {
+		b.Fatal(err)
+	}
+	if _, err = s.DB.Exec(insertTrigger); err != nil {
 		b.Fatal(err)
 	}
 	for _, legacy := range []bool{false, true} {
@@ -198,20 +214,10 @@ func BenchmarkHistoryCurrentPage100K(b *testing.B) {
 			}
 		})
 	}
-	b.Run("refresh_one_source", func(b *testing.B) {
+	b.Run("write_one_source", func(b *testing.B) {
 		b.ReportAllocs()
 		for range b.N {
-			tx, err := s.DB.Begin()
-			if err != nil {
-				b.Fatal(err)
-			}
-			if _, err = tx.Exec(`INSERT INTO transfer_history_dirty_sources VALUES('/source/bench-1')`); err != nil {
-				b.Fatal(err)
-			}
-			if err = refreshTransferHistoryIndex(context.Background(), tx); err != nil {
-				b.Fatal(err)
-			}
-			if err = tx.Commit(); err != nil {
+			if err := s.Put(context.Background(), "transfer_history_hidden", "file-bench-1", map[string]string{"execution_key": "0000"}); err != nil {
 				b.Fatal(err)
 			}
 		}
@@ -219,16 +225,10 @@ func BenchmarkHistoryCurrentPage100K(b *testing.B) {
 
 }
 
-func TestHistoryCurrentProjectionUpgradeAndOnlyDirtySources(t *testing.T) {
+func TestHistoryCurrentWriteTouchesOnlyChangedSources(t *testing.T) {
 	a, source, target := importTestApp(t)
 	first, _ := historyParityPlan(t, a, source, target, "dirty-current", "First", "failed", "error", "one.mkv")
 	historyParityPlan(t, a, source, target, "clean-current", "Other", "succeeded", "imported", "two.mkv")
-	historyIndexMatchesExecutionRecords(t, a)
-	// A v1 attempt index may already be clean during upgrade. Its source groups
-	// still need a one-time backfill even though no source records are dirty.
-	if _, err := a.Store.DB.Exec(`DELETE FROM transfer_history_current; DELETE FROM transfer_history_index_version WHERE version=2;` + transferHistoryIndexSchema()); err != nil {
-		t.Fatal(err)
-	}
 	historyIndexMatchesExecutionRecords(t, a)
 	if _, err := a.Store.DB.Exec(`CREATE TABLE current_writes(source TEXT);
  CREATE TRIGGER observe_current AFTER INSERT ON transfer_history_current BEGIN INSERT INTO current_writes VALUES(NEW.resource_source); END;`); err != nil {
@@ -239,7 +239,9 @@ func TestHistoryCurrentProjectionUpgradeAndOnlyDirtySources(t *testing.T) {
 		t.Fatal(err)
 	}
 	historyIndexMatchesExecutionRecords(t, a)
-	historyIndexMatchesExecutionRecords(t, a)
+	for range 2 {
+		historyParityReadPage(t, a, "capabilities=deferred")
+	}
 	var own, other int
 	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM current_writes WHERE source=?`, first.Files[0].Source).Scan(&own); err != nil {
 		t.Fatal(err)

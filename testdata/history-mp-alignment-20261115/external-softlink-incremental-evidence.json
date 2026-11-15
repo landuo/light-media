@@ -1,0 +1,43 @@
+{
+  "round": 26,
+  "scope": "external whole-tree directory softlink into an existing destination adopts only newly created links and preserves pre-call entries",
+  "allowed": "existing real directory (owned root goes through append admission); pre-call entries unchanged; newly created links point at their source leaves",
+  "refused": [
+    "pre-call entry removed or identity/content/link target changed",
+    "new entry outside the module mapping",
+    "copy pretending to be a softlink"
+  ],
+  "ownership": {
+    "new_links": "receipt Members only",
+    "new_parents": "receipt Directories only",
+    "pre_call_entries": "stored in Existing, validated unchanged, never deleted or rebased",
+    "owned_root": "AppendAssetID reused",
+    "republish": "published receipt is not re-frozen"
+  },
+  "verification": {
+    "special": {
+      "log": "work/history-mp-alignment-20261115/round26-external-adoption.log",
+      "seconds": 3.681,
+      "branches": [
+        "success",
+        "asset-sql-cold",
+        "counterfeit-copy",
+        "existing-target"
+      ]
+    },
+    "regression": {
+      "log": "work/history-mp-alignment-20261115/round26-external-adoption-regression.log",
+      "seconds": 113.324
+    },
+    "integration": {
+      "log": "work/history-mp-alignment-20261115/round26-integration.log",
+      "seconds": 363.389
+    }
+  },
+  "not_claimed": [
+    "module rewriting pre-existing regular files",
+    "NAS or cloud storage",
+    "production media"
+  ],
+  "whole_objective_complete": false
+}

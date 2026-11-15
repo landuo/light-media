@@ -450,6 +450,9 @@ func (a *App) persistSettingsWithEffect(ctx context.Context, c Settings, effect 
 		c.PluginMarkets = append([]string(nil), a.config.PluginMarkets...)
 		a.cfgMu.RUnlock()
 	}
+	if err := validateRecognitionSource(c.RecognitionSource); err != nil {
+		return err
+	}
 	if err := normalizeProxySettings(&c); err != nil {
 		return err
 	}

@@ -103,6 +103,13 @@ func TestManualOrganizeDirectoryQueuePreparesAndReplays(t *testing.T) {
 		}
 	}
 	// Restart after all files are committed but before the scanning job ends.
+	// This case intentionally replays preparation before executing file jobs.
+	// Recovery makes the parent due now; already-due children may otherwise be
+	// claimed first when restart crosses a wall-clock second. Schedule them
+	// later explicitly instead of assuming priority the worker never promised.
+	if _, err = a.Store.DB.Exec(`UPDATE jobs SET run_at=? WHERE json_extract(payload,'$._parent_job_id')=? AND kind='organize_file'`, time.Now().Add(time.Hour).Unix(), parent.ID); err != nil {
+		t.Fatal(err)
+	}
 	settings := a.Settings()
 	if err := a.Close(); err != nil {
 		t.Fatal(err)
@@ -123,6 +130,9 @@ func TestManualOrganizeDirectoryQueuePreparesAndReplays(t *testing.T) {
 	}
 	if changed, err := reopened.finishJob(ctx, recovered, "succeeded", "", "", time.Now().Unix()); err != nil || !changed {
 		t.Fatalf("finish preparation: changed=%v error=%v", changed, err)
+	}
+	if _, err = reopened.Store.DB.Exec(`UPDATE jobs SET run_at=? WHERE json_extract(payload,'$._parent_job_id')=? AND kind='organize_file'`, time.Now().Unix(), parent.ID); err != nil {
+		t.Fatal(err)
 	}
 	if err := os.Remove(filepath.Join(selected, "Original Show", "Original.Show.S02E05.mkv")); err != nil {
 		t.Fatal(err)

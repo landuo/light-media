@@ -79,8 +79,8 @@ func (a *App) persistOriginalTransferFailure(ctx context.Context, plan ImportPla
 		return err
 	}
 	for _, file := range release {
-		for _, episode := range importEpisodes(file.Episodes) {
-			if _, err := tx.ExecContext(ctx, `DELETE FROM reservations WHERE media_key=? AND season=? AND episode=? AND intent_id=?`, mediaKey(plan.Media), file.Season, episode, plan.ID); err != nil {
+		for _, slot := range file.inventorySlots() {
+			if _, err := tx.ExecContext(ctx, `DELETE FROM reservations WHERE media_key=? AND season=? AND episode=? AND intent_id=?`, mediaKey(plan.Media), slot.Season, slot.Episode, plan.ID); err != nil {
 				return err
 			}
 		}

@@ -48,8 +48,28 @@ func (a *App) originalManualTransferIdentity(ctx context.Context, request Import
 	if file.Part != "" {
 		meta.Set("part", file.Part)
 	}
+	if request.MediaType == "movie" {
+		meta.Set("type", "电影")
+	} else if request.MediaType == "tv" {
+		meta.Set("type", "电视剧")
+	}
 	initialName, initialYear := meta.Name(), meta.Text("year")
 	recognized, err := a.originalCatalogRecognizeByMetaMethod(ctx, "recognize_media", meta, func(current *releasemeta.MetaObject) (json.RawMessage, error) {
+		source := request.originalRecognitionSource
+		if source == "" {
+			source = a.effectiveRecognitionSource()
+		}
+		if source != "themoviedb" {
+			fields, e := current.ToDict()
+			if e != nil {
+				return nil, e
+			}
+			kwargs, e := originalCatalogRecognitionCallKwargs(fields, map[string]any{"source": source})
+			if e != nil {
+				return nil, e
+			}
+			return a.originalHostMediaRecognizeNative(ctx, kwargs)
+		}
 		// NameRecognize may have changed the name/year before this retry.
 		if current.Name() != initialName || current.Text("year") != initialYear {
 			return a.originalMetadataRecognizeNative(ctx, current)
@@ -86,10 +106,16 @@ func (a *App) originalManualTransferIdentity(ctx context.Context, request Import
 	if err != nil {
 		return request, err
 	}
-	if !validMedia(identity.MediaType, identity.ID) {
-		return request, bad("IMPORT_IDENTITY_REVIEW", "当前整理需要可核验的TMDB身份")
-	}
 	out := ImportRequest{MediaType: identity.MediaType, TMDBID: identity.ID, originalResolvedMedia: recognized, Files: []ImportFileRequest{file}}
+	if !validMedia(identity.MediaType, identity.ID) {
+		provider := originalChatMediaProvider{Source: identity.Source, ID: identity.SourceID}
+		info, e := originalChatProviderSearchInformation(recognized, &provider, identity.MediaType)
+		if e != nil {
+			return request, e
+		}
+		out.providerIdentity, out.originalManualProvider = info.Media, true
+		out.MediaType, out.TMDBID = info.Media.MediaType, 0
+	}
 	out.Files[0].originalResolvedMeta = meta
 	if identity.MediaType == "tv" {
 		if n := meta.Number("begin_season"); n != nil && n.IsInt64() && n.Sign() >= 0 && n.Int64() <= 1000 {
@@ -124,7 +150,7 @@ func manualTVRecognitionFallback(request ImportRequest, file ImportFileRequest, 
 }
 
 func (a *App) originalManualRecognitionAvailable() bool {
-	return a.originalTransferHasHandlers() || a.originalEventHasHandler(plugins.EventQuery{Kind: plugins.ChainEventKind, Type: "name.recognize"})
+	return a.effectiveRecognitionSource() != "themoviedb" || a.originalTransferHasHandlers() || a.originalEventHasHandler(plugins.EventQuery{Kind: plugins.ChainEventKind, Type: "name.recognize"})
 }
 
 func (a *App) originalTransferObtainImages(ctx context.Context, recognized json.RawMessage) (json.RawMessage, error) {

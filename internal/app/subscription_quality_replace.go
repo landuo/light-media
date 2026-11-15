@@ -42,10 +42,11 @@ func qualityImportSHA(plan ImportPlan) string {
 		Season                     int
 		Episodes                   []int
 		SourceSnapshot             importSnapshot
+		EpisodeScopes              []canonicalEpisodeScope `json:"episode_scopes,omitempty"`
 	}
 	files := []identityFile{}
 	for _, f := range plan.Files {
-		files = append(files, identityFile{f.ID, f.Source, f.Target, f.Method, f.Season, f.Episodes, planSnapshot(f)})
+		files = append(files, identityFile{f.ID, f.Source, f.Target, f.Method, f.Season, f.Episodes, planSnapshot(f), f.EpisodeScopes})
 	}
 	base := tokenHash(string(mustCleanSeedJSON(struct {
 		Plan, Intent, Media, Root, Mode, Directory string
@@ -153,8 +154,11 @@ func qualityFileOldAssets(p *qualityDownloadSnapshot, file PlanFile) []qualityAs
 		return nil
 	}
 	ids := map[string]bool{}
-	for _, ep := range importEpisodes(file.Episodes) {
-		for _, id := range p.Slots[ep] {
+	for _, slot := range file.inventorySlots() {
+		if slot.Season != p.Season {
+			continue
+		}
+		for _, id := range p.Slots[slot.Episode] {
 			ids[id] = true
 		}
 	}
@@ -169,8 +173,8 @@ func qualityFileOldAssets(p *qualityDownloadSnapshot, file PlanFile) []qualityAs
 func qualityTargetOwner(p *qualityDownloadSnapshot, file PlanFile) (*qualityAssetSnapshot, error) {
 	for _, frozen := range qualityFileOldAssets(p, file) {
 		if frozen.Asset.Path == file.Target {
-			for _, ep := range importEpisodes(frozen.Asset.Episodes) {
-				if !slices.Contains(importEpisodes(file.Episodes), ep) {
+			for _, slot := range frozen.Asset.inventorySlots() {
+				if !slices.Contains(file.inventorySlots(), slot) {
 					return nil, bad("QUALITY_PARTIAL_PATH_CONFLICT", "原视频还承载未替换剧集，不能原位替换")
 				}
 			}
@@ -188,11 +192,8 @@ func (a *App) saveQualityImportProofTx(ctx context.Context, tx *sql.Tx, plan Imp
 		if f.Status != "ready" && f.Status != "already_imported" {
 			continue
 		}
-		if f.Season != p.Season {
-			return bad("QUALITY_IMPORT_CONTEXT_CHANGED", "洗版整理季号不符")
-		}
-		for _, ep := range importEpisodes(f.Episodes) {
-			if !slices.Contains(importEpisodes(p.Episodes), ep) {
+		for _, slot := range f.inventorySlots() {
+			if slot.Season != p.Season || !slices.Contains(importEpisodes(p.Episodes), slot.Episode) {
 				return bad("QUALITY_IMPORT_CONTEXT_CHANGED", "洗版整理超出实际下载选集")
 			}
 		}
@@ -266,18 +267,22 @@ func (a *App) guardQualityImportFile(ctx context.Context, q qualityReader, plan 
 	if p.Version == 3 {
 		// The accepted material proves what may be organized. Inventory slots
 		// are presence facts, never permission to remove all previous versions.
-		if file.Season != p.Download.Season || p.Overwrite == nil {
+		if p.Overwrite == nil {
 			return bad("QUALITY_IMPORT_CONTEXT_CHANGED", "洗版实际下载季号或目录覆盖证明缺失")
 		}
-		for _, ep := range importEpisodes(file.Episodes) {
-			if !slices.Contains(importEpisodes(p.Download.Episodes), ep) {
+		for _, slot := range file.inventorySlots() {
+			if slot.Season != p.Download.Season || !slices.Contains(importEpisodes(p.Download.Episodes), slot.Episode) {
 				return bad("QUALITY_IMPORT_CONTEXT_CHANGED", "洗版整理超出实际接收范围")
 			}
 		}
 		return a.guardQualitySidecars(ctx, q, plan, file, p)
 	}
-	for _, ep := range importEpisodes(file.Episodes) {
-		actual, e := qualitySlots(ctx, q, mediaKey(plan.Media), file.Season, []int{ep})
+	for _, slot := range file.inventorySlots() {
+		if slot.Season != p.Download.Season {
+			return bad("QUALITY_IMPORT_CONTEXT_CHANGED", "洗版整理超出实际接收范围")
+		}
+		ep := slot.Episode
+		actual, e := qualitySlots(ctx, q, mediaKey(plan.Media), slot.Season, []int{ep})
 		if e != nil {
 			return e
 		}
@@ -459,8 +464,8 @@ func (a *App) commitQualityReplacementTx(ctx context.Context, tx *sql.Tx, plan I
 	cleanup := qualityCleanup{Version: 2, ID: plan.ID + "/" + file.ID, NewAsset: asset.ID, NewPath: asset.Path, NewRoot: asset.RootID, NewSnapshot: newFiles[0].Snapshot, NewFiles: append([]managedFile(nil), newFiles...), State: "pending", Files: []managedFile{}, OldAssets: []string{}, RootPaths: map[string]string{plan.RootID: p.RootPath}}
 	for _, old := range qualityFileOldAssets(&p.Download, file) {
 		cleanup.RootPaths[old.Asset.RootID] = old.RootPath
-		for _, ep := range importEpisodes(file.Episodes) {
-			if _, e = tx.ExecContext(ctx, `DELETE FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id=?`, mediaKey(plan.Media), file.Season, ep, old.Asset.ID); e != nil {
+		for _, slot := range file.inventorySlots() {
+			if _, e = tx.ExecContext(ctx, `DELETE FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id=?`, mediaKey(plan.Media), slot.Season, slot.Episode, old.Asset.ID); e != nil {
 				return e
 			}
 		}

@@ -189,7 +189,7 @@ func TestDirectoryFileRuleChangeBlocksQueuedPublication(t *testing.T) {
 	}
 }
 
-func TestDirectoryFileAmbiguousIdentityNeedsReviewAndNFOCanResolve(t *testing.T) {
+func TestDirectoryFileAmbiguousIdentityRequiresHistoryDeletionBeforeAutomaticRetry(t *testing.T) {
 	a, rule, source := directoryFileFixture(t, true)
 	p := filepath.Join(source, "Test Film (2024).mkv")
 	importWrite(t, p, []byte("synthetic"))
@@ -197,18 +197,43 @@ func TestDirectoryFileAmbiguousIdentityNeedsReviewAndNFOCanResolve(t *testing.T)
 	directoryPoll(t, a, rule)
 	directoryAge(t, a, rule, p)
 	directoryPoll(t, a, rule)
-	if f := directoryRecognize(t, a, rule, p); f.State != "error" || f.PlanID == "" {
-		t.Fatalf("ambiguous identity imported: %+v", f)
+	failed := directoryRecognize(t, a, rule, p)
+	if failed.State != "error" || failed.PlanID == "" {
+		t.Fatalf("ambiguous identity imported: %+v", failed)
+	}
+	ctx := context.Background()
+	var plan ImportPlan
+	if err := a.Store.Get(ctx, "import_plan", failed.PlanID, &plan); err != nil {
+		t.Fatal(err)
+	}
+	history, err := a.transferHistoryItem(ctx, plan.Files[0].ID)
+	if err != nil || history.Media.ID != 0 || history.Media.Title != "Test Film" || history.Mode != "hardlink" {
+		t.Fatalf("unidentified failure lost parsed facts or invented identity: %+v %v", history, err)
 	}
 	importWrite(t, strings.TrimSuffix(p, ".mkv")+".nfo", []byte(`<movie><title>Test Film</title><uniqueid type="tmdb" default="true">123</uniqueid></movie>`))
 	directoryPoll(t, a, rule)
-	if f := directoryObservation(t, a, rule, p); f.State != "observing" {
-		t.Fatalf("corrected NFO not reconsidered: %+v", f)
+	directoryAge(t, a, rule, p)
+	directoryPoll(t, a, rule)
+	if f := directoryObservation(t, a, rule, p); f.State != "error" || f.JobID != failed.JobID {
+		t.Fatalf("NFO edit bypassed existing failure history: %+v", f)
+	}
+	if _, err = a.deleteTransferHistory(ctx, history, historyDeleteRequest{Confirm: true}); err != nil {
+		t.Fatal(err)
+	}
+	directoryPoll(t, a, rule)
+	if f := directoryObservation(t, a, rule, p); f.State != "observing" || f.PlanID != "" {
+		t.Fatalf("deleted history did not release stable-file checks: %+v", f)
 	}
 	directoryAge(t, a, rule, p)
 	directoryPoll(t, a, rule)
-	if f := directoryObservation(t, a, rule, p); f.State != "queued" {
-		t.Fatalf("corrected NFO not imported: %+v", f)
+	retry := directoryRecognize(t, a, rule, p)
+	if retry.State != "queued" || retry.JobID == failed.JobID {
+		t.Fatalf("deleted failure did not permit a new execution: %+v", retry)
+	}
+	reorgRunJob(t, a, reorgJob(t, a, "import", retry.PlanID))
+	historyAfter, err := a.transferHistoryItem(ctx, history.ID)
+	if err != nil || historyAfter.Status != "success" || historyAfter.Media.ID != 123 {
+		t.Fatalf("corrected source did not actually import: %+v %v", historyAfter, err)
 	}
 }
 

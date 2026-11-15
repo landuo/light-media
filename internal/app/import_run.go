@@ -6,48 +6,64 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"sync/atomic"
 	"time"
 
-	"light-media/internal/plugins"
-
 	"golang.org/x/sys/unix"
 )
 
 type importReceipt struct {
-	ReusedHardlink            bool                               `json:"reused_hardlink,omitempty"`
-	DirectoryException        string                             `json:"directory_exception,omitempty"`
-	DirectoryMembers          map[string]originalDirectoryMember `json:"directory_members,omitempty"`
-	DirectoryFiles            []string                           `json:"directory_files,omitempty"`
-	DirectoryCompleted        []string                           `json:"directory_completed,omitempty"`
-	DirectoryListed           bool                               `json:"directory_listed,omitempty"`
-	DirectoryStreamSize       *int64                             `json:"directory_stream_size,omitempty"`
-	OriginalNamingResolved    bool                               `json:"original_naming_resolved,omitempty"`
-	OriginalModuleStarted     bool                               `json:"original_module_started,omitempty"`
-	OriginalModuleResult      []byte                             `json:"original_module_result,omitempty"`
-	OriginalNativeInterrupted bool                               `json:"original_native_interrupted,omitempty"`
-	ID                        string                             `json:"id"`
-	Target                    string                             `json:"target"`
-	Source                    string                             `json:"source"`
-	SourceSnapshot            importSnapshot                     `json:"source_snapshot"`
-	Stage                     string                             `json:"stage"`
-	StageSnapshot             importSnapshot                     `json:"stage_snapshot"`
-	State                     string                             `json:"state"`
-	SHA256                    string                             `json:"sha256,omitempty"`
+	StoragePublication        *importStoragePublicationState       `json:"storage_publication,omitempty"`
+	Softlink                  *importSoftlinkProof                 `json:"softlink,omitempty"`
+	StorageSoftlink           *importStorageSoftlinkState          `json:"storage_softlink,omitempty"`
+	OriginalSoftlink          *originalSoftlinkProof               `json:"original_softlink,omitempty"`
+	OriginalSoftlinkDirectory *originalSoftlinkDirectoryProof      `json:"original_softlink_directory,omitempty"`
+	Move                      *importMoveState                     `json:"move,omitempty"`
+	DirectoryMoveState        string                               `json:"directory_move_state,omitempty"`
+	DirectoryStorageMove      *importDirectoryStorageMoveState     `json:"directory_storage_move,omitempty"`
+	DirectoryStorageSoftlink  *importDirectoryStorageSoftlinkState `json:"directory_storage_softlink,omitempty"`
+	MoveSourceSnapshot        *importSnapshot                      `json:"move_source_snapshot,omitempty"`
+	ReusedHardlink            bool                                 `json:"reused_hardlink,omitempty"`
+	SharedDirectory           *importSharedDirectoryProof          `json:"shared_directory,omitempty"`
+	DirectoryMerge            *importDirectoryMergeState           `json:"directory_merge,omitempty"`
+	DirectoryException        string                               `json:"directory_exception,omitempty"`
+	DirectoryMembers          map[string]originalDirectoryMember   `json:"directory_members,omitempty"`
+	DirectoryFiles            []string                             `json:"directory_files,omitempty"`
+	DirectoryCompleted        []string                             `json:"directory_completed,omitempty"`
+	DirectoryListed           bool                                 `json:"directory_listed,omitempty"`
+	DirectoryStreamSize       *int64                               `json:"directory_stream_size,omitempty"`
+	OriginalNamingResolved    bool                                 `json:"original_naming_resolved,omitempty"`
+	OriginalModuleStarted     bool                                 `json:"original_module_started,omitempty"`
+	OriginalMoveSHA256        string                               `json:"original_move_sha256,omitempty"`
+	OriginalMoveDirectory     *originalMoveDirectoryProof          `json:"original_move_directory,omitempty"`
+	StorageMove               *importStorageMoveState              `json:"storage_move,omitempty"`
+	OriginalModuleResult      []byte                               `json:"original_module_result,omitempty"`
+	OriginalNativeInterrupted bool                                 `json:"original_native_interrupted,omitempty"`
+	AppendAssetID             string                               `json:"append_asset_id,omitempty"`
+	MediaKey                  string                               `json:"media_key,omitempty"`
+	ID                        string                               `json:"id"`
+	Target                    string                               `json:"target"`
+	Source                    string                               `json:"source"`
+	SourceSnapshot            importSnapshot                       `json:"source_snapshot"`
+	Stage                     string                               `json:"stage"`
+	StageSnapshot             importSnapshot                       `json:"stage_snapshot"`
+	State                     string                               `json:"state"`
+	SHA256                    string                               `json:"sha256,omitempty"`
 }
 
 type managedFile struct {
-	Path           string         `json:"path"`
-	RootID         string         `json:"root_id"`
-	AssetID        string         `json:"asset_id"`
-	MediaKey       string         `json:"media_key"`
-	Kind           string         `json:"kind"`
-	Snapshot       importSnapshot `json:"snapshot"`
-	SourceSnapshot importSnapshot `json:"source_snapshot,omitempty"`
-	SHA256         string         `json:"sha256,omitempty"`
+	Softlink        *importSoftlinkProof        `json:"softlink,omitempty"`
+	SharedDirectory *importSharedDirectoryProof `json:"shared_directory,omitempty"`
+	Path            string                      `json:"path"`
+	RootID          string                      `json:"root_id"`
+	AssetID         string                      `json:"asset_id"`
+	MediaKey        string                      `json:"media_key"`
+	Kind            string                      `json:"kind"`
+	Snapshot        importSnapshot              `json:"snapshot"`
+	SourceSnapshot  importSnapshot              `json:"source_snapshot,omitempty"`
+	SHA256          string                      `json:"sha256,omitempty"`
 }
 
 func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string) (Job, error) {
@@ -279,21 +295,21 @@ func (a *App) importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, fi
 	if plan.IntentID != "" {
 		owner = plan.IntentID
 	}
-	for _, episode := range importEpisodes(file.Episodes) {
+	for _, slot := range file.inventorySlots() {
 		var count int
-		if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=?`, mediaKey(plan.Media), file.Season, episode, plan.ReorganizeAssetID).Scan(&count); err != nil {
+		if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=?`, mediaKey(plan.Media), slot.Season, slot.Episode, plan.ReorganizeAssetID).Scan(&count); err != nil {
 			return err
 		}
 		if count > 0 && quality == nil && overwriteMeta.Overwrite == nil {
 			return bad("IMPORT_CONFLICT", "影片或季集已存在资产")
 		}
 		var current string
-		err := tx.QueryRowContext(ctx, `SELECT intent_id FROM reservations WHERE media_key=? AND season=? AND episode=?`, mediaKey(plan.Media), file.Season, episode).Scan(&current)
+		err := tx.QueryRowContext(ctx, `SELECT intent_id FROM reservations WHERE media_key=? AND season=? AND episode=?`, mediaKey(plan.Media), slot.Season, slot.Episode).Scan(&current)
 		if err == nil {
 			if current != owner {
 				reusable := false
 				if plan.IntentID == "" {
-					reusable, err = canReplaceFailedImportReservation(ctx, tx, current, mediaKey(plan.Media), file, episode)
+					reusable, err = canReplaceFailedImportReservation(ctx, tx, current, mediaKey(plan.Media), file, slot.Season, slot.Episode)
 					if err != nil {
 						return err
 					}
@@ -302,7 +318,7 @@ func (a *App) importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, fi
 					return bad("IMPORT_CONFLICT", "影片或季集被其他任务占用")
 				}
 				if _, err := tx.ExecContext(ctx, `UPDATE reservations SET intent_id=? WHERE media_key=? AND season=? AND episode=? AND intent_id=?`,
-					owner, mediaKey(plan.Media), file.Season, episode, current); err != nil {
+					owner, mediaKey(plan.Media), slot.Season, slot.Episode, current); err != nil {
 					return err
 				}
 			}
@@ -311,7 +327,7 @@ func (a *App) importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, fi
 		if !errors.Is(err, sql.ErrNoRows) {
 			return err
 		}
-		if _, err = tx.ExecContext(ctx, `INSERT INTO reservations VALUES(?,?,?,?)`, mediaKey(plan.Media), file.Season, episode, owner); err != nil {
+		if _, err = tx.ExecContext(ctx, `INSERT INTO reservations VALUES(?,?,?,?)`, mediaKey(plan.Media), slot.Season, slot.Episode, owner); err != nil {
 			return bad("IMPORT_CONFLICT", "影片或季集同时被其他任务占用")
 		}
 	}
@@ -319,9 +335,9 @@ func (a *App) importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, fi
 }
 
 func importExcludedTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, file PlanFile) error {
-	for _, episode := range importEpisodes(file.Episodes) {
+	for _, slot := range file.inventorySlots() {
 		var raw []byte
-		err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='exclusion' AND id=?`, fmt.Sprintf("%s:%d:%d", mediaKey(plan.Media), file.Season, episode)).Scan(&raw)
+		err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='exclusion' AND id=?`, fmt.Sprintf("%s:%d:%d", mediaKey(plan.Media), slot.Season, slot.Episode)).Scan(&raw)
 		if errors.Is(err, sql.ErrNoRows) {
 			continue
 		}
@@ -490,8 +506,10 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 		if !a.importSourceAllowed(file.Source, plan.Manual) || !within(root.Path, file.Target) {
 			return bad("REVIEW_PATH_CHANGED", "允许路径发生变化，请重新预览")
 		}
-		if err = a.ensureNotExcluded(ctx, plan.Media, file.Season, file.Episodes); err != nil {
-			return err
+		for _, scope := range file.inventoryScopes() {
+			if err = a.ensureNotExcluded(ctx, plan.Media, scope.Season, scope.Episodes); err != nil {
+				return err
+			}
 		}
 		if err = a.guardImportReorganize(ctx, meta.Reorganize); err != nil {
 			return err
@@ -508,7 +526,7 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 			ctx := ctx
 			var originalMetadataEvent json.RawMessage
 			defer release()
-			if a.originalTransferHasHandlers() || file.MaterialKind != "" {
+			if a.originalTransferHasHandlers() || file.MaterialKind != "" || file.Method == "move" || file.Method == "softlink" {
 				original, exists := meta.OriginalTransfer[file.ID]
 				if !exists {
 					var err error
@@ -519,8 +537,11 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 					if meta.OriginalTransfer == nil {
 						meta.OriginalTransfer = map[string]originalTransferFileContext{}
 					}
-					meta.OriginalTransfer[file.ID] = original
 				}
+				if err := original.setCategory(plan.Category); err != nil {
+					return err
+				}
+				meta.OriginalTransfer[file.ID] = original
 				ctx = context.WithValue(ctx, originalTransferWriteContextKey{}, &originalTransferWriteContext{File: *file, Source: original, Media: plan.Media})
 				sourceStorage, err := a.originalSelectTransferStorage(ctx)
 				if err != nil {
@@ -549,7 +570,7 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 			if err := a.preflightQualityDirectoryOverwrite(ctx, plan, *file, quality, meta); err != nil {
 				return err
 			}
-			inPlace := meta.Reorganize != nil && !meta.Reorganize.TargetRemoved && file.Target == meta.Reorganize.Asset.Path && (!meta.Reorganize.SingleHistory || file.Source == file.Target)
+			inPlace := meta.Reorganize != nil && !meta.Reorganize.TargetRemoved && file.Target == meta.Reorganize.Asset.Path && (file.Method == "softlink") == (meta.Reorganize.Video.Softlink != nil) && (!meta.Reorganize.SingleHistory || file.Source == file.Target)
 			var receipt importReceipt
 			var err error
 			publish := func() (importReceipt, error) {
@@ -563,9 +584,12 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 				}
 				file = &plan.Files[index]
 				if file.DirectoryDigest != "" {
-					return a.publishOriginalDirectory(ctx, plan.ID+"/"+file.ID, *file, check)
+					if inPlace && file.Method == "softlink" {
+						return a.reuseOwnedInPlaceSoftlink(ctx, plan.ID+"/"+file.ID, *file, meta.Reorganize.Video)
+					}
+					return a.publishOriginalDirectory(ctx, plan.ID+"/"+file.ID, *file, check, mediaKey(plan.Media))
 				}
-				inPlace = meta.Reorganize != nil && !meta.Reorganize.TargetRemoved && file.Target == meta.Reorganize.Asset.Path && (!meta.Reorganize.SingleHistory || file.Source == file.Target)
+				inPlace = meta.Reorganize != nil && !meta.Reorganize.TargetRemoved && file.Target == meta.Reorganize.Asset.Path && (file.Method == "softlink") == (meta.Reorganize.Video.Softlink != nil) && (!meta.Reorganize.SingleHistory || file.Source == file.Target)
 				if err := a.originalPrepareTransferTarget(ctx, file.Target); err != nil {
 					return importReceipt{}, err
 				}
@@ -574,7 +598,14 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 					if inspectErr != nil || actualSource != planSnapshot(*file) {
 						return receipt, bad("REVIEW_SOURCE_CHANGED", "重新整理的源文件在预览后发生变化")
 					}
-					receipt = importReceipt{Target: file.Target, Source: file.Source, SourceSnapshot: planSnapshot(*file), StageSnapshot: meta.Reorganize.Video.Snapshot, SHA256: meta.Reorganize.Video.SHA256, State: "published"}
+					if file.Method == "softlink" {
+						receipt, err = a.reuseOwnedInPlaceSoftlink(ctx, plan.ID+"/"+file.ID, *file, meta.Reorganize.Video)
+						if err != nil {
+							return receipt, err
+						}
+					} else {
+						receipt = importReceipt{Target: file.Target, Source: file.Source, SourceSnapshot: planSnapshot(*file), StageSnapshot: meta.Reorganize.Video.Snapshot, SHA256: meta.Reorganize.Video.SHA256, State: "published"}
+					}
 				} else {
 					if meta.Overwrite != nil {
 						receipt, err = a.publishDirectoryOverwrite(ctx, plan.ID+"/"+file.ID, file.Source, file.Target, plan.RootID, meta.Methods[file.ID], planSnapshot(*file), *meta.Overwrite, check)
@@ -618,7 +649,7 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 				failures.Messages = append(failures.Messages, a.clean(err.Error()))
 			}
 			file = &plan.Files[index]
-			inPlace = meta.Reorganize != nil && !meta.Reorganize.TargetRemoved && file.Target == meta.Reorganize.Asset.Path && (!meta.Reorganize.SingleHistory || file.Source == file.Target)
+			inPlace = meta.Reorganize != nil && !meta.Reorganize.TargetRemoved && file.Target == meta.Reorganize.Asset.Path && (file.Method == "softlink") == (meta.Reorganize.Video.Softlink != nil) && (!meta.Reorganize.SingleHistory || file.Source == file.Target)
 			completeTask := func(task PlanFile, source originalTransferFileContext, success bool, message string) {
 				if callbackErr := a.completeOriginalTransferCallback(ctx, job, plan, file.ID, task, source, success, message); callbackErr != nil {
 					taskFailures = append(taskFailures, &originalTransferCallbackError{callbackErr})
@@ -652,6 +683,13 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 			}
 			wantsScrape = wantsScrape && file.MaterialKind == ""
 			assetID := file.AssetID
+			if assetID == "" && receipt.AppendAssetID != "" {
+				assetID = receipt.AppendAssetID
+				file.AssetID = assetID
+				if err = a.Store.Put(ctx, "import_plan", plan.ID, plan); err != nil {
+					return err
+				}
+			}
 			if assetID == "" {
 				assetID = id("asset_")
 				file.AssetID = assetID
@@ -665,12 +703,12 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 				if kind == "" {
 					kind = "video"
 				}
-				owned = append(owned, managedFile{Path: file.Target, RootID: root.ID, AssetID: assetID, MediaKey: mediaKey(plan.Media), Kind: kind, Snapshot: receipt.StageSnapshot, SourceSnapshot: planSnapshot(*file), SHA256: receipt.SHA256})
+				owned = append(owned, managedFile{Path: file.Target, RootID: root.ID, AssetID: assetID, MediaKey: mediaKey(plan.Media), Kind: kind, Snapshot: receipt.StageSnapshot, SourceSnapshot: planSnapshot(*file), SHA256: receipt.SHA256, Softlink: receipt.Softlink, SharedDirectory: receipt.SharedDirectory})
 			}
 			if mainSucceeded && inPlace {
 				for _, prior := range meta.Reorganize.Owned {
 					if auxiliaryMaterialKind(prior.Kind) {
-						if actual, e := snapshotPath(prior.Path); e == nil && actual == prior.Snapshot {
+						if actual, e := snapshotOwnedTransferPath(prior.Path, prior.Snapshot, prior.Softlink, true, prior.SharedDirectory); e == nil && actual == prior.Snapshot {
 							prior.AssetID, prior.RootID, prior.MediaKey = assetID, root.ID, mediaKey(plan.Media)
 							owned = append(owned, prior)
 						}
@@ -702,20 +740,34 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 					completeTask(extra, *sidecar.Original, true, "")
 				}
 				originalFailedAuxiliary = nil
-				owned = append(owned, managedFile{Path: sidecar.Target, RootID: root.ID, AssetID: assetID, MediaKey: mediaKey(plan.Media), Kind: sidecarMaterialKind(sidecar), Snapshot: sideReceipt.StageSnapshot, SourceSnapshot: sidecar.Snapshot, SHA256: sideReceipt.SHA256})
+				owned = append(owned, managedFile{Path: sidecar.Target, RootID: root.ID, AssetID: assetID, MediaKey: mediaKey(plan.Media), Kind: sidecarMaterialKind(sidecar), Snapshot: sideReceipt.StageSnapshot, SourceSnapshot: sidecar.Snapshot, SHA256: sideReceipt.SHA256, Softlink: sideReceipt.Softlink})
 			}
-			asset := Asset{ID: assetID, Media: plan.Media, Season: file.Season, Episodes: append([]int(nil), file.Episodes...), RootID: root.ID, Path: file.Target, SourcePath: file.Source, Size: file.Size, State: "present", ScrapeState: "pending", FNOSState: "pending", IntentID: plan.IntentID, CreatedAt: now()}
+			asset := Asset{ID: assetID, Media: plan.Media, Season: file.Season, Episodes: append([]int(nil), file.Episodes...), EpisodeScopes: cloneEpisodeScopes(file.EpisodeScopes), RootID: root.ID, Path: file.Target, SourcePath: file.Source, Size: file.Size, State: "present", ScrapeState: "pending", FNOSState: "pending", IntentID: plan.IntentID, CreatedAt: now()}
 			if _, sourced := meta.OriginalTransfer[file.ID]; sourced && mainSucceeded && file.MaterialKind == "" {
 				asset.FNOSRefreshTransfer = plan.ID + "/" + file.ID
 			}
 			asset.Part = file.Part
 			if meta.Reorganize != nil {
 				asset.IntentID = meta.Reorganize.Asset.IntentID
-				if file.Source == meta.Reorganize.Asset.Path {
+				if file.Source == meta.Reorganize.Asset.Path || file.Method == "softlink" {
 					asset.SourcePath = meta.Reorganize.Asset.SourcePath
 				}
 			}
 			asset.Renaming = plan.Renaming
+			if receipt.AppendAssetID != "" && receipt.AppendAssetID == assetID {
+				var priorAsset Asset
+				if e := a.Store.Get(ctx, "asset", assetID, &priorAsset); e != nil {
+					return e
+				}
+				asset.CreatedAt = priorAsset.CreatedAt
+				asset.SourcePath = priorAsset.SourcePath
+				asset.IntentID = priorAsset.IntentID
+				asset.Episodes = mergeAppendInts(priorAsset.Episodes, asset.Episodes)
+				asset.EpisodeScopes = mergeAppendScopes(priorAsset.EpisodeScopes, asset.EpisodeScopes)
+				if asset.Size < priorAsset.Size {
+					asset.Size = priorAsset.Size
+				}
+			}
 			if !wantsScrape {
 				asset.ScrapeState = "skipped"
 				asset.FNOSState = "unverified"
@@ -730,6 +782,11 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 			defer tx.Rollback()
 			if err = a.requireNativeDirectoryAuthorizationTx(ctx, tx, plan, meta); err != nil {
 				return err
+			}
+			if mainSucceeded && receipt.DirectoryMerge != nil {
+				if err = a.supersedeReplacedDirectoryMembersTx(ctx, tx, receipt); err != nil {
+					return err
+				}
 			}
 			if mainSucceeded && file.MaterialKind == "" {
 				if err = a.commitQualityReplacementTx(ctx, tx, plan, *file, asset, owned); err != nil {
@@ -766,7 +823,7 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 					asset.State, asset.IdentitySource, asset.IdentityConfirmedAt = "external", "manual", now()
 					proof := libraryIdentity{AssetID: asset.ID, RootID: root.ID, RootPath: root.Path, Path: asset.Path,
 						Snapshot: receipt.StageSnapshot, MediaType: asset.Media.MediaType, TMDBID: asset.Media.ID,
-						Season: asset.Season, Episodes: asset.Episodes, Source: "manual", ConfirmedAt: asset.IdentityConfirmedAt, Actor: "admin"}
+						Season: asset.Season, Episodes: asset.Episodes, EpisodeScopes: cloneEpisodeScopes(asset.EpisodeScopes), Source: "manual", ConfirmedAt: asset.IdentityConfirmedAt, Actor: "admin"}
 					if err := txPut(ctx, tx, "asset_identity", asset.ID, proof); err != nil {
 						return err
 					}
@@ -778,23 +835,23 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 					return err
 				}
 				cleanupKeys = append(cleanupKeys, plan.ID+"/"+file.ID)
-				for _, episode := range importEpisodes(file.Episodes) {
+				for _, slot := range file.inventorySlots() {
 					var other string
-					err = tx.QueryRowContext(ctx, `SELECT asset_id FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=? LIMIT 1`, mediaKey(plan.Media), file.Season, episode, assetID).Scan(&other)
+					err = tx.QueryRowContext(ctx, `SELECT asset_id FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=? LIMIT 1`, mediaKey(plan.Media), slot.Season, slot.Episode, assetID).Scan(&other)
 					if err == nil {
 						return bad("IMPORT_CONFLICT", "发布后发现同季集资产冲突，文件已保留供人工核对")
 					}
 					if !errors.Is(err, sql.ErrNoRows) {
 						return err
 					}
-					if _, err = tx.ExecContext(ctx, `INSERT OR IGNORE INTO asset_slots VALUES(?,?,?,?)`, mediaKey(plan.Media), file.Season, episode, assetID); err != nil {
+					if _, err = tx.ExecContext(ctx, `INSERT OR IGNORE INTO asset_slots VALUES(?,?,?,?)`, mediaKey(plan.Media), slot.Season, slot.Episode, assetID); err != nil {
 						return err
 					}
 					owner := plan.ID
 					if plan.IntentID != "" {
 						owner = plan.IntentID
 					}
-					if _, err = tx.ExecContext(ctx, `DELETE FROM reservations WHERE media_key=? AND season=? AND episode=? AND intent_id=?`, mediaKey(plan.Media), file.Season, episode, owner); err != nil {
+					if _, err = tx.ExecContext(ctx, `DELETE FROM reservations WHERE media_key=? AND season=? AND episode=? AND intent_id=?`, mediaKey(plan.Media), slot.Season, slot.Episode, owner); err != nil {
 						return err
 					}
 				}
@@ -867,7 +924,11 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 			}
 			publicationCommitted = true
 			if len(owned) != 0 {
-				a.event(ctx, job, "INFO", "import", "published", "已登记本次实际发布成功的文件；源文件保留")
+				message := "已登记本次实际发布成功的文件；源文件保留"
+				if file.Method == "move" {
+					message = "已登记本次实际发布成功的文件；已完成源文件移动"
+				}
+				a.event(ctx, job, "INFO", "import", "published", message)
 			}
 			if len(originalMetadataEvent) > 0 {
 				// The same core event consumer is scheduled by the existing scrape
@@ -1074,7 +1135,23 @@ func sameInode(a, b importSnapshot) bool {
 	return a.Device == b.Device && a.Inode == b.Inode && a.Inode != 0
 }
 
+// A move's copy fallback must also work when the target filesystem rejects
+// hardlinks. Consume its owned stage with no-replace rename; staged receipts
+// already reconcile an existing target when the stage name has disappeared.
+func publishImportStage(parent *os.File, receipt importReceipt) error {
+	if receipt.Move != nil || receipt.StorageMove != nil {
+		return importRenameExclusive(int(parent.Fd()), receipt.Stage, filepath.Base(receipt.Target))
+	}
+	return unix.Linkat(int(parent.Fd()), receipt.Stage, int(parent.Fd()), filepath.Base(receipt.Target), 0)
+}
+
 func (a *App) publishImport(ctx context.Context, key, source, target string, locked importSnapshot, method string, check func() error) (importReceipt, error) {
+	if method == "move" {
+		return a.publishImportMove(ctx, key, source, target, locked, check)
+	}
+	if method == "softlink" {
+		return a.publishImportSoftlink(ctx, key, source, target, locked, check)
+	}
 	if method != "copy" && method != "hardlink" {
 		return importReceipt{}, bad("INVALID_IMPORT_MODE", "预览中的整理方式无效")
 	}
@@ -1093,11 +1170,17 @@ func (a *App) publishImport(ctx context.Context, key, source, target string, loc
 		if prior.Target != target || prior.Source != source || prior.SourceSnapshot != locked || prior.Stage != receipt.Stage {
 			return receipt, bad("REVIEW_RECEIPT", "发布收据与计划不一致")
 		}
+		if (prior.Move != nil || prior.StorageMove != nil || prior.Softlink != nil) && ctx.Value(importMovePublishKey{}) != true {
+			return receipt, bad("REVIEW_RECEIPT", "移动发布收据与本次整理方式不同")
+		}
 		receipt = prior
 	} else if !errors.Is(err, sql.ErrNoRows) {
 		return receipt, err
 	} else if err = a.Store.Put(ctx, "import_receipt", key, receipt); err != nil {
 		return receipt, err
+	}
+	if receipt.StoragePublication != nil {
+		return a.publishStorageCopyLink(ctx, receipt, method, nil, check)
 	}
 	current, openErr := snapshotPath(target)
 	if openErr == nil {
@@ -1123,7 +1206,7 @@ func (a *App) publishImport(ctx context.Context, key, source, target string, loc
 			if err = check(); err != nil {
 				return receipt, err
 			}
-			if err = unix.Linkat(int(parent.Fd()), receipt.Stage, int(parent.Fd()), filepath.Base(target), 0); err != nil {
+			if err = publishImportStage(parent, receipt); err != nil {
 				return receipt, bad("IMPORT_CONFLICT", "目标在发布时发生冲突")
 			}
 			if err = parent.Sync(); err != nil {
@@ -1164,53 +1247,7 @@ func (a *App) publishImport(ctx context.Context, key, source, target string, loc
 	}
 	storage := originalTransferStorageFromContext(ctx)
 	if storage != nil && storage.Source != nil {
-		item, err := originalLocalFileItem(source)
-		if err != nil {
-			return receipt, err
-		}
-		if member, ok := ctx.Value(originalDirectorySourceItemKey{}).(*plugins.ModuleFileItem); ok {
-			var path string
-			if json.Unmarshal(member.Fields["path"], &path) != nil || path != source {
-				return receipt, bad("REVIEW_RECEIPT", "目录成员文件项与源路径不同")
-			}
-			item = member
-		}
-		operation, path := originalTransferType(method), target
-		var name *string
-		if method == "copy" {
-			path = filepath.Dir(target)
-			filename := filepath.Base(target)
-			name = &filename
-		}
-		result, err := storage.Source.call(ctx, operation, item, path, name, stagePath)
-		if err != nil {
-			return receipt, err
-		}
-		if !originalModuleResultTruthy(result) {
-			return receipt, bad("PLUGIN_STORAGE_FAILED", "插件存储文件操作失败")
-		}
-		if method == "copy" {
-			copy, err := importOpen(stagePath)
-			if err != nil {
-				return receipt, err
-			}
-			digest, err := importCopy(ctx, copy, io.Discard, check)
-			if err == nil {
-				err = copy.Sync()
-			}
-			copy.Close()
-			if err != nil {
-				return receipt, err
-			}
-			sourceDigest, err := importCopy(ctx, input, io.Discard, check)
-			if err != nil {
-				return receipt, err
-			}
-			if digest != sourceDigest {
-				return receipt, bad("REVIEW_COPY_CONTENT", "插件复制内容与已核对的源文件不同")
-			}
-			receipt.SHA256 = digest
-		}
+		return a.publishStorageCopyLink(ctx, receipt, method, storage.Source, check)
 	} else if method == "hardlink" {
 		sourceDir, err := importDir(filepath.Dir(source), false)
 		if err != nil {
@@ -1236,7 +1273,9 @@ func (a *App) publishImport(ctx context.Context, key, source, target string, loc
 		if available < 64<<10 || locked.Size > available-(64<<10) {
 			return receipt, bad("IMPORT_SPACE_INSUFFICIENT", "实际复制所需空间不足，源文件与正式目标未改变")
 		}
-		fd, err := unix.Openat(int(parent.Fd()), receipt.Stage, unix.O_RDWR|unix.O_CREAT|unix.O_EXCL|unix.O_NOFOLLOW|unix.O_CLOEXEC, 0640)
+		// Like MP's open(dest, "wb"), let the destination's default ACL and
+		// process umask determine new-file access; do not copy source permissions.
+		fd, err := unix.Openat(int(parent.Fd()), receipt.Stage, unix.O_RDWR|unix.O_CREAT|unix.O_EXCL|unix.O_NOFOLLOW|unix.O_CLOEXEC, 0666)
 		if err != nil {
 			return receipt, bad("IMPORT_CONFLICT", "无法独占创建整理临时文件")
 		}
@@ -1255,6 +1294,9 @@ func (a *App) publishImport(ctx context.Context, key, source, target string, loc
 				copyCtx = context.WithValue(ctx, organizeCopyCallbackKey{}, func(n int64) { progress.Bytes.Add(n) })
 			}
 			receipt.SHA256, err = importCopy(copyCtx, input, output, check)
+		}
+		if err == nil {
+			err = importCopyTimes(output, info)
 		}
 		if err == nil {
 			err = output.Sync()
@@ -1294,7 +1336,7 @@ func (a *App) publishImport(ctx context.Context, key, source, target string, loc
 	if err = check(); err != nil {
 		return receipt, err
 	}
-	if err = unix.Linkat(int(parent.Fd()), receipt.Stage, int(parent.Fd()), filepath.Base(target), 0); err != nil {
+	if err = publishImportStage(parent, receipt); err != nil {
 		return receipt, bad("IMPORT_CONFLICT", "目标在发布时发生冲突，原文件未覆盖")
 	}
 	if err = parent.Sync(); err != nil {

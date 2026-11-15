@@ -287,7 +287,7 @@ type originalHostMediaNativeSourceKey struct{}
 func (a *App) originalHostMediaRecognitionSource(kwargs map[string]any) string {
 	source := sourceText(kwargs["source"])
 	if source == "" {
-		source = a.originalHostMediaRecognition.Source
+		source = a.effectiveRecognitionSource()
 	}
 	return source
 }

@@ -1,0 +1,43 @@
+{
+  "stage": 16,
+  "baseline": "4a222f0fa0c06848e7924e6614654a38e999fb19",
+  "scope": "Ordinary native-local video/subtitle paths with actual independent Go SDK processes, SQLite and filesystem; exclusive synthetic payloads only",
+  "external_transfer": {
+    "test": "TestOriginalTransferModuleActualSDKSoftlinkAdoption",
+    "branches": ["success", "asset-sql-cold", "counterfeit-copy", "existing-link"],
+    "permission": "source snapshot, exact absent target and real parent identity frozen before provider call",
+    "result": "explicit softlink/local file declaration and exact target required",
+    "physical": "real symlink entry, exact absolute reference and unchanged ordinary referent verified before adoption",
+    "native_published_proof_unchanged": true,
+    "cold_recovery": "asset SQL failure, graceful app close/reopen, original sealed result reused without provider replay",
+    "counterfeit_copy_rejected": true,
+    "existing_link_not_adopted_and_provider_not_called": true,
+    "unknown_changed_target_or_directory_result": "not adopted"
+  },
+  "source_storage": {
+    "test": "TestImportSoftlinkActualSDKSelectedSourceStorage",
+    "branches": ["success", "cold-stage", "copy-is-not-softlink", "false"],
+    "operation": "Source.softlink",
+    "path": "exact logical target file",
+    "new_name": null,
+    "publication_path": "deterministic host-authorized stage",
+    "frozen_file_item_preserved": true,
+    "state": "call-start identity plus sealed result, then exact entry snapshot and normal exclusive-rename publication",
+    "cold_recovery": "task cancelled after real returned result persisted but before staged snapshot; app reopened with a different SDK PID; original stage inode reused",
+    "calls": "one actual source call per video/subtitle, including recovery",
+    "false_or_copy": "no native fallback, no published target or asset ownership",
+    "source_bytes_unchanged": true
+  },
+  "verification": {
+    "external_and_legacy_regression_seconds": 13.193,
+    "source_storage_sdk_seconds": 5.732,
+    "integration_seconds": 271.195,
+    "all_package_compile": true,
+    "linux_amd64_compile": true,
+    "linux_binary_executed": false,
+    "new_browser_validation": false,
+    "ui_softlink_option_opened": false
+  },
+  "workers": "existing transfer-events and transfer-event-override output paths rebuilt in place, no versioned worker replicas",
+  "not_claimed": ["cloud or cross-storage softlinks", "directory actor/external transfer adoption", "delete_file override", "direct existing-directory merge/overwrite", "owned-link file manager and mode UI/browser verification", "full new softlink downloader protocol", "production or NAS verification", "whole-objective completion"]
+}

@@ -1,0 +1,47 @@
+{
+  "stage": 17,
+  "baseline": "4a222f0fa0c06848e7924e6614654a38e999fb19",
+  "scope": "Real Go/SQLite/local filesystem and independent SDK processes with exclusive synthetic directory payloads; no production/NAS or arbitrary cloud verification",
+  "external_directory": {
+    "test": "TestOriginalTransferModuleActualSDKDirectorySoftlinkAdoption",
+    "precall": "complete ordinary source tree, exact absent target and parent identity",
+    "mapping": "explicit softlink/local directory and complete bijective source-target file lists",
+    "physical": "real directory nodes, individual real leaf symlinks, exact references to frozen source files",
+    "root_directory_symlink_not_adopted": true,
+    "copy_not_adopted": true,
+    "preexisting_target_blocks_provider": true,
+    "no_invented_native_child_receipts": true,
+    "cold_recovery": "asset SQL failure, application close/reopen, sealed result reused without provider/callback replay",
+    "later_unrelated_source_nfo_does_not_invalidate_published_tree": true,
+    "callback_file_item": "complete provider-supplied FileItem preserved including null directory size",
+    "stream_size": "separate receipt/history STREAM=12",
+    "single_root_asset_and_history": true,
+    "source_data_and_empty_directories_retained": true
+  },
+  "directory_source_actor": {
+    "test": "TestDirectoryStorageSoftlinkActualSDKAndColdStageRecovery",
+    "branches": ["directory-names", "cold-stage", "copy-is-not-softlink"],
+    "binding": "source actor instance/key frozen for remaining members",
+    "call": "Source.softlink with frozen complete FileItem, exact logical path, NewName=null and authorized PublicationPath",
+    "name_mapping": "BDMV/STREAM/00001.m2ts -> BluRay/Streams/feature.m2ts",
+    "cold_recovery": "first actual returned result persisted before staged snapshot, task cancelled, app reopened with a new SDK PID, original stage inode reused",
+    "repeated_completed_actor_calls": false,
+    "copy_not_adopted": true,
+    "no_silent_actor_to_native_fallback": true,
+    "tiny_file_preserved": true,
+    "empty_source_certificate_not_created_in_target": true,
+    "single_asset_and_history": true,
+    "source_tree_snapshot_and_bytes_unchanged": true
+  },
+  "verification": {
+    "external_directory_and_legacy_regression_seconds": 19.690,
+    "source_directory_actor_sdk_seconds": 4.484,
+    "integration_seconds": 275.990,
+    "all_package_compile": true,
+    "linux_amd64_compile": true,
+    "linux_binary_executed": false,
+    "new_browser_validation": false,
+    "ui_softlink_option_opened": false
+  },
+  "remaining": ["softlink delete_file provider lifecycle", "direct existing-directory merge/overwrite", "owned links in file management", "mode UI/browser acceptance", "provider-native ordinary web/history identity", "final whole-objective integration"]
+}

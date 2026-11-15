@@ -116,9 +116,12 @@ func (a *App) walkOriginalDirectory(ctx context.Context, root string, visit func
 	return walk(root, "", item, 0)
 }
 
-func (a *App) publishOriginalDirectory(ctx context.Context, key string, file PlanFile, check func() error) (receipt importReceipt, returnErr error) {
+func (a *App) publishOriginalDirectory(ctx context.Context, key string, file PlanFile, check func() error, media ...string) (receipt importReceipt, returnErr error) {
 	locked := planSnapshot(file)
 	receipt = importReceipt{ID: key, Source: file.Source, Target: file.Target, SourceSnapshot: locked, Stage: ".light-media-" + tokenHash(key)[:32] + ".part", State: "planned"}
+	if len(media) > 0 {
+		receipt.MediaKey = media[0]
+	}
 	defer func() {
 		var exception *originalDirectoryProviderException
 		if errors.As(returnErr, &exception) && ctx.Err() == nil && !originalTransferInterrupted(returnErr) {
@@ -139,16 +142,79 @@ func (a *App) publishOriginalDirectory(ctx context.Context, key string, file Pla
 			return receipt, bad("REVIEW_RECEIPT", "目录发布收据与计划不一致")
 		}
 		receipt = prior
+		if receipt.MediaKey == "" && len(media) > 0 {
+			receipt.MediaKey = media[0]
+		}
 	} else if !errors.Is(err, sql.ErrNoRows) {
 		return receipt, err
 	}
 	receipt.DirectoryException = ""
+	sharedRoot := receipt.SharedDirectory != nil
+	if receipt.State == "planned" {
+		if _, e := os.Lstat(file.Target); e == nil {
+			sharedRoot = true
+		}
+	}
+	if file.Method == "softlink" && !sharedRoot {
+		if receipt.Softlink == nil || receipt.Softlink.Directory == nil {
+			if receipt.State != "planned" {
+				return receipt, bad("REVIEW_RECEIPT", "目录软链接发布证明缺失")
+			}
+			receipt.Softlink = &importSoftlinkProof{Source: file.Source, SourceSnapshot: locked, Directory: &importSoftlinkDirectoryProof{Directories: map[string]importSnapshot{}, Members: map[string]importSoftlinkDirectoryMember{}}}
+		}
+		if receipt.Softlink.Source != file.Source || receipt.Softlink.SourceSnapshot != locked {
+			return receipt, bad("REVIEW_RECEIPT", "目录软链接来源证明不符")
+		}
+	} else if receipt.Softlink != nil {
+		return receipt, bad("REVIEW_RECEIPT", "目录发布方式与软链接证明不符")
+	}
 	if err = check(); err != nil {
 		return receipt, err
 	}
-	actual, entries, err := snapshotOriginalDirectory(file.Source)
-	if err != nil || actual != locked {
-		return receipt, bad("REVIEW_SOURCE_CHANGED", "目录内容与冻结快照不一致")
+	if file.Method == "move" && receipt.State == "published" {
+		return a.finishDirectoryMove(ctx, receipt, check)
+	}
+	if file.Method == "softlink" && receipt.State == "published" {
+		if actual, e := snapshotOwnedTransferPath(file.Target, receipt.StageSnapshot, receipt.Softlink, true, receipt.SharedDirectory); e != nil || actual != receipt.StageSnapshot {
+			return receipt, bad("REVIEW_TARGET_CHANGED", "已发布软链接目录发生变化")
+		}
+		return receipt, nil
+	}
+	if receipt.State == "published" && receipt.SharedDirectory != nil {
+		if _, e := snapshotSharedDirectory(file.Target, receipt.StageSnapshot, receipt.SharedDirectory, true); e != nil {
+			return receipt, e
+		}
+		return receipt, nil
+	}
+	if file.Method == "softlink" {
+		if err = a.bindDirectoryStorageSoftlink(ctx, &receipt); err != nil {
+			return receipt, err
+		}
+	}
+	var entries []originalDirectoryEntry
+	if receipt.DirectoryStorageMove != nil {
+		if file.Method != "move" {
+			return receipt, bad("REVIEW_MOVE_STORAGE", "目录移动收据与本次方式不同")
+		}
+		entries, err = directoryStorageMoveEntries(receipt)
+		if err != nil {
+			return receipt, err
+		}
+		if err = guardDirectoryStorageMoveRoot(receipt); err != nil {
+			return receipt, err
+		}
+	} else {
+		var actual importSnapshot
+		actual, entries, err = snapshotOriginalDirectory(file.Source)
+		if err != nil || actual != locked {
+			return receipt, bad("REVIEW_SOURCE_CHANGED", "目录内容与冻结快照不一致")
+		}
+		if pair := originalTransferStorageFromContext(ctx); file.Method == "move" && pair != nil && pair.Source != nil && receipt.State == "planned" {
+			receipt.DirectoryStorageMove = &importDirectoryStorageMoveState{InstanceID: pair.Source.definition.InstanceID, Key: pair.Source.definition.Key, Entries: entries}
+			if err = a.Store.Put(ctx, "import_receipt", key, receipt); err != nil {
+				return receipt, err
+			}
+		}
 	}
 	if receipt.State == "published" {
 		actual, e := snapshotTransferPath(file.Target)
@@ -156,6 +222,15 @@ func (a *App) publishOriginalDirectory(ctx context.Context, key string, file Pla
 			return receipt, bad("REVIEW_TARGET_CHANGED", "已发布目录发生变化")
 		}
 		return receipt, nil
+	}
+	if receipt.State == "planned" {
+		if _, e := os.Lstat(file.Target); e == nil {
+			if err = a.beginDirectoryMerge(ctx, &receipt, file); err != nil {
+				return receipt, err
+			}
+		} else if !os.IsNotExist(e) {
+			return receipt, e
+		}
 	}
 	if receipt.State == "planned" {
 		if _, e := os.Lstat(file.Target); !os.IsNotExist(e) {
@@ -196,6 +271,9 @@ func (a *App) publishOriginalDirectory(ctx context.Context, key string, file Pla
 			return receipt, bad("REVIEW_TARGET_CHANGED", "新建目录含未知文件，拒绝认领")
 		}
 		receipt.StageSnapshot = stamp
+		if receipt.Softlink != nil {
+			receipt.Softlink.Directory.Root = softlinkDirectoryIdentity(stamp)
+		}
 		receipt.State = "directory_created"
 		if err = a.Store.Put(ctx, "import_receipt", key, receipt); err != nil {
 			return receipt, err
@@ -209,6 +287,11 @@ func (a *App) publishOriginalDirectory(ctx context.Context, key string, file Pla
 	}
 	if err = a.originalTransferInterceptWrite(ctx, file.Source, file.Target, file.Method, false); err != nil {
 		return receipt, err
+	}
+	if receipt.DirectoryStorageMove != nil && !receipt.DirectoryListed {
+		if err = a.freezeDirectoryStorageMoveMembers(ctx, &receipt); err != nil {
+			return receipt, err
+		}
 	}
 	stamps := map[string]importSnapshot{}
 	for _, entry := range entries {
@@ -231,11 +314,19 @@ func (a *App) publishOriginalDirectory(ctx context.Context, key string, file Pla
 			if err := check(); err != nil {
 				return err
 			}
+			if receipt.DirectoryStorageMove != nil {
+				return guardDirectoryStorageMoveRoot(receipt)
+			}
 			current, e := snapshotTransferPath(file.Source)
 			if e != nil || current != locked {
 				return bad("REVIEW_SOURCE_CHANGED", "目录整理期间源内容发生变化")
 			}
 			return nil
+		}
+		if file.Method == "softlink" && receipt.SharedDirectory == nil {
+			if err = a.prepareSoftlinkDirectoryParents(ctx, &receipt, receipt.directoryTarget(relative)); err != nil {
+				return err
+			}
 		}
 		childKey := key + "/directory/" + tokenHash(relative)
 		memberContext := ctx
@@ -246,7 +337,17 @@ func (a *App) publishOriginalDirectory(ctx context.Context, key string, file Pla
 			}
 			memberContext = context.WithValue(ctx, originalDirectorySourceItemKey{}, &item)
 		}
-		_, err = a.publishImport(memberContext, childKey, filepath.Join(file.Source, relative), filepath.Join(file.Target, receipt.directoryTarget(relative)), stamp, file.Method, childCheck)
+		if file.Method == "move" {
+			memberContext = context.WithValue(memberContext, importMoveDeferredKey{}, true)
+			if receipt.DirectoryStorageMove != nil {
+				memberContext = context.WithValue(memberContext, importDirectoryStorageMoveKey{}, receipt.DirectoryStorageMove)
+			}
+		}
+		if receipt.DirectoryMerge != nil {
+			err = a.publishDirectoryMergeMember(memberContext, &receipt, relative, stamp, file.Method, childCheck)
+		} else {
+			_, err = a.publishImport(memberContext, childKey, filepath.Join(file.Source, relative), filepath.Join(file.Target, receipt.directoryTarget(relative)), stamp, file.Method, childCheck)
+		}
 		if err != nil {
 			return err
 		}
@@ -305,26 +406,59 @@ func (a *App) publishOriginalDirectory(ctx context.Context, key string, file Pla
 	if err = a.guardOriginalDirectoryTarget(ctx, receipt); err != nil {
 		return receipt, err
 	}
-	actual, err = snapshotTransferPath(file.Source)
-	if err != nil || actual != locked {
+	if receipt.DirectoryStorageMove != nil {
+		if err = guardDirectoryStorageMoveRoot(receipt); err != nil {
+			return receipt, err
+		}
+	} else if actual, e := snapshotTransferPath(file.Source); e != nil || actual != locked {
 		return receipt, bad("REVIEW_SOURCE_CHANGED", "目录发布期间源内容发生变化")
 	}
-	receipt.StageSnapshot, err = snapshotTransferPath(file.Target)
+	if receipt.SharedDirectory != nil {
+		receipt.StageSnapshot, err = snapshotSharedDirectory(file.Target, receipt.SharedDirectory.Root, receipt.SharedDirectory, true)
+	} else if file.Method == "softlink" {
+		err = a.finishSoftlinkDirectoryProof(ctx, &receipt)
+	} else {
+		receipt.StageSnapshot, err = snapshotTransferPath(file.Target)
+	}
 	if err != nil {
 		return receipt, err
 	}
 	receipt.State = "published"
+	if file.Method == "move" {
+		receipt.DirectoryMoveState = "cleaning"
+	}
 	err = a.Store.Put(ctx, "import_receipt", key, receipt)
+	if err == nil && file.Method == "move" {
+		return a.finishDirectoryMove(ctx, receipt, check)
+	}
 	return receipt, err
 }
 
 func (a *App) guardOriginalDirectoryTarget(ctx context.Context, receipt importReceipt) error {
+	if receipt.DirectoryMerge != nil {
+		return a.guardDirectoryMerge(ctx, receipt)
+	}
+	if receipt.Softlink != nil && receipt.Softlink.Directory != nil {
+		return a.guardSoftlinkDirectoryTarget(ctx, receipt)
+	}
 	stamp, entries, err := snapshotOriginalDirectory(receipt.Target)
 	if err != nil || !sameInode(stamp, receipt.StageSnapshot) {
 		return bad("REVIEW_TARGET_CHANGED", "目录发布目标已被替换")
 	}
 	allowed := map[string]importSnapshot{}
 	dirs := map[string]bool{}
+	originals := map[string]importSnapshot{}
+	if receipt.DirectoryStorageMove != nil {
+		entries, err := directoryStorageMoveEntries(receipt)
+		if err != nil {
+			return err
+		}
+		for _, entry := range entries {
+			if !entry.Directory {
+				originals[entry.Path] = entry.Snapshot
+			}
+		}
+	}
 	for _, relative := range receipt.DirectoryFiles {
 		target := receipt.directoryTarget(relative)
 		for parent := filepath.Dir(target); parent != "."; parent = filepath.Dir(parent) {
@@ -340,6 +474,27 @@ func (a *App) guardOriginalDirectoryTarget(ctx context.Context, receipt importRe
 		}
 		if child.Source != filepath.Join(receipt.Source, relative) || child.Target != filepath.Join(receipt.Target, target) {
 			return bad("REVIEW_RECEIPT", "目录成员收据不一致")
+		}
+		if child.State == "planned" && child.StoragePublication != nil && len(child.StoragePublication.Result) > 0 {
+			if child.ID != receipt.ID+"/directory/"+tokenHash(relative) {
+				return bad("REVIEW_RECEIPT", "目录存储成员收据身份不同")
+			}
+			stage, e := a.verifyStoragePublicationStage(ctx, child, ctx.Err)
+			if e != nil {
+				return e
+			}
+			allowed[filepath.Join(filepath.Dir(target), child.Stage)] = stage
+		}
+		if child.State == "planned" && child.StorageMove != nil && len(child.StorageMove.Result) > 0 && receipt.DirectoryStorageMove != nil {
+			proof := receipt.DirectoryStorageMove
+			if child.ID != receipt.ID+"/directory/"+tokenHash(relative) || child.SourceSnapshot != originals[relative] || child.StorageMove.InstanceID != proof.InstanceID || child.StorageMove.Key != proof.Key {
+				return bad("REVIEW_MOVE_STORAGE", "目录暂存移动与冻结成员或存储对象不同")
+			}
+			stage, err := a.verifyStorageMoveStage(ctx, child, ctx.Err)
+			if err != nil {
+				return err
+			}
+			allowed[filepath.Join(filepath.Dir(target), child.Stage)] = stage
 		}
 		if child.State == "published" || child.State == "staged" {
 			allowed[target] = child.StageSnapshot

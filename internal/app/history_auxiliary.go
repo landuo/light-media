@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 )
 
 // Resolve the actual file represented by a source callback. Auxiliary IDs are
@@ -54,6 +55,10 @@ func (a *App) historyPlannedFile(ctx context.Context, plan ImportPlan, item tran
 	return PlanFile{}, false, "", coreDeleteInvalid()
 }
 
+func sameLifecycleSoftlinkProof(a, b *importSoftlinkProof, shared ...*importSharedDirectoryProof) bool {
+	return sameSoftlinkProof(a, b) && (len(shared) == 0 || len(shared) == 2 && sameSharedDirectoryProof(shared[0], shared[1]))
+}
+
 type historyTargetRemoval struct {
 	HistoryID, PlanID, ReceiptKey, AssetID, RootID string
 	SourceSnapshot                                 importSnapshot
@@ -97,7 +102,7 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 	if auxiliary {
 		validKind = auxiliaryMaterialKind(owned.Kind)
 	}
-	if ownedErr == nil && (!validKind || owned.AssetID != file.AssetID || owned.RootID != plan.RootID || owned.Path != file.Target || owned.Snapshot != published.StageSnapshot || owned.SourceSnapshot != published.SourceSnapshot) {
+	if ownedErr == nil && (!validKind || owned.AssetID != file.AssetID || owned.RootID != plan.RootID || owned.Path != file.Target || owned.Snapshot != published.StageSnapshot || owned.SourceSnapshot != published.SourceSnapshot || !sameLifecycleSoftlinkProof(owned.Softlink, published.Softlink, owned.SharedDirectory, published.SharedDirectory)) {
 		return bad("HISTORY_TARGET_CHANGED", "关联文件已被其他整理结果接管")
 	}
 	var asset Asset
@@ -113,13 +118,13 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 	var receipt historyTargetRemoval
 	err = a.Store.Get(ctx, "history_target_removal", item.executionFileID(), &receipt)
 	if errors.Is(err, sql.ErrNoRows) {
-		actual, err := snapshotTransferPath(file.Target)
+		actual, err := snapshotOwnedTransferPath(file.Target, published.StageSnapshot, published.Softlink, false, published.SharedDirectory)
 		missing := errors.Is(err, os.ErrNotExist)
 		if !missing && (err != nil || actual != published.StageSnapshot) {
 			return bad("FILE_SNAPSHOT_CHANGED", "关联目标文件发生变化，未删除")
 		}
 		receipt = historyTargetRemoval{HistoryID: item.executionFileID(), PlanID: plan.ID, ReceiptKey: key, AssetID: file.AssetID, RootID: plan.RootID, SourceSnapshot: published.SourceSnapshot,
-			File: assetRemovalFile{Path: file.Target, Kind: "auxiliary", Snapshot: published.StageSnapshot, Quarantine: ".light-media-remove-" + tokenHash(item.executionFileID() + now())[:32] + ".part"}, State: "deleting"}
+			File: assetRemovalFile{Path: file.Target, Kind: "auxiliary", Snapshot: published.StageSnapshot, Softlink: published.Softlink, SharedDirectory: published.SharedDirectory, Quarantine: ".light-media-remove-" + tokenHash(item.executionFileID() + now())[:32] + ".part"}, State: "deleting"}
 		if missing {
 			// An older host version may have frozen this exact file in an
 			// asset-removal preview. Adopt only that selected quarantine entry;
@@ -136,7 +141,7 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 					return bad("HISTORY_TARGET_CHANGED", "旧目标删除收据归属不一致")
 				}
 				for _, selected := range previous.Files {
-					if selected.Path != file.Target || selected.Deleted || selected.Snapshot != published.StageSnapshot || selected.Quarantine == "" {
+					if selected.Path != file.Target || selected.Deleted || selected.Snapshot != published.StageSnapshot || !sameLifecycleSoftlinkProof(selected.Softlink, published.Softlink, selected.SharedDirectory, published.SharedDirectory) || selected.Quarantine == "" {
 						continue
 					}
 					location, e := removalLocation(selected)
@@ -158,7 +163,7 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 	} else if err != nil {
 		return err
 	}
-	if receipt.HistoryID != item.executionFileID() || receipt.PlanID != plan.ID || receipt.ReceiptKey != key || receipt.AssetID != file.AssetID || receipt.RootID != plan.RootID || receipt.SourceSnapshot != published.SourceSnapshot || receipt.File.Path != file.Target || receipt.File.Snapshot != published.StageSnapshot {
+	if receipt.HistoryID != item.executionFileID() || receipt.PlanID != plan.ID || receipt.ReceiptKey != key || receipt.AssetID != file.AssetID || receipt.RootID != plan.RootID || receipt.SourceSnapshot != published.SourceSnapshot || receipt.File.Path != file.Target || receipt.File.Snapshot != published.StageSnapshot || !sameLifecycleSoftlinkProof(receipt.File.Softlink, published.Softlink, receipt.File.SharedDirectory, published.SharedDirectory) {
 		return bad("HISTORY_TARGET_CHANGED", "关联目标删除收据不一致")
 	}
 	if receipt.State == "completed" && receipt.File.Deleted {
@@ -176,6 +181,13 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 		return err
 	}
 	defer parent.Close()
+	softlinkResumed := receipt.File.Softlink != nil && receipt.File.SourceOperation != ""
+	if softlinkResumed {
+		err = a.originalHistoryStorageDelete(ctx, &receipt.File, parent, func() error { return a.Store.Put(ctx, "history_target_removal", item.executionFileID(), receipt) }, nil)
+		if err != nil && !originalHistoryDeleteRejected(err) {
+			return err
+		}
+	}
 	location, err := removalLocation(receipt.File)
 	if err != nil {
 		return err
@@ -185,7 +197,9 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 		if err != nil {
 			return err
 		}
-		err = a.originalHistoryStorageDelete(ctx, &receipt.File, parent, func() error { return a.Store.Put(ctx, "history_target_removal", item.executionFileID(), receipt) }, frozen)
+		if !softlinkResumed {
+			err = a.originalHistoryStorageDelete(ctx, &receipt.File, parent, func() error { return a.Store.Put(ctx, "history_target_removal", item.executionFileID(), receipt) }, frozen)
+		}
 		if err != nil && !originalHistoryDeleteRejected(err) {
 			return err
 		}
@@ -208,7 +222,7 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 		if err := importRenameExclusive(int(parent.Fd()), name, receipt.File.Quarantine); err != nil {
 			return err
 		}
-		actual, err := snapshotTransferPath(filepath.Join(filepath.Dir(file.Target), receipt.File.Quarantine))
+		actual, err := snapshotOwnedTransferPath(filepath.Join(filepath.Dir(file.Target), receipt.File.Quarantine), receipt.File.Snapshot, receipt.File.Softlink, false, receipt.File.SharedDirectory)
 		if err != nil || actual != receipt.File.Snapshot {
 			_ = importRenameExclusive(int(parent.Fd()), receipt.File.Quarantine, name)
 			_ = parent.Sync()
@@ -244,7 +258,7 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 	if ownedErr == nil {
 		var currentRaw []byte
 		var current managedFile
-		if err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='managed_file' AND id=?`, tokenHash(item.Target)).Scan(&currentRaw); err != nil || json.Unmarshal(currentRaw, &current) != nil || current != owned {
+		if err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='managed_file' AND id=?`, tokenHash(item.Target)).Scan(&currentRaw); err != nil || json.Unmarshal(currentRaw, &current) != nil || !reflect.DeepEqual(current, owned) {
 			return bad("HISTORY_TARGET_CHANGED", "关联目标归属已变化，删除收据需要核对")
 		}
 		result, err := tx.ExecContext(ctx, `DELETE FROM records WHERE kind='managed_file' AND id=? AND payload=?`, tokenHash(item.Target), currentRaw)

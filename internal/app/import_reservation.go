@@ -46,7 +46,7 @@ func (a *App) startImportRun(ctx context.Context, job Job, plan *ImportPlan, sel
 
 // A new local execution may take over an abandoned slot for the exact same
 // source. The old execution and its receipts remain available for history.
-func canReplaceFailedImportReservation(ctx context.Context, q qualityReader, owner, key string, file PlanFile, episode int) (bool, error) {
+func canReplaceFailedImportReservation(ctx context.Context, q qualityReader, owner, key string, file PlanFile, season, episode int) (bool, error) {
 	var old ImportPlan
 	err := qualityRecord(ctx, q, "import_plan", owner, &old)
 	if errors.Is(err, sql.ErrNoRows) {
@@ -58,15 +58,15 @@ func canReplaceFailedImportReservation(ctx context.Context, q qualityReader, own
 	if old.ID != owner || old.IntentID != "" || mediaKey(old.Media) != key || (old.State != "partial" && old.State != "failed") {
 		return false, nil
 	}
-	return failedImportSourceUnpublished(ctx, q, old, file, episode, false)
+	return failedImportSourceUnpublished(ctx, q, old, file, season, episode, false)
 }
 
 // Shared by local retries and a completed download's own manual retry. Neither
 // may discard a receipt that could already have published or replaced a file.
-func failedImportSourceUnpublished(ctx context.Context, q qualityReader, old ImportPlan, file PlanFile, episode int, allowSourceHardlink bool) (bool, error) {
+func failedImportSourceUnpublished(ctx context.Context, q qualityReader, old ImportPlan, file PlanFile, season, episode int, allowSourceHardlink bool) (bool, error) {
 	var retryable PlanFile
 	for _, previous := range old.Files {
-		if previous.Season != file.Season || previous.MaterialKind != "" || !slices.Contains(importEpisodes(previous.Episodes), episode) {
+		if previous.MaterialKind != "" || !slices.Contains(previous.inventorySlots(), canonicalEpisodeSlot{season, episode}) {
 			continue
 		}
 		if retryable.ID != "" || previous.Status != "error" || previous.Source != file.Source || planSnapshot(previous) != planSnapshot(file) || previous.DirectoryDigest != "" || !importPath(previous.Target) || previous.Target == previous.Source {

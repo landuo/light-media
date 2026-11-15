@@ -9,7 +9,7 @@ import (
 
 // The native provider advertises only the existing Go transfer operations.
 // Keep the source key "link" at the plugin boundary (UI maps it to hardlink).
-var originalLocalTransferTypes = json.RawMessage(`{"link":"硬链接","copy":"复制","auto":"自动"}`)
+var originalLocalTransferTypes = json.RawMessage(`{"link":"硬链接","softlink":"软链接","copy":"复制","move":"移动","auto":"自动"}`)
 
 func (a *App) originalTransferTypes(ctx context.Context) (any, error) {
 	return a.originalTransferTypesWithNative(ctx, func() (any, error) {

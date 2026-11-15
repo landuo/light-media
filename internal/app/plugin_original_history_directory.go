@@ -47,6 +47,9 @@ func (a *App) removeHistoryQuarantine(ctx context.Context, file *assetRemovalFil
 	if file.Snapshot.Directory == "" {
 		return unix.Unlinkat(int(parent.Fd()), file.Quarantine, 0)
 	}
+	if file.Softlink != nil && file.Softlink.Directory != nil {
+		return a.removeSoftlinkDirectoryQuarantine(ctx, file, parent, persist)
+	}
 	var operation browserOperation
 	sealed, err := base64.StdEncoding.DecodeString(file.SourceOperation)
 	if err != nil || a.Store.Unseal(sealed, &operation) != nil || len(operation.Items) != 1 {

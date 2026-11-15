@@ -6,6 +6,8 @@ export type BrowserItem = {
   size?: number;
   modified?: string;
   video?: boolean;
+  softlink?: boolean;
+  broken?: boolean;
   protected?: string;
   virtual?: boolean;
 };

@@ -239,7 +239,7 @@ func (a *App) validateOriginalAssetMetadataEvent(asset Asset, raw json.RawMessag
 		return bad("REVIEW_METADATA_CONTEXT", "整理刮削文件清单缺失")
 	}
 	owned := false
-	stamp, err := snapshotTransferPath(asset.Path)
+	stamp, err := a.snapshotAssetMedia(context.Background(), asset)
 	if err != nil {
 		return err
 	}

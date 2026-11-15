@@ -1,0 +1,45 @@
+{
+  "round": 27,
+  "goal": "align transfer history with MoviePilot behavior and interactions",
+  "integration": {
+    "log": "work/history-mp-alignment-20261115/round27-final-integration2.log",
+    "seconds": 357.709,
+    "includes_settings": true
+  },
+  "compile": "work/history-mp-alignment-20261115/round27-compile.log",
+  "linux_amd64_crosscompile": "PASS (artifact removed)",
+  "diff_check": "PASS",
+  "web": {
+    "tests": 641,
+    "pass": 641,
+    "fail": 0,
+    "build": "PASS",
+    "logs": [
+      "work/history-mp-alignment-20261115/round27-web-tests.log",
+      "work/history-mp-alignment-20261115/round27-web-build.log"
+    ]
+  },
+  "browser": {
+    "url": "http://127.0.0.1:18081",
+    "history_rows": 2,
+    "single_reorganize": "preview -> immediate success, dialog closed, list refreshed",
+    "multi_select_actions": [
+      "批量删除（2）",
+      "批量重新整理（2）"
+    ],
+    "screenshot": "work/history-mp-alignment-20261115/round27-history-final.png",
+    "fixture_stopped": true
+  },
+  "not_claimed": [
+    "production downloader or real RSS writes",
+    "NAS or cloud storage writes",
+    "Linux runtime tests",
+    "MoviePilot internal data structure equality"
+  ],
+  "whole_objective_complete": true,
+  "bare_go_test": {
+    "log": "work/history-mp-alignment-20261115/round27-bare-go-test.log",
+    "exit": 0
+  },
+  "public_settings_redaction": "FNOS password and TMDB credentials are never returned by GET /api/settings; secret_state still reports configured"
+}

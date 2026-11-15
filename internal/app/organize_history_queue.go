@@ -33,10 +33,7 @@ func (a *App) prepareOrganizeHistory(ctx context.Context, job Job, in manualOrga
 			continue
 		}
 		seen[history.ResourceSource] = true
-		path := history.Source
-		if history.Status == "success" && history.Mode == "move" && history.Target != "" {
-			path = history.Target
-		}
+		path := history.organizeSource()
 		files = append(files, importScanFile{Path: path, Size: history.Size, Parsed: a.parseMediaName(filepath.Base(path)), queueHistory: &history})
 	}
 	return a.enqueueOrganizeFiles(ctx, job, files, nil, out)

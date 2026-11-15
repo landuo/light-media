@@ -5,6 +5,7 @@ import { VTextarea } from 'vuetify/components/VTextarea';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VAlert } from 'vuetify/components/VAlert';
 import { api, errorText, toast } from '../api';
+import EpisodeFormatRuleSettings from './EpisodeFormatRuleSettings.vue';
 
 type Configuration = {
   source_mode: 'rust' | 'legacy';
@@ -116,6 +117,7 @@ onMounted(load);
         </VCardText>
       </VCard>
     </template>
+    <EpisodeFormatRuleSettings />
   </div>
 </template>
 

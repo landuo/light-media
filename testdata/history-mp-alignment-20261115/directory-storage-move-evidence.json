@@ -1,0 +1,43 @@
+{
+  "stage": 12,
+  "baseline": "4a222f0fa0c06848e7924e6614654a38e999fb19",
+  "scope": "Synthetic media and metadata, actual Go application and independent SDK processes; no production/NAS writes",
+  "directory_storage_move": {
+    "test": "TestImportMoveDirectoryActualSDKSelectedStorage",
+    "branches": ["success", "cold-recovery", "directory-names-cold", "stage-sql-recovery"],
+    "sdk_suite_seconds": 4.783,
+    "operation": "storage.move, not storage.copy or storage.link",
+    "frozen_before_first_move": ["original complete tree snapshots", "storage instance and key", "complete provider order", "original FileItems", "relative destination mappings"],
+    "source_protection": "root inode and pending file snapshots remain bound; completed members never reread or clear recreated sources",
+    "history_and_callback": "one original root history and completion callback; STREAM size retained",
+    "empty_source_containers": ["BDMV", "BDMV/STREAM", "CERTIFICATE"],
+    "provider_names_verified": ["BluRay/Streams/feature.m2ts", "BluRay/index-custom.bdmv"],
+    "each_source_move_count": 1,
+    "cold_recovery": "close app, new SDK PID, actual cancelled-job retry, remaining members execute, recreated completed source retained",
+    "before_staged_recovery": "SQL cancels job after sealed result is persisted; child planned, StageSnapshot inode zero, actual stage contents verified, original source absent, final target absent; real retry resumes without recalling move"
+  },
+  "list_validation": {
+    "test": "TestDirectoryStorageMoveRequiresCompleteMemberList",
+    "checks": ["covers every physical file", "source membership", "unique target paths", "no file/directory prefix collision"]
+  },
+  "transfer_types": {
+    "test": "TestOriginalTransferTypesActualSDKAndHTTP",
+    "cases_passed": 10,
+    "native_target_adaptation_updated": "link/copy/move/auto",
+    "original_native_dictionary_and_source_hashes_preserved": true,
+    "softlink_advertised_by_native": false
+  },
+  "verification": {
+    "all_package_compile": true,
+    "linux_amd64_compile": true,
+    "linux_binary_executed": false,
+    "directory_ui_contract_tests_passed": 7,
+    "new_browser_validation": false,
+    "integration_seconds": 242.366,
+    "integration_log": "work/history-mp-alignment-20261115/round12-integration-verified.log",
+    "prepare_replay_test_scheduling": "explicitly defer child jobs until parent replay completes; production claim ordering unchanged"
+  },
+  "cleanup": {"duplicate_worker_removed": true, "no_new_mounted_volumes": true},
+  "softlink": "incomplete low-level experiment removed from product paths and selection controls; retained only as workspace experiment, not shipped or claimed complete",
+  "remaining": ["native softlink end-to-end", "provider-native web/history identity", "final end-to-end verification"]
+}

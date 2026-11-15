@@ -1,0 +1,59 @@
+{
+  "round": 22,
+  "upstream": {
+    "origin_main": "8307f90e3d8556588d2426dc15cf1159c85cea69",
+    "applied_diff": "internal/app/plugin_original_host_downloader.go",
+    "commit_created": false
+  },
+  "scope": "append members into an existing managed directory root, reuse its asset, keep prior members and independent histories",
+  "admission": {
+    "requires": [
+      "owner managed_file is a directory asset at the same target",
+      "actual directory inode equals the registered snapshot",
+      "asset path/root/state match",
+      "planned media key and season equal the asset"
+    ],
+    "rejects": [
+      "different media identity",
+      "asset record missing",
+      "root replaced after registration"
+    ],
+    "cross_asset_member_overwrite": "still explicit conflict"
+  },
+  "verification": {
+    "append": {
+      "log": "work/history-mp-alignment-20261115/round22-append.log",
+      "seconds": 5.923,
+      "modes": [
+        "copy",
+        "hardlink"
+      ],
+      "native_softlink": "mechanism case in same test file",
+      "assertions": [
+        "prior members unchanged",
+        "new member published",
+        "single directory asset at path",
+        "two independent histories",
+        "deleting appended history removes only its member",
+        "owner root record unchanged"
+      ]
+    },
+    "regression": {
+      "log": "work/history-mp-alignment-20261115/round22-append-regression.log",
+      "seconds": 91.23
+    },
+    "integration": {
+      "log": "work/history-mp-alignment-20261115/round22-integration.log",
+      "seconds": 343.561
+    },
+    "compile": "work/history-mp-alignment-20261115/round22-compile.log",
+    "linux_amd64_crosscompile": "PASS"
+  },
+  "not_claimed": [
+    "cross-asset same-name overwrite transfer",
+    "external plugin whole-tree softlink incremental adoption into an owned root",
+    "NAS or cloud storage",
+    "production media"
+  ],
+  "whole_objective_complete": false
+}

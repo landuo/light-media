@@ -1,0 +1,42 @@
+{
+  "evidence_kind": "source-derived cases; synthetic files; no MoviePilot runtime or NAS execution",
+  "source": {
+    "frontend": "MoviePilot-Frontend/src/components/dialog/ReorganizeDialog.vue:740-910,1452-1482",
+    "settings": "MoviePilot-Frontend/src/views/system/WordsView.vue:14-59,174-225,354-453",
+    "backend": "MoviePilot/app/chain/transfer.py:2085-2236",
+    "helper": "MoviePilot/app/helper/format.py:276-325,543-905,1234-1484",
+    "range_case": "MoviePilot/tests/test_episode_format_helper.py:30-42"
+  },
+  "cases": [
+    {
+      "name": "original range validation fixture",
+      "pattern": "Show\\.S01E(?<ep>\\d{2}-E\\d{2})\\.mkv",
+      "files": ["Show.S01E01-E02.mkv"],
+      "template": "Show.S01E{ep}.mkv"
+    },
+    {
+      "name": "all named groups become placeholders",
+      "pattern": "(?P<title>.+)\\.E(?P<ep>\\d+)\\.(?P<ext>.+)",
+      "files": ["剧集.E01.mkv", "剧集.E02.zh.srt", "剧集.E03.flac"],
+      "template": "{title}.E{ep}.{ext}"
+    },
+    {
+      "name": "literal braces are escaped and unicode spans stay correct",
+      "pattern": "(?<=剧集\\{组\\} E)(?P<ep>\\d+)",
+      "files": ["剧集{组} E01.mkv", "剧集{组} E02.mkv"],
+      "template": "剧集{{组}} E{ep}.mkv"
+    },
+    {
+      "name": "nested outer capture hides ep and consumer rejects it",
+      "pattern": "(?P<title>Show.E(?P<ep>\\d+))\\.mkv",
+      "files": ["Show.E01.mkv"],
+      "error_code": "EPISODE_RULE_NO_MATCH"
+    },
+    {
+      "name": "no inferred filename numbers without a matching configured rule",
+      "pattern": "Episode-(?P<ep>\\d+)",
+      "files": ["Movie.2026.1080p.12345.mkv"],
+      "error_code": "EPISODE_RULE_NO_MATCH"
+    }
+  ]
+}

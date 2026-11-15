@@ -23,6 +23,12 @@ func originalHistoryDeleteRejected(err error) bool {
 // effect verification at that same quarantine boundary. Its private journal
 // is sealed, including FileItem values and a provider's completion/error fact.
 func (a *App) originalHistoryStorageDelete(ctx context.Context, file *assetRemovalFile, parent *os.File, persist func() error, frozen *plugins.ModuleFileItem) error {
+	if file.SharedDirectory != nil {
+		return a.removeSharedDirectoryMembers(ctx, file, persist)
+	}
+	if file.Softlink != nil {
+		return a.originalHistorySoftlinkDelete(ctx, file, parent, persist, frozen)
+	}
 	var operation browserOperation
 	if len(file.SourceOperation) > 0 {
 		sealed, err := base64.StdEncoding.DecodeString(file.SourceOperation)
@@ -161,6 +167,30 @@ func (a *App) originalHistoryStorageDelete(ctx context.Context, file *assetRemov
 		return saveErr
 	}
 	return err
+}
+
+// Only the proof-bound delete adapter's selected native fallback reaches this
+// quarantine operation. Generic browser manifests still reject arbitrary links.
+func (a *App) quarantineHistorySoftlink(ctx context.Context, file *assetRemovalFile, parent *os.File) error {
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	location, err := removalLocation(*file)
+	if err != nil || location != "source" {
+		return err
+	}
+	name := filepath.Base(file.Path)
+	if err := importRenameExclusive(int(parent.Fd()), name, file.Quarantine); err != nil {
+		return err
+	}
+	quarantine := filepath.Join(filepath.Dir(file.Path), file.Quarantine)
+	actual, err := snapshotOwnedTransferPath(quarantine, file.Snapshot, file.Softlink, false)
+	if err != nil || actual != file.Snapshot {
+		_ = importRenameExclusive(int(parent.Fd()), file.Quarantine, name)
+		_ = parent.Sync()
+		return bad("FILE_SNAPSHOT_CHANGED", "软链接删除隔离时实际条目发生变化")
+	}
+	return parent.Sync()
 }
 
 // TransferHistory persists the original FileItem values. Keep those values

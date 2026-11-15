@@ -35,6 +35,9 @@ func (a *App) completeOriginalTransferCallback(ctx context.Context, job Job, pla
 	} else if !errors.Is(err, sql.ErrNoRows) {
 		return err
 	}
+	if file.Method == "move" {
+		ctx = context.WithValue(ctx, originalTransferWriteContextKey{}, &originalTransferWriteContext{File: file, Source: source, Media: plan.Media})
+	}
 	info, called, err := a.originalRecordedTransferModule(ctx, plan, file)
 	if err != nil {
 		return err

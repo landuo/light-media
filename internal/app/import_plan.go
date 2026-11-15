@@ -36,11 +36,16 @@ type ImportFileRequest struct {
 
 type ImportRequest struct {
 	originalDirectoryPlanned  bool
+	originalDirectoryProvider bool
 	originalDirectoryListings map[string][]map[string]any
 	originalSingleHistory     bool
 	originalResolvedMedia     json.RawMessage
+	originalDownloadCategory  string
 	originalRecoveredWhole    bool
 	originalRetry             bool
+	originalHistoryProvider   bool
+	originalManualProvider    bool
+	originalRecognitionSource string
 	providerIdentity          catalog.Media
 	originalModulePreview     bool
 	directoryRule             *DirectoryRule
@@ -54,6 +59,7 @@ type ImportRequest struct {
 	LibraryTypeFolder         *bool               `json:"library_type_folder,omitempty"`
 	MediaType                 string              `json:"media_type"`
 	TMDBID                    int64               `json:"tmdb_id"`
+	EpisodeGroup              string              `json:"episode_group,omitempty"`
 	RootID                    string              `json:"root_id"`
 	TargetPath                string              `json:"target_path,omitempty"`
 	Mode                      string              `json:"mode"`
@@ -148,7 +154,7 @@ func (a *App) scanFiles(ctx context.Context, directory string, recursive bool) (
 	return a.scanImportFiles(ctx, directory, recursive, nil, nil)
 }
 
-func (a *App) scanImportFiles(ctx context.Context, directory string, recursive bool, inspectFailed func(string, error) error, unchanged func(string, importSnapshot) bool) (any, error) {
+func (a *App) scanImportFiles(ctx context.Context, directory string, recursive bool, inspectFailed func(string, error) error, unchanged func(string, importSnapshot) bool, automaticDiscs ...bool) (any, error) {
 	if !a.sourceAllowed(directory) {
 		return nil, bad("INVALID_SOURCE", "请扫描允许目录内的规范绝对路径")
 	}
@@ -170,6 +176,23 @@ func (a *App) scanImportFiles(ctx context.Context, directory string, recursive b
 		if depth > 16 {
 			truncated = true
 			return nil
+		}
+		if len(automaticDiscs) > 0 && automaticDiscs[0] {
+			file, disc, e := a.automaticDiscCandidate(ctx, dir, unchanged)
+			if e != nil {
+				if inspectFailed != nil {
+					return inspectFailed(dir, e)
+				}
+				return e
+			}
+			if disc {
+				if len(files) >= 2000 {
+					truncated = true
+					return nil
+				}
+				files = append(files, file)
+				return nil
+			}
 		}
 		opened, err := importDir(dir, false)
 		if err != nil {
@@ -245,15 +268,15 @@ func (a *App) adoptDownloadedIntent(ctx context.Context, owner string, plan *Imp
 		}
 		return false, err
 	}
-	if intent.State != "downloaded" || mediaKey(intent.Media) != mediaKey(plan.Media) || intent.Season != file.Season {
+	if intent.State != "downloaded" || mediaKey(intent.Media) != mediaKey(plan.Media) {
 		return false, nil
 	}
 	if intent.DownloadPath != "" && !within(intent.DownloadPath, file.Source) {
 		return false, nil
 	}
 	overlap := false
-	for _, episode := range importEpisodes(file.Episodes) {
-		if slices.Contains(intent.Episodes, episode) {
+	for _, slot := range file.inventorySlots() {
+		if intent.Season == slot.Season && slices.Contains(intent.Episodes, slot.Episode) {
 			overlap = true
 			break
 		}
@@ -285,6 +308,9 @@ func (a *App) managedFileByInode(ctx context.Context, device, inode uint64) (man
 }
 
 func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportPlan, error) {
+	// On preparation errors return only facts already obtained. Callers still
+	// require a nil error to execute; failure history need not re-recognize.
+	var plan ImportPlan
 	phase := a.performanceStages(ctx, "import_prepare", "extensions_and_settings")
 	defer phase("")
 	if request.originalDirectoryListings != nil {
@@ -293,48 +319,78 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	var prepareErr error
 	ctx, extensions, prepareErr := a.observeTransferExtensions(ctx)
 	if prepareErr != nil {
-		return ImportPlan{}, prepareErr
+		return plan, prepareErr
 	}
 	classifier, prepareErr := transferextensions.New(extensions.Constructor)
 	if prepareErr != nil {
-		return ImportPlan{}, prepareErr
+		return plan, prepareErr
 	}
 	ctx, prepareErr = a.ensureResourceRecognition(ctx)
 	if prepareErr != nil {
-		return ImportPlan{}, prepareErr
+		return plan, prepareErr
+	}
+	if request.Mode == "softlink" && request.Manual && len(request.Files) == 1 {
+		path := request.Files[0].Path
+		resolved, e := a.resolveSoftlinkReorganizeSource(ctx, path)
+		if e != nil {
+			return plan, e
+		}
+		if resolved != path {
+			var owned managedFile
+			if e = a.Store.Get(ctx, "managed_file", tokenHash(path), &owned); e != nil {
+				return plan, e
+			}
+			if owned.Kind == "video" {
+				if request.ReorganizeAssetID != "" && request.ReorganizeAssetID != owned.AssetID {
+					return plan, bad("REVIEW_REORGANIZE_OWNER", "所选软链接的归属与重整资产不同")
+				}
+				request.ReorganizeAssetID = owned.AssetID
+				var asset Asset
+				if e = a.Store.Get(ctx, "asset", owned.AssetID, &asset); e != nil {
+					return plan, e
+				}
+				request.HistorySource = asset.SourcePath
+			}
+			request.Files[0].Path = resolved
+		}
 	}
 	request, prepareErr = a.prepareManualImport(ctx, request)
 	if prepareErr != nil {
-		return ImportPlan{}, prepareErr
+		return plan, prepareErr
 	}
 	providerImport := request.providerImport()
-	if (!providerImport && !validMedia(request.MediaType, request.TMDBID)) || len(request.Files) == 0 || len(request.Files) > 2000 || (request.Mode != "hardlink" && request.Mode != "copy" && request.Mode != "auto") || len(request.Mappings) > 100 {
-		return ImportPlan{}, bad("INVALID_IMPORT", "请选择明确影视身份、1–2000 个源文件及有效整理方式")
+	if request.EpisodeGroup != "" && (providerImport || request.MediaType != "tv") {
+		return plan, bad("INVALID_EPISODE_GROUP", "剧集组仅用于TMDB电视剧")
+	}
+	plan.EpisodeGroup = request.EpisodeGroup
+	if (!providerImport && !validMedia(request.MediaType, request.TMDBID)) || len(request.Files) == 0 || len(request.Files) > 2000 || (request.Mode != "hardlink" && request.Mode != "copy" && request.Mode != "auto" && request.Mode != "move" && request.Mode != "softlink") || len(request.Mappings) > 100 {
+		return plan, bad("INVALID_IMPORT", "请选择明确影视身份、1–2000 个源文件及有效整理方式")
 	}
 	if request.TargetPath != "" {
 		phase("target_configuration")
 		rootID, err := a.ensureImportTarget(ctx, request.TargetPath, request.MediaType, request.Files, request.Manual)
 		if err != nil {
-			return ImportPlan{}, err
+			return plan, err
 		}
 		request.RootID = rootID
 	}
 	root, err := a.importRoot(request.RootID)
 	if err != nil {
-		return ImportPlan{}, err
+		return plan, err
 	}
 	if root.Kind != "mixed" && root.Kind != request.MediaType {
-		return ImportPlan{}, bad("INVALID_ROOT_KIND", "媒体类型与目标库类型不符")
+		return plan, bad("INVALID_ROOT_KIND", "媒体类型与目标库类型不符")
 	}
+	plan.RootID, plan.Mode = root.ID, request.Mode
 	phase("target_write_probe")
 	rootDir, err := importDir(root.Path, false)
 	if err != nil {
-		return ImportPlan{}, err
+		return plan, err
 	}
 	rootInfo, err := rootDir.Stat()
 	if err != nil {
 		rootDir.Close()
-		return ImportPlan{}, err
+		return plan, err
 	}
 	availableSpace, spaceErr := importAvailableSpace(rootDir)
 	if spaceErr == nil && !request.originalModulePreview {
@@ -351,16 +407,35 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	}
 	rootDir.Close()
 	if spaceErr != nil {
-		return ImportPlan{}, spaceErr
+		return plan, spaceErr
 	}
 	rootStat, ok := rootInfo.Sys().(*syscall.Stat_t)
 	if !ok {
-		return ImportPlan{}, bad("INVALID_ROOT", "无法确定目标文件系统")
+		return plan, bad("INVALID_ROOT", "无法确定目标文件系统")
 	}
 	phase("metadata")
 	var identity catalog.Media
 	var originalMedia json.RawMessage
-	if providerImport {
+	var selectedGroup catalogEpisodeGroupResponse
+	if request.EpisodeGroup != "" {
+		selectedGroup, err = a.organizeEpisodeGroup(ctx, request.TMDBID, request.EpisodeGroup)
+		if err != nil {
+			return plan, err
+		}
+		var raw json.RawMessage
+		raw, err = a.originalHostMediaRecognize(ctx, plugins.MediaRecognizeRequest{Source: "themoviedb", Type: "tv", TMDBID: request.TMDBID, EpisodeGroup: request.EpisodeGroup})
+		if err == nil {
+			complete, e := a.originalRecognitionProjection(catalog.Media{ID: request.TMDBID, MediaType: "tv"}, raw)
+			identity, originalMedia, err = complete.Media, complete.MediaInfo, e
+			// MediaInfo contains group seasons for naming/SDK consumers. The
+			// compact inventory identity keeps the provider's canonical seasons.
+			var canonical struct {
+				Seasons []catalog.SeasonSummary `json:"seasons"`
+			}
+			_ = json.Unmarshal(complete.ProviderInfo, &canonical)
+			identity.Seasons = canonical.Seasons
+		}
+	} else if providerImport {
 		provider := originalChatMediaProvider{Source: request.providerIdentity.ProviderSource, ID: request.providerIdentity.ProviderID}
 		complete, e := originalChatProviderSearchInformation(request.originalResolvedMedia, &provider, request.MediaType)
 		identity, originalMedia, err = complete.Media, complete.MediaInfo, e
@@ -374,35 +449,67 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		identity, err = a.media(ctx, request.MediaType, request.TMDBID)
 	}
 	if err != nil {
-		return ImportPlan{}, err
+		return plan, err
 	}
 	if identity.ID != request.TMDBID || identity.MediaType != request.MediaType || importName(identity.Title) == "" {
-		return ImportPlan{}, bad("INVALID_METADATA", "未取得可靠影视身份")
+		return plan, bad("INVALID_METADATA", "未取得可靠影视身份")
 	}
+	plan.Media = identity
+	// Classification belongs to the recognized media, independently of whether
+	// the destination uses a category folder. Preserve an explicit source DTO
+	// value; display-only classification never adds a metadata request.
 	category := ""
-	if importBool(request.LibraryTypeFolder, false) {
+	if importBool(request.LibraryTypeFolder, false) && request.originalDownloadCategory != "" {
+		category = request.originalDownloadCategory
+	} else if importBool(request.LibraryTypeFolder, false) {
 		identity, category, err = a.importMediaCategory(ctx, identity)
 		if err != nil {
-			return ImportPlan{}, err
+			return plan, err
 		}
 	}
+	var classified struct {
+		Category string `json:"category"`
+	}
+	_ = json.Unmarshal(originalMedia, &classified)
+	if request.originalDownloadCategory != "" {
+		classified.Category = request.originalDownloadCategory
+	}
+	if classified.Category == "" {
+		classified.Category = category
+	}
+	if classified.Category == "" && identity.CategoryMetadataKnown {
+		if policy, policyErr := a.currentMediaCategoryPolicy(); policyErr == nil {
+			complete := true
+			for _, field := range policy.extraFields(identity.MediaType) {
+				if _, known := identity.CategoryFields[field]; !known {
+					complete = false
+					break
+				}
+			}
+			if complete {
+				classified.Category, _ = policy.categoryWithError(identity)
+			}
+		}
+	}
+	plan.Media, plan.Category = identity, classified.Category
 	phase("ownership_and_policy")
 	qualityDownload, err := a.qualityImportDownload(ctx, request)
 	if err != nil {
-		return ImportPlan{}, err
+		return plan, err
 	}
 	reorganize, err := a.prepareImportReorganize(ctx, request)
 	if err != nil {
-		return ImportPlan{}, err
+		return plan, err
 	}
-	plan := ImportPlan{ID: id("plan_"), WorkflowID: request.WorkflowID, Media: identity, RootID: root.ID, Mode: request.Mode, Renaming: request.Renaming, Scraping: request.Scraping, LibraryTypeFolder: request.LibraryTypeFolder, Files: []PlanFile{}, State: "preview", IntentID: request.IntentID, CreatedAt: now()}
+	plan = ImportPlan{ID: id("plan_"), WorkflowID: request.WorkflowID, Media: identity, Category: classified.Category, RootID: root.ID, Mode: request.Mode, Renaming: request.Renaming, Scraping: request.Scraping, LibraryTypeFolder: request.LibraryTypeFolder, Files: []PlanFile{}, State: "preview", IntentID: request.IntentID, CreatedAt: now()}
+	plan.EpisodeGroup = request.EpisodeGroup
 	plan.DirectorySourceVersion = 2
 	plan.Manual, plan.ReorganizeAssetID = request.Manual, request.ReorganizeAssetID
 	if plan.WorkflowID == "" {
 		plan.WorkflowID = id("wf_")
 	}
 	if err = a.importIntentActive(ctx, plan); err != nil {
-		return ImportPlan{}, err
+		return plan, err
 	}
 	plan.SpaceAvailable = availableSpace
 	plan.Warnings = []string{"空间是视频、字幕及有上限的刮削图片的保守预估；实际写入前仍会复核可用空间。"}
@@ -412,7 +519,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	meta.ExtensionInputSHA = extensions.InputSHA
 	policy, policyErr := a.resolveImportOverwrite(ctx, request)
 	if policyErr != nil {
-		return ImportPlan{}, policyErr
+		return plan, policyErr
 	}
 	if policy.Selection != nil {
 		policy.Selection.Plan = plan.ID
@@ -505,9 +612,9 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				if seasonNumber > 0 && seasonNumber <= 1000 {
 					season, exists := seasons[seasonNumber]
 					if !exists {
-						season, err = a.importSeason(ctx, identity, originalMedia, seasonNumber)
+						season, err = a.importSeason(ctx, identity, originalMedia, seasonNumber, request.EpisodeGroup)
 						if err != nil {
-							return ImportPlan{}, err
+							return plan, err
 						}
 						seasons[seasonNumber] = season
 					}
@@ -540,10 +647,10 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			if file.Status == "ready" {
 				season, exists := seasons[file.Season]
 				if !exists {
-					season, err = a.importSeason(ctx, identity, originalMedia, file.Season)
+					season, err = a.importSeason(ctx, identity, originalMedia, file.Season, request.EpisodeGroup)
 					if err != nil {
 						if ctx.Err() != nil {
-							return ImportPlan{}, ctx.Err()
+							return plan, ctx.Err()
 						}
 						plan.Warnings = append(plan.Warnings, "未取得该季的辅助集信息，按已识别的季集号整理")
 					}
@@ -560,7 +667,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					// Fixed TmdbEpisode intentionally has no provider episode ID.
 					// A validated original module DTO establishes season/episode
 					// membership without inventing a native TMDB episode identity.
-					if episode.SeasonNumber == file.Season && slices.Contains(file.Episodes, episode.EpisodeNumber) && (providerImport || episode.ID > 0 || len(episode.OriginalEpisode) > 0) {
+					if (request.EpisodeGroup != "" || episode.SeasonNumber == file.Season) && slices.Contains(file.Episodes, episode.EpisodeNumber) && (providerImport || episode.ID > 0 || len(episode.OriginalEpisode) > 0) {
 						if nfoEpisodeID > 0 && episode.ID != nfoEpisodeID {
 							block("NFO 单集来源 ID 与 TMDB 季集不符，需人工核对")
 							break
@@ -576,9 +683,22 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				}
 			}
 		}
-		if file.Status == "ready" {
-			if e := a.ensureNotExcluded(ctx, identity, file.Season, file.Episodes); e != nil {
+		if file.Status == "ready" && request.EpisodeGroup != "" {
+			// MP's TV naming defaults an unnumbered Blu-ray directory to season
+			// one. This is presentation only, not a claim about disc contents.
+			if file.DirectoryDigest != "" && file.Season == 0 && !requested.SeasonExplicit {
+				file.Season = 1
+			}
+			if e := applyImportEpisodeGroup(&file, selectedGroup); e != nil {
 				block(e.Error())
+			}
+		}
+		if file.Status == "ready" {
+			for _, scope := range file.inventoryScopes() {
+				if e := a.ensureNotExcluded(ctx, identity, scope.Season, scope.Episodes); e != nil {
+					block(e.Error())
+					break
+				}
 			}
 		}
 		if file.Status == "ready" {
@@ -593,7 +713,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			}
 			base := folder
 			baseDir := root.Path
-			if category != "" {
+			if importBool(request.LibraryTypeFolder, false) && category != "" {
 				baseDir = filepath.Join(baseDir, category)
 			}
 			targetDir := filepath.Join(baseDir, folder)
@@ -603,7 +723,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			renaming := importBool(request.Renaming, true)
 			hasTransferHandlers := a.originalTransferHasHandlers()
 			modulePreview := request.originalModulePreview && (hasTransferHandlers || file.MaterialKind != "" || file.DirectoryDigest != "")
-			transferContext := providerImport || hasTransferHandlers || modulePreview || file.MaterialKind != "" || requested.originalResolvedMeta != nil
+			transferContext := request.Mode == "move" || request.Mode == "softlink" || request.EpisodeGroup != "" || providerImport || hasTransferHandlers || modulePreview || file.MaterialKind != "" || requested.originalResolvedMeta != nil
 			metadataPath := file.Source
 			if requested.originalMetadataPath != "" {
 				metadataPath = requested.originalMetadataPath
@@ -611,7 +731,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			if renaming && identity.MediaType == "movie" && !transferContext {
 				parsed, e := a.originalTransferPathMeta(ctx, metadataPath)
 				if e != nil {
-					return ImportPlan{}, e
+					return plan, e
 				}
 				if resolution := parsed.Text("resource_pix"); resolution != "" {
 					base += " - " + resolution
@@ -625,7 +745,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			} else if identity.MediaType == "tv" && !transferContext {
 				file.Target, err = a.originalTVImportTarget(ctx, identity, file, baseDir, metadataPath)
 				if err != nil {
-					return ImportPlan{}, err
+					return plan, err
 				}
 			}
 			if transferContext {
@@ -633,7 +753,16 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				metadataFile.Source = metadataPath
 				original, e := a.originalTransferContextWithMedia(ctx, identity, metadataFile, originalMedia, requested.originalResolvedMeta)
 				if e != nil {
-					return ImportPlan{}, e
+					return plan, e
+				}
+				if e = original.setCategory(plan.Category); e != nil {
+					return plan, e
+				}
+				if (request.Mode == "move" || request.Mode == "softlink") && original.Item == nil {
+					original.Item, e = originalLocalFileItem(file.Source)
+					if e != nil {
+						return plan, e
+					}
 				}
 				if requested.originalItem != nil {
 					original.Item = requested.originalItem.Clone()
@@ -641,7 +770,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				if meta.OriginalTransfer == nil {
 					meta.OriginalTransfer = map[string]originalTransferFileContext{}
 				}
-				if season, exists := seasons[file.Season]; !providerImport && exists {
+				if season, exists := seasons[file.presentationFile().Season]; !providerImport && exists {
 					rows := make([]map[string]any, 0, len(season.Episodes))
 					for _, episode := range season.Episodes {
 						raw := episode.OriginalEpisode
@@ -650,7 +779,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 						}
 						row, e := originalCatalogEpisodeProjection(raw)
 						if e != nil {
-							return ImportPlan{}, e
+							return plan, e
 						}
 						rows = append(rows, row)
 					}
@@ -659,12 +788,12 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				meta.OriginalTransfer[file.ID] = original
 				if renaming && !modulePreview {
 					var episodes []catalog.Episode
-					if season, exists := seasons[file.Season]; !providerImport && exists {
+					if season, exists := seasons[file.presentationFile().Season]; !providerImport && exists {
 						episodes = season.Episodes
 					}
 					file.Target, e = a.originalTransferNativeRename(ctx, identity, file, baseDir, original, episodes, false)
 					if e != nil {
-						return ImportPlan{}, e
+						return plan, e
 					}
 					if meta.OriginalNamingBases == nil {
 						meta.OriginalNamingBases = map[string]string{}
@@ -682,7 +811,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				}
 				meta.Methods[file.ID] = file.Method
 				var episodes []catalog.Episode
-				if season, exists := seasons[file.Season]; !providerImport && exists {
+				if season, exists := seasons[file.presentationFile().Season]; !providerImport && exists {
 					episodes = season.Episodes
 				}
 				preview, callback, e := a.originalTransferModulePreview(ctx, plan, file, meta, request.directorySelection, baseDir, episodes)
@@ -693,39 +822,33 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				// The manual source plans related files as separate tasks. Their
 				// preview callbacks never probe target existence or publish files.
 				plan.Files = append(plan.Files, file)
-				if file.MaterialKind != "" || request.originalDirectoryPlanned {
+				if file.MaterialKind != "" || request.originalDirectoryPlanned || request.originalSingleHistory {
 					continue
 				}
 				related, e := a.originalTransferRelatedPreview(ctx, plan, file, &meta, request.directorySelection, baseDir, episodes)
 				if e != nil {
-					return ImportPlan{}, e
+					return plan, e
 				}
 				plan.Files = append(plan.Files, related...)
 				continue
 			}
-			inPlace := reorganize != nil && file.Target == reorganize.Asset.Path
+			inPlace := reorganize != nil && file.Target == reorganize.Asset.Path && (request.Mode == "softlink") == (reorganize.Video.Softlink != nil)
 			// A hardlink already owned by this library is not a new transfer.
-			// Match by device/inode so a re-organized download is reported as
-			// already imported instead of failing on an existing target.
-			if file.Status == "ready" && qualityDownload == nil && reorganize == nil {
+			// Match its original source as well as device/inode. A different
+			// source path still follows its own history and overwrite policy.
+			if file.Status == "ready" && qualityDownload == nil && reorganize == nil && request.Mode != "move" && request.Mode != "softlink" {
 				if owner, ok := a.managedFileByInode(ctx, file.Device, file.Inode); ok && owner.AssetID != "" {
 					var existing Asset
-					if a.Store.Get(ctx, "asset", owner.AssetID, &existing) == nil && existing.State == "present" && existing.RootID == root.ID && mediaKey(existing.Media) == mediaKey(identity) {
+					if a.Store.Get(ctx, "asset", owner.AssetID, &existing) == nil && existing.State == "present" && existing.RootID == root.ID && existing.SourcePath == file.Source && mediaKey(existing.Media) == mediaKey(identity) && sameCanonicalSlots(existing.inventorySlots(), file.inventorySlots()) {
 						file.Status = "already_imported"
 						file.AssetID = existing.ID
 						file.Target = existing.Path
 					}
 				}
 			}
-			samePhysical := false
-			if targetInfo, statErr := os.Stat(file.Target); statErr == nil && file.Source != "" {
-				if sourceInfo, sourceErr := os.Stat(file.Source); sourceErr == nil {
-					samePhysical = os.SameFile(sourceInfo, targetInfo)
-				}
-			}
-			if file.Status == "ready" && samePhysical {
-				file.Status = "already_imported"
-			}
+			// An unregistered hardlink is not a completed import. Keep it ready
+			// so submission still binds download ownership and execution saves
+			// the asset, receipt and callback instead of silently skipping them.
 			if !importPath(file.Target) || !within(root.Path, file.Target) || file.Source == file.Target && !inPlace || seenTargets[file.Target] {
 				block("目标路径重复、重叠或逃逸")
 			} else {
@@ -755,12 +878,12 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				if file.Status == "already_imported" {
 					// Keep the inode-owned asset as the authoritative target.
 				} else if qualityOwner != nil && file.Status == "ready" {
-					stamp, inspectErr := snapshotTransferPath(file.Target)
+					stamp, inspectErr := snapshotOwnedTransferPath(file.Target, qualityOwner.Video.Snapshot, qualityOwner.Video.Softlink, true, qualityOwner.Video.SharedDirectory)
 					if inspectErr != nil || stamp != qualityOwner.Video.Snapshot {
 						block("洗版原视频在预览时已变化")
 					}
 				} else if inPlace {
-					actual, inspectErr := snapshotTransferPath(file.Target)
+					actual, inspectErr := snapshotOwnedTransferPath(file.Target, reorganize.Video.Snapshot, reorganize.Video.Softlink, true, reorganize.Video.SharedDirectory)
 					if inspectErr != nil || actual != reorganize.Video.Snapshot {
 						block("原整理目标已被外部修改，不能原位重新整理")
 					}
@@ -769,8 +892,8 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					e = a.assetAtPath(ctx, file.Target, &existing)
 					var ownership managedFile
 					ownershipErr := a.Store.Get(ctx, "managed_file", tokenHash(file.Target), &ownership)
-					actual, targetErr := snapshotTransferPath(file.Target)
-					if e == nil && mediaKey(existing.Media) == mediaKey(identity) && existing.RootID == root.ID && existing.SourcePath == file.Source && (existing.State == "present" || existing.State == "external") && ownershipErr == nil && ownership.RootID == root.ID && ownership.Kind == "video" && ownership.AssetID == existing.ID && ownership.SourceSnapshot == planSnapshot(file) && targetErr == nil && ownership.Snapshot == actual {
+					actual, targetErr := snapshotOwnedTransferPath(file.Target, ownership.Snapshot, ownership.Softlink, true, ownership.SharedDirectory)
+					if request.Mode != "move" && request.Mode != "softlink" && e == nil && mediaKey(existing.Media) == mediaKey(identity) && sameCanonicalSlots(existing.inventorySlots(), file.inventorySlots()) && existing.RootID == root.ID && existing.SourcePath == file.Source && (existing.State == "present" || existing.State == "external") && ownershipErr == nil && ownership.RootID == root.ID && ownership.Kind == "video" && ownership.AssetID == existing.ID && ownership.SourceSnapshot == planSnapshot(file) && targetErr == nil && ownership.Snapshot == actual {
 						file.Status = "already_imported"
 						file.AssetID = existing.ID
 					} else {
@@ -783,27 +906,27 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				block("无法检查目标冲突")
 			}
 			if file.Status == "ready" && file.MaterialKind == "" {
-				for _, episode := range importEpisodes(file.Episodes) {
-					slot := fmt.Sprintf("%d:%d", file.Season, episode)
+				for _, canonical := range file.inventorySlots() {
+					slot := fmt.Sprintf("%d:%d", canonical.Season, canonical.Episode)
 					if seenSlots[slot] {
 						block("同一季集被多次选择")
 						break
 					}
 					seenSlots[slot] = true
 					var count int
-					if e := a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=?`, mediaKey(identity), file.Season, episode, request.ReorganizeAssetID).Scan(&count); e != nil {
-						return ImportPlan{}, e
+					if e := a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=?`, mediaKey(identity), canonical.Season, canonical.Episode, request.ReorganizeAssetID).Scan(&count); e != nil {
+						return plan, e
 					}
 					if count > 0 && qualityDownload == nil && meta.Overwrite == nil {
 						block("该影片或季集已存在资产，需先核对冲突")
 						break
 					}
 					var owner string
-					e := a.Store.reader().QueryRowContext(ctx, `SELECT intent_id FROM reservations WHERE media_key=? AND season=? AND episode=?`, mediaKey(identity), file.Season, episode).Scan(&owner)
+					e := a.Store.reader().QueryRowContext(ctx, `SELECT intent_id FROM reservations WHERE media_key=? AND season=? AND episode=?`, mediaKey(identity), canonical.Season, canonical.Episode).Scan(&owner)
 					if e == nil && owner != request.IntentID {
 						reusable := false
 						if request.IntentID == "" {
-							reusable, e = canReplaceFailedImportReservation(ctx, a.Store.reader(), owner, mediaKey(identity), file, episode)
+							reusable, e = canReplaceFailedImportReservation(ctx, a.Store.reader(), owner, mediaKey(identity), file, canonical.Season, canonical.Episode)
 							if e == nil && !reusable && request.Manual && len(request.Files) == 1 {
 								meta.DownloadRetry, e = findDownloadImportRetry(ctx, a.Store.reader(), owner, plan, file)
 								reusable = meta.DownloadRetry != nil
@@ -812,7 +935,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 								}
 							}
 							if e != nil {
-								return ImportPlan{}, e
+								return plan, e
 							}
 						}
 						if !reusable {
@@ -821,11 +944,11 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 						}
 					}
 					if e != nil && !errors.Is(e, sql.ErrNoRows) {
-						return ImportPlan{}, e
+						return plan, e
 					}
 				}
 			}
-			if file.Status == "ready" && !inPlace && file.MaterialKind == "" && !request.originalDirectoryPlanned {
+			if file.Status == "ready" && !inPlace && file.MaterialKind == "" && !request.originalDirectoryPlanned && !request.originalSingleHistory {
 				var sidecars []importSidecar
 				var e error
 				if meta.Overwrite != nil {
@@ -844,20 +967,26 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 							// an associated extra; it does not parse the extra's name.
 							projection := original
 							projection.Item = sidecars[i].Item
+							if (request.Mode == "move" || request.Mode == "softlink") && projection.Item == nil {
+								projection.Item, e = originalLocalFileItem(sidecars[i].Source)
+								if e != nil {
+									return plan, e
+								}
+							}
 							sidecars[i].Original = &projection
 							if importBool(request.Renaming, true) {
 								var episodes []catalog.Episode
-								if season, exists := seasons[file.Season]; !providerImport && exists {
+								if season, exists := seasons[file.presentationFile().Season]; !providerImport && exists {
 									episodes = season.Episodes
 								}
 								path, e := a.originalTransferNativeRename(ctx, identity, extra, baseDir, projection, episodes, false)
 								if e != nil {
-									return ImportPlan{}, e
+									return plan, e
 								}
 								sidecars[i].NamingBase = baseDir
 								sidecars[i].Target = path
 								if !within(root.Path, sidecars[i].Target) || sidecars[i].Target == sidecars[i].Source || seenTargets[sidecars[i].Target] {
-									return ImportPlan{}, bad("INVALID_TARGET", "插件附加文件命名重复、重叠或逃逸")
+									return plan, bad("INVALID_TARGET", "插件附加文件命名重复、重叠或逃逸")
 								}
 								seenTargets[sidecars[i].Target] = true
 							}
@@ -872,7 +1001,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	if meta.DownloadRetry != nil {
 		plan.IntentID = meta.DownloadRetry.IntentID
 	}
-	plan.SpaceNeeded = importSpaceEstimate(plan, meta)
+	plan.SpaceNeeded = importSpaceEstimate(plan, meta, uint64(rootStat.Dev))
 	if plan.SpaceNeeded > plan.SpaceAvailable && !request.originalModulePreview {
 		plan.Warnings = append(plan.Warnings, "当前可用空间不足，不能执行此计划")
 		for index := range plan.Files {
@@ -885,7 +1014,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	phase("writer_wait")
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
-		return ImportPlan{}, err
+		return plan, err
 	}
 	defer tx.Rollback()
 	phase("persist_plan")
@@ -893,13 +1022,13 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		err = txPut(ctx, tx, "import_meta", plan.ID, meta)
 	}
 	if err != nil {
-		return ImportPlan{}, err
+		return plan, err
 	}
 	if err = a.saveQualityImportProofTx(ctx, tx, plan, meta, qualityDownload); err != nil {
-		return ImportPlan{}, err
+		return plan, err
 	}
 	if err = a.saveNativeDirectoryAuthorizationTx(ctx, tx, plan, meta, request.directorySelection); err != nil {
-		return ImportPlan{}, err
+		return plan, err
 	}
 	return plan, tx.Commit()
 }

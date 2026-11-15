@@ -189,7 +189,7 @@ func originalTransferModuleFixture(t *testing.T, mode, workerMode string) (*App,
 }
 
 func TestOriginalTransferModuleCopyAndOwnershipGuards(t *testing.T) {
-	for _, sample := range []struct{ name, mode, worker, code string }{{"actual_copy", "copy", "copy", ""}, {"changed_bytes", "copy", "corrupt", "REVIEW_COPY_CONTENT"}, {"copy_is_not_selected_link", "hardlink", "copy", "REVIEW_PLUGIN_TRANSFER_METHOD"}, {"different_result_target", "hardlink", "", "REVIEW_PLUGIN_TRANSFER_TARGET"}} {
+	for _, sample := range []struct{ name, mode, worker, code string }{{"actual_copy", "copy", "copy", ""}, {"changed_bytes", "copy", "corrupt", "REVIEW_COPY_CONTENT"}, {"copy_is_not_selected_link", "hardlink", "copy", "REVIEW_PLUGIN_TRANSFER_METHOD"}, {"copy_is_not_selected_softlink", "softlink", "copy", "REVIEW_PLUGIN_TRANSFER_METHOD"}, {"different_result_target", "hardlink", "", "REVIEW_PLUGIN_TRANSFER_TARGET"}} {
 		t.Run(sample.name, func(t *testing.T) {
 			a, object, plan, config := originalTransferModuleFixture(t, sample.mode, sample.worker)
 			ctx := context.Background()

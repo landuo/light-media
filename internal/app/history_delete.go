@@ -108,7 +108,7 @@ func (a *App) removeHistoricalTarget(ctx context.Context, item transferHistoryIt
 }
 
 func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryItem) (importSnapshot, bool, error) {
-	if !a.sourceAllowed(item.Source) || browserInternal(item.Source) {
+	if !importPath(item.Source) || browserInternal(item.Source) {
 		return importSnapshot{}, false, bad("INVALID_SOURCE", "源文件不在当前资源目录中")
 	}
 	var plan ImportPlan
@@ -118,11 +118,38 @@ func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryI
 	if _, e := a.historyDownloadIdentity(ctx, item); e != nil {
 		return importSnapshot{}, false, e
 	}
-	file, _, _, e := a.historyPlannedFile(ctx, plan, item)
+	file, _, receiptKey, e := a.historyPlannedFile(ctx, plan, item)
 	if e != nil {
 		return importSnapshot{}, false, e
 	}
 	expected := planSnapshot(file)
+	if file.Method == "move" {
+		var published importReceipt
+		if a.Store.Get(ctx, "import_receipt", receiptKey, &published) == nil && published.ID == receiptKey &&
+			published.State == "published" && (published.Move != nil && published.Move.State == "completed" || expected.Directory != "" && published.DirectoryMoveState == "completed") &&
+			published.Source == file.Source && published.Target == file.Target && published.SourceSnapshot == expected {
+			// This is absence reconciliation, not permission to delete anything
+			// below a library root. In particular, never skip a recreated source.
+			if _, err := os.Lstat(item.Source); errors.Is(err, os.ErrNotExist) {
+				return importSnapshot{}, false, nil
+			}
+		}
+	}
+	if !a.sourceAllowed(item.Source) && !a.historyReorganizedMoveSourceAllowed(ctx, plan, file) {
+		return importSnapshot{}, false, bad("INVALID_SOURCE", "源文件不在当前资源目录中")
+	}
+	if file.Method == "move" && expected.Directory != "" {
+		// Native directory move deliberately leaves empty containers. Only
+		// this exact completed publication can own that changed source tree;
+		// ordinary/plugin receipts and any newly added files keep the old guard.
+		var published importReceipt
+		if a.Store.Get(ctx, "import_receipt", receiptKey, &published) == nil &&
+			published.ID == receiptKey && published.State == "published" && published.DirectoryMoveState == "completed" &&
+			published.Source == file.Source && published.Target == file.Target && published.SourceSnapshot == expected &&
+			published.MoveSourceSnapshot != nil && published.MoveSourceSnapshot.Directory != "" && sameInode(*published.MoveSourceSnapshot, expected) {
+			expected = *published.MoveSourceSnapshot
+		}
+	}
 	actual, e := snapshotTransferPath(item.Source)
 	if errors.Is(e, os.ErrNotExist) {
 		var receipt historySourceRemoval
@@ -159,6 +186,30 @@ func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryI
 		return importSnapshot{}, false, e
 	}
 	return actual, true, nil
+}
+
+// An already moved historical source may be an old managed library path rather
+// than a download root. The frozen reorganize proof grants this one pathname,
+// not arbitrary deletion below a current library root. Current asset ownership
+// may legitimately have moved on; the immutable pre-transfer ownership is used.
+func (a *App) historyReorganizedMoveSourceAllowed(ctx context.Context, plan ImportPlan, file PlanFile) bool {
+	if !plan.Manual || file.Method != "move" || plan.ReorganizeAssetID == "" {
+		return false
+	}
+	var meta importMetadata
+	if a.Store.Get(ctx, "import_meta", plan.ID, &meta) != nil || meta.Reorganize == nil {
+		return false
+	}
+	frozen := meta.Reorganize
+	if frozen.Asset.ID != plan.ReorganizeAssetID || frozen.Asset.Path != file.Source ||
+		frozen.Video.Path != file.Source || frozen.Video.AssetID != frozen.Asset.ID ||
+		frozen.Video.RootID != frozen.Asset.RootID || frozen.Video.Kind != "video" ||
+		frozen.Video.MediaKey != mediaKey(frozen.Asset.Media) || frozen.Video.Snapshot != planSnapshot(file) ||
+		file.Source == frozen.RootPath || !within(frozen.RootPath, file.Source) {
+		return false
+	}
+	root, err := a.importRoot(frozen.Asset.RootID)
+	return err == nil && root.Path == frozen.RootPath
 }
 
 func (a *App) guardHistorySourceInUse(ctx context.Context, item transferHistoryItem) error {

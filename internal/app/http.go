@@ -617,6 +617,10 @@ func (a *App) publicSettingsContext(ctx context.Context) (map[string]any, error)
 	proxyEndpoint := networkproxy.Endpoint(c.ProxyHost)
 	c.ClearProxyHost = false
 	c.APIToken = ""
+	// Public settings describe whether credentials exist, never their values.
+	// The settings form submits an empty field to keep the stored secret.
+	c.FNOS.Password = ""
+	c.TMDB.APIKey, c.TMDB.AccessToken = "", ""
 	siteState := map[string]bool{}
 	for i := range c.Sites {
 		siteState[c.Sites[i].ID] = c.Sites[i].Cookie != "" || c.Sites[i].APIKey != ""
@@ -656,6 +660,7 @@ func (a *App) publicSettingsContext(ctx context.Context) (map[string]any, error)
 	}
 	m["secret_state"] = secretState
 	m["proxy_endpoint"] = proxyEndpoint
+	m["effective_recognition_source"] = a.effectiveRecognitionSource()
 	// Keep the stored nullable preference distinct from the effective value.
 	// Unrelated settings saves must not turn an inherited source flag into an
 	// explicit user choice merely because the UI displayed it.
@@ -724,6 +729,9 @@ func (a *App) preserveSecrets(c *Settings) {
 	c.IndexerSites = a.Settings().IndexerSites
 	c.RSSSites = a.Settings().RSSSites
 	old := a.Settings()
+	if c.RecognitionSource == nil {
+		c.RecognitionSource = old.RecognitionSource
+	}
 	if c.ClearProxyHost {
 		c.ProxyHost = ""
 	} else if strings.TrimSpace(c.ProxyHost) == "" {
@@ -986,6 +994,8 @@ func (a *App) catalogAPI(r *http.Request, action string) (any, error) {
 		result, e = a.originalCatalogTMDBDetail(ctx, kind, int64(atoi(q.Get("id"))))
 	case "seasons":
 		result, e = a.originalCatalogSeasons(ctx, int64(atoi(q.Get("id"))))
+	case "episode-groups":
+		result, e = a.organizeEpisodeGroupOptions(ctx, int64(atoi(q.Get("id"))))
 	case "episode-group":
 		id, err := strconv.ParseInt(q.Get("id"), 10, 32)
 		if err != nil {

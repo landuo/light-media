@@ -42,7 +42,7 @@ func (a *App) writeOriginalMetadataSidecar(ctx context.Context, mediaPath, targe
 			return err
 		}
 		if before, ok := ctx.Value(originalMetadataSnapshotKey{}).(browserStamp); ok {
-			after, err := browserStat(mediaPath)
+			after, err := a.originalMetadataMediaStamp(ctx, mediaPath)
 			if err != nil || !sameBrowserIdentity(before, after) || os.FileMode(before.Mode).IsRegular() && before != after {
 				return bad("REVIEW_METADATA_SOURCE_CHANGED", "刮削媒体文件发生变化，已停止旁车写入")
 			}
@@ -58,6 +58,7 @@ func (a *App) writeOriginalMetadataSidecar(ctx context.Context, mediaPath, targe
 	}
 	defer parent.Close()
 	var old *importSnapshot
+	var oldLink *importSoftlinkProof
 	if file, err := importOpen(target); err == nil {
 		stat, err := file.Stat()
 		_ = file.Close()
@@ -73,7 +74,18 @@ func (a *App) writeOriginalMetadataSidecar(ctx context.Context, mediaPath, targe
 		}
 		old = &stamp
 	} else if !os.IsNotExist(err) {
-		return err
+		member, known := metadataDirectoryLinkMember(ctx, target)
+		if !known {
+			return err
+		}
+		stamp, e := snapshotOwnedTransferPath(target, member.Snapshot, member.Softlink, false)
+		if e != nil || stamp != member.Snapshot {
+			return bad("REVIEW_METADATA_CONFLICT", "目录旁车链接已被替换")
+		}
+		if !overwrite {
+			return nil
+		}
+		old, oldLink = &stamp, member.Softlink
 	}
 	stage := ".light-media-metadata-" + id("") + filepath.Ext(target)
 	fd, err := unix.Openat(int(parent.Fd()), stage, unix.O_WRONLY|unix.O_CREAT|unix.O_EXCL|unix.O_CLOEXEC|unix.O_NOFOLLOW, 0666)
@@ -128,12 +140,17 @@ func (a *App) writeOriginalMetadataSidecar(ctx context.Context, mediaPath, targe
 			if err = originalMetadataExchange(int(parent.Fd()), stage, filepath.Base(target)); err != nil {
 				return nil, err
 			}
-			prior, err := importOpen(filepath.Join(filepath.Dir(target), stage))
 			matched := false
-			if err == nil {
-				st, e := prior.Stat()
-				matched = e == nil && old.matches(st)
-				_ = prior.Close()
+			if oldLink != nil {
+				stamp, e := snapshotOwnedTransferPath(filepath.Join(filepath.Dir(target), stage), *old, oldLink, false)
+				matched = e == nil && stamp == *old
+			} else {
+				prior, e := importOpen(filepath.Join(filepath.Dir(target), stage))
+				if e == nil {
+					st, e := prior.Stat()
+					matched = e == nil && old.matches(st)
+					_ = prior.Close()
+				}
 			}
 			if !matched {
 				current, e := snapshotPath(target)

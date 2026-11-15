@@ -31,7 +31,7 @@ function openDialog(t, initial = {}, options = {}) {
       },
     },
     api: async (path, body, method, signal) => {
-      requests.push({ path, body, ...(signal ? { signal } : {}) });
+      requests.push({ path, body, method, ...(signal ? { signal } : {}) });
       if (options.api) return options.api(path, body, requests.length);
       return { items: [], total: 0, submitted: 0, failed: 0 };
     },
@@ -40,6 +40,8 @@ function openDialog(t, initial = {}, options = {}) {
     image: (path) => path,
     toast: (message) => toasts.push(message),
   };
+  if (options.recognitionSource)
+    apiModule.ui.settings.effective_recognition_source = options.recognitionSource;
   if (options.noSettings) apiModule.ui.settings = null;
   const module = { exports: {} };
   new Function('require', 'exports', compiled)((name) => {
@@ -47,7 +49,7 @@ function openDialog(t, initial = {}, options = {}) {
     if (name === '../features/bounded-read') return { boundedRead: (read, signal) => read(signal) };
     if (name === './FileManagerIcon.vue') return { default: {} };
     if (name === './DirectoryPathPicker.vue') return { name: 'DirectoryPathPicker' };
-    if (/^vuetify\/components\/(VTextField|VSelect|VTextarea)$/.test(name)) {
+    if (/^vuetify\/components\/(VTextField|VSelect|VTextarea|VBtn|VTooltip)$/.test(name)) {
       const component = name.split('/').at(-1);
       return { [component]: { name: component } };
     }
@@ -68,11 +70,19 @@ function openDialog(t, initial = {}, options = {}) {
   const scope = vue.effectScope();
   const render = scope.run(() =>
     module.exports.default.setup(
-      { paths: ['/downloads/Test.mkv'], historyIds: options.historyIds, initial },
+      {
+        paths: options.paths || ['/downloads/Test.mkv'],
+        items: options.items,
+        historyIds: options.historyIds,
+        initial,
+      },
       { expose: () => {}, emit: (...event) => events.push(event) },
     ),
   );
-  t.after(() => scope.stop());
+  t.after(() => {
+    unmounted();
+    scope.stop();
+  });
   function nodes() {
     const result = [];
     function visit(node) {
@@ -81,7 +91,7 @@ function openDialog(t, initial = {}, options = {}) {
       result.push(node);
       if (node.children && !Array.isArray(node.children) && typeof node.children === 'object') {
         for (const slot of Object.values(node.children))
-          if (typeof slot === 'function') visit(slot());
+          if (typeof slot === 'function') visit(slot({ props: {} }));
       } else visit(node.children);
     }
     visit(render({}, []));
@@ -137,6 +147,102 @@ function openDialog(t, initial = {}, options = {}) {
     },
   };
 }
+
+test('global Douban uses source ID without any TMDB episode group', async (t) => {
+  const dialog = openDialog(t, { media_type: 'tv' }, { recognitionSource: 'douban' });
+  const field = dialog.nodes().find((n) => n.props?.label === '豆瓣编号');
+  assert.ok(field);
+  field.props['onUpdate:modelValue']('701');
+  await vue.nextTick();
+  assert.ok(!dialog.nodes().some((n) => n.props?.label === '剧集组'));
+  const body = await dialog.preview();
+  assert.equal(body.tmdb_id, 0);
+  assert.equal(body.media_source, 'douban');
+  assert.equal(body.media_id, '701');
+  assert.equal(body.episode_group, undefined);
+});
+
+test('provider media picker queries the selected source and fills source_id rather than zero TMDB id', async (t) => {
+  const dialog = openDialog(
+    t,
+    { media_type: 'movie' },
+    {
+      recognitionSource: 'douban',
+      api: async (path) =>
+        path.startsWith('/catalog/search?')
+          ? {
+              results: [
+                {
+                  id: 0,
+                  source: 'douban',
+                  source_id: '701',
+                  title: '豆瓣条目',
+                  media_type: 'movie',
+                },
+              ],
+            }
+          : { items: [], total: 0, submitted: 0, failed: 0 },
+    },
+  );
+  dialog
+    .nodes()
+    .find((n) => n.props?.['aria-label'] === '查询媒体编号')
+    .props.onClick();
+  await vue.nextTick();
+  dialog
+    .nodes()
+    .find((n) => n.props?.label === '搜索影视名称')
+    .props['onUpdate:modelValue']('条目');
+  await vue.nextTick();
+  await dialog
+    .nodes()
+    .find((n) => n.type === 'form')
+    .props.onSubmit({ preventDefault() {} });
+  await vue.nextTick();
+  const lookup = dialog.requests.find((r) => r.path.startsWith('/catalog/search?'));
+  assert.equal(new URLSearchParams(lookup.path.split('?')[1]).get('source'), 'douban');
+  dialog
+    .nodes()
+    .find((n) => n.type === 'button' && renderedText(n).includes('豆瓣条目'))
+    .props.onClick();
+  await vue.nextTick();
+  await Promise.resolve();
+  await vue.nextTick();
+  assert.equal(dialog.nodes().find((n) => n.props?.label === '豆瓣编号').props.modelValue, '701');
+  const body = await dialog.preview();
+  assert.equal(body.media_id, '701');
+  assert.equal(body.tmdb_id, 0);
+});
+
+test('history selections keep episode range editable without a filename template', async (t) => {
+  const paths = ['/downloads/E01.mkv', '/downloads/E02.mkv'];
+  const dialog = openDialog(t, { media_type: 'tv' }, { paths, historyIds: ['first', 'second'] });
+  const range = dialog.nodes().find((node) => node.props?.label === '集');
+  assert.equal(Boolean(range.props.disabled), false);
+  range.props['onUpdate:modelValue']('3,4');
+  await vue.nextTick();
+  const request = await dialog.preview();
+  assert.deepEqual(request.history_ids, ['first', 'second']);
+  assert.equal(request.episode_detail, '3,4');
+  assert.equal(request.episode_format, '');
+});
+
+test('multiple file and directory selections still require a template for episode range', async (t) => {
+  for (const options of [
+    { paths: ['/downloads/E01.mkv', '/downloads/E02.mkv'] },
+    { paths: ['/downloads/Show'], items: [{ path: '/downloads/Show', type: 'dir' }] },
+  ]) {
+    const dialog = openDialog(t, { media_type: 'tv' }, options);
+    const range = () => dialog.nodes().find((node) => node.props?.label === '集');
+    assert.equal(Boolean(range().props.disabled), true);
+    dialog
+      .nodes()
+      .find((node) => node.props?.label === '集数定位')
+      .props['onUpdate:modelValue']('E{ep}');
+    await vue.nextTick();
+    assert.equal(Boolean(range().props.disabled), false);
+  }
+});
 
 test('pinned per-task failure keeps successful siblings and updates the rendered summary', async (t) => {
   const oracle = JSON.parse(
@@ -219,6 +325,21 @@ test('queuing history closes the dialog as soon as background preparation is acc
   assert.deepEqual(dialog.events, [['done', 'history-preparation']]);
   assert.deepEqual(dialog.toasts, ['已提交 2 条整理记录，正在后台准备']);
   assert.ok(!dialog.nodes().some((node) => node.props?.class === 'organize-progress'));
+});
+
+test('softlink is a real independent manual method and preserves target/switches', async (t) => {
+  const dialog = openDialog(t);
+  await dialog.select(0, 'local');
+  await dialog.path('/library/linked');
+  await dialog.toggle(0, true);
+  await dialog.toggle(1, false);
+  await dialog.select(1, 'softlink');
+  const body = await dialog.preview();
+  assert.equal(body.mode, 'softlink');
+  assert.equal(body.target_path, '/library/linked');
+  assert.equal(body.target_storage, 'local');
+  assert.equal(body.library_type_folder, true);
+  assert.equal(body.scraping, false);
 });
 
 test('manual target can be edited and cleared without changing storage, mode, or explicit switches', async (t) => {
@@ -424,10 +545,12 @@ test('settings read after early history render stays local and cannot repopulate
   });
   const dialog = openDialog(t, {}, { noSettings: true, api: () => pending });
   const mounted = dialog.mount();
-  assert.equal(dialog.requests[0].path, '/settings');
-  assert.equal(dialog.requests[0].signal.aborted, false);
+  const settingsRequest = dialog.requests.find((request) => request.path === '/settings');
+  assert.ok(settingsRequest);
+  assert.equal(settingsRequest.signal.aborted, false);
   dialog.unmount();
-  assert.equal(dialog.requests[0].signal.aborted, true);
+  assert.equal(settingsRequest.signal.aborted, true);
+  assert.ok(dialog.requests.every((request) => request.signal.aborted));
   resolve({ directories: [{ library_path: '/old-session' }] });
   await mounted;
   assert.equal(dialog.ui.settings, null, 'late response must not populate global settings');
@@ -450,4 +573,361 @@ test('early history dialog can use local settings without replacing shared confi
     dialog.nodes().some((node) => node.type === 'option' && node.props?.value === '/local-choice'),
   );
   dialog.unmount();
+});
+
+const recommended = {
+  rule_name: '显式集号',
+  pattern: '(?P<ep>\\d+)',
+  episode_format: '{title}.E{ep}.{ext}',
+  sample_file: 'Show.E01.mkv',
+  sample_count: 3,
+  matched_count: 2,
+  message: '已根据配置规则生成并验证集数定位模板',
+};
+const recommendationButton = (dialog) =>
+  dialog.nodes().find((node) => node.props?.['aria-label'] === '推荐集数定位');
+const field = (dialog, name) => dialog.nodes().find((node) => node.props?.label === name);
+
+test('recommendation calls the real route and changes only episode_format without confirmation', async (t) => {
+  const dialog = openDialog(
+    t,
+    { media_type: 'tv', season: 2, tmdb_id: 123, target_path: '/library/custom' },
+    {
+      api: async (path) => (path.endsWith('/recommend') ? recommended : { items: [], total: 0 }),
+    },
+  );
+  await dialog.select(1, 'copy');
+  field(dialog, '集').props['onUpdate:modelValue']('4,6');
+  field(dialog, '集数定位').props['onUpdate:modelValue']('old-{ep}');
+  field(dialog, '集数偏移').props['onUpdate:modelValue']('-3');
+  field(dialog, '指定Part').props['onUpdate:modelValue']('part2');
+  field(dialog, '最小文件大小（MB）').props['onUpdate:modelValue'](42);
+  await dialog.toggle(0, true);
+  await dialog.toggle(1, true);
+  const before = await dialog.preview();
+  await recommendationButton(dialog).props.onClick({ stopPropagation() {} });
+  await vue.nextTick();
+  assert.deepEqual(dialog.requests.at(-1).body, { paths: ['/downloads/Test.mkv'] });
+  assert.equal(dialog.requests.at(-1).path, '/files/episode-format/recommend');
+  const after = await dialog.preview();
+  assert.deepEqual(after, { ...before, episode_format: recommended.episode_format });
+  assert.match(field(dialog, '集数定位').props.hint, /显式集号.*Show\.E01\.mkv.*2\/3/);
+  assert.ok(dialog.toasts.includes('已覆盖集数定位，其他选项保持不变'));
+  assert.equal(dialog.nodes().filter((node) => node.props?.role === 'dialog').length, 1);
+});
+
+test('history recommendation submits IDs only while explicit same-directory multi-select submits paths', async (t) => {
+  for (const options of [
+    { historyIds: ['history-one', 'history-two'], paths: ['/stale/display1', '/stale/display2'] },
+    {
+      paths: ['/downloads/Show.E01.mkv', '/downloads/Show.E02.mkv'],
+      items: [
+        { path: '/downloads/Show.E01.mkv', type: 'file' },
+        { path: '/downloads/Show.E02.mkv', type: 'file' },
+      ],
+    },
+  ]) {
+    const dialog = openDialog(
+      t,
+      { media_type: 'tv' },
+      { ...options, api: async () => recommended },
+    );
+    assert.equal(recommendationButton(dialog).props.disabled, false);
+    await recommendationButton(dialog).props.onClick({ stopPropagation() {} });
+    assert.deepEqual(
+      dialog.requests[0].body,
+      options.historyIds ? { history_ids: options.historyIds } : { paths: options.paths },
+    );
+  }
+});
+
+test('invalid multi-selection disables recommendation, while an empty rule table keeps a clickable reminder', async (t) => {
+  for (const options of [
+    { paths: ['/one/E01.mkv', '/two/E02.mkv'] },
+    {
+      paths: ['/one', '/one/E02.mkv'],
+      items: [
+        { path: '/one', type: 'dir' },
+        { path: '/one/E02.mkv', type: 'file' },
+      ],
+    },
+  ]) {
+    const dialog = openDialog(t, { media_type: 'tv' }, options);
+    assert.equal(recommendationButton(dialog).props.disabled, true);
+    await recommendationButton(dialog).props.onClick({ stopPropagation() {} });
+    assert.equal(dialog.requests.length, 0);
+  }
+  const dialog = openDialog(
+    t,
+    { media_type: 'tv' },
+    { api: async () => ({ revision: 0, rules: [] }) },
+  );
+  await dialog.mount();
+  await vue.nextTick();
+  assert.equal(recommendationButton(dialog).props.disabled, false);
+  const count = dialog.requests.length;
+  await recommendationButton(dialog).props.onClick({ stopPropagation() {} });
+  assert.equal(
+    dialog.requests.length,
+    count,
+    'empty table reminder does not send a recommendation',
+  );
+  assert.ok(dialog.toasts.includes('手动整理集数定位规则为空，请先前往设置的规则页填写'));
+  assert.ok(dialog.nodes().some((node) => renderedText(node).includes('手动整理集数定位规则为空')));
+});
+
+test('recommendation errors preserve existing format; pending responses never overwrite later user edits', async (t) => {
+  const failed = openDialog(
+    t,
+    { media_type: 'tv' },
+    {
+      api: async () => {
+        throw new Error('规则未通过附加文件兼容验证');
+      },
+    },
+  );
+  field(failed, '集数定位').props['onUpdate:modelValue']('keep-{ep}');
+  await recommendationButton(failed).props.onClick({ stopPropagation() {} });
+  assert.equal(field(failed, '集数定位').props.modelValue, 'keep-{ep}');
+  assert.equal(field(failed, '集数定位').props.error, true);
+  assert.match(field(failed, '集数定位').props.hint, /附加文件兼容/);
+  let finish;
+  const dialog = openDialog(
+    t,
+    { media_type: 'tv' },
+    {
+      api: () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    },
+  );
+  const pending = recommendationButton(dialog).props.onClick({ stopPropagation() {} });
+  await vue.nextTick();
+  assert.equal(recommendationButton(dialog).props.loading, true);
+  assert.equal(dialog.previewButton().props.disabled, true);
+  await dialog.preview();
+  await recommendationButton(dialog).props.onClick({ stopPropagation() {} });
+  assert.equal(dialog.requests.length, 1);
+  field(dialog, '集数定位').props['onUpdate:modelValue']('edited-{ep}');
+  finish(recommended);
+  await pending;
+  assert.equal(field(dialog, '集数定位').props.modelValue, 'edited-{ep}');
+  assert.equal(dialog.toasts.length, 0);
+});
+
+const groupFixtures = [
+  { id: 'group-a', name: '播出顺序', group_count: 3, episode_count: 24 },
+  { id: 'group-b', name: 'DVD顺序', group_count: 2, episode_count: 24 },
+];
+const flushReads = async () => {
+  await new Promise((resolve) => setImmediate(resolve));
+  await vue.nextTick();
+};
+
+test('episode groups use the real catalog GET, default selection and independent manual payload', async (t) => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const dialog = openDialog(
+    t,
+    {
+      media_type: 'tv',
+      tmdb_id: 123,
+      episode_group: 'historical-group',
+      target_path: '/library/custom',
+    },
+    {
+      historyIds: ['history-one'],
+      api: async (path) =>
+        path.startsWith('/catalog/episode-groups?') ? groupFixtures : { items: [], total: 0 },
+    },
+  );
+  assert.equal(
+    field(dialog, '剧集组').props.modelValue,
+    null,
+    'no implicit inheritance from history defaults',
+  );
+  assert.equal(field(dialog, '剧集组').props.disabled, false);
+  t.mock.timers.tick(399);
+  assert.equal(dialog.requests.length, 0);
+  t.mock.timers.tick(1);
+  assert.equal(dialog.requests[0].path, '/catalog/episode-groups?id=123');
+  assert.equal(dialog.requests[0].method, 'GET');
+  await flushReads();
+  const options = field(dialog, '剧集组').props.items;
+  assert.deepEqual(options[0], {
+    title: '不指定剧集组',
+    subtitle: '使用 TMDB 默认季集排序',
+    value: null,
+  });
+  assert.deepEqual(options[1], { title: '播出顺序', subtitle: '3 季 • 24 集', value: 'group-a' });
+  assert.deepEqual(field(dialog, '剧集组').props['item-props'](options[1]), {
+    title: '播出顺序',
+    subtitle: '3 季 • 24 集',
+  });
+  await dialog.select(1, 'copy');
+  await dialog.toggle(0, true);
+  await dialog.toggle(1, true);
+  const before = await dialog.preview();
+  assert.equal(before.episode_group, null);
+  assert.equal(before.from_history, false);
+  field(dialog, '剧集组').props['onUpdate:modelValue']('group-a');
+  await vue.nextTick();
+  const after = await dialog.preview();
+  assert.deepEqual(after, { ...before, episode_group: 'group-a' });
+  field(dialog, '剧集组').props['onUpdate:modelValue'](null);
+  await vue.nextTick();
+  assert.deepEqual(await dialog.preview(), before);
+});
+
+test('changing TMDB identity clears episode groups and isolates a superseded response', async (t) => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const finishes = new Map();
+  const dialog = openDialog(
+    t,
+    { media_type: 'tv', tmdb_id: 123 },
+    {
+      api: (path) =>
+        path.startsWith('/catalog/episode-groups?')
+          ? new Promise((resolve) => finishes.set(path, resolve))
+          : Promise.resolve({ items: [], total: 0 }),
+    },
+  );
+  t.mock.timers.tick(400);
+  assert.equal(field(dialog, '剧集组').props.loading, true);
+  field(dialog, 'TheMovieDb编号').props['onUpdate:modelValue']('456');
+  await vue.nextTick();
+  assert.equal(dialog.requests[0].signal.aborted, true);
+  assert.equal(field(dialog, '剧集组').props.modelValue, null);
+  assert.equal(field(dialog, '剧集组').props.items.length, 1);
+  t.mock.timers.tick(400);
+  finishes.get('/catalog/episode-groups?id=123')([{ ...groupFixtures[0], id: 'stale-group' }]);
+  await flushReads();
+  assert.equal(field(dialog, '剧集组').props.items.length, 1);
+  assert.equal(
+    field(dialog, '剧集组').props.loading,
+    true,
+    'old finally must not clear new loading',
+  );
+  finishes.get('/catalog/episode-groups?id=456')(groupFixtures);
+  await flushReads();
+  assert.equal(field(dialog, '剧集组').props.loading, false);
+  field(dialog, '剧集组').props['onUpdate:modelValue']('group-b');
+  await vue.nextTick();
+  for (const invalid of ['', '0', '-1', '1.5', 'not-a-number']) {
+    field(dialog, 'TheMovieDb编号').props['onUpdate:modelValue'](invalid);
+    await vue.nextTick();
+    t.mock.timers.tick(400);
+    assert.equal(field(dialog, '剧集组').props.disabled, true);
+    assert.equal(field(dialog, '剧集组').props.modelValue, null);
+  }
+  assert.equal(
+    dialog.requests.filter((r) => r.path.startsWith('/catalog/episode-groups?')).length,
+    2,
+  );
+  await dialog.select(2, 'movie');
+  assert.equal(field(dialog, '剧集组'), undefined);
+  assert.equal((await dialog.preview()).episode_group, undefined);
+  await dialog.select(2, 'tv');
+  assert.equal(field(dialog, '剧集组').props.disabled, true);
+  assert.equal(field(dialog, '剧集组').props.modelValue, null);
+});
+
+test('episode group lookup errors retain the form and unmount aborts the active read', async (t) => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  let finish;
+  const dialog = openDialog(
+    t,
+    { media_type: 'tv', tmdb_id: 123, target_path: '/library/kept' },
+    {
+      api: async (path) => {
+        if (path.endsWith('id=123')) throw new Error('剧集组查询失败');
+        if (path.endsWith('id=456'))
+          return new Promise((resolve) => {
+            finish = resolve;
+          });
+        return { items: [], total: 0 };
+      },
+    },
+  );
+  t.mock.timers.tick(400);
+  await flushReads();
+  assert.equal(field(dialog, '剧集组').props.loading, false);
+  assert.equal(field(dialog, '剧集组').props.error, true);
+  assert.match(field(dialog, '剧集组').props.hint, /剧集组查询失败/);
+  assert.equal(dialog.pathInput().props['model-value'], '/library/kept');
+  assert.equal((await dialog.preview()).episode_group, null);
+  field(dialog, 'TheMovieDb编号').props['onUpdate:modelValue']('456');
+  await vue.nextTick();
+  t.mock.timers.tick(400);
+  const request = dialog.requests.at(-1);
+  dialog.unmount();
+  assert.equal(request.signal.aborted, true);
+  finish(groupFixtures);
+  await flushReads();
+  assert.equal(field(dialog, '剧集组').props.items.length, 1);
+});
+
+test('a nonempty disabled rule table permits automatic fallback and keeps all other drafts', async (t) => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  let failRecommendation = false;
+  const automatic = {
+    ...recommended,
+    rule_name: '智能分析',
+    pattern: '',
+    episode_format: 'Show.E{ep}.{a}',
+    majority_count: 2,
+    confidence: 'low',
+    size_filter_relaxed: true,
+    native_verified_count: 1,
+    native_fallback_count: 1,
+    reason: 'small_files_fallback',
+    reasons: ['small_files_fallback', 'native_meta_fallback'],
+    message: '已放宽体积限制智能生成模板（仅供参考）',
+  };
+  const dialog = openDialog(
+    t,
+    { media_type: 'tv', tmdb_id: 123, target_path: '/library/kept' },
+    {
+      api: async (path) => {
+        if (path.endsWith('/rules')) return { rules: [{ enabled: false }] };
+        if (path.startsWith('/catalog/episode-groups?')) return groupFixtures;
+        if (path.endsWith('/recommend')) {
+          if (failRecommendation)
+            throw new Error('样本命名与原生识别结果冲突，建议补充集数定位规则');
+          return automatic;
+        }
+        return { items: [], total: 0 };
+      },
+    },
+  );
+  await dialog.mount();
+  t.mock.timers.tick(400);
+  await flushReads();
+  field(dialog, '剧集组').props['onUpdate:modelValue']('group-b');
+  await dialog.select(1, 'hardlink');
+  await dialog.toggle(0, true);
+  field(dialog, '集数偏移').props['onUpdate:modelValue']('-2');
+  await vue.nextTick();
+  const before = await dialog.preview();
+  assert.equal(recommendationButton(dialog).props.disabled, false);
+  await recommendationButton(dialog).props.onClick({ stopPropagation() {} });
+  assert.deepEqual(await dialog.preview(), { ...before, episode_format: automatic.episode_format });
+  const hint = field(dialog, '集数定位').props.hint;
+  for (const value of [
+    '智能分析',
+    'Show.E01.mkv',
+    '置信度：低',
+    '多数派 2/3',
+    '原生验证 1 项',
+    '原生回退 1 项',
+    automatic.message,
+  ])
+    assert.ok(hint.includes(value), value);
+  failRecommendation = true;
+  field(dialog, '集数定位').props['onUpdate:modelValue']('manual-{ep}');
+  await recommendationButton(dialog).props.onClick({ stopPropagation() {} });
+  assert.equal(field(dialog, '集数定位').props.modelValue, 'manual-{ep}');
+  assert.match(field(dialog, '集数定位').props.hint, /原生识别结果冲突/);
+  assert.equal(field(dialog, '剧集组').props.modelValue, 'group-b');
+  assert.equal(dialog.pathInput().props['model-value'], '/library/kept');
 });

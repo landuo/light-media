@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
-	"slices"
 	"strconv"
 	"strings"
 
@@ -22,6 +21,8 @@ type transferHistoryItem struct {
 	JobID                string        `json:"job_id"`
 	JobState             string        `json:"job_state"`
 	Media                catalog.Media `json:"media"`
+	Category             string        `json:"category,omitempty"`
+	EpisodeGroup         string        `json:"episode_group,omitempty"`
 	Season               int           `json:"season"`
 	Episodes             []int         `json:"episodes"`
 	Part                 string        `json:"part,omitempty"`
@@ -145,20 +146,22 @@ const transferHistoryColumns = transferHistoryJSON + `,h.job_id,h.job_state,h.jo
 const transferHistoryHydrate = ` JOIN records hp ON hp.kind='import_plan' AND hp.id=h.plan_id
  LEFT JOIN records hc ON hc.kind='original_transfer_callback' AND hc.id=h.callback_id`
 
+// Current histories carry their own compact snapshots. The execution join is
+// retained only for migration and exact execution/queue lookups.
+const transferHistoryStoredColumns = `h.plan_json,h.file_json,h.job_id,h.job_state,h.job_error,h.updated_at,h.status,h.history_id,h.history_created_at,h.resource_source,h.execution_key`
+const transferHistoryStoredSelect = `SELECT ` + transferHistoryStoredColumns + ` FROM history h`
 const transferHistorySelect = `SELECT ` + transferHistoryColumns + ` FROM history h` + transferHistoryHydrate
 
 const transferHistoryOrder = ` ORDER BY h.updated_at DESC,h.execution_key DESC,h.history_id`
 
-// Restrict both kinds of attempt before ranking. The queue worker already
-// knows the source and only needs its current history, including older retries.
-const transferHistoryBySource = transferHistoryJobsCTE +
-	transferHistoryExecutedFiles + ` AND ` + transferHistoryPlanSource + `=?1` +
-	transferHistoryAuxiliaryFiles + ` AND json_extract(cb.payload,'$.file.source')=?1` +
-	transferHistoryAttempts + transferHistoryRanked + transferHistorySelect
-
-const transferHistoryBySourceFile = transferHistoryBySource + ` WHERE EXISTS (
- SELECT 1 FROM attempts WHERE execution_file_id=?2
-)`
+// MP reuses the destination only after a successful move. All history entry
+// points must resolve the same source, including capability checks and queues.
+func (item transferHistoryItem) organizeSource() string {
+	if item.Status == "success" && item.Mode == "move" && item.Target != "" {
+		return item.Target
+	}
+	return item.Source
+}
 
 func (item transferHistoryItem) executionFileID() string {
 	if item.FileID != "" {
@@ -260,8 +263,10 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 		args = append(args, status)
 	}
 	if query != "" {
-		predicates = append(predicates, `lower(COALESCE(title,'')||' '||COALESCE(source_path,'')||' '||COALESCE(target_path,'')) LIKE lower(?) ESCAPE '\'`)
-		args = append(args, pattern)
+		predicates = append(predicates, `(lower(COALESCE(title,'')) LIKE lower(?) ESCAPE '\'
+		 OR lower(COALESCE(source_path,'')) LIKE lower(?) ESCAPE '\'
+		 OR lower(COALESCE(target_path,'')) LIKE lower(?) ESCAPE '\')`)
+		args = append(args, pattern, pattern, pattern)
 	}
 	where := ""
 	if len(predicates) > 0 {
@@ -299,17 +304,6 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 	if e = tx.Commit(); e != nil {
 		return nil, e
 	}
-	// Keep the page order without sending the hydrated documents through
-	// another SQLite sorter, even when the caller requests 1,000 rows.
-	slices.SortFunc(items, func(a, b transferHistoryItem) int {
-		if order := strings.Compare(b.UpdatedAt, a.UpdatedAt); order != 0 {
-			return order
-		}
-		if order := strings.Compare(b.ExecutionKey, a.ExecutionKey); order != 0 {
-			return order
-		}
-		return strings.Compare(a.ID, b.ID)
-	})
 	// The page only displays durable history. Do not walk NAS directories or
 	// revalidate execution permissions for every visible row (and every poll).
 	// Opt-in preserves the checked-capability contract of existing API clients;
@@ -333,15 +327,10 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 	return map[string]any{"items": items, "total": total, "page": page, "page_size": size}, nil
 }
 
-// LIMIT is applied to the scalar projection before hydrating plan JSON.
-// COUNT runs separately in the same snapshot, avoiding a window-function
-// sorter over every row just to return the first page. CROSS JOIN fixes the
-// outer loop to the bounded page; otherwise SQLite can scan every import plan
-// and probe an automatic index on the page, despite the LIMIT.
+// Current rows own their display snapshots. COUNT and this indexed page query
+// share a read snapshot; neither expands execution plans or writes history.
 func transferHistoryPageSQL(where string) string {
-	return `WITH page AS MATERIALIZED (SELECT h.* FROM transfer_history_current h` + where + transferHistoryOrder +
-		` LIMIT ? OFFSET ?) SELECT ` + transferHistoryColumns + ` FROM page h` +
-		strings.Replace(transferHistoryHydrate, " JOIN records hp", " CROSS JOIN records hp", 1)
+	return `SELECT ` + transferHistoryStoredColumns + ` FROM transfer_history_current h` + where + transferHistoryOrder + ` LIMIT ? OFFSET ?`
 }
 
 func scanTransferHistory(row interface{ Scan(...any) error }, extra ...any) (transferHistoryItem, error) {
@@ -372,10 +361,11 @@ func scanTransferHistory(row interface{ Scan(...any) error }, extra ...any) (tra
 	if message == "" && status == "failed" {
 		message = "整理未完成，请查看关联任务"
 	}
-	return transferHistoryItem{ID: historyID, FileID: file.ID, ResourceSource: resourceSource, ExecutionKey: executionKey, PlanID: plan.ID, WorkflowID: plan.WorkflowID, JobID: jobID, JobState: jobState, Media: plan.Media, Season: file.Season, Episodes: file.Episodes, Part: file.Part, Source: file.Source, Target: file.Target, Mode: mode, Size: file.Size, Status: status, FileStatus: file.Status, Error: message, CreatedAt: createdAt, UpdatedAt: updated, CanRetry: status == "failed" && jobState != "running" && jobState != "queued" && jobState != "retry_wait" && jobState != "waiting_paused" && file.Status != "blocked"}, nil
+	file = file.presentationFile()
+	return transferHistoryItem{EpisodeGroup: plan.EpisodeGroup, ID: historyID, FileID: file.ID, ResourceSource: resourceSource, ExecutionKey: executionKey, PlanID: plan.ID, WorkflowID: plan.WorkflowID, JobID: jobID, JobState: jobState, Media: plan.Media, Category: plan.Category, Season: file.Season, Episodes: file.Episodes, Part: file.Part, Source: file.Source, Target: file.Target, Mode: mode, Size: file.Size, Status: status, FileStatus: file.Status, Error: message, CreatedAt: createdAt, UpdatedAt: updated, CanRetry: status == "failed" && jobState != "running" && jobState != "queued" && jobState != "retry_wait" && jobState != "waiting_paused" && file.Status != "blocked"}, nil
 }
 func (a *App) transferHistoryItem(ctx context.Context, id string) (transferHistoryItem, error) {
-	item, e := a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedCTE+transferHistorySelect+` WHERE h.history_id=? OR h.resource_source=(SELECT resource_source FROM attempts WHERE execution_file_id=? LIMIT 1) LIMIT 1`, id, id)
+	item, e := a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedCTE+transferHistoryStoredSelect+` WHERE h.history_id=? OR h.resource_source=(SELECT resource_source FROM attempts WHERE execution_file_id=? LIMIT 1) LIMIT 1`, id, id)
 	if e != nil {
 		return item, e
 	}
@@ -416,8 +406,8 @@ func (a *App) transferHistorySelections(ctx context.Context, ids []string) ([]tr
  SELECT CAST(requested.key AS INTEGER) AS position,
  (SELECT resource_source FROM attempts WHERE execution_file_id=requested.value LIMIT 1) AS source
  FROM json_each(?) requested
-) SELECT `+transferHistoryColumns+`,selected.position FROM history h
- JOIN selected ON selected.source=h.resource_source`+transferHistoryHydrate, string(raw))
+) SELECT `+transferHistoryStoredColumns+`,selected.position FROM history h
+ JOIN selected ON selected.source=h.resource_source`, string(raw))
 	if err != nil {
 		return nil, err
 	}
@@ -454,8 +444,9 @@ func (a *App) transferHistoryExecution(ctx context.Context, fileID string) (tran
 	return a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedBase+`SELECT `+transferHistoryJSON+`,h.job_id,h.job_state,h.job_error,h.updated_at,h.status,h.execution_file_id,h.plan_created_at,h.resource_source,h.execution_key FROM attempts h`+transferHistoryHydrate+` WHERE h.execution_file_id=? LIMIT 1`, fileID)
 }
 func (a *App) transferHistoryCapabilities(ctx context.Context, item *transferHistoryItem) {
-	_, e := snapshotTransferPath(item.Source)
-	item.CanRecognize = e == nil && a.sourceAllowed(item.Source)
+	path := item.organizeSource()
+	_, e := snapshotTransferPath(path)
+	item.CanRecognize = e == nil && a.importSourceAllowed(path, true)
 	if !item.CanRecognize {
 		item.CanRetry = false
 		return
