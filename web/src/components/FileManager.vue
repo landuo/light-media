@@ -477,6 +477,9 @@ onUnmounted(() => {
           />
           <FileManagerIcon v-else :name="detailFile.video ? 'video' : 'file'" />
           <h2>{{ detailFile.name }}</h2>
+          <p v-if="detailFile.softlink" role="status">
+            {{ detailFile.broken ? '软链接 · 引用文件缺失或已变化' : '软链接' }}
+          </p>
           <p>
             大小：{{ bytes(detailFile.size || 0) }}<br />修改时间：{{
               date(detailFile.modified || '')
@@ -525,6 +528,9 @@ onUnmounted(() => {
                 >
                   <strong>{{ item.name }}</strong
                   ><small v-if="item.type === 'file' && item.size">{{ bytes(item.size) }}</small>
+                  <small v-if="item.softlink">{{
+                    item.broken ? '软链接 · 引用失效' : '软链接'
+                  }}</small>
                 </button>
                 <div
                   v-if="

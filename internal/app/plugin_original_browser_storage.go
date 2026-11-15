@@ -141,8 +141,10 @@ func (a *App) originalBrowserStorageEntryWithProtection(ctx context.Context, dir
 	// still require the real guarded file and their current inode snapshot.
 	if stat, err := os.Lstat(path); err != nil {
 		entry.Protected = "本地文件当前不可访问"
-	} else if stat.Mode()&os.ModeSymlink != 0 || !stat.Mode().IsRegular() && !stat.IsDir() {
-		entry.Protected = "符号链接或特殊文件禁止操作"
+	} else if stat.Mode()&os.ModeSymlink != 0 {
+		a.browserProjectSoftlink(ctx, &entry, protection)
+	} else if !stat.Mode().IsRegular() && !stat.IsDir() {
+		entry.Type, entry.Protected = "special", "特殊文件禁止操作"
 	}
 	return entry, nil
 }

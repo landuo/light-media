@@ -1,0 +1,99 @@
+{
+  "round": 21,
+  "scope": "recognition source setting, manual provider ids, directory rule softlink, automatic monitor/downloader softlink publication",
+  "directory_auto": {
+    "log": "work/history-mp-alignment-20261115/round21-directory-auto-final.log",
+    "seconds": 5.079,
+    "cases": [
+      "downloader video+subtitle -> 2 real softlink SDK calls and 2 histories",
+      "bluray monitor -> 3 leaf softlinks and 1 history",
+      "qBittorrent readonly protocol gate: incomplete not queued, complete imported",
+      "repeat poll does not duplicate"
+    ],
+    "disabled_and_none": {
+      "tasks": 0
+    }
+  },
+  "directory_regression": {
+    "log": "work/history-mp-alignment-20261115/round21-directory-regression-final.log",
+    "seconds": 20.315,
+    "prefixes": [
+      "TestDirectory",
+      "TestAutomaticDisc",
+      "TestPhysicalDirector",
+      "TestSharedDirectoryMonitor",
+      "TestSourceDirectory"
+    ]
+  },
+  "transfer_types": {
+    "log": "work/history-mp-alignment-20261115/round21-transfer-types.log",
+    "seconds": 7.02,
+    "native": {
+      "link": "硬链接",
+      "softlink": "软链接",
+      "copy": "复制",
+      "move": "移动",
+      "auto": "自动"
+    },
+    "moviepilot_local": {
+      "copy": "复制",
+      "move": "移动",
+      "link": "硬链接",
+      "softlink": "软链接"
+    }
+  },
+  "provider_http": {
+    "log": "work/history-mp-alignment-20261115/round21-provider-http.log",
+    "tests": [
+      "TestMediaRecognitionSourceSettingsPersistenceAndHostRead",
+      "TestManualOrganizeExplicitProviderIDsOrdinaryHTTP",
+      "TestManualOrganizeGlobalSourceAutomaticRecognitionHTTP",
+      "TestHistoryProviderIdentityOrdinaryHTTP"
+    ],
+    "sources": [
+      "douban",
+      "bangumi"
+    ],
+    "global_source_persisted": "douban"
+  },
+  "integration": {
+    "log": "work/history-mp-alignment-20261115/round21-integration-final2.log",
+    "compile": "PASS",
+    "linux_amd64_crosscompile": "PASS",
+    "diff_check": "PASS",
+    "seconds": 355.922
+  },
+  "web": {
+    "tests": 641,
+    "pass": 641,
+    "fail": 0,
+    "build": "PASS"
+  },
+  "browser": {
+    "instance": "http://127.0.0.1:18081",
+    "history_reorg": {
+      "before_after": "work/history-mp-alignment-20261115/round21-browser-after.json",
+      "stable_history_id": "file_3U-UmkBOXYehPBft8GnsF96H",
+      "source_provider": "douban:701",
+      "preview_does_not_mutate": true
+    },
+    "directory_rule": {
+      "mode": "softlink",
+      "monitor_after_revert": "none",
+      "screenshot": "work/history-mp-alignment-20261115/round21-directory-softlink-ui.png"
+    },
+    "settings": {
+      "recognition_source": "douban",
+      "effective_recognition_source": "douban",
+      "auto_import_mode": "hardlink"
+    }
+  },
+  "not_claimed": [
+    "NAS or cloud storage",
+    "production media",
+    "managed existing root cross-asset transfer",
+    "external shared root ownership adoption",
+    "whole objective complete"
+  ],
+  "whole_objective_complete": false
+}

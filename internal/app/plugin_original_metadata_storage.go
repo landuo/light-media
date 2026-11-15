@@ -78,6 +78,18 @@ func originalMetadataStorageItem(raw json.RawMessage) (map[string]any, error) {
 
 func (a *App) originalMetadataFileItemResult(ctx context.Context, storage, path string) (json.RawMessage, error) {
 	return a.originalMetadataStorage(ctx, "get_file_item", map[string]any{"storage": storage, "path": filepath.Clean(path)}, func() (any, error) {
+		if storage == "local" {
+			owned, ok, err := a.ownedSoftlinkEntry(ctx, path, false)
+			if err != nil {
+				return nil, err
+			}
+			if ok {
+				if owned.Softlink.Directory != nil {
+					return a.originalMetadataLocalItem(storage, path)
+				}
+				return softlinkTargetFileItemSnapshot(path, owned.Softlink.SourceSnapshot)
+			}
+		}
 		return a.originalMetadataLocalItem(storage, path)
 	})
 }
@@ -142,7 +154,34 @@ func (a *App) originalMetadataNativeList(ctx context.Context, item map[string]an
 	// filesystem's iteration order in each pass (SystemUtils helpers).
 	for _, directory := range []bool{true, false} {
 		for _, entry := range entries {
-			if entry.Type()&os.ModeSymlink != 0 || entry.IsDir() != directory || directory && (strings.HasPrefix(entry.Name(), ".") || entry.Name() == "@eaDir") || browserInternal(filepath.Join(path, entry.Name())) {
+			if entry.Type()&os.ModeSymlink != 0 {
+				if directory {
+					continue
+				}
+				path := filepath.Join(path, entry.Name())
+				owned, ok, e := a.ownedSoftlinkEntry(ctx, path, false)
+				if e != nil {
+					return nil, e
+				}
+				if !ok {
+					continue
+				}
+				item, e := softlinkTargetFileItemSnapshot(path, owned.Softlink.SourceSnapshot)
+				if e != nil {
+					return nil, e
+				}
+				raw, e := json.Marshal(item)
+				if e != nil {
+					return nil, e
+				}
+				var fields map[string]any
+				if e = json.Unmarshal(raw, &fields); e != nil {
+					return nil, e
+				}
+				out = append(out, fields)
+				continue
+			}
+			if entry.IsDir() != directory || directory && (strings.HasPrefix(entry.Name(), ".") || entry.Name() == "@eaDir") || browserInternal(filepath.Join(path, entry.Name())) {
 				continue
 			}
 			child, err := a.originalMetadataLocalItem("local", filepath.Join(path, entry.Name()))

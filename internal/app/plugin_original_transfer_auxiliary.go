@@ -24,6 +24,9 @@ func (a *App) publishOriginalTransferSide(ctx context.Context, job Job, plan *Im
 	side := meta.Sidecars[primary.ID][sideIndex]
 	extra := originalTransferSideFile(primary, side, sideIndex)
 	if side.Original != nil {
+		if err := side.Original.setCategory(plan.Category); err != nil {
+			return importReceipt{}, err
+		}
 		ctx = context.WithValue(ctx, originalTransferWriteContextKey{}, &originalTransferWriteContext{File: extra, Source: *side.Original, Media: plan.Media})
 		source, err := a.originalSelectTransferStorage(ctx)
 		if err != nil {

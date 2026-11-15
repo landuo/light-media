@@ -23,6 +23,7 @@ type catalogEpisodeGroup struct {
 }
 
 type catalogGroupEpisode struct {
+	ID            int64   `json:"id,omitempty"`
 	SeasonNumber  *int    `json:"season_number"`
 	EpisodeNumber int     `json:"episode_number"`
 	Name          string  `json:"name"`

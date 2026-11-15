@@ -187,7 +187,7 @@ func (s completedUnscopedScope) matches(plan ImportPlan) bool {
 	}
 	for i, f := range plan.Files {
 		scoped := s.Files[i]
-		if f.Source != scoped.Path || f.Size != scoped.Size || f.Season != scoped.Season || !slices.Equal(f.Episodes, scoped.Episodes) {
+		if f.Source != scoped.Path || f.Size != scoped.Size || f.Season != scoped.Season || !slices.Equal(f.Episodes, scoped.Episodes) || !sameCanonicalSlots(f.inventorySlots(), canonicalSlots(canonicalScopes(scoped.Season, scoped.Episodes, nil))) {
 			return false
 		}
 	}

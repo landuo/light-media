@@ -16,16 +16,19 @@ import (
 )
 
 type assetRemovalFile struct {
-	DirectoryRetained       bool           `json:"directory_retained,omitempty"`
-	DirectoryParentOnly     bool           `json:"directory_parent_only,omitempty"`
-	DirectoryRemovalStarted bool           `json:"directory_removal_started,omitempty"`
-	SourceOperation         string         `json:"source_operation,omitempty"`
-	Path                    string         `json:"path"`
-	Snapshot                importSnapshot `json:"snapshot"`
-	Kind                    string         `json:"kind"`
-	Deleted                 bool           `json:"deleted"`
-	Quarantine              string         `json:"quarantine,omitempty"`
-	Quarantined             bool           `json:"quarantined,omitempty"`
+	SharedDirectory         *importSharedDirectoryProof  `json:"shared_directory,omitempty"`
+	SharedMembers           map[string]*assetRemovalFile `json:"shared_members,omitempty"`
+	Softlink                *importSoftlinkProof         `json:"softlink,omitempty"`
+	DirectoryRetained       bool                         `json:"directory_retained,omitempty"`
+	DirectoryParentOnly     bool                         `json:"directory_parent_only,omitempty"`
+	DirectoryRemovalStarted bool                         `json:"directory_removal_started,omitempty"`
+	SourceOperation         string                       `json:"source_operation,omitempty"`
+	Path                    string                       `json:"path"`
+	Snapshot                importSnapshot               `json:"snapshot"`
+	Kind                    string                       `json:"kind"`
+	Deleted                 bool                         `json:"deleted"`
+	Quarantine              string                       `json:"quarantine,omitempty"`
+	Quarantined             bool                         `json:"quarantined,omitempty"`
 }
 type assetRemovalPreview struct {
 	ID       string             `json:"preview_id"`
@@ -70,6 +73,7 @@ func (a *App) assetAPI(w http.ResponseWriter, r *http.Request, p string) (any, e
 		preview.Files = append([]assetRemovalFile(nil), preview.Files...)
 		for index := range preview.Files {
 			preview.Files[index].SourceOperation = ""
+			preview.Files[index].SharedMembers = nil
 		}
 		return preview, err
 	case "remove":
@@ -168,14 +172,14 @@ func (a *App) previewAssetRemoval(ctx context.Context, asset Asset) (assetRemova
 		if file.AssetID != asset.ID || file.RootID != asset.RootID || !within(root.Path, file.Path) || file.Path == asset.SourcePath {
 			return preview, bad("REVIEW_MANAGED_FILE", "自管文件的路径或归属不一致")
 		}
-		actual, err := snapshotPath(file.Path)
+		actual, err := snapshotOwnedTransferPath(file.Path, file.Snapshot, file.Softlink, false, file.SharedDirectory)
 		if os.IsNotExist(err) {
 			continue
 		}
 		if err != nil || actual != file.Snapshot {
 			return preview, bad("REVIEW_MANAGED_FILE", "文件已被外部修改，不能纳入自动删除")
 		}
-		preview.Files = append(preview.Files, assetRemovalFile{Path: file.Path, Snapshot: actual, Kind: file.Kind})
+		preview.Files = append(preview.Files, assetRemovalFile{Path: file.Path, Snapshot: actual, Kind: file.Kind, Softlink: file.Softlink, SharedDirectory: file.SharedDirectory})
 	}
 	if err = a.Store.Put(ctx, "removal_preview", preview.ID, preview); err != nil {
 		return preview, err
@@ -232,11 +236,25 @@ func (a *App) removeAssetLocked(ctx context.Context, assetID, previewID string, 
 				return bad("REVIEW_REMOVE_PATH", "删除路径无效")
 			}
 			var owned managedFile
-			if err = a.Store.Get(ctx, "managed_file", tokenHash(file.Path), &owned); err != nil || owned.AssetID != asset.ID || owned.RootID != asset.RootID || owned.Snapshot != file.Snapshot {
+			if err = a.Store.Get(ctx, "managed_file", tokenHash(file.Path), &owned); err != nil || owned.AssetID != asset.ID || owned.RootID != asset.RootID || owned.Snapshot != file.Snapshot || !sameLifecycleSoftlinkProof(owned.Softlink, file.Softlink, owned.SharedDirectory, file.SharedDirectory) {
 				return bad("REVIEW_MANAGED_FILE", "文件所有权在预览后发生变化")
 			}
 			if file.Quarantine == "" {
 				file.Quarantine = ".light-media-remove-" + tokenHash(preview.ID + file.Path)[:32] + ".part"
+			}
+			if file.Softlink != nil && file.SourceOperation != "" {
+				parent, e := importDir(filepath.Dir(file.Path), false)
+				if e != nil {
+					return e
+				}
+				e = a.originalHistoryStorageDelete(ctx, file, parent, func() error { return a.Store.Put(ctx, "removal_preview", preview.ID, preview) }, nil)
+				parent.Close()
+				if e != nil {
+					return e
+				}
+				if file.Deleted {
+					continue
+				}
 			}
 			if _, e := removalLocation(*file); e != nil {
 				return e
@@ -254,6 +272,12 @@ func (a *App) removeAssetLocked(ctx context.Context, assetID, previewID string, 
 			if ctx.Err() != nil {
 				return ctx.Err()
 			}
+			if file.SharedDirectory != nil {
+				if err := a.removeSharedDirectoryMembers(ctx, file, func() error { return a.Store.Put(ctx, "removal_preview", preview.ID, preview) }); err != nil {
+					return err
+				}
+				continue
+			}
 			parent, err := importDir(filepath.Dir(file.Path), false)
 			if err != nil {
 				return err
@@ -263,13 +287,33 @@ func (a *App) removeAssetLocked(ctx context.Context, assetID, previewID string, 
 				parent.Close()
 				return err
 			}
-			if location == "source" {
+			if location == "source" && file.Softlink != nil {
+				frozen, e := a.assetSoftlinkDeleteItem(ctx, asset.ID, file.Path)
+				if e != nil {
+					parent.Close()
+					return e
+				}
+				err = a.originalHistoryStorageDelete(ctx, file, parent, func() error { return a.Store.Put(ctx, "removal_preview", preview.ID, preview) }, frozen)
+				if err != nil {
+					parent.Close()
+					return err
+				}
+				location, err = removalLocation(*file)
+				if err != nil {
+					parent.Close()
+					return err
+				}
+				if location == "source" {
+					parent.Close()
+					return bad("PLUGIN_FILE_OPERATION_REJECTED", "存储扩展保留了受管目标")
+				}
+			} else if location == "source" {
 				err = importRenameExclusive(int(parent.Fd()), filepath.Base(file.Path), file.Quarantine)
 				if err != nil {
 					parent.Close()
 					return bad("REVIEW_MANAGED_FILE", "无法独占暂存待删除文件，已停止")
 				}
-				actual, inspectErr := snapshotPath(filepath.Join(filepath.Dir(file.Path), file.Quarantine))
+				actual, inspectErr := snapshotOwnedTransferPath(filepath.Join(filepath.Dir(file.Path), file.Quarantine), file.Snapshot, file.Softlink, false, file.SharedDirectory)
 				if inspectErr != nil || actual != file.Snapshot {
 					_ = importRenameExclusive(int(parent.Fd()), file.Quarantine, filepath.Base(file.Path))
 					_ = parent.Sync()
@@ -294,7 +338,11 @@ func (a *App) removeAssetLocked(ctx context.Context, assetID, previewID string, 
 				}
 			}
 			if location != "gone" {
-				err = unix.Unlinkat(int(parent.Fd()), file.Quarantine, 0)
+				if file.Softlink != nil {
+					err = a.removeHistoryQuarantine(ctx, file, parent, func() error { return a.Store.Put(ctx, "removal_preview", preview.ID, preview) })
+				} else {
+					err = unix.Unlinkat(int(parent.Fd()), file.Quarantine, 0)
+				}
 			}
 			if err == nil {
 				err = parent.Sync()
@@ -325,9 +373,22 @@ func (a *App) removeAssetLocked(ctx context.Context, assetID, previewID string, 
 	if _, err = tx.ExecContext(ctx, `DELETE FROM asset_slots WHERE asset_id=?`, asset.ID); err != nil {
 		return err
 	}
+	for _, file := range preview.Files {
+		if file.SharedDirectory == nil || !file.Deleted {
+			continue
+		}
+		var raw []byte
+		var owned managedFile
+		if e := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='managed_file' AND id=?`, tokenHash(file.Path)).Scan(&raw); e != nil || json.Unmarshal(raw, &owned) != nil || owned.AssetID != asset.ID || owned.Snapshot != file.Snapshot || !sameSharedDirectoryProof(owned.SharedDirectory, file.SharedDirectory) {
+			return bad("REVIEW_MANAGED_FILE", "共享目录清理提交时归属已变化")
+		}
+		if _, e := tx.ExecContext(ctx, `DELETE FROM records WHERE kind='managed_file' AND id=? AND payload=?`, tokenHash(file.Path), raw); e != nil {
+			return e
+		}
+	}
 	if len(preserveExclusions) == 0 || !preserveExclusions[0] {
-		for _, episode := range importEpisodes(asset.Episodes) {
-			key := fmt.Sprintf("%s:%d:%d", mediaKey(asset.Media), asset.Season, episode)
+		for _, slot := range asset.inventorySlots() {
+			key := fmt.Sprintf("%s:%d:%d", mediaKey(asset.Media), slot.Season, slot.Episode)
 			if err = txPut(ctx, tx, "exclusion", key, map[string]any{"blocked": exclude, "reason": "user_removed", "at": now()}); err != nil {
 				return err
 			}
@@ -345,11 +406,24 @@ func (a *App) removeAssetLocked(ctx context.Context, assetID, previewID string, 
 }
 
 func removalLocation(file assetRemovalFile) (string, error) {
+	if file.SharedDirectory != nil {
+		if file.Deleted {
+			return "gone", verifySharedDirectoryRemoved(file)
+		}
+		actual, err := snapshotSharedDirectory(file.Path, file.Snapshot, file.SharedDirectory, false)
+		if err != nil {
+			return "", err
+		}
+		if !file.DirectoryRemovalStarted && actual != file.Snapshot {
+			return "", bad("REVIEW_SHARED_DIRECTORY", "共享目录删除前拥有成员已变化")
+		}
+		return "source", nil
+	}
 	if file.Quarantine == "" || filepath.Base(file.Quarantine) != file.Quarantine || !strings.HasPrefix(file.Quarantine, ".light-media-remove-") {
 		return "", bad("REVIEW_MANAGED_FILE", "删除暂存收据无效")
 	}
 	quarantine := filepath.Join(filepath.Dir(file.Path), file.Quarantine)
-	if current, err := snapshotTransferPath(quarantine); err == nil {
+	if current, err := snapshotOwnedTransferPath(quarantine, file.Snapshot, file.Softlink, false, file.SharedDirectory); err == nil {
 		if current != file.Snapshot && !(file.DirectoryRemovalStarted && file.Snapshot.Directory != "" && current.Directory != "" && sameInode(current, file.Snapshot)) {
 			return "", bad("REVIEW_MANAGED_FILE", "删除暂存文件指纹不符")
 		}
@@ -357,7 +431,7 @@ func removalLocation(file assetRemovalFile) (string, error) {
 	} else if !os.IsNotExist(err) {
 		return "", bad("REVIEW_MANAGED_FILE", "删除暂存路径不可安全访问")
 	}
-	current, err := snapshotTransferPath(file.Path)
+	current, err := snapshotOwnedTransferPath(file.Path, file.Snapshot, file.Softlink, false, file.SharedDirectory)
 	if err == nil && current == file.Snapshot {
 		return "source", nil
 	}
@@ -400,10 +474,14 @@ func (a *App) checkAssetLocked(ctx context.Context, assetID string) error {
 		return bad("ROOT_UNAVAILABLE", asset.Error)
 	}
 	directory.Close()
-	actual, err := snapshotPath(asset.Path)
+	var own managedFile
+	owned := a.Store.Get(ctx, "managed_file", tokenHash(asset.Path), &own) == nil
+	if owned && (own.Path != asset.Path || own.AssetID != asset.ID || own.RootID != asset.RootID || own.Kind != "video") {
+		return bad("REVIEW_MANAGED_FILE", "资产文件的受管归属已变化")
+	}
+	actual, err := snapshotOwnedTransferPath(asset.Path, own.Snapshot, own.Softlink, true, own.SharedDirectory)
 	if err == nil {
-		var own managedFile
-		changed := a.Store.Get(ctx, "managed_file", tokenHash(asset.Path), &own) == nil && own.Kind == "video" && own.Snapshot != actual
+		changed := owned && own.Kind == "video" && own.Snapshot != actual
 		if asset.IdentitySource == "manual" {
 			var proof libraryIdentity
 			if e := a.Store.Get(ctx, "asset_identity", asset.ID, &proof); e != nil || proof.Path != asset.Path || proof.RootPath != root.Path || proof.Snapshot != actual {
@@ -420,6 +498,9 @@ func (a *App) checkAssetLocked(ctx context.Context, assetID string) error {
 			}
 			asset.Error = ""
 			asset.Size = actual.Size
+			if own.Softlink != nil {
+				asset.Size = own.Softlink.SourceSnapshot.Size
+			}
 			asset.MissingSeenAt = ""
 		}
 		if err = a.Store.Delete(ctx, "asset_presence", asset.ID); err != nil {
@@ -495,8 +576,8 @@ func (a *App) resolveMissingAsset(ctx context.Context, asset Asset, action strin
 	}
 	defer tx.Rollback()
 	blocked := action == "confirm_missing"
-	for _, episode := range importEpisodes(asset.Episodes) {
-		key := fmt.Sprintf("%s:%d:%d", mediaKey(asset.Media), asset.Season, episode)
+	for _, slot := range asset.inventorySlots() {
+		key := fmt.Sprintf("%s:%d:%d", mediaKey(asset.Media), slot.Season, slot.Episode)
 		if err = txPut(ctx, tx, "exclusion", key, map[string]any{"blocked": blocked, "reason": action, "at": now()}); err != nil {
 			return err
 		}

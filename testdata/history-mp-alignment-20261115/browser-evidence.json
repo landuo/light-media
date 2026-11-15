@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-15",
+  "scope": "Local isolated Go service and production web build; headless Chrome; synthetic files/history only",
+  "fixture": {
+    "initial_seeded_history_count": 60,
+    "seeded_history_is_not_evidence_of_60_real_imports": true,
+    "real_manual_imports_after_seed": 3,
+    "existing_downloaders_or_NAS_used": false
+  },
+  "verified": {
+    "desktop_history_table_and_secondary_category": true,
+    "four_deletion_scope_buttons_and_visible_selected_count": true,
+    "record_only_delete_hides_two_selected_records_without_cancelling_queue": true,
+    "cancel_fixture_job_58_preserves_queued_peer_59_and_both_sources": true,
+    "single_history_dialog_stays_on_history_route": true,
+    "preview_errors_keep_form_and_preview_button": true,
+    "history_identity_reuse_and_explicit_destination_preview_succeed": true,
+    "preview_does_not_create_import_jobs": true,
+    "manual_import_creates_actual_target_with_same_inode_as_source": true,
+    "repeat_in_place_import_succeeds_and_closes_dialog_after_fix": true,
+    "stable_visible_history_id": "fixture-file-58",
+    "selected_page_one_row_does_not_block_page_two_button_after_fix": true,
+    "cross_page_selection_opens_two_item_shared_dialog": true,
+    "mobile_queue_bounds": {"width": 390, "height": 844, "x": 0, "y": 0},
+    "mobile_queue_shows_three_completed_executions_and_one_waiting_peer": true
+  },
+  "browser_discovered_fixes": [
+    "In-place asset commit has no new video receipt; job result now recognizes its committed imported asset instead of reporting file organization incomplete.",
+    "Transparent floating action container intercepted pagination while rows were selected; pointer events now pass through gaps while buttons remain interactive."
+  ],
+  "not_claimed": [
+    "Production downloader/NAS acceptance",
+    "All four file-deletion scopes exercised against production media",
+    "Full MoviePilot parity",
+    "Whole Go repository business test suite passing"
+  ]
+}

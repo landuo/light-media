@@ -12,6 +12,11 @@ import (
 // Native plan/path authorization precedes destructive cleanup; the same frozen
 // plan is then submitted, without another recognition or image-provider call.
 func (a *App) prepareOriginalHistoryTransfer(ctx context.Context, next ImportPlan, item transferHistoryItem, prior ImportPlan, file PlanFile, key string, auxiliary, retry bool) error {
+	for _, replacement := range next.Files {
+		if replacement.Method == "softlink" && replacement.Source == item.Target {
+			return bad("REVIEW_SOFTLINK_CLEANUP_DEPENDENCY", "新软链接依赖即将删除的旧目标，已保留原文件")
+		}
+	}
 	if err := a.removeHistoricalPublishedTarget(ctx, item, prior, file, key, auxiliary); err != nil {
 		return err
 	}
@@ -77,7 +82,10 @@ func (a *App) verifyOriginalHistoryCleanup(ctx context.Context, item transferHis
 	if stamp, err := snapshotTransferPath(file.Source); err != nil || stamp != receipt.SourceSnapshot {
 		return bad("REVIEW_REORGANIZE_SOURCE", "旧目标清理后原始资源已发生变化")
 	}
-	if _, err := snapshotTransferPath(asset.Path); !errors.Is(err, os.ErrNotExist) {
+	if receipt.File.SharedDirectory != nil {
+		return verifySharedDirectoryRemoved(receipt.File)
+	}
+	if _, err := snapshotOwnedTransferPath(asset.Path, receipt.File.Snapshot, receipt.File.Softlink, false); !errors.Is(err, os.ErrNotExist) {
 		return bad("REVIEW_REORGANIZE_CHANGED", "旧目标清理后路径再次出现，需核对归属")
 	}
 	return nil

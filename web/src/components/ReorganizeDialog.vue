@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { VSelect } from 'vuetify/components/VSelect';
 import { VTextField } from 'vuetify/components/VTextField';
+import { VBtn } from 'vuetify/components/VBtn';
+import { VTooltip } from 'vuetify/components/VTooltip';
 import { computed, nextTick, onMounted, onUnmounted, ref, useId, watch } from 'vue';
 import { api, errorText, image, label, toast, ui } from '../api';
 import { boundedRead } from '../features/bounded-read';
@@ -41,8 +43,59 @@ const targetListID = 'organize-targets-' + useId();
 const storage = ref(props.initial?.target_path ? 'local' : ''),
   mode = ref(''),
   targetPath = ref(props.initial?.target_path || '');
+const localSettings = ref<any>(null);
+const mediaSource = computed(
+  () =>
+    (ui.settings || localSettings.value)?.recognition_source ||
+    (ui.settings || localSettings.value)?.effective_recognition_source ||
+    'themoviedb',
+);
+const mediaSourceReady = computed(() => !!(ui.settings || localSettings.value));
+const mediaSourceLabel = computed(
+  () =>
+    (
+      ({
+        themoviedb: 'TheMovieDb',
+        douban: '豆瓣',
+        bangumi: 'Bangumi',
+        anilist: 'AniList',
+      }) as Record<string, string>
+    )[String(mediaSource.value)] || '媒体',
+);
 const mediaType = ref(props.initial?.media_type || ''),
   mediaID = ref(props.initial?.tmdb_id ? String(props.initial.tmdb_id) : '');
+type EpisodeGroup = { id: string; name: string; group_count: number; episode_count: number };
+// No client-side history inheritance: the explicit FromHistory option is handled server-side.
+const episodeGroup = ref<string | null>(null),
+  episodeGroups = ref<EpisodeGroup[]>([]),
+  episodeGroupLoading = ref(false),
+  episodeGroupError = ref('');
+const episodeGroupTMDBID = computed(() => {
+  const id = mediaID.value.trim();
+  const value = Number(id);
+  return mediaSource.value === 'themoviedb' &&
+    mediaType.value === 'tv' &&
+    /^\d+$/.test(id) &&
+    Number.isSafeInteger(value) &&
+    value > 0
+    ? value
+    : null;
+});
+const episodeGroupOptions = computed(() => [
+  { title: '不指定剧集组', subtitle: '使用 TMDB 默认季集排序', value: null },
+  ...episodeGroups.value.map((group) => ({
+    title: group.name,
+    subtitle: `${group.group_count} 季 • ${group.episode_count} 集`,
+    value: group.id,
+  })),
+]);
+const episodeGroupItemProps = (item: { title: string; subtitle: string }) => ({
+  title: item.title,
+  subtitle: item.subtitle,
+});
+let episodeGroupTimer: ReturnType<typeof setTimeout> | undefined;
+let episodeGroupRead: AbortController | undefined;
+let episodeGroupGeneration = 0;
 const season = ref<number | ''>(props.initial?.season ?? ''),
   episodeDetail = ref(''),
   episodeFormat = ref(''),
@@ -73,7 +126,6 @@ const subtitle = computed(() =>
       ? props.paths[0]
       : `共 ${props.paths.length} 项`,
 );
-const localSettings = ref<any>(null);
 const settingsRead = new AbortController();
 const targetPaths = computed(
   () =>
@@ -87,10 +139,129 @@ const targetPaths = computed(
 );
 const episodeDetailDisabled = computed(
   () =>
+    !props.historyIds?.length &&
     !!props.paths.length &&
     !episodeFormat.value &&
     (props.paths.length !== 1 || props.items?.some((item) => item.type === 'dir')),
 );
+type EpisodeRecommendation = {
+  episode_format: string;
+  rule_name: string;
+  pattern: string | null;
+  sample_file: string;
+  sample_count: number;
+  matched_count: number;
+  majority_count?: number;
+  confidence?: 'high' | 'low';
+  size_filter_relaxed?: boolean;
+  native_verified_count?: number;
+  native_fallback_count?: number;
+  native_conflict_count?: number;
+  reason?: string;
+  reasons?: string[];
+  message: string;
+};
+const recommendBusy = ref(false),
+  recommendConfigured = ref<boolean | null>(null),
+  recommendError = ref(''),
+  recommendation = ref<EpisodeRecommendation | null>(null);
+const recommendRead = new AbortController();
+const recommendationSelection = computed(() =>
+  JSON.stringify([props.paths, props.items, props.historyIds]),
+);
+const recommendSelectionValid = computed(() => {
+  if (props.historyIds?.length) return true; // Resolve the current source server-side, never trust display paths.
+  if (!props.paths.length) return false;
+  if (props.paths.length === 1) return true;
+  if (props.items?.some((item) => item.type !== 'file')) return false;
+  return new Set(props.paths.map((path) => path.slice(0, path.lastIndexOf('/')))).size === 1;
+});
+const recommendNeedsRules = '手动整理集数定位规则为空，请先前往设置的规则页填写';
+const recommendTooltip = computed(() => {
+  if (recommendBusy.value) return '正在生成集数定位';
+  if (!recommendSelectionValid.value) return '请选择单个文件、目录或同目录的多个文件';
+  if (recommendConfigured.value === false) return recommendNeedsRules;
+  return '优先匹配配置规则，未命中时智能分析；单文件使用同目录样本，多选仅使用所选文件';
+});
+const episodeFormatHint = computed(() => {
+  if (recommendError.value) return recommendError.value;
+  const data = recommendation.value;
+  if (data && episodeFormat.value === data.episode_format) {
+    const details = [`规则：${data.rule_name}`, `样本：${data.sample_file}`];
+    if (data.confidence) details.push(`置信度：${data.confidence === 'low' ? '低' : '高'}`);
+    details.push(
+      data.majority_count != null
+        ? `多数派 ${data.majority_count}/${data.sample_count} 个文件`
+        : `规则命中 ${data.matched_count}/${data.sample_count} 个文件`,
+    );
+    if (data.size_filter_relaxed) details.push('已放宽体积限制');
+    if (data.native_verified_count) details.push(`原生验证 ${data.native_verified_count} 项`);
+    if (data.native_fallback_count) details.push(`原生回退 ${data.native_fallback_count} 项`);
+    if (data.message) details.push(data.message);
+    return details.join(' · ');
+  }
+  return '使用{ep}定位文件名中的集数部分以辅助识别';
+});
+watch(recommendationSelection, () => {
+  recommendation.value = null;
+  recommendError.value = '';
+});
+async function loadEpisodeRules() {
+  try {
+    const data = await boundedRead(
+      (signal) => api('/files/episode-format/rules', undefined, 'GET', signal),
+      recommendRead.signal,
+    );
+    // MP checks table length, not whether any rule is enabled. A nonempty,
+    // fully disabled table reaches the backend's automatic fallback.
+    if (alive) recommendConfigured.value = !!data.rules?.length;
+  } catch (e) {
+    // An unsuccessful config read must not look like an empty configuration.
+    if (alive) recommendError.value = errorText(e);
+  }
+}
+async function recommendEpisode() {
+  if (busy.value || previewBusy.value || recommendBusy.value || !recommendSelectionValid.value)
+    return;
+  // Preserve MP's UI/backend asymmetry: an empty table shows a reminder on
+  // click, although the backend independently supports an empty-table fallback.
+  if (recommendConfigured.value === false) {
+    toast(recommendNeedsRules);
+    return;
+  }
+  recommendBusy.value = true;
+  recommendError.value = '';
+  const selection = recommendationSelection.value,
+    previousFormat = episodeFormat.value,
+    previousType = mediaType.value;
+  try {
+    const data = await boundedRead(
+      (signal) =>
+        api<EpisodeRecommendation>(
+          '/files/episode-format/recommend',
+          props.historyIds?.length ? { history_ids: props.historyIds } : { paths: props.paths },
+          'POST',
+          signal,
+        ),
+      recommendRead.signal,
+    );
+    if (
+      !alive ||
+      selection !== recommendationSelection.value ||
+      previousFormat !== episodeFormat.value ||
+      previousType !== mediaType.value
+    )
+      return;
+    if (!data.episode_format) throw new Error('推荐未返回有效的集数定位模板');
+    episodeFormat.value = data.episode_format;
+    recommendation.value = data;
+    toast(previousFormat.trim() ? '已覆盖集数定位，其他选项保持不变' : '已填入推荐集数定位');
+  } catch (e) {
+    if (alive && selection === recommendationSelection.value) recommendError.value = errorText(e);
+  } finally {
+    recommendBusy.value = false;
+  }
+}
 const previewRows = computed(() => result.value?.items || []);
 const formScroll = ref<HTMLElement | null>(null),
   previewPanel = ref<HTMLElement | null>(null);
@@ -120,18 +291,57 @@ function resetPreview() {
   result.value = null;
   error.value = '';
 }
-watch(mediaType, () => {
+watch([mediaType, mediaSource], () => {
   mediaID.value = '';
   season.value = '';
   episodeDetail.value = '';
   resetPreview();
 });
+async function loadEpisodeGroups(id: number, generation: number, controller: AbortController) {
+  episodeGroupLoading.value = true;
+  try {
+    const groups = await boundedRead(
+      (signal) => api<EpisodeGroup[]>(`/catalog/episode-groups?id=${id}`, undefined, 'GET', signal),
+      controller.signal,
+    );
+    if (alive && generation === episodeGroupGeneration && episodeGroupTMDBID.value === id)
+      episodeGroups.value = groups;
+  } catch (e) {
+    if (alive && generation === episodeGroupGeneration && episodeGroupTMDBID.value === id)
+      episodeGroupError.value = errorText(e);
+  } finally {
+    if (alive && generation === episodeGroupGeneration) episodeGroupLoading.value = false;
+  }
+}
+watch(
+  [mediaType, mediaID],
+  () => {
+    const generation = ++episodeGroupGeneration;
+    if (episodeGroupTimer) clearTimeout(episodeGroupTimer);
+    episodeGroupRead?.abort();
+    episodeGroup.value = null;
+    episodeGroups.value = [];
+    episodeGroupError.value = '';
+    episodeGroupLoading.value = false;
+    const id = episodeGroupTMDBID.value;
+    if (!id) return;
+    const controller = new AbortController();
+    episodeGroupRead = controller;
+    // MP debounces typed TMDB IDs by 400ms; all stale results are additionally isolated.
+    episodeGroupTimer = setTimeout(() => {
+      episodeGroupTimer = undefined;
+      void loadEpisodeGroups(id, generation, controller);
+    }, 400);
+  },
+  { immediate: true },
+);
 watch(
   [
     storage,
     mode,
     targetPath,
     mediaID,
+    episodeGroup,
     season,
     episodeDetail,
     episodeFormat,
@@ -147,7 +357,8 @@ watch(
 function payload(preview: boolean, background = false) {
   const id = mediaID.value.trim();
   if (id && (!/^\d+$/.test(id) || Number(id) < 1 || !mediaType.value))
-    throw new Error('请选择类型并填写有效的 TheMovieDb 编号');
+    throw new Error(`请选择类型并填写有效的 ${mediaSourceLabel.value} 编号`);
+  if (id && !mediaSourceReady.value) throw new Error('识别来源配置尚未加载');
   if (!Number.isInteger(Number(minFilesize.value)) || Number(minFilesize.value) < 0)
     throw new Error('最小文件大小须为不小于 0 的整数');
   return {
@@ -157,9 +368,17 @@ function payload(preview: boolean, background = false) {
     target_path: targetPath.value.trim(),
     mode: mode.value,
     media_type: mediaType.value,
-    tmdb_id: id ? Number(id) : 0,
+    tmdb_id: mediaSource.value === 'themoviedb' && id ? Number(id) : 0,
+    ...(mediaSource.value !== 'themoviedb'
+      ? { media_source: mediaSource.value, media_id: id }
+      : {}),
     ...(mediaType.value === 'tv'
       ? {
+          ...(mediaSource.value === 'themoviedb'
+            ? {
+                episode_group: episodeGroupTMDBID.value ? episodeGroup.value?.trim() || null : null,
+              }
+            : {}),
           ...(season.value === '' ? {} : { season: Number(season.value) }),
           episode_detail: episodeDetailDisabled.value ? '' : episodeDetail.value.trim(),
           episode_format: episodeFormat.value,
@@ -176,7 +395,7 @@ function payload(preview: boolean, background = false) {
   };
 }
 async function preview() {
-  if (busy.value || previewBusy.value) return;
+  if (busy.value || previewBusy.value || recommendBusy.value) return;
   previewVisible.value = true;
   resultIsPreview.value = true;
   previewBusy.value = true;
@@ -199,7 +418,7 @@ function waitForPoll() {
   });
 }
 async function organize(background: boolean) {
-  if (busy.value || previewBusy.value) return;
+  if (busy.value || previewBusy.value || recommendBusy.value) return;
   busy.value = true;
   resultIsPreview.value = false;
   error.value = '';
@@ -321,6 +540,7 @@ async function search() {
               q: query.value.trim(),
               kind: mediaType.value || 'all',
               page: '1',
+              source: mediaSource.value,
             }),
         )
       ).results || [];
@@ -335,11 +555,12 @@ function choose(media: any) {
   // The type watcher clears a previous id; let it finish before applying this id.
   mediaType.value = type;
   queueMicrotask(() => {
-    mediaID.value = String(media.id);
+    mediaID.value = String(mediaSource.value === 'themoviedb' ? media.id : media.source_id);
   });
   picker.value = false;
 }
 onMounted(async () => {
+  const episodeRulesRead = loadEpisodeRules();
   try {
     if (!ui.settings) {
       const settings = await boundedRead(
@@ -351,10 +572,14 @@ onMounted(async () => {
   } catch (e) {
     if (alive) error.value = errorText(e);
   }
+  await episodeRulesRead;
 });
 onUnmounted(() => {
   alive = false;
   settingsRead.abort();
+  recommendRead.abort();
+  episodeGroupRead?.abort();
+  if (episodeGroupTimer) clearTimeout(episodeGroupTimer);
   if (sleepTimer) clearTimeout(sleepTimer);
   wake?.();
 });
@@ -397,7 +622,9 @@ onUnmounted(() => {
               :items="[
                 { title: '自动', value: '' },
                 { title: '复制', value: 'copy' },
+                { title: '移动', value: 'move' },
                 { title: '硬链接', value: 'hardlink' },
+                { title: '软链接', value: 'softlink' },
               ]"
             />
             <VTextField
@@ -440,17 +667,17 @@ onUnmounted(() => {
             <VTextField
               v-model="mediaID"
               inputmode="numeric"
-              label="TheMovieDb编号"
+              :label="mediaSourceLabel + '编号'"
               placeholder="留空自动识别"
               hint="按名称查询媒体编号，留空自动识别"
               persistent-hint
-              :disabled="busy || !mediaType"
+              :disabled="busy || !mediaType || !mediaSourceReady"
             >
               <template #append-inner>
                 <button
                   class="icon-button"
                   aria-label="查询媒体编号"
-                  :disabled="busy || !mediaType"
+                  :disabled="busy || !mediaType || !mediaSourceReady"
                   @click="picker = true"
                 >
                   <FileManagerIcon name="search" />
@@ -459,35 +686,80 @@ onUnmounted(() => {
             </VTextField>
             <template v-if="mediaType === 'tv'">
               <VSelect
-                v-model="season"
-                :disabled="busy"
-                label="季"
-                hint="第几季"
+                v-if="mediaSource === 'themoviedb'"
+                v-model="episodeGroup"
+                label="剧集组"
+                placeholder="先输入 TMDB 编号"
+                :items="episodeGroupOptions"
+                item-title="title"
+                item-value="value"
+                :item-props="episodeGroupItemProps"
+                :loading="episodeGroupLoading"
+                :disabled="busy || !episodeGroupTMDBID"
+                :hint="
+                  episodeGroupError || '输入 TMDB 编号后自动查询剧集组；不指定时使用默认季集排序'
+                "
+                :error="!!episodeGroupError"
+                clearable
                 persistent-hint
-                :items="[
-                  { title: '自动', value: '' },
-                  ...Array.from({ length: 101 }, (_, index) => index + 1).map((number) => ({
-                    title: (' 第 ' + String(number - 1) + ' 季 ').trim(),
-                    value: number - 1,
-                  })),
-                ]"
+                prepend-inner-icon="mdi-view-list"
               />
-              <VTextField
-                v-model="episodeDetail"
-                placeholder="起始集,终止集"
-                :disabled="busy || episodeDetailDisabled"
-                label="集"
-                hint="集数或范围，如1或1,2"
-                persistent-hint
-              />
+              <div class="episode-number-fields">
+                <VSelect
+                  v-model="season"
+                  :disabled="busy"
+                  label="季"
+                  hint="第几季"
+                  persistent-hint
+                  :items="[
+                    { title: '自动', value: '' },
+                    ...Array.from({ length: 101 }, (_, index) => index + 1).map((number) => ({
+                      title: (' 第 ' + String(number - 1) + ' 季 ').trim(),
+                      value: number - 1,
+                    })),
+                  ]"
+                />
+                <VTextField
+                  v-model="episodeDetail"
+                  placeholder="起始集,终止集"
+                  :disabled="busy || episodeDetailDisabled"
+                  label="集"
+                  hint="集数或范围，如1或1,2"
+                  persistent-hint
+                />
+              </div>
               <VTextField
                 v-model="episodeFormat"
                 placeholder="使用{ep}定位集数"
                 :disabled="busy"
                 label="集数定位"
-                hint="使用{ep}定位文件名中的集数部分以辅助识别"
+                :hint="episodeFormatHint"
+                :error="!!recommendError"
                 persistent-hint
-              />
+              >
+                <template #append-inner>
+                  <VTooltip location="top" content-class="episode-recommend-tooltip">
+                    <template #activator="{ props: tooltipProps }">
+                      <span v-bind="tooltipProps">
+                        <VBtn
+                          type="button"
+                          color="primary"
+                          variant="text"
+                          size="small"
+                          icon="mdi-auto-fix"
+                          aria-label="推荐集数定位"
+                          :loading="recommendBusy"
+                          :disabled="
+                            busy || previewBusy || recommendBusy || !recommendSelectionValid
+                          "
+                          @click.stop="recommendEpisode"
+                        />
+                      </span>
+                    </template>
+                    {{ recommendTooltip }}
+                  </VTooltip>
+                </template>
+              </VTextField>
               <VTextField
                 v-model="episodeOffset"
                 placeholder="如-10"
@@ -576,15 +848,23 @@ onUnmounted(() => {
         <footer class="organize-actions">
           <button
             class="preview-action"
-            :disabled="busy || previewBusy"
+            :disabled="busy || previewBusy || recommendBusy"
             :aria-busy="previewBusy"
             @click="preview"
           >
             预览</button
-          ><button class="queue-action" :disabled="busy || previewBusy" @click="organize(true)">
+          ><button
+            class="queue-action"
+            :disabled="busy || previewBusy || recommendBusy"
+            @click="organize(true)"
+          >
             ＋ 加入整理队列</button
           ><span></span
-          ><button class="primary" :disabled="busy || previewBusy" @click="organize(false)">
+          ><button
+            class="primary"
+            :disabled="busy || previewBusy || recommendBusy"
+            @click="organize(false)"
+          >
             立即整理 →
           </button>
         </footer>
@@ -621,7 +901,7 @@ onUnmounted(() => {
         <div class="media-results">
           <button
             v-for="media in searchResults"
-            :key="media.media_type + media.id"
+            :key="media.media_type + ':' + (media.source_id || media.id)"
             @click="choose(media)"
           >
             <img v-if="media.poster_path" :src="image(media.poster_path, 'w185')" alt="" /><span
@@ -629,7 +909,7 @@ onUnmounted(() => {
               ><small
                 >{{ label(media.media_type) }} ·
                 {{ (media.release_date || media.first_air_date || '').slice(0, 4) }} ·
-                {{ media.id }}</small
+                {{ mediaSource === 'themoviedb' ? media.id : media.source_id }}</small
               ></span
             >
           </button>
@@ -639,6 +919,11 @@ onUnmounted(() => {
   </Teleport>
 </template>
 <style scoped>
+/* Keep natural tooltip width independent of the connected overlay's left edge.
+   Vuetify still supplies the viewport max-width and wraps long mobile hints. */
+:global(.v-tooltip > .v-overlay__content.episode-recommend-tooltip) {
+  width: max-content;
+}
 .organize-backdrop {
   position: fixed;
   inset: 0;
@@ -694,7 +979,8 @@ onUnmounted(() => {
   overflow-y: auto;
   flex: 1;
 }
-.organize-grid {
+.organize-grid,
+.episode-number-fields {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
@@ -909,7 +1195,8 @@ onUnmounted(() => {
   .organize-form {
     padding: 24px;
   }
-  .organize-grid {
+  .organize-grid,
+  .episode-number-fields {
     grid-template-columns: minmax(0, 1fr);
   }
   .organize-actions {

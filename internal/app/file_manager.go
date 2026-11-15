@@ -46,6 +46,8 @@ type browserEntry struct {
 	Size          int64  `json:"size"`
 	Modified      string `json:"modified"`
 	Video         bool   `json:"video"`
+	Softlink      bool   `json:"softlink,omitempty"`
+	Broken        bool   `json:"broken,omitempty"`
 	Protected     string `json:"protected,omitempty"`
 }
 type browserStamp struct {
@@ -183,6 +185,14 @@ func sameBrowserIdentity(a, b browserStamp) bool {
 func (a *App) fileManagerAPI(r *http.Request, p string) (any, error) {
 	ctx := r.Context()
 	switch {
+	case p == "episode-format/rules":
+		return a.episodeFormatRulesAPI(r)
+	case p == "episode-format/recommend" && r.Method == "POST":
+		var in organizeEpisodeRecommendRequest
+		if e := decodeBody(nil, r, &in); e != nil {
+			return nil, e
+		}
+		return a.recommendEpisodeFormat(ctx, in)
 	case p == "organize" && r.Method == "POST":
 		var in manualOrganizeRequest
 		if e := decodeBody(nil, r, &in); e != nil {
@@ -336,7 +346,11 @@ func (a *App) browserList(ctx context.Context, rootID, path, sorting, order stri
 				}
 			}
 			video, _ := display.Media(transferextensions.PathFile(name))
-			entries = append(entries, browserEntry{Name: item.Name(), Path: name, Type: kind, Size: info.Size(), Modified: info.ModTime().UTC().Format(time.RFC3339), Video: video, Protected: protected})
+			entry := browserEntry{Name: item.Name(), Path: name, Type: kind, Size: info.Size(), Modified: info.ModTime().UTC().Format(time.RFC3339), Video: video, Protected: protected}
+			if kind == "symlink" && rootID != containerBrowserRootID {
+				a.browserProjectSoftlink(ctx, &entry, protection)
+			}
+			entries = append(entries, entry)
 		}
 		if truncated || err == io.EOF {
 			break
@@ -400,7 +414,7 @@ func (a *App) browserScan(ctx context.Context, paths []string, recursive bool) (
 		if !allowed || browserInternal(path) {
 			return nil, bad("INVALID_SOURCE", "选择的文件不在允许目录内")
 		}
-		stamp, e := browserStat(path)
+		stamp, e := a.browserScanStamp(ctx, path)
 		if e != nil {
 			return nil, e
 		}
@@ -463,7 +477,7 @@ func (a *App) browserCollectFiles(ctx context.Context, path string, recursive bo
 					truncated = true
 					return nil
 				}
-				if entry.Type()&os.ModeSymlink != 0 || strings.HasPrefix(entry.Name(), ".") {
+				if strings.HasPrefix(entry.Name(), ".") {
 					continue
 				}
 				name := filepath.Join(path, entry.Name())
@@ -478,8 +492,11 @@ func (a *App) browserCollectFiles(ctx context.Context, path string, recursive bo
 				if media, _ := classifier.Media(transferextensions.PathFile(name)); !media {
 					continue
 				}
-				stamp, e := snapshotPath(name)
+				stamp, e := a.browserScanStamp(ctx, name)
 				if e != nil {
+					if entry.Type()&os.ModeSymlink != 0 {
+						continue
+					}
 					return e
 				}
 				file := importScanFile{Path: name, Size: stamp.Size, Parsed: a.parseMediaName(entry.Name())}

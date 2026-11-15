@@ -295,8 +295,8 @@ func (a *App) scanLibrary(ctx context.Context, job Job, rootID string) (returnEr
 			return e
 		}
 		if e = txPut(ctx, tx, "asset", asset.ID, asset); e == nil {
-			for _, episode := range importEpisodes(asset.Episodes) {
-				_, e = tx.ExecContext(ctx, `INSERT OR IGNORE INTO asset_slots VALUES(?,?,?,?)`, mediaKey(asset.Media), asset.Season, episode, asset.ID)
+			for _, slot := range asset.inventorySlots() {
+				_, e = tx.ExecContext(ctx, `INSERT OR IGNORE INTO asset_slots VALUES(?,?,?,?)`, mediaKey(asset.Media), slot.Season, slot.Episode, asset.ID)
 				if e != nil {
 					break
 				}

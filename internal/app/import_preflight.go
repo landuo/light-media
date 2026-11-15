@@ -117,7 +117,33 @@ func importProbeWrite(directory *os.File) error {
 	return nil
 }
 
-func importSpaceEstimate(plan ImportPlan, meta importMetadata) int64 {
+// Same-device moves reserve entries/metadata, not a second video data copy.
+// A disc may contain nested mounts, so account for its actual member devices.
+// Copy fallback still checks real free space immediately before copying.
+func importMoveCopyBytes(file PlanFile, rootDevice uint64) int64 {
+	if file.DirectoryDigest == "" {
+		if file.Device == rootDevice {
+			return 0
+		}
+		return file.Size
+	}
+	stamp, entries, err := snapshotOriginalDirectory(file.Source)
+	if err != nil || stamp != planSnapshot(file) {
+		return file.Size
+	}
+	var size int64
+	for _, entry := range entries {
+		if !entry.Directory && entry.Snapshot.Device != rootDevice {
+			if entry.Snapshot.Size > math.MaxInt64-size {
+				return math.MaxInt64
+			}
+			size += entry.Snapshot.Size
+		}
+	}
+	return size
+}
+
+func importSpaceEstimate(plan ImportPlan, meta importMetadata, rootDevice uint64) int64 {
 	needed := int64(0)
 	shared := false
 	add := func(value int64) {
@@ -131,12 +157,19 @@ func importSpaceEstimate(plan ImportPlan, meta importMetadata) int64 {
 		if file.Status != "ready" {
 			continue
 		}
-		if meta.Methods[file.ID] == "copy" {
+		method := meta.Methods[file.ID]
+		if method == "copy" {
 			add(file.Size)
+		}
+		if method == "move" {
+			add(importMoveCopyBytes(file, rootDevice))
 		}
 		add(64 << 10)
 		for _, sidecar := range meta.Sidecars[file.ID] {
-			add(sidecar.Snapshot.Size + 4096)
+			if method != "move" || sidecar.Snapshot.Device != rootDevice {
+				add(sidecar.Snapshot.Size)
+			}
+			add(4096)
 		}
 		if !shared && importBool(plan.Scraping, true) {
 			add(40 << 20)

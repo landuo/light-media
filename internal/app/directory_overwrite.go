@@ -162,6 +162,53 @@ type directoryOverwriteOperation struct {
 	Published         importReceipt              `json:"published"`
 }
 
+func (target directoryOverwriteTarget) softlinkProof() *importSoftlinkProof {
+	if target.Owner != nil {
+		return target.Owner.Softlink
+	}
+	return nil
+}
+
+// Ownership is read before inspecting a possible link. The decision sees media
+// size/mtime; the sealed target keeps the actual entry identity for rename/unlink.
+// An unowned link never acquires authority through its referent or link text.
+func (a *App) readDirectoryOverwriteTarget(ctx context.Context, path, rootID string) (directoryOverwriteTarget, importSnapshot, error) {
+	target := directoryOverwriteTarget{Path: path}
+	var owner managedFile
+	err := a.Store.Get(ctx, "managed_file", tokenHash(path), &owner)
+	if err == nil {
+		if owner.Path != path || owner.RootID != rootID {
+			return target, importSnapshot{}, bad("REVIEW_OVERWRITE_OWNER", "目标归属或媒体库已经变化")
+		}
+		if owner.SharedDirectory != nil || owner.Softlink != nil && owner.Softlink.Directory != nil {
+			return target, importSnapshot{}, bad("REVIEW_OVERWRITE_TARGET", "普通文件覆盖不接管目录资产")
+		}
+		if owner.Softlink != nil && (owner.AssetID == "" || owner.Kind != "video" && !auxiliaryMaterialKind(owner.Kind)) {
+			return target, importSnapshot{}, bad("REVIEW_OVERWRITE_OWNER", "软链接目标缺少受管媒体归属")
+		}
+		target.Owner = &owner
+	} else if !errors.Is(err, sql.ErrNoRows) {
+		return target, importSnapshot{}, err
+	}
+	var stamp importSnapshot
+	if owner.Softlink != nil {
+		stamp, err = snapshotOwnedTransferPath(path, owner.Snapshot, owner.Softlink, true)
+	} else {
+		stamp, err = snapshotPath(path)
+	}
+	if err != nil {
+		return target, importSnapshot{}, err
+	}
+	if target.Owner != nil && owner.Snapshot != stamp {
+		return target, importSnapshot{}, bad("REVIEW_OVERWRITE_OWNER", "目标归属或文件身份已经变化")
+	}
+	target.Snapshot = stamp
+	if owner.Softlink != nil {
+		return target, owner.Softlink.SourceSnapshot, nil
+	}
+	return target, stamp, nil
+}
+
 // readDirectoryOverwrite is a real per-material-file host read, independent of
 // subscription target episode filtering. Preview never calls this synchronous
 // event or enumerates latest-version deletion candidates.
@@ -191,16 +238,16 @@ func (a *App) readDirectoryOverwrite(ctx context.Context, key, source, target, r
 		return op, e
 	}
 	op.ExtensionInputSHA = observed.Handler.InputSHA
-	input := transferoverwrite.Input{Policy: policy.Policy, Source: overwriteFileItem(source, stamp), TargetKnown: true, TargetPath: target, TargetStorage: "local", TransferType: map[string]string{"hardlink": "link", "copy": "copy"}[method], Extra: handler.Extra(transferextensions.PathFile(source))}
-	targetStamp, e := snapshotPath(target)
+	input := transferoverwrite.Input{Policy: policy.Policy, Source: overwriteFileItem(source, stamp), TargetKnown: true, TargetPath: target, TargetStorage: "local", TransferType: originalTransferType(method), Extra: handler.Extra(transferextensions.PathFile(source))}
+	_, targetStamp, e := a.readDirectoryOverwriteTarget(ctx, target, rootID)
 	actualTargetExists := e == nil
 	if e == nil {
 		item := overwriteFileItem(target, targetStamp)
 		input.Target = &item
 	} else if !errors.Is(e, os.ErrNotExist) {
-		// Symlinks and directories have distinct source behavior. The native file
-		// publication capability deliberately refuses them instead of following them.
-		return op, bad("REVIEW_OVERWRITE_TARGET", "无法确认目标为普通文件，未覆盖："+target)
+		// Only a persisted, exact owned link may project its ordinary referent.
+		// Directories and arbitrary symlinks retain their existing admission.
+		return op, bad("REVIEW_OVERWRITE_TARGET", "目标文件或受管软链接身份无法确认，未覆盖："+target)
 	}
 	if e != nil {
 		if _, le := os.Lstat(target); le == nil {
@@ -254,22 +301,15 @@ func (a *App) readDirectoryOverwrite(ctx context.Context, key, source, target, r
 		if path == source {
 			return op, bad("REVIEW_OVERWRITE_SOURCE", "原版覆盖会移除当前源文件，已保留文件等待人工处理")
 		}
-		old, e := snapshotPath(path)
+		old, _, e := a.readDirectoryOverwriteTarget(ctx, path, rootID)
 		if e != nil {
 			return op, bad("REVIEW_OVERWRITE_TARGET", "待覆盖版本不可确认，未移除任何文件")
 		}
-		target := directoryOverwriteTarget{Path: path, Snapshot: old, Backup: ".light-media-overwrite-" + tokenHash(key + "\x00" + path)[:32] + ".part"}
-		var owner managedFile
-		e = a.Store.Get(ctx, "managed_file", tokenHash(path), &owner)
-		if e == nil {
-			if owner.Path != path || owner.RootID != rootID || owner.Snapshot != old {
-				return op, bad("REVIEW_OVERWRITE_OWNER", "目标归属或文件身份已经变化")
-			}
-			target.Owner = &owner
-		} else if !errors.Is(e, sql.ErrNoRows) {
-			return op, e
-		}
-		op.Targets = append(op.Targets, target)
+		old.Backup = ".light-media-overwrite-" + tokenHash(key + "\x00" + path)[:32] + ".part"
+		op.Targets = append(op.Targets, old)
+	}
+	if e = a.guardDirectoryOverwriteInventory(ctx, op); e != nil {
+		return op, e
 	}
 	return op, nil
 }

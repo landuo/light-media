@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { VTextField } from 'vuetify/components/VTextField';
 import { VSelect } from 'vuetify/components/VSelect';
-import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue';
 import { VSwitch } from 'vuetify/components/VSwitch';
 import { api, action, ui, refreshSettings, toast, errorText, date, bytes } from '../api';
 import DownloaderManager from './DownloaderManager.vue';
@@ -27,6 +27,16 @@ const form = ref<any>(null),
   logging = ref<any>(null),
   debugScope = ref('module'),
   debugID = ref('download');
+const recognitionSourceItems = computed(() => {
+  const items = [
+    { title: 'TheMovieDb', value: 'themoviedb' },
+    { title: '豆瓣', value: 'douban' },
+  ];
+  const effective = form.value?.recognition_source ?? form.value?.effective_recognition_source;
+  if (['bangumi', 'anilist'].includes(effective))
+    items.push({ title: effective === 'bangumi' ? 'Bangumi' : 'AniList', value: effective });
+  return items;
+});
 function syncTab() {
   tab.value = routeTab();
   visitedTabs.value.add(tab.value);
@@ -66,6 +76,7 @@ async function save(section: 'app' | 'tmdb' | 'fnos' | 'site') {
     if (section === 'tmdb') {
       c.tmdb = form.value.tmdb;
       c.recognize_plugin_first = form.value.recognize_plugin_first === true;
+      c.recognition_source = form.value.recognition_source;
     }
     if (section === 'site') {
       c.site_data_refresh_hours = form.value.site_data_refresh_hours;
@@ -84,7 +95,11 @@ async function save(section: 'app' | 'tmdb' | 'fnos' | 'site') {
       ui.settings = result;
       form.value.secret_state = result.secret_state;
       if (section === 'app') form.value.app_domain = result.app_domain ?? '';
-      if (section === 'tmdb') form.value.tmdb = result.tmdb;
+      if (section === 'tmdb') {
+        form.value.tmdb = result.tmdb;
+        form.value.recognition_source = result.recognition_source;
+        form.value.effective_recognition_source = result.effective_recognition_source;
+      }
       if (section === 'fnos') form.value.fnos = result.fnos;
       if (section === 'site') {
         form.value.site_data_refresh_hours = result.site_data_refresh_hours ?? 6;
@@ -192,10 +207,21 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
       </section>
       <section class="panel">
         <header class="section-heading">
-          <h2>TMDB 元数据</h2>
+          <h2>媒体识别</h2>
           <span class="badge">{{ form.secret_state?.tmdb ? '凭据已保存' : '尚未配置' }}</span>
         </header>
         <div class="form-grid">
+          <VSelect
+            :model-value="
+              form.recognition_source ?? form.effective_recognition_source ?? 'themoviedb'
+            "
+            :items="recognitionSourceItems"
+            label="识别数据源"
+            hint="用于自动识别及手动整理的媒体编号；凭据与整理默认方式保持独立"
+            persistent-hint
+            :disabled="saving"
+            @update:model-value="form.recognition_source = $event"
+          />
           <VTextField
             v-model="form.tmdb.api_key"
             type="text"

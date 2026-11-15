@@ -218,8 +218,19 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 	}
 	ctx = context.WithValue(ctx, organizeFileKey{}, organizeFileWork{Job: job, File: file, Stamp: item.Snapshot, BatchID: item.BatchID, HistorySource: item.HistorySource})
 	ctx = context.WithValue(ctx, originalScrapeBatchKey{}, item.BatchID)
+	known := ImportPlan{Files: []PlanFile{{Source: file.Path}}}
+	known.Media.Title, known.Media.Year = file.Parsed.Title, file.Parsed.Year
+	if numbering := file.Parsed.Original; numbering != nil {
+		if numbering.Season != nil {
+			known.Files[0].Season = *numbering.Season
+		}
+		known.Files[0].Episodes = append([]int{}, numbering.Episodes...)
+	}
+	if item.Directory != nil {
+		known.Mode, known.RootID = item.Directory.Rule.Mode, item.Directory.Rule.RootID
+	}
 	fail := func(cause error) error {
-		_, err := a.recordManualOrganizeFailure(ctx, file.Path, job.WorkflowID, cause, item.HistorySource)
+		_, err := a.recordManualOrganizeFailurePlan(ctx, file.Path, job.WorkflowID, cause, item.HistorySource, known)
 		return err
 	}
 	if err := a.jobCancelled(ctx, job); err != nil {
@@ -239,7 +250,7 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 		return fail(bad("REVIEW_SOURCE_CHANGED", "源文件已移除、发生变化或不在允许目录内"))
 	}
 	if item.Directory != nil {
-		return a.runDirectoryOrganizeFile(ctx, item, file, fail)
+		return a.runDirectoryOrganizeFile(ctx, item, file, &known, fail)
 	}
 	if item.HistoryID != "" {
 		parent.Request.HistoryIDs = []string{item.HistoryID}

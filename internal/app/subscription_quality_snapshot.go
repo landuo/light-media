@@ -120,8 +120,13 @@ func (a *App) freezeQualityAssets(ctx context.Context, p *qualityDownloadSnapsho
 			return e
 		}
 		asset := frozen.Asset
-		if asset.State != "present" || mediaKey(asset.Media) != p.MediaKey || asset.Season != p.Season {
+		if asset.State != "present" || mediaKey(asset.Media) != p.MediaKey {
 			return bad("QUALITY_ASSET_CHANGED", "库内资源缺少可替换的归属记录")
+		}
+		for episode, owners := range p.Slots {
+			if slices.Contains(owners, id) && !asset.coversEpisode(p.Season, episode) {
+				return bad("QUALITY_ASSET_CHANGED", "库内资源缺少对应标准季集归属")
+			}
 		}
 		root, e := a.importRoot(asset.RootID)
 		if e != nil || !within(root.Path, asset.Path) {
@@ -131,10 +136,10 @@ func (a *App) freezeQualityAssets(ctx context.Context, p *qualityDownloadSnapsho
 		if e = qualityRecord(ctx, a.Store.DB, "managed_file", tokenHash(asset.Path), &frozen.Video); e != nil {
 			return e
 		}
-		if frozen.Video.AssetID != asset.ID || frozen.Video.Kind != "video" || frozen.Video.RootID != root.ID || frozen.Video.MediaKey != p.MediaKey {
+		if frozen.Video.Path != asset.Path || frozen.Video.AssetID != asset.ID || frozen.Video.Kind != "video" || frozen.Video.RootID != root.ID || frozen.Video.MediaKey != p.MediaKey {
 			return bad("QUALITY_ASSET_CHANGED", "原视频文件归属无法核对")
 		}
-		stamp, e := snapshotPath(asset.Path)
+		stamp, e := snapshotOwnedTransferPath(asset.Path, frozen.Video.Snapshot, frozen.Video.Softlink, true, frozen.Video.SharedDirectory)
 		if e != nil || stamp != frozen.Video.Snapshot {
 			return bad("QUALITY_ASSET_CHANGED", "原视频文件已被外部修改")
 		}
@@ -274,10 +279,10 @@ func (a *App) guardQualityAssets(ctx context.Context, q qualityReader, p *qualit
 			return bad("QUALITY_ASSET_CHANGED", "原媒体库路径已变化")
 		}
 		var video managedFile
-		if e = qualityRecord(ctx, q, "managed_file", tokenHash(asset.Path), &video); e != nil || video.AssetID != frozen.Video.AssetID || video.Snapshot != frozen.Video.Snapshot || video.RootID != frozen.Video.RootID {
+		if e = qualityRecord(ctx, q, "managed_file", tokenHash(asset.Path), &video); e != nil || !sameManagedFile(video, frozen.Video) {
 			return bad("QUALITY_ASSET_CHANGED", "原视频归属已变化")
 		}
-		stamp, e := snapshotPath(asset.Path)
+		stamp, e := snapshotOwnedTransferPath(asset.Path, frozen.Video.Snapshot, frozen.Video.Softlink, true, frozen.Video.SharedDirectory)
 		if e != nil || stamp != frozen.Video.Snapshot {
 			return bad("QUALITY_ASSET_CHANGED", "原视频文件在预览后已变化")
 		}

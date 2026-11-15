@@ -51,9 +51,6 @@ func (a *App) originalChatTransferAlias(ctx context.Context, history transferHis
 		return 0, err
 	}
 	defer tx.Rollback()
-	if err = refreshTransferHistoryIndex(ctx, tx); err != nil {
-		return 0, err
-	}
 	current, err := scanTransferHistory(tx.QueryRowContext(ctx, transferHistoryIndexedBySource, history.ResourceSource))
 	if errors.Is(err, sql.ErrNoRows) {
 		return 0, originalTransferRetryStale()

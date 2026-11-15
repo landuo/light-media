@@ -246,7 +246,7 @@ func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
 		t.Fatal(err)
 	}
 	importWrite(t, old.Files[0].Target, []byte("unrelated preexisting target"))
-	if allowed, err := failedImportSourceUnpublished(ctx, a.Store.DB, old, old.Files[0], 0, true); err != nil || allowed {
+	if allowed, err := failedImportSourceUnpublished(ctx, a.Store.DB, old, old.Files[0], old.Files[0].Season, 0, true); err != nil || allowed {
 		t.Fatalf("unrelated target was reusable: %v %v", allowed, err)
 	}
 	if err := os.Remove(old.Files[0].Target); err != nil {
@@ -294,13 +294,25 @@ func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
 		t.Fatalf("an unrelated source took over the old reservation: %+v %v", different.Files, err)
 	}
 
-	// A running original transfer cannot be taken over, even for the same file.
+	// An existing but unregistered hardlink does not mean the download was
+	// imported. Preview reports the active ownership conflict without taking it.
 	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='running' WHERE id=?`, oldJob.ID); err != nil {
 		t.Fatal(err)
 	}
-	blocked, err := a.manualOrganize(ctx, manualOrganizeRequest{Paths: []string{path}, TargetPath: target, Mode: "hardlink", MediaType: "movie", TMDBID: movie.ID, Scraping: &noScrape, Preview: true})
-	if err != nil || blocked.Failed != 1 {
-		t.Fatalf("active download import was replaced: %+v %v", blocked, err)
+	activePreview, err := a.manualOrganize(ctx, manualOrganizeRequest{Paths: []string{path}, TargetPath: target, Mode: "hardlink", MediaType: "movie", TMDBID: movie.ID, Scraping: &noScrape, Preview: true})
+	if err != nil || activePreview.Failed != 1 || len(activePreview.Items) != 1 || activePreview.Submitted != 0 {
+		t.Fatalf("active transfer conflict was skipped or preview submitted work: %+v %v", activePreview, err)
+	}
+	if _, err := a.executeImport(ctx, activePreview.Items[0].PlanID, nil); err == nil {
+		t.Fatal("actual submission took over an active download import")
+	}
+	var activeIntent Intent
+	if err := a.Store.Get(ctx, "intent", intent.ID, &activeIntent); err != nil || activeIntent.ImportPlanID != old.ID {
+		t.Fatalf("preview/rejected submission changed download ownership: %+v %v", activeIntent, err)
+	}
+	activeHistory := historyUpsertOnly(t, a, "")
+	if activeHistory.ID != initial.ID || activeHistory.PlanID != old.ID || activeHistory.JobID != oldJob.ID {
+		t.Fatalf("preview/rejected submission replaced execution history: %+v", activeHistory)
 	}
 	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='failed' WHERE id=?`, oldJob.ID); err != nil {
 		t.Fatal(err)
@@ -319,6 +331,9 @@ func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
 	overwriteRule(a, source, target, "always", true)
 	next := historyUpsertSubmit(t, a, request, false)
 	replacement, newJob := historyUpsertAttempt(t, a, next.JobID)
+	if replacement.IntentID != intent.ID {
+		t.Fatalf("manual retry lost download ownership at submission: plan=%s intent=%q expected=%q", replacement.ID, replacement.IntentID, intent.ID)
+	}
 	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, oldJob.ID); err != nil {
 		t.Fatal(err)
 	}

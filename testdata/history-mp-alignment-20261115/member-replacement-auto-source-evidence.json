@@ -1,0 +1,42 @@
+{
+  "round": 23,
+  "scope": "same-asset member replacement inside a managed directory root; automatic directory recognition follows the global recognition source",
+  "member_replacement": {
+    "log": "work/history-mp-alignment-20261115/round23-member-replacement-source.log",
+    "seconds": 11.517,
+    "allowed": "owned leaf of the same appended asset with an unchanged registered snapshot",
+    "refused": [
+      "leaf owned by another asset",
+      "registered snapshot drifted",
+      "softlink occupied leaf (existing boundary)"
+    ],
+    "asset": "reuses the single directory asset; root managed_file unchanged"
+  },
+  "automatic_source": {
+    "source": "douban",
+    "provider_id": "704",
+    "history_identity": {
+      "provider_source": "douban",
+      "provider_id": "704",
+      "tmdb_id": 0
+    },
+    "authorization": "private originalDirectoryProvider granted only by a successful automatic rule recognition",
+    "nfo_identity": "kept as local TMDB identity"
+  },
+  "regression": {
+    "log": "work/history-mp-alignment-20261115/round23-source-directory-regression.log",
+    "seconds": 66.08
+  },
+  "integration": {
+    "log": "work/history-mp-alignment-20261115/round23-integration.log",
+    "seconds": 351.646
+  },
+  "compile": "work/history-mp-alignment-20261115/round23-compile.log",
+  "not_claimed": [
+    "cross-asset member ownership transfer",
+    "external whole-tree softlink incremental adoption",
+    "NAS or cloud storage",
+    "production media"
+  ],
+  "whole_objective_complete": false
+}

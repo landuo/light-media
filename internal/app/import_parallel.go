@@ -175,8 +175,8 @@ func (a *App) importJobScope(ctx context.Context, job Job, native bool) *importA
 			return run
 		}
 		run.extraTargets[file.Target] = auxiliaryMaterialKind(file.MaterialKind)
-		for _, episode := range importEpisodes(file.Episodes) {
-			run.slots[importSlot{mediaKey(plan.Media), file.Season, episode}] = struct{}{}
+		for _, slot := range file.inventorySlots() {
+			run.slots[importSlot{mediaKey(plan.Media), slot.Season, slot.Episode}] = struct{}{}
 		}
 		if base, ok := meta.OriginalNamingBases[file.ID]; ok {
 			target, err := a.originalTransferNativeRename(ctx, plan.Media, file, base, meta.OriginalTransfer[file.ID], nil, false)
@@ -256,8 +256,8 @@ func (run *importAdmission) covers(plan ImportPlan, meta importMetadata, indices
 		if file.DirectoryDigest != "" || !hasFile(file.Source, file.Target) {
 			return false
 		}
-		for _, episode := range importEpisodes(file.Episodes) {
-			if _, ok := run.slots[importSlot{mediaKey(plan.Media), file.Season, episode}]; !ok {
+		for _, slot := range file.inventorySlots() {
+			if _, ok := run.slots[importSlot{mediaKey(plan.Media), slot.Season, slot.Episode}]; !ok {
 				return false
 			}
 		}
@@ -281,7 +281,7 @@ func guardParallelOverwrite(ctx context.Context, op directoryOverwriteOperation)
 		return bad("REVIEW_IMPORT_SCOPE_CHANGED", "覆盖收据的路径已超出当前整理范围")
 	}
 	for _, old := range op.Targets {
-		if old.Owner != nil && run.owned[old.Path] != *old.Owner {
+		if old.Owner != nil && !sameManagedFile(run.owned[old.Path], *old.Owner) {
 			return bad("REVIEW_IMPORT_SCOPE_CHANGED", "待覆盖文件的归属已超出当前整理范围")
 		}
 		if old.Path != op.Target && !run.coversVersion(op, old.Path) {

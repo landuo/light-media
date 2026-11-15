@@ -1,0 +1,68 @@
+{
+  "stage": 15,
+  "baseline": "4a222f0fa0c06848e7924e6614654a38e999fb19",
+  "scope": "Native local Blu-ray/directory payload, real Go/SQLite/filesystem and independent SDK using exclusive synthetic inputs; not NAS, production or complete new downloader-protocol verification",
+  "publication": {
+    "root": "real directory, not a directory symlink",
+    "members": "individual real symlinks with frozen parent nodes and child receipts",
+    "one_asset_and_history": true,
+    "stream_size_fixture": 12,
+    "payload_bytes_fixture": 24,
+    "tiny_member_retained": true,
+    "empty_source_certificate_retained_and_not_copied": true,
+    "file_list_and_file_list_new": "complete actual source/target mappings",
+    "cold_recovery": "cancelled after a real child published; close/reopen application and retry; existing published inode reused",
+    "later_unrelated_source_nfo_does_not_invalidate_links": true,
+    "generic_snapshot_original_directory_still_rejects_symlinks": true
+  },
+  "ownership": {
+    "aggregate": "actual target entry bytes/digest, not referent snapshot",
+    "proof": "real directory root/nodes and known member entry plus ordinary referent proof",
+    "asset_size": "original payload bytes",
+    "available_check": "complete target tree and each referent",
+    "delete_check": "only known remaining subset, no new/replaced entries or referent traversal"
+  },
+  "lifecycle": {
+    "test": "TestImportSoftlinkDirectoryHistoryDeletion",
+    "branches": ["target", "broken", "both"],
+    "target_only_keeps_sources": true,
+    "both_uses_existing_source_authority": true,
+    "history_reorganize_test": "TestImportSoftlinkDirectoryReorganize",
+    "history_reorganize_branches": ["history-new-path", "in-place"],
+    "new_links_reference_original_tree": true,
+    "stable_resource_history_and_provenance": true,
+    "in_place_retains_actual_root_and_member_entries": true
+  },
+  "metadata": {
+    "test": "TestImportSoftlinkDirectoryScrapeRebasesManagedTree",
+    "branches": ["new-nfo", "linked-nfo"],
+    "new_nfo_beside_library_directory": true,
+    "existing_link_nfo_default_preserved": true,
+    "explicit_overwrite_exchanges_only_entry": true,
+    "source_tree_bytes_unchanged": true,
+    "ordinary_nfo_explicitly_added_to_proof": true,
+    "owner_and_matching_parent_receipts_updated_atomically": true,
+    "cold_recovery_test": "TestImportSoftlinkDirectoryMetadataCommitColdRecovery",
+    "cold_recovery": "real NFO written, managed-file SQL update aborted, durable write journal retained; close/reopen and run original scrape job; proof finalized and journal removed",
+    "no_unknown_sidecar_adoption": true
+  },
+  "external_boundary": {
+    "provider_copy_is_not_softlink": "real SDK copy counterexample now fails before ownership adoption",
+    "external_transfer_softlink_adoption": false,
+    "storage_actor_softlink": false,
+    "external_delete_file_softlink": false,
+    "file_v3_overwrite_admits_directory_proof": false
+  },
+  "verification": {
+    "directory_publish_and_legacy_modes_seconds": 9.405,
+    "targeted_softlink_and_method_checks_seconds": 19.727,
+    "directory_metadata_cold_recovery_seconds": 1.05,
+    "integration_seconds": 264.364,
+    "all_package_compile": true,
+    "linux_amd64_compile": true,
+    "linux_binary_executed": false,
+    "new_browser_validation": false,
+    "ui_softlink_option_opened": false
+  },
+  "remaining": ["external transfer and storage/delete actors", "direct existing-directory merge/overwrite", "owned links in file-management UI and mode choice/browser verification", "provider-native ordinary web/history identity", "final whole-objective integration"]
+}

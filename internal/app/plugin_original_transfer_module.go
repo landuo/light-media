@@ -18,7 +18,7 @@ import (
 // providers must produce the authorized physical file before it can be claimed.
 func (a *App) originalTransferModulePublish(ctx context.Context, plan ImportPlan, file PlanFile, meta importMetadata, check func() error, native func() (importReceipt, error), adopt func(importReceipt) error) (importReceipt, error) {
 	key := plan.ID + "/" + file.ID
-	receipt := importReceipt{ID: key, Source: file.Source, Target: file.Target, SourceSnapshot: planSnapshot(file), Stage: ".light-media-" + tokenHash(key)[:32] + ".part", State: "planned"}
+	receipt := importReceipt{ID: key, Source: file.Source, Target: file.Target, SourceSnapshot: planSnapshot(file), Stage: ".light-media-" + tokenHash(key)[:32] + ".part", State: "planned", MediaKey: mediaKey(plan.Media)}
 	var prior importReceipt
 	err := a.Store.Get(ctx, "import_receipt", key, &prior)
 	if err == nil {
@@ -68,6 +68,26 @@ func (a *App) originalTransferModulePublish(ctx context.Context, plan ImportPlan
 		kwargs, err := a.originalTransferModuleArguments(ctx, plan, file, meta)
 		if err != nil {
 			return receipt, err
+		}
+		if file.Method == "softlink" && !receipt.OriginalNativeInterrupted && receipt.State == "planned" {
+			if file.DirectoryDigest == "" {
+				err = a.freezeOriginalPluginSoftlink(plan, file, meta, &receipt)
+			} else {
+				err = a.freezeOriginalPluginDirectorySoftlink(ctx, plan, file, meta, &receipt)
+			}
+			if err != nil {
+				return receipt, err
+			}
+		}
+		if file.Method == "move" && !receipt.OriginalNativeInterrupted && receipt.State == "planned" {
+			if file.DirectoryDigest == "" {
+				receipt.OriginalMoveSHA256, err = originalMoveFileDigest(ctx, file.Source, receipt.SourceSnapshot, check, false)
+			} else {
+				receipt.OriginalMoveDirectory, err = freezeOriginalMoveDirectory(ctx, file, check)
+			}
+			if err != nil {
+				return receipt, err
+			}
 		}
 		receipt.OriginalModuleStarted = true
 		if err = a.Store.Put(ctx, "import_receipt", key, receipt); err != nil {
@@ -178,14 +198,63 @@ func (a *App) originalTransferModulePublish(ctx context.Context, plan ImportPlan
 		}
 	}
 	if receipt.State == "published" {
+		if file.Method == "softlink" && receipt.SharedDirectory == nil && (receipt.Softlink == nil || (file.DirectoryDigest != "") != (receipt.Softlink.Directory != nil)) {
+			return receipt, bad("REVIEW_PLUGIN_TRANSFER_METHOD", "软链接结果缺少真实条目与引用证明")
+		}
+		if file.Method == "softlink" && receipt.SharedDirectory != nil {
+			if file.DirectoryDigest == "" {
+				return receipt, bad("REVIEW_PLUGIN_TRANSFER_METHOD", "共享软链接结果不是目录")
+			}
+			if err := a.validateSharedSoftlinkPublication(ctx, receipt); err != nil {
+				return receipt, err
+			}
+		}
 		if receipt.Target != file.Target {
 			return receipt, bad("REVIEW_PLUGIN_TRANSFER_TARGET", "插件整理目标与已确认收据不符")
 		}
-		actual, err := snapshotTransferPath(file.Target)
+		actual, err := snapshotOwnedTransferPath(file.Target, receipt.StageSnapshot, receipt.Softlink, true, receipt.SharedDirectory)
 		if err != nil || actual != receipt.StageSnapshot {
 			return receipt, bad("REVIEW_TARGET_CHANGED", "插件整理目标与已确认收据不符")
 		}
+		if receipt.OriginalSoftlink != nil && receipt.OriginalSoftlink.Adopted {
+			if actual, err := verifyOriginalPluginSoftlink(receipt, model); err != nil || actual != receipt.StageSnapshot {
+				return receipt, bad("REVIEW_PLUGIN_SOFTLINK_PROOF", "已认领外部软链接与实际条目或封存结果不符")
+			}
+		}
+		if receipt.OriginalSoftlinkDirectory != nil && receipt.OriginalSoftlinkDirectory.Permission.Adopted {
+			if err := verifyOriginalPluginDirectorySoftlink(receipt, model); err != nil {
+				return receipt, err
+			}
+		}
+		if file.Method == "move" && file.DirectoryDigest != "" {
+			if receipt.DirectoryMoveState != "completed" {
+				return receipt, bad("REVIEW_PLUGIN_TRANSFER_METHOD", "目录移动缺少已完成的源处理收据")
+			}
+			if receipt.OriginalMoveDirectory != nil && receipt.OriginalMoveDirectory.Adopted {
+				return receipt, verifyOriginalPluginDirectoryMove(ctx, file, receipt, model, check)
+			}
+		}
+		if file.Method == "move" && file.DirectoryDigest == "" {
+			if receipt.Move == nil || receipt.Move.State != "completed" {
+				return receipt, bad("REVIEW_PLUGIN_TRANSFER_METHOD", "插件移动缺少已完成的源处理收据")
+			}
+			if receipt.Move.Publication == "plugin" {
+				return receipt, verifyOriginalPluginMovePublication(ctx, receipt, check)
+			}
+		}
 		return receipt, nil
+	}
+	if file.Method == "move" {
+		if file.DirectoryDigest != "" {
+			return a.adoptOriginalPluginDirectoryMove(ctx, plan, file, meta, receipt, model, check, adopt)
+		}
+		return a.adoptOriginalPluginMove(ctx, plan, file, meta, receipt, model, check, adopt)
+	}
+	if file.Method == "softlink" {
+		if file.DirectoryDigest != "" {
+			return a.adoptOriginalPluginDirectorySoftlink(ctx, plan, file, meta, receipt, model, check)
+		}
+		return a.adoptOriginalPluginSoftlink(ctx, plan, file, meta, receipt, model, check)
 	}
 	actual, err := snapshotTransferPath(file.Target)
 	if err != nil {
@@ -388,7 +457,7 @@ func originalTransferPreviewItem(path, kind string, size int64) map[string]any {
 }
 
 func (a *App) originalNativeTransferModuleInfo(ctx context.Context, file PlanFile, plan ImportPlan, failure error) (map[string]any, error) {
-	item, err := originalLocalFileItem(file.Source)
+	item, err := originalTransferRuntimeSourceItem(ctx, file)
 	if err != nil {
 		return nil, err
 	}
@@ -405,7 +474,7 @@ func (a *App) originalNativeTransferModuleInfo(ctx context.Context, file PlanFil
 	if err != nil {
 		return nil, err
 	}
-	target, err := originalLocalFileItem(file.Target)
+	target, err := a.originalPublishedTransferTargetItem(ctx, plan, file)
 	if err != nil {
 		return nil, err
 	}

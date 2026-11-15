@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -21,15 +22,17 @@ type importReorganize struct {
 }
 
 type reorganizeCleanup struct {
-	ID         string         `json:"id"`
-	OldAssetID string         `json:"old_asset_id"`
-	NewAssetID string         `json:"new_asset_id"`
-	PreviewID  string         `json:"preview_id"`
-	NewPath    string         `json:"new_path"`
-	NewRootID  string         `json:"new_root_id"`
-	Snapshot   importSnapshot `json:"snapshot"`
-	Scrape     bool           `json:"scrape"`
-	State      string         `json:"state"`
+	SharedDirectory *importSharedDirectoryProof `json:"shared_directory,omitempty"`
+	Softlink        *importSoftlinkProof        `json:"softlink,omitempty"`
+	ID              string                      `json:"id"`
+	OldAssetID      string                      `json:"old_asset_id"`
+	NewAssetID      string                      `json:"new_asset_id"`
+	PreviewID       string                      `json:"preview_id"`
+	NewPath         string                      `json:"new_path"`
+	NewRootID       string                      `json:"new_root_id"`
+	Snapshot        importSnapshot              `json:"snapshot"`
+	Scrape          bool                        `json:"scrape"`
+	State           string                      `json:"state"`
 }
 
 func (a *App) importSourceAllowed(path string, manual bool) bool {
@@ -47,17 +50,59 @@ func (a *App) importSourceAllowed(path string, manual bool) bool {
 	return false
 }
 
+// Resolve only a currently owned publication for an explicit softlink redo.
+// Unmanaged symlinks are never followed; the ordinary planner rejects them.
+func (a *App) resolveSoftlinkReorganizeSource(ctx context.Context, path string) (string, error) {
+	if !filepath.IsAbs(path) || filepath.Clean(path) != path {
+		return "", bad("INVALID_REORGANIZE", "软链接重整源路径无效")
+	}
+	var own managedFile
+	if err := a.Store.Get(ctx, "managed_file", tokenHash(path), &own); errors.Is(err, sql.ErrNoRows) {
+		return path, nil
+	} else if err != nil {
+		return "", err
+	}
+	var asset Asset
+	root, err := a.importRoot(own.RootID)
+	if err != nil || own.Path != path || own.AssetID == "" || !within(root.Path, path) || a.Store.Get(ctx, "asset", own.AssetID, &asset) != nil || asset.RootID != own.RootID || own.MediaKey != mediaKey(asset.Media) {
+		return "", bad("REVIEW_REORGANIZE_OWNER", "软链接重整缺少当前发布归属")
+	}
+	if own.Kind == "video" {
+		if asset.Path != path || asset.State != "present" && asset.State != "external" {
+			return "", bad("REVIEW_REORGANIZE_OWNER", "软链接视频不是当前有效资产")
+		}
+	} else if !auxiliaryMaterialKind(own.Kind) {
+		return "", bad("REVIEW_REORGANIZE_OWNER", "软链接重整仅支持视频与关联材料")
+	}
+	if stamp, err := snapshotOwnedTransferPath(path, own.Snapshot, own.Softlink, true, own.SharedDirectory); err != nil {
+		return "", err
+	} else if stamp != own.Snapshot {
+		return "", bad("REVIEW_REORGANIZE_SOURCE", "软链接重整源条目已变化")
+	}
+	if own.Softlink != nil {
+		return own.Softlink.Source, nil
+	}
+	if own.Kind == "video" && asset.Path == path && asset.SourcePath != path && a.importSourceAllowed(asset.SourcePath, true) {
+		if stamp, err := snapshotTransferPath(asset.SourcePath); err == nil && stamp == own.SourceSnapshot {
+			return asset.SourcePath, nil
+		}
+	}
+	return path, nil
+}
+
 func reorganizeSameAsset(actual, frozen Asset) bool {
 	a, _ := json.Marshal(struct {
 		ID, Root, Path, Source, Media, State, Part string
 		Season                                     int
 		Episodes                                   []int
-	}{actual.ID, actual.RootID, actual.Path, actual.SourcePath, mediaKey(actual.Media), actual.State, actual.Part, actual.Season, actual.Episodes})
+		EpisodeScopes                              []canonicalEpisodeScope `json:"episode_scopes,omitempty"`
+	}{actual.ID, actual.RootID, actual.Path, actual.SourcePath, mediaKey(actual.Media), actual.State, actual.Part, actual.Season, actual.Episodes, actual.EpisodeScopes})
 	b, _ := json.Marshal(struct {
 		ID, Root, Path, Source, Media, State, Part string
 		Season                                     int
 		Episodes                                   []int
-	}{frozen.ID, frozen.RootID, frozen.Path, frozen.SourcePath, mediaKey(frozen.Media), frozen.State, frozen.Part, frozen.Season, frozen.Episodes})
+		EpisodeScopes                              []canonicalEpisodeScope `json:"episode_scopes,omitempty"`
+	}{frozen.ID, frozen.RootID, frozen.Path, frozen.SourcePath, mediaKey(frozen.Media), frozen.State, frozen.Part, frozen.Season, frozen.Episodes, frozen.EpisodeScopes})
 	return string(a) == string(b)
 }
 
@@ -84,13 +129,22 @@ func (a *App) prepareImportReorganize(ctx context.Context, request ImportRequest
 		return nil, bad("REVIEW_REORGANIZE_OWNER", "原整理目标缺少可核验的文件归属")
 	}
 	source := request.Files[0].Path
-	stamp, err := snapshotTransferPath(source)
+	var stamp importSnapshot
+	if source == frozen.Video.Path {
+		stamp, err = snapshotOwnedTransferPath(source, frozen.Video.Snapshot, frozen.Video.Softlink, true, frozen.Video.SharedDirectory)
+	} else {
+		stamp, err = snapshotTransferPath(source)
+	}
 	if err != nil {
 		return nil, err
 	}
 	if source == frozen.Asset.Path {
 		if stamp != frozen.Video.Snapshot {
 			return nil, bad("REVIEW_REORGANIZE_SOURCE", "原整理目标已被外部修改")
+		}
+	} else if frozen.Video.Softlink != nil && source == frozen.Video.Softlink.Source {
+		if stamp != frozen.Video.Softlink.SourceSnapshot {
+			return nil, bad("REVIEW_REORGANIZE_SOURCE", "软链接实体在原整理后已发生变化")
 		}
 	} else if source == frozen.Asset.SourcePath {
 		if stamp != frozen.Video.SourceSnapshot {
@@ -121,6 +175,13 @@ func (a *App) prepareImportReorganize(ctx context.Context, request ImportRequest
 	if err != nil {
 		return nil, err
 	}
+	if request.Mode == "softlink" && !frozen.SingleHistory {
+		for _, old := range frozen.Owned {
+			if old.Path == source {
+				return nil, bad("REVIEW_SOFTLINK_CLEANUP_DEPENDENCY", "新软链接的实体仍属于待清理旧目标，请先核对原资源")
+			}
+		}
+	}
 	if err = a.guardImportReorganize(ctx, frozen); err != nil {
 		return nil, err
 	}
@@ -141,10 +202,10 @@ func (a *App) guardImportReorganize(ctx context.Context, frozen *importReorganiz
 	}
 	for _, file := range frozen.Owned {
 		var actual managedFile
-		if a.Store.Get(ctx, "managed_file", tokenHash(file.Path), &actual) != nil || actual.AssetID != file.AssetID || actual.RootID != file.RootID || actual.Snapshot != file.Snapshot {
+		if a.Store.Get(ctx, "managed_file", tokenHash(file.Path), &actual) != nil || actual.AssetID != file.AssetID || actual.RootID != file.RootID || actual.Snapshot != file.Snapshot || !sameLifecycleSoftlinkProof(actual.Softlink, file.Softlink, actual.SharedDirectory, file.SharedDirectory) {
 			return bad("REVIEW_REORGANIZE_OWNER", "原整理文件的归属在预览后改变")
 		}
-		stamp, inspectErr := snapshotTransferPath(file.Path)
+		stamp, inspectErr := snapshotOwnedTransferPath(file.Path, file.Snapshot, file.Softlink, true, file.SharedDirectory)
 		if inspectErr != nil && !errors.Is(inspectErr, os.ErrNotExist) || inspectErr == nil && stamp != file.Snapshot {
 			return bad("REVIEW_REORGANIZE_CHANGED", "原整理文件已被外部修改，已保留原结果")
 		}
@@ -183,6 +244,22 @@ func commitImportReorganizeTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, 
 	if err := reorganizeReserveTx(ctx, tx, plan); err != nil {
 		return err
 	}
+	if !meta.Reorganize.SingleHistory {
+		transferred := map[string]bool{}
+		for _, file := range owned {
+			transferred[file.Path] = true
+		}
+		for _, file := range owned {
+			if file.Softlink == nil {
+				continue
+			}
+			for _, previous := range meta.Reorganize.Owned {
+				if !transferred[previous.Path] && file.Softlink.Source == previous.Path {
+					return bad("REVIEW_SOFTLINK_CLEANUP_DEPENDENCY", "新软链接仍依赖待清理旧目标，已保留旧结果")
+				}
+			}
+		}
+	}
 	old := meta.Reorganize.Asset
 	if _, err := tx.ExecContext(ctx, `DELETE FROM asset_slots WHERE asset_id=?`, old.ID); err != nil {
 		return err
@@ -211,12 +288,12 @@ func commitImportReorganizeTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, 
 		if transferred[file.Path] {
 			continue
 		}
-		if _, err := snapshotTransferPath(file.Path); errors.Is(err, os.ErrNotExist) {
+		if _, err := snapshotOwnedTransferPath(file.Path, file.Snapshot, file.Softlink, false, file.SharedDirectory); errors.Is(err, os.ErrNotExist) {
 			continue
 		} else if err != nil {
 			return err
 		}
-		preview.Files = append(preview.Files, assetRemovalFile{Path: file.Path, Snapshot: file.Snapshot, Kind: file.Kind})
+		preview.Files = append(preview.Files, assetRemovalFile{Path: file.Path, Snapshot: file.Snapshot, Kind: file.Kind, Softlink: file.Softlink, SharedDirectory: file.SharedDirectory})
 	}
 	if err := txPut(ctx, tx, "removal_preview", preview.ID, preview); err != nil {
 		return err
@@ -227,7 +304,7 @@ func commitImportReorganizeTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, 
 			video = file
 		}
 	}
-	cleanup := reorganizeCleanup{ID: plan.ID, OldAssetID: old.ID, NewAssetID: asset.ID, PreviewID: preview.ID, NewPath: asset.Path, NewRootID: asset.RootID, Snapshot: video.Snapshot, Scrape: importBool(plan.Scraping, true), State: "pending"}
+	cleanup := reorganizeCleanup{ID: plan.ID, OldAssetID: old.ID, NewAssetID: asset.ID, PreviewID: preview.ID, NewPath: asset.Path, NewRootID: asset.RootID, Snapshot: video.Snapshot, Softlink: video.Softlink, SharedDirectory: video.SharedDirectory, Scrape: importBool(plan.Scraping, true), State: "pending"}
 	if err := txPut(ctx, tx, "reorganize_cleanup", cleanup.ID, cleanup); err != nil {
 		return err
 	}
@@ -257,13 +334,20 @@ func (a *App) runReorganizeCleanup(ctx context.Context, job Job, key string) err
 		return bad("REVIEW_REORGANIZE_ROOT", "新整理媒体库目录已变化，已保留旧目标文件")
 	}
 	var video managedFile
-	stamp, err := snapshotTransferPath(replacement.Path)
-	if err != nil || stamp != cleanup.Snapshot || a.Store.Get(ctx, "managed_file", tokenHash(replacement.Path), &video) != nil || video.AssetID != replacement.ID || video.Snapshot != cleanup.Snapshot {
+	stamp, err := snapshotOwnedTransferPath(replacement.Path, cleanup.Snapshot, cleanup.Softlink, true, cleanup.SharedDirectory)
+	if err != nil || stamp != cleanup.Snapshot || a.Store.Get(ctx, "managed_file", tokenHash(replacement.Path), &video) != nil || video.AssetID != replacement.ID || video.Snapshot != cleanup.Snapshot || !sameLifecycleSoftlinkProof(video.Softlink, cleanup.Softlink, video.SharedDirectory, cleanup.SharedDirectory) {
 		return bad("REVIEW_REORGANIZE_REPLACEMENT", "新整理视频已变化，旧目标文件保留")
 	}
 	var preview assetRemovalPreview
 	if err = a.Store.Get(ctx, "removal_preview", cleanup.PreviewID, &preview); err != nil {
 		return err
+	}
+	if cleanup.Softlink != nil {
+		for _, old := range preview.Files {
+			if !old.Deleted && old.Path == cleanup.Softlink.Source {
+				return bad("REVIEW_SOFTLINK_CLEANUP_DEPENDENCY", "新软链接仍依赖待清理旧实体，已停止清理")
+			}
+		}
 	}
 	if preview.State != "completed" {
 		if preview.State == "preview" {

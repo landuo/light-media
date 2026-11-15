@@ -27,6 +27,25 @@ type originalTransferFileContext struct {
 	Episodes json.RawMessage         `json:"episodes_info,omitempty"`
 }
 
+// Carry the plan's frozen classification into naming/module/event input. Legacy
+// plans without a saved category keep their original source projection unchanged.
+func (projection *originalTransferFileContext) setCategory(category string) error {
+	if category == "" {
+		return nil
+	}
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(projection.Media, &fields); err != nil {
+		return err
+	}
+	if fields == nil {
+		return bad("INVALID_METADATA", "整理媒体信息缺少有效对象")
+	}
+	fields["category"], _ = json.Marshal(category)
+	var err error
+	projection.Media, err = json.Marshal(fields)
+	return err
+}
+
 func (a *App) originalTransferHasHandlers() bool {
 	for _, object := range a.originalLoadedPluginSnapshot() {
 		if object.external && slices.Contains(object.manifest.Methods, "get_module") {
@@ -65,6 +84,7 @@ func (a *App) originalTransferPathMeta(ctx context.Context, path string) (*relea
 }
 
 func (a *App) originalTransferContextWithMedia(ctx context.Context, identity catalog.Media, file PlanFile, resolved json.RawMessage, parsed ...*releasemeta.MetaObject) (originalTransferFileContext, error) {
+	file = file.presentationFile()
 	var out originalTransferFileContext
 	var meta *releasemeta.MetaObject
 	if len(parsed) > 0 {

@@ -14,6 +14,11 @@ import (
 func installOwnedTransferObserver(t *testing.T, a *App, patches map[string]map[string]any, failures map[string]bool, extra ...map[string]any) string {
 	t.Helper()
 	cookie := setupTestAdmin(t, a)
+	return installOwnedTransferObserverWithCookie(t, a, cookie, patches, failures, extra...)
+}
+
+func installOwnedTransferObserverWithCookie(t *testing.T, a *App, cookie *http.Cookie, patches map[string]map[string]any, failures map[string]bool, extra ...map[string]any) string {
+	t.Helper()
 	settings := a.Settings()
 	settings.APIToken = "owned-transfer-events-test-key"
 	if err := a.saveSettings(context.Background(), settings); err != nil {

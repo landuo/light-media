@@ -11,7 +11,17 @@ import (
 func (a *App) originalBrowserDownload(ctx context.Context, path string) (string, error) {
 	item, err := originalLocalFileItem(path)
 	if err != nil {
-		return "", err
+		owned, ok, e := a.browserOwnedSoftlink(ctx, path, true)
+		if e != nil {
+			return "", e
+		}
+		if !ok {
+			return "", err
+		}
+		item, err = softlinkTargetFileItemSnapshot(path, owned.Softlink.SourceSnapshot)
+		if err != nil {
+			return "", err
+		}
 	}
 	result, err := a.originalMetadataStorage(ctx, "download_file", map[string]any{"fileitem": item, "path": nil}, func() (any, error) {
 		// Fixed LocalStorage.download ignores the optional destination.

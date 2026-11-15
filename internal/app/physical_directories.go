@@ -152,7 +152,7 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 			scanned := importScanFile{Path: file.Path, Parsed: a.parseManualImportFileContext(ctx, file), InferredMedia: hint, Numbering: numbering, IdentityReason: reason}
 			var inferred ImportRequest
 			var err error
-			if request.Manual && a.originalManualRecognitionAvailable() {
+			if request.Manual && (request.originalRecognitionSource != "" || a.originalManualRecognitionAvailable()) {
 				inferred, err = a.originalManualTransferIdentity(ctx, request, file, scanned)
 			} else {
 				inferred, err = a.directoryFileIdentity(ctx, DirectoryRule{MediaType: "mixed", Mode: request.Mode}, scanned)
@@ -176,6 +176,7 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 			}
 			request.MediaType, request.TMDBID = inferred.MediaType, inferred.TMDBID
 			request.originalResolvedMedia = inferred.originalResolvedMedia
+			request.providerIdentity, request.originalManualProvider = inferred.providerIdentity, inferred.originalManualProvider
 			request.Files[i].originalResolvedMeta = inferred.Files[0].originalResolvedMeta
 			if file.Season == 0 && !file.SeasonExplicit {
 				request.Files[i].Season = inferred.Files[0].Season

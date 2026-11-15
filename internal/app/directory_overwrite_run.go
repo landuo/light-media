@@ -61,10 +61,10 @@ func (a *App) knownDirectoryOverwritePublication(ctx context.Context, op *direct
 	if r.State != "staged" && r.State != "published" {
 		return false, nil
 	}
-	if r.Stage != ".light-media-"+tokenHash(op.ID)[:32]+".part" || r.StageSnapshot.Size != op.SourceSnapshot.Size || op.Method == "hardlink" && r.StageSnapshot != op.SourceSnapshot {
+	if r.Stage != ".light-media-"+tokenHash(op.ID)[:32]+".part" || !importPublicationMatchesMethod(r, op.Method) {
 		return false, bad("REVIEW_OVERWRITE_RECEIPT", "发布文件身份与实际整理方式不符")
 	}
-	actual, e := snapshotPath(op.Target)
+	actual, e := snapshotOwnedTransferPath(op.Target, r.StageSnapshot, r.Softlink, true)
 	if errors.Is(e, os.ErrNotExist) {
 		return false, nil
 	}
@@ -112,6 +112,9 @@ func (a *App) publishDirectoryOverwrite(ctx context.Context, key, source, target
 	}
 	if op.State == "registered" || op.State == "complete" {
 		return importReceipt{}, bad("REVIEW_PUBLISHED_MISSING", "已登记的覆盖目标消失，不能重新发布")
+	}
+	if e = a.guardDirectoryOverwriteInventory(ctx, op); e != nil {
+		return importReceipt{}, e
 	}
 	if e = a.requireNativeDirectoryPublication(ctx, key, source, target, rootID, method, locked, policy); e != nil {
 		return importReceipt{}, e
@@ -219,7 +222,7 @@ func quarantineDirectoryOverwrite(old directoryOverwriteTarget) error {
 	}
 	defer parent.Close()
 	backup := filepath.Join(filepath.Dir(old.Path), old.Backup)
-	if stamp, e := snapshotPath(backup); e == nil {
+	if stamp, e := snapshotOwnedTransferPath(backup, old.Snapshot, old.softlinkProof(), false); e == nil {
 		if stamp != old.Snapshot {
 			return bad("REVIEW_OVERWRITE_BACKUP", "覆盖暂存文件身份已变化")
 		}
@@ -230,13 +233,13 @@ func quarantineDirectoryOverwrite(old directoryOverwriteTarget) error {
 	} else if !errors.Is(e, os.ErrNotExist) {
 		return e
 	}
-	if stamp, e := snapshotPath(old.Path); e != nil || stamp != old.Snapshot {
+	if stamp, e := snapshotOwnedTransferPath(old.Path, old.Snapshot, old.softlinkProof(), false); e != nil || stamp != old.Snapshot {
 		return bad("REVIEW_OVERWRITE_TARGET", "覆盖前目标身份已变化")
 	}
 	if e = importRenameExclusive(int(parent.Fd()), filepath.Base(old.Path), old.Backup); e != nil {
 		return e
 	}
-	stamp, e := snapshotPath(backup)
+	stamp, e := snapshotOwnedTransferPath(backup, old.Snapshot, old.softlinkProof(), false)
 	if e != nil || stamp != old.Snapshot {
 		_ = importRenameExclusive(int(parent.Fd()), old.Backup, filepath.Base(old.Path))
 		_ = parent.Sync()
@@ -251,7 +254,7 @@ func restoreDirectoryOverwrite(old directoryOverwriteTarget) error {
 	}
 	defer parent.Close()
 	backup := filepath.Join(filepath.Dir(old.Path), old.Backup)
-	stamp, e := snapshotPath(backup)
+	stamp, e := snapshotOwnedTransferPath(backup, old.Snapshot, old.softlinkProof(), false)
 	if errors.Is(e, os.ErrNotExist) {
 		return nil
 	}
@@ -300,15 +303,15 @@ func (a *App) commitDirectoryOverwriteFileTx(ctx context.Context, tx *sql.Tx, id
 	if json.Unmarshal(raw, &r) != nil || r.Target != op.Target || r.Source != op.Source || r.SourceSnapshot != op.SourceSnapshot || (r.State != "published" && r.State != "staged") {
 		return bad("REVIEW_OVERWRITE_RECEIPT", "没有实际发布结果，不能转移整理归属")
 	}
-	if r.Stage != ".light-media-"+tokenHash(op.ID)[:32]+".part" || r.StageSnapshot.Size != op.SourceSnapshot.Size || op.Method == "hardlink" && r.StageSnapshot != op.SourceSnapshot {
+	if r.Stage != ".light-media-"+tokenHash(op.ID)[:32]+".part" || !importPublicationMatchesMethod(r, op.Method) {
 		return bad("REVIEW_OVERWRITE_RECEIPT", "实际整理发布身份不符")
 	}
-	if actual, e := snapshotPath(op.Target); e != nil || actual != r.StageSnapshot {
+	if actual, e := snapshotOwnedTransferPath(op.Target, r.StageSnapshot, r.Softlink, true); e != nil || actual != r.StageSnapshot {
 		return bad("REVIEW_OVERWRITE_TARGET", "发布结果已被外部改动")
 	}
 	expectedTarget := replacement.Path
 	if material != nil {
-		if material.AssetID != replacement.ID || material.RootID != replacement.RootID || material.MediaKey != mediaKey(replacement.Media) || material.SourceSnapshot != op.SourceSnapshot || material.Snapshot != r.StageSnapshot || !auxiliaryMaterialKind(material.Kind) {
+		if material.AssetID != replacement.ID || material.RootID != replacement.RootID || material.MediaKey != mediaKey(replacement.Media) || material.SourceSnapshot != op.SourceSnapshot || material.Snapshot != r.StageSnapshot || !sameSoftlinkProof(material.Softlink, r.Softlink) || !auxiliaryMaterialKind(material.Kind) {
 			return bad("REVIEW_OVERWRITE_RECEIPT", "附加文件与真实发布结果不一致")
 		}
 		expectedTarget = material.Path
@@ -331,7 +334,7 @@ func (a *App) commitDirectoryOverwriteFileTx(ctx context.Context, tx *sql.Tx, id
 			return e
 		}
 		var current managedFile
-		if json.Unmarshal(raw, &current) != nil || current != *owner {
+		if json.Unmarshal(raw, &current) != nil || !sameManagedFile(current, *owner) {
 			return bad("REVIEW_OVERWRITE_OWNER", "原目标登记已被其他操作修改")
 		}
 		var asset Asset
@@ -346,6 +349,9 @@ func (a *App) commitDirectoryOverwriteFileTx(ctx context.Context, tx *sql.Tx, id
 			return e
 		} else if json.Unmarshal(raw, &asset) != nil || asset.RootID != op.RootID || material == nil && asset.Path != old.Path {
 			return bad("REVIEW_OVERWRITE_OWNER", "原整理记录不能匹配覆盖文件")
+		}
+		if (len(asset.EpisodeScopes) != 0 || len(replacement.EpisodeScopes) != 0) && (mediaKey(asset.Media) != mediaKey(replacement.Media) || !canonicalSlotsContain(replacement.inventorySlots(), asset.inventorySlots())) {
+			return bad("QUALITY_PARTIAL_PATH_CONFLICT", "原文件还承载未替换季集，保留原文件")
 		}
 		if material == nil {
 			asset.State = "superseded"
@@ -393,10 +399,10 @@ func (a *App) commitDirectoryOverwriteFileTx(ctx context.Context, tx *sql.Tx, id
 				if own.Kind == "video" {
 					continue
 				}
-				if run := parallelImport(ctx); run != nil && run.owned[own.Path] != own {
+				if run := parallelImport(ctx); run != nil && !sameManagedFile(run.owned[own.Path], own) {
 					return bad("REVIEW_IMPORT_SCOPE_CHANGED", "原资产的旁车归属已超出当前整理范围")
 				}
-				actual, err := snapshotPath(own.Path)
+				actual, err := snapshotOwnedTransferPath(own.Path, own.Snapshot, own.Softlink, true)
 				if err != nil || actual != own.Snapshot {
 					return bad("REVIEW_OVERWRITE_OWNER", "原旁车已变化，未转移其归属")
 				}
@@ -412,8 +418,8 @@ func (a *App) commitDirectoryOverwriteFileTx(ctx context.Context, tx *sql.Tx, id
 	// versions. When differently named versions coexist, retain those records and
 	// files and point only these newly materialized scopes at the new asset.
 	if material == nil {
-		for _, ep := range importEpisodes(replacement.Episodes) {
-			if _, e = tx.ExecContext(ctx, `DELETE FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=?`, mediaKey(replacement.Media), replacement.Season, ep, replacement.ID); e != nil {
+		for _, slot := range replacement.inventorySlots() {
+			if _, e = tx.ExecContext(ctx, `DELETE FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=?`, mediaKey(replacement.Media), slot.Season, slot.Episode, replacement.ID); e != nil {
 				return e
 			}
 		}
@@ -454,7 +460,7 @@ func (a *App) finishDirectoryOverwrite(ctx context.Context, id string) error {
 	if e != nil || root.Path != op.RootPath {
 		return bad("REVIEW_ROOT_CHANGED", "覆盖清理的目录已变化")
 	}
-	if actual, e := snapshotPath(op.Target); e != nil || actual != op.Published.StageSnapshot {
+	if actual, e := snapshotOwnedTransferPath(op.Target, op.Published.StageSnapshot, op.Published.Softlink, true); e != nil || actual != op.Published.StageSnapshot {
 		return bad("REVIEW_OVERWRITE_TARGET", "新文件身份已变化，旧版本暂存文件保留")
 	}
 	for _, old := range op.Targets {
@@ -463,7 +469,7 @@ func (a *App) finishDirectoryOverwrite(ctx context.Context, id string) error {
 			return e
 		}
 		backup := filepath.Join(filepath.Dir(old.Path), old.Backup)
-		stamp, e := snapshotPath(backup)
+		stamp, e := snapshotOwnedTransferPath(backup, old.Snapshot, old.softlinkProof(), false)
 		if e == nil && stamp == old.Snapshot {
 			e = unix.Unlinkat(int(parent.Fd()), old.Backup, 0)
 			if e == nil {
@@ -511,6 +517,9 @@ func (a *App) finishImportOverwrites(ctx context.Context, plan ImportPlan, file 
 		if err := a.finishDirectoryOverwrite(ctx, key); err != nil {
 			return err
 		}
+	}
+	if file.DirectoryDigest != "" && file.Status == "imported" {
+		return a.finishDirectoryMerge(ctx, plan.ID+"/"+file.ID)
 	}
 	return nil
 }

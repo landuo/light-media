@@ -1,0 +1,54 @@
+{
+  "stage": 11,
+  "baseline": "4a222f0fa0c06848e7924e6614654a38e999fb19",
+  "scope": "Synthetic media and metadata, actual Go services, local filesystems and independent SDK processes; no production/NAS changes",
+  "storage_move": {
+    "test": "TestImportMoveActualSDKSelectedStorage",
+    "branches": ["success", "cold-recovery", "corrupt", "source-retained"],
+    "operation": "storage.move, not storage.copy or storage.link",
+    "material": "ordinary video and subtitle",
+    "proof": "original SourceSnapshot and SHA, instance/key, sealed operation result, verified stage, exclusive target publication",
+    "terminal": {"publication": "storage", "state": "completed"},
+    "cold_recovery": "new SDK process, no second move or completion callback, recreated source retained"
+  },
+  "directory_transfer_move": {
+    "test": "TestOriginalTransferModuleActualSDKDirectoryMoveAdoption",
+    "branches": ["success", "cold-recovery", "native-fallback", "wrong-content"],
+    "proof": "original directory snapshot, per-member snapshots/SHA, explicit source/target mapping and actual target files",
+    "terminal": "DirectoryMoveState=completed, OriginalMoveDirectory.Adopted=true for external provider",
+    "history": "single original root; source empty containers retained",
+    "cold_recovery": "original source not reread; replacement source members retained",
+    "copy_claiming_move_rejected": true
+  },
+  "copy_attributes": {
+    "test": "TestImportCopyAndMoveUseSourceTimesAndDestinationPermissions",
+    "source_mode": "0700",
+    "destination_policy": "ordinary 0666 creation subject to umask and inherited ACL; no source chmod/copystat",
+    "apfs_nanosecond_mtime_verified": true,
+    "linux_runtime_verified": false,
+    "atime_note": "set from source before-read stat; subsequent verification reads may update it"
+  },
+  "cross_device": {
+    "target": "new exclusive 64 MiB HFS+ image",
+    "source_device": 16777229,
+    "target_device": 16777237,
+    "bytes": 1769499,
+    "sha256": "e4a437570e036f870ee457f319ebc1ed930e225ad5fd1129b1b16f4c0d548da1",
+    "source_and_target_mtime_ns": 1700000000000000000,
+    "source_removed": true,
+    "image_detached_and_removed": true
+  },
+  "history_absence": "completed exact directory move reconciles missing source after old roots removed; recreated directory is not granted deletion",
+  "verification": {
+    "integration_seconds": 132.222,
+    "cross_device_attributes_history_seconds": 2.784,
+    "directory_sdk_seconds": 10.138,
+    "storage_move_sdk_seconds": 5.272,
+    "legacy_storage_sdk_seconds": 6.657,
+    "all_package_compile": true,
+    "linux_amd64_compile": true,
+    "linux_binary_executed": false,
+    "new_browser_validation": false
+  },
+  "remaining": ["directory members through storage.Source.move", "native softlink", "provider-native web/history identity", "final end-to-end verification"]
+}

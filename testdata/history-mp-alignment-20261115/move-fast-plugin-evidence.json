@@ -1,0 +1,42 @@
+{
+  "stage": 10,
+  "baseline": "4a222f0fa0c06848e7924e6614654a38e999fb19",
+  "scope": "Go application with synthetic metadata/media, real local filesystems and independent SDK processes; not production/NAS",
+  "same_device": {
+    "tests": ["TestImportMoveSameDeviceSpaceAndInode/file-and-subtitle", "TestImportMoveSameDeviceSpaceAndInode/disc"],
+    "sparse_video_bytes": 67108864,
+    "subtitle_bytes": 8388608,
+    "assertions": ["manual submission executes actual move", "target retains original video snapshot and inode", "source video disappears", "space estimate below 1 MiB without scraping", "native hardlink publication has no full-file SHA field"]
+  },
+  "cross_device": {
+    "test": "TestImportMoveActualCrossFilesystem",
+    "target_filesystem": "new exclusive 64 MiB HFS+ disk image",
+    "source_device": 16777229,
+    "target_device": 16777237,
+    "target_bytes": 1769499,
+    "sha256": "e4a437570e036f870ee457f319ebc1ed930e225ad5fd1129b1b16f4c0d548da1",
+    "publication": "copy",
+    "move_state": "completed",
+    "source_exists_after_move": false,
+    "target_bytes_verified": true,
+    "image_detached_and_removed_after_test": true
+  },
+  "recovery": ["EXDEV and unsupported source-link fallback copies real bytes", "legacy empty publication resumes as copy", "rename publication before SQL confirmation survives App close/reopen", "completed move preserves recreated source"],
+  "plugin_transfer": {
+    "test": "TestOriginalTransferModuleActualSDKMoveAdoption",
+    "scenarios": ["video and subtitle", "asset SQL failure and same-plan resume", "wrong content", "source retained"],
+    "publication": "plugin",
+    "before_call_source_sha_persisted": true,
+    "directory_copy_cannot_claim_move_test": "TestOriginalTransferModuleActualSDKDirectoryCopyCannotClaimMove"
+  },
+  "verification": {
+    "integrated_history_inventory_metadata_and_sdk_seconds": 119.211,
+    "final_move_publication_and_module_suite_seconds": 31.808,
+    "all_package_compile": true,
+    "linux_amd64_compile": true,
+    "linux_binary_executed": false,
+    "frontend_changed": false,
+    "new_browser_validation": false
+  },
+  "remaining": ["custom storage.Source.move", "external directory transfer move", "cross-device copy timestamps and destination permission policy", "native softlink", "provider-native web/history identity", "final end-to-end verification"]
+}

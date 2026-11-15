@@ -49,8 +49,18 @@ func ownedStorageOperation(ctx context.Context, base plugins.Base, raw json.RawM
 		if os.IsNotExist(e) {
 			return json.RawMessage(`null`), nil
 		}
-		if e != nil || stat.Mode()&os.ModeSymlink != 0 {
-			return nil, errors.New("owned storage unreadable item")
+		if e != nil {
+			return nil, e
+		}
+		if stat.Mode()&os.ModeSymlink != 0 {
+			reference, err := os.Readlink(path)
+			if err != nil || !allowed(reference) {
+				return nil, errors.New("owned storage link outside fixture root")
+			}
+			stat, e = os.Stat(path)
+			if e != nil {
+				return nil, e
+			}
 		}
 		ext := strings.TrimPrefix(filepath.Ext(path), ".")
 		typ := "file"
@@ -113,7 +123,7 @@ func ownedStorageOperation(ctx context.Context, base plugins.Base, raw json.RawM
 			return nil, e
 		}
 		return json.RawMessage(`true`), nil
-	case "link", "copy":
+	case "link", "copy", "move", "softlink":
 		var source string
 		if call.FileItem == nil || json.Unmarshal(call.FileItem.Fields["path"], &source) != nil || !allowed(source) || !strings.HasPrefix(filepath.Base(call.PublicationPath), ".light-media-") {
 			return nil, errors.New("invalid owned publication")
@@ -130,8 +140,14 @@ func ownedStorageOperation(ctx context.Context, base plugins.Base, raw json.RawM
 		if mode == "lie" {
 			return json.RawMessage(`true`), nil
 		}
-		if call.Operation == "link" {
+		if call.Operation == "link" && mode != "copy-is-not-link" || call.Operation == "copy" && mode == "link-is-not-copy" {
 			e = os.Link(source, call.PublicationPath)
+		} else if call.Operation == "softlink" && mode != "copy-is-not-softlink" {
+			reference := source
+			if mode == "corrupt" {
+				reference += ".wrong"
+			}
+			e = os.Symlink(reference, call.PublicationPath)
 		} else {
 			input, err := os.Open(source)
 			if err != nil {
@@ -149,10 +165,26 @@ func ownedStorageOperation(ctx context.Context, base plugins.Base, raw json.RawM
 			if e == nil {
 				e = output.Sync()
 			}
-			output.Close()
+			if closeErr := output.Close(); e == nil {
+				e = closeErr
+			}
 		}
 		if e != nil {
 			return nil, e
+		}
+		if call.Operation == "move" && mode != "source-retained" {
+			if e = os.Remove(source); e != nil {
+				return nil, e
+			}
+			parent, err := os.Open(filepath.Dir(source))
+			if err != nil {
+				return nil, err
+			}
+			e = parent.Sync()
+			parent.Close()
+			if e != nil {
+				return nil, e
+			}
 		}
 		return json.RawMessage(`true`), nil
 	}

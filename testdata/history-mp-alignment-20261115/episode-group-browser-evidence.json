@@ -1,0 +1,1104 @@
+{
+  "requests": [
+    {
+      "url": "/api/catalog/episode-groups?id=123",
+      "status": 200,
+      "request": null,
+      "response": {
+        "data": [
+          {
+            "id": "merged",
+            "name": "合并篇章",
+            "group_count": 2,
+            "episode_count": 4
+          }
+        ],
+        "request_id": "req_dAb1YDDG7_T-xPh-SIM0wcXC"
+      }
+    },
+    {
+      "url": "/api/files/episode-format/recommend",
+      "status": 200,
+      "request": {
+        "history_ids": [
+          "group-file-2",
+          "group-file-1"
+        ]
+      },
+      "response": {
+        "data": {
+          "rule_name": "智能分析",
+          "rule_index": -1,
+          "pattern": "",
+          "episode_format": "Sample.S01E{ep}.mkv",
+          "sample_file": "Sample.S01E01.mkv",
+          "min_file_size_mb": 0,
+          "sample_count": 2,
+          "matched_count": 2,
+          "message": "已放宽体积限制智能生成模板（仅供参考）",
+          "majority_count": 2,
+          "confidence": "low",
+          "size_filter_relaxed": true,
+          "native_verified_count": 2,
+          "native_fallback_count": 0,
+          "native_conflict_count": 0,
+          "reason": "small_files_fallback",
+          "reasons": [
+            "small_files_fallback",
+            "native_meta_verified"
+          ]
+        },
+        "request_id": "req_SHe-9pKiKfp8EmNpJuVX3j8Z"
+      }
+    },
+    {
+      "url": "/api/files/organize",
+      "status": 200,
+      "request": {
+        "paths": [
+          "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E02.mkv",
+          "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E01.mkv"
+        ],
+        "history_ids": [
+          "group-file-2",
+          "group-file-1"
+        ],
+        "target_storage": "",
+        "target_path": "",
+        "mode": "",
+        "media_type": "tv",
+        "tmdb_id": 123,
+        "episode_group": "merged",
+        "episode_detail": "",
+        "episode_format": "Sample.S01E{ep}.mkv",
+        "episode_offset": "",
+        "episode_part": "",
+        "min_filesize": 0,
+        "from_history": false,
+        "preview": true,
+        "background": false
+      },
+      "response": {
+        "data": {
+          "items": [
+            {
+              "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E02.mkv",
+              "status": "failed",
+              "error": "源目录未匹配整理规则，请指定整理目标目录",
+              "error_code": "DIRECTORY_TARGET_REQUIRED",
+              "media": {
+                "id": 0,
+                "media_type": "",
+                "title": "Sample",
+                "original_title": "",
+                "original_language": "",
+                "origin_country": null,
+                "production_countries": null,
+                "imdb_id": "",
+                "aliases": null,
+                "year": 0,
+                "overview": "",
+                "poster_path": "",
+                "backdrop_path": "",
+                "release_date": "",
+                "vote_average": 0,
+                "vote_count": 0,
+                "popularity": 0,
+                "genres": null,
+                "cast": null,
+                "recommendations": null,
+                "seasons": null,
+                "number_of_episodes": 0,
+                "number_of_seasons": 0,
+                "status": "",
+                "runtime": 0
+              },
+              "mode": "hardlink"
+            },
+            {
+              "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E01.mkv",
+              "status": "failed",
+              "error": "源目录未匹配整理规则，请指定整理目标目录",
+              "error_code": "DIRECTORY_TARGET_REQUIRED",
+              "media": {
+                "id": 0,
+                "media_type": "",
+                "title": "Sample",
+                "original_title": "",
+                "original_language": "",
+                "origin_country": null,
+                "production_countries": null,
+                "imdb_id": "",
+                "aliases": null,
+                "year": 0,
+                "overview": "",
+                "poster_path": "",
+                "backdrop_path": "",
+                "release_date": "",
+                "vote_average": 0,
+                "vote_count": 0,
+                "popularity": 0,
+                "genres": null,
+                "cast": null,
+                "recommendations": null,
+                "seasons": null,
+                "number_of_episodes": 0,
+                "number_of_seasons": 0,
+                "status": "",
+                "runtime": 0
+              },
+              "mode": "hardlink"
+            }
+          ],
+          "total": 2,
+          "submitted": 0,
+          "failed": 2
+        },
+        "request_id": "req_l3zW0ilwQGBuzhWyeNp-eAbE"
+      }
+    },
+    {
+      "url": "/api/files/organize",
+      "status": 200,
+      "request": {
+        "paths": [
+          "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E02.mkv",
+          "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E01.mkv"
+        ],
+        "history_ids": [
+          "group-file-2",
+          "group-file-1"
+        ],
+        "target_storage": "",
+        "target_path": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library",
+        "mode": "",
+        "media_type": "tv",
+        "tmdb_id": 123,
+        "episode_group": "merged",
+        "episode_detail": "",
+        "episode_format": "Sample.S01E{ep}.mkv",
+        "episode_offset": "",
+        "episode_part": "",
+        "min_filesize": 0,
+        "scraping": true,
+        "from_history": false,
+        "preview": true,
+        "background": false
+      },
+      "response": {
+        "data": {
+          "items": [
+            {
+              "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E02.mkv",
+              "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Group Fixture (2024)/Season 1/Group Fixture - S01E02 - 第 2 集.mkv",
+              "status": "ready",
+              "media": {
+                "id": 123,
+                "media_type": "tv",
+                "title": "Group Fixture",
+                "original_title": "Group Fixture",
+                "original_language": "",
+                "origin_country": [],
+                "production_countries": [],
+                "category_metadata_known": true,
+                "imdb_id": "",
+                "aliases": [],
+                "year": 2024,
+                "overview": "",
+                "poster_path": "",
+                "backdrop_path": "",
+                "release_date": "2024-01-01",
+                "vote_average": 0,
+                "vote_count": 0,
+                "popularity": 0,
+                "genres": [],
+                "cast": [],
+                "recommendations": [],
+                "seasons": [
+                  {
+                    "id": 0,
+                    "season_number": 0,
+                    "name": "",
+                    "overview": "",
+                    "air_date": "",
+                    "poster_path": "",
+                    "episode_count": 2
+                  },
+                  {
+                    "id": 0,
+                    "season_number": 4,
+                    "name": "",
+                    "overview": "",
+                    "air_date": "",
+                    "poster_path": "",
+                    "episode_count": 19
+                  }
+                ],
+                "number_of_episodes": 0,
+                "number_of_seasons": 0,
+                "status": "",
+                "runtime": 0
+              },
+              "mode": "hardlink",
+              "plan_id": "plan_8QYOJgmS-rr54yddun9yR2vk"
+            },
+            {
+              "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E01.mkv",
+              "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Group Fixture (2024)/Season 1/Group Fixture - S01E01 - 第 1 集.mkv",
+              "status": "ready",
+              "media": {
+                "id": 123,
+                "media_type": "tv",
+                "title": "Group Fixture",
+                "original_title": "Group Fixture",
+                "original_language": "",
+                "origin_country": [],
+                "production_countries": [],
+                "category_metadata_known": true,
+                "imdb_id": "",
+                "aliases": [],
+                "year": 2024,
+                "overview": "",
+                "poster_path": "",
+                "backdrop_path": "",
+                "release_date": "2024-01-01",
+                "vote_average": 0,
+                "vote_count": 0,
+                "popularity": 0,
+                "genres": [],
+                "cast": [],
+                "recommendations": [],
+                "seasons": [
+                  {
+                    "id": 0,
+                    "season_number": 0,
+                    "name": "",
+                    "overview": "",
+                    "air_date": "",
+                    "poster_path": "",
+                    "episode_count": 2
+                  },
+                  {
+                    "id": 0,
+                    "season_number": 4,
+                    "name": "",
+                    "overview": "",
+                    "air_date": "",
+                    "poster_path": "",
+                    "episode_count": 19
+                  }
+                ],
+                "number_of_episodes": 0,
+                "number_of_seasons": 0,
+                "status": "",
+                "runtime": 0
+              },
+              "mode": "hardlink",
+              "plan_id": "plan_TBqfO7n6oH1eRVOyQ8GzIWHu"
+            }
+          ],
+          "total": 2,
+          "submitted": 0,
+          "failed": 0
+        },
+        "request_id": "req_mD902rpoQRWlztKCsbpxm6Ry"
+      }
+    },
+    {
+      "url": "/api/files/organize",
+      "status": 200,
+      "request": {
+        "paths": [
+          "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E02.mkv",
+          "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E01.mkv"
+        ],
+        "history_ids": [
+          "group-file-2",
+          "group-file-1"
+        ],
+        "target_storage": "",
+        "target_path": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library",
+        "mode": "",
+        "media_type": "tv",
+        "tmdb_id": 123,
+        "episode_group": "merged",
+        "episode_detail": "",
+        "episode_format": "Sample.S01E{ep}.mkv",
+        "episode_offset": "",
+        "episode_part": "",
+        "min_filesize": 0,
+        "scraping": true,
+        "from_history": false,
+        "preview": false,
+        "background": false
+      },
+      "response": {
+        "data": {
+          "items": [
+            {
+              "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E02.mkv",
+              "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Group Fixture (2024)/Season 1/Group Fixture - S01E02 - 第 2 集.mkv",
+              "status": "queued",
+              "media": {
+                "id": 123,
+                "media_type": "tv",
+                "title": "Group Fixture",
+                "original_title": "Group Fixture",
+                "original_language": "",
+                "origin_country": [],
+                "production_countries": [],
+                "category_metadata_known": true,
+                "imdb_id": "",
+                "aliases": [],
+                "year": 2024,
+                "overview": "",
+                "poster_path": "",
+                "backdrop_path": "",
+                "release_date": "2024-01-01",
+                "vote_average": 0,
+                "vote_count": 0,
+                "popularity": 0,
+                "genres": [],
+                "cast": [],
+                "recommendations": [],
+                "seasons": [
+                  {
+                    "id": 0,
+                    "season_number": 0,
+                    "name": "",
+                    "overview": "",
+                    "air_date": "",
+                    "poster_path": "",
+                    "episode_count": 2
+                  },
+                  {
+                    "id": 0,
+                    "season_number": 4,
+                    "name": "",
+                    "overview": "",
+                    "air_date": "",
+                    "poster_path": "",
+                    "episode_count": 19
+                  }
+                ],
+                "number_of_episodes": 0,
+                "number_of_seasons": 0,
+                "status": "",
+                "runtime": 0
+              },
+              "mode": "hardlink",
+              "plan_id": "plan_TRq1s9s_ekBMK3tzmEjxs5Ts",
+              "job_id": "job_v18QWCRDvLHGi7WK0vzlisOy"
+            },
+            {
+              "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E01.mkv",
+              "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Group Fixture (2024)/Season 1/Group Fixture - S01E01 - 第 1 集.mkv",
+              "status": "queued",
+              "media": {
+                "id": 123,
+                "media_type": "tv",
+                "title": "Group Fixture",
+                "original_title": "Group Fixture",
+                "original_language": "",
+                "origin_country": [],
+                "production_countries": [],
+                "category_metadata_known": true,
+                "imdb_id": "",
+                "aliases": [],
+                "year": 2024,
+                "overview": "",
+                "poster_path": "",
+                "backdrop_path": "",
+                "release_date": "2024-01-01",
+                "vote_average": 0,
+                "vote_count": 0,
+                "popularity": 0,
+                "genres": [],
+                "cast": [],
+                "recommendations": [],
+                "seasons": [
+                  {
+                    "id": 0,
+                    "season_number": 0,
+                    "name": "",
+                    "overview": "",
+                    "air_date": "",
+                    "poster_path": "",
+                    "episode_count": 2
+                  },
+                  {
+                    "id": 0,
+                    "season_number": 4,
+                    "name": "",
+                    "overview": "",
+                    "air_date": "",
+                    "poster_path": "",
+                    "episode_count": 19
+                  }
+                ],
+                "number_of_episodes": 0,
+                "number_of_seasons": 0,
+                "status": "",
+                "runtime": 0
+              },
+              "mode": "hardlink",
+              "plan_id": "plan_7MRlkMO4jR9m8siv_ls83BFa",
+              "job_id": "job_e5YJwq_0wcR1OYPD9meQTrmD"
+            }
+          ],
+          "total": 2,
+          "submitted": 2,
+          "failed": 0
+        },
+        "request_id": "req_cQzB0TUSDqX7xFql-8biEkKl"
+      }
+    },
+    {
+      "url": "/api/files/organize",
+      "status": 200,
+      "request": {
+        "paths": [
+          "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E01.mkv"
+        ],
+        "history_ids": [
+          "group-file-1"
+        ],
+        "target_storage": "",
+        "target_path": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library",
+        "mode": "",
+        "media_type": "",
+        "tmdb_id": 0,
+        "episode_part": "",
+        "min_filesize": 0,
+        "from_history": true,
+        "preview": true,
+        "background": false
+      },
+      "response": {
+        "data": {
+          "items": [
+            {
+              "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E01.mkv",
+              "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Group Fixture (2024)/Season 1/Group Fixture - S01E01 - 第 1 集.mkv",
+              "status": "ready",
+              "media": {
+                "id": 123,
+                "media_type": "tv",
+                "title": "Group Fixture",
+                "original_title": "Group Fixture",
+                "original_language": "",
+                "origin_country": [],
+                "production_countries": [],
+                "category_metadata_known": true,
+                "imdb_id": "",
+                "aliases": [],
+                "year": 2024,
+                "overview": "",
+                "poster_path": "",
+                "backdrop_path": "",
+                "release_date": "2024-01-01",
+                "vote_average": 0,
+                "vote_count": 0,
+                "popularity": 0,
+                "genres": [],
+                "cast": [],
+                "recommendations": [],
+                "seasons": [
+                  {
+                    "id": 0,
+                    "season_number": 0,
+                    "name": "",
+                    "overview": "",
+                    "air_date": "",
+                    "poster_path": "",
+                    "episode_count": 2
+                  },
+                  {
+                    "id": 0,
+                    "season_number": 4,
+                    "name": "",
+                    "overview": "",
+                    "air_date": "",
+                    "poster_path": "",
+                    "episode_count": 19
+                  }
+                ],
+                "number_of_episodes": 0,
+                "number_of_seasons": 0,
+                "status": "",
+                "runtime": 0
+              },
+              "mode": "hardlink",
+              "plan_id": "plan_F2hlLCP2G580TjR_3FrLDBLx"
+            }
+          ],
+          "total": 1,
+          "submitted": 0,
+          "failed": 0
+        },
+        "request_id": "req_DtHSkOxnHReoI_lXdxeSJCQg"
+      }
+    }
+  ],
+  "errors": [],
+  "before": {
+    "items": [
+      {
+        "id": "group-file-2",
+        "file_id": "group-file-2",
+        "plan_id": "group-plan-2",
+        "workflow_id": "fixture-work",
+        "job_id": "group-job-2",
+        "job_state": "failed",
+        "media": {
+          "id": 123,
+          "media_type": "tv",
+          "title": "Group Fixture",
+          "original_title": "",
+          "original_language": "",
+          "origin_country": null,
+          "production_countries": null,
+          "category_metadata_known": true,
+          "imdb_id": "",
+          "aliases": null,
+          "year": 2024,
+          "overview": "",
+          "poster_path": "",
+          "backdrop_path": "",
+          "release_date": "",
+          "vote_average": 0,
+          "vote_count": 0,
+          "popularity": 0,
+          "genres": null,
+          "cast": null,
+          "recommendations": null,
+          "seasons": null,
+          "number_of_episodes": 0,
+          "number_of_seasons": 0,
+          "status": "",
+          "runtime": 0
+        },
+        "season": 1,
+        "episodes": [
+          2
+        ],
+        "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E02.mkv",
+        "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Unpublished.2.mkv",
+        "mode": "hardlink",
+        "size": 0,
+        "status": "failed",
+        "file_status": "error",
+        "error": "合成记录：待重新整理",
+        "created_at": "2026-11-14T22:33:48.683814Z",
+        "updated_at": "2026-11-14T22:35:48.683841Z",
+        "can_retry": false,
+        "can_recognize": true
+      },
+      {
+        "id": "group-file-1",
+        "file_id": "group-file-1",
+        "plan_id": "group-plan-1",
+        "workflow_id": "fixture-work",
+        "job_id": "group-job-1",
+        "job_state": "failed",
+        "media": {
+          "id": 123,
+          "media_type": "tv",
+          "title": "Group Fixture",
+          "original_title": "",
+          "original_language": "",
+          "origin_country": null,
+          "production_countries": null,
+          "category_metadata_known": true,
+          "imdb_id": "",
+          "aliases": null,
+          "year": 2024,
+          "overview": "",
+          "poster_path": "",
+          "backdrop_path": "",
+          "release_date": "",
+          "vote_average": 0,
+          "vote_count": 0,
+          "popularity": 0,
+          "genres": null,
+          "cast": null,
+          "recommendations": null,
+          "seasons": null,
+          "number_of_episodes": 0,
+          "number_of_seasons": 0,
+          "status": "",
+          "runtime": 0
+        },
+        "season": 1,
+        "episodes": [
+          1
+        ],
+        "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E01.mkv",
+        "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Unpublished.1.mkv",
+        "mode": "hardlink",
+        "size": 0,
+        "status": "failed",
+        "file_status": "error",
+        "error": "合成记录：待重新整理",
+        "created_at": "2026-11-14T22:34:48.678869Z",
+        "updated_at": "2026-11-14T22:35:48.678926Z",
+        "can_retry": false,
+        "can_recognize": true
+      }
+    ],
+    "page": 1,
+    "page_size": 50,
+    "total": 2
+  },
+  "afterPreview": {
+    "items": [
+      {
+        "id": "group-file-2",
+        "file_id": "group-file-2",
+        "plan_id": "group-plan-2",
+        "workflow_id": "fixture-work",
+        "job_id": "group-job-2",
+        "job_state": "failed",
+        "media": {
+          "id": 123,
+          "media_type": "tv",
+          "title": "Group Fixture",
+          "original_title": "",
+          "original_language": "",
+          "origin_country": null,
+          "production_countries": null,
+          "category_metadata_known": true,
+          "imdb_id": "",
+          "aliases": null,
+          "year": 2024,
+          "overview": "",
+          "poster_path": "",
+          "backdrop_path": "",
+          "release_date": "",
+          "vote_average": 0,
+          "vote_count": 0,
+          "popularity": 0,
+          "genres": null,
+          "cast": null,
+          "recommendations": null,
+          "seasons": null,
+          "number_of_episodes": 0,
+          "number_of_seasons": 0,
+          "status": "",
+          "runtime": 0
+        },
+        "season": 1,
+        "episodes": [
+          2
+        ],
+        "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E02.mkv",
+        "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Unpublished.2.mkv",
+        "mode": "hardlink",
+        "size": 0,
+        "status": "failed",
+        "file_status": "error",
+        "error": "合成记录：待重新整理",
+        "created_at": "2026-11-14T22:33:48.683814Z",
+        "updated_at": "2026-11-14T22:35:48.683841Z",
+        "can_retry": false,
+        "can_recognize": true
+      },
+      {
+        "id": "group-file-1",
+        "file_id": "group-file-1",
+        "plan_id": "group-plan-1",
+        "workflow_id": "fixture-work",
+        "job_id": "group-job-1",
+        "job_state": "failed",
+        "media": {
+          "id": 123,
+          "media_type": "tv",
+          "title": "Group Fixture",
+          "original_title": "",
+          "original_language": "",
+          "origin_country": null,
+          "production_countries": null,
+          "category_metadata_known": true,
+          "imdb_id": "",
+          "aliases": null,
+          "year": 2024,
+          "overview": "",
+          "poster_path": "",
+          "backdrop_path": "",
+          "release_date": "",
+          "vote_average": 0,
+          "vote_count": 0,
+          "popularity": 0,
+          "genres": null,
+          "cast": null,
+          "recommendations": null,
+          "seasons": null,
+          "number_of_episodes": 0,
+          "number_of_seasons": 0,
+          "status": "",
+          "runtime": 0
+        },
+        "season": 1,
+        "episodes": [
+          1
+        ],
+        "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E01.mkv",
+        "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Unpublished.1.mkv",
+        "mode": "hardlink",
+        "size": 0,
+        "status": "failed",
+        "file_status": "error",
+        "error": "合成记录：待重新整理",
+        "created_at": "2026-11-14T22:34:48.678869Z",
+        "updated_at": "2026-11-14T22:35:48.678926Z",
+        "can_retry": false,
+        "can_recognize": true
+      }
+    ],
+    "page": 1,
+    "page_size": 50,
+    "total": 2
+  },
+  "successPreview": {
+    "items": [
+      {
+        "id": "group-file-2",
+        "file_id": "group-file-2",
+        "plan_id": "group-plan-2",
+        "workflow_id": "fixture-work",
+        "job_id": "group-job-2",
+        "job_state": "failed",
+        "media": {
+          "id": 123,
+          "media_type": "tv",
+          "title": "Group Fixture",
+          "original_title": "",
+          "original_language": "",
+          "origin_country": null,
+          "production_countries": null,
+          "category_metadata_known": true,
+          "imdb_id": "",
+          "aliases": null,
+          "year": 2024,
+          "overview": "",
+          "poster_path": "",
+          "backdrop_path": "",
+          "release_date": "",
+          "vote_average": 0,
+          "vote_count": 0,
+          "popularity": 0,
+          "genres": null,
+          "cast": null,
+          "recommendations": null,
+          "seasons": null,
+          "number_of_episodes": 0,
+          "number_of_seasons": 0,
+          "status": "",
+          "runtime": 0
+        },
+        "season": 1,
+        "episodes": [
+          2
+        ],
+        "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E02.mkv",
+        "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Unpublished.2.mkv",
+        "mode": "hardlink",
+        "size": 0,
+        "status": "failed",
+        "file_status": "error",
+        "error": "合成记录：待重新整理",
+        "created_at": "2026-11-14T22:33:48.683814Z",
+        "updated_at": "2026-11-14T22:35:48.683841Z",
+        "can_retry": false,
+        "can_recognize": true
+      },
+      {
+        "id": "group-file-1",
+        "file_id": "group-file-1",
+        "plan_id": "group-plan-1",
+        "workflow_id": "fixture-work",
+        "job_id": "group-job-1",
+        "job_state": "failed",
+        "media": {
+          "id": 123,
+          "media_type": "tv",
+          "title": "Group Fixture",
+          "original_title": "",
+          "original_language": "",
+          "origin_country": null,
+          "production_countries": null,
+          "category_metadata_known": true,
+          "imdb_id": "",
+          "aliases": null,
+          "year": 2024,
+          "overview": "",
+          "poster_path": "",
+          "backdrop_path": "",
+          "release_date": "",
+          "vote_average": 0,
+          "vote_count": 0,
+          "popularity": 0,
+          "genres": null,
+          "cast": null,
+          "recommendations": null,
+          "seasons": null,
+          "number_of_episodes": 0,
+          "number_of_seasons": 0,
+          "status": "",
+          "runtime": 0
+        },
+        "season": 1,
+        "episodes": [
+          1
+        ],
+        "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E01.mkv",
+        "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Unpublished.1.mkv",
+        "mode": "hardlink",
+        "size": 0,
+        "status": "failed",
+        "file_status": "error",
+        "error": "合成记录：待重新整理",
+        "created_at": "2026-11-14T22:34:48.678869Z",
+        "updated_at": "2026-11-14T22:35:48.678926Z",
+        "can_retry": false,
+        "can_recognize": true
+      }
+    ],
+    "page": 1,
+    "page_size": 50,
+    "total": 2
+  },
+  "mobile": {
+    "width": 390,
+    "documentWidth": 390,
+    "dialogWidth": 390,
+    "errors": []
+  },
+  "afterExecution": {
+    "items": [
+      {
+        "id": "group-file-1",
+        "file_id": "file_m3OEUWZXkY86xLl_VF5Pxthm",
+        "plan_id": "plan_7MRlkMO4jR9m8siv_ls83BFa",
+        "workflow_id": "wf_NPKj2GbOUeNXABwVn5UPfaxm",
+        "job_id": "job_e5YJwq_0wcR1OYPD9meQTrmD",
+        "job_state": "succeeded",
+        "media": {
+          "id": 123,
+          "media_type": "tv",
+          "title": "Group Fixture",
+          "original_title": "Group Fixture",
+          "original_language": "",
+          "origin_country": [],
+          "production_countries": [],
+          "category_metadata_known": true,
+          "imdb_id": "",
+          "aliases": [],
+          "year": 2024,
+          "overview": "",
+          "poster_path": "",
+          "backdrop_path": "",
+          "release_date": "2024-01-01",
+          "vote_average": 0,
+          "vote_count": 0,
+          "popularity": 0,
+          "genres": [],
+          "cast": null,
+          "recommendations": null,
+          "seasons": null,
+          "number_of_episodes": 0,
+          "number_of_seasons": 0,
+          "status": "",
+          "runtime": 0
+        },
+        "category": "未分类",
+        "episode_group": "merged",
+        "season": 1,
+        "episodes": [
+          1
+        ],
+        "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E01.mkv",
+        "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Group Fixture (2024)/Season 1/Group Fixture - S01E01 - 第 1 集.mkv",
+        "mode": "hardlink",
+        "size": 25,
+        "status": "success",
+        "file_status": "imported",
+        "error": "",
+        "created_at": "2026-11-14T22:34:48.678869Z",
+        "updated_at": "2026-11-14T22:47:28.872751Z",
+        "can_retry": false,
+        "can_recognize": true
+      },
+      {
+        "id": "group-file-2",
+        "file_id": "file_Lw3Rcoqu8caOLeMtsfoHDo_t",
+        "plan_id": "plan_TRq1s9s_ekBMK3tzmEjxs5Ts",
+        "workflow_id": "wf_kh8zGDzVDBywXmlJbeg4wIWO",
+        "job_id": "job_v18QWCRDvLHGi7WK0vzlisOy",
+        "job_state": "succeeded",
+        "media": {
+          "id": 123,
+          "media_type": "tv",
+          "title": "Group Fixture",
+          "original_title": "Group Fixture",
+          "original_language": "",
+          "origin_country": [],
+          "production_countries": [],
+          "category_metadata_known": true,
+          "imdb_id": "",
+          "aliases": [],
+          "year": 2024,
+          "overview": "",
+          "poster_path": "",
+          "backdrop_path": "",
+          "release_date": "2024-01-01",
+          "vote_average": 0,
+          "vote_count": 0,
+          "popularity": 0,
+          "genres": [],
+          "cast": null,
+          "recommendations": null,
+          "seasons": null,
+          "number_of_episodes": 0,
+          "number_of_seasons": 0,
+          "status": "",
+          "runtime": 0
+        },
+        "category": "未分类",
+        "episode_group": "merged",
+        "season": 1,
+        "episodes": [
+          2
+        ],
+        "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E02.mkv",
+        "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Group Fixture (2024)/Season 1/Group Fixture - S01E02 - 第 2 集.mkv",
+        "mode": "hardlink",
+        "size": 25,
+        "status": "success",
+        "file_status": "imported",
+        "error": "",
+        "created_at": "2026-11-14T22:33:48.683814Z",
+        "updated_at": "2026-11-14T22:47:28.769523Z",
+        "can_retry": false,
+        "can_recognize": true
+      }
+    ],
+    "page": 1,
+    "page_size": 50,
+    "total": 2
+  },
+  "dialogClosed": true,
+  "afterSinglePreview": {
+    "items": [
+      {
+        "id": "group-file-1",
+        "file_id": "file_m3OEUWZXkY86xLl_VF5Pxthm",
+        "plan_id": "plan_7MRlkMO4jR9m8siv_ls83BFa",
+        "workflow_id": "wf_NPKj2GbOUeNXABwVn5UPfaxm",
+        "job_id": "job_e5YJwq_0wcR1OYPD9meQTrmD",
+        "job_state": "succeeded",
+        "media": {
+          "id": 123,
+          "media_type": "tv",
+          "title": "Group Fixture",
+          "original_title": "Group Fixture",
+          "original_language": "",
+          "origin_country": [],
+          "production_countries": [],
+          "category_metadata_known": true,
+          "imdb_id": "",
+          "aliases": [],
+          "year": 2024,
+          "overview": "",
+          "poster_path": "",
+          "backdrop_path": "",
+          "release_date": "2024-01-01",
+          "vote_average": 0,
+          "vote_count": 0,
+          "popularity": 0,
+          "genres": [],
+          "cast": null,
+          "recommendations": null,
+          "seasons": null,
+          "number_of_episodes": 0,
+          "number_of_seasons": 0,
+          "status": "",
+          "runtime": 0
+        },
+        "category": "未分类",
+        "episode_group": "merged",
+        "season": 1,
+        "episodes": [
+          1
+        ],
+        "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E01.mkv",
+        "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Group Fixture (2024)/Season 1/Group Fixture - S01E01 - 第 1 集.mkv",
+        "mode": "hardlink",
+        "size": 25,
+        "status": "success",
+        "file_status": "imported",
+        "error": "",
+        "created_at": "2026-11-14T22:34:48.678869Z",
+        "updated_at": "2026-11-14T22:47:28.872751Z",
+        "can_retry": false,
+        "can_recognize": true
+      },
+      {
+        "id": "group-file-2",
+        "file_id": "file_Lw3Rcoqu8caOLeMtsfoHDo_t",
+        "plan_id": "plan_TRq1s9s_ekBMK3tzmEjxs5Ts",
+        "workflow_id": "wf_kh8zGDzVDBywXmlJbeg4wIWO",
+        "job_id": "job_v18QWCRDvLHGi7WK0vzlisOy",
+        "job_state": "succeeded",
+        "media": {
+          "id": 123,
+          "media_type": "tv",
+          "title": "Group Fixture",
+          "original_title": "Group Fixture",
+          "original_language": "",
+          "origin_country": [],
+          "production_countries": [],
+          "category_metadata_known": true,
+          "imdb_id": "",
+          "aliases": [],
+          "year": 2024,
+          "overview": "",
+          "poster_path": "",
+          "backdrop_path": "",
+          "release_date": "2024-01-01",
+          "vote_average": 0,
+          "vote_count": 0,
+          "popularity": 0,
+          "genres": [],
+          "cast": null,
+          "recommendations": null,
+          "seasons": null,
+          "number_of_episodes": 0,
+          "number_of_seasons": 0,
+          "status": "",
+          "runtime": 0
+        },
+        "category": "未分类",
+        "episode_group": "merged",
+        "season": 1,
+        "episodes": [
+          2
+        ],
+        "source": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/source/Sample.S01E02.mkv",
+        "target": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-group-fixture/library/Group Fixture (2024)/Season 1/Group Fixture - S01E02 - 第 2 集.mkv",
+        "mode": "hardlink",
+        "size": 25,
+        "status": "success",
+        "file_status": "imported",
+        "error": "",
+        "created_at": "2026-11-14T22:33:48.683814Z",
+        "updated_at": "2026-11-14T22:47:28.769523Z",
+        "can_retry": false,
+        "can_recognize": true
+      }
+    ],
+    "page": 1,
+    "page_size": 50,
+    "total": 2
+  }
+}

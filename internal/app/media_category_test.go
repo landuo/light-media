@@ -300,7 +300,7 @@ func TestCustomMediaCategoryPlanPublishesFrozenHardlink(t *testing.T) {
 	importWrite(t, path, []byte("frozen Japanese category fixture"))
 	plan, err := a.previewImport(context.Background(), ImportRequest{MediaType: "movie", TMDBID: 123, RootID: "root", Mode: "hardlink", Scraping: importFlag(false), Files: []ImportFileRequest{{Path: path}}, LibraryTypeFolder: importFlag(true)})
 	want := filepath.Join(target, "日番动漫电影", "测试影片 (2024)", "测试影片 (2024).mkv")
-	if err != nil || len(plan.Files) != 1 || plan.Files[0].Target != want {
+	if err != nil || len(plan.Files) != 1 || plan.Files[0].Target != want || plan.Category != "日番动漫电影" {
 		t.Fatalf("custom category not reflected in preview: %+v %v", plan, err)
 	}
 	if err := os.WriteFile(policyPath, []byte("movie:\n  后续新分类:\n"), 0600); err != nil {
@@ -321,6 +321,10 @@ func TestCustomMediaCategoryPlanPublishesFrozenHardlink(t *testing.T) {
 	linked, err := os.Stat(want)
 	if err != nil || !os.SameFile(info, linked) {
 		t.Fatal("execution did not publish the frozen classified hardlink", err)
+	}
+	history, err := a.transferHistoryItem(context.Background(), plan.Files[0].ID)
+	if err != nil || history.Category != "日番动漫电影" || history.Status != "success" {
+		t.Fatalf("history did not retain the actual frozen secondary category: %+v %v", history, err)
 	}
 	for _, forbidden := range []string{"电影", "电视剧", "后续新分类"} {
 		if _, err := os.Stat(filepath.Join(target, forbidden)); !os.IsNotExist(err) {

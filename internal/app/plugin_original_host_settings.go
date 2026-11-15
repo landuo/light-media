@@ -98,7 +98,7 @@ func (a *App) originalHostSettingsResource(ctx context.Context, scope originalBa
 		case "TMDB_LOCALE":
 			out.Value = mustCleanSeedJSON(a.originalHostMediaRecognition.Locale)
 		case "RECOGNIZE_SOURCE":
-			out.Value = mustCleanSeedJSON(a.originalHostMediaRecognition.Source)
+			out.Value = mustCleanSeedJSON(a.effectiveRecognitionSource())
 		case "SCRAP_SOURCE":
 			out.Value = mustCleanSeedJSON(a.originalHostMediaRecognition.ScrapeSource)
 		}

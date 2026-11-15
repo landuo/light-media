@@ -123,7 +123,7 @@ async function mount(t, result, initial = {}) {
     fixture,
     nodes,
     async testConnection(target = 'fnos') {
-      const title = target === 'fnos' ? '媒体服务器' : 'TMDB 元数据';
+      const title = target === 'fnos' ? '媒体服务器' : '媒体识别';
       const panel = nodes().find(
         (node) => node.type === 'section' && nodeText(node).includes(title),
       );

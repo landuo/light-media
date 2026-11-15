@@ -200,6 +200,9 @@ func (a *App) ordinaryCompletionBasisWithExistence(ctx context.Context, q qualit
 		}
 		id := ids[0]
 		if index, ok := seen[id]; ok {
+			if !basis.Inventory[index].Asset.coversEpisode(s.Season, ep) {
+				return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "订阅库存缺少对应的真实季集资产")
+			}
 			basis.Inventory[index].Episodes = append(basis.Inventory[index].Episodes, ep)
 			continue
 		}
@@ -208,7 +211,7 @@ func (a *App) ordinaryCompletionBasisWithExistence(ctx context.Context, q qualit
 			return nil, false, e
 		}
 		asset := entry.Asset
-		if (asset.State != "present" && asset.State != "external") || mediaKey(asset.Media) != mediaKey(s.Media) || asset.Season != s.Season || !slices.Contains(importEpisodes(asset.Episodes), ep) {
+		if (asset.State != "present" && asset.State != "external") || mediaKey(asset.Media) != mediaKey(s.Media) || !asset.coversEpisode(s.Season, ep) {
 			return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "订阅库存缺少对应的真实季集资产")
 		}
 		root, e := a.importRoot(asset.RootID)
@@ -216,31 +219,41 @@ func (a *App) ordinaryCompletionBasisWithExistence(ctx context.Context, q qualit
 			return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "订阅库存媒体库目录无法核对")
 		}
 		entry.RootPath = root.Path
-		stamp, e := snapshotPath(asset.Path)
-		if e != nil {
-			return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "订阅库存文件已变化，未完成订阅")
-		}
-		entry.Snapshot = stamp
+		var stamp importSnapshot
 		if asset.State == "present" {
+			// Use the caller's reader even during the terminal completion transaction.
 			var video managedFile
-			if e = qualityRecord(ctx, q, "managed_file", tokenHash(asset.Path), &video); e != nil || video.Kind != "video" || video.Path != asset.Path || video.AssetID != asset.ID || video.RootID != asset.RootID || video.MediaKey != mediaKey(s.Media) || video.Snapshot != stamp {
+			if e = qualityRecord(ctx, q, "managed_file", tokenHash(asset.Path), &video); e != nil || video.Kind != "video" || video.Path != asset.Path || video.AssetID != asset.ID || video.RootID != asset.RootID || video.MediaKey != mediaKey(s.Media) {
 				return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "订阅库存缺少真实文件受管归属")
 			}
+			stamp, e = snapshotOwnedTransferPath(asset.Path, video.Snapshot, video.Softlink, true, video.SharedDirectory)
+			if e != nil || stamp != video.Snapshot {
+				return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "订阅库存文件或软链接实体已变化，未完成订阅")
+			}
 			entry.Video = &video
-		} else if providerNativeMedia(s.Media) {
-			return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "外部库存缺少可核对的来源影视身份")
-		} else if asset.IdentitySource == "manual" {
-			var proof libraryIdentity
-			if e = qualityRecord(ctx, q, "asset_identity", asset.ID, &proof); e != nil || proof.AssetID != asset.ID || proof.Path != asset.Path || proof.RootPath != root.Path || proof.RootID != root.ID || proof.Snapshot != stamp || proof.MediaType != s.Media.MediaType || proof.TMDBID != s.Media.ID || proof.Season != s.Season || !equalQualityEpisodes(importEpisodes(proof.Episodes), importEpisodes(asset.Episodes)) || proof.Source != "manual" || proof.ConfirmedAt != asset.IdentityConfirmedAt {
-				return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "人工登记的库存身份或文件指纹已变化")
-			}
-			entry.Registration = &proof
 		} else {
-			identity, numbering, _ := a.importNFOEvidence(asset.Path)
-			if identity == nil || identity.ID != s.Media.ID || identity.MediaType != s.Media.MediaType || s.Media.MediaType == "tv" && (numbering == nil || numbering.Season == nil || *numbering.Season != s.Season || !equalQualityEpisodes(numbering.Episodes, asset.Episodes)) {
-				return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "外部库存的 NFO 影视身份或季集已变化")
+			stamp, e = snapshotPath(asset.Path)
+			if e != nil {
+				return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "订阅库存文件已变化，未完成订阅")
 			}
-			entry.NFO, entry.Numbering = identity, numbering
+		}
+		entry.Snapshot = stamp
+		if asset.State != "present" {
+			if providerNativeMedia(s.Media) {
+				return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "外部库存缺少可核对的来源影视身份")
+			} else if asset.IdentitySource == "manual" {
+				var proof libraryIdentity
+				if e = qualityRecord(ctx, q, "asset_identity", asset.ID, &proof); e != nil || proof.AssetID != asset.ID || proof.Path != asset.Path || proof.RootPath != root.Path || proof.RootID != root.ID || proof.Snapshot != stamp || proof.MediaType != s.Media.MediaType || proof.TMDBID != s.Media.ID || proof.Season != asset.Season || !equalQualityEpisodes(importEpisodes(proof.Episodes), importEpisodes(asset.Episodes)) || !sameCanonicalSlots(canonicalSlots(canonicalScopes(proof.Season, proof.Episodes, proof.EpisodeScopes)), asset.inventorySlots()) || proof.Source != "manual" || proof.ConfirmedAt != asset.IdentityConfirmedAt {
+					return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "人工登记的库存身份或文件指纹已变化")
+				}
+				entry.Registration = &proof
+			} else {
+				identity, numbering, _ := a.importNFOEvidence(asset.Path)
+				if identity == nil || identity.ID != s.Media.ID || identity.MediaType != s.Media.MediaType || s.Media.MediaType == "tv" && (numbering == nil || numbering.Season == nil || *numbering.Season != s.Season || !equalQualityEpisodes(numbering.Episodes, asset.Episodes)) {
+					return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "外部库存的 NFO 影视身份或季集已变化")
+				}
+				entry.NFO, entry.Numbering = identity, numbering
+			}
 		}
 		entry.Episodes = []int{ep}
 		seen[id] = len(basis.Inventory)
@@ -298,7 +311,7 @@ func (p *PluginStore) validateOrdinaryCompletionInput(ctx context.Context, q sub
 	seen := map[string]bool{}
 	for _, entry := range basis.Inventory {
 		asset, video := entry.Asset, entry.Video
-		if seen[asset.ID] || asset.ID == "" || (asset.State != "present" && asset.State != "external") || mediaKey(asset.Media) != basis.MediaKey || asset.Season != basis.Season || !within(entry.RootPath, asset.Path) || len(entry.Episodes) == 0 {
+		if seen[asset.ID] || asset.ID == "" || (asset.State != "present" && asset.State != "external") || mediaKey(asset.Media) != basis.MediaKey || !within(entry.RootPath, asset.Path) || len(entry.Episodes) == 0 {
 			return completionEvidenceError()
 		}
 		if asset.State == "present" {
@@ -309,7 +322,7 @@ func (p *PluginStore) validateOrdinaryCompletionInput(ctx context.Context, q sub
 			return completionEvidenceError()
 		} else if asset.IdentitySource == "manual" {
 			proof := entry.Registration
-			if video != nil || entry.NFO != nil || proof == nil || proof.AssetID != asset.ID || proof.Path != asset.Path || proof.RootPath != entry.RootPath || proof.RootID != asset.RootID || proof.Snapshot != entry.Snapshot || proof.MediaType != s.Media.MediaType || proof.TMDBID != s.Media.ID || proof.Season != s.Season || !equalQualityEpisodes(importEpisodes(proof.Episodes), importEpisodes(asset.Episodes)) || proof.Source != "manual" || proof.ConfirmedAt != asset.IdentityConfirmedAt {
+			if video != nil || entry.NFO != nil || proof == nil || proof.AssetID != asset.ID || proof.Path != asset.Path || proof.RootPath != entry.RootPath || proof.RootID != asset.RootID || proof.Snapshot != entry.Snapshot || proof.MediaType != s.Media.MediaType || proof.TMDBID != s.Media.ID || proof.Season != asset.Season || !equalQualityEpisodes(importEpisodes(proof.Episodes), importEpisodes(asset.Episodes)) || !sameCanonicalSlots(canonicalSlots(canonicalScopes(proof.Season, proof.Episodes, proof.EpisodeScopes)), asset.inventorySlots()) || proof.Source != "manual" || proof.ConfirmedAt != asset.IdentityConfirmedAt {
 				return completionEvidenceError()
 			}
 		} else if video != nil || entry.Registration != nil || entry.NFO == nil || entry.NFO.ID != s.Media.ID || entry.NFO.MediaType != s.Media.MediaType || s.Media.MediaType == "tv" && (entry.Numbering == nil || entry.Numbering.Season == nil || *entry.Numbering.Season != s.Season || !equalQualityEpisodes(entry.Numbering.Episodes, asset.Episodes)) {
@@ -317,7 +330,7 @@ func (p *PluginStore) validateOrdinaryCompletionInput(ctx context.Context, q sub
 		}
 		seen[asset.ID] = true
 		for _, ep := range entry.Episodes {
-			if !slices.Contains(basis.Targets, ep) || !slices.Contains(importEpisodes(asset.Episodes), ep) || slices.Contains(covered, ep) {
+			if !slices.Contains(basis.Targets, ep) || !asset.coversEpisode(basis.Season, ep) || slices.Contains(covered, ep) {
 				return completionEvidenceError()
 			}
 			covered = append(covered, ep)

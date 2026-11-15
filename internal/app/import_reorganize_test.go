@@ -131,6 +131,10 @@ func TestReorganizeCorrectsIdentityInPlaceWithoutRewritingVideoAndRescrapes(t *t
 		t.Fatal(err)
 	}
 	reorgRunJob(t, a, job)
+	result, err := a.originalTransferJobResult(ctx, reorgJob(t, a, "import", plan.ID))
+	if err != nil || result == nil || result.Failed != 0 || len(result.Items) != 1 || result.Items[0].Status != "success" {
+		t.Fatalf("completed in-place reorganization reported failure to the dialog: %+v %v", result, err)
+	}
 	var replacement Asset
 	if err = a.assetAtPath(ctx, old.Path, &replacement); err != nil || replacement.Media.ID != corrected.ID || replacement.ID == old.ID {
 		t.Fatal("identity not corrected", replacement, err)

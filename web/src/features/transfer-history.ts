@@ -3,6 +3,7 @@ export const historyPageSizes = [25, 50, 100, 500, 1000] as const;
 export interface HistoryRow {
   id: string;
   media: { title: string; media_type: string; year?: number; tmdb_id?: number };
+  category?: string;
   season: number;
   episodes: number[];
   source: string;

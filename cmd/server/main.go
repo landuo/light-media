@@ -101,7 +101,6 @@ func main() {
 			defer close(started)
 			a.Start(ctx)
 		}()
-		go a.PrewarmTransferHistory(ctx)
 		fmt.Printf("light-media listening at %s\n", addr)
 		restart := false
 		select {

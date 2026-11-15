@@ -11,13 +11,21 @@ export async function loadDirectoryTransferTypes(
   const source = (await request()).transtype;
   const destination = (await request()).transtype;
   if (!source || !destination) return;
-  const modes: Record<string, string> = { link: 'hardlink', copy: 'copy', auto: 'auto' };
+  const modes: Record<string, string> = {
+    link: 'hardlink',
+    softlink: 'softlink',
+    copy: 'copy',
+    move: 'move',
+    auto: 'auto',
+  };
   const items = Object.keys(source)
     .filter((key) => key in destination && key in modes)
     .map((key) => ({ title: source[key], value: modes[key] }));
   directory._transferTypes = items;
   if (!items.length) directory.mode = '';
   else if (!items.some((item) => item.value === directory.mode)) {
-    nextTick(() => { directory.mode = items[0].value; });
+    nextTick(() => {
+      directory.mode = items[0].value;
+    });
   }
 }

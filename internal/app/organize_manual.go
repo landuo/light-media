@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"light-media/internal/catalog"
+	"light-media/internal/historywords"
 )
 
 // Manual organization is one operation shared by files and transfer history.
@@ -34,6 +35,9 @@ type manualOrganizeRequest struct {
 	Mode                  string   `json:"mode"`
 	MediaType             string   `json:"media_type"`
 	TMDBID                int64    `json:"tmdb_id"`
+	MediaSource           string   `json:"media_source,omitempty"`
+	MediaID               string   `json:"media_id,omitempty"`
+	EpisodeGroup          string   `json:"episode_group"`
 	Season                *int     `json:"season"`
 	EpisodeDetail         string   `json:"episode_detail"`
 	EpisodeFormat         string   `json:"episode_format"`
@@ -81,6 +85,9 @@ func normalizeManualOrganize(in *manualOrganizeRequest) (*regexp.Regexp, error) 
 	if in.Season != nil && (*in.Season < 0 || *in.Season > 1000) {
 		return nil, bad("INVALID_SEASON", "季号须在0至1000之间")
 	}
+	if err := normalizeManualProviderInput(in); err != nil {
+		return nil, err
+	}
 	if in.TMDBID != 0 && !validMedia(in.MediaType, in.TMDBID) {
 		return nil, bad("INVALID_MEDIA", "请先选择媒体类型，再填写TMDB ID")
 	}
@@ -94,6 +101,9 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 	format, err := normalizeManualOrganize(&in)
 	if err != nil {
 		return out, err
+	}
+	if len(in.HistoryIDs) > 1 {
+		return a.manualOrganizeHistoryBatch(ctx, in)
 	}
 	wf := id("wf_")
 	var prepared, preparedHistorySources map[string]bool
@@ -146,10 +156,10 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			if preparedHistorySources[h.ResourceSource] {
 				continue
 			}
-			path := h.Source
-			if h.Target != "" && h.Status == "success" && h.Mode == "move" {
-				path = h.Target
+			if in.FromHistory {
+				in.inheritHistoryIdentity(h)
 			}
+			path := h.organizeSource()
 			paths = append(paths, path)
 			histories[path] = h
 			historySources[path] = h.ResourceSource
@@ -204,6 +214,52 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 
 		}
 	}
+	{
+		for i, path := range paths {
+			if in.Mode != "softlink" {
+				linked, e := a.browserOrganizeLinkedSource(ctx, path)
+				if e != nil {
+					return out, e
+				}
+				if !linked {
+					continue
+				}
+			}
+			resolved, e := a.resolveSoftlinkReorganizeSource(ctx, path)
+			if e != nil {
+				return out, e
+			}
+			if resolved == path {
+				continue
+			}
+			if owner, ok := historyOwners[path]; ok {
+				historyOwners[resolved] = owner
+			}
+			if source, ok := historySources[path]; ok {
+				historySources[resolved] = source
+			}
+			if history, ok := histories[path]; ok {
+				histories[resolved] = history
+			}
+			if prior, ok := priorHistories[path]; ok {
+				priorHistories[resolved] = prior
+			}
+			if historyOwners[resolved] == "" && len(in.HistoryIDs) == 0 {
+				var owned managedFile
+				if e = a.Store.Get(ctx, "managed_file", tokenHash(path), &owned); e != nil {
+					return out, e
+				}
+				if owned.Kind == "video" {
+					var asset Asset
+					if e = a.Store.Get(ctx, "asset", owned.AssetID, &asset); e != nil {
+						return out, e
+					}
+					historyOwners[resolved], historySources[resolved] = asset.ID, asset.SourcePath
+				}
+			}
+			paths[i] = resolved
+		}
+	}
 	if !in.Preview && !isFileJob && (preparation.ID == "" || len(in.HistoryIDs) > 0) {
 		batchID := id("scrape_batch_")
 		if err := a.Store.Put(ctx, "original_scrape_batch", batchID, originalScrapeBatch{ID: batchID}); err != nil {
@@ -216,7 +272,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			returnErr = errors.Join(returnErr, a.closeOriginalScrapeBatch(closeCtx, batchID, true))
 		}()
 	}
-	fail := func(source string, e error) error {
+	fail := func(source string, e error, known ...ImportPlan) error {
 		if isFileJob && (ctx.Err() != nil || organizeFileInterrupted(e)) {
 			return e
 		}
@@ -225,8 +281,19 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		if errors.As(e, &api) {
 			item.ErrorCode = api.Code
 		}
+		var planned ImportPlan
+		if len(known) > 0 {
+			planned = known[0]
+			item.Media, item.Mode = planned.Media, planned.Mode
+			for _, file := range planned.Files {
+				if file.Source == source {
+					item.Target = file.Target
+					break
+				}
+			}
+		}
 		if !in.Preview {
-			job, storeErr := a.recordManualOrganizeFailure(ctx, source, wf, e, historySources[source])
+			job, storeErr := a.recordManualOrganizeFailurePlan(ctx, source, wf, e, historySources[source], planned)
 			if storeErr != nil {
 				return storeErr
 			}
@@ -330,7 +397,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			out.Items = append(out.Items, manualOrganizeItem{Source: file.Path, Status: "skipped", Error: "小于最小文件大小"})
 			continue
 		}
-		request := ImportRequest{MediaType: in.MediaType, TMDBID: in.TMDBID, TargetPath: in.TargetPath, Mode: in.Mode, Renaming: in.Renaming, Scraping: in.Scraping, LibraryTypeFolder: in.LibraryTypeFolder, WorkflowID: wf, Files: []ImportFileRequest{{Path: file.Path}}}
+		request := ImportRequest{MediaType: in.MediaType, TMDBID: in.TMDBID, EpisodeGroup: in.EpisodeGroup, TargetPath: in.TargetPath, Mode: in.Mode, Renaming: in.Renaming, Scraping: in.Scraping, LibraryTypeFolder: in.LibraryTypeFolder, WorkflowID: wf, Files: []ImportFileRequest{{Path: file.Path}}}
 		request.Manual = true
 		request.originalResolvedMedia = in.originalResolvedMedia
 		request.originalRetry = in.originalRetryAttempt != nil
@@ -361,8 +428,39 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			}
 		}
 		historySources[file.Path] = request.HistorySource
+		failFile := func(cause error, partial ...ImportPlan) error {
+			var facts ImportPlan
+			if len(partial) > 0 {
+				facts = partial[0]
+			}
+			if facts.EpisodeGroup == "" {
+				facts.EpisodeGroup = request.EpisodeGroup
+			}
+			if facts.Mode == "" {
+				facts.Mode = request.Mode
+			}
+			if facts.RootID == "" {
+				facts.RootID = request.RootID
+			}
+			if facts.Media.Title == "" {
+				if h, ok := histories[file.Path]; ok && in.FromHistory && (validMedia(h.Media.MediaType, h.Media.ID) && h.Media.ID == request.TMDBID && h.Media.MediaType == request.MediaType || request.originalHistoryProvider && providerNativeMedia(h.Media) && mediaKey(h.Media) == mediaKey(request.providerIdentity)) {
+					facts.Media, facts.Category = h.Media, h.Category
+				} else {
+					facts.Media.Title, facts.Media.Year = file.Parsed.Title, file.Parsed.Year
+				}
+			}
+			if len(facts.Files) == 0 && len(request.Files) > 0 {
+				selected := request.Files[0]
+				facts.Files = []PlanFile{{Source: file.Path, Season: selected.Season, Episodes: append([]int(nil), selected.Episodes...), Part: selected.Part}}
+			}
+			return fail(file.Path, cause, facts)
+		}
 		if h, ok := histories[file.Path]; ok && in.FromHistory {
-			if !validMedia(request.MediaType, request.TMDBID) {
+			if providerNativeMedia(h.Media) {
+				request.MediaType, request.TMDBID, request.providerIdentity = h.Media.MediaType, 0, h.Media
+				request.originalHistoryProvider = true
+				request.EpisodeGroup = ""
+			} else if !validMedia(request.MediaType, request.TMDBID) {
 				request.MediaType, request.TMDBID = h.Media.MediaType, h.Media.ID
 			}
 			request.Files[0].Season = h.Season
@@ -391,7 +489,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 				}
 			}
 			if err != nil {
-				if e := fail(file.Path, err); e != nil {
+				if e := failFile(err); e != nil {
 					return out, e
 				}
 				continue
@@ -402,7 +500,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			}
 			episodes, err = organizeEpisodeRange(in.EpisodeDetail)
 			if err != nil {
-				if e := fail(file.Path, err); e != nil {
+				if e := failFile(err); e != nil {
 					return out, e
 				}
 				continue
@@ -434,7 +532,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			}
 		}
 		if err != nil {
-			if e := fail(file.Path, err); e != nil {
+			if e := failFile(err); e != nil {
 				return out, e
 			}
 			err = nil
@@ -460,18 +558,28 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 				request.Files[0].Episodes = append(request.Files[0].Episodes, int(n.Int64()))
 			}
 		}
+		// Explicit source IDs are resolved through the same source chain; the
+		// selected from-history identity has already cleared form overrides.
+		if !request.originalHistoryProvider {
+			err = a.applyManualProviderInput(ctx, in, &request)
+		}
 		// Explicit numbering can supply a season after automatic media lookup.
-		request, err = a.prepareManualImport(ctx, request)
+		if err == nil {
+			request, err = a.prepareManualImport(ctx, request)
+		}
 		if err == nil && len(request.Files[0].Episodes) > 0 && request.Files[0].Season == 0 && !request.Files[0].SeasonExplicit && in.Season == nil && file.Parsed.Original != nil && file.Parsed.Original.Season != nil {
 			request.Files[0].Season = *file.Parsed.Original.Season
 		}
 		var plan ImportPlan
+		if err == nil && request.originalHistoryProvider {
+			err = a.resolveHistoryProviderImport(ctx, &request)
+		}
 		if err == nil {
 			request.originalModulePreview = in.Preview
 			plan, err = a.previewImport(ctx, request)
 		}
 		if err != nil {
-			if e := fail(file.Path, err); e != nil {
+			if e := failFile(err, plan); e != nil {
 				return out, e
 			}
 			err = nil
@@ -501,7 +609,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			}
 		}
 		if item.Status == "failed" {
-			if e := fail(file.Path, bad("REVIEW_IMPORT", item.Error)); e != nil {
+			if e := fail(file.Path, bad("REVIEW_IMPORT", item.Error), plan); e != nil {
 				return out, e
 			}
 			continue
@@ -538,7 +646,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			}
 			job, e := a.executeImport(executeCtx, plan.ID, nil)
 			if e != nil {
-				if e = fail(file.Path, e); e != nil {
+				if e = fail(file.Path, e, plan); e != nil {
 					return out, e
 				}
 				continue
@@ -562,10 +670,27 @@ func manualOrganizeFileName(file importScanFile) string {
 }
 
 func (a *App) recordManualOrganizeFailure(ctx context.Context, path, wf string, cause error, historySource ...string) (Job, error) {
-	plan := ImportPlan{ID: id("plan_"), WorkflowID: wf, State: "failed", CreatedAt: now(), Files: []PlanFile{{ID: id("file_"), Source: path, Status: "blocked", Reason: a.clean(cause.Error())}}}
+	resourceSource := ""
 	if len(historySource) > 0 {
-		plan.Files[0].HistorySource = historySource[0]
+		resourceSource = historySource[0]
 	}
+	return a.recordManualOrganizeFailurePlan(ctx, path, wf, cause, resourceSource, ImportPlan{})
+}
+
+// A failed submission retains identity and destination already resolved during
+// planning, like MP add_fail. It creates a new attempt, not an asset or receipt.
+func (a *App) recordManualOrganizeFailurePlan(ctx context.Context, path, wf string, cause error, historySource string, known ImportPlan) (Job, error) {
+	file := PlanFile{ID: id("file_"), Source: path, HistorySource: historySource, Status: "blocked", Reason: a.clean(cause.Error())}
+	for _, planned := range known.Files {
+		if planned.Source == path {
+			file.Target, file.Method = planned.Target, planned.Method
+			file.GroupNumbering = planned.GroupNumbering
+			file.EpisodeScopes = cloneEpisodeScopes(planned.EpisodeScopes)
+			file.Season, file.Episodes, file.Part = planned.Season, append([]int{}, planned.Episodes...), planned.Part
+			break
+		}
+	}
+	plan := ImportPlan{ID: id("plan_"), WorkflowID: wf, State: "failed", CreatedAt: now(), RootID: known.RootID, Mode: known.Mode, Media: known.Media, Category: known.Category, EpisodeGroup: known.EpisodeGroup, Files: []PlanFile{file}}
 	if stamp, e := snapshotTransferPath(path); e == nil {
 		f := &plan.Files[0]
 		f.Size, f.Device, f.Inode, f.ModNS = stamp.Size, stamp.Device, stamp.Inode, stamp.ModNS
@@ -787,6 +912,20 @@ func organizeEpisodeOffset(expression string, episode int) (int, error) {
 }
 
 func (a *App) recognizeBrowserFile(ctx context.Context, path string) (any, error) {
+	owned, linked, err := a.browserOwnedSoftlink(ctx, path, true)
+	if err != nil {
+		return nil, err
+	}
+	if linked {
+		if !a.importSourceAllowed(path, true) || browserInternal(path) {
+			return nil, bad("INVALID_SOURCE", "文件不在当前允许媒体目录内")
+		}
+		var asset Asset
+		if err = a.Store.Get(ctx, "asset", owned.AssetID, &asset); err != nil {
+			return nil, err
+		}
+		return map[string]any{"media": asset.Media, "parsed": a.parseMediaName(filepath.Base(path)), "season": asset.Season, "episodes": asset.Episodes}, nil
+	}
 	scan, e := a.browserScan(ctx, []string{path}, true)
 	if e != nil {
 		return nil, e
@@ -905,7 +1044,17 @@ func (a *App) organizeQueue(ctx context.Context) (any, error) {
 }
 
 func historySearchPattern(value string) string {
-	return "%" + strings.NewReplacer(`\`, `\\`, "%", `\%`, "_", `\_`, "*", "%", "?", "_").Replace(value) + "%"
+	if strings.ContainsAny(value, "*?") {
+		return strings.NewReplacer(`\`, `\\`, "%", `\%`, "_", `\_`, "*", "%", "?", "_").Replace(value)
+	}
+	// MP uses jieba-next's accurate HMM=False tokens, including whitespace,
+	// before inserting LIKE gaps. User-supplied %/_ remain literal characters.
+	words := historywords.Cut(value)
+	escape := strings.NewReplacer(`\`, `\\`, "%", `\%`, "_", `\_`)
+	for i := range words {
+		words[i] = escape.Replace(words[i])
+	}
+	return "%" + strings.Join(words, "%") + "%"
 }
 
 func (a *App) cancelOrganizeQueueFile(ctx context.Context, key string) (any, error) {

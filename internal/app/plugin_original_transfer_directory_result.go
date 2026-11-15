@@ -113,7 +113,7 @@ func (a *App) originalNativeDirectoryModuleInfo(ctx context.Context, file PlanFi
 		out["message"] = receipt.DirectoryException
 		return map[string]any{plugins.ModuleTransferInfoKey: out}, nil
 	}
-	item, err := originalLocalFileItem(file.Source)
+	item, err := originalTransferRuntimeSourceItem(ctx, file)
 	if err != nil {
 		return nil, err
 	}
@@ -129,6 +129,19 @@ func (a *App) originalNativeDirectoryModuleInfo(ctx context.Context, file PlanFi
 	if failure != nil {
 		out["message"] = a.clean(failure.Error())
 	} else {
+		if file.Method == "softlink" {
+			if receipt.SharedDirectory != nil {
+				if err = a.validateSharedSoftlinkPublication(ctx, receipt); err != nil {
+					return nil, err
+				}
+			}
+			if receipt.SharedDirectory == nil && (receipt.Softlink == nil || receipt.Softlink.Directory == nil) {
+				return nil, bad("REVIEW_SOFTLINK", "目录结果缺少已发布软链接成员证明")
+			}
+			if _, err = snapshotOwnedTransferPath(file.Target, receipt.StageSnapshot, receipt.Softlink, true, receipt.SharedDirectory); err != nil {
+				return nil, err
+			}
+		}
 		target, err := originalLocalFileItem(file.Target)
 		if err != nil {
 			return nil, err

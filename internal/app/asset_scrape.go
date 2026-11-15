@@ -127,10 +127,6 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 	if !within(root.Path, asset.Path) {
 		return bad("REVIEW_ROOT_CHANGED", "资产路径不在配置库内")
 	}
-	stamp, err := snapshotTransferPath(asset.Path)
-	if err != nil {
-		return bad("REVIEW_ASSET_MISSING", "视频不可访问，不能标记刮削成功")
-	}
 	if err = a.jobCancelled(ctx, job); err != nil {
 		return err
 	}
@@ -139,6 +135,16 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 		return err
 	}
 	defer release()
+	if err = a.recoverOriginalMetadataDirectory(ctx, asset); err != nil {
+		return err
+	}
+	stamp, err := a.snapshotAssetMedia(ctx, asset)
+	if err != nil {
+		return bad("REVIEW_ASSET_MISSING", "视频不可访问，不能标记刮削成功")
+	}
+	if err = a.jobCancelled(ctx, job); err != nil {
+		return err
+	}
 	asset.ScrapeState = "running"
 	asset.Error = ""
 	if err = a.Store.Put(ctx, "asset", asset.ID, asset); err != nil {
@@ -186,7 +192,10 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 			if other.State == "removed" || other.State == "missing_confirmed" || other.State == "superseded" {
 				return bad("REVIEW_ASSET", "批次资产已移除，不能刮削")
 			}
-			if _, err = snapshotTransferPath(other.Path); err != nil {
+			if err = a.recoverOriginalMetadataDirectory(ctx, other); err != nil {
+				return err
+			}
+			if _, err = a.snapshotAssetMedia(ctx, other); err != nil {
 				return bad("REVIEW_ASSET_MISSING", "批次视频不可访问，不能标记刮削成功")
 			}
 			if err = a.validateOriginalAssetMetadataEvent(other, inherited.Event); err != nil {
@@ -606,7 +615,7 @@ func (a *App) runFNOSSync(ctx context.Context, job Job, assetID string) (returnE
 	if !within(root.Path, asset.Path) {
 		return bad("REVIEW_ROOT_CHANGED", "资产已不在目标媒体库内")
 	}
-	if _, err = snapshotPath(asset.Path); err != nil {
+	if _, err = a.snapshotAssetMedia(ctx, asset); err != nil {
 		return bad("REVIEW_ASSET_MISSING", "视频不可访问")
 	}
 	actual := asset.Path

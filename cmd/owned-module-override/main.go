@@ -261,7 +261,15 @@ func (f *fixture) handle(ctx context.Context, method string, input json.RawMessa
 			if err := os.MkdirAll(filepath.Dir(target), 0750); err != nil {
 				return nil, err
 			}
-			if f.config.TransferMode == "copy" || f.config.TransferMode == "corrupt" {
+			if f.config.TransferMode == "softlink" {
+				if err := os.Symlink(path, target); err != nil {
+					return nil, err
+				}
+			} else if f.config.TransferMode == "move" || f.config.TransferMode == "move_corrupt" {
+				if err := f.transferOwnedMove(path, target); err != nil {
+					return nil, err
+				}
+			} else if f.config.TransferMode == "copy" || f.config.TransferMode == "corrupt" {
 				src, err := os.Open(path)
 				if err != nil {
 					return nil, err
@@ -321,6 +329,9 @@ func (f *fixture) handle(ctx context.Context, method string, input json.RawMessa
 		}
 		return value, nil
 	case "module_storage", "module_storage_mkdir", "module_storage_rename", "module_storage_delete":
+		if method == "module_storage_delete" {
+			f.StorageCalls = append(f.StorageCalls, append(json.RawMessage(nil), input...))
+		}
 		action := f.config.StorageAction
 		if strings.HasPrefix(method, "module_storage_") {
 			action = strings.TrimPrefix(method, "module_storage_")

@@ -98,6 +98,7 @@ type Settings struct {
 	DefaultTVSubscribeConfig    json.RawMessage              `json:"default_tv_subscribe_config,omitempty"`
 	AppDomain                   string                       `json:"app_domain,omitempty"`
 	TMDBImageDomain             string                       `json:"tmdb_image_domain,omitempty"`
+	RecognitionSource           *string                      `json:"recognition_source,omitempty"`
 	RecognizePluginFirst        bool                         `json:"recognize_plugin_first"`
 	SearchSource                *string                      `json:"search_source,omitempty"`
 	AutoDownloadUser            string                       `json:"auto_download_user,omitempty"`
@@ -254,53 +255,57 @@ type Intent struct {
 	PreviewID               string          `json:"preview_id"`
 }
 type Asset struct {
-	Part                string        `json:"part,omitempty"`
-	IdentitySource      string        `json:"identity_source,omitempty"`
-	IdentityConfirmedAt string        `json:"identity_confirmed_at,omitempty"`
-	ID                  string        `json:"id"`
-	Media               catalog.Media `json:"media"`
-	Season              int           `json:"season"`
-	Episodes            []int         `json:"episodes"`
-	RootID              string        `json:"root_id"`
-	Path                string        `json:"path"`
-	SourcePath          string        `json:"source_path"`
-	Size                int64         `json:"size"`
-	State               string        `json:"state"`
-	ScrapeState         string        `json:"scrape_state"`
-	Renaming            *bool         `json:"renaming,omitempty"`
-	FNOSState           string        `json:"fnos_state"`
-	FNOSGUID            string        `json:"fnos_guid"`
-	FNOSScanAt          string        `json:"fnos_scan_at,omitempty"`
-	FNOSScanScope       string        `json:"fnos_scan_scope,omitempty"`
-	FNOSRefreshTransfer string        `json:"fnos_refresh_transfer,omitempty"`
-	Error               string        `json:"error"`
-	IntentID            string        `json:"intent_id"`
-	CreatedAt           string        `json:"created_at"`
-	MissingSeenAt       string        `json:"missing_seen_at"`
+	EpisodeScopes       []canonicalEpisodeScope `json:"episode_scopes,omitempty"`
+	Part                string                  `json:"part,omitempty"`
+	IdentitySource      string                  `json:"identity_source,omitempty"`
+	IdentityConfirmedAt string                  `json:"identity_confirmed_at,omitempty"`
+	ID                  string                  `json:"id"`
+	Media               catalog.Media           `json:"media"`
+	Season              int                     `json:"season"`
+	Episodes            []int                   `json:"episodes"`
+	RootID              string                  `json:"root_id"`
+	Path                string                  `json:"path"`
+	SourcePath          string                  `json:"source_path"`
+	Size                int64                   `json:"size"`
+	State               string                  `json:"state"`
+	ScrapeState         string                  `json:"scrape_state"`
+	Renaming            *bool                   `json:"renaming,omitempty"`
+	FNOSState           string                  `json:"fnos_state"`
+	FNOSGUID            string                  `json:"fnos_guid"`
+	FNOSScanAt          string                  `json:"fnos_scan_at,omitempty"`
+	FNOSScanScope       string                  `json:"fnos_scan_scope,omitempty"`
+	FNOSRefreshTransfer string                  `json:"fnos_refresh_transfer,omitempty"`
+	Error               string                  `json:"error"`
+	IntentID            string                  `json:"intent_id"`
+	CreatedAt           string                  `json:"created_at"`
+	MissingSeenAt       string                  `json:"missing_seen_at"`
 }
 type PlanFile struct {
-	DirectoryDigest         string `json:"directory_digest,omitempty"`
-	MaterialKind            string `json:"material_kind,omitempty"`
-	OriginalPreviewCallback bool   `json:"original_preview_callback,omitempty"`
-	OriginalTransferHistory bool   `json:"original_transfer_history,omitempty"`
-	ParentFileID            string `json:"parent_file_id,omitempty"`
-	HistorySource           string `json:"history_source,omitempty"`
-	Part                    string `json:"part,omitempty"`
-	Method                  string `json:"method"`
-	ID                      string `json:"id"`
-	Source                  string `json:"source"`
-	Target                  string `json:"target"`
-	Size                    int64  `json:"size"`
-	ModNS                   int64  `json:"mod_ns"`
-	Device                  uint64 `json:"device"`
-	Inode                   uint64 `json:"inode"`
-	Season                  int    `json:"season"`
-	Episodes                []int  `json:"episodes"`
-	Status                  string `json:"status"`
-	Reason                  string `json:"reason"`
-	AssetID                 string `json:"asset_id"`
+	EpisodeScopes           []canonicalEpisodeScope `json:"episode_scopes,omitempty"`
+	GroupNumbering          *importGroupNumbering   `json:"group_numbering,omitempty"`
+	DirectoryDigest         string                  `json:"directory_digest,omitempty"`
+	MaterialKind            string                  `json:"material_kind,omitempty"`
+	OriginalPreviewCallback bool                    `json:"original_preview_callback,omitempty"`
+	OriginalTransferHistory bool                    `json:"original_transfer_history,omitempty"`
+	ParentFileID            string                  `json:"parent_file_id,omitempty"`
+	HistorySource           string                  `json:"history_source,omitempty"`
+	Part                    string                  `json:"part,omitempty"`
+	Method                  string                  `json:"method"`
+	ID                      string                  `json:"id"`
+	Source                  string                  `json:"source"`
+	Target                  string                  `json:"target"`
+	Size                    int64                   `json:"size"`
+	ModNS                   int64                   `json:"mod_ns"`
+	Device                  uint64                  `json:"device"`
+	Inode                   uint64                  `json:"inode"`
+	Season                  int                     `json:"season"`
+	Episodes                []int                   `json:"episodes"`
+	Status                  string                  `json:"status"`
+	Reason                  string                  `json:"reason"`
+	AssetID                 string                  `json:"asset_id"`
 }
 type ImportPlan struct {
+	EpisodeGroup           string        `json:"episode_group,omitempty"`
 	DirectorySourceVersion int           `json:"directory_source_version,omitempty"`
 	Manual                 bool          `json:"manual,omitempty"`
 	ReorganizeAssetID      string        `json:"reorganize_asset_id,omitempty"`
@@ -313,6 +318,7 @@ type ImportPlan struct {
 	ID                     string        `json:"id"`
 	WorkflowID             string        `json:"workflow_id"`
 	Media                  catalog.Media `json:"media"`
+	Category               string        `json:"category,omitempty"`
 	RootID                 string        `json:"root_id"`
 	Mode                   string        `json:"mode"`
 	Files                  []PlanFile    `json:"files"`

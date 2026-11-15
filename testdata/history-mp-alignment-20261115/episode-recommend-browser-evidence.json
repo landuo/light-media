@@ -1,0 +1,125 @@
+{
+  "fixture": "synthetic local app, real HTTP handlers and built Vue bundle",
+  "rule_saved_through_ui": {
+    "revision": 1,
+    "rules": [
+      {
+        "name": "浏览器合成样本",
+        "enabled": true,
+        "order": 1,
+        "pattern": "Sample\\.S01E(?P<ep>\\d+)\\.mkv",
+        "min_file_size_mb": 0
+      }
+    ]
+  },
+  "history_selection": [
+    "episode-file-3",
+    "episode-file-2"
+  ],
+  "successful_recommendation": {
+    "format": "Sample.S01E{ep}.mkv",
+    "sample": "Sample.S01E03.mkv",
+    "matched": 2,
+    "sample_count": 2
+  },
+  "failure_after_temporarily_renaming_selected_synthetic_source": {
+    "text": "手动整理\n\n共 2 项\n\n自动\n目的存储\n整理目的存储，选择自动时由后端匹配\n复制\n整理方式\n选择自动时使用目录配置的整理方式\n目的路径\n整理目的路径，选择自动将按源路径匹配\n电视剧\n类型\n文件的媒体类型\nTheMovieDb编号\n按名称查询媒体编号，留空自动识别\n自动\n季\n第几季\n集\n集数或范围，如1或1,2\n集数定位\n推荐源文件或目录已失效，或包含符号链接/特殊文件 · 请求 req_trUeHGrDCHWL54haQvPeEq-i\n集数偏移\n集数偏移运算，如-10或EP*2\n指定Part\n指定Part，如part1\n最小文件大小（MB）\n只整理大于最小文件大小的文件\n按类型分类\n按二级分类策略添加子目录\n刮削元数据\n整理完成后自动刮削元数据\n复用历史识别信息\n使用历史整理记录中已识别的媒体信息\n预览\n＋ 加入整理队列\n立即整理 →",
+    "inputs": [
+      {
+        "id": "input-111",
+        "type": "text",
+        "value": "",
+        "checked": false
+      },
+      {
+        "id": "input-114",
+        "type": "text",
+        "value": "copy",
+        "checked": false
+      },
+      {
+        "id": "input-117",
+        "type": "text",
+        "value": "/Users/accidia/projects/light-media/work/history-mp-alignment-20261115/browser-episode-fixture/library",
+        "checked": false
+      },
+      {
+        "id": "input-119",
+        "type": "text",
+        "value": "tv",
+        "checked": false
+      },
+      {
+        "id": "input-122",
+        "type": "text",
+        "value": "",
+        "checked": false
+      },
+      {
+        "id": "input-131",
+        "type": "text",
+        "value": "",
+        "checked": false
+      },
+      {
+        "id": "input-134",
+        "type": "text",
+        "value": "",
+        "checked": false
+      },
+      {
+        "id": "input-136",
+        "type": "text",
+        "value": "User-{ep}.mkv",
+        "checked": false
+      },
+      {
+        "id": "input-140",
+        "type": "text",
+        "value": "",
+        "checked": false
+      },
+      {
+        "id": "input-124",
+        "type": "text",
+        "value": "",
+        "checked": false
+      },
+      {
+        "id": "input-126",
+        "type": "number",
+        "value": "0",
+        "checked": false
+      },
+      {
+        "id": "",
+        "type": "checkbox",
+        "value": "on",
+        "checked": false
+      },
+      {
+        "id": "",
+        "type": "checkbox",
+        "value": "on",
+        "checked": false
+      },
+      {
+        "id": "",
+        "type": "checkbox",
+        "value": "on",
+        "checked": false
+      }
+    ],
+    "viewport": 390,
+    "scrollWidth": 390
+  },
+  "history_after_recommendations": {
+    "total": 3,
+    "count": 3
+  },
+  "database_counts_after_recommendations": {"plans": 3, "jobs": 3, "history": 3},
+  "mobile_dialog": {
+    "width": 390,
+    "height": 844
+  }
+}

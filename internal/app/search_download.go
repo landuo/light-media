@@ -1954,11 +1954,7 @@ func (a *App) pollDownloads(ctx context.Context) error {
 	}
 	return nil
 }
-func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d DownloaderConfig, in *Intent, task download.Task) error {
-	ctx, recognitionErr := a.intentRecognitionContext(ctx, *in)
-	if recognitionErr != nil {
-		return recognitionErr
-	}
+func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d DownloaderConfig, in *Intent, task download.Task) (resultErr error) {
 	if e := a.guardDownloaderSnapshot(ctx, *in); e != nil {
 		return e
 	}
@@ -1968,9 +1964,39 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 	if e := a.bindCompletedDirectory(ctx, in, task, d); e != nil {
 		return e
 	}
+	if in.ImportPlanID != "" {
+		return a.resumeCompletedPlan(ctx, in)
+	}
+	files, e := c.Files(ctx, in.Hash)
+	if e != nil {
+		return e
+	}
+	// Establish the entire local source set before recording preparation
+	// failures. A partial listing/file or a disconnected downloader is not a
+	// failed file transfer, even if an earlier file has bad numbering.
+	known, sourceErr := a.completedDownloadSourcePlan(ctx, d, *in, task, files)
+	// Quality selection may intentionally leave other package files absent or
+	// incomplete. Preserve that path's per-selected-file readiness checks; an
+	// incomplete source set simply does not authorize synthetic failure rows.
+	preparing := sourceErr == nil
+	defer func() {
+		if preparing && completedDownloadPreparationFailure(resultErr) && ctx.Err() == nil {
+			if err := a.recordCompletedDownloadPreparationFailure(ctx, in, known, resultErr); err != nil {
+				resultErr = errors.Join(resultErr, err)
+			}
+		}
+	}()
+	ctx, e = a.intentRecognitionContext(ctx, *in)
+	if e != nil {
+		return e
+	}
+	category, e := a.completedDownloadCategory(ctx, *in)
+	if e != nil {
+		return e
+	}
+	known.Category = category
 	var providerMedia json.RawMessage
 	var recoveredEpisodes []media.Episode
-	var e error
 	if in.ChatWholeUnscoped {
 		providerMedia, recoveredEpisodes, e = a.recoverCompletedUnscopedMedia(ctx, *in)
 	} else {
@@ -1979,9 +2005,12 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 	if e != nil {
 		return e
 	}
-	files, e := c.Files(ctx, in.Hash)
-	if e != nil {
-		return e
+	if len(providerMedia) > 0 {
+		var classified struct {
+			Category string `json:"category"`
+		}
+		_ = json.Unmarshal(providerMedia, &classified)
+		known.Category = classified.Category
 	}
 	seasonProof, e := a.intentSeasonProof(ctx, a.Store.DB, *in)
 	if e != nil {
@@ -2009,6 +2038,7 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 		mode = "hardlink"
 	}
 	request := ImportRequest{MediaType: in.Media.MediaType, TMDBID: in.Media.ID, RootID: in.RootID, Mode: mode, IntentID: in.ID, WorkflowID: in.WorkflowID}
+	request.originalDownloadCategory = category
 	request.originalRecoveredWhole = in.ChatWholeUnscoped
 	if len(providerMedia) > 0 {
 		request.providerIdentity, request.originalResolvedMedia = in.Media, providerMedia
@@ -2038,25 +2068,24 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 				return err
 			}
 			if !selected {
+				full, _ := mapDownloaderPath(a.Settings(), d, filepath.Join(task.DownloadDir, filepath.FromSlash(f.Path)))
+				for i := range known.Files {
+					if known.Files[i].Source == full {
+						known.Files = append(known.Files[:i], known.Files[i+1:]...)
+						break
+					}
+				}
 				continue
 			}
 		}
-		if f.Progress < 1 {
-			return bad("DOWNLOAD_NOT_COMPLETE", "视频文件尚未下载完成，等待下一轮")
-		}
-		if filepath.IsAbs(f.Path) || strings.ContainsAny(f.Path, "\x00\r\n") || filepath.Clean(f.Path) == ".." || strings.HasPrefix(filepath.Clean(f.Path), ".."+string(filepath.Separator)) {
-			return bad("INVALID_DOWNLOAD_PATH", "下载器返回的视频文件路径越界")
+		if sourceErr != nil {
+			if _, err := a.completedDownloadSourcePlan(ctx, d, *in, task, []download.File{f}); err != nil {
+				return err
+			}
 		}
 		full, e := mapDownloaderPath(a.Settings(), d, filepath.Join(task.DownloadDir, filepath.FromSlash(f.Path)))
 		if e != nil {
 			return e
-		}
-		stamp, e := snapshotPath(full)
-		if e != nil {
-			return e
-		}
-		if f.Size <= 0 || stamp.Size != f.Size {
-			return bad("DOWNLOAD_FILE_NOT_READY", "下载文件大小与下载器记录不一致，等待重新检查")
 		}
 		parsed := a.parseMediaNameContext(ctx, filepath.Base(f.Path))
 		entry := ImportFileRequest{Path: full}
@@ -2100,6 +2129,11 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 			entry.Season = in.Season
 		}
 		request.Files = append(request.Files, entry)
+		for i := range known.Files {
+			if known.Files[i].Source == entry.Path {
+				known.Files[i].Season, known.Files[i].Episodes = entry.Season, append([]int{}, entry.Episodes...)
+			}
+		}
 	}
 	covered := map[media.Episode]bool{}
 	for _, f := range request.Files {
@@ -2125,8 +2159,16 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 	}
 	plan, e := a.previewImport(ctx, request)
 	if e != nil {
+		if plan.Media.Title != "" {
+			known.Media = plan.Media
+		}
+		if plan.Category != "" {
+			known.Category = plan.Category
+		}
 		return e
 	}
+	// A formed plan uses the existing blocked/admission failure path.
+	preparing = false
 	if seasonProof != nil && seasonProof.Magnet {
 		if e = a.saveCompletedSeasonMagnet(ctx, *in, seasonProof.Files); e != nil {
 			return e

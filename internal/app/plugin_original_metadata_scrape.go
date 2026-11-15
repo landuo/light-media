@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"encoding/json"
-	"encoding/xml"
 	"fmt"
 	"io"
 	"net/http"
@@ -27,11 +26,6 @@ func (a *App) scrapeOriginalLocalMetadata(ctx context.Context, kwargs map[string
 	if err := a.originalMetadataAllowed(path); err != nil {
 		return err
 	}
-	stamp, err := browserStat(path)
-	if err != nil {
-		return err
-	}
-	ctx = context.WithValue(ctx, originalMetadataSnapshotKey{}, stamp)
 	options, err := a.globalRecognitionOptions(ctx)
 	if err != nil {
 		return err
@@ -49,6 +43,11 @@ func (a *App) scrapeOriginalLocalMetadata(ctx context.Context, kwargs map[string
 			return nil
 		}
 	}
+	stamp, err := a.originalMetadataMediaStamp(ctx, path)
+	if err != nil {
+		return err
+	}
+	ctx = context.WithValue(ctx, originalMetadataSnapshotKey{}, stamp)
 	parser, err := releasemeta.NewMetaInfoParser(releasemeta.MetaInfoEnvironment{Options: options})
 	if err != nil {
 		return err
@@ -65,7 +64,7 @@ func (a *App) scrapeOriginalLocalMetadata(ctx context.Context, kwargs map[string
 	info := sourceMap(kwargs["mediainfo"])
 	if len(info) == 0 {
 		raw, err := a.originalCatalogRecognizeByMetaMethod(ctx, "recognize_media", meta, func(meta *releasemeta.MetaObject) (json.RawMessage, error) {
-			if a.originalHostMediaRecognition.Source == "themoviedb" {
+			if a.effectiveRecognitionSource() == "themoviedb" {
 				return a.originalMetadataRecognizeNative(ctx, meta)
 			}
 			fields, err := meta.ToDict()
@@ -129,6 +128,9 @@ func (a *App) scrapeOriginalLocalMetadata(ctx context.Context, kwargs map[string
 					return inputErr
 				}
 				raw, err = a.originalCatalogRecognizeMethod(ctx, "recognize_media", input, func() (json.RawMessage, error) {
+					if sourceSubscriptionTruth(input["episode_group"]) {
+						return a.originalHostMediaRecognizeTMDB(ctx, input)
+					}
 					id, _ := strconv.ParseInt(sourceNumberString(info["tmdb_id"]), 10, 64)
 					result, err := a.sourceRecognizeTMDBCore(ctx, catalog.Media{ID: id, MediaType: "tv"})
 					return result.MediaInfo, err
@@ -319,7 +321,12 @@ func (a *App) originalMetadataNativeNFO(ctx context.Context, raw json.RawMessage
 	}
 	// The pinned system scraper uses its TMDB helper directly. tmdb_episodes
 	// is a separate chain extension whose DTO deliberately omits episode IDs.
-	details, err := a.nativeSeason(ctx, id, seasonNumber)
+	var details catalog.Season
+	if group := sourceText(fields["episode_group"]); group != "" {
+		details, err = a.nativeGroupSeason(ctx, id, seasonNumber, group)
+	} else {
+		details, err = a.nativeSeason(ctx, id, seasonNumber)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -330,14 +337,33 @@ func (a *App) originalMetadataNativeNFO(ctx context.Context, raw json.RawMessage
 		}
 		for _, item := range details.Episodes {
 			if item.EpisodeNumber == number {
+				// The source scraper writes its requested group season, not the
+				// canonical season_number retained on a group provider row.
+				item.SeasonNumber = seasonNumber
 				return assetNFO(full.Media, &item)
 			}
 		}
 		return nil, originalRecognitionMissing()
 	}
-	doc := assetNFODocument{XMLName: xml.Name{Local: "season"}, Title: details.Name, Plot: details.Overview, Season: &seasonNumber, Premiered: details.AirDate}
-	body, err := xml.MarshalIndent(doc, "", "  ")
-	return append(append([]byte(xml.Header), body...), '\n'), err
+	// Use the source season document, not the episode document's <season>.
+	// Group and ordinary season folders share this exact scraper contract.
+	doc := newOriginalMetadataXML("season")
+	doc.cdata("plot", details.Overview)
+	doc.cdata("outline", details.Overview)
+	title := details.Name
+	if title == "" {
+		title = fmt.Sprintf("季 %d", seasonNumber)
+	}
+	doc.text("title", title)
+	doc.text("premiered", details.AirDate)
+	doc.text("releasedate", details.AirDate)
+	year := details.AirDate
+	if len(year) > 4 {
+		year = year[:4]
+	}
+	doc.text("year", year)
+	doc.text("seasonnumber", seasonNumber)
+	return doc.finish()
 }
 
 func (a *App) originalMetadataScrapeSource(info map[string]any) string {
@@ -418,7 +444,14 @@ func (a *App) scrapeOriginalMetadataImages(ctx context.Context, item, parent map
 		if id <= 0 {
 			return
 		}
-		details, err := a.nativeSeason(ctx, id, seasonNumber)
+		var details catalog.Season
+		var err error
+		if group := sourceText(info["episode_group"]); group != "" && sourceSubscriptionTruth(episode) {
+			details, err = a.nativeGroupSeason(ctx, id, seasonNumber, group)
+		} else {
+			// MP still sources the season poster from the ordinary season.
+			details, err = a.nativeSeason(ctx, id, seasonNumber)
+		}
 		if err == nil {
 			imagePath, name := details.PosterPath, fmt.Sprintf("season%02d-poster", seasonNumber)
 			if seasonNumber == 0 {

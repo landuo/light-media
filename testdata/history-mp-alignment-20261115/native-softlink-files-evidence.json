@@ -1,0 +1,53 @@
+{
+  "stage": 13,
+  "baseline": "4a222f0fa0c06848e7924e6614654a38e999fb19",
+  "scope": "Native ordinary video/subtitle backend with synthetic media, actual local filesystems and independent SDK processes; no production/NAS changes",
+  "identity": {
+    "stage_and_managed_snapshot": "actual symlink entry device/inode/text-byte-length/mtime",
+    "proof": "canonical ordinary referent path and SourceSnapshot",
+    "asset_size": "referent media bytes, not link-text length",
+    "generic_import_open_snapshot_and_browser_following_unchanged": true
+  },
+  "publication": {
+    "syscalls": ["Symlinkat", "exclusive rename", "parent sync"],
+    "cold_recovery": "persisted staged entry recognized at target after published SQL update failed",
+    "unknown_stage_with_only_matching_text": "not adopted"
+  },
+  "sdk": {
+    "test": "TestImportSoftlinkActualSDKVideoSubtitleAndAssetRecovery",
+    "branches": ["success", "asset-sql-recovery"],
+    "actual_separate_actor": true,
+    "cold_branch_new_actor_pid": true,
+    "callbacks": "video and subtitle success once each",
+    "shutdown_boundary": "wait for in-flight observer delivery before graceful close; no claim about sudden-crash event delivery"
+  },
+  "scrape": {
+    "test": "TestImportSoftlinkScrapeWritesBesideLibraryLink",
+    "actual_import_batch_finished": true,
+    "actual_queued_scrape_executed": true,
+    "nfo_beside_library_link": true,
+    "no_nfo_beside_referent": true,
+    "media_link_retained": true
+  },
+  "lifecycle": {
+    "tests": ["TestImportSoftlinkHistoryDeletesOwnedEntries", "TestImportSoftlinkReorganizeFlattensOwnedLinkAndCleansEntries", "TestImportSoftlinkReorganizeProtectsSoleOldEntity", "TestImportSoftlinkInPlaceReorganizeKeepsOwnedEntries"],
+    "target_only": "unlink entries, referents retained",
+    "both": "target entries removed before separately authorized sources",
+    "broken_link": "owned entry can be removed without reading referent",
+    "same_text_new_inode": "replacement retained",
+    "reorganize": "new links refer to original ordinary entities, old entries cleaned, provenance retained",
+    "sole_entity_dependency": "preparation stops before destructive cleanup",
+    "in_place": "original owned video/subtitle entries retained and re-registered"
+  },
+  "verification": {
+    "softlink_suite_seconds": 6.956,
+    "legacy_history_delete_reorganize_seconds": 7.230,
+    "integration_seconds": 252.950,
+    "all_package_compile": true,
+    "linux_amd64_compile": true,
+    "linux_binary_executed": false,
+    "new_browser_validation": false
+  },
+  "remaining": ["directory softlink", "storage actor and external transfer softlink", "external delete_file override for managed softlinks", "inventory/subscription/quality consumers", "mode selection UI and browser verification", "provider-native web/history identity", "final integration"],
+  "ui_softlink_option_opened": false
+}

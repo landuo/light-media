@@ -42,19 +42,20 @@ type LibraryRegisterRequest struct {
 	Confirm     bool   `json:"confirm"`
 }
 type libraryIdentity struct {
-	AssetID     string         `json:"asset_id"`
-	CandidateID string         `json:"candidate_id"`
-	RootID      string         `json:"root_id"`
-	RootPath    string         `json:"root_path"`
-	Path        string         `json:"path"`
-	Snapshot    importSnapshot `json:"snapshot"`
-	MediaType   string         `json:"media_type"`
-	TMDBID      int64          `json:"tmdb_id"`
-	Season      int            `json:"season"`
-	Episodes    []int          `json:"episodes"`
-	Source      string         `json:"source"`
-	ConfirmedAt string         `json:"confirmed_at"`
-	Actor       string         `json:"actor"`
+	AssetID       string                  `json:"asset_id"`
+	CandidateID   string                  `json:"candidate_id"`
+	RootID        string                  `json:"root_id"`
+	RootPath      string                  `json:"root_path"`
+	Path          string                  `json:"path"`
+	Snapshot      importSnapshot          `json:"snapshot"`
+	MediaType     string                  `json:"media_type"`
+	TMDBID        int64                   `json:"tmdb_id"`
+	Season        int                     `json:"season"`
+	Episodes      []int                   `json:"episodes"`
+	EpisodeScopes []canonicalEpisodeScope `json:"episode_scopes,omitempty"`
+	Source        string                  `json:"source"`
+	ConfirmedAt   string                  `json:"confirmed_at"`
+	Actor         string                  `json:"actor"`
 }
 
 func libraryCandidateID(root Root, path string, locked importSnapshot) string {
@@ -302,7 +303,7 @@ func (a *App) registerLibraryAsset(ctx context.Context, in LibraryRegisterReques
 		if sameEpisodes && len(in.Episodes) == 1 {
 			sameEpisodes = prior.Episodes[0] == in.Episodes[0]
 		}
-		if prior.Media.MediaType != in.MediaType || prior.Media.ID != in.TMDBID || prior.Season != in.Season || !sameEpisodes || prior.State == "removed" || prior.State == "missing_confirmed" {
+		if prior.Media.MediaType != in.MediaType || prior.Media.ID != in.TMDBID || prior.Season != in.Season || !sameEpisodes || !sameCanonicalSlots(prior.inventorySlots(), canonicalSlots(canonicalScopes(in.Season, in.Episodes, nil))) || prior.State == "removed" || prior.State == "missing_confirmed" {
 			return empty, bad("LIBRARY_ALREADY_REGISTERED", "此候选已登记，不能通过旧确认覆盖既有身份")
 		}
 		return prior, nil
@@ -370,8 +371,8 @@ func (a *App) registerLibraryAsset(ctx context.Context, in LibraryRegisterReques
 			return empty, err
 		}
 	}
-	for _, episode := range importEpisodes(asset.Episodes) {
-		if _, err = tx.ExecContext(ctx, `INSERT INTO asset_slots VALUES(?,?,?,?)`, mediaKey(asset.Media), asset.Season, episode, asset.ID); err != nil {
+	for _, slot := range asset.inventorySlots() {
+		if _, err = tx.ExecContext(ctx, `INSERT INTO asset_slots VALUES(?,?,?,?)`, mediaKey(asset.Media), slot.Season, slot.Episode, asset.ID); err != nil {
 			return empty, err
 		}
 	}

@@ -388,7 +388,7 @@ func (a *App) originalHostMediaRecognizeAniList(ctx context.Context, e *catalog.
 	meta := originalHostMediaMeta(metaValue)
 	source := sourceText(kwargs["source"])
 	if source == "" {
-		source = a.originalHostMediaRecognition.Source
+		source = a.effectiveRecognitionSource()
 	}
 	if !sourceSubscriptionTruth(id) && (metaValue == nil || source != "anilist") {
 		return nil, nil

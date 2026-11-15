@@ -121,6 +121,10 @@ async function mount(t, initial = {}) {
     ui,
     field,
     saveButton,
+    sourceField: () =>
+      descendants(panel('媒体识别')).find(
+        (n) => n.type === 'source-select' && n.props.label === '识别数据源',
+      ),
     value: () => field().props.modelValue,
     saved: () => copy(settings),
     writes: () => fixture.requests.filter((r) => r.path === '/settings' && r.method === 'PUT'),
@@ -160,6 +164,23 @@ test('app domain loads, saves verbatim, and reloads without introducing URL vali
   }
 });
 
+test('recognition source displays inherited source without freezing it on unrelated saves', async (t) => {
+  const app = await mount(t, { effective_recognition_source: 'douban' });
+  assert.equal(app.sourceField().props['model-value'], 'douban');
+  assert.deepEqual(
+    app.sourceField().props.items.map((i) => i.value),
+    ['themoviedb', 'douban'],
+  );
+  await app.save('应用地址');
+  assert.equal(app.writes().at(-1).body.recognition_source, undefined);
+  app.sourceField().props['onUpdate:modelValue']('themoviedb');
+  await vue.nextTick();
+  await app.save('媒体识别');
+  assert.equal(app.writes().at(-1).body.recognition_source, 'themoviedb');
+  assert.equal(app.sourceField().props['model-value'], 'themoviedb');
+  assert.equal(app.ui.settings.recognition_source, 'themoviedb');
+});
+
 test('missing app domain displays empty and stays optional', async (t) => {
   const app = await mount(t);
   assert.equal(app.value(), '');
@@ -197,7 +218,7 @@ test('unrelated saves keep the latest domain, not the unsaved draft; tabs retain
   await app.tab('系统');
   assert.equal(app.value(), 'draft.example.invalid');
   app.updateCurrent({ app_domain: 'external.example.invalid' });
-  await app.save('TMDB 元数据');
+  await app.save('媒体识别');
   assert.equal(app.writes()[0].body.app_domain, 'external.example.invalid');
   assert.equal(app.value(), 'draft.example.invalid');
 });
@@ -228,7 +249,7 @@ test('pending save disables submissions and guards duplicate handler calls', asy
   try {
     await vue.nextTick();
     assert.equal(app.saveButton().props.disabled, true);
-    assert.equal(app.saveButton('TMDB 元数据').props.disabled, true);
+    assert.equal(app.saveButton('媒体识别').props.disabled, true);
     await app.save();
     assert.equal(app.writes().length, 1);
   } finally {

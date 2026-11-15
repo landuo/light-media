@@ -24,7 +24,7 @@ func (a *App) originalTransferInterceptWrite(ctx context.Context, source, target
 	file.Source, file.Target, file.Method = source, target, method
 	if active.File.Source != source {
 		var err error
-		projection, err = a.originalTransferContext(ctx, active.Media, file)
+		projection, err = a.originalTransferContextWithMedia(ctx, active.Media, file, active.Source.Media)
 		if err != nil {
 			return err
 		}

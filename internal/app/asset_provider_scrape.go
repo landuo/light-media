@@ -37,7 +37,7 @@ func (a *App) providerAssetScrapeEvent(ctx context.Context, asset Asset, root Ro
 		return nil, invalid
 	}
 	file := plan.Files[index]
-	if file.Status != "imported" || file.MaterialKind != "" || file.AssetID != asset.ID || file.Target != asset.Path || file.Source != asset.SourcePath || file.Season != asset.Season || !slices.Equal(file.Episodes, asset.Episodes) {
+	if file.Status != "imported" || file.MaterialKind != "" || file.AssetID != asset.ID || file.Target != asset.Path || file.Source != asset.SourcePath || file.Season != asset.Season || !slices.Equal(file.Episodes, asset.Episodes) || !sameCanonicalSlots(file.inventorySlots(), asset.inventorySlots()) {
 		return nil, invalid
 	}
 	var owned managedFile
