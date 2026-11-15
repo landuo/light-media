@@ -116,7 +116,10 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 		if err := originalResourceDecode(raw, &request); err != nil {
 			return nil, err
 		}
-		client, kind, guard, err := a.originalHostDownloaderClient(ctx, scope, request.DownloaderID)
+		// Use the same qBittorrent login path as the bound brush add. Recent
+		// daemons can return 204 and use a QBT_SID cookie instead of SID.
+		brush := scope.phase == "brush" && originalBrushSourceScope(ctx, scope)
+		client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, brush)
 		if err != nil {
 			return nil, err
 		}
