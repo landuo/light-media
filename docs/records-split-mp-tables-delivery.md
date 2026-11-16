@@ -90,11 +90,13 @@
 | --- | --- |
 | `go build ./...` | 通过 |
 | `go vet ./...` | 通过 |
-| `internal/storetest` | 迁移、路由、投影、密封、视图转发、别名回填 6 组测试通过 |
+| `internal/storetest` | 迁移、路由、投影、密封、别名回填、索引命中、SQL 预检 7 组测试通过 |
 | SQL 字面量预检 | 900 条 SQL（生产 + 测试）在 v2 schema 上 `Prepare` 通过（捕获并修复 20 余处残留 kind/uid 列引用） |
 | 残留引用检查 | `TestNoLegacyRecordsReferences` 断言生产与测试代码中不存在 `FROM/INTO/UPDATE/JOIN records` |
 | 拼接 SQL 预检 | `ValidateAssembledSQL` 覆盖整理历史 CTE、任务摘要、整理队列、通知、订阅别名，全部 `Prepare` 通过 |
 | 测试夹具 | 93 处 `ON records` 触发器与 54 处断言改为落在目标表；`internal/app` 夹具测试仍需 OWNED_* 二进制才能实跑 |
+| 本地迁移演练 | 24,200 行合成库（14 类 kind + 密封密文 + 未知 kind）：迁移 5.1s；行数全部对齐；1,200 条抽样 payload 字节一致；400 条密文完全一致；`--apply` 重复执行无副作用 |
+| 迁移后打开耗时 | v2 库 0.14s、空库 0.10s（兼容触发器删除后回到基线） |
 | `cmd/...` | 全部通过（含真实 Store 的迁移 CLI 测试） |
 | 前端 | 无改动（API 未变） |
 
@@ -106,7 +108,11 @@
 4. **`site` / `user` 为镜像写入**：设置保存与管理员创建时同步 MP 表；读路径仍走加密 config，切换读是下一步。
 5. **`mediaserveritem` / `workflow` / `agentchat` / `agenttask` / `passkey`** 已按 MP 建表但无写入方（对应功能未实现），结构与索引齐全。
 
-## 7. 后续工作（按优先级）
+## 7. 迁移操作
+
+停机迁移步骤、校验 SQL 与回滚见 `docs/records-split-mp-migration-runbook.md`。
+
+## 8. 后续工作（按优先级）
 
 1. ~~测试改 typed 表并删除兼容视图~~（已完成）。
 2. `site` 读路径切换：`Settings().Sites` 改为读 `site` 表，`config` 只保留非站点字段。

@@ -20,7 +20,9 @@ import (
 
 func main() {
 	var dir string
+	var apply bool
 	flag.StringVar(&dir, "data-dir", "", "light-media data directory")
+	flag.BoolVar(&apply, "apply", false, "run the split migration (the service must be stopped) and report the result")
 	flag.Parse()
 	if dir == "" || !filepath.IsAbs(dir) {
 		fmt.Fprintln(os.Stderr, "usage: records-migrate-check --data-dir /absolute/path")
@@ -30,6 +32,22 @@ func main() {
 	if st, err := os.Stat(dbPath); err != nil || !st.Mode().IsRegular() {
 		fmt.Fprintln(os.Stderr, "database not found")
 		os.Exit(1)
+	}
+	if apply {
+		store, err := app.OpenStore(dir)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		report, err := app.CheckRecordsMigration(context.Background(), store.DB)
+		store.Close()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		_ = json.NewEncoder(os.Stdout).Encode(report)
+		fmt.Fprint(os.Stderr, report.String())
+		return
 	}
 	dsn := (&url.URL{Scheme: "file", Path: dbPath}).String() + "?mode=ro"
 	db, err := sql.Open("sqlite", dsn)
