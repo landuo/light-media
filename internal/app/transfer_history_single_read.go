@@ -166,7 +166,9 @@ func (a *App) transferHistoryMPFiltered(ctx context.Context, page, size int, sta
 		return nil, 0, err
 	}
 	if total == 0 {
-		return nil, 0, nil
+		// The API contract is a JSON array; a nil slice would marshal to null and
+		// the history view rejects a non-iterable items field.
+		return []transferHistoryItem{}, 0, nil
 	}
 	rows, err := a.Store.reader().QueryContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory`+where+` ORDER BY date DESC,id DESC LIMIT ? OFFSET ?`, append(args, size, (page-1)*size)...)
 	if err != nil {

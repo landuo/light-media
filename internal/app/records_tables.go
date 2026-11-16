@@ -23,6 +23,20 @@ const recordKeyLit = "\x00key"
 
 func (c recordColumn) keyFromID() bool { return c.lit == recordKeyLit }
 
+// insertValue projects the payload at INSERT time. A NOT NULL column cannot be
+// repaired by an AFTER trigger, so the value has to be present in the statement.
+func (c recordColumn) insertValue() string {
+	if c.keyFromID() {
+		return "?1"
+	}
+	if c.path == "" && c.lit == "" {
+		return "NULL"
+	}
+	// Reuse the trigger projection so a non-JSON payload (sealed bytes) is
+	// tolerated, then bind it to the INSERT parameter instead of NEW.payload.
+	return strings.ReplaceAll(c.newValue(""), "NEW.payload", "?2")
+}
+
 func (c recordColumn) value() string {
 	if c.keyFromID() {
 		return "?1"
@@ -437,6 +451,10 @@ var recordKinds = map[string]string{
 	"plugin_host_setting_presence":      "plugin_host_state",
 	"core_settings_lifecycle":           "settings_lifecycle",
 
+	// MoviePilot tables written directly by the settings/auth paths.
+	"user": "user",
+	"site": "site",
+
 	// Notifications, settings and cache.
 	"notification":             "message",
 	"message":                  "message",
@@ -488,35 +506,28 @@ func recordInsertSQLNoop(kind string, t recordTable) string {
 
 func recordInsertSQLMode(kind string, t recordTable, upsert bool) string {
 	key := recordKeyColumn(t)
-	cols := key + ",payload,updated_at,record_kind"
-	vals := "?1,?2,?3,'" + kind + "'"
-	conflict := " ON CONFLICT(" + key + ") DO NOTHING"
-	if upsert {
-		updates := "payload=excluded.payload,updated_at=excluded.updated_at,record_kind=excluded.record_kind"
-		if stage, ok := recordKindAlias[kind]; ok {
-			cols += ",stage"
-			vals += ",'" + stage + "'"
-			updates += ",stage=excluded.stage"
-		}
-		for _, c := range t.cols {
-			if !c.keyFromID() {
-				continue
-			}
-			cols += "," + c.name
-			vals += ",?1"
-			updates += "," + c.name + "=excluded." + c.name
-		}
-		conflict = " ON CONFLICT(" + key + ") DO UPDATE SET " + updates
-	} else {
-		for _, c := range t.cols {
-			if !c.keyFromID() {
-				continue
-			}
-			cols += "," + c.name
-			vals += ",?1"
-		}
+	cols := []string{key, "payload", "updated_at", "record_kind"}
+	vals := []string{"?1", "?2", "?3", "'" + kind + "'"}
+	updates := []string{"payload=excluded.payload", "updated_at=excluded.updated_at", "record_kind=excluded.record_kind"}
+	if stage, ok := recordKindAlias[kind]; ok {
+		cols = append(cols, "stage")
+		vals = append(vals, "'"+stage+"'")
+		updates = append(updates, "stage=excluded.stage")
 	}
-	return "INSERT INTO " + t.name + "(" + cols + ") VALUES(" + vals + ")" + conflict
+	for _, c := range t.cols {
+		if c.name == "stage" {
+			continue
+		}
+		cols = append(cols, c.name)
+		vals = append(vals, c.insertValue())
+		updates = append(updates, c.name+"=excluded."+c.name)
+	}
+	conflict := " ON CONFLICT(\"" + key + "\") DO NOTHING"
+	if upsert {
+		conflict = " ON CONFLICT(\"" + key + "\") DO UPDATE SET " + strings.Join(updates, ",")
+	}
+	return "INSERT INTO \"" + t.name + "\"(" + strings.Join(cols, ",") + ") VALUES(" +
+		strings.Join(vals, ",") + ")" + conflict
 }
 
 // recordProjection builds the trigger body that copies payload fields into the
@@ -621,7 +632,7 @@ func recordTriggerDDL(t recordTable) string {
 // be queried and indexed with plain SQL while the canonical record stays whole.
 var mpCols = map[string][]recordColumn{
 	"user": {
-		{"name", "$.username", "TEXT", ""}, {"email", "$.email", "TEXT", ""},
+		{"name", "", "TEXT", "COALESCE(json_extract(NEW.payload,'$.username'),'')"}, {"email", "$.email", "TEXT", ""},
 		{"hashed_password", "", "TEXT", "json_extract(NEW.payload,'$.password_hash')"},
 		{"is_active", "", "INTEGER", "1"}, {"is_superuser", "", "INTEGER", "0"},
 		{"permissions", "$.permissions", "JSON", ""}, {"settings", "$.settings", "JSON", ""},
@@ -636,8 +647,9 @@ var mpCols = map[string][]recordColumn{
 		{"value", "$.value", "JSON", ""},
 	},
 	"site": {
-		{"name", "$.name", "TEXT", ""}, {"domain", "$.domain", "TEXT", ""},
-		{"url", "$.base_url", "TEXT", ""}, {"pri", "$.pri", "INTEGER", ""},
+		{"name", "", "TEXT", "COALESCE(json_extract(NEW.payload,'$.name'),'')"},
+		{"domain", "$.domain", "TEXT", ""},
+		{"url", "", "TEXT", "COALESCE(json_extract(NEW.payload,'$.base_url'),'')"}, {"pri", "$.pri", "INTEGER", ""},
 		{"rss", "$.rss", "TEXT", ""}, {"cookie", "$.cookie", "TEXT", ""},
 		{"ua", "$.ua", "TEXT", ""}, {"apikey", "$.api_key", "TEXT", ""},
 		{"token", "$.token", "TEXT", ""}, {"proxy", "$.proxy", "INTEGER", ""},
@@ -724,8 +736,9 @@ var mpCols = map[string][]recordColumn{
 		{"save_path", "$.download_path", "TEXT", ""}, {"description", "$.media.overview", "TEXT", ""},
 	},
 	"downloadhistory": {
-		{"path", "$.download_path", "TEXT", ""}, {"type", "$.media.media_type", "TEXT", ""},
-		{"title", "$.media.title", "TEXT", ""}, {"year", "$.media.year", "TEXT", ""},
+		{"path", "", "TEXT", "COALESCE(json_extract(NEW.payload,'$.download_path'),'')"},
+		{"type", "", "TEXT", "COALESCE(json_extract(NEW.payload,'$.media.media_type'),'')"},
+		{"title", "", "TEXT", "COALESCE(json_extract(NEW.payload,'$.media.title'),'')"}, {"year", "$.media.year", "TEXT", ""},
 		{"tmdbid", "$.media.id", "INTEGER", ""}, {"media_source", "$.media.media_source", "TEXT", ""},
 		{"media_id", "$.media.media_id", "TEXT", ""}, {"seasons", "", "TEXT", "NULL"},
 		{"episodes", "", "TEXT", "NULL"}, {"image", "$.media.backdrop_path", "TEXT", ""},
@@ -742,7 +755,7 @@ var mpCols = map[string][]recordColumn{
 		{"downloader", "$.downloader", "TEXT", ""}, {"download_hash", "$.download_hash", "TEXT", ""},
 		{"fullpath", "$.fullpath", "TEXT", ""}, {"savepath", "$.savepath", "TEXT", ""},
 		{"filepath", "$.filepath", "TEXT", ""}, {"torrentname", "$.torrentname", "TEXT", ""},
-		{"state", "$.state", "INTEGER", ""}, {"history_uid", "$.history_uid", "TEXT", ""},
+		{"state", "", "INTEGER", "COALESCE(json_extract(NEW.payload,'$.state'),1)"}, {"history_uid", "$.history_uid", "TEXT", ""},
 		{"asset_id", "$.asset_id", "TEXT", ""},
 	},
 	"downloadfailure": {

@@ -289,3 +289,30 @@ func TestHotQueriesUseFeatureIndexes(t *testing.T) {
 		}
 	}
 }
+
+func TestMoviePilotNotNullColumnsProjectAtInsert(t *testing.T) {
+	store, err := app.OpenStore(t.TempDir())
+	if err != nil {
+		t.Fatalf("open: %v", err)
+	}
+	defer store.Close()
+	// MoviePilot's user.name/subscribe.name/site.name are NOT NULL. An AFTER
+	// trigger cannot repair them, so the projection has to run inside INSERT.
+	ctx := context.Background()
+	user := map[string]any{"username": "admin", "password_hash": []byte("hash")}
+	if err := store.Put(ctx, "user", "admin", user); err != nil {
+		t.Fatalf("user insert: %v", err)
+	}
+	var name string
+	if err := store.DB.QueryRow(`SELECT name FROM "user" WHERE uid='admin'`).Scan(&name); err != nil || name != "admin" {
+		t.Fatalf("user projection: %q %v", name, err)
+	}
+	site := map[string]any{"id": "s1", "name": "Demo", "base_url": "https://demo.example", "enabled": true}
+	if err := store.Put(ctx, "site", "s1", site); err != nil {
+		t.Fatalf("site insert: %v", err)
+	}
+	var siteName, url string
+	if err := store.DB.QueryRow(`SELECT name,url FROM site WHERE uid='s1'`).Scan(&siteName, &url); err != nil || siteName != "Demo" || url != "https://demo.example" {
+		t.Fatalf("site projection: %q %q %v", siteName, url, err)
+	}
+}

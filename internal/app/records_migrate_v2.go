@@ -97,6 +97,10 @@ func recordTableForKind(name string) recordTable {
 	if t, ok := recordTableFor(name); ok {
 		return t
 	}
+	if t, ok := mpTables[name]; ok {
+		t.cols = mpCols[name]
+		return t
+	}
 	for _, t := range nativeTables {
 		if t.name == name {
 			return t
