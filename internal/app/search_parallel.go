@@ -19,7 +19,7 @@ const siteSearchTimeout = 45 * time.Second
 // interactiveSearchBudget bounds a keyword search the user is waiting on.
 // Background subscription checks keep the longer per-site timeout because they
 // are not blocking a request.
-const interactiveSearchBudget = 6 * time.Second
+const interactiveSearchBudget = 15 * time.Second
 
 type siteSearchOutput struct {
 	status     SiteStatus
