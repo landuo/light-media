@@ -96,6 +96,21 @@ docker compose up -d light-media   # 使用旧镜像 tag（见 image.pre-v2.txt�
 - `records_frozen_v1` 保留一个版本，用于抽样核对；下一版本发布时删除。
 - 未经 `--apply` 的旧库仍可直接被旧二进制启动。
 
+## 6.1 稳定期后清理快照
+
+迁移后观察 3–7 天；订阅、整理、监控、通知无异常后执行：
+
+```bash
+cd /vol1/1000/docker/light-media && docker stop light-media
+cd data && sudo -u admin sqlite3 light-media.db \
+  "PRAGMA wal_checkpoint(TRUNCATE); DROP TABLE IF EXISTS records_frozen_v1; VACUUM;"
+cd .. && docker compose up -d
+```
+
+- `VACUUM` 需要约等于库大小的临时空间，并在停机窗口执行。
+- 清理后不能再依靠该表抽样核对；回滚仍以 `light-media.db.pre-records-split-*` 整库备份为准。
+- 2026-11-16 生产实测：874 MB → 451 MB（回收约 423 MB），VACUUM 24 秒。
+
 ## 7. 迁移幂等性
 
 - `--apply` 可重复执行：`version=2` 后直接跳过，目标表按主键 upsert。
