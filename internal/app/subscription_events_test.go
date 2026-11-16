@@ -83,9 +83,9 @@ func TestSubscriptionAddedLateOutboxFailureRollsBackActualSubscription(t *testin
 	if _, err := a.saveSubscription(ctx, "", subscriptionRequest(t)); err == nil {
 		t.Fatal("creation accepted without its outbox fact")
 	}
-	var count int
-	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind IN ('subscription','subscription_added')`).Scan(&count); err != nil || count != 0 {
-		t.Fatal("partial subscription commit", count, err)
+	count := countRecordKinds(t, a.Store.DB, "subscription", "subscription_added")
+	if count != 0 {
+		t.Fatal("partial subscription commit", count)
 	}
 	if _, err := a.Store.DB.Exec(`DROP TRIGGER fail_subscription_fact`); err != nil {
 		t.Fatal(err)

@@ -106,9 +106,8 @@ func TestOriginalTransferModuleActualSDKDirectorySoftlinkAdoption(t *testing.T) 
 				t.Fatal("original source tree changed", actual, err)
 			}
 			if !positive {
-				var count int
-				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset' OR kind='managed_file'`).Scan(&count); err != nil || count != 0 {
-					t.Fatal("unverified directory claimed", count, err)
+				if count := countRecordKinds(t, a.Store.DB, "asset", "managed_file"); count != 0 {
+					t.Fatal("unverified directory claimed", count)
 				}
 				return
 			}

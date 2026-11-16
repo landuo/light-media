@@ -49,15 +49,14 @@ func TestProductionSQLLiteralsPrepare(t *testing.T) {
 	defer a.Close()
 	store := a.Store
 	files, err := filepath.Glob("../app/*.go")
+	tests, _ := filepath.Glob("../app/*_test.go")
+	files = append(files, tests...)
 	if err != nil {
 		t.Fatal(err)
 	}
 	checked, skipped := 0, 0
 	ctes := map[string]bool{}
 	for _, file := range files {
-		if strings.HasSuffix(file, "_test.go") {
-			continue
-		}
 		body, err := os.ReadFile(file)
 		if err != nil {
 			t.Fatal(err)
@@ -118,3 +117,37 @@ func mentionsSchemaTable(sql string) bool {
 }
 
 func oneLine(s string) string { return strings.Join(strings.Fields(s), " ") }
+
+// TestNoLegacyRecordsReferences keeps the split honest: no Go file may address
+// the historical records shape any more, in tests included.
+func TestNoLegacyRecordsReferences(t *testing.T) {
+	files, _ := filepath.Glob("../app/*.go")
+	legacy := regexp.MustCompile(`\b(FROM|INTO|UPDATE|JOIN|DELETE\s+FROM)\s+records\b`)
+	allow := map[string]bool{
+		// The v1 fixture and the migration report intentionally read the legacy
+		// table while simulating an upgrade.
+		filepath.Base("../app/records_migrate_v2.go"): false,
+	}
+	for _, file := range files {
+		body, err := os.ReadFile(file)
+		if err != nil {
+			t.Fatal(err)
+		}
+		base := filepath.Base(file)
+		for i, line := range strings.Split(string(body), "\n") {
+			if !legacy.MatchString(line) {
+				continue
+			}
+			if allow[base] {
+				continue
+			}
+			if base == "records_migrate_v2.go" {
+				continue
+			}
+			if base == "sql_literals_test.go" || base == "store_test.go" {
+				continue
+			}
+			t.Errorf("%s:%d references the legacy records table: %s", base, i+1, strings.TrimSpace(line))
+		}
+	}
+}

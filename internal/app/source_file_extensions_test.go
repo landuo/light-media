@@ -126,9 +126,9 @@ func TestActualExtensionSourceReadersKeepNativeAndCapturedOriginsIndependent(t *
 		t.Fatal("captured original source borrowed current native environment", original, e)
 	}
 	for kind, want := range before {
-		var got []byte
-		if e = a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind=? AND id='main'`, kind).Scan(&got); e != nil || !bytes.Equal(got, want) {
-			t.Fatal("extension read changed existing captured setting", kind, e)
+		got, ok := readRecordPayloadOK(t, a.Store.DB, kind, "main")
+		if !ok || !bytes.Equal(got, want) {
+			t.Fatal("extension read changed existing captured setting", kind, ok)
 		}
 	}
 }

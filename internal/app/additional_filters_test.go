@@ -101,7 +101,7 @@ func TestOriginalSubscriptionFiltersPersistAndAffectRealSearchBeforeProgress(t *
 		t.Fatal("filter error published raw rows or exposed expression", err)
 	}
 	var count int
-	a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind IN ('intent','native_download','material_blob')`).Scan(&count)
+	count = countRecordKinds(t, a.Store.DB, "intent", "native_download", "material_blob")
 	if count != 0 {
 		t.Fatal("filter validation created downloads")
 	}

@@ -241,7 +241,7 @@ func TestOriginalHostBusinessSitesActualSDKRefreshAtomicDailyAndSourceFailure(t 
 		t.Fatal("refresh SQL failure swallowed")
 	}
 	var count int
-	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind IN ('site_connection','site_stats_history','site_stats_latest')`).Scan(&count); err != nil || count != 0 {
+	if err := a.Store.DB.QueryRow(`SELECT (SELECT COUNT(*) FROM site_state WHERE record_kind='site_connection')+(SELECT COUNT(*) FROM site_statistic_event)+(SELECT COUNT(*) FROM sitestatistic)`).Scan(&count); err != nil || count != 0 {
 		t.Fatal("refresh partially committed", count, err)
 	}
 	if _, err := a.Store.DB.Exec(`DROP TRIGGER owned_host_refresh_rollback`); err != nil {

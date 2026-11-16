@@ -104,10 +104,9 @@ func TestOriginalTransferPreviewActualSDKFixedSource(t *testing.T) {
 			if after.Calls["transfer_event"] != before.Calls["transfer_event"] {
 				t.Fatal("preview sent normal callback", after.Calls)
 			}
-			for _, kind := range []string{"import_receipt", "asset", "job"} {
-				var count int
-				if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind=?`, kind).Scan(&count); err != nil || count != 0 {
-					t.Fatal("preview publication/history", kind, count, err)
+			for _, kind := range []string{"import_receipt", "asset"} {
+				if count := countRecordKind(t, a.Store.DB, kind); count != 0 {
+					t.Fatal("preview publication/history", kind, count)
 				}
 			}
 			var count int

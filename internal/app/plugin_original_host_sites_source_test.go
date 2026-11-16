@@ -703,7 +703,7 @@ func TestSourceSitesIntrinsicNativeGuardStaysRejectedAfterRestore(t *testing.T) 
 		t.Fatal("authority was not actually restored", err)
 	}
 	var count int
-	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind IN ('site_connection','site_stats_latest','site_stats_history')`).Scan(&count); err != nil || count != 0 {
+	if err := a.Store.DB.QueryRow(`SELECT (SELECT count(*) FROM site_state WHERE record_kind='site_connection')+(SELECT count(*) FROM sitestatistic)+(SELECT count(*) FROM site_statistic_event)`).Scan(&count); err != nil || count != 0 {
 		t.Fatal("rejected request became successful None observation", count, err)
 	}
 	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM domain_events WHERE json_extract(CAST(payload AS TEXT),'$.event_type')='site.refreshed'`).Scan(&count); err != nil || count != 0 {

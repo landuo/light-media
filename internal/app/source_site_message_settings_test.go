@@ -90,12 +90,12 @@ func TestReviewedSiteMessageSettingsOfflineDryApplyReplayAndColdPolicy(t *testin
 				t.Fatal("public value ignored explicit user choice")
 			}
 			var n int
-			if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM systemconfig WHERE kind IN ('source_statistics_settings','source_network_settings','source_runtime_settings','source_settings_migration')`).Scan(&n); e != nil || n != 4 {
+			if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_record WHERE kind IN ('source_statistics_settings','source_network_settings','source_runtime_settings','source_settings_migration')`).Scan(&n); e != nil || n != 4 {
 				t.Fatal("prior source domains changed", n, e)
 			}
-			var body []byte
-			if e = a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind=?`, sourceSiteMessageKind).Scan(&body); e != nil || bytes.Contains(body, []byte(sourceSiteMessageMode)) {
-				t.Fatal("source proof not encrypted", e)
+			rows := recordRows(t, a.Store.DB, sourceSiteMessageKind)
+			if len(rows) != 1 || bytes.Contains(rows[0], []byte(sourceSiteMessageMode)) {
+				t.Fatal("source proof not encrypted", len(rows))
 			}
 			// A running target, even without active jobs, remains unavailable to importer.
 			if _, e = ImportReviewedSiteMessageSettings(ctx, dir, raw, true); e == nil {

@@ -102,11 +102,12 @@ func TestPluginSubscriptionCompletionProductionCLI(t *testing.T) {
 		defer readOnly.Close()
 		countRows := func(kind, id string) int {
 			t.Helper()
+			table := recordTableForTest(t, kind)
 			var count int
-			query := `SELECT count(*) FROM records WHERE kind=?`
+			query := `SELECT count(*) FROM ` + table.name + ` WHERE record_kind=?`
 			args := []any{kind}
 			if id != "" {
-				query += ` AND id=?`
+				query += ` AND ` + recordKeyColumn(table) + `=?`
 				args = append(args, id)
 			}
 			if err := readOnly.QueryRow(query, args...).Scan(&count); err != nil {

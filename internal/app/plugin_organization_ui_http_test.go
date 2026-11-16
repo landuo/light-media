@@ -163,9 +163,7 @@ func TestPluginOrganizationUIInstalledAppendOrderAndRollback(t *testing.T) {
 	}
 	// Exercise a pre-order-record DB with equal timestamps. The migration tie
 	// is physical insertion order, not alphabetical clone ID or browser order.
-	if _, err = a.Store.DB.Exec(`DELETE FROM records WHERE kind=?`, originalInstalledOrderKind); err != nil {
-		t.Fatal(err)
-	}
+	deleteRecordKind(t, a.Store.DB, originalInstalledOrderKind)
 	if _, err = a.Store.DB.Exec(`UPDATE plugin_installations SET created_at='2026-10-01T00:00:00Z'`); err != nil {
 		t.Fatal(err)
 	}

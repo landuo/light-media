@@ -86,7 +86,7 @@ func TestSiteStatisticJobCancellationBeforeMessageReadStopsSideEffect(t *testing
 		t.Fatal("cancelled refresh job retained message IO authority", err)
 	}
 	var count int
-	if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind IN ('site_connection','site_stats_latest','site_stats_history')`).Scan(&count); err != nil || count != 0 {
+	if err = a.Store.DB.QueryRow(`SELECT (SELECT COUNT(*) FROM site_state WHERE record_kind='site_connection')+(SELECT COUNT(*) FROM sitestatistic)+(SELECT COUNT(*) FROM site_statistic_event)`).Scan(&count); err != nil || count != 0 {
 		t.Fatal("cancelled job committed private observations", err)
 	}
 }

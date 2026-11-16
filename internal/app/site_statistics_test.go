@@ -112,21 +112,26 @@ func TestSiteRefreshEventRejectsDownloadAuthority(t *testing.T) {
 // neither insert a new history row nor replace an existing connection/snapshot.
 func siteStatisticsRecordSnapshot(t *testing.T, a *App) string {
 	t.Helper()
-	rows, err := a.Store.DB.Query(`SELECT kind,id,payload,updated_at FROM records WHERE kind IN ('site_connection','site_stats_latest','site_stats_history') ORDER BY kind,id`)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer rows.Close()
 	var records [][4]string
-	for rows.Next() {
-		var row [4]string
-		if err := rows.Scan(&row[0], &row[1], &row[2], &row[3]); err != nil {
+	for _, kind := range []string{"site_connection", "site_stats_latest", "site_stats_history"} {
+		table := recordTableForTest(t, kind)
+		rows, err := a.Store.DB.Query(`SELECT record_kind,`+recordKeyColumn(table)+`,payload,updated_at FROM `+table.name+` WHERE record_kind=? ORDER BY record_kind,`+recordKeyColumn(table), kind)
+		if err != nil {
 			t.Fatal(err)
 		}
-		records = append(records, row)
-	}
-	if err := rows.Err(); err != nil {
-		t.Fatal(err)
+		for rows.Next() {
+			var row [4]string
+			if err := rows.Scan(&row[0], &row[1], &row[2], &row[3]); err != nil {
+				rows.Close()
+				t.Fatal(err)
+			}
+			records = append(records, row)
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			t.Fatal(err)
+		}
+		rows.Close()
 	}
 	raw, err := json.Marshal(records)
 	if err != nil {

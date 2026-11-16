@@ -146,7 +146,7 @@ func TestOriginalLarkLegacyMaterialRecoveryLinuxAMD64(t *testing.T) {
 	if err = a.saveDownloadContextTx(ctx, tx, *frozen); err != nil {
 		t.Fatal(err)
 	}
-	if _, err = tx.ExecContext(ctx, `DELETE FROM records WHERE kind IN ('material_info','material_blob') AND id=?`, legacyRef); err != nil {
+	if _, err = tx.ExecContext(ctx, `DELETE FROM material WHERE id=?`, legacyRef); err != nil {
 		t.Fatal(err)
 	}
 	if err = tx.Commit(); err != nil {

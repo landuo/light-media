@@ -12,7 +12,7 @@
 2. 新增 `migrateRecordsV2`：启动时把 v1 的每一行按 kind 搬到目标表，建立子表行（`import_plan_file`、`import_receipt_member`），把表重命名为 `records_frozen_v1`，写入 `migrations.version=2`。
 3. `Store.Put/Get/List/Delete`、`txPut` 改为按 kind 路由；未知 kind 落到 `plugin_record`，保持插件兼容。
 4. 生产代码里 **301 处手写 SQL 全部改写**：不再有 `FROM records` / `INTO records` / `UPDATE records`（迁移代码本身除外）。
-5. 新增 `records` **兼容视图**（`CREATE VIEW records`），并为每个 kind 生成 INSTEAD OF 写触发器：视图存在是为了让尚未迁移的测试夹具和插件兼容调用继续工作；任何写入会被转发到真实表，不会重建共享表。
+5. 兼容视图在收尾阶段已删除：测试与生产代码全部改为直接访问功能表，`sqlite_master` 中不再有 `records` 表或视图。
 6. 站点与管理员写操作同步投影到 MP 的 `site`、`user` 表。
 7. 新增 CLI 与报告：`CheckRecordsMigration` 输出每 kind 行数、目标表、缺失表、未知 kind。
 
@@ -91,23 +91,24 @@
 | `go build ./...` | 通过 |
 | `go vet ./...` | 通过 |
 | `internal/storetest` | 迁移、路由、投影、密封、视图转发、别名回填 6 组测试通过 |
-| SQL 字面量预检 | 272 条生产 SQL 在 v2 schema 上 `Prepare` 通过（捕获并修复 8 处残留 kind 列引用） |
+| SQL 字面量预检 | 900 条 SQL（生产 + 测试）在 v2 schema 上 `Prepare` 通过（捕获并修复 20 余处残留 kind/uid 列引用） |
+| 残留引用检查 | `TestNoLegacyRecordsReferences` 断言生产与测试代码中不存在 `FROM/INTO/UPDATE/JOIN records` |
 | 拼接 SQL 预检 | `ValidateAssembledSQL` 覆盖整理历史 CTE、任务摘要、整理队列、通知、订阅别名，全部 `Prepare` 通过 |
-| 测试夹具 | 93 处 `ON records` 触发器改为落在目标表（84 处机械改写 + 9 处手工），`internal/app` 夹具测试仍需 OWNED_* 二进制才能实跑 |
+| 测试夹具 | 93 处 `ON records` 触发器与 54 处断言改为落在目标表；`internal/app` 夹具测试仍需 OWNED_* 二进制才能实跑 |
 | `cmd/...` | 全部通过（含真实 Store 的迁移 CLI 测试） |
 | 前端 | 无改动（API 未变） |
 
 ## 6. 与方案的偏差（明确说明）
 
 1. **保留了 `payload` 扩展列**。方案要求纯列化；本轮为保证 301 处调用点一次性切换正确，`payload` 作为规范记录保留，热字段由触发器投影并建索引。后续可按表逐步删除 `payload`。
-2. **`records` 视图与 INSTEAD OF 触发器**：新增的过渡层，不是表。作用是把尚未迁移的测试夹具与插件调用继续路由到真实表。`sqlite_master` 中 `records` 为 `view`。写触发器让旧夹具的 `INSERT/UPDATE/DELETE` 仍可用；移除条件是剩余调用点全部改为 typed 表访问。
+2. **`records` 视图已移除**：过渡期曾用只读视图 + INSTEAD OF 写触发器支撑旧夹具，收尾时把 54 处测试 SQL 全部改成功能表访问后删除，未留下任何 `records` 对象。
 3. **密封值集中到 `plugin_record`**：`subscription_quality_*`、`subscription_history`、`source_*_settings`、`site_message_collection` 等以 kind 为 AAD 的密文，搬表需要重封，本轮保持原命名空间。
 4. **`site` / `user` 为镜像写入**：设置保存与管理员创建时同步 MP 表；读路径仍走加密 config，切换读是下一步。
 5. **`mediaserveritem` / `workflow` / `agentchat` / `agenttask` / `passkey`** 已按 MP 建表但无写入方（对应功能未实现），结构与索引齐全。
 
 ## 7. 后续工作（按优先级）
 
-1. 把 `internal/app/*_test.go` 中剩余 3 处 `INSERT INTO records` 与视图读改为 typed 表；完成后删除兼容视图与触发器。
+1. ~~测试改 typed 表并删除兼容视图~~（已完成）。
 2. `site` 读路径切换：`Settings().Sites` 改为读 `site` 表，`config` 只保留非站点字段。
 3. `user` 读路径切换（登录鉴权走 `user`）。
 4. 逐表删除 `payload`，把剩余 JSON 字段列化。

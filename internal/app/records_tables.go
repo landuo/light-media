@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 )
@@ -140,7 +139,7 @@ var mpTables = map[string]recordTable{
 			`CREATE INDEX IF NOT EXISTS ix_subscribe_media_identity ON subscribe(media_source,media_id)`,
 			`CREATE INDEX IF NOT EXISTS ix_subscribe_name ON subscribe(name)`,
 			`CREATE INDEX IF NOT EXISTS ix_subscribe_username ON subscribe(username)`,
-			`CREATE INDEX IF NOT EXISTS ix_subscribe_display ON subscribe(state,date,id)`,
+			`CREATE INDEX IF NOT EXISTS ix_subscribe_display ON subscribe(state,date,id)`, `CREATE INDEX IF NOT EXISTS subscription_media_key ON subscribe((json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id')))`,
 		}},
 	"subscribehistory": {name: "subscribehistory", mp: true, ddl: `CREATE TABLE IF NOT EXISTS subscribehistory(
  id INTEGER PRIMARY KEY AUTOINCREMENT, uid TEXT NOT NULL UNIQUE,
@@ -180,7 +179,7 @@ var mpTables = map[string]recordTable{
 			`CREATE INDEX IF NOT EXISTS ix_downloadhistory_download_hash_date ON downloadhistory(download_hash,date)`,
 			`CREATE INDEX IF NOT EXISTS ix_downloadhistory_date_id ON downloadhistory(date,id)`,
 			`CREATE INDEX IF NOT EXISTS ix_downloadhistory_state ON downloadhistory(state)`,
-			`CREATE INDEX IF NOT EXISTS ix_downloadhistory_downloader ON downloadhistory(downloader,state)`,
+			`CREATE INDEX IF NOT EXISTS ix_downloadhistory_downloader ON downloadhistory(downloader,state)`, `CREATE INDEX IF NOT EXISTS intent_media_key ON downloadhistory((json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id'))) WHERE record_kind='intent'`,
 		}},
 	"downloadfiles": {name: "downloadfiles", mp: true, ddl: `CREATE TABLE IF NOT EXISTS downloadfiles(
  id INTEGER PRIMARY KEY AUTOINCREMENT, uid TEXT NOT NULL UNIQUE,
@@ -299,7 +298,7 @@ var nativeTables = []recordTable{
 	{name: "managed_file", cols: []recordColumn{{"asset_id", "$.asset_id", "TEXT", ""}, {"path", "$.path", "TEXT", ""}, {"root_id", "$.root_id", "TEXT", ""}, {"sha256", "$.sha256", "TEXT", ""}, {"media_key", "$.media_key", "TEXT", ""}},
 		idx: []string{`CREATE INDEX IF NOT EXISTS managed_file_asset ON managed_file(asset_id)`, `CREATE INDEX IF NOT EXISTS managed_file_path ON managed_file(path)`, `CREATE INDEX IF NOT EXISTS managed_file_sha ON managed_file(sha256)`}},
 	{name: "library_asset", cols: []recordColumn{{"path", "$.path", "TEXT", ""}, {"root_id", "$.root_id", "TEXT", ""}, {"state", "$.state", "TEXT", ""}, {"media_key", "$.media_key", "TEXT", ""}, {"fnos_guid", "$.fnos_guid", "TEXT", ""}},
-		idx: []string{`CREATE INDEX IF NOT EXISTS library_asset_path ON library_asset(path)`, `CREATE INDEX IF NOT EXISTS asset_path ON library_asset(path)`, `CREATE INDEX IF NOT EXISTS library_asset_root ON library_asset(root_id,state)`, `CREATE INDEX IF NOT EXISTS library_asset_media ON library_asset(media_key)`}},
+		idx: []string{`CREATE INDEX IF NOT EXISTS library_asset_path ON library_asset(path)`, `CREATE INDEX IF NOT EXISTS asset_path ON library_asset(path)`, `CREATE INDEX IF NOT EXISTS asset_media_key ON library_asset((json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id')))`, `CREATE INDEX IF NOT EXISTS library_asset_root ON library_asset(root_id,state)`, `CREATE INDEX IF NOT EXISTS library_asset_media ON library_asset(media_key)`}},
 	{name: "library_asset_proof", cols: []recordColumn{{"asset_id", "$.asset_id", "TEXT", ""}, {"path", "$.path", "TEXT", ""}}},
 	{name: "library_asset_presence", cols: []recordColumn{{"asset_id", "$.asset_id", "TEXT", ""}, {"present", "$.present", "INTEGER", ""}}},
 	{name: "library_candidate", cols: []recordColumn{{"root_id", "$.root_id", "TEXT", ""}, {"state", "$.state", "TEXT", ""}, {"path", "$.path", "TEXT", ""}},
@@ -786,69 +785,4 @@ var mpCols = map[string][]recordColumn{
 		{"credential_id", "$.credential_id", "TEXT", ""}, {"public_key", "$.public_key", "TEXT", ""},
 		{"sign_count", "$.sign_count", "INTEGER", ""}, {"name", "$.name", "TEXT", ""},
 	},
-}
-
-// recordCompatViewDDL publishes the historical records shape as a read-only
-// view. Every row now lives in its feature table; the view only keeps the
-// remaining plugin-compatibility reads working while they are migrated. It is a
-// view, not a table: any write through it fails loudly instead of splitting
-// storage again.
-func recordCompatViewDDL() string {
-	kinds := make([]string, 0, len(recordKinds))
-	for kind := range recordKinds {
-		kinds = append(kinds, kind)
-	}
-	sort.Strings(kinds)
-	arms := make([]string, 0, len(kinds)+1)
-	for _, kind := range kinds {
-		t, ok := recordTableFor(kind)
-		if !ok {
-			continue
-		}
-		arms = append(arms, "SELECT '"+kind+"' AS kind,"+recordKeyColumn(t)+" AS id,payload,updated_at FROM "+t.name)
-	}
-	arms = append(arms, "SELECT kind,id,payload,updated_at FROM plugin_record")
-	return "DROP VIEW IF EXISTS records;\nCREATE VIEW records AS " + strings.Join(arms, " UNION ALL ") + ";\n"
-}
-
-// recordCompatWriteDDL makes the compatibility view writable. Existing tests
-// and plugin helpers still INSERT/UPDATE/DELETE through the historical
-// records(kind,id,payload,updated_at) shape; INSTEAD OF triggers forward each
-// statement to the owning feature table. This is a transition layer: the
-// storage is already split, and the view disappears once the last caller is
-// moved to the typed tables.
-func recordCompatWriteDDL() string {
-	kinds := make([]string, 0, len(recordKinds))
-	for kind := range recordKinds {
-		kinds = append(kinds, kind)
-	}
-	sort.Strings(kinds)
-	var b strings.Builder
-	quoted := make([]string, 0, len(kinds))
-	for _, kind := range kinds {
-		t, ok := recordTableFor(kind)
-		if !ok {
-			continue
-		}
-		quoted = append(quoted, "'"+kind+"'")
-		key := recordKeyColumn(t)
-		cols := key + ",payload,updated_at,record_kind"
-		vals := "NEW.id,NEW.payload,NEW.updated_at,'" + kind + "'"
-		conflict := key
-		if stage, ok := recordKindAlias[kind]; ok {
-			cols += ",stage"
-			vals += ",'" + stage + "'"
-		}
-		fmt.Fprintf(&b, "CREATE TRIGGER IF NOT EXISTS records_v2_ins_%s INSTEAD OF INSERT ON records WHEN NEW.kind='%s' BEGIN INSERT INTO %s(%s) VALUES(%s) ON CONFLICT(%s) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at,record_kind=excluded.record_kind; END;\n",
-			kind, kind, t.name, cols, vals, conflict)
-		fmt.Fprintf(&b, "CREATE TRIGGER IF NOT EXISTS records_v2_upd_%s INSTEAD OF UPDATE ON records WHEN OLD.kind='%s' BEGIN UPDATE %s SET payload=NEW.payload,updated_at=NEW.updated_at,record_kind='%s' WHERE %s=OLD.id; END;\n",
-			kind, kind, t.name, kind, key)
-		fmt.Fprintf(&b, "CREATE TRIGGER IF NOT EXISTS records_v2_del_%s INSTEAD OF DELETE ON records WHEN OLD.kind='%s' BEGIN DELETE FROM %s WHERE %s=OLD.id; END;\n",
-			kind, kind, t.name, key)
-	}
-	notIn := strings.Join(quoted, ",")
-	fmt.Fprintf(&b, "CREATE TRIGGER IF NOT EXISTS records_v2_ins_other INSTEAD OF INSERT ON records WHEN NEW.kind NOT IN (%s) BEGIN INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(NEW.kind,NEW.id,NEW.payload,NEW.updated_at) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at; END;\n", notIn)
-	fmt.Fprintf(&b, "CREATE TRIGGER IF NOT EXISTS records_v2_upd_other INSTEAD OF UPDATE ON records WHEN OLD.kind NOT IN (%s) BEGIN UPDATE plugin_record SET payload=NEW.payload,updated_at=NEW.updated_at WHERE kind=OLD.kind AND id=OLD.id; END;\n", notIn)
-	fmt.Fprintf(&b, "CREATE TRIGGER IF NOT EXISTS records_v2_del_other INSTEAD OF DELETE ON records WHEN OLD.kind NOT IN (%s) BEGIN DELETE FROM plugin_record WHERE kind=OLD.kind AND id=OLD.id; END;\n", notIn)
-	return b.String()
 }

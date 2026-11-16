@@ -35,7 +35,8 @@ func displayQueryPlan(t *testing.T, a *App, query string, args ...any) string {
 func TestDisplayReadsUseSelectiveIndexes(t *testing.T) {
 	a := newTestApp(t)
 	for _, kind := range []string{"asset", "subscription", "intent"} {
-		plan := displayQueryPlan(t, a, `SELECT payload FROM records WHERE kind=? AND (json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id')) IN (?,?)`, kind, "tv:1", "movie:2")
+		table := recordTableForTest(t, kind)
+		plan := displayQueryPlan(t, a, `SELECT payload FROM `+table.name+` WHERE record_kind=? AND (json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id')) IN (?,?)`, kind, "tv:1", "movie:2")
 		if !strings.Contains(plan, kind+"_media_key") || !strings.Contains(plan, "<expr>=?") {
 			t.Fatalf("media lookup is not an indexed seek: %s", plan)
 		}

@@ -57,10 +57,11 @@ func TestEpisodeRecommendRulesAPIPersistenceAndConsumer(t *testing.T) {
 	if err != nil || len(saved.Rules) != 1 || saved.Rules[0].Pattern != rule.Pattern {
 		t.Fatalf("read=%+v %v", saved, err)
 	}
-	var persisted []byte
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind=?`, organizeEpisodeRulesKind).Scan(&persisted); err != nil {
-		t.Fatal(err)
+	rows := recordRows(t, a.Store.DB, organizeEpisodeRulesKind)
+	if len(rows) != 1 {
+		t.Fatalf("rules rows=%d", len(rows))
 	}
+	persisted := rows[0]
 	if strings.Contains(string(persisted), rule.Pattern) || strings.Contains(string(persisted), rule.Name) {
 		t.Fatal("rules were persisted as plaintext")
 	}

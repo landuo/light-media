@@ -575,7 +575,7 @@ func assertOriginalLarkRSSFullCompletion(t *testing.T, a *App, sub Subscription,
 	}
 	var live, events int
 	if err := a.Store.DB.QueryRowContext(ctx, `SELECT (SELECT count(*) FROM subscribe WHERE uid=?),
-		(SELECT count(*) FROM subscribe WHERE kind='source_subscribe_complete' AND uid=?)`, sub.ID, receipt.Identity.ID).Scan(&live, &events); err != nil || live != 0 || events != 1 {
+		(SELECT count(*) FROM plugin_record WHERE kind='source_subscribe_complete' AND id=?)`, sub.ID, receipt.Identity.ID).Scan(&live, &events); err != nil || live != 0 || events != 1 {
 		t.Fatalf("completed source subscription was not retired before magnet file verification: live=%d event=%d err=%v", live, events, err)
 	}
 }

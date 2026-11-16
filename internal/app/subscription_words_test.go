@@ -273,7 +273,7 @@ func TestSubscriptionWordsLateSQLFailureRollsBackCorePrivateValueAndOutbox(t *te
 	}
 	for name, query := range map[string]string{
 		"private words":     `SELECT COUNT(*) FROM subscription_words`,
-		"core and identity": `SELECT COUNT(*) FROM records WHERE kind IN ('subscription','subscription_added')`,
+		"core and identity": `SELECT (SELECT COUNT(*) FROM subscribe)+(SELECT COUNT(*) FROM subscription_event)`,
 		"outbox":            `SELECT COUNT(*) FROM domain_events`,
 	} {
 		var count int

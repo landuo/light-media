@@ -338,10 +338,7 @@ func TestMaterialScheduledCleanupDeletesOnlyExpiredUnpinned(t *testing.T) {
 		t.Fatal(err)
 	}
 	for kind, ref := range refs {
-		var count int
-		if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind IN ('material_info','material_blob') AND id=?`, ref).Scan(&count); err != nil {
-			t.Fatal(err)
-		}
+		count := countRecordKey(t, a.Store.DB, "material_info", ref) + countRecordKey(t, a.Store.DB, "material_blob", ref)
 		if kind == "expired-orphan" {
 			if count != 0 {
 				t.Fatal("hourly collection retained expired orphan")

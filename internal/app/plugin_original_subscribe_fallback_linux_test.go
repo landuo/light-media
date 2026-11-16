@@ -223,10 +223,10 @@ func TestOriginalLarkSameSearchFallbackLinuxAMD64(t *testing.T) {
 	var children, roots, rejections, failures int
 	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT
 		(SELECT COUNT(*) FROM jobs WHERE kind IN ('download','subscription_download') AND state IN ('failed','succeeded')
-			AND json_extract(payload,'$._parent_job_id') IN (SELECT uid FROM jobs WHERE 1=1)),
+			AND json_extract(payload,'$._parent_job_id') IN (SELECT id FROM jobs WHERE 1=1)),
 		(SELECT COUNT(DISTINCT json_extract(payload,'$._parent_job_id')) FROM jobs WHERE kind IN ('download','subscription_download')),
-		(SELECT COUNT(*) FROM subscribe WHERE kind='subscription_download_rejection'),
-		(SELECT COUNT(*) FROM subscribe WHERE kind='subscription_download_failure')`).Scan(&children, &roots, &rejections, &failures); err != nil || children != 2 || roots != 1 || rejections != 1 || failures != 1 {
+		(SELECT COUNT(*) FROM plugin_record WHERE kind='subscription_download_rejection'),
+		(SELECT COUNT(*) FROM plugin_record WHERE kind='subscription_download_failure')`).Scan(&children, &roots, &rejections, &failures); err != nil || children != 2 || roots != 1 || rejections != 1 || failures != 1 {
 		t.Fatalf("fallback escaped its original search or duplicated outcomes: jobs=%d roots=%d rejections=%d cooldowns=%d err=%v", children, roots, rejections, failures, err)
 	}
 	var firstState, secondState string
@@ -234,14 +234,14 @@ func TestOriginalLarkSameSearchFallbackLinuxAMD64(t *testing.T) {
 	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT
 		(SELECT json_extract(payload,'$.state') FROM downloadhistory WHERE json_extract(payload,'$.hash')=?),
 		(SELECT json_extract(payload,'$.state') FROM downloadhistory WHERE json_extract(payload,'$.hash')=?),
-		(SELECT COUNT(*) FROM reservations AS r JOIN downloadhistory AS i ON i.id=r.intent_id AND i.kind='intent'
+		(SELECT COUNT(*) FROM reservations AS r JOIN downloadhistory AS i ON i.uid=r.intent_id AND i.record_kind='intent'
 			WHERE json_extract(i.payload,'$.hash')=?)`, rejectedHash, acceptedHash, rejectedHash).Scan(&firstState, &secondState, &refusedReservations); err != nil || firstState != "failed" || secondState != "accepted" && secondState != "downloading" || refusedReservations != 0 {
 		t.Fatalf("wrong refusal or acceptance state: first=%s second=%s rejectedReservations=%d err=%v", firstState, secondState, refusedReservations, err)
 	}
 	var live, completed int
 	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT
 		(SELECT COUNT(*) FROM subscribe WHERE uid=?),
-		(SELECT COUNT(*) FROM subscribe WHERE kind='source_subscribe_complete')`, sub.ID).Scan(&live, &completed); err != nil || live != 0 || completed != 1 {
+		(SELECT COUNT(*) FROM plugin_record WHERE kind='source_subscribe_complete')`, sub.ID).Scan(&live, &completed); err != nil || live != 0 || completed != 1 {
 		t.Fatalf("fallback acceptance did not finish the original subscription: live=%d completed=%d err=%v", live, completed, err)
 	}
 	t.Log("one manual search attempted two actual Add calls in order; refusal released the first intent and cooled only its resource; the second accepted resource finished the same subscription")

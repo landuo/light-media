@@ -135,7 +135,7 @@ func TestSiteAccountFirstHTTPFailureIsRecordedAndAtomic(t *testing.T) {
 		t.Fatal("history failure reported success")
 	}
 	var count int
-	a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind IN ('site_connection','site_stats_history')`).Scan(&count)
+	count = countRecordKinds(t, a.Store.DB, "site_connection", "site_stats_history")
 	if count != 0 {
 		t.Fatal("first failure partially committed")
 	}

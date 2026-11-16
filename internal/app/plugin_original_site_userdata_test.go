@@ -136,14 +136,7 @@ func TestOriginalSiteUpdatedActualSDKConsumerCommitMessagesAndClone(t *testing.T
 		ownedSDKEventCall(t, a, cookie, "event.send", string(raw))
 		a.wg.Wait()
 	}
-	count := func(kind string) int {
-		t.Helper()
-		var n int
-		if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind=?`, kind).Scan(&n); err != nil {
-			t.Fatal(err)
-		}
-		return n
-	}
+	count := func(kind string) int { return countRecordKind(t, a.Store.DB, kind) }
 	for _, data := range []any{map[string]any{}, map[string]any{"domain": ""}, map[string]any{"domain": "missing.test"}, map[string]any{"domain": 123}} {
 		send(data)
 	}

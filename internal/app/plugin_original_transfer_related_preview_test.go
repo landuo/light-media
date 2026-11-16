@@ -138,9 +138,8 @@ func TestOriginalTransferRelatedManualPreviewActualSDK(t *testing.T) {
 				t.Fatal("every related preview storage/module/native-only name with no normal callback", observed)
 			}
 			for _, record := range []string{"import_receipt", "asset", "original_transfer_callback"} {
-				var count int
-				if e := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind=?`, record).Scan(&count); e != nil || count != 0 {
-					t.Fatal("preview published persistent execution", record, count, e)
+				if count := countRecordKind(t, a.Store.DB, record); count != 0 {
+					t.Fatal("preview published persistent execution", record, count)
 				}
 			}
 			var jobs int

@@ -135,9 +135,8 @@ func TestOriginalTransferModuleActualSDKSoftlinkAdoption(t *testing.T) {
 					stamps[file.Target] = actual
 				}
 			} else {
-				var count int
-				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset' OR kind='managed_file'`).Scan(&count); err != nil || count != 0 {
-					t.Fatal("unverified output acquired ownership", count, err)
+				if count := countRecordKinds(t, a.Store.DB, "asset", "managed_file"); count != 0 {
+					t.Fatal("unverified output acquired ownership", count)
 				}
 			}
 			if branch == "asset-sql-cold" {

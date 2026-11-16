@@ -163,10 +163,9 @@ func TestOriginalLarkRestartLinuxAMD64(t *testing.T) {
 	case <-time.After(8 * time.Second):
 		t.Fatal("restart command did not notify the App supervisor")
 	}
-	var sealed []byte
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, originalChatRestartKind, originalChatRestartKey).Scan(&sealed); err != nil ||
-		bytes.Contains(sealed, []byte(sender)) {
-		t.Fatalf("sender was not durably protected before restart: %v", err)
+	sealed := readRecordPayload(t, a.Store.DB, originalChatRestartKind, originalChatRestartKey)
+	if bytes.Contains(sealed, []byte(sender)) {
+		t.Fatal("sender was not durably protected before restart")
 	}
 	var receipt originalChatRestartReceipt
 	if err := a.readQualitySealed(ctx, a.Store.DB, originalChatRestartKind, originalChatRestartKey, &receipt); err != nil ||
@@ -184,8 +183,8 @@ func TestOriginalLarkRestartLinuxAMD64(t *testing.T) {
 	if pid := installedLarkFixturePID(t, a, clone); pid == originalPID {
 		t.Fatal("restart did not start a new clone worker")
 	}
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, originalChatRestartKind, originalChatRestartKey).Scan(&sealed); !errors.Is(err, sql.ErrNoRows) {
-		t.Fatalf("completed notice did not consume the exact restart receipt: %v", err)
+	if _, ok := readRecordPayloadOK(t, a.Store.DB, originalChatRestartKind, originalChatRestartKey); ok {
+		t.Fatal("completed notice did not consume the exact restart receipt")
 	}
 	select {
 	case card := <-cards:

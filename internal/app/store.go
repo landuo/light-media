@@ -140,10 +140,6 @@ func OpenStore(dir string) (*Store, error) {
 		db.Close()
 		return fail(fmt.Errorf("subscription alias backfill: %w", err))
 	}
-	if _, err = db.Exec(recordCompatViewDDL() + recordCompatWriteDDL()); err != nil {
-		db.Close()
-		return fail(fmt.Errorf("records view: %w", err))
-	}
 	if err = migrateTransferHistoryMP(context.Background(), db); err != nil {
 		db.Close()
 		return fail(err)

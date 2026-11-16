@@ -127,10 +127,7 @@ func TestReviewedSourceSettingsDryApplyReplayCold(t *testing.T) {
 		t.Fatal(e)
 	}
 	for kind, want := range map[string]any{"source_statistics_settings": in.Statistics, "source_network_settings": in.Network, "source_runtime_settings": in.Runtime} {
-		var sealed []byte
-		if e = s.DB.QueryRow(`SELECT payload FROM records WHERE kind=? AND id='main'`, kind).Scan(&sealed); e != nil {
-			t.Fatal(e)
-		}
+		sealed := readRecordPayload(t, s.DB, kind, "main")
 		for _, plain := range [][]byte{[]byte("owned-source-token"), []byte("owned-statistics.invalid"), []byte(strings.Repeat("1", 64)), []byte("Authorization")} {
 			if bytes.Contains(sealed, plain) {
 				t.Fatal("plaintext in encrypted record", kind)
@@ -232,7 +229,7 @@ func TestReviewedSourceSettingsAtomicRollbackAndScope(t *testing.T) {
 				}
 				defer s.Close()
 				var count int
-				if e = s.DB.QueryRow(`SELECT COUNT(*) FROM systemconfig WHERE kind IN ('source_statistics_settings','source_network_settings','source_runtime_settings','source_settings_migration')`).Scan(&count); e != nil || count != 0 {
+				if e = s.DB.QueryRow(`SELECT COUNT(*) FROM plugin_record WHERE kind IN ('source_statistics_settings','source_network_settings','source_runtime_settings','source_settings_migration')`).Scan(&count); e != nil || count != 0 {
 					t.Fatal("partial failed transaction survived", count, e)
 				}
 			}

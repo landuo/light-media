@@ -196,9 +196,9 @@ func TestNativeDownloadProducerRejectsMetadataFailureBeforeAdd(t *testing.T) {
 	if adds.Load() != 0 {
 		t.Fatal("metadata failure submitted to downloader", adds.Load())
 	}
-	var records int
-	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind IN ('native_download','download_context','download_added')`).Scan(&records); err != nil || records != 0 {
-		t.Fatal("failed metadata created a planned download", records, err)
+	records := countRecordKinds(t, a.Store.DB, "native_download", "download_context", "download_added")
+	if records != 0 {
+		t.Fatal("failed metadata created a planned download", records)
 	}
 	page, err := a.domainEvents(ctx, 0, 100)
 	if err != nil || len(page.Events) != 0 {

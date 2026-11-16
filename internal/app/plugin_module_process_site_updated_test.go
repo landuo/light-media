@@ -108,13 +108,7 @@ func verifyOwnedProductionCoreSiteUpdated(t *testing.T, dir string, request func
 		t.Fatal("owned test database observer key unavailable")
 	}
 	store := &Store{DB: db, key: key}
-	count := func(kind string) int {
-		var count int
-		if err := store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind=?`, kind).Scan(&count); err != nil {
-			t.Fatal(err)
-		}
-		return count
-	}
+	count := func(kind string) int { return countRecordKind(t, store.DB, kind) }
 	send := func(sender string, domain any) {
 		request("POST", "/api/v1/plugin/"+sender+"/input", map[string]any{"operation": "event.send", "input": map[string]any{"kind": "broadcast", "type": "site.updated", "data": map[string]any{"domain": domain}}}, 200)
 	}

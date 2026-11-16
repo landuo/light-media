@@ -69,9 +69,7 @@ func TestSiteMessageImportedSettingCorePolicyAndConnection(t *testing.T) {
 						if e != nil {
 							t.Error(e)
 						}
-						if _, e = cold.Store.DB.Exec(`UPDATE records SET payload=? WHERE kind=?`, sealed, sourceSiteMessageKind); e != nil {
-							t.Error(e)
-						}
+						writeRecordPayload(t, cold.Store.DB, sourceSiteMessageKind, "main", sealed)
 					}
 				case "/api/messages/read-all":
 				default:
@@ -86,9 +84,10 @@ func TestSiteMessageImportedSettingCorePolicyAndConnection(t *testing.T) {
 				t.Fatal("core policy outcome changed", mode, err)
 			}
 			if !wantSuccess {
-				var published int
-				if e = cold.Store.DB.QueryRow(`SELECT (SELECT COUNT(*) FROM records WHERE kind IN ('site_connection','site_stats_latest','site_stats_history','notification'))+(SELECT COUNT(*) FROM domain_events)+(SELECT COUNT(*) FROM plugin_message_queue)`).Scan(&published); e != nil || published != 0 {
-					t.Fatal("revoked/unconfirmed setting published account data/event/notification", published, e)
+				published := countRecordKinds(t, cold.Store.DB, "site_connection", "site_stats_latest", "site_stats_history", "notification")
+				var outbox int
+				if e = cold.Store.DB.QueryRow(`SELECT (SELECT COUNT(*) FROM domain_events)+(SELECT COUNT(*) FROM plugin_message_queue)`).Scan(&outbox); e != nil || published+outbox != 0 {
+					t.Fatal("revoked/unconfirmed setting published account data/event/notification", published, outbox, e)
 				}
 			}
 			want := []string{"/api/v1/profile"}
@@ -126,9 +125,10 @@ func TestSiteMessageImportedSettingCorePolicyAndConnection(t *testing.T) {
 				if err != nil || terminal.Stage != "aborted" || terminal.Failure != "SITE_CHANGED" || len(paths) != before {
 					t.Fatal("cold restart retried terminal denied read", terminal.Stage, paths, err)
 				}
-				var visible int
-				if err = restarted.Store.DB.QueryRow(`SELECT (SELECT COUNT(*) FROM records WHERE kind IN ('site_connection','site_stats_latest','site_stats_history','notification'))+(SELECT COUNT(*) FROM domain_events)+(SELECT COUNT(*) FROM plugin_message_queue)`).Scan(&visible); err != nil || visible != 0 {
-					t.Fatal("denied admission published effects", visible, err)
+				visible := countRecordKinds(t, restarted.Store.DB, "site_connection", "site_stats_latest", "site_stats_history", "notification")
+				var outbox int
+				if err = restarted.Store.DB.QueryRow(`SELECT (SELECT COUNT(*) FROM domain_events)+(SELECT COUNT(*) FROM plugin_message_queue)`).Scan(&outbox); err != nil || visible+outbox != 0 {
+					t.Fatal("denied admission published effects", visible, outbox, err)
 				}
 			}
 			if mode == "corrupt-proof" {

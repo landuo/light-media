@@ -294,9 +294,10 @@ func TestOriginalLarkWholeMultiSeasonLinuxAMD64(t *testing.T) {
 			t.Fatalf("season %d did not retain its own hardlinked asset: %v %v", i+1, srcErr, dstErr)
 		}
 	}
-	var subscriptions, intents int
-	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT (SELECT COUNT(*) FROM records WHERE kind='subscription'), (SELECT COUNT(*) FROM records WHERE kind='intent')`).Scan(&subscriptions, &intents); err != nil || subscriptions != 0 || intents != 1 || adds.Load() != 1 {
-		t.Fatalf("whole pack split or created a fallback: subscriptions=%d intents=%d adds=%d err=%v", subscriptions, intents, adds.Load(), err)
+	subscriptions := countRecordKind(t, a.Store.DB, "subscription")
+	intents := countRecordKind(t, a.Store.DB, "intent")
+	if subscriptions != 0 || intents != 1 || adds.Load() != 1 {
+		t.Fatalf("whole pack split or created a fallback: subscriptions=%d intents=%d adds=%d", subscriptions, intents, adds.Load())
 	}
 	t.Log("two wholly missing seasons used one real Add without file selection, then published S01E01 and S02E01 as two distinct local hardlinks")
 }

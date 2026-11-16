@@ -622,9 +622,8 @@ func TestSiteMessageCoreCollectionFactCommitFailureBlocksRecollection(t *testing
 		t.Fatal("fixture never completed source requests", calls.Load())
 	}
 	for _, kind := range []string{"site_connection", "site_stats_latest", "site_stats_history", "notification"} {
-		var count int
-		if err = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind=?`, kind).Scan(&count); err != nil || count != 0 {
-			t.Fatal("fact transaction leaked partial state", kind, count, err)
+		if count := countRecordKind(t, a.Store.DB, kind); count != 0 {
+			t.Fatal("fact transaction leaked partial state", kind, count)
 		}
 	}
 	var events, admitted int

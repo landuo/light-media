@@ -80,7 +80,7 @@ func TestKeywordResourceHTTPListingAppliesPolicyWithoutIdentity(t *testing.T) {
 		t.Fatal("accepted-first sorting/private material", out.Candidates, requests.Load())
 	}
 	var count int
-	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind IN ('intent','native_download','material_blob')`).Scan(&count)
+	count = countRecordKinds(t, a.Store.DB, "intent", "native_download", "material_blob")
 	if count != 0 {
 		t.Fatal("search created identity/download/material", count)
 	}

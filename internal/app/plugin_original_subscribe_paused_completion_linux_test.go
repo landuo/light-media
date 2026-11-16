@@ -210,8 +210,8 @@ func TestOriginalLarkPausedSubscriptionCompletionLinuxAMD64(t *testing.T) {
 	var live, histories, events int
 	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT
 		(SELECT COUNT(*) FROM subscribe WHERE uid=?),
-		(SELECT COUNT(*) FROM subscribe WHERE kind='subscription_history'),
-		(SELECT COUNT(*) FROM subscribe WHERE kind='source_subscribe_complete')`, paused.ID).Scan(&live, &histories, &events); err != nil || live != 0 || histories != 1 || events != 0 || adds.Load() != 1 {
+		(SELECT COUNT(*) FROM plugin_record WHERE kind='subscription_history'),
+		(SELECT COUNT(*) FROM plugin_record WHERE kind='source_subscribe_complete')`, paused.ID).Scan(&live, &histories, &events); err != nil || live != 0 || histories != 1 || events != 0 || adds.Load() != 1 {
 		t.Fatalf("completion notice preceded accepted Add and history/delete, or event ran early: live=%d histories=%d events=%d adds=%d err=%v", live, histories, events, adds.Load(), err)
 	}
 	select {

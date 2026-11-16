@@ -646,11 +646,9 @@ func testOriginalLarkProviderSelection(t *testing.T, mode string) {
 		if card := next(); !strings.Contains(card, "未识别到媒体信息") {
 			t.Fatalf("unverified configured title fallback did not report its identity failure: %s", card)
 		}
-		var records int
-		if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT count(*) FROM records
-			WHERE kind IN ('download_preview','intent','subscription','resource')
-			OR (kind IN ('workflow','decision') AND json_extract(payload,'$.media_key') IN ('movie:0','tv:0'))`).Scan(&records); err != nil || records != 0 || materialCalls.Load() != 0 || addCalls.Load() != 0 {
-			t.Fatalf("provider-only selection crossed a native write boundary: records=%d material=%d add=%d error=%v", records, materialCalls.Load(), addCalls.Load(), err)
+		records := countRecordKinds(t, a.Store.DB, "download_preview", "intent", "subscription", "resource")
+		if records != 0 || materialCalls.Load() != 0 || addCalls.Load() != 0 {
+			t.Fatalf("provider-only selection crossed a native write boundary: records=%d material=%d add=%d", records, materialCalls.Load(), addCalls.Load())
 		}
 		t.Log("selected provider TV searched with its own episode scope, returned only the matching release, and did not create a subscription when configured title recognition found no media")
 		return

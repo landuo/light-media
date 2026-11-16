@@ -87,8 +87,7 @@ func TestPriorityRulesRealSearchSettingsAndSubscriptionScopes(t *testing.T) {
 	if err != nil || !reflect.DeepEqual(priorityCandidateIDs(out), []string{"3"}) {
 		t.Fatal("automatic subscription used search defaults", priorityCandidateIDs(out), err)
 	}
-	var count int
-	a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind IN ('intent','native_download','material_blob')`).Scan(&count)
+	count := countRecordKinds(t, a.Store.DB, "intent", "native_download", "material_blob")
 	if count != 0 {
 		t.Fatal("rule search created a download", count)
 	}

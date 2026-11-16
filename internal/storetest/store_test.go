@@ -65,12 +65,12 @@ func TestLegacyRecordsMigrateToFeatureTables(t *testing.T) {
 	}
 	defer store.Close()
 
-	var typ string
-	if err := store.DB.QueryRow(`SELECT type FROM sqlite_master WHERE name='records'`).Scan(&typ); err != nil {
+	var leftover int
+	if err := store.DB.QueryRow(`SELECT COUNT(*) FROM sqlite_master WHERE name='records'`).Scan(&leftover); err != nil {
 		t.Fatalf("records object: %v", err)
 	}
-	if typ != "view" {
-		t.Fatalf("records must be a view, got %s", typ)
+	if leftover != 0 {
+		t.Fatal("records table or view still present")
 	}
 	var frozen int
 	if err := store.DB.QueryRow(`SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='records_frozen_v1'`).Scan(&frozen); err != nil || frozen != 1 {
@@ -107,19 +107,7 @@ func TestLegacyRecordsMigrateToFeatureTables(t *testing.T) {
 	if err := store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_record WHERE kind='plugin_dashboard_settings'`).Scan(&archived); err != nil || archived != 1 {
 		t.Fatalf("plugin_record rows: %d %v", archived, err)
 	}
-	var viaView int
-	if err := store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='subscription'`).Scan(&viaView); err != nil || viaView != 1 {
-		t.Fatalf("compat view rows: %d %v", viaView, err)
-	}
-	// The compatibility view forwards writes to the owning table instead of
-	// silently recreating a shared table.
-	if _, err := store.DB.Exec(`INSERT INTO records VALUES('x','y','{}','t')`); err != nil {
-		t.Fatalf("compat view write: %v", err)
-	}
-	var mirrored int
-	if err := store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_record WHERE kind='x' AND id='y'`).Scan(&mirrored); err != nil || mirrored != 1 {
-		t.Fatalf("compat view did not forward to plugin_record: %d %v", mirrored, err)
-	}
+
 }
 
 func TestStoreRoutesKindsToFeatureTables(t *testing.T) {
@@ -213,36 +201,6 @@ func TestSealedPayloadsSurviveProjection(t *testing.T) {
 	var n int
 	if err := store.DB.QueryRow(`SELECT COUNT(*) FROM subscription_acquisition WHERE id='a1'`).Scan(&n); err != nil || n != 1 {
 		t.Fatalf("sealed row: %d %v", n, err)
-	}
-}
-
-func TestCompatViewForwardsMappedKinds(t *testing.T) {
-	store, err := app.OpenStore(t.TempDir())
-	if err != nil {
-		t.Fatalf("open: %v", err)
-	}
-	defer store.Close()
-	payload := `{"id":"sub_v","state":"active","media":{"id":9,"media_type":"tv","title":"View"}}`
-	if _, err := store.DB.Exec(`INSERT INTO records VALUES('subscription','sub_v',?,'2026-02-02T00:00:00Z')`, payload); err != nil {
-		t.Fatalf("view insert: %v", err)
-	}
-	var name string
-	if err := store.DB.QueryRow(`SELECT name FROM subscribe WHERE uid='sub_v'`).Scan(&name); err != nil || name != "View" {
-		t.Fatalf("projection after view insert: %q %v", name, err)
-	}
-	if _, err := store.DB.Exec(`UPDATE records SET payload=json_set(payload,'$.state','paused') WHERE kind='subscription' AND id='sub_v'`); err != nil {
-		t.Fatalf("view update: %v", err)
-	}
-	var state string
-	if err := store.DB.QueryRow(`SELECT state FROM subscribe WHERE uid='sub_v'`).Scan(&state); err != nil || state != "paused" {
-		t.Fatalf("view update projection: %q %v", state, err)
-	}
-	if _, err := store.DB.Exec(`DELETE FROM records WHERE kind='subscription' AND id='sub_v'`); err != nil {
-		t.Fatalf("view delete: %v", err)
-	}
-	var n int
-	if err := store.DB.QueryRow(`SELECT COUNT(*) FROM subscribe WHERE uid='sub_v'`).Scan(&n); err != nil || n != 0 {
-		t.Fatalf("view delete left rows: %d %v", n, err)
 	}
 }
 

@@ -591,9 +591,8 @@ func TestSourceUninstallFalseyInstalledSetRecreatesAbsentSourceRow(t *testing.T)
 		if err != nil || changed != (i == 0) {
 			t.Fatal("source row-present/equal return", i, changed, err)
 		}
-		var present bool
-		if err = a.Store.DB.QueryRow(`SELECT EXISTS(SELECT 1 FROM records WHERE kind=? AND id='main')`, originalInstalledOrderKind).Scan(&present); err != nil || present != wantPresent {
-			t.Fatal("source falsey create", present, err)
+		if present := recordExists(t, a.Store.DB, originalInstalledOrderKind, "main"); present != wantPresent {
+			t.Fatal("source falsey create", present)
 		}
 	}
 	if _, err := a.pluginStore.sourceSetOriginalInstalled(ctx, json.RawMessage(`["Alpha"]`)); err != nil {
