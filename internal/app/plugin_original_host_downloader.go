@@ -116,10 +116,21 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 		if err := originalResourceDecode(raw, &request); err != nil {
 			return nil, err
 		}
-		// Use the same qBittorrent login path as the bound brush add. Recent
-		// daemons can return 204 and use a QBT_SID cookie instead of SID.
-		brush := scope.phase == "brush" && originalBrushSourceScope(ctx, scope)
-		client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, brush)
+		// Use the same qBittorrent login path as the bound brush add for every
+		// BrushFlow callback, not only the brush run. qBittorrent 5 answers
+		// auth/login with 204 and a QBT_SID_<port> cookie; the legacy path used
+		// by check and promotion_expiry rejects both. A check that cannot list
+		// the daemon cannot enforce promotion expiry and leaves paid downloads
+		// running, so the source login path must cover the whole plugin. Keep
+		// Transmission on its existing dialect and only select this for qB.
+		source := false
+		if scope.object != nil && scope.object.installation.PluginID == "BrushFlowLanduo" {
+			if configured, configErr := a.configuredDownloader(request.DownloaderID); configErr == nil {
+				kind := strings.ToLower(configured.Kind)
+				source = kind == "qb" || kind == "qbittorrent"
+			}
+		}
+		client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, source)
 		if err != nil {
 			return nil, err
 		}
