@@ -12,6 +12,25 @@ import (
 	"light-media/internal/releasemeta/legacyanime"
 )
 
+// originalBrushQBSourceLogin selects the qBittorrent 5-compatible login and
+// read policy for every BrushFlow callback, not only the brush phase. qB 5
+// answers auth/login with 204 and a QBT_SID_<port> cookie; the legacy path
+// rejects both. Transmission keeps its existing dialect.
+func (a *App) originalBrushQBSourceLogin(scope originalBaseCallScope, id string) bool {
+	if scope.object == nil || scope.object.installation.PluginID != "BrushFlowLanduo" {
+		return false
+	}
+	configured, err := a.configuredDownloader(id)
+	if err != nil {
+		return false
+	}
+	switch strings.ToLower(configured.Kind) {
+	case "qb", "qbittorrent":
+		return true
+	}
+	return false
+}
+
 func originalHostDownloaderCapability(method string) bool {
 	switch method {
 	case plugins.DownloaderSourceFindByTagCapability, plugins.DownloaderSourceConnectionCapability, plugins.DownloaderConfigurationsReadCapability, plugins.DownloaderSourceTasksCapability, plugins.DownloaderSourceCompletedCapability, plugins.DownloaderSourceAddCapability, plugins.DownloaderSourceControlCapability, plugins.DownloaderConnectionCapability, plugins.DownloaderDeleteFilesCapability, plugins.DownloaderCompletedCapability, plugins.DownloaderDownloadingCapability, plugins.DownloaderAddCapability, plugins.DownloaderControlCapability, plugins.DownloaderTagsCapability, plugins.DownloaderFindByTagCapability, plugins.DownloaderDeleteTagsCapability, plugins.DownloaderListCapability, plugins.DownloaderTrackersCapability:
@@ -97,7 +116,12 @@ func originalHostDownloaderAddDecode(raw json.RawMessage, out any) error {
 	return nil
 }
 
-func (a *App) originalHostDownloaderResource(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (json.RawMessage, error) {
+func (a *App) originalHostDownloaderResource(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (result json.RawMessage, err error) {
+	defer func() {
+		if err != nil {
+			a.log("ERROR", "plugins", "brush_host_failed", method+": "+err.Error(), "", "")
+		}
+	}()
 	switch method {
 	case plugins.DownloaderSourceConnectionCapability:
 		return a.originalHostDownloaderSourceConnection(ctx, scope, raw)
@@ -116,10 +140,15 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 		if err := originalResourceDecode(raw, &request); err != nil {
 			return nil, err
 		}
-		// Use the same qBittorrent login path as the bound brush add. Recent
-		// daemons can return 204 and use a QBT_SID cookie instead of SID.
-		brush := scope.phase == "brush" && originalBrushSourceScope(ctx, scope)
-		client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, brush)
+		// Use the same qBittorrent login path as the bound brush add for every
+		// BrushFlow callback, not only the brush run. qBittorrent 5 answers
+		// auth/login with 204 and a QBT_SID_<port> cookie; the legacy path used
+		// by check and promotion_expiry rejects both. A check that cannot list
+		// the daemon cannot enforce promotion expiry and leaves paid downloads
+		// running, so the source login path must cover the whole plugin. Keep
+		// Transmission on its existing dialect and only select this for qB.
+		source := a.originalBrushQBSourceLogin(scope, request.DownloaderID)
+		client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, source)
 		if err != nil {
 			return nil, err
 		}
@@ -239,7 +268,7 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 				}
 			}
 		}
-		client, kind, guard, err := a.originalHostDownloaderMutationClient(ctx, scope, request.DownloaderID)
+		client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, a.originalBrushQBSourceLogin(scope, request.DownloaderID))
 		if err != nil {
 			return nil, err
 		}
@@ -480,7 +509,7 @@ func (a *App) originalHostDownloaderControlOutcome(ctx context.Context, scope or
 }
 
 func (a *App) originalHostDownloaderTags(ctx context.Context, scope originalBaseCallScope, request plugins.DownloaderTagsRequestV1) (json.RawMessage, error) {
-	client, kind, guard, err := a.originalHostDownloaderClient(ctx, scope, request.DownloaderID)
+	client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, a.originalBrushQBSourceLogin(scope, request.DownloaderID))
 	if err != nil {
 		return nil, err
 	}

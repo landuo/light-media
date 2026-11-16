@@ -50,7 +50,7 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 	a.importMu.Lock()
 	defer a.importMu.Unlock()
 	phase("validate_and_delete")
-	reader, kind, baseGuard, err := a.originalHostDownloaderMutationClient(ctx, scope, request.DownloaderID)
+	reader, kind, baseGuard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, request.BrushOwnership && a.originalBrushQBSourceLogin(scope, request.DownloaderID))
 	if err != nil {
 		return nil, err
 	}
@@ -271,7 +271,7 @@ func (a *App) originalHostDownloaderProtectSharedFiles(ctx context.Context, scop
 	for _, configured := range a.Settings().Downloaders {
 		// Trusted host safety read includes stopped instances; this is never
 		// reachable as a public disabled downloader query.
-		client, kind, guard, err := a.originalHostDownloaderBoundClient(ctx, scope, configured.ID, false)
+		client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, configured.ID, false, a.originalBrushQBSourceLogin(scope, configured.ID))
 		if err != nil {
 			return err
 		}
