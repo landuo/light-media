@@ -59,7 +59,7 @@
 | `ui_preferences` | `userconfig` | `username='admin'` |
 | `site_icon` | `siteicon` | 密文放 `payload` |
 | `site_stats_latest` | `sitestatistic` | |
-| `site_connection` / `site_cooldown` | `site_state` | |
+| `site_connection` | `site_state` | 冷却态单独落 `site_cooldown`，避免同站点 ID 覆盖 | |
 | `site_stats_history` / `site_access_statistics` | `site_statistic_event` | |
 | `asset` | `library_asset` | |
 | `asset_identity` / `asset_presence` | `library_asset_proof` / `library_asset_presence` | 分开避免键覆盖 |
@@ -96,6 +96,7 @@
 | 拼接 SQL 预检 | `ValidateAssembledSQL` 覆盖整理历史 CTE、任务摘要、整理队列、通知、订阅别名，全部 `Prepare` 通过 |
 | 测试夹具 | 93 处 `ON records` 触发器与 54 处断言改为落在目标表；`internal/app` 夹具测试仍需 OWNED_* 二进制才能实跑 |
 | 本地迁移演练 | 24,200 行合成库（14 类 kind + 密封密文 + 未知 kind）：迁移 5.1s；行数全部对齐；1,200 条抽样 payload 字节一致；400 条密文完全一致；`--apply` 重复执行无副作用 |
+| 生产库演练 | NAS 部署库副本 44,455 行 / 487MB / 47 张目标表：迁移 21.6s；逐表行数与预检零差异；1,811 条抽样 payload 字节一致；26 条密封收据完全一致；`records` 对象为 0 |
 | 迁移后打开耗时 | v2 库 0.14s、空库 0.10s（兼容触发器删除后回到基线） |
 | `cmd/...` | 全部通过（含真实 Store 的迁移 CLI 测试） |
 | 前端 | 无改动（API 未变） |

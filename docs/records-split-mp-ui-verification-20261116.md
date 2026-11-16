@@ -38,9 +38,24 @@
 `transferHistoryMPFiltered` 在 `total == 0` 时返回 nil slice，JSON 变成 `null`，前端报 `e.items is not iterable`。
 修复：返回空切片；页面恢复为“没有数据”+分页。
 
+## 2.4 TMDB 凭证来源与真实订阅验证
+
+部署在 NAS 的 light-media 配置（从原 MoviePilot 迁移而来）含 32 位 TMDB API Key。经 `/tmp` 副本解密只用于本地实例，测试实例通过「设置 → 媒体识别」保存该 Key（界面显示「凭据已保存」）。
+
+| 操作 | 结果 |
+| --- | --- |
+| 新增电影订阅（TMDB 438631） | 200 附异步统计依赖提示；`subscribe` 行 `沙丘 / 2021 / movie / 438631 / active` |
+| 页面渲染 | 卡片显示 2021、沙丘、已下载 0 / 1、订阅中、真实 TMDB 海报 |
+| 菜单暂停 | payload 与列同步为 `paused`，卡片显示已暂停 |
+| 菜单恢复 | 重新拉取 TMDB 详情后 `active`，卡片恢复订阅中 |
+| 新增电视剧订阅（TMDB 1399 第 1 季） | 行 `权力的游戏 / tv / season 1 / total_episode 10 / active`，卡片显示「第 1 季 已下载 0 / 10」 |
+
+新增失败时会返回 `SUBSCRIPTION_ASYNC_STATS_DEPENDENCY`（safe 模式缺少原异步统计依赖），但订阅与通知/事件已提交，属于该模式下的已知提示。
+
 ## 3. 未能覆盖的部分
 
-- **订阅保存/暂停**：`saveSubscription` 会重新拉取 TMDB 详情，本实例没有配置 TMDB 凭据，返回 `INVALID_MEDIA`。这是环境限制；payload → 列投影的写入路径由站点保存与通知已读两条链路覆盖。
+- **订阅保存/暂停/恢复**：已在配置真实 TMDB 凭据后全部通过（见 2.4）。
+- **新建订阅的异步统计依赖**：`-safe` 模式缺少原插件链路，接口返回提示但数据已落库。
 - **下载管理**：页面要求先配置下载器；`downloadhistory` 的读取由 `/api/status` 计数与单元测试覆盖。
 - **文件管理**：浏览的是容器文件系统，与 `library_asset` 无关；资产索引由 storetest 与迁移演练覆盖。
 - **插件页面**：`-safe` 模式跳过插件加载。

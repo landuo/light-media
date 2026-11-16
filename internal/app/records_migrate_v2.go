@@ -163,8 +163,9 @@ func migrateRecordsV2(ctx context.Context, db *sql.DB) error {
 			archived++
 			continue
 		}
-		if _, err := tx.ExecContext(ctx, recordInsertSQL(r.kind, t), r.id, r.payload, r.updatedAt); err != nil {
-			return fmt.Errorf("migrate %s/%s: %w", r.kind, r.id, err)
+		insert := recordInsertSQL(r.kind, t)
+		if _, err := tx.ExecContext(ctx, insert, r.id, r.payload, r.updatedAt); err != nil {
+			return fmt.Errorf("migrate %s/%s: %w :: %s", r.kind, r.id, err, insert)
 		}
 		if err := recordChildren(ctx, tx, r.kind, r.id, r.payload, r.updatedAt); err != nil {
 			return fmt.Errorf("children %s/%s: %w", r.kind, r.id, err)

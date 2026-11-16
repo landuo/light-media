@@ -274,6 +274,7 @@ var mpTables = map[string]recordTable{
 // these, so they follow the same rule: one feature per table, typed columns for
 // every indexed path, payload kept as the canonical record.
 var nativeTables = []recordTable{
+	{name: "site_cooldown", cols: []recordColumn{{"until", "$.until", "INTEGER", ""}}},
 	{name: "site_state", cols: []recordColumn{{"site_id", "$.id", "TEXT", ""}, {"status", "$.status", "TEXT", ""}, {"checked_at", "$.checked_at", "TEXT", ""}, {"cooldown_until", "$.until", "INTEGER", ""}},
 		idx: []string{`CREATE INDEX IF NOT EXISTS site_state_status ON site_state(status,checked_at)`}},
 	{name: "site_statistic_event", cols: []recordColumn{{"site_id", "$.site_id", "TEXT", ""}, {"ts", "$.ts", "INTEGER", ""}, {"kind", "$.kind", "TEXT", ""}},
@@ -371,7 +372,7 @@ var nativeTables = []recordTable{
 var recordKinds = map[string]string{
 	// Site and source domain.
 	"site_connection":                "site_state",
-	"site_cooldown":                  "site_state",
+	"site_cooldown":                  "site_cooldown",
 	"site_icon":                      "siteicon",
 	"site_stats_latest":              "sitestatistic",
 	"site_stats_history":             "site_statistic_event",
@@ -380,12 +381,6 @@ var recordKinds = map[string]string{
 	"site_message_history_execution": "site_message_sync",
 	"site_system_error":              "site_system_error",
 	"site_refresh_clock":             "scheduler_state",
-	"source_file_extension_settings": "systemconfig",
-	"source_statistics_settings":     "systemconfig",
-	"source_settings_migration":      "systemconfig",
-	"source_site_message_settings":   "systemconfig",
-	"source_network_settings":        "systemconfig",
-	"source_runtime_settings":        "systemconfig",
 
 	// Subscription domain.
 	"subscription":       "subscribe",
