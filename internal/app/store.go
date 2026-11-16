@@ -292,7 +292,10 @@ func (s *Store) List(ctx context.Context, kind string, limit, offset int) ([]jso
 	if !ok {
 		return s.listRecordPayloads(ctx, `SELECT payload FROM plugin_record WHERE kind=? ORDER BY updated_at DESC,id LIMIT ? OFFSET ?`, kind, limit, offset)
 	}
-	return s.listRecordPayloads(ctx, `SELECT payload FROM `+t.name+` ORDER BY updated_at DESC,`+recordKeyColumn(t)+` LIMIT ? OFFSET ?`, limit, offset)
+	// A feature table can host several kinds (downloadhistory holds intents and
+	// native downloads, message holds notifications, cache_entry holds cache and
+	// resources). Listing without the discriminator would leak rows across kinds.
+	return s.listRecordPayloads(ctx, `SELECT payload FROM `+t.name+` WHERE record_kind=? ORDER BY updated_at DESC,`+recordKeyColumn(t)+` LIMIT ? OFFSET ?`, kind, limit, offset)
 }
 func (s *Store) Delete(ctx context.Context, kind, key string) error {
 	t, ok := recordTableFor(kind)

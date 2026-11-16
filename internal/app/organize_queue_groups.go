@@ -166,7 +166,7 @@ func registerOrganizeQueueTx(ctx context.Context, tx *sql.Tx, job Job) error {
 // leaving historic completed batches outside the current queue.
 func (a *App) seedOrganizeQueue(ctx context.Context) error {
 	jobs, err := a.queryJobs(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind IN ('import','organize_file') AND state IN `+activeOrganizeStates+`
-	 AND NOT EXISTS(SELECT 1 FROM organize_queue_member m INDEXED BY organize_queue_job WHERE m.kind='organize_queue_member' AND json_extract(m.payload,'$.job')=(jobs.id||''))`)
+	 AND NOT EXISTS(SELECT 1 FROM organize_queue_member m INDEXED BY organize_queue_job WHERE m.record_kind='organize_queue_member' AND json_extract(m.payload,'$.job')=(jobs.id||''))`)
 	if err != nil || len(jobs) == 0 {
 		return err
 	}

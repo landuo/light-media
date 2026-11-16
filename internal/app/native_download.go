@@ -153,7 +153,7 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 	defer a.downloadMu.Unlock()
 	var previous []byte
 	var superseded *NativeDownload
-	err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE lower(json_extract(payload,'$.hash'))=lower(?) AND json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')!='cancelled' ORDER BY updated_at DESC LIMIT 1`, material.Hash, d.ID).Scan(&previous)
+	err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE record_kind='native_download' AND lower(json_extract(payload,'$.hash'))=lower(?) AND json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')!='cancelled' ORDER BY updated_at DESC LIMIT 1`, material.Hash, d.ID).Scan(&previous)
 	if err == nil {
 		err = json.Unmarshal(previous, &out)
 		if err != nil || out.State != "failed" && out.State != "waiting" {

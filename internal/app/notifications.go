@@ -61,8 +61,8 @@ func (a *App) notifyFailed(ctx context.Context, j Job, message string) {
 	_ = a.Store.Put(ctx, "notification", n.ID, n)
 }
 
-const notificationListSQL = `SELECT payload FROM message INDEXED BY notification_display_order ORDER BY updated_at DESC,uid LIMIT ?`
-const notificationUnreadSQL = `SELECT COUNT(*) FROM message INDEXED BY notification_unread WHERE json_extract(payload,'$.read')=0`
+const notificationListSQL = `SELECT payload FROM message INDEXED BY notification_display_order WHERE record_kind='notification' ORDER BY updated_at DESC,uid LIMIT ?`
+const notificationUnreadSQL = `SELECT COUNT(*) FROM message INDEXED BY notification_unread WHERE record_kind='notification' AND json_extract(payload,'$.read')=0`
 
 func (a *App) notifications(ctx context.Context) (any, error) {
 	// The literal kind allows SQLite to select the notification-only ordering

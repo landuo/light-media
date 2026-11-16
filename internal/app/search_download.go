@@ -1859,12 +1859,12 @@ func (a *App) pollDownloads(ctx context.Context) error {
 	// Only the completed-tag repair is bounded. Old pending downloads still
 	// need polling when recent history alone fills that window.
 	raw, e := a.Store.listRecordPayloads(ctx, `WITH recent_imported AS (
-		SELECT payload,updated_at,uid FROM downloadhistory WHERE 1=1
+		SELECT payload,updated_at,uid FROM downloadhistory WHERE record_kind='intent'
 		AND CASE WHEN json_valid(payload) THEN json_extract(payload,'$.state')='imported' END
 		ORDER BY updated_at DESC,uid LIMIT 500
 	)
 	SELECT payload FROM (
-		SELECT payload,updated_at,uid FROM downloadhistory WHERE 1=1
+		SELECT payload,updated_at,uid FROM downloadhistory WHERE record_kind='intent'
 		AND CASE WHEN json_valid(payload) THEN json_extract(payload,'$.state') IN ('accepted','downloading','downloaded','reconcile_pending') END
 		UNION ALL SELECT payload,updated_at,uid FROM recent_imported
 	) ORDER BY updated_at DESC,uid`)
