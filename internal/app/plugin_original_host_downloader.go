@@ -116,7 +116,12 @@ func originalHostDownloaderAddDecode(raw json.RawMessage, out any) error {
 	return nil
 }
 
-func (a *App) originalHostDownloaderResource(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (json.RawMessage, error) {
+func (a *App) originalHostDownloaderResource(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (result json.RawMessage, err error) {
+	defer func() {
+		if err != nil {
+			a.log("ERROR", "plugins", "brush_host_failed", method+": "+err.Error(), "", "")
+		}
+	}()
 	switch method {
 	case plugins.DownloaderSourceConnectionCapability:
 		return a.originalHostDownloaderSourceConnection(ctx, scope, raw)
@@ -263,7 +268,7 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 				}
 			}
 		}
-		client, kind, guard, err := a.originalHostDownloaderMutationClient(ctx, scope, request.DownloaderID)
+		client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, a.originalBrushQBSourceLogin(scope, request.DownloaderID))
 		if err != nil {
 			return nil, err
 		}
@@ -504,7 +509,7 @@ func (a *App) originalHostDownloaderControlOutcome(ctx context.Context, scope or
 }
 
 func (a *App) originalHostDownloaderTags(ctx context.Context, scope originalBaseCallScope, request plugins.DownloaderTagsRequestV1) (json.RawMessage, error) {
-	client, kind, guard, err := a.originalHostDownloaderClient(ctx, scope, request.DownloaderID)
+	client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, a.originalBrushQBSourceLogin(scope, request.DownloaderID))
 	if err != nil {
 		return nil, err
 	}
