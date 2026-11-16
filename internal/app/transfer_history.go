@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 	"strings"
@@ -12,6 +12,7 @@ import (
 )
 
 type transferHistoryItem struct {
+	mpRecord             bool          `json:"-"`
 	ID                   string        `json:"id"`
 	FileID               string        `json:"file_id"`
 	ResourceSource       string        `json:"-"`
@@ -254,120 +255,44 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 		return nil, bad("INVALID_QUERY", "搜索内容过长")
 	}
 	pattern := historySearchPattern(query)
-	// Concrete predicates let SQLite seek the status/order index. An optional
-	// OR predicate prevents that seek, even when the status is known.
-	predicates := []string{}
-	args := []any{}
-	if status != "" {
-		predicates = append(predicates, `status=?`)
-		args = append(args, status)
+	if status == "pending" {
+		return map[string]any{"items": []transferHistoryItem{}, "total": 0, "page": page, "page_size": size}, nil
 	}
-	if query != "" {
-		predicates = append(predicates, `(lower(COALESCE(title,'')) LIKE lower(?) ESCAPE '\'
-		 OR lower(COALESCE(source_path,'')) LIKE lower(?) ESCAPE '\'
-		 OR lower(COALESCE(target_path,'')) LIKE lower(?) ESCAPE '\')`)
-		args = append(args, pattern, pattern, pattern)
-	}
-	where := ""
-	if len(predicates) > 0 {
-		where = " WHERE " + strings.Join(predicates, " AND ")
-	}
-	var total int
-	tx, e := a.transferHistoryReadTx(ctx)
-	if e != nil {
-		return nil, e
-	}
-	defer tx.Rollback()
-	phase("query_and_hydrate")
-	if e = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM transfer_history_current`+where, args...).Scan(&total); e != nil {
-		return nil, e
-	}
-	rows, e := tx.QueryContext(ctx, transferHistoryPageSQL(where), append(args, size, (page-1)*size)...)
-	if e != nil {
-		return nil, e
-	}
-	items := []transferHistoryItem{}
-	for rows.Next() {
-		item, e := scanTransferHistory(rows)
-		if e != nil {
-			rows.Close()
-			return nil, e
+	if status != "pending" {
+		mpItems, mpTotal, mpErr := a.transferHistoryMPFiltered(ctx, page, size, status, query, pattern)
+		if mpErr != nil {
+			return nil, mpErr
 		}
-		items = append(items, item)
-	}
-	e = rows.Err()
-	rows.Close()
-	if e != nil {
-		return nil, e
-	}
-	phase("commit")
-	if e = tx.Commit(); e != nil {
-		return nil, e
-	}
-	// The page only displays durable history. Do not walk NAS directories or
-	// revalidate execution permissions for every visible row (and every poll).
-	// Opt-in preserves the checked-capability contract of existing API clients;
-	// single-item reads and all actual operations still perform strict checks.
-	if q.Get("capabilities") == "deferred" {
-		for i := range items {
-			items[i].CanRetry = false
-			items[i].CanRecognize = false
-			items[i].CapabilitiesDeferred = true
+		if q.Get("capabilities") == "deferred" {
+			for i := range mpItems {
+				mpItems[i].CanRetry, mpItems[i].CanRecognize, mpItems[i].CapabilitiesDeferred = false, false, true
+			}
+		} else {
+			for i := range mpItems {
+				a.transferHistoryCapabilities(ctx, &mpItems[i])
+			}
 		}
-		return map[string]any{"items": items, "total": total, "page": page, "page_size": size}, nil
+		return map[string]any{"items": mpItems, "total": mpTotal, "page": page, "page_size": size}, nil
 	}
-	phase("file_capabilities")
-	// Filesystem checks happen after closing the single-connection SQL cursor.
-	for i := range items {
-		if e = ctx.Err(); e != nil {
-			return nil, e
-		}
-		a.transferHistoryCapabilities(ctx, &items[i])
-	}
-	return map[string]any{"items": items, "total": total, "page": page, "page_size": size}, nil
+	return map[string]any{"items": []transferHistoryItem{}, "total": 0, "page": page, "page_size": size}, nil
 }
 
-// Current rows own their display snapshots. COUNT and this indexed page query
-// share a read snapshot; neither expands execution plans or writes history.
-func transferHistoryPageSQL(where string) string {
-	return `SELECT ` + transferHistoryStoredColumns + ` FROM transfer_history_current h` + where + transferHistoryOrder + ` LIMIT ? OFFSET ?`
+func (a *App) transferHistoryResolveID(ctx context.Context, id string) (transferHistoryItem, error) {
+	item, found, err := a.transferHistoryMPByID(ctx, id)
+	if err != nil {
+		return transferHistoryItem{}, err
+	}
+	if found {
+		return item, nil
+	}
+	item, err = a.scanTransferHistoryMP(a.Store.reader().QueryRowContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory WHERE json_extract(src_fileitem,'$.file_id')=? ORDER BY id DESC LIMIT 1`, id))
+	return item, err
 }
 
-func scanTransferHistory(row interface{ Scan(...any) error }, extra ...any) (transferHistoryItem, error) {
-	var planRaw, fileRaw []byte
-	var jobID, jobState, jobError, updated, status string
-	var historyID, createdAt, resourceSource string
-	var executionKey string
-	columns := []any{&planRaw, &fileRaw, &jobID, &jobState, &jobError, &updated, &status, &historyID, &createdAt, &resourceSource, &executionKey}
-	if e := row.Scan(append(columns, extra...)...); e != nil {
-		return transferHistoryItem{}, e
-	}
-	var plan ImportPlan
-	var file PlanFile
-	if e := json.Unmarshal(planRaw, &plan); e != nil {
-		return transferHistoryItem{}, e
-	}
-	if e := json.Unmarshal(fileRaw, &file); e != nil {
-		return transferHistoryItem{}, e
-	}
-	mode := file.Method
-	if mode == "" && !file.OriginalTransferHistory {
-		mode = plan.Mode
-	}
-	message := file.Reason
-	if message == "" && status == "failed" {
-		message = jobError
-	}
-	if message == "" && status == "failed" {
-		message = "整理未完成，请查看关联任务"
-	}
-	file = file.presentationFile()
-	return transferHistoryItem{EpisodeGroup: plan.EpisodeGroup, ID: historyID, FileID: file.ID, ResourceSource: resourceSource, ExecutionKey: executionKey, PlanID: plan.ID, WorkflowID: plan.WorkflowID, JobID: jobID, JobState: jobState, Media: plan.Media, Category: plan.Category, Season: file.Season, Episodes: file.Episodes, Part: file.Part, Source: file.Source, Target: file.Target, Mode: mode, Size: file.Size, Status: status, FileStatus: file.Status, Error: message, CreatedAt: createdAt, UpdatedAt: updated, CanRetry: status == "failed" && jobState != "running" && jobState != "queued" && jobState != "retry_wait" && jobState != "waiting_paused" && file.Status != "blocked"}, nil
-}
 func (a *App) transferHistoryItem(ctx context.Context, id string) (transferHistoryItem, error) {
-	item, e := a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedCTE+transferHistoryStoredSelect+` WHERE h.history_id=? OR h.resource_source=(SELECT resource_source FROM attempts WHERE execution_file_id=? LIMIT 1) LIMIT 1`, id, id)
-	if e != nil {
-		return item, e
+	item, err := a.transferHistoryResolveID(ctx, id)
+	if err != nil {
+		return transferHistoryItem{}, err
 	}
 	a.transferHistoryCapabilities(ctx, &item)
 	return item, nil
@@ -390,58 +315,32 @@ func (a *App) transferHistoryItemsForOrganize(ctx context.Context, ids []string)
 
 // Preserve the requested positions so a stale selection cannot suppress its peers.
 func (a *App) transferHistorySelections(ctx context.Context, ids []string) ([]transferHistoryItem, error) {
-	if len(ids) == 0 {
-		return nil, nil
-	}
-	raw, err := json.Marshal(ids)
-	if err != nil {
-		return nil, err
-	}
-	tx, err := a.transferHistoryReadTx(ctx)
-	if err != nil {
-		return nil, err
-	}
-	defer tx.Rollback()
-	rows, err := tx.QueryContext(ctx, transferHistoryIndexedCTE+`, selected AS MATERIALIZED (
- SELECT CAST(requested.key AS INTEGER) AS position,
- (SELECT resource_source FROM attempts WHERE execution_file_id=requested.value LIMIT 1) AS source
- FROM json_each(?) requested
-) SELECT `+transferHistoryStoredColumns+`,selected.position FROM history h
- JOIN selected ON selected.source=h.resource_source`, string(raw))
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
 	items := make([]transferHistoryItem, len(ids))
-	for rows.Next() {
-		var position int
-		item, err := scanTransferHistory(rows, &position)
+	for i, id := range ids {
+		item, err := a.transferHistoryResolveID(ctx, id)
+		if errors.Is(err, sql.ErrNoRows) {
+			continue
+		}
 		if err != nil {
 			return nil, err
 		}
-		items[position] = item
+		items[i] = item
 	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	rows.Close()
-	return items, tx.Commit()
+	return items, nil
 }
 
 func (a *App) transferHistoryPlanFile(ctx context.Context, planID, fileID string) (transferHistoryItem, error) {
-	var source string
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT `+transferHistoryPlanSource+`
-		FROM records r,json_each(r.payload,'$.files') f
-		LEFT JOIN records meta ON meta.kind='import_meta' AND meta.id=r.id
-		WHERE r.kind='import_plan' AND r.id=? AND json_extract(f.value,'$.id')=?`, planID, fileID).Scan(&source); err != nil {
-		return transferHistoryItem{}, err
+	item, err := a.scanTransferHistoryMP(a.Store.reader().QueryRowContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory WHERE json_extract(src_fileitem,'$.plan_id')=? AND json_extract(src_fileitem,'$.file_id')=? ORDER BY id DESC LIMIT 1`, planID, fileID))
+	if err == nil {
+		return item, nil
 	}
-	return a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedBySourceFile, source, fileID)
+	return transferHistoryItem{}, err
 }
 
 // Queue controls address an exact execution, never a stable-history redirect.
 func (a *App) transferHistoryExecution(ctx context.Context, fileID string) (transferHistoryItem, error) {
-	return a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedBase+`SELECT `+transferHistoryJSON+`,h.job_id,h.job_state,h.job_error,h.updated_at,h.status,h.execution_file_id,h.plan_created_at,h.resource_source,h.execution_key FROM attempts h`+transferHistoryHydrate+` WHERE h.execution_file_id=? LIMIT 1`, fileID)
+	item, err := a.scanTransferHistoryMP(a.Store.reader().QueryRowContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory WHERE json_extract(src_fileitem,'$.file_id')=? ORDER BY id DESC LIMIT 1`, fileID))
+	return item, err
 }
 func (a *App) transferHistoryCapabilities(ctx context.Context, item *transferHistoryItem) {
 	path := item.organizeSource()
@@ -478,4 +377,13 @@ func (a *App) transferHistoryCapabilities(ctx context.Context, item *transferHis
 			}
 		}
 	}
+}
+
+func isMPHistoryID(id string) bool {
+	number, err := strconv.ParseInt(id, 10, 64)
+	return err == nil && number > 0
+}
+
+func (a *App) transferHistoryReadTx(ctx context.Context) (*sql.Tx, error) {
+	return a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
 }

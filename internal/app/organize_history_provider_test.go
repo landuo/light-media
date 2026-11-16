@@ -181,12 +181,15 @@ func TestHistoryProviderIdentityOrdinaryHTTP(t *testing.T) {
 				t.Fatal("source identity changed history cardinality", page)
 			}
 			for _, before := range selected {
-				current, err := a.transferHistoryItem(t.Context(), before.ID)
-				if err != nil {
-					t.Fatal(err)
+				var current transferHistoryItem
+				for _, candidate := range page.Items {
+					if candidate.Source == before.Source {
+						current = candidate
+						break
+					}
 				}
 				acted := before.ID == ids[0] || len(ids) > 1
-				if current.ID != before.ID || current.ResourceSource != before.ResourceSource || current.Media.ID != 0 || current.Media.ProviderSource != before.Media.ProviderSource || current.Media.ProviderID != before.Media.ProviderID || current.Media.MediaType != before.Media.MediaType || current.Season != before.Season || !slices.Equal(current.Episodes, before.Episodes) {
+				if current.ID == "" || current.Source != before.Source || current.Media.ID != 0 || current.Media.ProviderSource != before.Media.ProviderSource || current.Media.ProviderID != before.Media.ProviderID || current.Media.MediaType != before.Media.MediaType || current.Season != before.Season || !slices.Equal(current.Episodes, before.Episodes) {
 					t.Fatal("stable provider/source history", current, before)
 				}
 				if scenario == "preview" || !acted {
@@ -197,13 +200,13 @@ func TestHistoryProviderIdentityOrdinaryHTTP(t *testing.T) {
 						t.Fatal("preview deleted prior target", err)
 					}
 				} else {
-					if current.PlanID == before.PlanID || current.Status != "success" || !within(destination, current.Target) {
+					if current.ID == before.ID || current.PlanID == before.PlanID || current.Status != "success" || !within(destination, current.Target) {
 						t.Fatal("ordinary retry did not replace latest attempt", current, before)
 					}
 					if _, err = os.Lstat(before.Target); !os.IsNotExist(err) {
 						t.Fatal("old selected target was not cleaned", err)
 					}
-					if got, e := os.ReadFile(current.Target); e != nil || !bytes.Equal(got, payloads[current.ResourceSource]) {
+					if got, e := os.ReadFile(current.Target); e != nil || !bytes.Equal(got, payloads[before.Source]) {
 						t.Fatal("actual retry payload", e)
 					}
 				}

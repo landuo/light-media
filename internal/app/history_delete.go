@@ -33,7 +33,7 @@ func (a *App) deleteTransferHistory(ctx context.Context, item transferHistoryIte
 		return nil, bad("CONFIRM_REQUIRED", "请确认删除整理记录及所选文件")
 	}
 	if (in.FileID != "" && in.FileID != item.executionFileID()) ||
-		(in.FileID == "" && (in.DeleteSource || in.DeleteTarget) && item.executionFileID() != item.ID) {
+		(in.FileID == "" && (in.DeleteSource || in.DeleteTarget)) {
 		return nil, bad("HISTORY_CHANGED", "整理记录已更新，请刷新后重新确认删除")
 	}
 	if in.DeleteSource {
@@ -91,6 +91,12 @@ func (a *App) deleteTransferHistory(ctx context.Context, item transferHistoryIte
 	}); e != nil {
 		return nil, e
 	}
+	// The MoviePilot-shaped single table is removed with the same user action.
+	// It is keyed by src, so a stale numeric ID cannot leave a visible row behind.
+	if _, e := a.Store.DB.ExecContext(ctx, `DELETE FROM transferhistory WHERE src=?`, item.Source); e != nil {
+		return nil, e
+	}
+
 	a.log("INFO", "history", "deleted", "已删除用户选定的整理历史及明确勾选的文件", item.JobID, "")
 	return map[string]any{"deleted": true, "delete_source": in.DeleteSource, "delete_target": in.DeleteTarget}, nil
 }

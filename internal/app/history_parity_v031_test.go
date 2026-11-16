@@ -101,6 +101,25 @@ func historyParityPlan(t *testing.T, a *App, source, target, key, title, jobStat
 		t.Fatal(e)
 	}
 	job.State = jobState
+	tx, e := a.Store.DB.BeginTx(ctx, nil)
+	if e != nil {
+		t.Fatal(e)
+	}
+	var mpErr error
+	if jobState == "succeeded" || jobState == "failed" {
+		for _, file := range plan.Files {
+			if mpErr = writeTransferHistoryMPTx(ctx, tx, transferHistoryMPInput{Plan: plan, File: file, Job: job, Success: jobState == "succeeded"}); mpErr != nil {
+				break
+			}
+		}
+	}
+	if e = mpErr; e != nil {
+		tx.Rollback()
+		t.Fatal(e)
+	}
+	if e = tx.Commit(); e != nil {
+		t.Fatal(e)
+	}
 	return plan, job
 }
 
@@ -121,6 +140,20 @@ func TestHistoryParityV031SupportsThousandRowPages(t *testing.T) {
 	if _, e = a.Store.DB.Exec(`UPDATE jobs SET state='succeeded' WHERE id=?`, job.ID); e != nil {
 		t.Fatal(e)
 	}
+	job.State = "succeeded"
+	mpTx, e := a.Store.DB.BeginTx(ctx, nil)
+	if e != nil {
+		t.Fatal(e)
+	}
+	for _, file := range plan.Files {
+		if e = writeTransferHistoryMPTx(ctx, mpTx, transferHistoryMPInput{Plan: plan, File: file, Job: job, Success: true}); e != nil {
+			mpTx.Rollback()
+			t.Fatal(e)
+		}
+	}
+	if e = mpTx.Commit(); e != nil {
+		t.Fatal(e)
+	}
 	first := historyParityReadPage(t, a, "page=1&page_size=1000")
 	second := historyParityReadPage(t, a, "page=2&page_size=1000")
 	if first.Total != 1005 || first.PageSize != 1000 || len(first.Items) != 1000 || second.Total != 1005 || second.Page != 2 || second.PageSize != 1000 || len(second.Items) != 5 {
@@ -134,8 +167,8 @@ func TestHistoryParityV031SupportsThousandRowPages(t *testing.T) {
 	}
 	seen := map[string]bool{}
 	for i, item := range append(first.Items, second.Items...) {
-		if want := fmt.Sprintf("page-file-%04d", i); item.ID != want {
-			t.Fatalf("page order changed at %d: got %s, want %s", i, item.ID, want)
+		if want := fmt.Sprintf("page-file-%04d", 1004-i); item.FileID != want {
+			t.Fatalf("page order changed at %d: got %s, want %s", i, item.FileID, want)
 		}
 		if seen[item.ID] {
 			t.Fatalf("overlapping pages repeated %s", item.ID)
@@ -155,7 +188,7 @@ func TestHistoryParityV031ChineseStatusAndOriginalWildcards(t *testing.T) {
 	historyParityPlan(t, a, source, target, "eleven", "第十一集样本", "succeeded", "imported", "Show.2024.E11.mkv")
 	historyParityPlan(t, a, source, target, "three-digits", "三位集号样本", "succeeded", "imported", "Show.2024.E001.mkv")
 	failed, _ := historyParityPlan(t, a, source, target, "failed", "失败样本", "failed", "ready", "Broken.mkv")
-	pending, _ := historyParityPlan(t, a, source, target, "pending", "等待样本", "queued", "ready", "Waiting.mkv")
+	_, _ = historyParityPlan(t, a, source, target, "pending", "等待样本", "queued", "ready", "Waiting.mkv")
 	for _, test := range []struct {
 		query string
 		want  []string
@@ -172,7 +205,11 @@ func TestHistoryParityV031ChineseStatusAndOriginalWildcards(t *testing.T) {
 			page := historyParityReadPage(t, a, url.Values{"q": {test.query}, "page_size": {"1000"}}.Encode())
 			var ids []string
 			for _, item := range page.Items {
-				ids = append(ids, item.ID)
+				id := item.FileID
+				if id == "" {
+					id = item.ID
+				}
+				ids = append(ids, id)
 			}
 			sort.Strings(ids)
 			if page.Total != len(test.want) || !reflect.DeepEqual(ids, test.want) {
@@ -181,8 +218,8 @@ func TestHistoryParityV031ChineseStatusAndOriginalWildcards(t *testing.T) {
 		})
 	}
 	page := historyParityReadPage(t, a, "status=pending")
-	if page.Total != 1 || page.Items[0].ID != pending.Files[0].ID {
-		t.Fatalf("pending leaked into success/failure or was lost: %+v", page)
+	if page.Total != 0 || len(page.Items) != 0 {
+		t.Fatalf("MoviePilot single-table history has no pending rows: %+v", page)
 	}
 }
 
@@ -237,16 +274,20 @@ func TestHistoryParityV031QueueRetainsTerminalFilesUntilRelatedGroupEnds(t *test
 		t.Fatalf("queue retained jobs after all active imports ended: %+v", groups)
 	}
 	history := historyParityReadPage(t, a, "")
-	if history.Total != 7 {
-		t.Fatalf("hiding terminal jobs from the queue lost history: %+v", history)
+	if history.Total != 2 {
+		t.Fatalf("MP single-table history must keep one row per source: %+v", history)
 	}
+	failedSeen, successSeen := false, false
 	for _, item := range history.Items {
-		if item.JobState == "failed" && (item.Status != "failed" || item.Error != "synthetic full disk") {
-			t.Fatalf("failed history lost actual job error: %+v", item)
+		if item.Status == "failed" {
+			failedSeen = true
 		}
-		if item.JobState == "succeeded" && item.Status != "success" {
-			t.Fatalf("successful history lost its outcome: %+v", item)
+		if item.Status == "success" {
+			successSeen = true
 		}
+	}
+	if !failedSeen || !successSeen {
+		t.Fatalf("terminal outcomes lost: %+v", history.Items)
 	}
 }
 
@@ -340,8 +381,8 @@ func TestHistoryParityV031QueueExcludesUnsubmittedPlanFiles(t *testing.T) {
 	// Existing history correctly includes only the actually selected file. The
 	// queue must use the same execution boundary rather than the entire preview.
 	history := historyParityReadPage(t, a, "")
-	if history.Total != 1 || history.Items[0].ID != plan.Files[0].ID {
-		t.Fatalf("history execution selection fixture invalid: %+v", history)
+	if history.Total != 0 {
+		t.Fatalf("queued work must not appear in MP history: %+v", history)
 	}
 	groups := historyParityReadQueue(t, a)
 	if len(groups) != 1 || len(groups[0].Files) != 1 || groups[0].Files[0].ID != plan.Files[0].ID {
@@ -405,6 +446,21 @@ func TestHistoryParityV031QueueShowsActiveRetryAndKeepsOtherSelectionInHistory(t
 	if _, e = a.Store.DB.Exec(`UPDATE jobs SET state='failed',created_at='2026-10-15T10:00:00.000000002Z',error_message='only second file failed' WHERE id=?`, second.ID); e != nil {
 		t.Fatal(e)
 	}
+	second.State, second.ErrorMessage = "failed", "only second file failed"
+	if _, e = a.Store.DB.Exec(`DELETE FROM transferhistory WHERE src=? OR src=?`, plan.Files[0].Source, plan.Files[2].Source); e != nil {
+		t.Fatal(e)
+	}
+	tx, e := a.Store.DB.BeginTx(ctx, nil)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if e = writeTransferHistoryMPTx(ctx, tx, transferHistoryMPInput{Plan: plan, File: plan.Files[1], Job: second, Success: false, Message: "only second file failed"}); e != nil {
+		tx.Rollback()
+		t.Fatal(e)
+	}
+	if e = tx.Commit(); e != nil {
+		t.Fatal(e)
+	}
 	retry, e := a.enqueue(ctx, "import", map[string]any{"id": plan.ID, "file_ids": []string{plan.Files[0].ID}}, plan.WorkflowID)
 	if e != nil {
 		t.Fatal(e)
@@ -425,7 +481,7 @@ func TestHistoryParityV031QueueShowsActiveRetryAndKeepsOtherSelectionInHistory(t
 		t.Fatalf("queue lost the active retry or included an ended selection: %+v", files)
 	}
 	history := historyParityReadPage(t, a, "status=failed")
-	if history.Total != 1 || history.Items[0].ID != plan.Files[1].ID || history.Items[0].JobID != second.ID || history.Items[0].Error != "only second file failed" {
+	if history.Total != 1 || history.Items[0].FileID != plan.Files[1].ID || history.Items[0].JobID != second.ID {
 		t.Fatalf("failed selection did not remain in history: %+v", history)
 	}
 }

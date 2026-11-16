@@ -13,7 +13,13 @@ func directoryHistoryObservation(ctx context.Context, db interface {
 	QueryRowContext(context.Context, string, ...any) *sql.Row
 }, file *DirectoryObservedFile) (bool, error) {
 	var status, planID, jobID, reason string
-	err := db.QueryRowContext(ctx, `SELECT status,plan_id,COALESCE(job_id,''),COALESCE(NULLIF(json_extract(file_json,'$.reason'),''),job_error,'') FROM transfer_history_current WHERE resource_source=?`, file.Path).Scan(&status, &planID, &jobID, &reason)
+	var state int
+	err := db.QueryRowContext(ctx, `SELECT status,COALESCE(json_extract(src_fileitem,'$.plan_id'),''),COALESCE(json_extract(src_fileitem,'$.job_id'),''),COALESCE(errmsg,'') FROM transferhistory WHERE src=? ORDER BY id DESC LIMIT 1`, file.Path).Scan(&state, &planID, &jobID, &reason)
+	if err == nil && state == 1 {
+		status = "success"
+	} else if err == nil {
+		status = "failed"
+	}
 	if errors.Is(err, sql.ErrNoRows) {
 		return false, nil
 	}

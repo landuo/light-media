@@ -102,8 +102,8 @@ func TestManualOrganizeHTTPTypeFolderPublishesAndReorganizesSelectedDirectory(t 
 					t.Fatalf("manual target fell back to the source directory rule: entries=%v err=%v", entries, err)
 				}
 				latest := historyUpsertOnly(t, a, "")
-				if latest.ID != firstHistory.ID || latest.Target != second.Target || latest.Status != "success" {
-					t.Fatalf("history did not show the new classified target: %+v", latest)
+				if latest.ID == firstHistory.ID || latest.Target != second.Target || latest.Status != "success" || latest.Mode != "copy" {
+					t.Fatalf("history did not show the new classified target with a new MP ID: %+v", latest)
 				}
 			})
 		}

@@ -52,6 +52,7 @@ func nativeMoveHistoryFixture(t *testing.T) (*App, string, map[string]transferHi
 }
 
 func TestImportMoveHistorySingleAndMultiReorganize(t *testing.T) {
+	t.Skip("MoviePilot single-table history keeps one row per src; physical-resource merge was removed")
 	for _, selection := range []string{"main", "subtitle", "both"} {
 		t.Run(selection, func(t *testing.T) {
 			a, root, before, contents := nativeMoveHistoryFixture(t)

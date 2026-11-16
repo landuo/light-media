@@ -50,12 +50,20 @@ func TestHistoryCategoryDoesNotRequireCategoryFoldersOrMetadataRequests(t *testi
 			if err != nil || strings.HasPrefix(rel, "华语电影/") || strings.HasPrefix(rel, "原识别分类/") {
 				t.Fatalf("disabled category folder changed target: %q %v", rel, err)
 			}
-			if _, err = a.executeImport(ctx, plan.ID, nil); err != nil {
+			job, err := a.executeImport(ctx, plan.ID, nil)
+			if err != nil {
 				t.Fatal(err)
 			}
-			history, err := a.transferHistoryItem(ctx, plan.Files[0].ID)
-			if err != nil || history.Category != tc.want {
-				t.Fatalf("stored classification lost: %+v %v", history, err)
+			reorgRunJob(t, a, job)
+			var history transferHistoryItem
+			for _, item := range historyParityReadPage(t, a, "page_size=1000").Items {
+				if item.FileID == plan.Files[0].ID {
+					history = item
+					break
+				}
+			}
+			if history.ID == "" || history.Category != tc.want {
+				t.Fatalf("stored classification lost: %+v", history)
 			}
 		})
 	}

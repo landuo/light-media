@@ -26,7 +26,11 @@ func TestHistoryBatchContinuesAfterMissingAndUnavailableRows(t *testing.T) {
 			}
 			old, _ := historyUpsertAttempt(t, a, job.ID)
 			untouched, _ := historyParityPlan(t, a, source, target, "unselected", "Unselected", "failed", "error", "NotSelected.mkv")
-			request := manualOrganizeRequest{HistoryIDs: []string{"missing-row", unavailable.Files[0].ID, old.Files[0].ID, old.Files[0].ID}, MediaType: "movie", TMDBID: media.ID, TargetPath: target, Mode: "hardlink", Scraping: importFlag(false), Preview: preview}
+			pageIDs := map[string]string{}
+			for _, item := range historyParityReadPage(t, a, "page_size=1000").Items {
+				pageIDs[item.FileID] = item.ID
+			}
+			request := manualOrganizeRequest{HistoryIDs: []string{"missing-row", pageIDs[unavailable.Files[0].ID], pageIDs[old.Files[0].ID], pageIDs[old.Files[0].ID]}, MediaType: "movie", TMDBID: media.ID, TargetPath: target, Mode: "hardlink", Scraping: importFlag(false), Preview: preview}
 			raw, err := json.Marshal(request)
 			if err != nil {
 				t.Fatal(err)
@@ -65,9 +69,14 @@ func TestHistoryBatchContinuesAfterMissingAndUnavailableRows(t *testing.T) {
 				if e1 != nil || e2 != nil || !os.SameFile(src, dst) {
 					t.Fatalf("selected peer did not finish a real hardlink: %v %v", e1, e2)
 				}
-				item, err := a.transferHistoryItem(ctx, old.Files[0].ID)
-				if err != nil || item.ID != old.Files[0].ID || item.Status != "success" {
-					t.Fatalf("stable history not updated: %+v %v", item, err)
+				var updated transferHistoryItem
+				for _, item := range historyParityReadPage(t, a, "page_size=1000").Items {
+					if item.Source == path {
+						updated = item
+					}
+				}
+				if updated.ID == "" || updated.ID == pageIDs[old.Files[0].ID] || updated.Status != "success" {
+					t.Fatalf("MP history did not replace the selected row: %+v", updated)
 				}
 			}
 		})

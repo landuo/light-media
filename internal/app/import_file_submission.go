@@ -95,5 +95,14 @@ func (a *App) recordImportFileSubmissionFailure(ctx context.Context, planID, fil
 	if err = txPut(ctx, tx, "import_plan", plan.ID, plan); err != nil {
 		return err
 	}
+	job.State, job.ErrorMessage = "failed", a.clean(cause.Error())
+	for _, file := range plan.Files {
+		if file.ID == fileID {
+			if err = writeTransferHistoryMPTx(ctx, tx, transferHistoryMPInput{Plan: plan, File: file, Job: job, Success: false, Message: a.clean(cause.Error())}); err != nil {
+				return err
+			}
+			break
+		}
+	}
 	return tx.Commit()
 }

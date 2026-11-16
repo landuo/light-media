@@ -27,6 +27,20 @@ func TestHistoryFromHistoryIdentityPrecedesCurrentForm(t *testing.T) {
 			if err := a.Store.Put(ctx, "import_plan", history.ID, history); err != nil {
 				t.Fatal(err)
 			}
+			if _, err := a.Store.DB.Exec(`DELETE FROM transferhistory WHERE src=?`, history.Files[0].Source); err != nil {
+				t.Fatal(err)
+			}
+			mpTx, err := a.Store.DB.BeginTx(ctx, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err = writeTransferHistoryMPTx(ctx, mpTx, transferHistoryMPInput{Plan: history, File: history.Files[0], Job: Job{ID: "identity-history-job"}, Success: false}); err != nil {
+				mpTx.Rollback()
+				t.Fatal(err)
+			}
+			if err = mpTx.Commit(); err != nil {
+				t.Fatal(err)
+			}
 			season := 2
 			out, err := a.manualOrganize(ctx, manualOrganizeRequest{HistoryIDs: []string{history.Files[0].ID}, FromHistory: inherit, MediaType: "tv", TMDBID: 456, Season: &season, EpisodeDetail: "7", TargetPath: target, Mode: "hardlink", Preview: true, Scraping: importFlag(false)})
 			if err != nil || out.Failed != 0 || len(out.Items) != 1 || out.Items[0].Status != "ready" {

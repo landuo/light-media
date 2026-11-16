@@ -34,7 +34,7 @@ type historySoftlinkDeleteState struct {
 func (a *App) assetSoftlinkDeleteItem(ctx context.Context, assetID, path string) (*plugins.ModuleFileItem, error) {
 	// Asset ownership outlives a record-only history deletion. Resolve an exact
 	// execution (not only the visible current-history row), then check its asset.
-	history, err := a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedBase+`SELECT `+transferHistoryJSON+`,h.job_id,h.job_state,h.job_error,h.updated_at,h.status,h.execution_file_id,h.plan_created_at,h.resource_source,h.execution_key FROM attempts h`+transferHistoryHydrate+` WHERE h.target_path=? AND EXISTS (SELECT 1 FROM json_each(hp.payload,'$.files') f WHERE json_extract(f.value,'$.asset_id')=?) ORDER BY h.updated_at DESC LIMIT 1`, path, assetID)
+	history, err := a.scanTransferHistoryMP(a.Store.reader().QueryRowContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory WHERE dest=? AND json_extract(src_fileitem,'$.asset_id')=? ORDER BY id DESC LIMIT 1`, path, assetID))
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	}

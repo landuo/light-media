@@ -46,18 +46,51 @@ func TestHistoryMPMovedFileRecognizeCapability(t *testing.T) {
 	if err := a.Store.Put(ctx, "import_plan", plan.ID, plan); err != nil {
 		t.Fatal(err)
 	}
-	item, err := a.transferHistoryItem(ctx, plan.Files[0].ID)
-	if err != nil || !item.CanRecognize || item.CanRetry {
-		t.Fatalf("moved destination should be available for recognition: %+v %v", item, err)
+	rewrite := func() {
+		t.Helper()
+		if _, err := a.Store.DB.Exec(`DELETE FROM transferhistory WHERE src=?`, plan.Files[0].Source); err != nil {
+			t.Fatal(err)
+		}
+		tx, err := a.Store.DB.BeginTx(ctx, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err = writeTransferHistoryMPTx(ctx, tx, transferHistoryMPInput{Plan: plan, File: plan.Files[0], Job: Job{ID: "job-moved"}, Success: true}); err != nil {
+			tx.Rollback()
+			t.Fatal(err)
+		}
+		if err = tx.Commit(); err != nil {
+			t.Fatal(err)
+		}
+	}
+	rewrite()
+	var item transferHistoryItem
+	for _, candidate := range historyParityReadPage(t, a, "page_size=1000").Items {
+		if candidate.FileID == plan.Files[0].ID {
+			item = candidate
+			break
+		}
+	}
+	if item.ID == "" || !item.CanRecognize || item.CanRetry {
+		t.Fatalf("moved destination should be available for recognition: %+v", item)
 	}
 	// A successful copy must still use its source rather than silently taking the target.
 	plan.Mode, plan.Files[0].Method = "copy", "copy"
 	if err := a.Store.Put(ctx, "import_plan", plan.ID, plan); err != nil {
 		t.Fatal(err)
 	}
-	item, err = a.transferHistoryItem(ctx, plan.Files[0].ID)
-	if err != nil || item.CanRecognize {
-		t.Fatalf("copy without source should not switch to target: %+v %v", item, err)
+	rewrite()
+	lookup := func() transferHistoryItem {
+		for _, candidate := range historyParityReadPage(t, a, "page_size=1000").Items {
+			if candidate.FileID == plan.Files[0].ID {
+				return candidate
+			}
+		}
+		return transferHistoryItem{}
+	}
+	item = lookup()
+	if item.ID == "" || item.CanRecognize {
+		t.Fatalf("copy without source should not switch to target: %+v", item)
 	}
 	// An existing destination outside configured roots does not grant access.
 	plan.Mode, plan.Files[0].Method = "move", "move"
@@ -66,8 +99,9 @@ func TestHistoryMPMovedFileRecognizeCapability(t *testing.T) {
 	if err := a.Store.Put(ctx, "import_plan", plan.ID, plan); err != nil {
 		t.Fatal(err)
 	}
-	item, err = a.transferHistoryItem(ctx, plan.Files[0].ID)
-	if err != nil || item.CanRecognize {
-		t.Fatalf("unconfigured destination became available: %+v %v", item, err)
+	rewrite()
+	item = lookup()
+	if item.ID == "" || item.CanRecognize {
+		t.Fatalf("unconfigured destination became available: %+v", item)
 	}
 }

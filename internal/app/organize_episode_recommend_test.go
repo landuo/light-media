@@ -309,6 +309,26 @@ func TestEpisodeRecommendHistoryBatchUsesOnlyCurrentSameDirectoryFiles(t *testin
 	if err := a.Store.Put(ctx, "import_plan", plan.ID, plan); err != nil {
 		t.Fatal(err)
 	}
+	rewrite := func() {
+		t.Helper()
+		if _, err := a.Store.DB.Exec(`DELETE FROM transferhistory WHERE src IN (?,?) OR json_extract(src_fileitem,'$.file_id') IN (?,?)`, plan.Files[0].Source, second.Source, plan.Files[0].ID, second.ID); err != nil {
+			t.Fatal(err)
+		}
+		tx, err := a.Store.DB.BeginTx(ctx, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, file := range plan.Files {
+			if err = writeTransferHistoryMPTx(ctx, tx, transferHistoryMPInput{Plan: plan, File: file, Job: Job{ID: "episode-batch-job"}, Success: false}); err != nil {
+				tx.Rollback()
+				t.Fatal(err)
+			}
+		}
+		if err = tx.Commit(); err != nil {
+			t.Fatal(err)
+		}
+	}
+	rewrite()
 	out, err := a.recommendEpisodeFormat(ctx, organizeEpisodeRecommendRequest{HistoryIDs: []string{second.ID, plan.Files[0].ID}})
 	if err != nil || out.SampleCount != 2 || out.SampleFile != "Show.E02.mkv" {
 		t.Fatalf("history selection must retain requested order and not broaden: %+v %v", out, err)
@@ -318,6 +338,7 @@ func TestEpisodeRecommendHistoryBatchUsesOnlyCurrentSameDirectoryFiles(t *testin
 	if err := a.Store.Put(ctx, "import_plan", plan.ID, plan); err != nil {
 		t.Fatal(err)
 	}
+	rewrite()
 	_, err = a.recommendEpisodeFormat(ctx, organizeEpisodeRecommendRequest{HistoryIDs: []string{second.ID, plan.Files[0].ID}})
 	episodeTestError(t, err, "INVALID_EPISODE_SELECTION")
 }
@@ -335,6 +356,20 @@ func TestEpisodeRecommendHistoryResolvesMoveButNotCopy(t *testing.T) {
 	if err := a.Store.Put(ctx, "import_plan", plan.ID, plan); err != nil {
 		t.Fatal(err)
 	}
+	if _, err := a.Store.DB.Exec(`DELETE FROM transferhistory WHERE src=?`, plan.Files[0].Source); err != nil {
+		t.Fatal(err)
+	}
+	mpTx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = writeTransferHistoryMPTx(ctx, mpTx, transferHistoryMPInput{Plan: plan, File: plan.Files[0], Job: Job{ID: "recommend-move-job"}, Success: true}); err != nil {
+		mpTx.Rollback()
+		t.Fatal(err)
+	}
+	if err = mpTx.Commit(); err != nil {
+		t.Fatal(err)
+	}
 	request := organizeEpisodeRecommendRequest{HistoryIDs: []string{plan.Files[0].ID}}
 	out, err := a.recommendEpisodeFormat(ctx, request)
 	if err != nil || out.MatchedCount != 1 {
@@ -342,6 +377,20 @@ func TestEpisodeRecommendHistoryResolvesMoveButNotCopy(t *testing.T) {
 	}
 	plan.Mode, plan.Files[0].Method = "copy", "copy"
 	if err := a.Store.Put(ctx, "import_plan", plan.ID, plan); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.Store.DB.Exec(`DELETE FROM transferhistory WHERE src=?`, plan.Files[0].Target); err != nil {
+		t.Fatal(err)
+	}
+	mpTx, err = a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = writeTransferHistoryMPTx(ctx, mpTx, transferHistoryMPInput{Plan: plan, File: plan.Files[0], Job: Job{ID: "recommend-copy-job"}, Success: true}); err != nil {
+		mpTx.Rollback()
+		t.Fatal(err)
+	}
+	if err = mpTx.Commit(); err != nil {
 		t.Fatal(err)
 	}
 	_, err = a.recommendEpisodeFormat(ctx, request)

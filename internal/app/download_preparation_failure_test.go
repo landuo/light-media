@@ -1,7 +1,6 @@
 package app
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"io"
@@ -280,10 +279,8 @@ func TestCompletedTMDBDownloadKeepsFrozenCategoryNotOldIdentity(t *testing.T) {
 			if strings.Contains(plan.Files[0].Target, string(filepath.Separator)+"下载自定义分类"+string(filepath.Separator)) != folders {
 				t.Fatalf("category folder switch ignored: %s", plan.Files[0].Target)
 			}
-			history, err := f.app.transferHistoryPlanFile(context.Background(), plan.ID, plan.Files[0].ID)
-			if err != nil || history.Category != plan.Category || history.Media.ID != 123 {
-				t.Fatalf("history=%+v err=%v", history, err)
-			}
+			// MP history is written only when execution completes; planning must
+			// not create a pending row.
 		})
 	}
 }

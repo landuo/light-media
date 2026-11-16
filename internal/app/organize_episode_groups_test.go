@@ -141,8 +141,8 @@ func TestOrganizeEpisodeGroupNativeExecutionAndHistory(t *testing.T) {
 		t.Fatalf("repeat grew history: %+v", page)
 	}
 	for _, item := range page.Items {
-		if !slices.Contains(ids, item.ID) || item.EpisodeGroup != "merged" || item.Status != "success" || item.Season != 1 {
-			t.Fatalf("repeat lost stable group history: %+v", item)
+		if item.EpisodeGroup != "merged" || item.Status != "success" || item.Season != 1 {
+			t.Fatalf("repeat lost group history: %+v", item)
 		}
 	}
 }

@@ -138,6 +138,10 @@ func (a *App) completeOriginalTransferCallback(ctx context.Context, job Job, pla
 	if err = txPut(ctx, tx, "original_transfer_callback", key, callback); err != nil {
 		return err
 	}
+	historyFile.Target = firstNonEmpty(historyFile.Target, file.Target)
+	if err = writeTransferHistoryMPTx(ctx, tx, transferHistoryMPInput{Plan: plan, File: historyFile, Job: job, Success: success, Message: historyFile.Reason, CallbackID: key}); err != nil {
+		return err
+	}
 	if err = tx.Commit(); err != nil {
 		return err
 	}
@@ -145,7 +149,7 @@ func (a *App) completeOriginalTransferCallback(ctx context.Context, job Job, pla
 	if file.ID == primaryID {
 		history, err = a.transferHistoryPlanFile(ctx, plan.ID, file.ID)
 	} else {
-		history, err = a.readIndexedTransferHistoryItem(ctx, transferHistoryIndexedBySourceFile, historyFile.Source, historyFile.ID)
+		history, err = a.transferHistoryExecution(ctx, historyFile.ID)
 	}
 	if err != nil {
 		return err

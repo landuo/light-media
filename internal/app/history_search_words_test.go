@@ -42,6 +42,20 @@ func TestHistorySearchJiebaQueriesIndependentSQLFields(t *testing.T) {
 			if err := a.Store.Put(t.Context(), "import_plan", plan.ID, plan); err != nil {
 				t.Fatal(err)
 			}
+			if _, err := a.Store.DB.Exec(`DELETE FROM transferhistory WHERE src=?`, plan.Files[0].Source); err != nil {
+				t.Fatal(err)
+			}
+			tx, err := a.Store.DB.BeginTx(t.Context(), nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err = writeTransferHistoryMPTx(t.Context(), tx, transferHistoryMPInput{Plan: plan, File: plan.Files[0], Job: Job{ID: "search-target-job"}}); err != nil {
+				tx.Rollback()
+				t.Fatal(err)
+			}
+			if err = tx.Commit(); err != nil {
+				t.Fatal(err)
+			}
 		}
 	}
 	for _, tc := range []struct {

@@ -266,13 +266,17 @@ func TestManualOrganizeHistoryQueueAcknowledgesBatchBeforeRecognition(t *testing
 			t.Fatalf("episode %d was not hardlinked: source=%v destination=%v", episode, srcErr, dstErr)
 		}
 	}
-	current, err := a.transferHistoryItemsForOrganize(ctx, ids)
-	if err != nil || len(current) != count {
-		t.Fatalf("retry history: count=%d err=%v", len(current), err)
+	latest := historyParityReadPage(t, a, "")
+	if latest.Total != count || len(latest.Items) != count {
+		t.Fatalf("retry history: total=%d items=%d", latest.Total, len(latest.Items))
 	}
-	for i, item := range current {
-		if item.ID != ids[i] || item.Status != "success" {
-			t.Fatalf("retry should update the same record: id=%s status=%s", item.ID, item.Status)
+	oldIDs := map[string]bool{}
+	for _, id := range ids {
+		oldIDs[id] = true
+	}
+	for _, item := range latest.Items {
+		if oldIDs[item.ID] || item.Status != "success" {
+			t.Fatalf("retry should replace the record with a new MP ID: id=%s status=%s", item.ID, item.Status)
 		}
 	}
 }

@@ -730,6 +730,9 @@ func (a *App) recordManualOrganizeFailurePlan(ctx context.Context, path, wf stri
 	if e != nil {
 		return Job{}, e
 	}
+	if e = writeTransferHistoryMPTx(ctx, tx, transferHistoryMPInput{Plan: plan, File: plan.Files[0], Job: job, Success: false, Message: reason}); e != nil {
+		return Job{}, e
+	}
 	if e = tx.Commit(); e != nil {
 		return Job{}, e
 	}
@@ -1077,13 +1080,35 @@ func (a *App) cancelOrganizeQueueFile(ctx context.Context, key string) (any, err
 		}
 		key = payload.FileIDs[0]
 	}
-	item, e := a.transferHistoryExecution(ctx, key)
-	if e != nil {
-		return nil, e
-	}
+	var item transferHistoryItem
 	var plan ImportPlan
-	if e = a.Store.Get(ctx, "import_plan", item.PlanID, &plan); e != nil {
-		return nil, e
+	var planID string
+	if e := a.Store.reader().QueryRowContext(ctx, `SELECT r.id FROM records r,json_each(r.payload,'$.files') f
+ WHERE r.kind='import_plan' AND json_extract(f.value,'$.id')=? ORDER BY r.updated_at DESC LIMIT 1`, key).Scan(&planID); e == nil {
+		if e = a.Store.Get(ctx, "import_plan", planID, &plan); e != nil {
+			return nil, e
+		}
+		for _, file := range plan.Files {
+			if file.ID == key {
+				item = transferHistoryItem{PlanID: planID, FileID: key, Source: file.Source, Target: file.Target}
+				break
+			}
+		}
+		if item.PlanID == "" {
+			return nil, bad("QUEUE_FILE_FINISHED", "此文件整理任务已经结束")
+		}
+		if e = a.Store.reader().QueryRowContext(ctx, `SELECT id FROM jobs WHERE kind IN ('import','organize_file') AND state IN `+activeOrganizeStates+` AND (json_extract(payload,'$.id')=? OR EXISTS(SELECT 1 FROM json_each(payload,'$.file_ids') f WHERE f.value=?)) ORDER BY created_at DESC LIMIT 1`, planID, key).Scan(&item.JobID); e != nil {
+			return nil, bad("QUEUE_FILE_FINISHED", "此文件整理任务已经结束")
+		}
+	} else {
+		var e error
+		item, e = a.transferHistoryExecution(ctx, key)
+		if e != nil {
+			return nil, e
+		}
+		if e = a.Store.Get(ctx, "import_plan", item.PlanID, &plan); e != nil {
+			return nil, e
+		}
 	}
 	if len(plan.Files) != 1 {
 		tx, err := a.Store.DB.BeginTx(ctx, nil)

@@ -1,0 +1,32 @@
+{
+  "deployed_at": "2026-11-16T01:25:00+08:00",
+  "source_branch": "codex/history-single-table-20261115",
+  "source_state": "uncommitted working tree (refactor pending review/commit)",
+  "binary": {
+    "path": "/vol1/1000/docker/light-media/releases/history-mp-single-20261116-0115/light-media-server",
+    "sha256": "a45d90fca6602538828a0b816634e62370bbe962fac6f30cbf32aba68f8d79bf",
+    "platform": "linux/arm64"
+  },
+  "database": {
+    "path": "/vol1/1000/docker/light-media/data/light-media.db",
+    "history_rows": 1577,
+    "history_tables_after": 1,
+    "legacy_tables_after": 0,
+    "legacy_triggers_after": 0
+  },
+  "backups": {
+    "compose": "/vol1/1000/docker/light-media/deployment-backups/compose.yaml.before-history-single-20261116-0115",
+    "database": "/vol1/1000/docker/light-media/deployment-backups/light-media-db-before-history-single-20261116-0115.db",
+    "previous_release": "/vol1/1000/docker/light-media/releases/history-mp-b40839bc/light-media-server"
+  },
+  "verification": {
+    "health": "{\"data\":{\"status\":\"ok\",\"version\":\"0.4.19\"}}",
+    "container": "Up, entrypoint /app/light-media-server",
+    "migration": "production copy rehearsal and live migration both produced 1577 rows in transferhistory",
+    "known_existing": [
+      "organize_queue_media/meta index integrity_check warnings pre-dated this deployment",
+      "plugin API/registry load errors pre-dated this deployment"
+    ]
+  },
+  "rollback": "stop container, restore compose backup, restore DB backup, docker compose up -d --no-build light-media"
+}

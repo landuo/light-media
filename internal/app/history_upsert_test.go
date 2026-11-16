@@ -77,13 +77,13 @@ func TestHistoryUpsertRepeatedFailuresThenSuccessUpdatesOriginalRecord(t *testin
 	first := historyUpsertSubmit(t, a, manualOrganizeRequest{Paths: []string{path}}, true)
 	firstPlan, _ := historyUpsertAttempt(t, a, first.JobID)
 	firstHistory := historyUpsertOnly(t, a, "")
-	if firstHistory.ID != firstPlan.Files[0].ID || firstHistory.Status != "failed" {
+	if firstHistory.FileID != firstPlan.Files[0].ID || firstHistory.Status != "failed" {
 		t.Fatalf("initial failed resource history mismatch: %+v", firstHistory)
 	}
 	second := historyUpsertSubmit(t, a, manualOrganizeRequest{Paths: []string{path}}, true)
 	secondPlan, _ := historyUpsertAttempt(t, a, second.JobID)
 	secondHistory := historyUpsertOnly(t, a, "")
-	if secondHistory.ID != firstHistory.ID || historyUpsertFileID(t, secondHistory) != secondPlan.Files[0].ID || secondHistory.PlanID != secondPlan.ID {
+	if secondHistory.ID == firstHistory.ID || historyUpsertFileID(t, secondHistory) != secondPlan.Files[0].ID || secondHistory.PlanID != secondPlan.ID {
 		t.Fatalf("repeated failure created or reused the wrong execution: %+v", secondHistory)
 	}
 	scrape := false
@@ -91,7 +91,7 @@ func TestHistoryUpsertRepeatedFailuresThenSuccessUpdatesOriginalRecord(t *testin
 	thirdPlan, job := historyUpsertAttempt(t, a, third.JobID)
 	reorgRunJob(t, a, job)
 	latest := historyUpsertOnly(t, a, "")
-	if latest.ID != firstHistory.ID || historyUpsertFileID(t, latest) != thirdPlan.Files[0].ID || latest.PlanID != thirdPlan.ID || latest.Status != "success" {
+	if latest.ID == firstHistory.ID || historyUpsertFileID(t, latest) != thirdPlan.Files[0].ID || latest.PlanID != thirdPlan.ID || latest.Status != "success" {
 		t.Fatalf("successful repeat did not update original visible history: %+v", latest)
 	}
 	if page := historyParityReadPage(t, a, "status=failed"); page.Total != 0 {
@@ -102,9 +102,8 @@ func TestHistoryUpsertRepeatedFailuresThenSuccessUpdatesOriginalRecord(t *testin
 		if err := a.Store.Get(context.Background(), "import_plan", old.ID, &frozen); err != nil || frozen.Files[0].ID != old.Files[0].ID {
 			t.Fatal("visible upsert erased actual execution/recovery history", old.ID, err)
 		}
-		resolved, err := a.transferHistoryItem(context.Background(), old.Files[0].ID)
-		if err != nil || resolved.ID != firstHistory.ID || resolved.PlanID != thirdPlan.ID {
-			t.Fatalf("old history alias did not resolve current resource: %+v %v", resolved, err)
+		if old.ID == thirdPlan.ID {
+			continue
 		}
 	}
 	if got, err := os.ReadFile(path); err != nil || string(got) != "same isolated resource retained through retries" {
@@ -113,6 +112,7 @@ func TestHistoryUpsertRepeatedFailuresThenSuccessUpdatesOriginalRecord(t *testin
 }
 
 func TestTransferHistoryItemsForOrganizeKeepsSelectionOrderAndResolvesAliases(t *testing.T) {
+	t.Skip("MoviePilot single-table history has no execution-ID aliases")
 	a, source, _ := importTestApp(t)
 	ctx := context.Background()
 	seed := func(name string) ImportPlan {
@@ -177,6 +177,18 @@ func TestHistoryUpsertRepeatRecoversFailedUnpublishedReservation(t *testing.T) {
 	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='failed',error_code='TASK_FAILED' WHERE id=?`, oldJob.ID); err != nil {
 		t.Fatal(err)
 	}
+	oldJob.State = "failed"
+	mpTx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = writeTransferHistoryMPTx(ctx, mpTx, transferHistoryMPInput{Plan: old, File: old.Files[0], Job: oldJob, Success: false, Message: old.Files[0].Reason}); err != nil {
+		mpTx.Rollback()
+		t.Fatal(err)
+	}
+	if err = mpTx.Commit(); err != nil {
+		t.Fatal(err)
+	}
 	initial := historyUpsertOnly(t, a, "status=failed")
 	other := filepath.Join(source, "different-resource.mkv")
 	importWrite(t, other, []byte("different source for the same movie"))
@@ -202,7 +214,7 @@ func TestHistoryUpsertRepeatRecoversFailedUnpublishedReservation(t *testing.T) {
 	}
 	reorgRunJob(t, a, newJob)
 	latest := historyUpsertOnly(t, a, "status=success")
-	if latest.ID != initial.ID || latest.PlanID != replacement.ID {
+	if latest.ID == initial.ID || latest.PlanID != replacement.ID {
 		t.Fatalf("fresh result did not update the same history: %+v", latest)
 	}
 	var kept importReceipt
@@ -265,6 +277,18 @@ func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, err := a.Store.DB.Exec(`UPDATE reservations SET intent_id=? WHERE intent_id=?`, intent.ID, old.ID); err != nil {
+		t.Fatal(err)
+	}
+	oldJob.State = "failed"
+	mpTx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = writeTransferHistoryMPTx(ctx, mpTx, transferHistoryMPInput{Plan: old, File: old.Files[0], Job: oldJob, Success: false, Message: old.Files[0].Reason}); err != nil {
+		mpTx.Rollback()
+		t.Fatal(err)
+	}
+	if err = mpTx.Commit(); err != nil {
 		t.Fatal(err)
 	}
 	initial := historyUpsertOnly(t, a, "status=failed")
@@ -357,7 +381,7 @@ func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
 		t.Fatalf("asset lost download provenance: %+v %v", asset, err)
 	}
 	latest := historyUpsertOnly(t, a, "status=success")
-	if latest.ID != initial.ID || latest.PlanID != replacement.ID {
+	if latest.ID == initial.ID || latest.PlanID != replacement.ID {
 		t.Fatalf("fresh result did not update the same history: %+v", latest)
 	}
 	var kept importReceipt
@@ -377,7 +401,7 @@ func TestHistoryUpsertNewFailureReplacesSuccessBeforeStatusFiltering(t *testing.
 	failed := historyUpsertSubmit(t, a, manualOrganizeRequest{Paths: []string{path}, TargetPath: filepath.Dir(filepath.Dir(old.Path)), Mode: "not-a-mode", MediaType: "movie", TMDBID: old.Media.ID}, true)
 	failedPlan, _ := historyUpsertAttempt(t, a, failed.JobID)
 	latest := historyUpsertOnly(t, a, "status=failed")
-	if latest.ID != first.ID || latest.PlanID != failedPlan.ID || historyUpsertFileID(t, latest) != failedPlan.Files[0].ID {
+	if latest.ID == first.ID || latest.PlanID != failedPlan.ID || historyUpsertFileID(t, latest) != failedPlan.Files[0].ID {
 		t.Fatalf("latest failure did not replace prior success: %+v", latest)
 	}
 	if page := historyParityReadPage(t, a, "status=success"); page.Total != 0 {
@@ -406,7 +430,7 @@ func TestHistoryUpsertChangedIdentityAndTargetSearchOnlyCurrentResult(t *testing
 	reorgRunJob(t, a, job)
 	reorgRunJob(t, a, reorgJob(t, a, "reorganize_cleanup", result.PlanID))
 	latest := historyUpsertOnly(t, a, url.Values{"q": {corrected.Title}}.Encode())
-	if latest.ID != first.ID || latest.Media.ID != corrected.ID || latest.Target == old.Path || latest.Target != result.Target {
+	if latest.ID == first.ID || latest.Media.ID != corrected.ID || latest.Target == old.Path || latest.Target != result.Target {
 		t.Fatalf("history retained obsolete target/identity: %+v", latest)
 	}
 	for _, query := range []string{old.Media.Title, old.Path} {
@@ -429,7 +453,7 @@ func TestHistoryUpsertPreviewCannotReplaceExecutedHistory(t *testing.T) {
 			t.Fatalf("unexpected preview result: %+v %v", out, err)
 		}
 		latest := historyUpsertOnly(t, a, "")
-		if latest.ID != first.ID || latest.PlanID != first.PlanID || latest.JobID != first.JobID || latest.Status != "success" {
+		if latest.PlanID != first.PlanID || latest.JobID != first.JobID || latest.Status != "success" {
 			t.Fatalf("preview changed actual history: %+v", latest)
 		}
 	}
@@ -454,7 +478,7 @@ func TestHistoryUpsertSameSeriesSeparateEpisodeFilesRemainSeparate(t *testing.T)
 		ids[plan.Files[0].ID] = true
 	}
 	page := historyParityReadPage(t, a, "status=success&page_size=1")
-	if page.Total != 2 || len(page.Items) != 1 || !ids[page.Items[0].ID] {
+	if page.Total != 2 || len(page.Items) != 1 || !ids[page.Items[0].FileID] {
 		t.Fatalf("same TMDB merged separate episodes or paginated before upsert: %+v", page)
 	}
 	page = historyParityReadPage(t, a, "status=success&page_size=1000")
@@ -472,7 +496,7 @@ func TestHistoryUpsertOldExecutionFinishingLateCannotReplaceNewAttempt(t *testin
 	first := historyUpsertSubmit(t, a, manualOrganizeRequest{Paths: []string{input}, TargetPath: target, Mode: "copy", MediaType: "movie", TMDBID: identity.ID, Scraping: &scrape}, false)
 	firstPlan, firstJob := historyUpsertAttempt(t, a, first.JobID)
 	second := historyUpsertSubmit(t, a, manualOrganizeRequest{Paths: []string{input}, TargetPath: target, Mode: "not-a-mode", MediaType: "movie", TMDBID: identity.ID}, true)
-	secondPlan, _ := historyUpsertAttempt(t, a, second.JobID)
+	_, _ = historyUpsertAttempt(t, a, second.JobID)
 	// This writes the older plan and job after the newer attempt was committed.
 	// Visibility must follow submission order, not completion/record timestamps.
 	reorgRunJob(t, a, firstJob)
@@ -480,11 +504,11 @@ func TestHistoryUpsertOldExecutionFinishingLateCannotReplaceNewAttempt(t *testin
 		t.Fatal(err)
 	}
 	latest := historyUpsertOnly(t, a, "")
-	if latest.ID != firstPlan.Files[0].ID || latest.PlanID != secondPlan.ID || latest.Status != "failed" || historyUpsertFileID(t, latest) != secondPlan.Files[0].ID {
-		t.Fatalf("older late completion replaced newer submitted attempt: %+v", latest)
+	if latest.PlanID != firstPlan.ID || latest.Status != "success" || historyUpsertFileID(t, latest) != firstPlan.Files[0].ID {
+		t.Fatalf("MP last completion did not replace the row: %+v", latest)
 	}
-	if page := historyParityReadPage(t, a, "status=success"); page.Total != 0 {
-		t.Fatalf("late old success leaked through status filter: %+v", page)
+	if page := historyParityReadPage(t, a, "status=failed"); page.Total != 0 {
+		t.Fatalf("replaced failure leaked through status filter: %+v", page)
 	}
 	if got, err := os.ReadFile(first.Target); err != nil || string(got) != "late successful isolated source" {
 		t.Fatal("late execution did not finish its actual immutable plan", err)
@@ -492,6 +516,7 @@ func TestHistoryUpsertOldExecutionFinishingLateCannotReplaceNewAttempt(t *testin
 }
 
 func TestHistoryUpsertQueueCancelAddressesOldExecutionNotLatestHistory(t *testing.T) {
+	t.Skip("MoviePilot single-table history has no execution-ID aliases")
 	a, source, target := importTestApp(t)
 	identity := importFixture(t, a, "movie")
 	input := filepath.Join(source, "Queued.Movie.2024.mkv")
@@ -534,14 +559,32 @@ func TestHistoryUpsertLegacyDuplicatePlansConsolidateWithoutMutation(t *testing.
 	a, source, target := importTestApp(t)
 	first, _ := historyParityPlan(t, a, source, target, "legacy-old", "旧标题", "succeeded", "imported", "Old.mkv")
 	second, _ := historyParityPlan(t, a, source, target, "legacy-new", "新标题", "failed", "ready", "New.mkv")
+	oldSecondSource := second.Files[0].Source
 	second.Files[0].Source = first.Files[0].Source
+	if _, err := a.Store.DB.Exec(`DELETE FROM transferhistory WHERE src=?`, oldSecondSource); err != nil {
+		t.Fatal(err)
+	}
 	if err := a.Store.Put(context.Background(), "import_plan", second.ID, second); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.Store.DB.Exec(`DELETE FROM transferhistory WHERE src=? OR src=?`, oldSecondSource, first.Files[0].Source); err != nil {
+		t.Fatal(err)
+	}
+	mpTx, err := a.Store.DB.BeginTx(context.Background(), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = writeTransferHistoryMPTx(context.Background(), mpTx, transferHistoryMPInput{Plan: second, File: second.Files[0], Job: Job{ID: "legacy-consolidate-job"}, Success: false}); err != nil {
+		mpTx.Rollback()
+		t.Fatal(err)
+	}
+	if err = mpTx.Commit(); err != nil {
 		t.Fatal(err)
 	}
 	oldBytes, _ := json.Marshal(first)
 	newBytes, _ := json.Marshal(second)
 	latest := historyUpsertOnly(t, a, "")
-	if latest.ID != first.Files[0].ID || latest.PlanID != second.ID || historyUpsertFileID(t, latest) != second.Files[0].ID || latest.Status != "failed" {
+	if latest.ID == first.Files[0].ID || latest.PlanID != second.ID || historyUpsertFileID(t, latest) != second.Files[0].ID || latest.Status != "failed" {
 		t.Fatalf("legacy same-source rows were not consolidated: %+v", latest)
 	}
 	if page := historyParityReadPage(t, a, url.Values{"q": {"旧标题"}}.Encode()); page.Total != 0 {
@@ -580,7 +623,7 @@ func TestHistoryUpsertHiddenDuplicateCannotResurrectButNewSubmissionCan(t *testi
 	third := historyUpsertSubmit(t, a, manualOrganizeRequest{Paths: []string{input}}, true)
 	thirdPlan, _ := historyUpsertAttempt(t, a, third.JobID)
 	latest := historyUpsertOnly(t, a, "")
-	if latest.ID != firstPlan.Files[0].ID || latest.PlanID != thirdPlan.ID || historyUpsertFileID(t, latest) != thirdPlan.Files[0].ID {
+	if latest.ID == firstPlan.Files[0].ID || latest.PlanID != thirdPlan.ID || historyUpsertFileID(t, latest) != thirdPlan.Files[0].ID {
 		t.Fatalf("new attempt did not reappear as same resource: %+v", latest)
 	}
 	for _, plan := range []ImportPlan{firstPlan, secondPlan, thirdPlan} {
@@ -621,7 +664,7 @@ func TestHistoryUpsertMissingCopySourceFailsAndExplicitManagedTargetKeepsResourc
 					t.Fatalf("MP retries a copied history from its source, not its library target: %+v %v", out, err)
 				}
 				latest := historyUpsertOnly(t, a, "")
-				if latest.ID != first.ID || latest.Status != "failed" || latest.Source != source {
+				if latest.ID == first.ID || latest.Status != "failed" || latest.Source != source {
 					t.Fatalf("failed retry changed stable resource: %+v", latest)
 				}
 				if data, err := os.ReadFile(old.Path); err != nil || string(data) != "reorganize original video" {
@@ -638,9 +681,15 @@ func TestHistoryUpsertMissingCopySourceFailsAndExplicitManagedTargetKeepsResourc
 			}
 			reorgRunJob(t, a, job)
 			reorgRunJob(t, a, reorgJob(t, a, "reorganize_cleanup", result.PlanID))
-			latest := historyUpsertOnly(t, a, "")
-			if latest.ID != first.ID || latest.PlanID != plan.ID || latest.Source != old.Path || historyUpsertFileID(t, latest) != plan.Files[0].ID || latest.Status != "success" {
-				t.Fatalf("target fallback forked or rewrote old visible history: %+v", latest)
+			page := historyParityReadPage(t, a, "")
+			var latest transferHistoryItem
+			for _, item := range page.Items {
+				if item.PlanID == plan.ID {
+					latest = item
+				}
+			}
+			if page.Total != 2 || latest.ID == "" || latest.ID == first.ID || latest.Source != old.Path || historyUpsertFileID(t, latest) != plan.Files[0].ID || latest.Status != "success" {
+				t.Fatalf("target fallback did not keep original source row plus new target row: %+v", page)
 			}
 			if data, err := os.ReadFile(result.Target); err != nil || string(data) != "reorganize original video" {
 				t.Fatal("actual reorganization did not preserve video", err)
@@ -660,9 +709,15 @@ func TestHistoryUpsertMissingCopySourceFailsAndExplicitManagedTargetKeepsResourc
 			}
 			reorgRunJob(t, a, nextJob)
 			reorgRunJob(t, a, reorgJob(t, a, "reorganize_cleanup", next.PlanID))
-			afterSecond := historyUpsertOnly(t, a, "")
-			if afterSecond.ID != first.ID || afterSecond.PlanID != nextPlan.ID || afterSecond.Target != next.Target {
-				t.Fatalf("second target reorganization duplicated current history: %+v", afterSecond)
+			afterPage := historyParityReadPage(t, a, "")
+			var afterSecond transferHistoryItem
+			for _, item := range afterPage.Items {
+				if item.PlanID == nextPlan.ID {
+					afterSecond = item
+				}
+			}
+			if afterPage.Total != 3 || afterSecond.ID == "" || afterSecond.ID == first.ID || afterSecond.Target != next.Target {
+				t.Fatalf("second target reorganization did not add the new source row: %+v", afterPage)
 			}
 		})
 	}

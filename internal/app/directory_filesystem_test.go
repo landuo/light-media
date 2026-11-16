@@ -231,9 +231,14 @@ func TestDirectoryFileAmbiguousIdentityRequiresHistoryDeletionBeforeAutomaticRet
 		t.Fatalf("deleted failure did not permit a new execution: %+v", retry)
 	}
 	reorgRunJob(t, a, reorgJob(t, a, "import", retry.PlanID))
-	historyAfter, err := a.transferHistoryItem(ctx, history.ID)
-	if err != nil || historyAfter.Status != "success" || historyAfter.Media.ID != 123 {
-		t.Fatalf("corrected source did not actually import: %+v %v", historyAfter, err)
+	var historyAfter transferHistoryItem
+	for _, candidate := range historyParityReadPage(t, a, "page_size=1000").Items {
+		if candidate.Source == p {
+			historyAfter = candidate
+		}
+	}
+	if historyAfter.ID == "" || historyAfter.Status != "success" || historyAfter.Media.ID != 123 {
+		t.Fatalf("corrected source did not actually import: %+v", historyAfter)
 	}
 }
 

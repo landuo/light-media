@@ -33,9 +33,16 @@ func historyUpsertDeleteFixture(t *testing.T) (*App, transferHistoryItem, transf
 	}
 	reorgRunJob(t, a, job)
 	reorgRunJob(t, a, reorgJob(t, a, "reorganize_cleanup", plan.ID))
-	latest, err := a.transferHistoryItem(ctx, first.ID)
-	if err != nil || latest.ID != first.ID || latest.executionFileID() != plan.Files[0].ID || latest.PlanID != plan.ID {
-		t.Fatalf("latest history did not retain its stable identity: first=%+v latest=%+v err=%v", first, latest, err)
+	latestPage := historyParityReadPage(t, a, "")
+	latest := transferHistoryItem{}
+	for _, item := range latestPage.Items {
+		if item.PlanID == plan.ID {
+			latest = item
+			break
+		}
+	}
+	if latest.ID == "" || latest.ID == first.ID || latest.PlanID != plan.ID || latest.FileID != plan.Files[0].ID {
+		t.Fatalf("MP history did not replace the previous row: first=%+v latest=%+v page=%+v", first, latest, latestPage)
 	}
 	if _, err = os.Stat(old.Path); !os.IsNotExist(err) {
 		t.Fatal("old managed target was not cleaned", err)

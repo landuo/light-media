@@ -158,7 +158,7 @@ func testDirectoryMergeAppendMode(t *testing.T, mode string) {
 	}
 
 	// Deleting the appended history removes only what that plan published.
-	if _, err := a.deleteTransferHistory(t.Context(), secondHistory, historyDeleteRequest{Confirm: true, DeleteTarget: true}); err != nil {
+	if _, err := a.deleteTransferHistory(t.Context(), secondHistory, historyDeleteRequest{Confirm: true, DeleteTarget: true, FileID: secondHistory.executionFileID()}); err != nil {
 		t.Fatal("append history deletion", err)
 	}
 	if _, err := os.Stat(appended); !os.IsNotExist(err) {

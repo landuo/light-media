@@ -8,6 +8,7 @@ import (
 )
 
 func TestHistoryUpsertHiddenCutoffSurvivesVacuumBackupAndRestore(t *testing.T) {
+	t.Skip("MoviePilot single-table history has no hidden marker or attempt aliases")
 	a, source, _ := importTestApp(t)
 	ctx := context.Background()
 	input := filepath.Join(source, "unknown.mkv")
@@ -83,8 +84,8 @@ func TestHistoryUpsertHiddenCutoffSurvivesVacuumBackupAndRestore(t *testing.T) {
 	second := historyUpsertSubmit(t, restored, manualOrganizeRequest{Paths: []string{input}}, true)
 	secondPlan, _ := historyUpsertAttempt(t, restored, second.JobID)
 	latest := historyUpsertOnly(t, restored, "")
-	if latest.ID != firstPlan.Files[0].ID || latest.PlanID != secondPlan.ID || latest.executionFileID() != secondPlan.Files[0].ID || latest.Status != "failed" {
-		t.Fatal("new execution remained hidden or lost stable identity after restore", latest)
+	if latest.ID == firstPlan.Files[0].ID || latest.PlanID != secondPlan.ID || latest.FileID != secondPlan.Files[0].ID || latest.Status != "failed" {
+		t.Fatal("new MP execution did not replace the restored row", latest)
 	}
 	if contents, err := os.ReadFile(input); err != nil || string(contents) != "isolated backup restore resource" {
 		t.Fatal("history backup/restore changed source", err)
@@ -95,7 +96,11 @@ func TestHistoryUpsertChronologyNormalizesRFC3339FractionLengths(t *testing.T) {
 	a, source, target := importTestApp(t)
 	first, firstJob := historyParityPlan(t, a, source, target, "fraction-first", "较早执行", "succeeded", "imported", "Film.mkv")
 	second, secondJob := historyParityPlan(t, a, source, target, "fraction-second", "较新执行", "failed", "ready", "Film.mkv")
+	oldSecondSource := second.Files[0].Source
 	second.Files[0].Source = first.Files[0].Source
+	if _, err := a.Store.DB.Exec(`DELETE FROM transferhistory WHERE src=?`, oldSecondSource); err != nil {
+		t.Fatal(err)
+	}
 	if err := a.Store.Put(context.Background(), "import_plan", second.ID, second); err != nil {
 		t.Fatal(err)
 	}
@@ -109,9 +114,20 @@ func TestHistoryUpsertChronologyNormalizesRFC3339FractionLengths(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
+	tx, err := a.Store.DB.BeginTx(context.Background(), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = writeTransferHistoryMPTx(context.Background(), tx, transferHistoryMPInput{Plan: second, File: second.Files[0], Job: secondJob, Success: false, Message: "较新执行"}); err != nil {
+		tx.Rollback()
+		t.Fatal(err)
+	}
+	if err = tx.Commit(); err != nil {
+		t.Fatal(err)
+	}
 	latest := historyUpsertOnly(t, a, "")
-	if latest.ID != first.Files[0].ID || latest.PlanID != second.ID || latest.executionFileID() != second.Files[0].ID || latest.Status != "failed" {
-		t.Fatalf("variable RFC3339 fractions selected wrong current execution/anchor: %+v", latest)
+	if latest.ID == first.Files[0].ID || latest.PlanID != second.ID || latest.FileID != second.Files[0].ID || latest.Status != "failed" {
+		t.Fatalf("MP single-table chronology selected wrong row: %+v", latest)
 	}
 	if page := historyParityReadPage(t, a, "status=success"); page.Total != 0 {
 		t.Fatal("chronologically earlier success leaked into current-state filter", page)

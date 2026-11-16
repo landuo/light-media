@@ -117,7 +117,7 @@ func TestAuxiliaryHistoryIndependentFileChoicesFixedSource(t *testing.T) {
 			if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM asset_slots`).Scan(&slots); err != nil || slots != 1 {
 				t.Fatal("independent deletion removed video slots", slots, err)
 			}
-			if err := a.Store.DB.QueryRow(transferHistoryCTE + `SELECT COUNT(*) FROM history`).Scan(&histories); err != nil || histories != 2 {
+			if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM transferhistory`).Scan(&histories); err != nil || histories != 2 {
 				t.Fatal("only selected history should disappear", histories, err)
 			}
 		})

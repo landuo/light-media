@@ -60,7 +60,7 @@ func TestDirectoryHistoryCancellationBeforeRecognitionStaysCancelled(t *testing.
 	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM jobs WHERE kind='organize_file'`).Scan(&count); err != nil || count != 1 {
 		t.Fatalf("cancellation recreated preparation: %d %v", count, err)
 	}
-	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM transfer_history_current`).Scan(&count); err != nil || count != 0 {
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM transferhistory`).Scan(&count); err != nil || count != 0 {
 		t.Fatalf("unattempted recognition created execution history: %d %v", count, err)
 	}
 	if bytes, err := os.ReadFile(path); err != nil || string(bytes) != "synthetic monitor video" {

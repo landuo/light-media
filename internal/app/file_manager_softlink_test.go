@@ -88,9 +88,14 @@ func TestBrowserOwnedSoftlinkActualReadRecognizeAndReorganize(t *testing.T) {
 		t.Fatal("actual linked file manual organize", r.Code, r.Body.String())
 	}
 	runSoftlinkDirectoryJob(t, a, queued.Data.Items[0].JobID)
-	current, err := a.transferHistoryItem(t.Context(), prior.Files[0].ID)
-	if err != nil || current.ID != prior.Files[0].ID || current.ResourceSource != asset.SourcePath || current.Mode != "copy" || !within(target, current.Target) || current.Status != "success" {
-		t.Fatal("linked path lost original resource/history", current, err)
+	var current transferHistoryItem
+	for _, candidate := range historyParityReadPage(t, a, "page_size=1000").Items {
+		if candidate.Source == prior.Files[0].Source {
+			current = candidate
+		}
+	}
+	if current.ID == "" || current.Mode != "copy" || !within(target, current.Target) || current.Status != "success" {
+		t.Fatalf("linked path lost original resource/history current=%+v page=%+v", current, historyParityReadPage(t, a, "page_size=1000"))
 	}
 	if data, e := os.ReadFile(current.Target); e != nil || !bytes.Equal(data, contents[prior.Files[0].Source]) {
 		t.Fatal("actual selected copy", e)

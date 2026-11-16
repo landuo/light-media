@@ -141,9 +141,14 @@ func TestImportMoveReorganizedLibrarySourceDeletionRequiresFrozenOwner(t *testin
 			}
 			plan, job := historyUpsertAttempt(t, a, out.Items[0].JobID)
 			runEpisodeGroupJob(t, a, job)
-			latest, err := a.transferHistoryItem(t.Context(), original.ID)
-			if err != nil || latest.Status != "success" || latest.Source != original.Target || a.sourceAllowed(latest.Source) {
-				t.Fatalf("fixture did not produce a managed library source outside download roots: %+v %v", latest, err)
+			var latest transferHistoryItem
+			for _, candidate := range historyParityReadPage(t, a, "page_size=1000").Items {
+				if candidate.Source == original.Target {
+					latest = candidate
+				}
+			}
+			if latest.ID == "" || latest.Status != "success" || latest.Source != original.Target || a.sourceAllowed(latest.Source) {
+				t.Fatalf("fixture did not produce a managed library source outside download roots: %+v", latest)
 			}
 			if _, err = os.Lstat(latest.Source); !os.IsNotExist(err) {
 				t.Fatal("second move did not remove its library source", err)

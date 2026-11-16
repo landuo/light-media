@@ -104,7 +104,7 @@ func TestOrganizeEpisodeGroupCrossSeasonFileInventoryAndHistory(t *testing.T) {
 	_, repeat := historyUpsertAttempt(t, a, result.Items[0].JobID)
 	runEpisodeGroupJob(t, a, repeat)
 	after := historyParityReadPage(t, a, "")
-	if after.Total != 1 || after.Items[0].ID != before.Items[0].ID || after.Items[0].Status != "success" || !slices.Equal(after.Items[0].Episodes, []int{1, 2}) {
+	if after.Total != 1 || after.Items[0].ID == before.Items[0].ID || after.Items[0].Status != "success" || !slices.Equal(after.Items[0].Episodes, []int{1, 2}) {
 		t.Fatalf("repeat history changed: %+v", after)
 	}
 	if _, e = a.deleteTransferHistory(ctx, after.Items[0], historyDeleteRequest{Confirm: true, DeleteTarget: true, FileID: after.Items[0].executionFileID()}); e != nil {

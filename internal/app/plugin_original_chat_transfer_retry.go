@@ -51,7 +51,7 @@ func (a *App) originalChatTransferAlias(ctx context.Context, history transferHis
 		return 0, err
 	}
 	defer tx.Rollback()
-	current, err := scanTransferHistory(tx.QueryRowContext(ctx, transferHistoryIndexedBySource, history.ResourceSource))
+	current, err := a.scanTransferHistoryMP(tx.QueryRowContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory WHERE src=? ORDER BY id DESC LIMIT 1`, history.ResourceSource))
 	if errors.Is(err, sql.ErrNoRows) {
 		return 0, originalTransferRetryStale()
 	}
@@ -187,8 +187,7 @@ func (a *App) originalChatRetryTransferWithMedia(ctx context.Context, number int
 		return err
 	}
 	defer tx.Rollback()
-	if err := tx.QueryRowContext(ctx, transferHistoryIndexedBase+`SELECT EXISTS(
-		SELECT 1 FROM attempts WHERE job_id=? AND resource_source=? AND status='success')`, job.ID, history.ResourceSource).Scan(&published); err != nil {
+	if err := tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM transferhistory WHERE json_extract(src_fileitem,'$.job_id')=? AND src=? AND status=1)`, job.ID, history.ResourceSource).Scan(&published); err != nil {
 		return err
 	}
 	if err = tx.Commit(); err != nil {

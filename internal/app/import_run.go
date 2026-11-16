@@ -868,6 +868,19 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 			if !mainSucceeded {
 				file.Status, file.Reason = "error", a.clean(mainFailure.Error())
 			}
+			if _, sourced := meta.OriginalTransfer[file.ID]; !sourced {
+				message := ""
+				if !mainSucceeded {
+					message = a.clean(mainFailure.Error())
+				}
+				historyFile := *file
+				if receipt.Target != "" {
+					historyFile.Target = receipt.Target
+				}
+				if err = writeTransferHistoryMPTx(ctx, tx, transferHistoryMPInput{Plan: plan, File: historyFile, Job: job, Success: mainSucceeded, Message: message}); err != nil {
+					return err
+				}
+			}
 			if err = txPut(ctx, tx, "original_transfer_task_failures", plan.ID+"/"+file.ID, failures); err != nil {
 				return err
 			}

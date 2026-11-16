@@ -59,6 +59,20 @@ func TestHistoryDeferredDoesNotRequireDirectorySnapshot(t *testing.T) {
 	if err := a.Store.Put(ctx, "import_plan", plan.ID, plan); err != nil {
 		t.Fatal(err)
 	}
+	if _, err := a.Store.DB.Exec(`DELETE FROM transferhistory WHERE src=?`, filepath.Join(root, "one.mkv")); err != nil {
+		t.Fatal(err)
+	}
+	mpTx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = writeTransferHistoryMPTx(ctx, mpTx, transferHistoryMPInput{Plan: plan, File: plan.Files[0], Job: Job{ID: "directory-deferred-job"}, Success: true}); err != nil {
+		mpTx.Rollback()
+		t.Fatal(err)
+	}
+	if err = mpTx.Commit(); err != nil {
+		t.Fatal(err)
+	}
 	if _, err := snapshotTransferPath(root); fileCode(err) != "FILE_SELECTION_LIMIT" {
 		t.Fatalf("fixture must reject recursive snapshot: %v", err)
 	}

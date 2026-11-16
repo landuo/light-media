@@ -69,19 +69,19 @@ func (a *App) originalHostHistoryResource(ctx context.Context, scope originalBas
 		if count != 1 {
 			return nil, bad("INVALID_PLUGIN_VALUE", "整理历史查询须选择一个准确ID或路径")
 		}
-		query := transferHistoryIndexedCTE + `, selected AS MATERIALIZED (SELECT * FROM history WHERE `
+		query := `SELECT ` + transferHistoryMPColumns + ` FROM transferhistory WHERE `
 		value := in.ID
 		if in.ID != "" {
-			query += `history_id=?`
+			query += `id=?`
 		} else if in.Source != "" {
-			query += `source_path=?`
+			query += `src=?`
 			value = in.Source
 		} else {
-			query += `target_path=?`
+			query += `dest=?`
 			value = in.Target
 		}
-		query += ` ORDER BY history_created_at,history_id LIMIT 1) SELECT ` + transferHistoryStoredColumns + ` FROM selected h`
-		item, err := a.readIndexedTransferHistoryItem(ctx, query, value)
+		query += ` ORDER BY date,id LIMIT 1`
+		item, err := a.scanTransferHistoryMP(a.Store.reader().QueryRowContext(ctx, query, value))
 		out := plugins.TransferHistoryResultV1{SchemaVersion: 1}
 		if errors.Is(err, sql.ErrNoRows) {
 			return json.Marshal(out)
