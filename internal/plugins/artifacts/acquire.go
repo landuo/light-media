@@ -257,29 +257,45 @@ func (p *Preparation) Publish(ctx context.Context) (Acquired, error) {
 	}
 	stage, packageSHA := p.sourceStage, p.packageSHA
 	if release.Source == nil {
-		var payload []byte
 		if IsLocalRepository(req.RepositoryURL) {
 			localRoot, rootErr := trustedLocalRoot(req.RepositoryURL, req.LocalRoots)
 			if rootErr != nil {
 				return fail("prepare", rootErr)
 			}
-			payload, err = readLocalFile(ctx, localRoot, artifact.URL, artifact.Size)
+			payload, readErr := readLocalFile(ctx, localRoot, artifact.URL, artifact.Size)
+			if readErr != nil {
+				return fail("prepare", readErr)
+			}
+			if int64(len(payload)) != artifact.Size || digest(payload) != strings.ToLower(artifact.SHA256) {
+				return fail("prepare", errors.New("artifact size or SHA256 mismatch"))
+			}
+			stage, err = os.MkdirTemp(root, ".prepare-")
+			if err != nil {
+				return fail("prepare", err)
+			}
+			defer os.RemoveAll(stage)
+			if err = unpack(payload, artifact.Format, stage, release.Manifest.Entry); err != nil {
+				return fail("prepare", err)
+			}
 		} else {
-			payload, err = download(ctx, client, artifact.URL, artifact.Size)
-		}
-		if err != nil {
-			return fail("prepare", err)
-		}
-		if int64(len(payload)) != artifact.Size || digest(payload) != strings.ToLower(artifact.SHA256) {
-			return fail("prepare", errors.New("artifact size or SHA256 mismatch"))
-		}
-		stage, err = os.MkdirTemp(root, ".prepare-")
-		if err != nil {
-			return fail("prepare", err)
-		}
-		defer os.RemoveAll(stage)
-		if err = unpack(payload, artifact.Format, stage, release.Manifest.Entry); err != nil {
-			return fail("prepare", err)
+			// Stream the package to disk: a large artifact would otherwise hold
+			// its full size in the heap while it is verified and unpacked.
+			path, size, sum, downloadErr := downloadToFile(ctx, client, artifact.URL, artifact.Size)
+			if downloadErr != nil {
+				return fail("prepare", downloadErr)
+			}
+			defer os.Remove(path)
+			if size != artifact.Size || sum != strings.ToLower(artifact.SHA256) {
+				return fail("prepare", errors.New("artifact size or SHA256 mismatch"))
+			}
+			stage, err = os.MkdirTemp(root, ".prepare-")
+			if err != nil {
+				return fail("prepare", err)
+			}
+			defer os.RemoveAll(stage)
+			if err = unpackFile(path, artifact.Format, stage, release.Manifest.Entry); err != nil {
+				return fail("prepare", err)
+			}
 		}
 		packageSHA, err = preparePackage(ctx, req, release, artifact, stage)
 		if err != nil {
@@ -322,11 +338,10 @@ func preparePackage(ctx context.Context, req Request, release Release, artifact 
 	if err != nil || !info.Mode().IsRegular() || info.Size() > MaxExpandedBytes {
 		return "", errors.New("entry is not a bounded regular file")
 	}
-	data, err := os.ReadFile(executable)
+	sum, err := fileSHA256(executable)
 	if err != nil {
 		return "", err
 	}
-	sum := digest(data)
 	if sum != strings.ToLower(artifact.ExecutableSHA256) {
 		return "", errors.New("executable SHA256 mismatch")
 	}
@@ -508,7 +523,20 @@ func download(ctx context.Context, client *http.Client, raw string, limit int64)
 	if resp.ContentLength > limit {
 		return nil, errors.New("download exceeds size bound")
 	}
-	data, err := io.ReadAll(io.LimitReader(resp.Body, limit+1))
+	var data []byte
+	if resp.ContentLength > 0 && resp.ContentLength <= limit {
+		// Size is known: read into an exact buffer instead of letting append
+		// growth allocate up to twice the artifact size.
+		data = make([]byte, resp.ContentLength)
+		if _, err := io.ReadFull(resp.Body, data); err != nil {
+			if ctx.Err() != nil {
+				return nil, ctx.Err()
+			}
+			return nil, errors.New("artifact response read failed")
+		}
+	} else {
+		data, err = io.ReadAll(io.LimitReader(resp.Body, limit+1))
+	}
 	if err != nil {
 		if ctx.Err() != nil {
 			return nil, ctx.Err()
@@ -520,5 +548,83 @@ func download(ctx context.Context, client *http.Client, raw string, limit int64)
 	}
 	return data, nil
 }
+
+// downloadToFile streams an artifact into a temporary file so a large package
+// never lives in the Go heap. The caller removes the returned path.
+func downloadToFile(ctx context.Context, client *http.Client, raw string, limit int64) (string, int64, string, error) {
+	if _, err := httpURL(raw); err != nil {
+		return "", 0, "", err
+	}
+	clone := *client
+	previous := clone.CheckRedirect
+	clone.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		if len(via) >= 5 {
+			return errors.New("too many redirects")
+		}
+		if _, err := httpURL(req.URL.String()); err != nil {
+			return err
+		}
+		if via[0].URL.Scheme == "https" && req.URL.Scheme != "https" {
+			return errors.New("HTTPS downgrade")
+		}
+		if previous != nil {
+			return previous(req, via)
+		}
+		return nil
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, raw, nil)
+	if err != nil {
+		return "", 0, "", err
+	}
+	resp, err := clone.Do(req)
+	if err != nil {
+		if ctx.Err() != nil {
+			return "", 0, "", ctx.Err()
+		}
+		return "", 0, "", errors.New("artifact request failed")
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return "", 0, "", &downloadStatusError{Code: resp.StatusCode}
+	}
+	if resp.ContentLength > limit {
+		return "", 0, "", errors.New("download exceeds size bound")
+	}
+	file, err := os.CreateTemp("", "light-media-artifact-*")
+	if err != nil {
+		return "", 0, "", err
+	}
+	hasher := sha256.New()
+	written, copyErr := io.Copy(io.MultiWriter(file, hasher), io.LimitReader(resp.Body, limit+1))
+	closeErr := file.Close()
+	if copyErr != nil || closeErr != nil || written > limit {
+		os.Remove(file.Name())
+		if copyErr != nil && ctx.Err() != nil {
+			return "", 0, "", ctx.Err()
+		}
+		if copyErr != nil {
+			return "", 0, "", errors.New("artifact response read failed")
+		}
+		if written > limit {
+			return "", 0, "", errors.New("download exceeds size bound")
+		}
+		return "", 0, "", closeErr
+	}
+	return file.Name(), written, hex.EncodeToString(hasher.Sum(nil)), nil
+}
+
+func fileSHA256(path string) (string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+	hasher := sha256.New()
+	if _, err := io.Copy(hasher, file); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(hasher.Sum(nil)), nil
+}
+
 func digest(b []byte) string    { h := sha256.Sum256(b); return hex.EncodeToString(h[:]) }
 func validDigest(s string) bool { b, e := hex.DecodeString(s); return e == nil && len(b) == 32 }

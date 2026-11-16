@@ -161,7 +161,7 @@ func OpenStore(dir string) (*Store, error) {
 	// WAL readers do not wait for the organizer's single writer connection.
 	// Keep writes serialized; configure every reader connection through its DSN.
 	readURL := url.URL{Scheme: "file", Path: dbPath}
-	params := url.Values{"mode": {"ro"}, "_pragma": {"busy_timeout(5000)", "query_only(ON)", "foreign_keys(ON)", "cache_size(-8192)"}}
+	params := url.Values{"mode": {"ro"}, "_pragma": {"busy_timeout(5000)", "query_only(ON)", "foreign_keys(ON)", "cache_size(-4096)"}}
 	readURL.RawQuery = params.Encode()
 	readDB, err := sql.Open("sqlite", readURL.String())
 	if err == nil {

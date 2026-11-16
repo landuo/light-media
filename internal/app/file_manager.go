@@ -657,9 +657,91 @@ func (a *App) browserMutationReferenceCheck(ctx context.Context, protectReferenc
 		identities[dir], identityErrors[dir] = value, err
 		return value, err
 	}
+	// Find every reference path first, then record which path strings share a
+	// mount identity above them. A candidate whose own ancestors only meet the
+	// same strings cannot alias any reference, so plain string containment is
+	// authoritative and the per-pair identity walk can be skipped.
+	clean := map[string]string{}
+	cleanOf := func(p string) string {
+		if value, ok := clean[p]; ok {
+			return value
+		}
+		value := filepath.Clean(p)
+		clean[p] = value
+		return value
+	}
+	refDirs := map[mountedDirectoryID]map[string]struct{}{}
+	seenDirs := map[string]bool{}
+	recordRef := func(p string) {
+		if p == "" {
+			return
+		}
+		for dir := cleanOf(p); dir != "/" && dir != "."; dir = filepath.Dir(dir) {
+			if seenDirs[dir] {
+				break
+			}
+			seenDirs[dir] = true
+			if id, err := identity(dir); err == nil {
+				set := refDirs[id]
+				if set == nil {
+					set = map[string]struct{}{}
+					refDirs[id] = set
+				}
+				set[dir] = struct{}{}
+			}
+		}
+	}
+	for _, asset := range assets {
+		recordRef(asset.Path)
+		recordRef(asset.SourcePath)
+	}
+	for _, plan := range plans {
+		for _, file := range plan.Files {
+			recordRef(file.Source)
+			recordRef(file.Target)
+		}
+	}
+	for _, file := range managed {
+		recordRef(file.Path)
+	}
+	aliasFree := map[string]bool{}
+	candidateAliasFree := func(p string) bool {
+		if value, ok := aliasFree[p]; ok {
+			return value
+		}
+		free := true
+		for dir := p; dir != "/" && dir != "."; dir = filepath.Dir(dir) {
+			id, err := identity(dir)
+			if err != nil {
+				continue
+			}
+			for known := range refDirs[id] {
+				if known != dir {
+					free = false
+					break
+				}
+			}
+			if !free {
+				break
+			}
+		}
+		aliasFree[p] = free
+		return free
+	}
 	check := func(path string) error {
+		pathClean := cleanOf(path)
 		contains := func(referenced string) bool {
-			return referenced != "" && sharedDirectoryContainsWithIdentity(path, referenced, identity)
+			if referenced == "" {
+				return false
+			}
+			refClean := cleanOf(referenced)
+			if pathClean == refClean || strings.HasPrefix(pathClean, refClean+"/") || strings.HasPrefix(refClean, pathClean+"/") {
+				return true
+			}
+			if candidateAliasFree(pathClean) {
+				return false
+			}
+			return sharedDirectoryContainsWithIdentity(path, referenced, identity)
 		}
 		for _, asset := range assets {
 			if asset.Path != "" && (contains(asset.Path) || contains(asset.SourcePath)) {

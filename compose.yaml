@@ -14,7 +14,8 @@ services:
     environment:
       TZ: Asia/Shanghai
       LIGHT_MEDIA_MEDIA_ROOTS: /media:/vol2/1000/media
-      GOMEMLIMIT: 256MiB
+      GOMEMLIMIT: 128MiB
+      GOGC: 50
     mem_limit: 512m
     cpus: 1.0
     read_only: true

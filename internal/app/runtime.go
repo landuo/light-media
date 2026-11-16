@@ -84,61 +84,67 @@ type App struct {
 	recognitionMu                    sync.Mutex
 	recognitionMatcher               atomic.Pointer[words.Matcher]
 	directoryFileMu                  sync.Mutex
-	startupPending                   atomic.Bool
-	RestartRequested                 chan struct{}
-	logs                             *runtimeLogger
-	logError                         string
-	catMu                            sync.Mutex
-	mediaCategories                  mediaCategoryRuntime
-	catClient                        *catalog.Client
-	catCreds                         TMDBConfig
-	catProxy                         networkproxy.Config
-	metadataProxyMu                  sync.Mutex
-	metadataProxyConfig              networkproxy.Config
-	metadataProxyClient              *http.Client
-	metadataAPITransport             http.RoundTripper
-	metadataAPIConfig                networkproxy.Config
-	imageWork                        catalogImageWork
-	cacheReads                       cachedReadFlights
-	Store                            *Store
-	Dir                              string
-	web                              http.Handler
-	frontendVersion                  string
-	cfgMu                            sync.RWMutex
-	settingsCache                    atomic.Pointer[Settings] // Derived snapshot; invalidated on every config write.
-	settingsMu                       sync.Mutex
-	originalHostOCRHost              string // Immutable ordinary OCR_HOST startup snapshot; never exposed to workers.
-	originalHostBrowserEmulation     string
-	originalHostFlareSolverrURL      string
-	originalHostSettingsMu           sync.Mutex
-	originalHostSettingsValues       map[string]json.RawMessage
-	originalHostMediaRecognition     *HostMediaRecognitionConfiguration
-	originalHostMediaCache           originalHostMediaRecognitionCache
-	originalHostMediaProviderCaches  sync.Map
-	originalHostDouban               originalHostDoubanState
-	config                           Settings
-	controlMu                        sync.Mutex
-	control                          string
-	activeWrites                     int
-	logMu                            sync.Mutex
-	authMu                           sync.Mutex
-	pluginOriginalAuth               originalAuthRuntime
-	authAttempts                     map[string][]time.Time
-	jobWake                          chan struct{}
-	wg                               sync.WaitGroup
-	importMu                         sync.RWMutex
-	importTargetProbe                importTargetProbe
-	importAdmissionsMu               sync.Mutex
-	importAdmissions                 map[string]*importAdmission
-	importSourceLink                 func(int, string, int, string, int) error // Owned syscall-failure seam; nil uses actual Linkat.
-	importAutoCommit                 func(*sql.Tx) error                       // Owned lost-ack seam; nil uses actual Commit.
-	subMu                            sync.Mutex
-	downloadMu                       sync.Mutex
-	materialMu                       sync.Mutex
-	materials                        map[string][]byte
-	siteLocks                        sync.Map
-	cancel                           context.CancelFunc
-	pluginMu                         sync.Mutex
+	brushInventoryCache              struct {
+		mu    sync.Mutex
+		at    time.Time
+		value plugins.BrushInventoryV1
+		err   error
+	}
+	startupPending                  atomic.Bool
+	RestartRequested                chan struct{}
+	logs                            *runtimeLogger
+	logError                        string
+	catMu                           sync.Mutex
+	mediaCategories                 mediaCategoryRuntime
+	catClient                       *catalog.Client
+	catCreds                        TMDBConfig
+	catProxy                        networkproxy.Config
+	metadataProxyMu                 sync.Mutex
+	metadataProxyConfig             networkproxy.Config
+	metadataProxyClient             *http.Client
+	metadataAPITransport            http.RoundTripper
+	metadataAPIConfig               networkproxy.Config
+	imageWork                       catalogImageWork
+	cacheReads                      cachedReadFlights
+	Store                           *Store
+	Dir                             string
+	web                             http.Handler
+	frontendVersion                 string
+	cfgMu                           sync.RWMutex
+	settingsCache                   atomic.Pointer[Settings] // Derived snapshot; invalidated on every config write.
+	settingsMu                      sync.Mutex
+	originalHostOCRHost             string // Immutable ordinary OCR_HOST startup snapshot; never exposed to workers.
+	originalHostBrowserEmulation    string
+	originalHostFlareSolverrURL     string
+	originalHostSettingsMu          sync.Mutex
+	originalHostSettingsValues      map[string]json.RawMessage
+	originalHostMediaRecognition    *HostMediaRecognitionConfiguration
+	originalHostMediaCache          originalHostMediaRecognitionCache
+	originalHostMediaProviderCaches sync.Map
+	originalHostDouban              originalHostDoubanState
+	config                          Settings
+	controlMu                       sync.Mutex
+	control                         string
+	activeWrites                    int
+	logMu                           sync.Mutex
+	authMu                          sync.Mutex
+	pluginOriginalAuth              originalAuthRuntime
+	authAttempts                    map[string][]time.Time
+	jobWake                         chan struct{}
+	wg                              sync.WaitGroup
+	importMu                        sync.RWMutex
+	importTargetProbe               importTargetProbe
+	importAdmissionsMu              sync.Mutex
+	importAdmissions                map[string]*importAdmission
+	importSourceLink                func(int, string, int, string, int) error // Owned syscall-failure seam; nil uses actual Linkat.
+	importAutoCommit                func(*sql.Tx) error                       // Owned lost-ack seam; nil uses actual Commit.
+	subMu                           sync.Mutex
+	downloadMu                      sync.Mutex
+	materialMu                      sync.Mutex
+	materials                       map[string][]byte
+	siteLocks                       sync.Map
+	cancel                          context.CancelFunc
+	pluginMu                        sync.Mutex
 	// Serialize original endpoint operations separately from live SDK calls.
 	// Shutdown may join workers and must not hold a callback snapshot lock.
 	pluginOriginalOperationMu sync.Mutex
@@ -454,6 +460,9 @@ func (a *App) Settings() Settings {
 // invalidateSettings drops the derived snapshot after any config write.
 func (a *App) invalidateSettings() {
 	a.settingsCache.Store(nil)
+	a.brushInventoryCache.mu.Lock()
+	a.brushInventoryCache.at = time.Time{}
+	a.brushInventoryCache.mu.Unlock()
 }
 func (a *App) saveSettings(ctx context.Context, c Settings) error {
 	a.pluginMu.Lock()

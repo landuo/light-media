@@ -143,6 +143,86 @@ func (x *extraction) write(name string, dir bool, size int64, r io.Reader) error
 	}
 	return nil
 }
+
+// unpackFile is the streaming variant used for installed artifacts, so a large
+// package is extracted from disk instead of being held in memory.
+func unpackFile(path, format, root, entry string) error {
+	x := extraction{root: root, seen: map[string]bool{}}
+	switch format {
+	case "executable":
+		file, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+		info, err := file.Stat()
+		if err != nil {
+			return err
+		}
+		return x.write(entry, false, info.Size(), file)
+	case "zip":
+		z, err := zip.OpenReader(path)
+		if err != nil {
+			return err
+		}
+		defer z.Close()
+		if len(z.File) == 0 || len(z.File) > MaxArchiveEntries {
+			return errors.New("empty or oversized ZIP directory")
+		}
+		for _, f := range z.File {
+			mode := f.Mode()
+			if !mode.IsRegular() && !mode.IsDir() {
+				return errors.New("ZIP link or special node rejected")
+			}
+			if f.UncompressedSize64 > uint64(MaxExpandedBytes) {
+				return errors.New("ZIP expansion bound")
+			}
+			r, err := f.Open()
+			if err != nil {
+				return err
+			}
+			err = x.write(f.Name, mode.IsDir(), int64(f.UncompressedSize64), r)
+			err = errors.Join(err, r.Close())
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	case "tar.gz":
+		file, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+		gz, err := gzip.NewReader(file)
+		if err != nil {
+			return err
+		}
+		defer gz.Close()
+		tr := tar.NewReader(gz)
+		for {
+			h, err := tr.Next()
+			if err == io.EOF {
+				return nil
+			}
+			if err != nil {
+				return err
+			}
+			if !h.FileInfo().Mode().IsRegular() && !h.FileInfo().IsDir() {
+				return errors.New("TAR link or special node rejected")
+			}
+			if h.Size > MaxExpandedBytes {
+				return errors.New("TAR expansion bound")
+			}
+			if err := x.write(h.Name, h.FileInfo().IsDir(), h.Size, tr); err != nil {
+				return err
+			}
+		}
+	default:
+		return errors.New("unsupported artifact format")
+	}
+}
+
 func unpack(data []byte, format, root, entry string) error {
 	x := extraction{root: root, seen: map[string]bool{}}
 	switch format {

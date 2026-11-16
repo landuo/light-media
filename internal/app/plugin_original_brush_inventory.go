@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"sort"
 	"strings"
+	"time"
 
 	"light-media/internal/plugins"
 )
@@ -15,6 +16,24 @@ import (
 // It never connects to a site/downloader or allocates an identity. All reads in
 // the transaction use tx: Store.DB has one connection.
 func (a *App) originalBrushInventory(ctx context.Context) (plugins.BrushInventoryV1, error) {
+	// The brush plugin polls this inventory repeatedly. Decoding every site
+	// snapshot is expensive, and the underlying account data only changes on a
+	// refresh, so a short-lived snapshot is enough for its decisions.
+	a.brushInventoryCache.mu.Lock()
+	if time.Since(a.brushInventoryCache.at) < 15*time.Second {
+		value, err := a.brushInventoryCache.value, a.brushInventoryCache.err
+		a.brushInventoryCache.mu.Unlock()
+		return value, err
+	}
+	a.brushInventoryCache.mu.Unlock()
+	value, err := a.buildOriginalBrushInventory(ctx)
+	a.brushInventoryCache.mu.Lock()
+	a.brushInventoryCache.at, a.brushInventoryCache.value, a.brushInventoryCache.err = time.Now(), value, err
+	a.brushInventoryCache.mu.Unlock()
+	return value, err
+}
+
+func (a *App) buildOriginalBrushInventory(ctx context.Context) (plugins.BrushInventoryV1, error) {
 	out := plugins.BrushInventoryV1{SchemaVersion: 1, Sites: []plugins.BrushSiteReferenceV1{}, Downloaders: []plugins.BrushDownloaderReferenceV1{}}
 	if err := ctx.Err(); err != nil {
 		return out, err

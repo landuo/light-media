@@ -268,6 +268,81 @@ func (a *App) originalHostDownloaderProtectSharedFiles(ctx context.Context, scop
 			paths = append(paths, path)
 		}
 	}
+	// Every candidate file is compared against the selected paths. Reuse the
+	// mount identity across the whole scan instead of stat-ing the same
+	// ancestors again for each pair.
+	identities := map[string]mountedDirectoryID{}
+	identityErrors := map[string]error{}
+	identity := func(dir string) (mountedDirectoryID, error) {
+		if value, ok := identities[dir]; ok {
+			return value, identityErrors[dir]
+		}
+		value, err := mountedDirectoryIdentity(dir)
+		identities[dir], identityErrors[dir] = value, err
+		return value, err
+	}
+	cleanPaths := map[string]string{}
+	cleanOf := func(p string) string {
+		if value, ok := cleanPaths[p]; ok {
+			return value
+		}
+		value := filepath.Clean(p)
+		cleanPaths[p] = value
+		return value
+	}
+	refDirs := map[mountedDirectoryID]map[string]struct{}{}
+	seenDirs := map[string]bool{}
+	for _, selected := range paths {
+		for dir := cleanOf(selected); dir != "/" && dir != "."; dir = filepath.Dir(dir) {
+			if seenDirs[dir] {
+				break
+			}
+			seenDirs[dir] = true
+			if id, err := identity(dir); err == nil {
+				set := refDirs[id]
+				if set == nil {
+					set = map[string]struct{}{}
+					refDirs[id] = set
+				}
+				set[dir] = struct{}{}
+			}
+		}
+	}
+	aliasFree := map[string]bool{}
+	candidateAliasFree := func(candidate string) bool {
+		if value, ok := aliasFree[candidate]; ok {
+			return value
+		}
+		free := true
+		for dir := candidate; dir != "/" && dir != "."; dir = filepath.Dir(dir) {
+			id, err := identity(dir)
+			if err != nil {
+				continue
+			}
+			for known := range refDirs[id] {
+				if known != dir {
+					free = false
+					break
+				}
+			}
+			if !free {
+				break
+			}
+		}
+		aliasFree[candidate] = free
+		return free
+	}
+	overlap := func(candidate, selected string) bool {
+		left, right := cleanOf(candidate), cleanOf(selected)
+		if left == right || strings.HasPrefix(left, right+"/") || strings.HasPrefix(right, left+"/") {
+			return true
+		}
+		if candidateAliasFree(left) {
+			return false
+		}
+		_, relevant := sharedDirectoryPathWithIdentity(candidate, selected, identity)
+		return relevant
+	}
 	for _, configured := range a.Settings().Downloaders {
 		// Trusted host safety read includes stopped instances; this is never
 		// reachable as a public disabled downloader query.
@@ -330,7 +405,7 @@ func (a *App) originalHostDownloaderProtectSharedFiles(ctx context.Context, scop
 				}
 				relevant := false
 				for _, path := range paths {
-					if _, overlap := sharedDirectoryPath(directory, path); overlap {
+					if overlap(directory, path) {
 						relevant = true
 						break
 					}
@@ -344,7 +419,7 @@ func (a *App) originalHostDownloaderProtectSharedFiles(ctx context.Context, scop
 				}
 				for _, file := range files {
 					for _, path := range paths {
-						if _, overlap := sharedDirectoryPath(filepath.Join(directory, file.Path), path); overlap {
+						if overlap(filepath.Join(directory, file.Path), path) {
 							return bad("FILE_DOWNLOADER_SOURCE_PROTECTED", "任务文件仍被其他下载或做种任务引用，未执行删除")
 						}
 					}
