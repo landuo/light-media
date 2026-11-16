@@ -703,6 +703,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		p.ImportMode = "hardlink"
 	}
 	videos := 0
+	unknownFile := false
 	for _, f := range material.Files {
 		if !isVideo(f.Path) {
 			continue
@@ -720,12 +721,31 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		if verifiedPack && !in.qualitySelection {
 			fileTarget.AllowEarly = nil
 		}
+		// A long-running series ships season packs that still contain episodes
+		// before the subscription's start point. Those files are not part of the
+		// target and must not fail the whole resource's identity check.
+		if t.Media.MediaType == "tv" {
+			if parsed := a.parseMediaNameContext(ctx, filepath.Base(f.Path)); parsed.Status == media.Parsed && parsed.Original != nil && parsed.Original.Season != nil && *parsed.Original.Season == in.Season {
+				covered := false
+				for _, ep := range parsed.Original.Episodes {
+					if containsInt(in.Episodes, ep) {
+						covered = true
+						break
+					}
+				}
+				if !covered {
+					p.ExtraFiles = true
+					continue
+				}
+			}
+		}
 		fileChoice := a.evaluateResourceContext(ctx, fileResource, fileTarget, decision.Policy{})
 		if !fileChoice.Accepted || fileChoice.NeedsConfirmation {
 			if auto {
 				a.log("WARN", "download", "file_identity_rejected", filepath.Base(f.Path)+" | "+strings.Join(fileChoice.Reasons, ","), "", "")
 				return p, bad("REVIEW_FILE_IDENTITY", "种子实际视频文件名不能确认目标身份，请手动核对")
 			}
+			unknownFile = true
 			p.Warnings = append(p.Warnings, "需要核对实际文件身份："+filepath.Base(f.Path))
 			p.NeedsConfirmation = true
 		}
@@ -761,7 +781,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		return p, bad("NO_MEDIA_FILES", "种子未包含支持的视频文件")
 	}
 	if verifiedPack && !in.qualitySelection {
-		if p.ExtraFiles || len(coverage) == 0 {
+		if unknownFile || len(coverage) == 0 {
 			return p, bad("REVIEW_SEASON_PACK", "整季包包含目标缺集之外或无法确认的文件，请人工核对")
 		}
 		// Every actual video already passed the normal strict automatic identity,
