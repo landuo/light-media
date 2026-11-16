@@ -53,7 +53,11 @@ func (a *App) streamSearch(w http.ResponseWriter, r *http.Request) {
 	var result SearchOutput
 	var e error
 	if strings.HasSuffix(r.URL.Path, "/search/resources") {
-		result, e = a.searchResources(ctx, in)
+		// Progressive events still arrive immediately; the budget only bounds
+		// how long the stream waits for slow sites before completing.
+		budget, stop := context.WithTimeout(ctx, interactiveSearchBudget)
+		defer stop()
+		result, e = a.searchResources(budget, in)
 	} else {
 		result, e = a.search(ctx, in, false)
 	}

@@ -64,7 +64,7 @@ func TestOriginalResourceBytesActualSDKSource(t *testing.T) {
 			case "batch":
 				op := &originalResourceBatchSearch{app: a, keyword: "Owned keyword", page: 2, native: native}
 				op.attach(context.Background(), []SiteConfig{site})
-				out, failure := op.site(site)
+				out, failure := op.site(context.Background(), site)
 				err, count = failure, len(out.Resources)
 			case "title":
 				settings := a.Settings()

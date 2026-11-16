@@ -198,7 +198,7 @@ func TestOriginalMediaResourceModuleArgumentsActualSDKSource(t *testing.T) {
 			} else {
 				op := &originalResourceBatchSearch{app: a, method: method, mtype: sample.MediaType, keyword: sample.ActualKeyword, page: 1, native: native}
 				op.attach(context.Background(), []SiteConfig{site})
-				out, err = op.site(site)
+				out, err = op.site(context.Background(), site)
 			}
 			wantNative := 0
 			for _, call := range sample.Observations {

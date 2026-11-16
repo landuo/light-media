@@ -20,26 +20,49 @@ type originalResourceSiteResult struct {
 // existing searchSites collector supplies its selected, ordered site snapshot
 // and still owns HTTP progress, policy decisions, sorting and cancellation.
 type originalResourceBatchSearch struct {
-	app           *App
-	keyword       string
-	mtype         any
-	method        string
-	initialGroups []originalPluginModuleGroup
-	page          int
-	auto          bool
-	native        func(context.Context, SiteConfig, int) (sites.SearchResult, error)
-	ctx           context.Context
-	configs       []SiteConfig
-	once          sync.Once
-	results       map[string]originalResourceSiteResult
-	err           error
+	app             *App
+	keyword         string
+	mtype           any
+	method          string
+	initialGroups   []originalPluginModuleGroup
+	page            int
+	auto            bool
+	native          func(context.Context, SiteConfig, int) (sites.SearchResult, error)
+	ctx             context.Context
+	configs         []SiteConfig
+	once            sync.Once
+	groups          []originalPluginModuleGroup
+	directNative    bool
+	results         map[string]originalResourceSiteResult
+	fallbackResults map[string]originalResourceSiteResult
+	err             error
 }
 
 func (op *originalResourceBatchSearch) attach(ctx context.Context, configs []SiteConfig) {
 	op.ctx, op.configs = ctx, append([]SiteConfig(nil), configs...)
+	// Without a plugin batch method the wrapper only adds a global barrier:
+	// every site would wait for the slowest one. Let the caller run the native
+	// per-site requests in parallel instead so results arrive as they finish.
+	method := op.method
+	if method == "" {
+		method = "async_batch_search_torrents"
+	}
+	groups, err := op.app.originalPluginModules(ctx, "")
+	if err != nil {
+		op.err = err
+		return
+	}
+	op.groups = groups
+	op.directNative = !originalModuleGroupsHaveMethod(groups, method)
 }
 
-func (op *originalResourceBatchSearch) site(config SiteConfig) (sites.SearchResult, error) {
+func (op *originalResourceBatchSearch) site(ctx context.Context, config SiteConfig) (sites.SearchResult, error) {
+	if op.err != nil {
+		return sites.SearchResult{Page: op.page, Resources: []sites.Resource{}}, op.err
+	}
+	if op.directNative {
+		return op.native(ctx, config, op.page)
+	}
 	op.once.Do(op.run)
 	value := op.results[config.ID]
 	if op.err != nil {
@@ -97,6 +120,9 @@ func (op *originalResourceBatchSearch) dispatch(configs []SiteConfig, page int) 
 	groups := op.initialGroups
 	op.initialGroups = nil
 	if groups == nil {
+		groups = op.groups
+	}
+	if groups == nil {
 		var err error
 		groups, err = op.app.originalPluginModules(op.ctx, "")
 		if err != nil {
@@ -129,7 +155,10 @@ func (op *originalResourceBatchSearch) dispatch(configs []SiteConfig, page int) 
 	// repeats the query through its legacy per-site wrapper. Preserve both calls.
 	var list []json.RawMessage
 	if json.Unmarshal(result, &list) == nil && list != nil {
-		_ = op.nativeBatch(configs, page)
+		// The source repeats this query per site and discards the list result.
+		// Keep the native batch so a slow interactive retry still has candidates
+		// to return when the request budget expires.
+		op.fallbackResults = op.nativeBatch(configs, page)
 		return nil, true, op.ctx.Err()
 	}
 	if _, tuple := plugins.DecodeModuleResultTuple(result); tuple {
@@ -188,13 +217,19 @@ func (op *originalResourceBatchSearch) run() {
 		if fallback {
 			// The fixed AttributeError fallback resets accumulated batch results
 			// and retries every original selected site from the original page.
-			op.results = op.parallel(op.configs, func(ctx context.Context, site SiteConfig) (sites.SearchResult, error) {
+			results := op.parallel(op.configs, func(ctx context.Context, site SiteConfig) (sites.SearchResult, error) {
 				method := "async_search_torrents"
 				if op.method == "batch_search_torrents" {
 					method = "search_torrents"
 				}
 				return op.app.originalResourceSiteSearchPagesMedia(ctx, method, site, op.keyword, op.mtype, op.page, func(page int) (sites.SearchResult, error) { return op.native(ctx, site, page) })
 			})
+			for key, value := range op.fallbackResults {
+				if _, done := results[key]; !done {
+					results[key] = value
+				}
+			}
+			op.results = results
 			op.err = op.ctx.Err()
 			return
 		}

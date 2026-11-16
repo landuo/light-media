@@ -44,6 +44,11 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 	}
 	if _, streaming := ctx.Value(searchProgressKey{}).(func(SearchOutput)); !streaming {
 		in.resourceBatch = &originalResourceBatchSearch{app: a, keyword: in.Query, page: in.Page, native: fetch}
+		// Bound the request the user is waiting on; partial site results and
+		// per-site timeout statuses are returned instead of a hard failure.
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, interactiveSearchBudget)
+		defer cancel()
 	}
 	out, err = a.searchSites(ctx, in, out, false, func(siteCtx context.Context, config SiteConfig) siteSearchOutput {
 		var result sites.SearchResult
@@ -54,7 +59,7 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 		if _, streaming := siteCtx.Value(searchProgressKey{}).(func(SearchOutput)); streaming {
 			result, err = a.originalStreamResourceSite(siteCtx, config, in.Query, in.Page, native)
 		} else {
-			result, err = in.resourceBatch.site(config)
+			result, err = in.resourceBatch.site(siteCtx, config)
 		}
 		found := siteSearchOutput{status: a.searchStatus(siteCtx, config.ID, len(result.Resources), err, 0), candidates: []Candidate{}}
 		for _, resource := range result.Resources {
@@ -92,6 +97,9 @@ func (a *App) browseManagedSiteResources(ctx context.Context, key, query string,
 		return nil, bad("INVALID_SEARCH", "搜索页码无效")
 	}
 	ctx = allowDisabledSiteRequests(ctx)
+	var cancel context.CancelFunc
+	ctx, cancel = context.WithTimeout(ctx, interactiveSearchBudget)
+	defer cancel()
 	config, err := a.siteForRequest(ctx, key)
 	if err != nil {
 		return nil, err

@@ -377,6 +377,12 @@ func (a *App) queryLogs(ctx context.Context, q map[string]string) (logPage, erro
 		inventory[[2]uint64{f.Dev, f.Ino}] = f
 	}
 	page.Gap = page.Gap || cursor.Gap
+	var fromTime time.Time
+	if filters["from"] != "" {
+		fromTime, _ = time.Parse(time.RFC3339Nano, filters["from"])
+	}
+	olderRun := 0
+	exhausted := false
 	for cursor.Index < len(cursor.Files) && len(page.Entries) < limit {
 		if ctx.Err() != nil {
 			return page, ctx.Err()
@@ -447,6 +453,22 @@ func (a *App) queryLogs(ctx context.Context, q map[string]string) (logPage, erro
 				continue
 			}
 			t, _ := v["time"].(string)
+			if !fromTime.IsZero() && t != "" {
+				if ts, parseErr := time.Parse(time.RFC3339Nano, t); parseErr == nil {
+					if ts.Before(fromTime) {
+						// Logs are appended in time order and read newest first, so a
+						// run of older entries means the requested window is done.
+						// The run guard tolerates interleaving at rotation boundaries.
+						olderRun++
+						if olderRun >= 64 {
+							exhausted = true
+							break
+						}
+					} else {
+						olderRun = 0
+					}
+				}
+			}
 			if page.OldestTime == "" || t < page.OldestTime {
 				page.OldestTime = t
 			}
@@ -458,6 +480,11 @@ func (a *App) queryLogs(ctx context.Context, q map[string]string) (logPage, erro
 			}
 		}
 		f.Close()
+		if exhausted {
+			cursor.Index = len(cursor.Files)
+			cursor.Offset = 0
+			break
+		}
 		if cursor.Offset == 0 {
 			cursor.Index++
 			if cursor.Index < len(cursor.Files) {

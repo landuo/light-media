@@ -51,7 +51,7 @@ func TestOriginalResourceBatchFallbackActualSDKSource(t *testing.T) {
 		return sites.SearchResult{Resources: []sites.Resource{{ID: "22", SiteID: site.ID, Title: "Owned core resource"}, {ID: "22", SiteID: site.ID, Title: "Owned core resource"}}}, nil
 	}}
 	op.attach(context.Background(), []SiteConfig{site})
-	out, err := op.site(site)
+	out, err := op.site(context.Background(), site)
 	if err != nil || native != 1 || len(out.Resources) != len(reference.Legacy.Returned) || out.Resources[0].Title != "Owned plugin resource" {
 		t.Fatal("actual fallback plugin/core accumulation differs", err, native, len(out.Resources))
 	}
@@ -103,7 +103,7 @@ func TestOriginalResourceBatchActualSDKSourceOracle(t *testing.T) {
 				return sites.SearchResult{Page: page, Resources: []sites.Resource{{ID: "22", SiteID: site.ID, Title: "Owned core resource"}}}, nil
 			}}
 			op.attach(context.Background(), []SiteConfig{site})
-			out, err := op.site(site)
+			out, err := op.site(context.Background(), site)
 			if (err != nil) != (sample.Error != nil) {
 				t.Fatal("source batch/fallback result boundary differs", err)
 			}

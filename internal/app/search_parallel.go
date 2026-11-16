@@ -16,6 +16,11 @@ import (
 const concurrentBackgroundSearchSites = 5
 const siteSearchTimeout = 45 * time.Second
 
+// interactiveSearchBudget bounds a keyword search the user is waiting on.
+// Background subscription checks keep the longer per-site timeout because they
+// are not blocking a request.
+const interactiveSearchBudget = 6 * time.Second
+
 type siteSearchOutput struct {
 	status     SiteStatus
 	candidates []Candidate
@@ -154,15 +159,32 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 	for completed := 0; completed < len(configs); {
 		select {
 		case <-ctx.Done():
+			deadline := errors.Is(ctx.Err(), context.DeadlineExceeded)
 			for i := range out.Sites {
 				if out.Sites[i].Status == "queued" || out.Sites[i].Status == "searching" {
 					out.Sites[i].Status, out.Sites[i].Message = "cancelled", "搜索已停止，已完成的结果保留"
-					if errors.Is(ctx.Err(), context.DeadlineExceeded) {
+					if deadline {
 						out.Sites[i].Status, out.Sites[i].Message = "timeout", "搜索超时，已完成的结果保留"
 					}
 				}
 			}
+			// Return what already arrived instead of dropping a finished site's
+			// results when the interactive budget expires.
+			out.Candidates = append([]Candidate{}, collected...)
+			for index := range configs {
+				out.Candidates = append(out.Candidates, partial[index]...)
+			}
+			ids := context.WithoutCancel(ctx)
+			if filtered, filterErr := filter.apply(ids, a, out); filterErr == nil {
+				out = filtered
+				sorter.sort(a, out.Candidates, in.Policy)
+			} else {
+				sortSearchCandidates(out.Candidates, in.Policy)
+			}
 			emitSearchProgress(ctx, out)
+			if deadline {
+				return out, nil
+			}
 			return out, ctx.Err()
 		case update := <-updates:
 			if update.started {
