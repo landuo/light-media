@@ -116,7 +116,12 @@ func originalHostDownloaderAddDecode(raw json.RawMessage, out any) error {
 	return nil
 }
 
-func (a *App) originalHostDownloaderResource(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (json.RawMessage, error) {
+func (a *App) originalHostDownloaderResource(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (result json.RawMessage, err error) {
+	defer func() {
+		if err != nil {
+			a.log("ERROR", "plugins", "brush_host_failed", method+": "+err.Error(), "", "")
+		}
+	}()
 	switch method {
 	case plugins.DownloaderSourceConnectionCapability:
 		return a.originalHostDownloaderSourceConnection(ctx, scope, raw)
