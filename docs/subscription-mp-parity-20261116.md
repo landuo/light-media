@@ -35,7 +35,7 @@
 | 重复校验 | `exists()` 按媒体+季判断 | `DUPLICATE_SUBSCRIPTION`，同媒体同季拦截 | ✅ | `subscription_runtime.go:429-458` |
 | 数量上限 | 无固定上限 | 500 条上限 | ➕ | 同上 |
 | 创建即搜索 | 60 秒宽限后进入搜索 | 不隐式搜索，排入下次计划检查 | 🟡 | `subscription_runtime.go:493` |
-| 备用识别源 | 豆瓣/Bangumi/AniList/插件 | 字段存在；识别只走 TMDB 与插件原生 provider | ❌ | `subscription_runtime.go:178-240` |
+| 备用识别源 | 豆瓣/Bangumi/AniList/插件 | 网页新增时先解析为 TMDB，唯一命中即落 TMDB 身份；歧义/失败保留 provider 原生 | ✅ | `subscription_add_source.go`、`subscription_source_resolve.go` |
 | 插件原生 provider | `media_source/media_id` | `providerNativeMedia` + `recognizeProviderSubscriptionMedia` | ✅ | `subscription_provider_media.go` |
 | 消息渠道新建 | 微信/Telegram/Slack/QQ/Lark 等 | Lark 聊天 + Web | 🟡 | `plugin_original_chat_media_subscribe.go` |
 
@@ -103,8 +103,8 @@
 | --- | --- | --- | --- | --- |
 | 列表/筛选/排序/分页 | ✅ | ✅ | ✅ | `Subscriptions.vue` |
 | 编辑弹窗字段 | 20 项（基础/进阶） | 覆盖 20 项并增加编码/音轨/字幕/体积/发布组/集范围 | ✅➕ | `Subscriptions.vue` |
-| 季详情弹窗 | `SubscribeSeasonDialog`（逐集状态） | 仅卡片汇总（已入库/下载中/缺集…） | ❌ | — |
-| 文件详情弹窗 | `SubscribeFilesDialog`（逐集文件） | 无 | ❌ | — |
+| 季详情弹窗 | `SubscribeSeasonDialog`（逐集状态） | 季列表：集数/已入库/下载中/缺集，可进入文件详情 | ✅ | `SubscriptionSeasonDialog.vue` |
+| 文件详情弹窗 | `SubscribeFilesDialog`（逐集文件） | 逐集标题/播出日期/状态/库文件路径与大小/下载记录 | ✅ | `SubscriptionFilesDialog.vue` |
 | 订阅历史弹窗 | `SubscribeHistoryDialog` | 无 | ❌ | — |
 | 批量暂停/恢复/删除 | 有 | 无 | ❌ | — |
 | 热门订阅 | `GET /popular` + 页面 | 无 | ❌ | — |
@@ -126,6 +126,11 @@
 ---
 
 ## 3. 差距分级与建议顺序
+
+**已补齐（2026-11-16）**
+
+- 备用识别源：网页新增订阅时，豆瓣/Bangumi/AniList 来源先经 `catalog.Explorer.Resolve` 解析，唯一命中即保存为 TMDB 订阅（保留原标题与年份），歧义或解析失败继续走插件原生 provider。生产实测：豆瓣 `36847425` → TMDB `1483525`。
+- 季详情与文件详情：新增 `GET /api/subscriptions/{id}/seasons`、`GET /api/subscriptions/{id}/files?season=N` 与两个弹窗；逐集状态、库文件路径/大小、下载记录均来自 `asset_slots`/`reservations`/`library_asset`/`downloadhistory`。
 
 **P0（影响日常使用）**
 1. 订阅历史：写 `subscribehistory` 表 + `GET/DELETE /subscriptions/history` + 历史弹窗（当前密封记录无法查看）。

@@ -72,6 +72,17 @@ func (a *App) buildSourceSubscriptionAdd(ctx context.Context, in SubscriptionReq
 		}
 		id, provider, providerID = explicit, "", ""
 	}
+	if chat == nil && provider != "" {
+		// MoviePilot resolves douban/bangumi/anilist identities through its
+		// media chain and stores the TMDB media. Do the same when the source
+		// entry resolves to exactly one TMDB item; otherwise keep the
+		// provider-native identity.
+		if resolved, ok := a.resolveSubscriptionAltIdentity(ctx, provider, kind, providerID); ok {
+			id, provider, providerID = resolved.ID, "", ""
+			in.Media = resolved
+			in.MediaSource, in.MediaID, in.MediaKey = "", "", ""
+		}
+	}
 	if (kind != "movie" && kind != "tv") || id < 0 || id == 0 && provider == "" && (chat == nil || !chat.MediaProvider.sourceOnly()) {
 		return out, bad("INVALID_MEDIA", "请选择电影或电视剧")
 	}

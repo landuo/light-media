@@ -171,6 +171,15 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 		}
 		in.TMDBID, providerSource, providerID = tmdbID, "", ""
 	}
+	if snapshot.ID == "" && in.source == nil && in.TMDBID == 0 && providerSource != "" {
+		// A source identity that resolves to exactly one TMDB media becomes a
+		// normal TMDB subscription; ambiguous results keep the provider path.
+		if resolved, ok := a.resolveSubscriptionAltIdentity(ctx, providerSource, in.MediaType, providerID); ok {
+			in.TMDBID, in.Media = resolved.ID, resolved
+			in.MediaSource, in.MediaID, in.MediaKey = "", "", ""
+			providerSource, providerID = "", ""
+		}
+	}
 	if snapshot.ID != "" {
 		if in.MediaType == "" {
 			in.MediaType = snapshot.Media.MediaType

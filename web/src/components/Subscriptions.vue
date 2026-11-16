@@ -40,6 +40,8 @@ import AppIcon from './AppIcon.vue';
 import Schedule from './Schedule.vue';
 import MappingRules from './MappingRules.vue';
 import MultiSeasonSubscribe from './MultiSeasonSubscribe.vue';
+import SubscriptionFilesDialog from './SubscriptionFilesDialog.vue';
+import SubscriptionSeasonDialog from './SubscriptionSeasonDialog.vue';
 import SubscriptionFilters from './SubscriptionFilters.vue';
 import { subscriptionFilterValue, setSubscriptionFilter } from '../features/subscription-filters';
 import { downloadDestination, downloadDirectoryPaths } from '../features/download-directories';
@@ -48,6 +50,9 @@ const props = defineProps<{ view: string; editorOnly?: boolean }>(),
   subs = ref<any[]>([]),
   entries = ref<any[]>([]),
   editing = ref<any>(null),
+  seasonFor = ref<any>(null),
+  filesFor = ref<any>(null),
+  filesSeason = ref(0),
   multiSeason = ref(false),
   multiTemplate = ref<any>(null),
   convertLegacy = ref(false),
@@ -422,6 +427,15 @@ async function cancelSubscription() {
   const current = editing.value;
   if ((await remove(current)) && editing.value === current) editing.value = null;
 }
+function openSeasons(s: any) {
+  seasonFor.value = s;
+}
+
+function openFiles(s: any, season: number) {
+  filesFor.value = s;
+  filesSeason.value = season || 0;
+}
+
 async function check(s: any) {
   await action(() => api('/subscriptions/' + s.id + '/check', {}), '检查任务已提交');
   load();
@@ -684,6 +698,12 @@ watch(() => props.view, applyView);
               <button @click="begin(s)"><AppIcon name="edit" />编辑</button>
               <button v-if="subscriptionMediaIdentity(s.media)" @click="subscriptionDetail(s)">
                 <AppIcon name="info" />详情
+              </button>
+              <button v-if="s.media.media_type === 'tv'" @click="openSeasons(s)">
+                <AppIcon name="calendar" />季详情
+              </button>
+              <button @click="openFiles(s, s.season)">
+                <AppIcon name="download" />文件详情
               </button>
               <button @click="state(s)">
                 <AppIcon :name="s.state === 'paused' ? 'play' : 'pause'" />{{
@@ -1281,6 +1301,20 @@ watch(() => props.view, applyView);
     :existing="subs"
     @changed="subscriptionChanged"
     @close="closeMulti"
+  />
+  <SubscriptionSeasonDialog
+    v-if="seasonFor"
+    :subid="seasonFor.id"
+    :title="seasonFor.media?.title"
+    @files="openFiles(seasonFor, $event)"
+    @close="seasonFor = null"
+  />
+  <SubscriptionFilesDialog
+    v-if="filesFor"
+    :subid="filesFor.id"
+    :season="filesSeason"
+    :title="filesFor.media?.title"
+    @close="filesFor = null"
   />
 </template>
 

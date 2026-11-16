@@ -465,6 +465,13 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 					out, e = a.subscriptionEditorValue(ctx, saved)
 				}
 			}
+		} else if strings.HasSuffix(key, "/files") && method == "GET" {
+			key = strings.TrimSuffix(key, "/files")
+			season, _ := strconv.Atoi(r.URL.Query().Get("season"))
+			out, e = a.subscriptionFiles(ctx, key, season)
+		} else if strings.HasSuffix(key, "/seasons") && method == "GET" {
+			key = strings.TrimSuffix(key, "/seasons")
+			out, e = a.subscriptionSeasons(ctx, key)
 		} else if method == "PUT" {
 			var in SubscriptionRequest
 			e = decodeSubscriptionBody(w, r, &in)
