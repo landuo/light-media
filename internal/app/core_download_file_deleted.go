@@ -112,7 +112,7 @@ func (a *App) historyDownloadIdentity(ctx context.Context, item transferHistoryI
 	if err != nil || accepted.DownloadKind != "intent" || accepted.DownloadID != in.ID || !sameHash(accepted.Hash, in.Hash) {
 		return out, coreDeleteInvalid()
 	}
-	if err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, acceptedID).Scan(&sealed); err != nil {
+	if err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM download_accepted WHERE id=?`, acceptedID).Scan(&sealed); err != nil {
 		return out, err
 	}
 	return historyDownloadIdentity{Hash: accepted.Hash, AcceptedID: acceptedID, AcceptedDigest: coreDeleteDigest(sealed)}, nil
@@ -299,7 +299,7 @@ func (p *PluginStore) historyDownloadFileFact(ctx context.Context, q pluginRemov
 		if f.Identity.AcceptedID != domainEventID("download.accepted", plan.IntentID) || plan.IntentID == "" {
 			return f, coreDeleteInvalid()
 		}
-		if err = q.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, f.Identity.AcceptedID).Scan(&acceptedSealed); err != nil {
+		if err = q.QueryRowContext(ctx, `SELECT payload FROM download_accepted WHERE id=?`, f.Identity.AcceptedID).Scan(&acceptedSealed); err != nil {
 			return f, err
 		}
 		if coreDeleteDigest(acceptedSealed) != f.Identity.AcceptedDigest {

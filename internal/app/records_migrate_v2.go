@@ -206,6 +206,37 @@ func migrateRecordsV2(ctx context.Context, db *sql.DB) error {
 	return nil
 }
 
+// migrateRecordsV3 moves the sealed download.accepted receipts out of
+// downloadhistory. They are ciphertext, so leaving them in a table that other
+// queries scan with json_extract breaks the directory monitor with
+// "malformed JSON".
+func migrateRecordsV3(ctx context.Context, db *sql.DB) error {
+	var version int
+	if err := db.QueryRowContext(ctx, `SELECT COALESCE(MAX(version),0) FROM migrations`).Scan(&version); err != nil {
+		return err
+	}
+	if version >= 3 {
+		return nil
+	}
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	if _, err := tx.ExecContext(ctx, `INSERT INTO download_accepted(id,payload,updated_at,record_kind)
+ SELECT uid,payload,updated_at,'download_added' FROM downloadhistory WHERE record_kind='download_added'
+ ON CONFLICT(id) DO NOTHING`); err != nil {
+		return err
+	}
+	if _, err := tx.ExecContext(ctx, `DELETE FROM downloadhistory WHERE record_kind='download_added'`); err != nil {
+		return err
+	}
+	if _, err := tx.ExecContext(ctx, `INSERT OR IGNORE INTO migrations VALUES(3,?)`, now()); err != nil {
+		return err
+	}
+	return tx.Commit()
+}
+
 // RecordsMigrationReport is the dry-run output of `migrate records --check`.
 type RecordsMigrationReport struct {
 	Version       int            `json:"version"`

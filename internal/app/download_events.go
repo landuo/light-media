@@ -243,7 +243,7 @@ func (p *PluginStore) downloadAddedSnapshotFrom(ctx context.Context, q PluginPro
 		return snapshot, bad("INVALID_DOWNLOAD_EVENT", "下载事件引用无法核对")
 	}
 	var sealed []byte
-	if err = q.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, valid.EventID).Scan(&sealed); err != nil {
+	if err = q.QueryRowContext(ctx, `SELECT payload FROM download_accepted WHERE id=?`, valid.EventID).Scan(&sealed); err != nil {
 		return snapshot, err
 	}
 	raw, err := p.unseal("download_added", "system", valid.EventID, sealed)

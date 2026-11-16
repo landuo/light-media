@@ -1,6 +1,7 @@
 # records 拆分迁移 Runbook（NAS 停机执行）
 
-对象：把 v1 的 `records(kind,id,payload,updated_at)` 迁移到 v2 功能表。
+对象：把 v1 的 `records(kind,id,payload,updated_at)` 迁移到 v2 功能表，并由 v3 把密封的
+`download_added` 回执移到 `download_accepted`。二进制支持 schema 1–3；v2 库启动时会自动补 v3。
 工具：`cmd/records-migrate-check`（`--data-dir` 干跑，`--apply` 执行）。
 前置：**服务必须停止**；工具的实例锁会拒绝运行中的实例。
 
@@ -48,7 +49,7 @@ time records-migrate-check --data-dir /config --apply
 
 ```bash
 sqlite3 /config/light-media.db <<'SQL'
-SELECT MAX(version) FROM migrations;                                  -- 2
+SELECT MAX(version) FROM migrations;                                  -- 3
 SELECT COUNT(*) FROM sqlite_master WHERE name='records';              -- 0
 SELECT COUNT(*) FROM records_frozen_v1;                               -- 等于预检 source_rows
 SELECT COUNT(*) FROM subscribe;
@@ -58,6 +59,7 @@ SELECT COUNT(*) FROM library_asset;
 SELECT COUNT(*) FROM managed_file;
 SELECT COUNT(*) FROM message;
 SELECT COUNT(*) FROM original_subscription_aliases;                  -- 等于订阅数
+SELECT COUNT(*) FROM download_accepted;                              -- 等于预检的 download_added 行数
 SQL
 ```
 

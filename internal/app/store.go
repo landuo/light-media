@@ -21,6 +21,9 @@ import (
 	_ "modernc.org/sqlite"
 )
 
+// supportedSchemaVersion is the newest on-disk schema this binary can open.
+const supportedSchemaVersion = 3
+
 type Store struct {
 	RecoveredJobs int64
 	DB            *sql.DB
@@ -100,7 +103,7 @@ func OpenStore(dir string) (*Store, error) {
 	}
 	if versionTable != 0 {
 		var version int
-		if err = db.QueryRow(`SELECT MAX(version) FROM migrations`).Scan(&version); err != nil || version < 1 || version > 2 {
+		if err = db.QueryRow(`SELECT MAX(version) FROM migrations`).Scan(&version); err != nil || version < 1 || version > supportedSchemaVersion {
 			db.Close()
 			return fail(errors.New("database schema is not supported by this application version"))
 		}
@@ -132,6 +135,10 @@ func OpenStore(dir string) (*Store, error) {
 	if err = migrateRecordsV2(context.Background(), db); err != nil {
 		db.Close()
 		return fail(fmt.Errorf("records migration: %w", err))
+	}
+	if err = migrateRecordsV3(context.Background(), db); err != nil {
+		db.Close()
+		return fail(fmt.Errorf("download receipt migration: %w", err))
 	}
 	// Subscribe aliases are allocated by a trigger on subscribe; re-run the
 	// idempotent backfill so rows migrated from records also get their stable

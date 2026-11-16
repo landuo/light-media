@@ -88,7 +88,7 @@ func openSourceSettingsTarget(ctx context.Context, dir string, apply bool) (*sou
 		return nil, errors.New("source_settings_target_read_failed")
 	}
 	var schema, pluginSchema int
-	if db.QueryRowContext(ctx, `SELECT MAX(version) FROM migrations`).Scan(&schema) != nil || schema < 1 || schema > 2 || db.QueryRowContext(ctx, `SELECT MAX(version) FROM plugin_storage_schema`).Scan(&pluginSchema) != nil || pluginSchema != 1 {
+	if db.QueryRowContext(ctx, `SELECT MAX(version) FROM migrations`).Scan(&schema) != nil || schema < 1 || schema > supportedSchemaVersion || db.QueryRowContext(ctx, `SELECT MAX(version) FROM plugin_storage_schema`).Scan(&pluginSchema) != nil || pluginSchema != 1 {
 		return nil, errors.New("source_settings_target_schema_unsupported")
 	}
 	p := &PluginStore{store: &Store{DB: db, key: key}}

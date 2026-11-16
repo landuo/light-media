@@ -77,7 +77,7 @@ func TestLegacyRecordsMigrateToFeatureTables(t *testing.T) {
 		t.Fatalf("frozen table missing: %d %v", frozen, err)
 	}
 	var version int
-	if err := store.DB.QueryRow(`SELECT MAX(version) FROM migrations`).Scan(&version); err != nil || version != 2 {
+	if err := store.DB.QueryRow(`SELECT MAX(version) FROM migrations`).Scan(&version); err != nil || version != 3 {
 		t.Fatalf("migration version: %d %v", version, err)
 	}
 	var state string
@@ -230,7 +230,7 @@ func TestMigrationReportAfterSplit(t *testing.T) {
 	if err != nil {
 		t.Fatalf("report: %v", err)
 	}
-	if report.Version != 2 {
+	if report.Version != 3 {
 		t.Fatalf("version: %d", report.Version)
 	}
 	if report.SourceRows != 0 {

@@ -53,7 +53,8 @@
 | kind | 表 | 说明 |
 | --- | --- | --- |
 | `subscription` | `subscribe` | MP 全列 + `uid`/`revision`/`note` 扩展 |
-| `intent` / `native_download` / `download_added` | `downloadhistory` | `record_kind` 区分；`uid` 原样保留 |
+| `intent` / `native_download` | `downloadhistory` | `record_kind` 区分；`uid` 原样保留 |
+| `download_added` | `download_accepted` | 密封的接受回执，单独成表，避免被下载历史查询 `json_extract` 扫到 |
 | `notification` / `message` | `message` | `read` 扩展列 |
 | `config` / `control` | `systemconfig` | `key` 由记录键投影 |
 | `ui_preferences` | `userconfig` | `username='admin'` |
@@ -97,6 +98,7 @@
 | 测试夹具 | 93 处 `ON records` 触发器与 54 处断言改为落在目标表；`internal/app` 夹具测试仍需 OWNED_* 二进制才能实跑 |
 | 本地迁移演练 | 24,200 行合成库（14 类 kind + 密封密文 + 未知 kind）：迁移 5.1s；行数全部对齐；1,200 条抽样 payload 字节一致；400 条密文完全一致；`--apply` 重复执行无副作用 |
 | 生产库演练 | NAS 部署库副本 44,455 行 / 487MB / 47 张目标表：迁移 21.6s；逐表行数与预检零差异；1,811 条抽样 payload 字节一致；26 条密封收据完全一致；`records` 对象为 0 |
+| NAS 生产迁移 | 2026-11-16 13:42 停机迁移：56.3s，逐表零差异，冻结 44,455 行；启动后目录监控报 `malformed JSON`，定位为 `download_added` 密封回执混在 `downloadhistory`，拆出 `download_accepted` 并加 schema v3 修复迁移，重启后监控错误为 0 |
 | 迁移后打开耗时 | v2 库 0.14s、空库 0.10s（兼容触发器删除后回到基线） |
 | `cmd/...` | 全部通过（含真实 Store 的迁移 CLI 测试） |
 | 前端 | 无改动（API 未变） |

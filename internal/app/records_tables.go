@@ -291,6 +291,8 @@ var nativeTables = []recordTable{
 	{name: "subscription_receipt", cols: []recordColumn{{"subscription_id", "$.subscription_id", "TEXT", ""}, {"stage", "$.stage", "TEXT", ""}, {"state", "$.state", "TEXT", ""}, {"plan_id", "$.plan_id", "TEXT", ""}},
 		idx: []string{`CREATE INDEX IF NOT EXISTS subscription_receipt_stage ON subscription_receipt(stage,state)`}},
 	{name: "subscription_origin", cols: []recordColumn{{"subscription_id", "$.subscription_id", "TEXT", ""}}},
+	{name: "download_accepted", cols: []recordColumn{{"event_id", "$.id", "TEXT", ""}},
+		idx: []string{`CREATE INDEX IF NOT EXISTS download_accepted_event ON download_accepted(event_id)`}},
 	{name: "download_preview", cols: []recordColumn{{"hash", "$.hash", "TEXT", ""}, {"state", "$.state", "TEXT", ""}, {"expires_at", "$.expires_at", "TEXT", ""}},
 		idx: []string{`CREATE INDEX IF NOT EXISTS download_preview_expires ON download_preview(expires_at)`, `CREATE INDEX IF NOT EXISTS download_preview_hash ON download_preview(hash)`}},
 	{name: "download_selection", cols: []recordColumn{{"intent_id", "$.intent_id", "TEXT", ""}, {"scope_type", "$.scope_type", "TEXT", ""}},
