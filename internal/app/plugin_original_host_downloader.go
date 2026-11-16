@@ -12,6 +12,25 @@ import (
 	"light-media/internal/releasemeta/legacyanime"
 )
 
+// originalBrushQBSourceLogin selects the qBittorrent 5-compatible login and
+// read policy for every BrushFlow callback, not only the brush phase. qB 5
+// answers auth/login with 204 and a QBT_SID_<port> cookie; the legacy path
+// rejects both. Transmission keeps its existing dialect.
+func (a *App) originalBrushQBSourceLogin(scope originalBaseCallScope, id string) bool {
+	if scope.object == nil || scope.object.installation.PluginID != "BrushFlowLanduo" {
+		return false
+	}
+	configured, err := a.configuredDownloader(id)
+	if err != nil {
+		return false
+	}
+	switch strings.ToLower(configured.Kind) {
+	case "qb", "qbittorrent":
+		return true
+	}
+	return false
+}
+
 func originalHostDownloaderCapability(method string) bool {
 	switch method {
 	case plugins.DownloaderSourceFindByTagCapability, plugins.DownloaderSourceConnectionCapability, plugins.DownloaderConfigurationsReadCapability, plugins.DownloaderSourceTasksCapability, plugins.DownloaderSourceCompletedCapability, plugins.DownloaderSourceAddCapability, plugins.DownloaderSourceControlCapability, plugins.DownloaderConnectionCapability, plugins.DownloaderDeleteFilesCapability, plugins.DownloaderCompletedCapability, plugins.DownloaderDownloadingCapability, plugins.DownloaderAddCapability, plugins.DownloaderControlCapability, plugins.DownloaderTagsCapability, plugins.DownloaderFindByTagCapability, plugins.DownloaderDeleteTagsCapability, plugins.DownloaderListCapability, plugins.DownloaderTrackersCapability:
@@ -123,13 +142,7 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 		// the daemon cannot enforce promotion expiry and leaves paid downloads
 		// running, so the source login path must cover the whole plugin. Keep
 		// Transmission on its existing dialect and only select this for qB.
-		source := false
-		if scope.object != nil && scope.object.installation.PluginID == "BrushFlowLanduo" {
-			if configured, configErr := a.configuredDownloader(request.DownloaderID); configErr == nil {
-				kind := strings.ToLower(configured.Kind)
-				source = kind == "qb" || kind == "qbittorrent"
-			}
-		}
+		source := a.originalBrushQBSourceLogin(scope, request.DownloaderID)
 		client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, source)
 		if err != nil {
 			return nil, err
