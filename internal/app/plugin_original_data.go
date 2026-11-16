@@ -14,7 +14,7 @@ func (p *PluginStore) deleteOriginalPluginData(ctx context.Context, instance str
 	if _, err = tx.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=? AND kind='data'`, instance); err != nil {
 		return err
 	}
-	if _, err = tx.ExecContext(ctx, `DELETE FROM records WHERE kind=? AND id LIKE ?`, originalBrushOwnerKind, originalBrushOwnerPrefix(instance)+"%"); err != nil {
+	if _, err = tx.ExecContext(ctx, `DELETE FROM plugin_record WHERE kind=? AND id LIKE ?`, originalBrushOwnerKind, originalBrushOwnerPrefix(instance)+"%"); err != nil {
 		return err
 	}
 	return tx.Commit()

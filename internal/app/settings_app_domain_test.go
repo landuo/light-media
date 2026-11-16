@@ -121,7 +121,7 @@ func TestSettingsAppDomainHTTPPersistenceAndClear(t *testing.T) {
 					t.Fatal("domain edit changed unrelated in-memory settings")
 				}
 				var sealed []byte
-				if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&sealed); err != nil {
+				if err := a.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed); err != nil {
 					t.Fatal(err)
 				}
 				var stored Settings

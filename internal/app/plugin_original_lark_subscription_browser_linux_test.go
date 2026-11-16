@@ -166,7 +166,7 @@ func originalLarkProviderBrowserRestart(t *testing.T, first *App, closeFirst fun
 		t.Fatal("browser did not verify the reopened App")
 	}
 	var total int
-	if err := second.Store.DB.QueryRowContext(ctx, `SELECT count(*) FROM records WHERE kind='subscription'`).Scan(&total); err != nil || total != 1 {
+	if err := second.Store.DB.QueryRowContext(ctx, `SELECT count(*) FROM subscribe WHERE 1=1`).Scan(&total); err != nil || total != 1 {
 		t.Fatal("browser edit and reopen did not preserve exactly one subscription", total, err)
 	}
 	t.Logf("browser saved one keyword edit and reopened the same Lark source subscription %s at revision %d with its original source and episode scope", mediaKey(restored.Media), restored.Revision)

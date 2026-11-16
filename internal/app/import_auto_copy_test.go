@@ -65,12 +65,12 @@ func TestActualAutoEXDEVCopyAndColdSQLRecovery(t *testing.T) {
 				}
 			}
 			if boundary == "asset_sql_cold" {
-				if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_auto_asset_failure BEFORE INSERT ON records WHEN NEW.kind='asset' BEGIN SELECT RAISE(ABORT,'owned auto asset SQL'); END`); e != nil {
+				if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_auto_asset_failure BEFORE INSERT ON library_asset WHEN NEW.record_kind='asset' BEGIN SELECT RAISE(ABORT,'owned auto asset SQL'); END`); e != nil {
 					t.Fatal(e)
 				}
 			}
 			if boundary == "transition_sql" {
-				if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_auto_transition_failure BEFORE INSERT ON records WHEN NEW.kind='import_auto_copy' BEGIN SELECT RAISE(ABORT,'owned auto transition SQL'); END`); e != nil {
+				if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_auto_transition_failure BEFORE INSERT ON plugin_record WHEN NEW.kind='import_auto_copy' BEGIN SELECT RAISE(ABORT,'owned auto transition SQL'); END`); e != nil {
 					t.Fatal(e)
 				}
 			}

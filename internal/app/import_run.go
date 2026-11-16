@@ -285,7 +285,7 @@ func (a *App) importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, fi
 	}
 	var overwriteMeta importMetadata
 	var overwriteRaw []byte
-	if err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='import_meta' AND id=?`, plan.ID).Scan(&overwriteRaw); err != nil {
+	if err := tx.QueryRowContext(ctx, `SELECT payload FROM import_meta WHERE id=?`, plan.ID).Scan(&overwriteRaw); err != nil {
 		return err
 	}
 	if json.Unmarshal(overwriteRaw, &overwriteMeta) != nil {
@@ -337,7 +337,7 @@ func (a *App) importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, fi
 func importExcludedTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, file PlanFile) error {
 	for _, slot := range file.inventorySlots() {
 		var raw []byte
-		err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='exclusion' AND id=?`, fmt.Sprintf("%s:%d:%d", mediaKey(plan.Media), slot.Season, slot.Episode)).Scan(&raw)
+		err := tx.QueryRowContext(ctx, `SELECT payload FROM media_exclusion WHERE id=?`, fmt.Sprintf("%s:%d:%d", mediaKey(plan.Media), slot.Season, slot.Episode)).Scan(&raw)
 		if errors.Is(err, sql.ErrNoRows) {
 			continue
 		}
@@ -888,7 +888,7 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 				return err
 			}
 			var qualityCleanupCount int
-			if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='subscription_quality_cleanup' AND id=?`, plan.ID+"/"+file.ID).Scan(&qualityCleanupCount); err != nil {
+			if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM subscription_receipt WHERE id=?`, plan.ID+"/"+file.ID).Scan(&qualityCleanupCount); err != nil {
 				return err
 			}
 			if wantsScrape {
@@ -1037,7 +1037,7 @@ func importIntentTx(ctx context.Context, tx *sql.Tx, plan ImportPlan) (Intent, e
 		return Intent{}, nil
 	}
 	var raw []byte
-	if err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='intent' AND id=?`, plan.IntentID).Scan(&raw); err != nil {
+	if err := tx.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, plan.IntentID).Scan(&raw); err != nil {
 		return Intent{}, bad("REVIEW_IMPORT_INTENT", "关联下载意图不存在")
 	}
 	var intent Intent
@@ -1052,7 +1052,7 @@ func (a *App) importCompleteIntent(ctx context.Context, tx *sql.Tx, plan ImportP
 		return nil
 	}
 	var raw []byte
-	if err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='intent' AND id=?`, plan.IntentID).Scan(&raw); err != nil {
+	if err := tx.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, plan.IntentID).Scan(&raw); err != nil {
 		return err
 	}
 	var intent Intent
@@ -1091,7 +1091,7 @@ func (a *App) importCompleteIntent(ctx context.Context, tx *sql.Tx, plan ImportP
 	for _, scope := range scopes {
 		for _, episode := range scope.Episodes {
 			var count int
-			err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots s JOIN records r ON r.kind='asset' AND r.id=s.asset_id WHERE s.media_key=? AND s.season=? AND s.episode=? AND json_extract(r.payload,'$.state') IN ('present','external')`, mediaKey(intent.Media), scope.Season, episode).Scan(&count)
+			err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots s JOIN library_asset r AND r.id=s.asset_id WHERE s.media_key=? AND s.season=? AND s.episode=? AND json_extract(r.payload,'$.state') IN ('present','external')`, mediaKey(intent.Media), scope.Season, episode).Scan(&count)
 			if err != nil {
 				return err
 			}
@@ -1108,7 +1108,7 @@ func (a *App) importCompleteIntent(ctx context.Context, tx *sql.Tx, plan ImportP
 	}
 	if intent.SubscriptionID != "" {
 		var raw []byte
-		err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription' AND id=?`, intent.SubscriptionID).Scan(&raw)
+		err := tx.QueryRowContext(ctx, `SELECT payload FROM subscribe WHERE uid=?`, intent.SubscriptionID).Scan(&raw)
 		if err == nil {
 			var subscription Subscription
 			if json.Unmarshal(raw, &subscription) != nil {

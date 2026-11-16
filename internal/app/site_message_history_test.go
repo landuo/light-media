@@ -50,12 +50,12 @@ func TestSiteMessageHistoryExecutionSurvivesBusinessDeletionOnly(t *testing.T) {
 	if e = p.validateSiteMessageHistoryExecution(ctx, a.Store.DB, r, step, saved); e == nil {
 		t.Fatal("present changed business history accepted")
 	}
-	if _, e = a.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE kind='notification' AND id=?`, n.ID); e != nil {
+	if _, e = a.Store.DB.ExecContext(ctx, `DELETE FROM message WHERE uid=?`, n.ID); e != nil {
 		t.Fatal(e)
 	}
 	check()
 	var count int
-	if e = a.Store.DB.QueryRowContext(ctx, `SELECT count(*) FROM records WHERE kind='notification' AND json_extract(payload,'$.source')=?`, n.Source).Scan(&count); e != nil || count != 0 {
+	if e = a.Store.DB.QueryRowContext(ctx, `SELECT count(*) FROM message WHERE json_extract(payload,'$.source')=?`, n.Source).Scan(&count); e != nil || count != 0 {
 		t.Fatal("execution receipt became a source reservation", count, e)
 	}
 	changed := step
@@ -68,7 +68,7 @@ func TestSiteMessageHistoryExecutionSurvivesBusinessDeletionOnly(t *testing.T) {
 	if e = p.validateSiteMessageHistoryExecution(ctx, a.Store.DB, changedRoute, step, saved); e == nil {
 		t.Fatal("receipt accepted changed business")
 	}
-	if _, e = a.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE kind='site_message_history_execution'`); e != nil {
+	if _, e = a.Store.DB.ExecContext(ctx, `DELETE FROM site_message_sync WHERE 1=1`); e != nil {
 		t.Fatal(e)
 	}
 	if e = p.validateSiteMessageHistoryExecution(ctx, a.Store.DB, r, step, saved); e == nil {

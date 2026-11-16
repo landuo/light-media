@@ -234,7 +234,7 @@ func TestOriginalLarkDownloadFailureLinuxAMD64(t *testing.T) {
 		var intent, state, actualCode string
 		var reservations, attempts int
 		err := a.Store.DB.QueryRowContext(t.Context(), `SELECT json_extract(r.payload,'$.state'), j.state, j.error_code, j.attempt,
-			(SELECT COUNT(*) FROM reservations WHERE intent_id=r.id) FROM records r JOIN jobs j ON json_extract(j.payload,'$.id')=r.id
+			(SELECT COUNT(*) FROM reservations WHERE intent_id=r.id) FROM downloadhistory r JOIN jobs j ON json_extract(j.payload,'$.id')=r.id
 			WHERE r.kind='intent' AND j.kind='download' AND json_extract(r.payload,'$.hash')=?`, hash).Scan(&intent, &state, &actualCode, &attempts, &reservations)
 		if err != nil || intent != intentState || state != "failed" || actualCode != code || attempts != 1 || reservations != wantReservations {
 			t.Fatalf("unexpected durable attempt: intent=%s state=%s code=%s attempts=%d reservations=%d err=%v", intent, state, actualCode, attempts, reservations, err)

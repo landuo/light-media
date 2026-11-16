@@ -69,7 +69,7 @@ func TestUIReadsContinueDuringOrganizeWrite(t *testing.T) {
 			t.Fatal(err)
 		}
 		connections = append(connections, c)
-		if _, err = c.ExecContext(ctx, `DELETE FROM records WHERE kind='read_test'`); err == nil {
+		if _, err = c.ExecContext(ctx, `DELETE FROM plugin_record WHERE kind='read_test'`); err == nil {
 			t.Fatal("read connection allowed a write")
 		}
 	}

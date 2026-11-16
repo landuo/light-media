@@ -279,7 +279,7 @@ func siteCollectionInputSHA(r siteMessageCollection) string {
 func (p *PluginStore) readSiteMessageCollection(ctx context.Context, q subscriptionCompletionReader, key string) (siteMessageCollection, error) {
 	var r siteMessageCollection
 	var sealed []byte
-	if e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='site_message_collection' AND id=?`, key).Scan(&sealed); e != nil {
+	if e := q.QueryRowContext(ctx, `SELECT payload FROM site_message_sync WHERE id=?`, key).Scan(&sealed); e != nil {
 		return r, e
 	}
 	raw, e := p.unseal("site_message_collection", "system", key, sealed)
@@ -349,7 +349,7 @@ func (p *PluginStore) saveSiteMessageCollection(ctx context.Context, tx *sql.Tx,
 	if e != nil {
 		return e
 	}
-	_, e = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('site_message_collection',?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, r.ID, sealed, now())
+	_, e = tx.ExecContext(ctx, recordInsertSQL("site_message_collection", recordTableForKind("site_message_collection")), r.ID, sealed, now())
 	return e
 }
 func (p *PluginStore) siteMessageBusiness(ctx context.Context, q subscriptionCompletionReader, i siteMessageIdentity) ([]byte, error) {
@@ -590,7 +590,7 @@ func (a *App) siteMessageSourceExistsTx(ctx context.Context, tx *sql.Tx, source 
 	}
 	// Current history encrypts source with its message. Read those same deletable
 	// rows, without a public source index or a permanent dedup reservation.
-	rows, err := tx.QueryContext(ctx, `SELECT payload FROM records WHERE kind IN ('notification','message')`)
+	rows, err := tx.QueryContext(ctx, `SELECT payload FROM message WHERE record_kind IN ('notification','message')`)
 	if err != nil {
 		return false, err
 	}
@@ -855,7 +855,7 @@ func (a *App) finishSiteMessageCollection(ctx context.Context, key string) (site
 // Recovery advances only a durable collected snapshot and its existing source
 // sequence. It cannot invoke a site client, SDK refresh, or remote mark-read.
 func (a *App) resumeSiteMessageCollections(ctx context.Context) error {
-	rows, e := a.Store.DB.QueryContext(ctx, `SELECT id FROM records WHERE kind='site_message_collection' ORDER BY id`)
+	rows, e := a.Store.DB.QueryContext(ctx, `SELECT id FROM site_message_sync ORDER BY id`)
 	if e != nil {
 		return e
 	}

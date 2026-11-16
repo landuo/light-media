@@ -98,10 +98,10 @@ func failedImportSourceUnpublished(ctx context.Context, q qualityReader, old Imp
 		return false, err
 	}
 	var pending bool
-	if err := q.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE
-		(kind='directory_overwrite' AND id=?) OR
-		(kind IN ('directory_overwrite','import_receipt') AND instr(id,?)=1) OR
-		(kind='managed_file' AND id=?))`, want.ID, want.ID+"/", tokenHash(want.Target)).Scan(&pending); err != nil || pending {
+	if err := q.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM directory_overwrite WHERE id=?)
+	 OR EXISTS(SELECT 1 FROM directory_overwrite WHERE instr(id,?)=1)
+	 OR EXISTS(SELECT 1 FROM import_receipt WHERE instr(id,?)=1)
+	 OR EXISTS(SELECT 1 FROM managed_file WHERE id=?)`, want.ID, want.ID+"/", tokenHash(want.Target)).Scan(&pending); err != nil || pending {
 		return false, err
 	}
 	if stamp, err := snapshotPath(want.Source); err != nil || stamp != want.SourceSnapshot {

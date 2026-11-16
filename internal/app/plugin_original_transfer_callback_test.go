@@ -109,7 +109,7 @@ func TestOriginalTransferCallbackFixedSourceFieldsAndHistory(t *testing.T) {
 func TestOriginalTransferCallbackHistoryFailureCannotBroadcast(t *testing.T) {
 	a, object, plan, _ := originalTransferModuleFixture(t, "hardlink", "")
 	ctx := context.Background()
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_callback_failure BEFORE INSERT ON records WHEN NEW.kind='original_transfer_callback' BEGIN SELECT RAISE(ABORT,'owned_callback_failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_callback_failure BEFORE INSERT ON plugin_original_callback WHEN NEW.record_kind='original_transfer_callback' BEGIN SELECT RAISE(ABORT,'owned_callback_failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	job := overwriteStart(t, a, plan)

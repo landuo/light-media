@@ -244,7 +244,7 @@ func (a *App) originalHostMediaCacheLoadLocked(ctx context.Context) error {
 	}
 	cache.items = map[string]*originalHostMediaCacheEntry{}
 	var raw []byte
-	err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='plugin_host_tmdb_cache' AND id='main'`).Scan(&raw)
+	err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM plugin_host_state WHERE id='main'`).Scan(&raw)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil
 	}
@@ -421,7 +421,7 @@ func (a *App) saveOriginalHostMediaCache(ctx context.Context) error {
 	}
 	var err error
 	if len(items) == 0 {
-		_, err = a.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE kind='plugin_host_tmdb_cache' AND id='main'`)
+		_, err = a.Store.DB.ExecContext(ctx, `DELETE FROM plugin_host_state WHERE id='main'`)
 	} else {
 		err = a.Store.Put(ctx, "plugin_host_tmdb_cache", "main", struct {
 			Version int                                     `json:"version"`

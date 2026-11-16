@@ -101,7 +101,7 @@ func ImportReviewedSiteMessageSettings(ctx context.Context, dir string, raw []by
 	}
 	result := SourceSiteMessageImportResult{State: "ready", SourceMode: sourceSiteMessageMode, Records: 1}
 	var old []byte
-	e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id='main'`, sourceSiteMessageKind).Scan(&old)
+	e = tx.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id='main'`, sourceSiteMessageKind).Scan(&old)
 	if e == nil {
 		value, e := p.unseal(sourceSiteMessageKind, "system", "main", old)
 		if e != nil {
@@ -124,7 +124,7 @@ func ImportReviewedSiteMessageSettings(ctx context.Context, dir string, raw []by
 	if e != nil {
 		return result, errors.New("source_site_message_encryption_failed")
 	}
-	if _, e = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,'main',?,?)`, sourceSiteMessageKind, sealed, now()); e != nil {
+	if _, e = tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,'main',?,?)`, sourceSiteMessageKind, sealed, now()); e != nil {
 		return result, errors.New("source_site_message_transaction_failed")
 	}
 	if tx.Commit() != nil {
@@ -138,7 +138,7 @@ func ImportReviewedSiteMessageSettings(ctx context.Context, dir string, raw []by
 // import. A partial/different import cannot silently supply this global flag.
 func sourceSiteMessageParent(ctx context.Context, p *PluginStore, tx *sql.Tx, in sourceSiteMessageSettings) error {
 	var sealed []byte
-	if e := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='source_settings_migration' AND id='main'`).Scan(&sealed); e != nil {
+	if e := tx.QueryRowContext(ctx, `SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed); e != nil {
 		return errors.New("source_site_message_parent_settings_required")
 	}
 	b, e := p.unseal("source_settings_migration", "system", "main", sealed)
@@ -158,7 +158,7 @@ func sourceSiteMessageParent(ctx context.Context, p *PluginStore, tx *sql.Tx, in
 	settings := sourceSettingsInput{Version: 1, Source: parent.Source}
 	for name, value := range map[string]any{"source_statistics_settings": &settings.Statistics, "source_network_settings": &settings.Network, "source_runtime_settings": &settings.Runtime} {
 		var body []byte
-		if tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id='main'`, name).Scan(&body) != nil {
+		if tx.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id='main'`, name).Scan(&body) != nil {
 			return errors.New("source_site_message_parent_settings_required")
 		}
 		plain, e := p.unseal(name, "system", "main", body)
@@ -191,7 +191,7 @@ func (a *App) sourceSiteMessagePolicy(ctx context.Context, c Settings) (siteMess
 	}
 	defer tx.Rollback()
 	var sealed []byte
-	e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id='main'`, sourceSiteMessageKind).Scan(&sealed)
+	e = tx.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id='main'`, sourceSiteMessageKind).Scan(&sealed)
 	if errors.Is(e, sql.ErrNoRows) {
 		return policy, nil
 	}

@@ -19,7 +19,7 @@ func TestOriginalWebMessageCoreHistoryReceiptAuthenticatesColumnsAndTimezone(t *
 			}
 			route := noticeV2OnlyRoute(t, a)
 			var raw []byte
-			if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='notification' ORDER BY rowid LIMIT 1`).Scan(&raw); err != nil {
+			if err := a.Store.DB.QueryRow(`SELECT payload FROM message ORDER BY rowid LIMIT 1`).Scan(&raw); err != nil {
 				t.Fatal(err)
 			}
 			var record notificationRecord

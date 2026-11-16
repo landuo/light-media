@@ -63,7 +63,7 @@ func TestLibraryReviewIndexesUnknownMovieInPlaceAndPreventsDownload(t *testing.T
 		t.Fatal("registration created sidecars or moved file", len(entries), e)
 	}
 	var count int
-	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='managed_file'`).Scan(&count)
+	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM managed_file WHERE 1=1`).Scan(&count)
 	if count != 0 {
 		t.Fatal("external registration granted delete rights")
 	}
@@ -98,7 +98,7 @@ func TestLibraryReviewIndexesUnknownMovieInPlaceAndPreventsDownload(t *testing.T
 	if e != nil || !complete || len(basis.Inventory) != 1 || basis.Inventory[0].Registration == nil || basis.Inventory[0].Video != nil {
 		t.Fatal("real external identity did not give read-only completion evidence", basis, complete, e)
 	}
-	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='intent'`).Scan(&count)
+	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM downloadhistory WHERE 1=1`).Scan(&count)
 	if count != 0 {
 		t.Fatal("existing film was downloaded again")
 	}

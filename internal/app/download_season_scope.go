@@ -59,12 +59,12 @@ func (a *App) saveDownloadSeasonProofTx(ctx context.Context, tx *sql.Tx, p downl
 	if e != nil {
 		return e
 	}
-	_, e = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('download_season_scope',?,?,?)`, key, sealed, now())
+	_, e = tx.ExecContext(ctx, recordInsertSQL("download_season_scope", recordTableForKind("download_season_scope")), key, sealed, now())
 	return e
 }
 func (a *App) readDownloadSeasonProof(ctx context.Context, q qualityReader, kind, key, hash, sha string) (*downloadSeasonProof, error) {
 	var sealed []byte
-	e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='download_season_scope' AND id=?`, kind+":"+key).Scan(&sealed)
+	e := q.QueryRowContext(ctx, `SELECT payload FROM download_selection WHERE id=?`, kind+":"+key).Scan(&sealed)
 	if errors.Is(e, sql.ErrNoRows) && sha == "" {
 		return nil, nil
 	}

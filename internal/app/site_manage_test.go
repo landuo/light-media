@@ -139,7 +139,7 @@ func TestManagedDownloaderOwnConfigurationAndReferenceGuard(t *testing.T) {
 	if _, e = a.deleteManagedDownloader(ctx, old.ID); e == nil {
 		t.Fatal("deleted downloader referenced by paused subscription")
 	}
-	_, _ = a.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE kind='subscription'`)
+	_, _ = a.Store.DB.ExecContext(ctx, `DELETE FROM subscribe WHERE 1=1`)
 	if _, e = a.deleteManagedDownloader(ctx, old.ID); e != nil || len(a.Settings().Downloaders) != 0 || a.Settings().DefaultDownloader != "" {
 		t.Fatal("delete failed", e)
 	}

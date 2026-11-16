@@ -129,7 +129,7 @@ func TestOriginalMetadataScrapeActualSDKWritesUnregisteredSidecars(t *testing.T)
 		t.Fatal("video changed", err)
 	}
 	var count int
-	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&count); err != nil || count != 0 {
+	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&count); err != nil || count != 0 {
 		t.Fatal("ordinary metadata must not invent an asset", count, err)
 	}
 	// None continues into the independently loaded clone. The two workers

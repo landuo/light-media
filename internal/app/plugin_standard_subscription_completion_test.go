@@ -65,7 +65,7 @@ func TestStandardSubscriptionCompletionActualCoreSDKVetoFailureAndRestart(t *tes
 			t.Fatal("real chain veto did not stop before history/delete", current.LastReason, err)
 		}
 		var histories int
-		a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription_history'`).Scan(&histories)
+		a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_record WHERE kind='subscription_history'`).Scan(&histories)
 		if histories != 0 || notice.Sends.Load() != 0 {
 			t.Fatal("veto allowed finish side effects")
 		}
@@ -85,7 +85,7 @@ func TestStandardSubscriptionCompletionActualCoreSDKVetoFailureAndRestart(t *tes
 		}
 		// An ordinary return containing cancel=true must not replace shared data.
 		configure("ordinary")
-		if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_finish_history_rollback BEFORE INSERT ON records WHEN NEW.kind='subscription_history' BEGIN SELECT RAISE(ABORT,'owned history rollback'); END`); err != nil {
+		if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_finish_history_rollback BEFORE INSERT ON plugin_record WHEN NEW.kind='subscription_history' BEGIN SELECT RAISE(ABORT,'owned history rollback'); END`); err != nil {
 			t.Fatal(err)
 		}
 		if err = a.prepareSubscriptionCompletion(ctx, prepare, s.ID, s.Revision); err == nil {
@@ -112,7 +112,7 @@ func TestStandardSubscriptionCompletionActualCoreSDKVetoFailureAndRestart(t *tes
 		if json.Unmarshal(complete.Payload, &ref) != nil {
 			t.Fatal("invalid actual completion job")
 		}
-		if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_finish_event_rollback BEFORE INSERT ON records WHEN NEW.kind='source_subscribe_complete' BEGIN SELECT RAISE(ABORT,'owned event rollback'); END`); err != nil {
+		if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_finish_event_rollback BEFORE INSERT ON plugin_record WHEN NEW.kind='source_subscribe_complete' BEGIN SELECT RAISE(ABORT,'owned event rollback'); END`); err != nil {
 			t.Fatal(err)
 		}
 		if err = a.runSubscriptionCompletion(ctx, complete, ref.ID); err == nil {

@@ -23,7 +23,7 @@ func TestOriginalHostBusinessHistoryActualSDKRecordDeleteRetainsPhysicalFiles(t 
 		t.Fatal("missing path fabricated record", err)
 	}
 	var mutation plugins.HostMutationV1
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_host_history_rollback BEFORE INSERT ON records WHEN NEW.kind='transfer_history_hidden' BEGIN SELECT RAISE(ABORT,'owned failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_host_history_rollback BEFORE INSERT ON history_hidden WHEN NEW.record_kind='transfer_history_hidden' BEGIN SELECT RAISE(ABORT,'owned failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if err := hostBusinessCall(t, worker, plugins.TransferHistoryDeleteCapability, plugins.TransferHistoryDeleteV1{ID: item.ID}, &mutation); err == nil {
@@ -94,7 +94,7 @@ func TestOriginalHostBusinessDownloadHistoryActualSDKSelectsLatestHash(t *testin
 	if err := a.Store.Put(ctx, "intent", first.ID, first); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := a.Store.DB.Exec(`UPDATE records SET updated_at='2026-10-30T00:00:00Z' WHERE kind='intent' AND id=?`, first.ID); err != nil {
+	if _, err := a.Store.DB.Exec(`UPDATE downloadhistory SET updated_at='2026-10-30T00:00:00Z' WHERE uid=?`, first.ID); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.Store.Put(ctx, "intent", second.ID, second); err != nil {

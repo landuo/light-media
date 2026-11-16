@@ -16,17 +16,17 @@ CREATE TABLE IF NOT EXISTS original_subscription_aliases (
     subscription_id TEXT NOT NULL UNIQUE CHECK(subscription_id <> '')
 );
 INSERT INTO original_subscription_aliases(subscription_id)
-SELECT r.id FROM records r
-WHERE r.kind = 'subscription' AND NOT EXISTS (
-    SELECT 1 FROM original_subscription_aliases a WHERE a.subscription_id = r.id
+SELECT r.uid FROM subscribe r
+WHERE NOT EXISTS (
+    SELECT 1 FROM original_subscription_aliases a WHERE a.subscription_id = r.uid
 )
-ORDER BY COALESCE(CASE WHEN json_valid(r.payload) THEN json_extract(r.payload, '$.created_at') END, r.updated_at), r.id;
+ORDER BY COALESCE(CASE WHEN json_valid(r.payload) THEN json_extract(r.payload, '$.created_at') END, r.updated_at), r.uid;
 CREATE TRIGGER IF NOT EXISTS original_subscription_alias_on_insert
-AFTER INSERT ON records WHEN NEW.kind = 'subscription'
+AFTER INSERT ON subscribe
 BEGIN
     INSERT INTO original_subscription_aliases(subscription_id)
-    SELECT NEW.id WHERE NOT EXISTS (
-        SELECT 1 FROM original_subscription_aliases WHERE subscription_id = NEW.id
+    SELECT NEW.uid WHERE NOT EXISTS (
+        SELECT 1 FROM original_subscription_aliases WHERE subscription_id = NEW.uid
     );
 END;
 `
@@ -42,7 +42,7 @@ type originalSubscriptionAlias struct {
 const originalCurrentSubscriptionAliases = `
 SELECT a.number, r.id, r.payload
 FROM original_subscription_aliases a
-JOIN records r ON r.kind = 'subscription' AND r.id = a.subscription_id
+JOIN subscribe r ON r.uid = a.subscription_id
 WHERE json_extract(r.payload, '$.state') IN ('active', 'paused')`
 
 func (s *Store) originalSubscriptionAliases(ctx context.Context) ([]originalSubscriptionAlias, error) {

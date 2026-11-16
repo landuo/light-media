@@ -53,7 +53,7 @@ func (a *App) originalHostSubscriptionsResource(ctx context.Context, scope origi
 			states[state] = true
 		}
 	}
-	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind='subscription' ORDER BY rowid`)
+	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM subscribe ORDER BY rowid`)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +127,7 @@ func (a *App) originalHostUpdateSubscription(ctx context.Context, scope original
 	}
 	defer tx.Rollback()
 	var b []byte
-	err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription' AND id=?`, in.ID).Scan(&b)
+	err = tx.QueryRowContext(ctx, `SELECT payload FROM subscribe WHERE uid=?`, in.ID).Scan(&b)
 	out := plugins.SubscriptionHostResultV1{SchemaVersion: 1, Items: []json.RawMessage{}}
 	if errors.Is(err, sql.ErrNoRows) {
 		return json.Marshal(out)

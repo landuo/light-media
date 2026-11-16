@@ -401,7 +401,7 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	var old Subscription
 	if key != "" {
 		var b []byte
-		if e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription' AND id=?`, key).Scan(&b); e != nil {
+		if e = tx.QueryRowContext(ctx, `SELECT payload FROM subscribe WHERE uid=?`, key).Scan(&b); e != nil {
 			return old, e
 		}
 		if e = json.Unmarshal(b, &old); e != nil {
@@ -421,7 +421,7 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	if old.ID != "" {
 		oldEventInfo, eventSnapshotErr = a.subscriptionSourceProjectionReferences(ctx, tx, old, true)
 	}
-	rows, e := tx.QueryContext(ctx, `SELECT payload FROM records WHERE kind='subscription'`)
+	rows, e := tx.QueryContext(ctx, `SELECT payload FROM subscribe WHERE 1=1`)
 	if e != nil {
 		return old, e
 	}
@@ -572,7 +572,7 @@ func (a *App) cancelSubscriptionWithEvent(ctx context.Context, key string, annou
 	}
 	defer tx.Rollback()
 	var b []byte
-	if e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription' AND id=?`, key).Scan(&b); e != nil {
+	if e = tx.QueryRowContext(ctx, `SELECT payload FROM subscribe WHERE uid=?`, key).Scan(&b); e != nil {
 		return e
 	}
 	var s Subscription
@@ -693,7 +693,7 @@ func (a *App) subscriptionCoverageLoadedAt(ctx context.Context, s Subscription, 
 		// completed task remains reserved until its import commits an asset slot.
 		// Read its persisted intent in the same query; viewing subscriptions never
 		// polls downloaders or makes one metadata request per episode.
-		rows, e := a.Store.reader().QueryContext(ctx, `SELECT r.episode,COALESCE(json_extract(i.payload,'$.state'),'') FROM reservations r LEFT JOIN records i ON i.kind='intent' AND i.id=r.intent_id WHERE r.media_key=? AND r.season=?`, mediaKey(s.Media), s.Season)
+		rows, e := a.Store.reader().QueryContext(ctx, `SELECT r.episode,COALESCE(json_extract(i.payload,'$.state'),'') FROM reservations r LEFT JOIN downloadhistory i ON i.uid=r.intent_id WHERE r.media_key=? AND r.season=?`, mediaKey(s.Media), s.Season)
 		if e != nil {
 			return out, e
 		}
@@ -715,7 +715,7 @@ func (a *App) subscriptionCoverageLoadedAt(ctx context.Context, s Subscription, 
 		prefix := fmt.Sprintf("%s:%d:", mediaKey(s.Media), s.Season)
 		// Match the exact media/season prefix using the primary-key range, just
 		// as the batch display path does; LIKE scans every exclusion of this kind.
-		rows, e = a.Store.reader().QueryContext(ctx, `SELECT id,payload FROM records WHERE kind='exclusion' AND id>=? AND id<?`, prefix, strings.TrimSuffix(prefix, ":")+";")
+		rows, e = a.Store.reader().QueryContext(ctx, `SELECT id,payload FROM media_exclusion WHERE id>=? AND id<?`, prefix, strings.TrimSuffix(prefix, ":")+";")
 		if e != nil {
 			return out, e
 		}
@@ -848,9 +848,9 @@ func (a *App) recordSubscriptionCheck(ctx context.Context, s Subscription, reaso
 	current.LastCheck = now()
 	current.LastReason = reason
 	if current.State == "paused" {
-		_, err := a.Store.DB.ExecContext(ctx, `UPDATE records
+		_, err := a.Store.DB.ExecContext(ctx, `UPDATE subscribe
 			SET payload=json_set(payload,'$.last_check',?,'$.last_reason',?),updated_at=?
-			WHERE kind='subscription' AND id=? AND json_extract(payload,'$.revision')=? AND json_extract(payload,'$.state')='paused'`,
+			WHERE uid=? AND json_extract(payload,'$.revision')=? AND json_extract(payload,'$.state')='paused'`,
 			current.LastCheck, current.LastReason, current.LastCheck, s.ID, s.Revision)
 		return err
 	}

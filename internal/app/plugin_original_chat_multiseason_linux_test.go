@@ -237,7 +237,7 @@ func TestOriginalLarkWholeMultiSeasonLinuxAMD64(t *testing.T) {
 	deadline := time.Now().Add(5 * time.Second)
 	var intent Intent
 	for {
-		err := a.Store.DB.QueryRowContext(t.Context(), `SELECT id FROM records WHERE kind='intent'`).Scan(&intentID)
+		err := a.Store.DB.QueryRowContext(t.Context(), `SELECT uid FROM downloadhistory WHERE 1=1`).Scan(&intentID)
 		if err == nil {
 			err = a.Store.Get(t.Context(), "intent", intentID, &intent)
 		}

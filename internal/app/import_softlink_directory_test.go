@@ -47,7 +47,7 @@ func TestImportSoftlinkDirectoryManualSDKAndColdMemberRecovery(t *testing.T) {
 			job := overwriteStart(t, a, plan)
 			if branch == "cold-member" {
 				// Stop at an actual child publication, not an invented successful receipt.
-				_, err = a.Store.DB.Exec(`CREATE TRIGGER softlink_directory_pause AFTER UPDATE ON records WHEN NEW.kind='import_receipt' AND NEW.id LIKE '` + key + `/directory/%' AND json_extract(NEW.payload,'$.state')='published' BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE id='` + job.ID + `'; END`)
+				_, err = a.Store.DB.Exec(`CREATE TRIGGER softlink_directory_pause AFTER UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND NEW.id LIKE '` + key + `/directory/%' AND json_extract(NEW.payload,'$.state')='published' BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE id='` + job.ID + `'; END`)
 				if err != nil {
 					t.Fatal(err)
 				}

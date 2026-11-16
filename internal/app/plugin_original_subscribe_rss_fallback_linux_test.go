@@ -305,15 +305,15 @@ func TestOriginalLarkRSSBatchFallbackLinuxAMD64(t *testing.T) {
 	var jobs, roots, cooled, live int
 	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT
 		(SELECT COUNT(*) FROM jobs WHERE kind='download' AND json_extract(payload,'$._parent_job_id') IN
-			(SELECT id FROM jobs WHERE kind='subscription' AND json_extract(payload,'$.latest_batch') IS NOT NULL)),
+			(SELECT uid FROM jobs WHERE json_extract(payload,'$.latest_batch') IS NOT NULL)),
 		(SELECT COUNT(DISTINCT json_extract(payload,'$._parent_job_id')) FROM jobs WHERE kind='download'),
-		(SELECT COUNT(*) FROM records WHERE kind='subscription_download_failure'),
-		(SELECT COUNT(*) FROM records WHERE kind='subscription' AND id=?)`, sub.ID).Scan(&jobs, &roots, &cooled, &live); err != nil || jobs != 2 || roots != 1 || cooled != 1 || live != 0 {
+		(SELECT COUNT(*) FROM subscribe WHERE kind='subscription_download_failure'),
+		(SELECT COUNT(*) FROM subscribe WHERE uid=?)`, sub.ID).Scan(&jobs, &roots, &cooled, &live); err != nil || jobs != 2 || roots != 1 || cooled != 1 || live != 0 {
 		t.Fatalf("RSS outcomes did not belong to one latest batch: jobs=%d roots=%d cooled=%d live=%d err=%v", jobs, roots, cooled, live, err)
 	}
 	for wantHash, wantState := range map[string]string{rejectedHash: "failed", acceptedHash: "accepted"} {
 		var got string
-		if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT json_extract(payload,'$.state') FROM records WHERE kind='intent' AND json_extract(payload,'$.hash')=?`, wantHash).Scan(&got); err != nil || got != wantState && !(wantState == "accepted" && got == "downloading") {
+		if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT json_extract(payload,'$.state') FROM downloadhistory WHERE json_extract(payload,'$.hash')=?`, wantHash).Scan(&got); err != nil || got != wantState && !(wantState == "accepted" && got == "downloading") {
 			t.Fatalf("unexpected native intent state: got=%s want=%s err=%v", got, wantState, err)
 		}
 	}

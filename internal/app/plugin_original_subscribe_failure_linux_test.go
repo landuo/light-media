@@ -160,7 +160,7 @@ func TestOriginalLarkRSSPromptAndStableFailureCooldownLinux(t *testing.T) {
 		t.Fatal("a failed confirmation poisoned the separate invalid-enclosure cache")
 	}
 	var fingerprint string
-	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT id FROM records WHERE kind='subscription_download_failure'`).Scan(&fingerprint); err != nil {
+	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT id FROM plugin_record WHERE kind='subscription_download_failure'`).Scan(&fingerprint); err != nil {
 		t.Fatal(err)
 	}
 	var failure subscriptionDownloadFailure

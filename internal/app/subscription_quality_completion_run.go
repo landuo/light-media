@@ -77,7 +77,7 @@ func (a *App) enqueueQualityCompletionForTx(ctx context.Context, tx *sql.Tx, s S
 }
 
 func (a *App) completionAcceptedClosure(ctx context.Context, q qualityReader, s Subscription) ([]subscriptionCompletionAccepted, error) {
-	rows, e := q.QueryContext(ctx, `SELECT id,payload FROM records WHERE kind='subscription_quality_accepted' ORDER BY id`)
+	rows, e := q.QueryContext(ctx, `SELECT id,payload FROM subscription_receipt ORDER BY id`)
 	if e != nil {
 		return nil, e
 	}
@@ -288,7 +288,7 @@ func (a *App) prepareSubscriptionCompletion(ctx context.Context, j Job, key stri
 	if e = a.writeQualitySealedTx(ctx, tx, "subscription_history", identity.ID, history); e != nil {
 		return e
 	}
-	if _, e = tx.ExecContext(ctx, `DELETE FROM records WHERE kind='subscription' AND id=?`, s.ID); e != nil {
+	if _, e = tx.ExecContext(ctx, `DELETE FROM subscribe WHERE uid=?`, s.ID); e != nil {
 		return e
 	}
 	job, e := enqueueTx(ctx, tx, "subscription_completion", map[string]string{"id": identity.ID}, j.WorkflowID)

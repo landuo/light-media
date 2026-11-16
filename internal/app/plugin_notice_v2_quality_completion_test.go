@@ -31,7 +31,7 @@ func TestPluginNoticeV2ActualQualityAcceptedPrepareHistoryDeleteNoticeColdAndGua
 				}
 				prepare = qualityRunningJob(t, a, prepare)
 				if mode == "history_failure" {
-					if _, e = a.Store.DB.Exec(`CREATE TRIGGER completion_history_failure BEFORE INSERT ON records WHEN NEW.kind='subscription_history' BEGIN SELECT RAISE(ABORT,'owned history write failure'); END`); e != nil {
+					if _, e = a.Store.DB.Exec(`CREATE TRIGGER completion_history_failure BEFORE INSERT ON plugin_record WHEN NEW.kind='subscription_history' BEGIN SELECT RAISE(ABORT,'owned history write failure'); END`); e != nil {
 						t.Fatal(e)
 					}
 				}
@@ -41,7 +41,7 @@ func TestPluginNoticeV2ActualQualityAcceptedPrepareHistoryDeleteNoticeColdAndGua
 						t.Fatal("history failure deleted source subscription")
 					}
 					var n, jobs int
-					a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription' AND id=?`, s.ID).Scan(&n)
+					a.Store.DB.QueryRow(`SELECT count(*) FROM subscribe WHERE uid=?`, s.ID).Scan(&n)
 					a.Store.DB.QueryRow(`SELECT count(*) FROM jobs WHERE kind='subscription_completion'`).Scan(&jobs)
 					if n != 1 || jobs != 0 || fixture.Sends.Load() != 0 {
 						t.Fatal("history/check/delete transaction was partial", n, jobs, fixture.Sends.Load())
@@ -52,7 +52,7 @@ func TestPluginNoticeV2ActualQualityAcceptedPrepareHistoryDeleteNoticeColdAndGua
 					t.Fatal("real full source factory/check/history/delete failed", e)
 				}
 				var n int
-				if e = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription' AND id=?`, s.ID).Scan(&n); e != nil || n != 0 {
+				if e = a.Store.DB.QueryRow(`SELECT count(*) FROM subscribe WHERE uid=?`, s.ID).Scan(&n); e != nil || n != 0 {
 					t.Fatal("source row not deleted after original history", n, e)
 				}
 				complete, e := scanJob(a.Store.DB.QueryRow(`SELECT ` + jobColumns + ` FROM jobs WHERE kind='subscription_completion' ORDER BY rowid LIMIT 1`))
@@ -91,8 +91,8 @@ func TestPluginNoticeV2ActualQualityAcceptedPrepareHistoryDeleteNoticeColdAndGua
 					t.Fatal("quality completion used fixed text or lacked actual authenticated route", e, fixture.Metadata.Load(), fixture.Sends.Load())
 				}
 				var histories, events int
-				a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription_history'`).Scan(&histories)
-				a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='source_subscribe_complete'`).Scan(&events)
+				a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_record WHERE kind='subscription_history'`).Scan(&histories)
+				a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_record WHERE kind='source_subscribe_complete'`).Scan(&events)
 				if histories != 1 || events != 1 {
 					t.Fatal("history or SourceComplete missing after durable stats admission", histories, events)
 				}
@@ -163,7 +163,7 @@ func TestPluginNoticeV2ActualQualityAcceptedPrepareHistoryDeleteNoticeColdAndGua
 				if fixture.Sends.Load() != 1 || fixture.Metadata.Load() != 1 || cold.pluginStore.noticeTemplateHelper().Cache.Get(rendered.SourceCache.Key) != nil {
 					t.Fatal("cold replay repeated fresh metadata/send or reset ephemeral cache")
 				}
-				if _, e = cold.Store.DB.Exec(`DELETE FROM records WHERE kind='download_added'`); e != nil {
+				if _, e = cold.Store.DB.Exec(`DELETE FROM downloadhistory WHERE 1=1`); e != nil {
 					t.Fatal(e)
 				}
 				if _, _, e = cold.pluginStore.readNoticeRoute(ctx, cold.Store.DB, r.ID); e == nil || errors.Is(e, sql.ErrNoRows) {

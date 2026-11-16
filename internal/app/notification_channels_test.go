@@ -66,7 +66,7 @@ func TestNotificationChannelMissingHistoryOrHeadCannotReinitialize(t *testing.T)
 			case "history":
 				_, e = s.DB.Exec(`DELETE FROM notification_channel_history WHERE revision=0`)
 			case "marker":
-				_, e = s.DB.Exec(`DELETE FROM records WHERE kind='core_settings_lifecycle' AND id='notifications/v1'`)
+				_, e = s.DB.Exec(`DELETE FROM settings_lifecycle WHERE id='notifications/v1'`)
 			}
 			if e != nil {
 				t.Fatal(e)

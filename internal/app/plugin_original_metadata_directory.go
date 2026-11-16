@@ -244,14 +244,14 @@ func (a *App) finishOriginalMetadataDirectory(ctx context.Context, directory *or
 	}
 	defer tx.Rollback()
 	var raw []byte
-	if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='managed_file' AND id=?`, tokenHash(directory.Owned.Path)).Scan(&raw); err != nil {
+	if err = tx.QueryRowContext(ctx, `SELECT payload FROM managed_file WHERE id=?`, tokenHash(directory.Owned.Path)).Scan(&raw); err != nil {
 		return err
 	}
 	var current managedFile
 	if json.Unmarshal(raw, &current) != nil || !sameManagedFile(current, directory.Owned) {
 		return bad("REVIEW_METADATA_CONTEXT", "刮削提交时目录归属发生变化")
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT id,payload FROM records WHERE kind='import_receipt' AND json_extract(payload,'$.target')=? AND json_extract(payload,'$.state')='published'`, current.Path)
+	rows, err := tx.QueryContext(ctx, `SELECT id,payload FROM import_receipt WHERE json_extract(payload,'$.target')=? AND json_extract(payload,'$.state')='published'`, current.Path)
 	if err != nil {
 		return err
 	}
@@ -301,7 +301,7 @@ func (a *App) finishOriginalMetadataDirectory(ctx context.Context, directory *or
 			return err
 		}
 	}
-	if _, err = tx.ExecContext(ctx, `DELETE FROM records WHERE kind='original_metadata_directory' AND id=?`, current.AssetID); err != nil {
+	if _, err = tx.ExecContext(ctx, `DELETE FROM plugin_original_directory WHERE id=?`, current.AssetID); err != nil {
 		return err
 	}
 	return tx.Commit()

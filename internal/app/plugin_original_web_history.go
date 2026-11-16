@@ -121,7 +121,7 @@ func (a *App) originalWebMessageHistory(r *http.Request) (any, error) {
 	}
 	// The fixed API accepts count, while its frontend sends ignored size=20.
 	// No channel filter: source MessageOper lists all message rows.
-	rows, err := a.Store.DB.QueryContext(r.Context(), `SELECT rowid,payload FROM records WHERE kind IN ('notification','message') ORDER BY coalesce(json_extract(payload,'$.source_registered_at'),substr(json_extract(payload,'$.created_at'),1,19)) DESC,rowid DESC LIMIT ? OFFSET ?`, count.Int64(), offset.Int64())
+	rows, err := a.Store.DB.QueryContext(r.Context(), `SELECT rowid,payload FROM message WHERE record_kind IN ('notification','message') ORDER BY coalesce(json_extract(payload,'$.source_registered_at'),substr(json_extract(payload,'$.created_at'),1,19)) DESC,rowid DESC LIMIT ? OFFSET ?`, count.Int64(), offset.Int64())
 	if err != nil {
 		return nil, err
 	}

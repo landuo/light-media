@@ -58,9 +58,9 @@ func actualOrdinaryNoticeStats(t *testing.T, a *App, s Subscription, wantAccepte
 		t.Fatal("ordinary source template/fresh lookup/async separation failed", e, fixture.Metadata.Load(), fixture.Sends.Load(), calls.Load())
 	}
 	var history, events, subscriptions int
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription_history'`).Scan(&history)
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='source_subscribe_complete'`).Scan(&events)
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription'`).Scan(&subscriptions)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_record WHERE kind='subscription_history'`).Scan(&history)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_record WHERE kind='source_subscribe_complete'`).Scan(&events)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM subscribe WHERE 1=1`).Scan(&subscriptions)
 	if history != 1 || events != 1 || subscriptions != 0 {
 		t.Fatal("ordinary original finish order was incomplete", history, events, subscriptions)
 	}

@@ -125,7 +125,7 @@ func TestStorageCopyLinkActualSDKColdStage(t *testing.T) {
 			if directory {
 				selector = "NEW.id LIKE '" + key + "/directory/%'"
 			}
-			_, err = a.Store.DB.Exec(`CREATE TRIGGER storage_publication_pause AFTER UPDATE ON records WHEN NEW.kind='import_receipt' AND ` + selector + ` AND json_extract(NEW.payload,'$.state')='planned' AND length(json_extract(NEW.payload,'$.storage_publication.result'))>0 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE id='` + job.ID + `'; END`)
+			_, err = a.Store.DB.Exec(`CREATE TRIGGER storage_publication_pause AFTER UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND ` + selector + ` AND json_extract(NEW.payload,'$.state')='planned' AND length(json_extract(NEW.payload,'$.storage_publication.result'))>0 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE id='` + job.ID + `'; END`)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -253,7 +253,7 @@ func TestStorageCopyLinkActualSDKRejectsCounterfeitAndUnreturned(t *testing.T) {
 			key := plan.ID + "/" + plan.Files[0].ID
 			job := overwriteStart(t, a, plan)
 			if test.mode == "missing-result" {
-				if _, err = a.Store.DB.Exec(`CREATE TRIGGER storage_publication_missing BEFORE UPDATE ON records WHEN NEW.kind='import_receipt' AND NEW.id='` + key + `' AND length(json_extract(NEW.payload,'$.storage_publication.result'))>0 BEGIN SELECT RAISE(FAIL,'result persistence interrupted'); END`); err != nil {
+				if _, err = a.Store.DB.Exec(`CREATE TRIGGER storage_publication_missing BEFORE UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND NEW.id='` + key + `' AND length(json_extract(NEW.payload,'$.storage_publication.result'))>0 BEGIN SELECT RAISE(FAIL,'result persistence interrupted'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}

@@ -398,7 +398,7 @@ func testOriginalLarkRSSMagnet(t *testing.T, mode string) {
 	}
 
 	var intentID string
-	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT id FROM records WHERE kind='intent'`).Scan(&intentID); err != nil {
+	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT uid FROM downloadhistory WHERE 1=1`).Scan(&intentID); err != nil {
 		t.Fatal(err)
 	}
 	var intent Intent
@@ -434,7 +434,7 @@ func testOriginalLarkRSSMagnet(t *testing.T, mode string) {
 		}
 	}
 	var archived []byte
-	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT payload FROM records WHERE kind='material_blob' AND id=?`, intent.MaterialRef).Scan(&archived); err != nil || bytes.Contains(archived, []byte(magnet)) {
+	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT payload FROM material_blob WHERE id=?`, intent.MaterialRef).Scan(&archived); err != nil || bytes.Contains(archived, []byte(magnet)) {
 		t.Fatal("magnet was not kept in a sealed material record", err)
 	}
 	raw, err := a.resolveDownloadMaterial(t.Context(), intent.MaterialRef, materialPurpose, true)
@@ -447,7 +447,7 @@ func testOriginalLarkRSSMagnet(t *testing.T, mode string) {
 		wantAssets = 1
 	}
 	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT
-		(SELECT COUNT(*) FROM asset_slots), (SELECT COUNT(*) FROM records WHERE kind='subscription_download_failure')`).Scan(&assets, &cooled); err != nil || assets != wantAssets || cooled != 0 || len(a.originalChatRSSInvalidSnapshot()) != 0 {
+		(SELECT COUNT(*) FROM asset_slots), (SELECT COUNT(*) FROM plugin_record WHERE kind='subscription_download_failure')`).Scan(&assets, &cooled); err != nil || assets != wantAssets || cooled != 0 || len(a.originalChatRSSInvalidSnapshot()) != 0 {
 		t.Fatalf("magnet incorrectly completed files or cooled the resource: assets=%d cooled=%d err=%v", assets, cooled, err)
 	}
 	owned := filepath.Join(source, filename)
@@ -574,8 +574,8 @@ func assertOriginalLarkRSSFullCompletion(t *testing.T, a *App, sub Subscription,
 		t.Fatalf("retirement did not persist its exact source history: %v", err)
 	}
 	var live, events int
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT (SELECT count(*) FROM records WHERE kind='subscription' AND id=?),
-		(SELECT count(*) FROM records WHERE kind='source_subscribe_complete' AND id=?)`, sub.ID, receipt.Identity.ID).Scan(&live, &events); err != nil || live != 0 || events != 1 {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT (SELECT count(*) FROM subscribe WHERE uid=?),
+		(SELECT count(*) FROM subscribe WHERE kind='source_subscribe_complete' AND uid=?)`, sub.ID, receipt.Identity.ID).Scan(&live, &events); err != nil || live != 0 || events != 1 {
 		t.Fatalf("completed source subscription was not retired before magnet file verification: live=%d event=%d err=%v", live, events, err)
 	}
 }

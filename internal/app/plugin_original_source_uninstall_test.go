@@ -204,7 +204,7 @@ func TestSourceUninstallInstalledCacheFailureAndDeepCopies(t *testing.T) {
 	if _, err := a.pluginStore.sourceSetOriginalInstalled(ctx, json.RawMessage(`["Alpha","Beta","Gamma"]`)); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_uninstall_reject BEFORE UPDATE ON records WHEN NEW.kind='plugin-original-installed-order-v1' BEGIN SELECT RAISE(FAIL,'owned source DB failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_uninstall_reject BEFORE UPDATE ON plugin_record WHEN NEW.kind='plugin-original-installed-order-v1' BEGIN SELECT RAISE(FAIL,'owned source DB failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := a.pluginStore.sourceSetOriginalInstalled(ctx, json.RawMessage(`["Gamma"]`)); err == nil {
@@ -242,7 +242,7 @@ func TestSourceUninstallActualOpaqueFailurePreservesEarlierEffects(t *testing.T)
 	a, cookie := sourceUninstallFixture(t)
 	// Real SQL failure after removing the first target leaves source effects and
 	// cache ahead of storage; config tail is not applied or replayed.
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_uninstall_reject BEFORE UPDATE ON records WHEN NEW.kind='plugin-original-installed-order-v1' BEGIN SELECT RAISE(FAIL,'owned source DB failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_uninstall_reject BEFORE UPDATE ON plugin_record WHEN NEW.kind='plugin-original-installed-order-v1' BEGIN SELECT RAISE(FAIL,'owned source DB failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	sourceUninstallConfigure(t, a, cookie, "PluginUnInstall", []string{"MPServerStatus"}, false)
@@ -511,7 +511,7 @@ func TestSourceUninstallFailedInstalledWriteCacheControlsSameProcessRestart(t *t
 		t.Fatal(err)
 	}
 	defer os.Chmod(path, 0700)
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_uninstall_reject BEFORE UPDATE ON records WHEN NEW.kind='plugin-original-installed-order-v1' BEGIN SELECT RAISE(FAIL,'owned source DB failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_uninstall_reject BEFORE UPDATE ON plugin_record WHEN NEW.kind='plugin-original-installed-order-v1' BEGIN SELECT RAISE(FAIL,'owned source DB failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	sourceUninstallConfigure(t, a, cookie, "PluginUnInstall", []string{"MPServerStatus"}, false)
@@ -751,7 +751,7 @@ func TestSourceUninstallOldObservationCannotDiscardNewFailedWriteCache(t *testin
 	if _, err := a.pluginStore.sourceSetOriginalInstalled(ctx, json.RawMessage(`["Gamma"]`)); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_uninstall_reject BEFORE UPDATE ON records WHEN NEW.kind='plugin-original-installed-order-v1' BEGIN SELECT RAISE(FAIL,'owned failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_uninstall_reject BEFORE UPDATE ON plugin_record WHEN NEW.kind='plugin-original-installed-order-v1' BEGIN SELECT RAISE(FAIL,'owned failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := a.pluginStore.sourceSetOriginalInstalled(ctx, json.RawMessage(`["Delta"]`)); err == nil {

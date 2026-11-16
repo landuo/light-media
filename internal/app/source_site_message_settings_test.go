@@ -90,7 +90,7 @@ func TestReviewedSiteMessageSettingsOfflineDryApplyReplayAndColdPolicy(t *testin
 				t.Fatal("public value ignored explicit user choice")
 			}
 			var n int
-			if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind IN ('source_statistics_settings','source_network_settings','source_runtime_settings','source_settings_migration')`).Scan(&n); e != nil || n != 4 {
+			if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM systemconfig WHERE kind IN ('source_statistics_settings','source_network_settings','source_runtime_settings','source_settings_migration')`).Scan(&n); e != nil || n != 4 {
 				t.Fatal("prior source domains changed", n, e)
 			}
 			var body []byte
@@ -118,16 +118,16 @@ func TestReviewedSiteMessageSettingsRejectsInvalidPartialAndConflictingParent(t 
 			p := &PluginStore{store: store}
 			switch mode {
 			case "no-parent":
-				_, e = store.DB.Exec(`DELETE FROM records WHERE kind='source_settings_migration'`)
+				_, e = store.DB.Exec(`DELETE FROM systemconfig WHERE 1=1`)
 			case "different-env":
 				var in sourceSiteMessageSettings
 				json.Unmarshal(raw, &in)
 				in.EnvSHA = strings.Repeat("3", 64)
 				raw, _ = json.Marshal(in)
 			case "missing-parent-domain":
-				_, e = store.DB.Exec(`DELETE FROM records WHERE kind='source_runtime_settings'`)
+				_, e = store.DB.Exec(`DELETE FROM systemconfig WHERE 1=1`)
 			case "corrupt-parent-domain":
-				_, e = store.DB.Exec(`UPDATE records SET payload=zeroblob(length(payload)) WHERE kind='source_network_settings'`)
+				_, e = store.DB.Exec(`UPDATE systemconfig SET payload=zeroblob(length(payload)) WHERE 1=1`)
 			case "changed-parent-domain":
 				var input sourceSettingsInput
 				json.Unmarshal(ownedSourceSettingsInput(t), &input)
@@ -136,18 +136,18 @@ func TestReviewedSiteMessageSettingsRejectsInvalidPartialAndConflictingParent(t 
 				var sealed []byte
 				sealed, e = p.seal("source_runtime_settings", "system", "main", body)
 				if e == nil {
-					_, e = store.DB.Exec(`UPDATE records SET payload=? WHERE kind='source_runtime_settings'`, sealed)
+					_, e = store.DB.Exec(`UPDATE systemconfig SET payload=? WHERE 1=1`, sealed)
 				}
 			case "corrupt-parent-receipt":
-				_, e = store.DB.Exec(`UPDATE records SET payload=zeroblob(length(payload)) WHERE kind='source_settings_migration'`)
+				_, e = store.DB.Exec(`UPDATE systemconfig SET payload=zeroblob(length(payload)) WHERE 1=1`)
 			case "conflicting-flag":
 				var sealed []byte
 				sealed, e = p.seal(sourceSiteMessageKind, "system", "main", ownedSiteMessageInput(t, true))
 				if e == nil {
-					_, e = store.DB.Exec(`INSERT INTO records(kind,id,payload,updated_at) VALUES(?,'main',?,'owned')`, sourceSiteMessageKind, sealed)
+					_, e = store.DB.Exec(`INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,'main',?,'owned')`, sourceSiteMessageKind, sealed)
 				}
 			case "rollback":
-				_, e = store.DB.Exec(`CREATE TRIGGER owned_site_message_fail BEFORE INSERT ON records WHEN NEW.kind='source_site_message_settings' BEGIN SELECT RAISE(ABORT,'owned'); END`)
+				_, e = store.DB.Exec(`CREATE TRIGGER owned_site_message_fail BEFORE INSERT ON systemconfig WHEN NEW.record_kind='source_site_message_settings' BEGIN SELECT RAISE(ABORT,'owned'); END`)
 			case "queued-work":
 				_, e = store.DB.Exec(`INSERT INTO jobs(id,workflow_id,kind,state,payload,run_at,created_at,updated_at) VALUES('owned-message-job','owned-workflow','owned','queued','{}',0,'owned','owned')`)
 			}

@@ -91,7 +91,7 @@ func TestActualExtensionSourceReadersKeepNativeAndCapturedOriginsIndependent(t *
 		if e != nil {
 			t.Fatal(e)
 		}
-		if _, e = a.Store.DB.Exec(`INSERT INTO records(kind,id,payload,updated_at) VALUES(?,?,?,'owned')`, kind, "main", sealed); e != nil {
+		if _, e = a.Store.DB.Exec(`INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,'owned')`, kind, "main", sealed); e != nil {
 			t.Fatal(e)
 		}
 		before[kind] = sealed
@@ -118,7 +118,7 @@ func TestActualExtensionSourceReadersKeepNativeAndCapturedOriginsIndependent(t *
 	if e != nil {
 		t.Fatal(e)
 	}
-	if _, e = a.Store.DB.Exec(`INSERT INTO records(kind,id,payload,updated_at) VALUES('source_file_extension_settings','main',?,'owned')`, sealed); e != nil {
+	if _, e = a.Store.DB.Exec(`INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES('source_file_extension_settings','main',?,'owned')`, sealed); e != nil {
 		t.Fatal(e)
 	}
 	original, e := a.capturedSourceFileExtensions(ctx)

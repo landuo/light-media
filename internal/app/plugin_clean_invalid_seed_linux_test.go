@@ -575,7 +575,7 @@ func TestCleanInvalidSeedInstalledLinuxAMD64ScheduleRescansRemovedOrphan(t *test
 	}
 	var effects, confirmed int
 	err := a.Store.DB.QueryRowContext(t.Context(), `SELECT COUNT(*), COALESCE(SUM(CAST(payload AS TEXT)='"confirmed"'),0)
-		FROM records WHERE kind='plugin_clean_seed_effect'`).Scan(&effects, &confirmed)
+		FROM plugin_record WHERE kind='plugin_clean_seed_effect'`).Scan(&effects, &confirmed)
 	if err != nil || effects != 1 || confirmed != 1 {
 		t.Fatalf("expected one confirmed local cleanup effect, got %d/%d: %v", confirmed, effects, err)
 	}

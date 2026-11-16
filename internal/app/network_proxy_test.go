@@ -57,7 +57,7 @@ func TestProxySettingsAuthenticatedProjectionEncryptedRetentionAndClear(t *testi
 		}
 	}
 	var sealed []byte
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&sealed); err != nil {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed); err != nil {
 		t.Fatal(err)
 	}
 	if strings.Contains(string(sealed), "owned-proxy-") {
@@ -141,7 +141,7 @@ func TestProxyActualSiteFlagAndChangeGuard(t *testing.T) {
 		t.Fatal("unchecked site routed through explicit global proxy")
 	}
 	// The earlier 403 creates a cooldown; this test isolates only transport selection.
-	a.Store.DB.Exec(`DELETE FROM records WHERE kind='site_cooldown'`)
+	a.Store.DB.Exec(`DELETE FROM site_state WHERE 1=1`)
 	site.Proxy = true
 	a.cfgMu.Lock()
 	a.config.Sites = []SiteConfig{site}
@@ -150,7 +150,7 @@ func TestProxyActualSiteFlagAndChangeGuard(t *testing.T) {
 	if direct.Load() != 1 || proxied.Load() != 1 {
 		t.Fatal("selected site did not use configured proxy")
 	}
-	a.Store.DB.Exec(`DELETE FROM records WHERE kind='site_cooldown'`)
+	a.Store.DB.Exec(`DELETE FROM site_state WHERE 1=1`)
 	_ = a.withSite(context.Background(), site, false, func(client *sites.Client) error {
 		a.cfgMu.Lock()
 		a.config.ProxyHost = "http://127.0.0.1:1"

@@ -69,7 +69,7 @@ func TestHostDownloaderDeleteFilesActualSDKOwnedAndFailures(t *testing.T) {
 				}
 			}
 			if mode == "bookkeeping_failed" {
-				if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_delete_failure BEFORE UPDATE ON records WHEN OLD.id='owned-delete' BEGIN SELECT RAISE(ABORT,'owned synthetic failure'); END`); err != nil {
+				if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_delete_failure BEFORE UPDATE ON downloadhistory WHEN OLD.uid='owned-delete' BEGIN SELECT RAISE(ABORT,'owned synthetic failure'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}

@@ -28,7 +28,7 @@ func TestSubscriptionAddedFactAndFrozenIdentityShareActualCreation(t *testing.T)
 		t.Fatal("frozen identity missing", identity, err)
 	}
 	var sealed []byte
-	if err = a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='subscription_added' AND id=?`, event.EventID).Scan(&sealed); err != nil || json.Valid(sealed) {
+	if err = a.Store.DB.QueryRow(`SELECT payload FROM subscription_event WHERE id=?`, event.EventID).Scan(&sealed); err != nil || json.Valid(sealed) {
 		t.Fatal("event snapshot not protected", err)
 	}
 	request.State = "active"

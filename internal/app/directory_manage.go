@@ -268,10 +268,14 @@ func (a *App) managedDirectories(ctx context.Context) (any, error) {
 	}
 	defer tx.Rollback()
 	pendingCounts := map[string]int{}
-	counts, err := tx.QueryContext(ctx, `SELECT json_extract(payload,'$.directory_id'),COUNT(*) FROM records
- WHERE (kind='intent' AND json_extract(payload,'$.state') NOT IN ('imported','cancelled'))
- OR (kind='directory_file' AND json_extract(payload,'$.state') NOT IN ('complete','imported','baseline','tracking'))
- GROUP BY json_extract(payload,'$.directory_id')`)
+	counts, err := tx.QueryContext(ctx, `SELECT directory_id,SUM(n) FROM (
+ SELECT json_extract(payload,'$.directory_id') AS directory_id,COUNT(*) AS n FROM downloadhistory
+ WHERE record_kind='intent' AND json_extract(payload,'$.state') NOT IN ('imported','cancelled')
+ GROUP BY json_extract(payload,'$.directory_id')
+ UNION ALL
+ SELECT json_extract(payload,'$.directory_id') AS directory_id,COUNT(*) AS n FROM directory_file
+ WHERE json_extract(payload,'$.state') NOT IN ('complete','imported','baseline','tracking')
+ GROUP BY json_extract(payload,'$.directory_id')) GROUP BY directory_id`)
 	if err != nil {
 		return nil, err
 	}
@@ -296,7 +300,7 @@ func (a *App) managedDirectories(ctx context.Context) (any, error) {
 		source, e := a.directorySource(rule)
 		var state managedConnection
 		var status []byte
-		if tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='directory_status' AND id=?`, rule.ID).Scan(&status) == nil {
+		if tx.QueryRowContext(ctx, `SELECT payload FROM directory_status WHERE id=?`, rule.ID).Scan(&status) == nil {
 			_ = json.Unmarshal(status, &state)
 		}
 		if e != nil {

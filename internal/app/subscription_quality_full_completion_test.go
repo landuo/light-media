@@ -151,9 +151,9 @@ func TestSubscriptionQualityActualFullModeNonePackFinishesAndThenOrganizes(t *te
 					t.Fatal("authenticated whole pack lost smaller current scope", len(facts), changed.CurrentPriority, e)
 				}
 				var history, accepted, subs int
-				a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='subscription_history'`).Scan(&history)
-				a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='subscription_quality_accepted'`).Scan(&accepted)
-				a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='subscription'`).Scan(&subs)
+				a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_record WHERE kind='subscription_history'`).Scan(&history)
+				a.Store.DB.QueryRow(`SELECT COUNT(*) FROM subscription_receipt WHERE 1=1`).Scan(&accepted)
+				a.Store.DB.QueryRow(`SELECT COUNT(*) FROM subscribe WHERE 1=1`).Scan(&subs)
 				if history != 0 || accepted != 1 || subs != 1 || adds.Load() != 1 {
 					t.Fatal("scope expansion discarded accepted fact or repeated external action", history, accepted, subs, adds.Load())
 				}
@@ -196,9 +196,9 @@ func TestSubscriptionQualityActualFullModeNonePackFinishesAndThenOrganizes(t *te
 				t.Fatal("full-mode final receipt incomplete", completion.Stage, e)
 			}
 			var history, events, subs int
-			a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='subscription_history'`).Scan(&history)
-			a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='source_subscribe_complete'`).Scan(&events)
-			a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='subscription'`).Scan(&subs)
+			a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_record WHERE kind='subscription_history'`).Scan(&history)
+			a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_record WHERE kind='source_subscribe_complete'`).Scan(&events)
+			a.Store.DB.QueryRow(`SELECT COUNT(*) FROM subscribe WHERE 1=1`).Scan(&subs)
 			route := noticeV2OnlyRoute(t, a)
 			rendered, e := a.pluginStore.noticeBusinessRender(ctx, route.ID)
 			if e != nil || history != 1 || events != 1 || subs != 0 || !strings.Contains(rendered.Snapshot.Fields["title"].(string), "已完成洗版") || fixture.Metadata.Load() != 1 || fixture.Sends.Load() != 1 {

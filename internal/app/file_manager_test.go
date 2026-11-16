@@ -592,7 +592,7 @@ func TestFileManagerAuthenticatedHTTPThroughOrganizeHistoryAndScrape(t *testing.
 		t.Fatal("source modified in HTTP workflow", e)
 	}
 	var assets int
-	if e = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&assets); e != nil || assets != 1 {
+	if e = a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&assets); e != nil || assets != 1 {
 		t.Fatal("asset not durably created", assets, e)
 	}
 }

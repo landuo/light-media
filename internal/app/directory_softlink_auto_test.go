@@ -147,7 +147,7 @@ func TestDirectorySoftlinkActualSaveAndAutomaticPublication(t *testing.T) {
 					t.Fatal("real automatic video link", text, e)
 				}
 				var count int
-				if err = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='managed_file' AND json_extract(payload,'$.asset_id')=? AND json_extract(payload,'$.kind')='subtitle' AND json_type(payload,'$.softlink')='object'`, asset.ID).Scan(&count); err != nil || count != 1 {
+				if err = a.Store.DB.QueryRow(`SELECT count(*) FROM managed_file WHERE json_extract(payload,'$.asset_id')=? AND json_extract(payload,'$.kind')='subtitle' AND json_type(payload,'$.softlink')='object'`, asset.ID).Scan(&count); err != nil || count != 1 {
 					t.Fatal("automatic subtitle link missing", count, err)
 				}
 			} else {

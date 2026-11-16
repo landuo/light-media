@@ -30,7 +30,7 @@ func TestSiteMessageCoreAuthorityRevokedBetweenRouterStepsAndAtDispatch(t *testi
 					if err != nil {
 						return err
 					}
-					_, err = a.Store.DB.ExecContext(ctx, `UPDATE records SET payload=?,updated_at=? WHERE kind='config' AND id='main'`, sealed, now())
+					_, err = a.Store.DB.ExecContext(ctx, `UPDATE systemconfig SET payload=?,updated_at=? WHERE uid='main'`, sealed, now())
 					return err
 				}
 				job := siteMessageClaimBatch(t, a)

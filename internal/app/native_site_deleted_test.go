@@ -166,7 +166,7 @@ func TestNativeSiteDeletedActualProducersRollbackIdentitySettingsCacheAndEvent(t
 				t.Fatal("settings/map/event did not roll back together")
 			}
 			var n int
-			if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='site_connection' AND id=?`, site.ID).Scan(&n); err != nil || n != 1 {
+			if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM site_state WHERE id=?`, site.ID).Scan(&n); err != nil || n != 1 {
 				t.Fatal("failed delete removed cache", n, err)
 			}
 			if _, err := a.Store.DB.Exec(`DROP TRIGGER deny_owned_site_delete`); err != nil {
@@ -175,7 +175,7 @@ func TestNativeSiteDeletedActualProducersRollbackIdentitySettingsCacheAndEvent(t
 			if remove() != 200 || len(a.Settings().Sites) != 0 || identityRequire(t, a, site.ID).State != "deleted" || len(siteDeletedTestEvents(t, a)) != 1 || identityCount(t, a, "native_site_deletions") != 1 {
 				t.Fatal("retry did not commit one complete deletion")
 			}
-			if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='site_connection' AND id=?`, site.ID).Scan(&n); err != nil || n != 0 {
+			if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM site_state WHERE id=?`, site.ID).Scan(&n); err != nil || n != 0 {
 				t.Fatal("committed delete kept cache", n, err)
 			}
 		})

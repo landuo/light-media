@@ -81,11 +81,11 @@ func TestImportMoveDirectoryActualSDKSelectedStorage(t *testing.T) {
 			cold := branch != "success"
 			stageBoundary := branch == "stage-sql-recovery"
 			if cold {
-				trigger := `CREATE TRIGGER selected_directory_move_cancel AFTER UPDATE ON records WHEN NEW.kind='import_receipt' AND json_array_length(json_extract(NEW.payload,'$.directory_completed'))=1 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE kind='import'; END`
+				trigger := `CREATE TRIGGER selected_directory_move_cancel AFTER UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND json_array_length(json_extract(NEW.payload,'$.directory_completed'))=1 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE kind='import'; END`
 				if stageBoundary {
 					// Cancel after the actual actor result commits, before the host
 					// verifies source absence and durably transitions to staged.
-					trigger = `CREATE TRIGGER selected_directory_move_cancel AFTER UPDATE ON records WHEN NEW.kind='import_receipt' AND json_extract(NEW.payload,'$.state')='planned' AND json_extract(NEW.payload,'$.storage_move.result') IS NOT NULL AND json_extract(OLD.payload,'$.storage_move.result') IS NULL BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE kind='import'; END`
+					trigger = `CREATE TRIGGER selected_directory_move_cancel AFTER UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND json_extract(NEW.payload,'$.state')='planned' AND json_extract(NEW.payload,'$.storage_move.result') IS NOT NULL AND json_extract(OLD.payload,'$.storage_move.result') IS NULL BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE kind='import'; END`
 				}
 				if _, err = a.Store.DB.Exec(trigger); err != nil {
 					t.Fatal(err)

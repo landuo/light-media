@@ -53,7 +53,7 @@ func TestSiteMessageSealedPendingBusinessAbsentOrNullAndRoutingRejectsNull(t *te
 			if err != nil {
 				t.Fatal(err)
 			}
-			if _, err = a.Store.DB.Exec(`UPDATE records SET payload=? WHERE kind='site_message_collection' AND id=?`, sealed, r.ID); err != nil {
+			if _, err = a.Store.DB.Exec(`UPDATE site_message_sync SET payload=? WHERE id=?`, sealed, r.ID); err != nil {
 				t.Fatal(err)
 			}
 			loaded, err := a.pluginStore.readSiteMessageCollection(context.Background(), a.Store.DB, r.ID)
@@ -100,7 +100,7 @@ func TestSiteMessageCoreGrantCheckedAfterHistoryBeforeFurtherEffects(t *testing.
 					return nil
 				}
 				var histories int
-				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='notification'`).Scan(&histories); err != nil {
+				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM message WHERE 1=1`).Scan(&histories); err != nil {
 					return err
 				}
 				if histories == 0 || !changed.CompareAndSwap(false, true) {
@@ -176,7 +176,7 @@ func TestSiteMessageDeletedUIHistoryPreservesCoreCompletion(t *testing.T) {
 		t.Fatal("messages were not actually committed", len(history), len(sent()), calls.Load())
 	}
 	for _, item := range history {
-		if _, err := a.Store.DB.Exec(`DELETE FROM records WHERE kind='notification' AND id=?`, item.ID); err != nil {
+		if _, err := a.Store.DB.Exec(`DELETE FROM message WHERE uid=?`, item.ID); err != nil {
 			t.Fatal(err)
 		}
 	}

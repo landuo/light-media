@@ -238,7 +238,7 @@ func TestDirectoryConfigurationRejectsOverlapAndResumesEnabledRule(t *testing.T)
 		t.Fatal(e)
 	}
 	var sealed []byte
-	if e := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&sealed); e != nil {
+	if e := a.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed); e != nil {
 		t.Fatal(e)
 	}
 	var persisted Settings

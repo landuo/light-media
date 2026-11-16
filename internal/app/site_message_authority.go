@@ -51,7 +51,7 @@ func (a *App) requireSiteCollectionAuthorityTx(ctx context.Context, tx *sql.Tx, 
 func (a *App) requireSiteCollectionAuthorityModeTx(ctx context.Context, tx *sql.Tx, receipt siteMessageCollection, accepted bool) error {
 	var err error
 	var sealed []byte
-	if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&sealed); err != nil {
+	if err = tx.QueryRowContext(ctx, `SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed); err != nil {
 		return err
 	}
 	var settings Settings

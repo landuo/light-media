@@ -313,7 +313,7 @@ func ImportReviewedSourceSettings(ctx context.Context, dir string, raw []byte, a
 	count := 0
 	for i, name := range names {
 		var sealed []byte
-		e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id='main'`, name).Scan(&sealed)
+		e = tx.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id='main'`, name).Scan(&sealed)
 		if errors.Is(e, sql.ErrNoRows) {
 			continue
 		}
@@ -350,7 +350,7 @@ func ImportReviewedSourceSettings(ctx context.Context, dir string, raw []byte, a
 		if e != nil {
 			return SourceSettingsImportResult{}, errors.New("source_settings_encryption_failed")
 		}
-		if _, e = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,'main',?,?)`, name, sealed, now()); e != nil {
+		if _, e = tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,'main',?,?)`, name, sealed, now()); e != nil {
 			return SourceSettingsImportResult{}, errors.New("source_settings_import_transaction_failed")
 		}
 	}

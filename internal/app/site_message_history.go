@@ -40,7 +40,7 @@ func (p *PluginStore) saveSiteMessageHistoryExecutionTx(ctx context.Context, tx 
 		return e
 	}
 	// INSERT, never upsert: an existing execution cannot be replaced or adopted.
-	_, e = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('site_message_history_execution',?,?,?)`, key, sealed, now())
+	_, e = tx.ExecContext(ctx, recordInsertSQL("site_message_history_execution", recordTableForKind("site_message_history_execution")), key, sealed, now())
 	return e
 }
 
@@ -50,7 +50,7 @@ func (p *PluginStore) validateSiteMessageHistoryExecution(ctx context.Context, q
 	}
 	key := siteMessageHistoryExecutionID(r.ID, step.Ordinal)
 	var sealed []byte
-	if e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='site_message_history_execution' AND id=?`, key).Scan(&sealed); e != nil {
+	if e := q.QueryRowContext(ctx, `SELECT payload FROM site_message_sync WHERE id=?`, key).Scan(&sealed); e != nil {
 		return seedhost.ErrUnsafe
 	}
 	var proof siteMessageHistoryExecution
@@ -61,7 +61,7 @@ func (p *PluginStore) validateSiteMessageHistoryExecution(ctx context.Context, q
 		return seedhost.ErrUnsafe
 	}
 	var raw []byte
-	e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='notification' AND id=?`, saved.History.ID).Scan(&raw)
+	e := q.QueryRowContext(ctx, `SELECT payload FROM message WHERE uid=?`, saved.History.ID).Scan(&raw)
 	if errors.Is(e, sql.ErrNoRows) {
 		return nil
 	} // A removed row must stay removed.

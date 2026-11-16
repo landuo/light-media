@@ -74,6 +74,11 @@ func (s *Store) putSiteAccountSnapshotTx(ctx context.Context, tx *sql.Tx, kind, 
 	if err != nil {
 		return err
 	}
-	_, err = tx.ExecContext(ctx, `INSERT INTO records VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, key, sealed, now())
+	table, ok := recordTableFor(kind)
+	if !ok {
+		_, err = tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, key, sealed, now())
+		return err
+	}
+	_, err = tx.ExecContext(ctx, recordInsertSQL(kind, table), key, sealed, now())
 	return err
 }

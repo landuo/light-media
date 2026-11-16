@@ -148,7 +148,7 @@ func TestActualTransferExtensionChangesRejectNewPublication(t *testing.T) {
 				t.Fatal(e)
 			}
 			if tamper {
-				if _, e = a.Store.DB.Exec(`UPDATE records SET payload='{}' WHERE kind='native_directory_selection' AND id=?`, p.ID); e != nil {
+				if _, e = a.Store.DB.Exec(`UPDATE plugin_record SET payload='{}' WHERE kind='native_directory_selection' AND id=?`, p.ID); e != nil {
 					t.Fatal(e)
 				}
 			} else {
@@ -267,7 +267,7 @@ func TestActualTransferAudioSQLFailureColdRecovery(t *testing.T) {
 		t.Fatal(meta, e)
 	}
 	j := overwriteStart(t, a, p)
-	if _, e = a.Store.DB.Exec(`CREATE TRIGGER owned_audio_register_failure BEFORE INSERT ON records WHEN NEW.kind='asset' BEGIN SELECT RAISE(ABORT,'owned audio transaction failure'); END`); e != nil {
+	if _, e = a.Store.DB.Exec(`CREATE TRIGGER owned_audio_register_failure BEFORE INSERT ON library_asset WHEN NEW.record_kind='asset' BEGIN SELECT RAISE(ABORT,'owned audio transaction failure'); END`); e != nil {
 		t.Fatal(e)
 	}
 	if e = a.runImport(ctx, j, p.ID, nil); e == nil {

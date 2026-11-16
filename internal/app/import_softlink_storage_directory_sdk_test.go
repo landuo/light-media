@@ -55,7 +55,7 @@ func TestDirectoryStorageSoftlinkActualSDKAndColdStageRecovery(t *testing.T) {
 			}
 			firstPID := pid(a)
 			if branch == "cold-stage" {
-				_, err = a.Store.DB.Exec(`CREATE TRIGGER directory_softlink_actor_pause AFTER UPDATE ON records WHEN NEW.kind='import_receipt' AND NEW.id LIKE '` + key + `/directory/%' AND json_extract(NEW.payload,'$.state')='planned' AND length(json_extract(NEW.payload,'$.storage_softlink.result'))>0 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE id='` + job.ID + `'; END`)
+				_, err = a.Store.DB.Exec(`CREATE TRIGGER directory_softlink_actor_pause AFTER UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND NEW.id LIKE '` + key + `/directory/%' AND json_extract(NEW.payload,'$.state')='planned' AND length(json_extract(NEW.payload,'$.storage_softlink.result'))>0 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE id='` + job.ID + `'; END`)
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -142,7 +142,7 @@ func TestDirectoryStorageSoftlinkActualSDKAndColdStageRecovery(t *testing.T) {
 					t.Fatal("STREAM size lost", parent.DirectoryStreamSize)
 				}
 				var assets int
-				if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='asset'`).Scan(&assets); err != nil || assets != 1 {
+				if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM library_asset WHERE 1=1`).Scan(&assets); err != nil || assets != 1 {
 					t.Fatal("directory split into child assets", assets, err)
 				}
 				page := historyParityReadPage(t, a, "")
@@ -154,7 +154,7 @@ func TestDirectoryStorageSoftlinkActualSDKAndColdStageRecovery(t *testing.T) {
 				}
 			} else {
 				var assets int
-				if e := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='asset'`).Scan(&assets); e != nil || assets != 0 {
+				if e := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM library_asset WHERE 1=1`).Scan(&assets); e != nil || assets != 0 {
 					t.Fatal("copy actor got softlink asset", assets, e)
 				}
 			}

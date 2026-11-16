@@ -297,7 +297,7 @@ func TestLoggingDebugScopeExpiresAndDoesNotRestart(t *testing.T) {
 		t.Fatal("temporary DEBUG persisted")
 	}
 	raw := []byte{}
-	if e = a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&raw); e != nil {
+	if e = a.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&raw); e != nil {
 		t.Fatal(e)
 	}
 	var saved Settings
@@ -387,7 +387,7 @@ func TestLoggingHistoricalCleanupPreservesPendingAndRecovery(t *testing.T) {
 			t.Fatal(e)
 		}
 	}
-	_, e := a.Store.DB.ExecContext(ctx, `INSERT INTO records VALUES('audit','old',?,?)`, []byte(`{"time":"old"}`), old)
+	_, e := a.Store.DB.ExecContext(ctx, `INSERT INTO plugin_record VALUES('audit','old',?,?)`, []byte(`{"time":"old"}`), old)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -399,11 +399,11 @@ func TestLoggingHistoricalCleanupPreservesPendingAndRecovery(t *testing.T) {
 	if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM events`).Scan(&n); e != nil || n != 3 {
 		t.Fatal("pending event cleanup unsafe", n, e)
 	}
-	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='audit'`).Scan(&n)
+	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM audit_log WHERE 1=1`).Scan(&n)
 	if n != 0 {
 		t.Fatal("old audit not cleaned")
 	}
-	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='import_receipt'`).Scan(&n)
+	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM import_receipt WHERE 1=1`).Scan(&n)
 	if n != 1 {
 		t.Fatal("recovery state removed")
 	}

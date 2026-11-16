@@ -22,7 +22,7 @@ func (a *App) pruneDeletedCoreSiteReferencesTx(ctx context.Context, tx *sql.Tx, 
 		next.IndexerSites, _ = removeCoreSiteReference(next.IndexerSites, id)
 		next.RSSSites, _ = removeCoreSiteReference(next.RSSSites, id)
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT payload FROM records WHERE kind='subscription'`)
+	rows, err := tx.QueryContext(ctx, `SELECT payload FROM subscribe WHERE 1=1`)
 	if err != nil {
 		return err
 	}

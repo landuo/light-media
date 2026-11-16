@@ -226,7 +226,7 @@ func TestOriginalLarkTVMissingEpisodeLinuxAMD64(t *testing.T) {
 		t.Fatalf("incorrect partial pack effects: materials=%d adds=%d priorities=%d starts=%d", materials.Load(), adds.Load(), priorities.Load(), starts.Load())
 	}
 	var intentID string
-	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT id FROM records WHERE kind='intent'`).Scan(&intentID); err != nil {
+	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT uid FROM downloadhistory WHERE 1=1`).Scan(&intentID); err != nil {
 		t.Fatal(err)
 	}
 	var intent Intent

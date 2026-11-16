@@ -355,7 +355,7 @@ func ImportReviewedNativeSites(ctx context.Context, dir string, raw []byte, appl
 	}
 	var sealed []byte
 	var config Settings
-	if tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&sealed) != nil || s.Unseal(sealed, &config) != nil {
+	if tx.QueryRowContext(ctx, `SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed) != nil || s.Unseal(sealed, &config) != nil {
 		return fail()
 	}
 	fingerprint := s.siteIdentityMAC("source-native-fingerprint", in.SourceFingerprint)

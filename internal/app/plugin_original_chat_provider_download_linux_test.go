@@ -246,7 +246,7 @@ func TestOriginalLarkProviderDownloadLinuxAMD64(t *testing.T) {
 		t.Fatalf("incorrect provider download effects: queries=%d materials=%d adds=%d detail=%d", queries.Load(), materials.Load(), adds.Load(), exactDetails.Load())
 	}
 	var intentID string
-	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT id FROM records WHERE kind='intent'`).Scan(&intentID); err != nil {
+	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT uid FROM downloadhistory WHERE 1=1`).Scan(&intentID); err != nil {
 		t.Fatal(err)
 	}
 	var intent Intent

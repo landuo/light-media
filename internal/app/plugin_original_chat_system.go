@@ -79,8 +79,10 @@ func (a *App) clearOriginalChatMediaCaches(ctx context.Context) error {
 	cache := &a.originalHostMediaCache
 	cache.mu.Lock()
 	defer cache.mu.Unlock()
-	_, err := a.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE kind='cache' OR (kind='plugin_host_tmdb_cache' AND id='main')`)
-	if err != nil {
+	if _, err := a.Store.DB.ExecContext(ctx, `DELETE FROM cache_entry WHERE record_kind='cache'`); err != nil {
+		return err
+	}
+	if _, err := a.Store.DB.ExecContext(ctx, `DELETE FROM plugin_host_state WHERE id='main'`); err != nil {
 		return err
 	}
 	cache.items = map[string]*originalHostMediaCacheEntry{}

@@ -128,7 +128,7 @@ func TestImportPreviewPublishResumeAndSourceRetention(t *testing.T) {
 				t.Fatal("subtitle lost", err)
 			}
 			var assets, slots, reservations int
-			_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='asset'`).Scan(&assets)
+			_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM library_asset WHERE 1=1`).Scan(&assets)
 			_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM asset_slots`).Scan(&slots)
 			_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM reservations`).Scan(&reservations)
 			if assets != 1 || slots != 1 || reservations != 0 {

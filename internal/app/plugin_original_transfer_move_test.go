@@ -70,15 +70,15 @@ func TestOriginalTransferModuleActualSDKMoveAdoption(t *testing.T) {
 			// The durable "provider started" marker may never precede the
 			// destructive-call proof, including the first INSERT for a sidecar.
 			for _, statement := range []string{
-				`CREATE TRIGGER move_module_insert_proof BEFORE INSERT ON records WHEN NEW.kind='import_receipt' AND json_extract(NEW.payload,'$.original_module_started')=1 AND length(COALESCE(json_extract(NEW.payload,'$.original_move_sha256'),''))!=64 BEGIN SELECT RAISE(FAIL,'move called without frozen content proof'); END`,
-				`CREATE TRIGGER move_module_update_proof BEFORE UPDATE ON records WHEN NEW.kind='import_receipt' AND json_extract(NEW.payload,'$.original_module_started')=1 AND length(COALESCE(json_extract(NEW.payload,'$.original_move_sha256'),''))!=64 BEGIN SELECT RAISE(FAIL,'move called without frozen content proof'); END`,
+				`CREATE TRIGGER move_module_insert_proof BEFORE INSERT ON import_receipt WHEN NEW.record_kind='import_receipt' AND json_extract(NEW.payload,'$.original_module_started')=1 AND length(COALESCE(json_extract(NEW.payload,'$.original_move_sha256'),''))!=64 BEGIN SELECT RAISE(FAIL,'move called without frozen content proof'); END`,
+				`CREATE TRIGGER move_module_update_proof BEFORE UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND json_extract(NEW.payload,'$.original_module_started')=1 AND length(COALESCE(json_extract(NEW.payload,'$.original_move_sha256'),''))!=64 BEGIN SELECT RAISE(FAIL,'move called without frozen content proof'); END`,
 			} {
 				if _, err := a.Store.DB.Exec(statement); err != nil {
 					t.Fatal(err)
 				}
 			}
 			if branch == "asset-sql-retry" {
-				if _, err := a.Store.DB.Exec(`CREATE TRIGGER move_module_asset_failure BEFORE INSERT ON records WHEN NEW.kind='asset' BEGIN SELECT RAISE(FAIL,'synthetic external move asset failure'); END`); err != nil {
+				if _, err := a.Store.DB.Exec(`CREATE TRIGGER move_module_asset_failure BEFORE INSERT ON library_asset WHEN NEW.record_kind='asset' BEGIN SELECT RAISE(FAIL,'synthetic external move asset failure'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
@@ -190,7 +190,7 @@ func TestOriginalTransferModuleActualSDKMoveAdoption(t *testing.T) {
 				}
 			} else {
 				var count int
-				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&count); err != nil || count != 0 {
+				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&count); err != nil || count != 0 {
 					t.Fatal("unverified plugin move created asset ownership", count, err)
 				}
 			}
@@ -263,7 +263,7 @@ func TestOriginalTransferModuleActualSDKDirectoryCopyCannotClaimMove(t *testing.
 		t.Fatal("unsupported directory move recovery replayed plugin", before.Calls, after.Calls)
 	}
 	var assets int
-	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&assets); err != nil || assets != 0 {
+	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&assets); err != nil || assets != 0 {
 		t.Fatal("directory copied-but-declared-move created asset ownership", assets, err)
 	}
 	item, err := a.transferHistoryItem(ctx, file.ID)

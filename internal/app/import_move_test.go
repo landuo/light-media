@@ -142,8 +142,8 @@ func TestImportMoveColdRecoveryPreservesRecreatedSource(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = a.Store.DB.Exec(`CREATE TRIGGER move_quarantine_sql_failure BEFORE UPDATE ON records
-		WHEN NEW.kind='import_receipt' AND json_extract(NEW.payload,'$.move.state')='quarantined'
+	if _, err = a.Store.DB.Exec(`CREATE TRIGGER move_quarantine_sql_failure BEFORE UPDATE ON import_receipt
+		WHEN NEW.record_kind='import_receipt' AND json_extract(NEW.payload,'$.move.state')='quarantined'
 		BEGIN SELECT RAISE(FAIL,'synthetic move quarantine SQL failure'); END`); err != nil {
 		t.Fatal(err)
 	}

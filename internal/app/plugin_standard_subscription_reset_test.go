@@ -53,7 +53,7 @@ func TestStandardSubscriptionResetActualHTTPAndSDKSource(t *testing.T) {
 	if _, err = a.Store.DB.Exec(`INSERT INTO reservations VALUES(?,?,?,?)`, mediaKey(sub.Media), sub.Season, 1, "owned-reset-inflight"); err != nil {
 		t.Fatal(err)
 	}
-	if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_reset_failure BEFORE UPDATE ON records WHEN NEW.kind='subscription' BEGIN SELECT RAISE(ABORT,'owned reset rollback'); END`); err != nil {
+	if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_reset_failure BEFORE UPDATE ON subscribe WHEN NEW.record_kind='subscription' BEGIN SELECT RAISE(ABORT,'owned reset rollback'); END`); err != nil {
 		t.Fatal(err)
 	}
 	path := "/api/subscriptions/" + sub.ID + "/reset"

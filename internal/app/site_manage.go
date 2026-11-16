@@ -144,7 +144,7 @@ func (a *App) managedSites(ctx context.Context) (any, error) {
 		key := a.managedSiteKey(s)
 		var latest siteSnapshot
 		var raw []byte
-		err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='site_connection' AND id=?`, s.ID).Scan(&raw)
+		err := tx.QueryRowContext(ctx, `SELECT payload FROM site_state WHERE id=?`, s.ID).Scan(&raw)
 		if err == nil {
 			if err = a.Store.openSiteAccountSnapshot("site_connection", s.ID, raw, &latest); err != nil {
 				return nil, err
@@ -637,7 +637,8 @@ func (a *App) deleteManagedDownloader(ctx context.Context, key string) (any, err
 	a.settingsMu.Lock()
 	defer a.settingsMu.Unlock()
 	var references int
-	e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE ((kind='intent' AND json_extract(payload,'$.state') NOT IN ('imported','cancelled')) OR kind='subscription') AND json_extract(payload,'$.downloader_id')=?`, key).Scan(&references)
+	e := a.Store.DB.QueryRowContext(ctx, `SELECT (SELECT COUNT(*) FROM downloadhistory WHERE record_kind='intent' AND json_extract(payload,'$.state') NOT IN ('imported','cancelled') AND json_extract(payload,'$.downloader_id')=?)
+	 + (SELECT COUNT(*) FROM subscribe WHERE json_extract(payload,'$.downloader_id')=?)`, key).Scan(&references)
 	if e != nil {
 		return nil, e
 	}
@@ -667,7 +668,7 @@ func (a *App) deleteManagedDownloader(ctx context.Context, key string) (any, err
 	if e = a.saveSettings(ctx, c); e != nil {
 		return nil, e
 	}
-	_, _ = a.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE kind='downloader_connection' AND id=?`, key)
+	_, _ = a.Store.DB.ExecContext(ctx, `DELETE FROM plugin_record WHERE kind='downloader_connection' AND id=?`, key)
 	return a.managedDownloaders(ctx)
 }
 

@@ -252,7 +252,7 @@ func (a *App) previewDownloadReview(ctx context.Context, key string, request Dow
 	}
 	if targetChanged {
 		var assets int
-		if err = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='asset' AND json_extract(payload,'$.intent_id')=?`, in.ID).Scan(&assets); err != nil {
+		if err = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM library_asset WHERE json_extract(payload,'$.intent_id')=?`, in.ID).Scan(&assets); err != nil {
 			return out, err
 		}
 		if assets > 0 {
@@ -365,7 +365,7 @@ func (a *App) confirmDownloadReview(ctx context.Context, key, planID string, con
 	}
 	defer tx.Rollback()
 	var raw []byte
-	if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='intent' AND id=?`, key).Scan(&raw); err != nil {
+	if err = tx.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, key).Scan(&raw); err != nil {
 		return Job{}, err
 	}
 	if json.Unmarshal(raw, &in) != nil || in.State == "cancelled" || in.State == "imported" || downloadReviewFingerprint(in) != review.Fingerprint {
@@ -380,7 +380,7 @@ func (a *App) confirmDownloadReview(ctx context.Context, key, planID string, con
 	}
 	if review.TargetChanged {
 		var assets int
-		if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='asset' AND json_extract(payload,'$.intent_id')=?`, key).Scan(&assets); err != nil {
+		if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM library_asset WHERE json_extract(payload,'$.intent_id')=?`, key).Scan(&assets); err != nil {
 			return Job{}, err
 		}
 		if assets > 0 {
@@ -391,7 +391,7 @@ func (a *App) confirmDownloadReview(ctx context.Context, key, planID string, con
 		}
 		if in.SubscriptionID != "" {
 			var sub Subscription
-			if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription' AND id=?`, in.SubscriptionID).Scan(&raw); err != nil {
+			if err = tx.QueryRowContext(ctx, `SELECT payload FROM subscribe WHERE uid=?`, in.SubscriptionID).Scan(&raw); err != nil {
 				return Job{}, err
 			}
 			if json.Unmarshal(raw, &sub) != nil {
@@ -425,7 +425,7 @@ func (a *App) confirmDownloadReview(ctx context.Context, key, planID string, con
 	}
 	if in.ImportPlanID != "" && in.ImportPlanID != plan.ID {
 		var old ImportPlan
-		if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='import_plan' AND id=?`, in.ImportPlanID).Scan(&raw); err == nil {
+		if err = tx.QueryRowContext(ctx, `SELECT payload FROM import_plan WHERE id=?`, in.ImportPlanID).Scan(&raw); err == nil {
 			if json.Unmarshal(raw, &old) != nil {
 				return Job{}, bad("REVIEW_IMPORT_PLAN", "原整理记录无效")
 			}

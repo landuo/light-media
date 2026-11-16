@@ -58,7 +58,7 @@ func TestOriginalHistoryDeleteStorageModuleActualSDK(t *testing.T) {
 					}
 				}
 				var hidden int
-				if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='transfer_history_hidden' AND id=?`, item.ID).Scan(&hidden); err != nil || hidden != map[bool]int{true: 1, false: 0}[target || accepted] {
+				if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM history_hidden WHERE id=?`, item.ID).Scan(&hidden); err != nil || hidden != map[bool]int{true: 1, false: 0}[target || accepted] {
 					t.Fatal("fixed record deletion branch", hidden, err)
 				}
 			})
@@ -144,7 +144,7 @@ func TestOriginalHistorySourceDeleteCommitFailureColdRecovery(t *testing.T) {
 	if err := a.initOriginalLoadedPlugin(ctx, object.installation.InstanceID); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_source_remove_commit BEFORE UPDATE ON records WHEN NEW.kind='history_source_removal' AND json_extract(NEW.payload,'$.state')='completed' BEGIN SELECT RAISE(ABORT,'owned source removal commit'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_source_remove_commit BEFORE UPDATE ON history_receipt WHEN NEW.record_kind='history_source_removal' AND json_extract(NEW.payload,'$.state')='completed' BEGIN SELECT RAISE(ABORT,'owned source removal commit'); END`); err != nil {
 		t.Fatal(err)
 	}
 	before := ownedModuleRead(t, object)
@@ -194,7 +194,7 @@ func TestOriginalHistoryTargetParentCleanupHiddenFailureColdRecovery(t *testing.
 	}
 	nfo := strings.TrimSuffix(item.Target, filepath.Ext(item.Target)) + ".nfo"
 	importWrite(t, nfo, []byte("owned no-media parent cleanup"))
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_history_hide_commit BEFORE INSERT ON records WHEN NEW.kind='transfer_history_hidden' BEGIN SELECT RAISE(ABORT,'owned history hide commit'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_history_hide_commit BEFORE INSERT ON history_hidden WHEN NEW.record_kind='transfer_history_hidden' BEGIN SELECT RAISE(ABORT,'owned history hide commit'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := a.deleteTransferHistory(ctx, item, historyDeleteRequest{Confirm: true, DeleteTarget: true, FileID: item.executionFileID()}); err == nil {

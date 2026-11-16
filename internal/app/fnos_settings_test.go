@@ -43,7 +43,7 @@ func redactedFNOSSettings(t *testing.T, a *App) Settings {
 func storedFNOSSettings(t *testing.T, a *App) []byte {
 	t.Helper()
 	var raw []byte
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='config'`).Scan(&raw); err != nil {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE 1=1`).Scan(&raw); err != nil {
 		t.Fatal(err)
 	}
 	return raw

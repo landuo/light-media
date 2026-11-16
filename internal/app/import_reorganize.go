@@ -153,7 +153,7 @@ func (a *App) prepareImportReorganize(ctx context.Context, request ImportRequest
 	} else {
 		return nil, bad("REVIEW_REORGANIZE_SOURCE", "重新整理的源文件不属于所选历史")
 	}
-	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind='managed_file' AND json_extract(payload,'$.asset_id')=?`, frozen.Asset.ID)
+	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM managed_file WHERE json_extract(payload,'$.asset_id')=?`, frozen.Asset.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -218,14 +218,14 @@ func reorganizeReserveTx(ctx context.Context, tx *sql.Tx, plan ImportPlan) error
 		return nil
 	}
 	var raw []byte
-	if err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='import_meta' AND id=?`, plan.ID).Scan(&raw); err != nil {
+	if err := tx.QueryRowContext(ctx, `SELECT payload FROM import_meta WHERE id=?`, plan.ID).Scan(&raw); err != nil {
 		return err
 	}
 	var meta importMetadata
 	if json.Unmarshal(raw, &meta) != nil || meta.Reorganize == nil || meta.Reorganize.Asset.ID != plan.ReorganizeAssetID {
 		return bad("REVIEW_REORGANIZE_OWNER", "重新整理缺少原文件归属快照")
 	}
-	if err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='asset' AND id=?`, plan.ReorganizeAssetID).Scan(&raw); err != nil {
+	if err := tx.QueryRowContext(ctx, `SELECT payload FROM library_asset WHERE id=?`, plan.ReorganizeAssetID).Scan(&raw); err != nil {
 		return err
 	}
 	var current Asset

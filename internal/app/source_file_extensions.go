@@ -35,7 +35,7 @@ func (a *App) sourceFileExtensions(ctx context.Context) (fileextensions.Snapshot
 // never rewritten, nor used as evidence of missing extension fields.
 func (a *App) capturedSourceFileExtensions(ctx context.Context) (fileextensions.Snapshot, error) {
 	var sealed []byte
-	e := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='source_file_extension_settings' AND id='main'`).Scan(&sealed)
+	e := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed)
 	if errors.Is(e, sql.ErrNoRows) {
 		return fileextensions.Snapshot{}, fileextensions.ErrDependency
 	}

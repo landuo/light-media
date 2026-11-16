@@ -21,25 +21,25 @@ type organizeQueueMember struct {
 // Start at active jobs, then seek their membership. Starting at all archived
 // members makes an empty queue walk the whole job history on every UI poll.
 const liveOrganizeGroups = `SELECT DISTINCT json_extract(m.payload,'$.group')
- FROM jobs j INDEXED BY jobs_due CROSS JOIN records m INDEXED BY organize_queue_job
- WHERE j.state IN ` + activeOrganizeStates + ` AND m.kind='organize_queue_member'
+ FROM jobs j INDEXED BY jobs_due CROSS JOIN organize_queue_member m INDEXED BY organize_queue_job
+ WHERE j.state IN ` + activeOrganizeStates + `
  AND json_extract(m.payload,'$.job')=(j.id||'')`
 
 // Writes already know which group to check. Seek that group's members instead
 // of rebuilding the set of every active group for each incoming file.
 const activeOrganizeGroup = `EXISTS(
- SELECT 1 FROM records member INDEXED BY organize_queue_group
+ SELECT 1 FROM organize_queue_member member INDEXED BY organize_queue_group
  CROSS JOIN jobs active
- WHERE member.kind='organize_queue_member' AND json_extract(member.payload,'$.group')=(m.group_id||'')
+ WHERE json_extract(member.payload,'$.group')=(m.group_id||'')
  AND active.id=json_extract(member.payload,'$.job') AND active.state IN ` + activeOrganizeStates + `
 )`
 
 const matchingOrganizeGroups = `WITH matches(group_id) AS (
- SELECT json_extract(payload,'$.group') FROM records INDEXED BY organize_queue_meta
- WHERE kind='organize_queue_member' AND ?1!='' AND json_extract(payload,'$.meta')=?1
+ SELECT json_extract(payload,'$.group') FROM organize_queue_member INDEXED BY organize_queue_meta
+ WHERE ?1!='' AND json_extract(payload,'$.meta')=?1
  UNION
- SELECT json_extract(payload,'$.group') FROM records INDEXED BY organize_queue_media
- WHERE kind='organize_queue_member' AND ?2!='' AND json_extract(payload,'$.media')=?2
+ SELECT json_extract(payload,'$.group') FROM organize_queue_member INDEXED BY organize_queue_media
+ WHERE ?2!='' AND json_extract(payload,'$.media')=?2
 )
 SELECT m.group_id FROM matches m WHERE ` + activeOrganizeGroup
 
@@ -47,11 +47,11 @@ func activeOrganizeSourceTx(ctx context.Context, tx *sql.Tx, source string) (str
 	var job string
 	err := tx.QueryRowContext(ctx, `WITH candidates AS (
 	 SELECT json_extract(payload,'$.job') AS job_id,json_extract(payload,'$.file') AS file_id,json_extract(payload,'$.group') AS group_id
-	 FROM records WHERE kind='organize_queue_member' AND json_extract(payload,'$.source')=?
+	 FROM organize_queue_member WHERE json_extract(payload,'$.source')=?
 	)
 	SELECT m.job_id FROM candidates m JOIN jobs j ON j.id=m.job_id
 	WHERE j.state!='cancelled' AND NOT EXISTS(
-	 SELECT 1 FROM records c WHERE c.kind='organize_file_cancel' AND c.id=j.id||'/'||m.file_id
+	 SELECT 1 FROM organize_cancel c WHERE c.id=j.id||'/'||m.file_id
 	) AND `+activeOrganizeGroup+` LIMIT 1`, source).Scan(&job)
 	if errors.Is(err, sql.ErrNoRows) {
 		return "", nil
@@ -86,7 +86,7 @@ func registerOrganizeQueueTx(ctx context.Context, tx *sql.Tx, job Job) error {
 			return err
 		}
 		var raw []byte
-		if err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='import_plan' AND id=?`, payload.ID).Scan(&raw); err != nil {
+		if err := tx.QueryRowContext(ctx, `SELECT payload FROM import_plan WHERE id=?`, payload.ID).Scan(&raw); err != nil {
 			return err
 		}
 		var plan ImportPlan
@@ -107,7 +107,7 @@ func registerOrganizeQueueTx(ctx context.Context, tx *sql.Tx, job Job) error {
 	for _, member := range members {
 		key := tokenHash(job.ID + "\x00" + member.Source)
 		var raw []byte
-		err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='organize_queue_member' AND id=?`, key).Scan(&raw)
+		err := tx.QueryRowContext(ctx, `SELECT payload FROM organize_queue_member WHERE id=?`, key).Scan(&raw)
 		if err == nil {
 			var previous organizeQueueMember
 			if err := json.Unmarshal(raw, &previous); err != nil {
@@ -118,7 +118,7 @@ func registerOrganizeQueueTx(ctx context.Context, tx *sql.Tx, job Job) error {
 			return err
 		}
 		if job.Kind == "import" && member.Media == "" {
-			if _, err := tx.ExecContext(ctx, `DELETE FROM records WHERE kind='organize_queue_member' AND id=?`, key); err != nil {
+			if _, err := tx.ExecContext(ctx, `DELETE FROM organize_queue_member WHERE id=?`, key); err != nil {
 				return err
 			}
 			continue // MP removes recognition failures directly; history retains them.
@@ -151,7 +151,7 @@ func registerOrganizeQueueTx(ctx context.Context, tx *sql.Tx, job Job) error {
 			if group == member.Group {
 				continue
 			}
-			if _, err := tx.ExecContext(ctx, `UPDATE records SET payload=json_set(payload,'$.group',?) WHERE kind='organize_queue_member' AND json_extract(payload,'$.group')=?`, member.Group, group); err != nil {
+			if _, err := tx.ExecContext(ctx, `UPDATE organize_queue_member SET payload=json_set(payload,'$.group',?) WHERE json_extract(payload,'$.group')=?`, member.Group, group); err != nil {
 				return err
 			}
 		}
@@ -166,7 +166,7 @@ func registerOrganizeQueueTx(ctx context.Context, tx *sql.Tx, job Job) error {
 // leaving historic completed batches outside the current queue.
 func (a *App) seedOrganizeQueue(ctx context.Context) error {
 	jobs, err := a.queryJobs(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind IN ('import','organize_file') AND state IN `+activeOrganizeStates+`
-	 AND NOT EXISTS(SELECT 1 FROM records m INDEXED BY organize_queue_job WHERE m.kind='organize_queue_member' AND json_extract(m.payload,'$.job')=(jobs.id||''))`)
+	 AND NOT EXISTS(SELECT 1 FROM organize_queue_member m INDEXED BY organize_queue_job WHERE m.kind='organize_queue_member' AND json_extract(m.payload,'$.job')=(jobs.id||''))`)
 	if err != nil || len(jobs) == 0 {
 		return err
 	}

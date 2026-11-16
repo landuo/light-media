@@ -47,7 +47,7 @@ func ownedSourceSettingsTarget(t *testing.T) string {
 	if _, e = NewPluginStore(context.Background(), s); e != nil {
 		t.Fatal(e)
 	}
-	if _, e = s.DB.Exec(`INSERT INTO records(kind,id,payload,updated_at) VALUES('owned_existing','keep',?,'before')`, []byte(`{"preserve":"owned"}`)); e != nil {
+	if _, e = s.DB.Exec(`INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES('owned_existing','keep',?,'before')`, []byte(`{"preserve":"owned"}`)); e != nil {
 		t.Fatal(e)
 	}
 	if e = s.Close(); e != nil {
@@ -152,7 +152,7 @@ func TestReviewedSourceSettingsDryApplyReplayCold(t *testing.T) {
 		}
 	}
 	var existing []byte
-	if s.DB.QueryRow(`SELECT payload FROM records WHERE kind='owned_existing' AND id='keep'`).Scan(&existing) != nil || string(existing) != `{"preserve":"owned"}` {
+	if s.DB.QueryRow(`SELECT payload FROM plugin_record WHERE kind='owned_existing' AND id='keep'`).Scan(&existing) != nil || string(existing) != `{"preserve":"owned"}` {
 		t.Fatal("unrelated record changed")
 	}
 }
@@ -196,18 +196,18 @@ func TestReviewedSourceSettingsAtomicRollbackAndScope(t *testing.T) {
 			}
 			switch scenario {
 			case "SQL-failure":
-				_, e = s.DB.Exec(`CREATE TRIGGER owned_fail_source_settings BEFORE INSERT ON records WHEN NEW.kind='source_network_settings' BEGIN SELECT RAISE(ABORT,'owned failure'); END`)
+				_, e = s.DB.Exec(`CREATE TRIGGER owned_fail_source_settings BEFORE INSERT ON systemconfig WHEN NEW.record_kind='source_network_settings' BEGIN SELECT RAISE(ABORT,'owned failure'); END`)
 			case "partial-record":
 				p := &PluginStore{store: s}
 				sealed, err := p.seal("source_statistics_settings", "system", "main", []byte(`{}`))
 				if err != nil {
 					t.Fatal(err)
 				}
-				_, e = s.DB.Exec(`INSERT INTO records(kind,id,payload,updated_at) VALUES('source_statistics_settings','main',?,'owned')`, sealed)
+				_, e = s.DB.Exec(`INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES('source_statistics_settings','main',?,'owned')`, sealed)
 			case "active-work":
 				_, e = s.DB.Exec(`INSERT INTO jobs(id,workflow_id,kind,state,payload,run_at,created_at,updated_at) VALUES('owned','owned','owned','queued','{}',0,'owned','owned')`)
 			case "corrupt-record":
-				_, e = s.DB.Exec(`UPDATE records SET payload=zeroblob(length(payload)) WHERE kind='source_network_settings'`)
+				_, e = s.DB.Exec(`UPDATE systemconfig SET payload=zeroblob(length(payload)) WHERE 1=1`)
 			case "existing-conflict":
 				input = bytes.Replace(input, []byte("owned-source-token"), []byte("different-owned-source-token"), 1)
 			}
@@ -232,7 +232,7 @@ func TestReviewedSourceSettingsAtomicRollbackAndScope(t *testing.T) {
 				}
 				defer s.Close()
 				var count int
-				if e = s.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind IN ('source_statistics_settings','source_network_settings','source_runtime_settings','source_settings_migration')`).Scan(&count); e != nil || count != 0 {
+				if e = s.DB.QueryRow(`SELECT COUNT(*) FROM systemconfig WHERE kind IN ('source_statistics_settings','source_network_settings','source_runtime_settings','source_settings_migration')`).Scan(&count); e != nil || count != 0 {
 					t.Fatal("partial failed transaction survived", count, e)
 				}
 			}

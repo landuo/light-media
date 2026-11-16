@@ -28,7 +28,7 @@ func (a *App) consumeOriginalCoreSiteDataClear(ctx context.Context, raw json.Raw
 		return err
 	}
 	prefix := "site." + host
-	rows, err := a.Store.DB.QueryContext(ctx, `SELECT id FROM records WHERE kind='site_cooldown' ORDER BY rowid`)
+	rows, err := a.Store.DB.QueryContext(ctx, `SELECT id FROM site_state ORDER BY rowid`)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func (a *App) consumeOriginalCoreSiteDataClear(ctx context.Context, raw json.Raw
 		}
 		// Original SystemConfig.delete commits each key separately. A later SQL
 		// failure must not restore earlier successfully cleared cache entries.
-		if _, err = a.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE kind='site_cooldown' AND id=?`, id); err != nil {
+		if _, err = a.Store.DB.ExecContext(ctx, `DELETE FROM site_state WHERE id=?`, id); err != nil {
 			return err
 		}
 	}

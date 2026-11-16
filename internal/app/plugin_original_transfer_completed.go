@@ -58,8 +58,8 @@ func (a *App) finishOriginalTransferTorrent(ctx context.Context, job Job, state 
 
 func (a *App) originalTorrentTasksDone(ctx context.Context, hash string) (bool, error) {
 	rows, err := a.Store.DB.QueryContext(ctx, `SELECT json_extract(i.payload,'$.hash') FROM jobs j
-		JOIN records p ON p.kind='import_plan' AND p.id=json_extract(j.payload,'$.id')
-		JOIN records i ON i.kind='intent' AND i.id=json_extract(p.payload,'$.intent_id')
+		JOIN import_plan p ON p.id=json_extract(j.payload,'$.id')
+		JOIN downloadhistory i ON i.uid=json_extract(p.payload,'$.intent_id')
 		WHERE j.kind='import' AND j.state NOT IN ('succeeded','failed','cancelled')`)
 	if err != nil {
 		return false, err

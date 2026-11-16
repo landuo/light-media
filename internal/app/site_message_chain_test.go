@@ -176,7 +176,7 @@ func siteMessageHTTPFixture(t *testing.T, a *App, duplicate bool, lowRatio ...bo
 
 func siteMessageHistory(t *testing.T, a *App) []Notification {
 	t.Helper()
-	rows, err := a.Store.DB.Query(`SELECT payload FROM records WHERE kind='notification' ORDER BY rowid`)
+	rows, err := a.Store.DB.Query(`SELECT payload FROM message ORDER BY rowid`)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -347,7 +347,7 @@ func TestSiteMessageGlobalActualHistorySourceDedupAndDeletion(t *testing.T) {
 	}
 	// The private test DB is the only deletion target. Real history deletion
 	// must remove dedup evidence; route acceptance is not a permanent reservation.
-	if _, err = a.Store.DB.Exec(`DELETE FROM records WHERE kind='notification' AND id=?`, history[0].ID); err != nil {
+	if _, err = a.Store.DB.Exec(`DELETE FROM message WHERE uid=?`, history[0].ID); err != nil {
 		t.Fatal(err)
 	}
 	third := siteMessageSeedCollectedDTO(t, a, job, "after-deletion", &sites.SourceUserData{MessageUnread: 1, Messages: [][]any{{"again", "date", "body", "shared/source:42"}}})
@@ -610,7 +610,7 @@ func TestSiteMessageActualCoreBatchCollectsAndPublishesOnce(t *testing.T) {
 func TestSiteMessageCoreCollectionFactCommitFailureBlocksRecollection(t *testing.T) {
 	a := newTestApp(t)
 	calls := siteMessageHTTPFixture(t, a, false)
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_collection_fact_failure BEFORE UPDATE ON records WHEN OLD.kind='site_message_collection' BEGIN SELECT RAISE(ABORT,'owned collection fact rollback'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_collection_fact_failure BEFORE UPDATE ON site_message_sync WHEN OLD.record_kind='site_message_collection' BEGIN SELECT RAISE(ABORT,'owned collection fact rollback'); END`); err != nil {
 		t.Fatal(err)
 	}
 	job := siteMessageClaimBatch(t, a)
@@ -631,7 +631,7 @@ func TestSiteMessageCoreCollectionFactCommitFailureBlocksRecollection(t *testing
 	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM domain_events WHERE json_extract(payload,'$.event_type')='site.refreshed'`).Scan(&events); err != nil || events != 0 {
 		t.Fatal("rolled-back fact emitted event", events, err)
 	}
-	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='site_message_collection'`).Scan(&admitted); err != nil || admitted != 1 {
+	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM site_message_sync WHERE 1=1`).Scan(&admitted); err != nil || admitted != 1 {
 		t.Fatal("request admission was not durable", admitted, err)
 	}
 	if _, err = a.Store.DB.Exec(`DROP TRIGGER owned_collection_fact_failure`); err != nil {

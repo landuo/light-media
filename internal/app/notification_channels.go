@@ -37,7 +37,7 @@ func (p *PluginStore) initNotificationChannelsTx(ctx context.Context, tx *sql.Tx
 		return e
 	}
 	var marker []byte
-	e := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='core_settings_lifecycle' AND id='notifications/v1'`).Scan(&marker)
+	e := tx.QueryRowContext(ctx, `SELECT payload FROM settings_lifecycle WHERE id='notifications/v1'`).Scan(&marker)
 	if e == nil {
 		raw, e := p.unseal("core_notification_marker", "system", "main", marker)
 		if e != nil || string(raw) != `{"version":1}` {
@@ -71,7 +71,7 @@ func (p *PluginStore) initNotificationChannelsTx(ctx context.Context, tx *sql.Tx
 	if e != nil {
 		return e
 	}
-	_, e = tx.ExecContext(ctx, `INSERT INTO records VALUES('core_settings_lifecycle','notifications/v1',?,?)`, marker, now())
+	_, e = tx.ExecContext(ctx, recordInsertSQL("core_settings_lifecycle", recordTableForKind("core_settings_lifecycle")), "notifications/v1", marker, now())
 	return e
 }
 func (p *PluginStore) notificationChannelsReadTx(ctx context.Context, q pluginRemoveLinkJournalReader) (NotificationChannelSnapshot, error) {

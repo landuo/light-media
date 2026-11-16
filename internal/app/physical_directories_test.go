@@ -317,7 +317,7 @@ func TestOrderedPhysicalRulesProcessOnlyFirstMatchAndBlockStalePriorityPlan(t *t
 		t.Fatalf("overlapping watches both organized: first=%+v second=%+v", owned, skipped)
 	}
 	var plans int
-	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='import_plan'`).Scan(&plans); err != nil || plans != 1 {
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM import_plan WHERE 1=1`).Scan(&plans); err != nil || plans != 1 {
 		t.Fatal("overlapping rules created duplicate plans", plans, err)
 	}
 	a.config.Directories = []DirectoryRule{second, first}

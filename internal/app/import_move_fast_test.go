@@ -128,7 +128,7 @@ func TestImportMoveRenamePublicationColdRecovery(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = a.Store.DB.Exec(`CREATE TRIGGER move_publish_sql_failure BEFORE UPDATE ON records WHEN NEW.kind='import_receipt' AND json_extract(NEW.payload,'$.state')='published' BEGIN SELECT RAISE(FAIL,'synthetic publication failure'); END`); err != nil {
+	if _, err = a.Store.DB.Exec(`CREATE TRIGGER move_publish_sql_failure BEFORE UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND json_extract(NEW.payload,'$.state')='published' BEGIN SELECT RAISE(FAIL,'synthetic publication failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if _, err = a.publishImport(t.Context(), "rename-move", input, output, stamp, "move", nil); err == nil {

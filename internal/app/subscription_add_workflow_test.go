@@ -110,7 +110,7 @@ func TestUISubscriptionActualSaveDefaultNoticeAddedColdAndDuplicateBeforeAwaitSt
 			if e = cold.safeRun(ctx, job); pluginErrorCodeInternal(e) != "SUBSCRIPTION_ASYNC_STATS_DEPENDENCY" || fixture.Sends.Load() != 1 || fixture.Metadata.Load() != 1 {
 				t.Fatal("cold saved UI operation repeated source business", e)
 			}
-			if _, e = cold.Store.DB.Exec(`DELETE FROM records WHERE kind='source_subscription_origin'`); e != nil {
+			if _, e = cold.Store.DB.Exec(`DELETE FROM subscription_origin WHERE 1=1`); e != nil {
 				t.Fatal(e)
 			}
 			if e = cold.safeRun(ctx, job); e == nil {
@@ -178,7 +178,7 @@ func TestUISubscriptionActualAuthenticatedAPIAndExistingAddPreserveCreation(t *t
 		t.Fatal("existing source add rewrote original ownership", e)
 	}
 	var rows int
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription'`).Scan(&rows)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM subscribe WHERE 1=1`).Scan(&rows)
 	if rows != 1 {
 		t.Fatal("duplicate UI create made second subscription", rows)
 	}
@@ -194,15 +194,15 @@ func TestUISubscriptionActualSaveReceiptFailureRollsBackAndRecovers(t *testing.T
 	if e != nil {
 		t.Fatal(e)
 	}
-	if _, e = a.Store.DB.Exec(`CREATE TRIGGER owned_ui_save_receipt_failure BEFORE UPDATE ON records WHEN NEW.kind='subscription_add' BEGIN SELECT RAISE(ABORT,'owned UI save receipt write failure'); END`); e != nil {
+	if _, e = a.Store.DB.Exec(`CREATE TRIGGER owned_ui_save_receipt_failure BEFORE UPDATE ON plugin_record WHEN NEW.kind='subscription_add' BEGIN SELECT RAISE(ABORT,'owned UI save receipt write failure'); END`); e != nil {
 		t.Fatal(e)
 	}
 	if e = a.runUISubscriptionAdd(ctx, job, identity.ID); e == nil {
 		t.Fatal("source mutation without receipt committed")
 	}
 	var rows, origins int
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription'`).Scan(&rows)
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='source_subscription_origin'`).Scan(&origins)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM subscribe WHERE 1=1`).Scan(&rows)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM subscription_origin WHERE 1=1`).Scan(&origins)
 	if rows != 0 || origins != 0 || noticeV2AddedCount(t, a) != 0 || fixture.Sends.Load() != 0 {
 		t.Fatal("save/receipt TX failure was partial", rows, origins)
 	}
@@ -282,7 +282,7 @@ func TestUISubscriptionAuthenticatedAPIAwaitsActualAsyncStatistics(t *testing.T)
 					return
 				}
 				if mode == "finish_sql_failure" {
-					if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_async_finish_failure BEFORE UPDATE ON records WHEN NEW.kind='subscription_stats' BEGIN SELECT RAISE(ABORT,'owned async receipt write failure'); END`); e != nil {
+					if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_async_finish_failure BEFORE UPDATE ON plugin_record WHEN NEW.kind='subscription_stats' BEGIN SELECT RAISE(ABORT,'owned async receipt write failure'); END`); e != nil {
 						t.Error(e)
 					}
 				}
@@ -296,7 +296,7 @@ func TestUISubscriptionAuthenticatedAPIAwaitsActualAsyncStatistics(t *testing.T)
 			subscriptionStatsInstallSettings(t, a, statistics.URL, true)
 			if mode == "nonascii_header" {
 				var sealed []byte
-				a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='source_statistics_settings' AND id='main'`).Scan(&sealed)
+				a.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed)
 				raw, e := a.pluginStore.unseal("source_statistics_settings", "system", "main", sealed)
 				if e != nil {
 					t.Fatal(e)
@@ -310,7 +310,7 @@ func TestUISubscriptionAuthenticatedAPIAwaitsActualAsyncStatistics(t *testing.T)
 				if e != nil {
 					t.Fatal(e)
 				}
-				if _, e = a.Store.DB.Exec(`UPDATE records SET payload=? WHERE kind='source_statistics_settings' AND id='main'`, sealed); e != nil {
+				if _, e = a.Store.DB.Exec(`UPDATE systemconfig SET payload=? WHERE uid='main'`, sealed); e != nil {
 					t.Fatal(e)
 				}
 			}

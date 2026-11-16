@@ -148,9 +148,9 @@ func (a *App) executeOriginalCleanSeedEffect(ctx context.Context, scope original
 		return false, err
 	}
 	// Store.Put writes the confirmed JSON value as bytes.
-	result, err := a.Store.DB.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at)
+	result, err := a.Store.DB.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at)
 		VALUES(?,?,'"started"',?) ON CONFLICT(kind,id) DO UPDATE
-		SET payload=excluded.payload,updated_at=excluded.updated_at WHERE CAST(records.payload AS TEXT)='"confirmed"'`, kind, key, now())
+		SET payload=excluded.payload,updated_at=excluded.updated_at WHERE CAST(plugin_record.payload AS TEXT)='"confirmed"'`, kind, key, now())
 	if err != nil {
 		return false, err
 	}
@@ -170,7 +170,7 @@ func (a *App) executeOriginalCleanSeedEffect(ctx context.Context, scope original
 	if applied {
 		err = a.Store.Put(settle, kind, key, "confirmed")
 	} else {
-		_, err = a.Store.DB.ExecContext(settle, `DELETE FROM records WHERE kind=? AND id=?`, kind, key)
+		_, err = a.Store.DB.ExecContext(settle, `DELETE FROM plugin_record WHERE kind=? AND id=?`, kind, key)
 	}
 	if err != nil {
 		return false, bad("CLEAN_SEED_EFFECT_UNCERTAIN", "清理结果未能保存，需核对实际状态")

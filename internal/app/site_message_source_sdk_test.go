@@ -46,7 +46,7 @@ func TestSiteMessageImportedSettingCorePolicyAndConnection(t *testing.T) {
 			}
 			defer cold.Close()
 			if mode == "corrupt-proof" {
-				if _, e = cold.Store.DB.Exec(`UPDATE records SET payload=zeroblob(length(payload)) WHERE kind='source_site_message_settings'`); e != nil {
+				if _, e = cold.Store.DB.Exec(`UPDATE systemconfig SET payload=zeroblob(length(payload)) WHERE 1=1`); e != nil {
 					t.Fatal(e)
 				}
 			}

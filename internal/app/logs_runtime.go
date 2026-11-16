@@ -585,7 +585,7 @@ func (l *runtimeLogger) cleanupHistory() {
 	// retain their diagnostic events until explicitly resolved; recovery state is never deleted.
 	_, e := l.app.Store.DB.ExecContext(ctx, `DELETE FROM events WHERE seq IN (SELECT e.seq FROM events e JOIN jobs j ON j.id=e.job_id WHERE j.state IN ('succeeded','cancelled') AND j.updated_at<? AND e.time<? ORDER BY e.seq LIMIT 500)`, time.Now().Add(-90*24*time.Hour).UTC().Format(time.RFC3339Nano), time.Now().Add(-90*24*time.Hour).UTC().Format(time.RFC3339Nano))
 	if e == nil {
-		_, e = l.app.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE kind='audit' AND id IN (SELECT id FROM records WHERE kind='audit' AND updated_at<? ORDER BY updated_at LIMIT 500)`, time.Now().Add(-180*24*time.Hour).UTC().Format(time.RFC3339Nano))
+		_, e = l.app.Store.DB.ExecContext(ctx, `DELETE FROM audit_log WHERE id IN (SELECT id FROM audit_log WHERE updated_at<? ORDER BY updated_at LIMIT 500)`, time.Now().Add(-180*24*time.Hour).UTC().Format(time.RFC3339Nano))
 	}
 	l.mu.Lock()
 	if e != nil {

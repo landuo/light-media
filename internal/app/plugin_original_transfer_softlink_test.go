@@ -64,12 +64,12 @@ func TestOriginalTransferModuleActualSDKSoftlinkAdoption(t *testing.T) {
 				t.Fatal(err)
 			}
 			for _, event := range []string{"INSERT", "UPDATE"} {
-				if _, err := a.Store.DB.Exec(`CREATE TRIGGER softlink_call_proof_` + event + ` BEFORE ` + event + ` ON records WHEN NEW.kind='import_receipt' AND json_extract(NEW.payload,'$.original_module_started')=1 AND (COALESCE(json_extract(NEW.payload,'$.original_softlink.target_absent'),0)!=1 OR COALESCE(json_extract(NEW.payload,'$.softlink.source'),'')!=json_extract(NEW.payload,'$.source')) BEGIN SELECT RAISE(FAIL,'softlink provider called without frozen proof'); END`); err != nil {
+				if _, err := a.Store.DB.Exec(`CREATE TRIGGER softlink_call_proof_` + event + ` BEFORE ` + event + ` ON import_receipt WHEN NEW.record_kind='import_receipt' AND json_extract(NEW.payload,'$.original_module_started')=1 AND (COALESCE(json_extract(NEW.payload,'$.original_softlink.target_absent'),0)!=1 OR COALESCE(json_extract(NEW.payload,'$.softlink.source'),'')!=json_extract(NEW.payload,'$.source')) BEGIN SELECT RAISE(FAIL,'softlink provider called without frozen proof'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
 			if branch == "asset-sql-cold" {
-				if _, err := a.Store.DB.Exec(`CREATE TRIGGER softlink_asset_failure BEFORE INSERT ON records WHEN NEW.kind='asset' BEGIN SELECT RAISE(FAIL,'synthetic external softlink asset failure'); END`); err != nil {
+				if _, err := a.Store.DB.Exec(`CREATE TRIGGER softlink_asset_failure BEFORE INSERT ON library_asset WHEN NEW.record_kind='asset' BEGIN SELECT RAISE(FAIL,'synthetic external softlink asset failure'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}

@@ -61,7 +61,7 @@ func TestOriginalSiteCacheDomainAndClearFixedSource(t *testing.T) {
 				t.Fatal(err)
 			}
 			if sample.Fail != nil {
-				if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_clear_failure BEFORE DELETE ON records WHEN OLD.kind='site_cooldown' AND OLD.id='cache-foobar' BEGIN SELECT RAISE(ABORT,'owned second cache failure'); END`); err != nil {
+				if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_clear_failure BEFORE DELETE ON site_state WHEN OLD.record_kind='site_cooldown' AND OLD.id='cache-foobar' BEGIN SELECT RAISE(ABORT,'owned second cache failure'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
@@ -78,12 +78,12 @@ func TestOriginalSiteCacheDomainAndClearFixedSource(t *testing.T) {
 					}
 				}
 				var count int
-				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='site_cooldown' AND id=?`, id).Scan(&count); err != nil || count != want {
+				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM site_state WHERE id=?`, id).Scan(&count); err != nil || count != want {
 					t.Fatal("source prefix/partial commit cache effect", id, count, want, err)
 				}
 			}
 			var history int
-			if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='site_stats_history' AND id='must-stay'`).Scan(&history); err != nil || history != 1 || len(a.Settings().Sites) != 4 {
+			if err := a.Store.DB.QueryRow(`SELECT count(*) FROM site_statistic_event WHERE id='must-stay'`).Scan(&history); err != nil || history != 1 || len(a.Settings().Sites) != 4 {
 				t.Fatal("cache clear changed account history or configured sites", err)
 			}
 		})
@@ -179,7 +179,7 @@ func TestOriginalSiteFaviconFixedSourceActualHTTPEncryptedCache(t *testing.T) {
 				t.Fatal("private cached icon is public")
 			}
 			var public []byte
-			if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='site_icon' AND id=?`, site.ID).Scan(&public); err != nil || bytes.Contains(public, []byte("owned-icon")) || bytes.Contains(public, []byte(peer.URL)) {
+			if err := a.Store.DB.QueryRow(`SELECT payload FROM siteicon WHERE uid=?`, site.ID).Scan(&public); err != nil || bytes.Contains(public, []byte("owned-icon")) || bytes.Contains(public, []byte(peer.URL)) {
 				t.Fatal("private chosen icon URL/content exposed in stored cache", err)
 			}
 		})

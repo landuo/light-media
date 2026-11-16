@@ -85,14 +85,14 @@ func (a *App) persistVerifiedMaterialTx(ctx context.Context, tx *sql.Tx, raw []b
 	mac.Write(digest[:])
 	ref := "mat_" + hex.EncodeToString(mac.Sum(nil))
 	var previous []byte
-	e := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='material_info' AND id=?`, ref).Scan(&previous)
+	e := tx.QueryRowContext(ctx, `SELECT payload FROM material WHERE id=?`, ref).Scan(&previous)
 	if e == nil {
 		var info materialInfo
 		if json.Unmarshal(previous, &info) != nil || info.Ref != ref || info.Purpose != materialPurpose || info.Size != len(raw) || info.Hash != hash || info.Digest != hex.EncodeToString(digest[:]) || info.Magnet != magnet {
 			return "", bad("MATERIAL_CORRUPT", "已有材料归档无法核对")
 		}
 		var sealed []byte
-		if e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='material_blob' AND id=?`, ref).Scan(&sealed); errors.Is(e, sql.ErrNoRows) {
+		if e = tx.QueryRowContext(ctx, `SELECT payload FROM material_blob WHERE id=?`, ref).Scan(&sealed); errors.Is(e, sql.ErrNoRows) {
 			return "", bad("MATERIAL_UNAVAILABLE", "材料归档缺失，需人工核对")
 		} else if e != nil {
 			return "", e
@@ -132,7 +132,7 @@ func (a *App) persistVerifiedMaterialTx(ctx context.Context, tx *sql.Tx, raw []b
 	}
 	sealed := aead.Seal(nonce, nonce, raw, []byte("light-media/material/v1/"+ref))
 	var used int64
-	if e = tx.QueryRowContext(ctx, `SELECT COALESCE(SUM(length(payload)),0) FROM records WHERE kind='material_blob'`).Scan(&used); e != nil {
+	if e = tx.QueryRowContext(ctx, `SELECT COALESCE(SUM(length(payload)),0) FROM material_blob WHERE 1=1`).Scan(&used); e != nil {
 		return "", e
 	}
 	if used+int64(len(sealed)) > a.materialBudget() {
@@ -142,14 +142,14 @@ func (a *App) persistVerifiedMaterialTx(ctx context.Context, tx *sql.Tx, raw []b
 	if e = txPut(ctx, tx, "material_info", ref, info); e != nil {
 		return "", e
 	}
-	if _, e = tx.ExecContext(ctx, `INSERT INTO records VALUES('material_blob',?,?,?)`, ref, sealed, now()); e != nil {
+	if _, e = tx.ExecContext(ctx, recordInsertSQL("material_blob", recordTableForKind("material_blob")), ref, sealed, now()); e != nil {
 		return "", e
 	}
 	return ref, nil
 }
 
 func cleanupMaterialOrphansTx(ctx context.Context, tx *sql.Tx) error {
-	rows, e := tx.QueryContext(ctx, `SELECT id FROM records WHERE kind='material_info' AND json_extract(payload,'$.pinned')=0 AND json_extract(payload,'$.expires_at')<? LIMIT 4096`, now())
+	rows, e := tx.QueryContext(ctx, `SELECT id FROM material WHERE json_extract(payload,'$.pinned')=0 AND json_extract(payload,'$.expires_at')<? LIMIT 4096`, now())
 	if e != nil {
 		return e
 	}
@@ -168,7 +168,7 @@ func cleanupMaterialOrphansTx(ctx context.Context, tx *sql.Tx) error {
 		return e
 	}
 	for _, key := range expired {
-		if _, e = tx.ExecContext(ctx, `DELETE FROM records WHERE kind IN ('material_info','material_blob') AND id=?`, key); e != nil {
+		if _, e = tx.ExecContext(ctx, `DELETE FROM material WHERE id=?`, key); e != nil {
 			return e
 		}
 	}
@@ -194,7 +194,7 @@ func pinMaterialTx(ctx context.Context, tx *sql.Tx, ref, hash string) error {
 		return nil
 	} // Existing validation fixtures and pre-archive records.
 	var raw []byte
-	if e := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='material_info' AND id=?`, ref).Scan(&raw); e != nil {
+	if e := tx.QueryRowContext(ctx, `SELECT payload FROM material WHERE id=?`, ref).Scan(&raw); e != nil {
 		return bad("MATERIAL_UNAVAILABLE", "原种子材料归档不存在，请重新预览")
 	}
 	var info materialInfo
@@ -208,7 +208,7 @@ func pinMaterialTx(ctx context.Context, tx *sql.Tx, ref, hash string) error {
 		}
 	}
 	var count int
-	if e := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='material_blob' AND id=?`, ref).Scan(&count); e != nil {
+	if e := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM material_blob WHERE id=?`, ref).Scan(&count); e != nil {
 		return e
 	}
 	if count != 1 {
@@ -246,7 +246,7 @@ func (a *App) resolveDownloadMaterial(ctx context.Context, ref, purpose string, 
 		}
 	}
 	var sealed []byte
-	if e := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='material_blob' AND id=?`, ref).Scan(&sealed); e != nil {
+	if e := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM material_blob WHERE id=?`, ref).Scan(&sealed); e != nil {
 		return nil, bad("MATERIAL_UNAVAILABLE", "受保护的原种子材料不可用")
 	}
 	aead, e := a.materialAEAD()

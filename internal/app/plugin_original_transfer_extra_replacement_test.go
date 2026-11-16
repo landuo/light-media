@@ -63,7 +63,7 @@ func TestOriginalExtraReplacementWithoutVideoAsset(t *testing.T) {
 				t.Fatal(e)
 			}
 			var n int
-			if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='asset'`).Scan(&n); e != nil || n != 0 {
+			if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM library_asset WHERE 1=1`).Scan(&n); e != nil || n != 0 {
 				t.Fatal("no false main asset", n, e)
 			}
 			delete(cfg, "transfer_results")
@@ -97,7 +97,7 @@ func TestOriginalExtraReplacementWithoutVideoAsset(t *testing.T) {
 			}
 			tx.Rollback()
 			if !grouped {
-				if _, e = a.Store.DB.Exec(`CREATE TRIGGER owned_extra_replace_failure BEFORE INSERT ON records WHEN NEW.kind='managed_file' BEGIN SELECT RAISE(ABORT,'owned extra replacement registration'); END`); e != nil {
+				if _, e = a.Store.DB.Exec(`CREATE TRIGGER owned_extra_replace_failure BEFORE INSERT ON managed_file WHEN NEW.record_kind='managed_file' BEGIN SELECT RAISE(ABORT,'owned extra replacement registration'); END`); e != nil {
 					t.Fatal(e)
 				}
 				if e = a.runImport(ctx, overwriteStart(t, a, next), next.ID, nil); e == nil {
@@ -152,7 +152,7 @@ func TestOriginalExtraReplacementWithoutVideoAsset(t *testing.T) {
 			if e = a.Store.Get(ctx, "managed_file", tokenHash(final.Files[0].Target), &owned); e != nil || owned.AssetID != final.Files[0].AssetID || owned.Kind != "subtitle" {
 				t.Fatal("new independent owner", owned, e)
 			}
-			if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='asset'`).Scan(&n); e != nil || n != 0 {
+			if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM library_asset WHERE 1=1`).Scan(&n); e != nil || n != 0 {
 				t.Fatal("no fabricated asset after overwrite", n, e)
 			}
 		})

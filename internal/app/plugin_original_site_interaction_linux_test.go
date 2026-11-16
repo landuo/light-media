@@ -230,7 +230,7 @@ func TestOriginalLarkSiteInteractionLinuxAMD64(t *testing.T) {
 		credentialPosts.Load() != 1 || otpPosts.Load() != 1 || foreignRequests.Load() != 0 {
 		t.Fatal("browser login did not persist verified Cookie+UA or attempted cross-origin credential transfer")
 	}
-	rows, err := a.Store.DB.QueryContext(t.Context(), "SELECT payload FROM records WHERE kind='message'")
+	rows, err := a.Store.DB.QueryContext(t.Context(), "\"SELECT payload FROM message WHERE 1=1\"")
 	if err != nil {
 		t.Fatal(err)
 	}

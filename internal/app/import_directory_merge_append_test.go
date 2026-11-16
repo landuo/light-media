@@ -146,7 +146,7 @@ func testDirectoryMergeAppendMode(t *testing.T, mode string) {
 		t.Fatal("reused asset missing", err)
 	}
 	var assets int
-	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='asset' AND json_extract(payload,'$.path')=?`, fixture.Target).Scan(&assets); err != nil || assets != 1 {
+	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM library_asset WHERE json_extract(payload,'$.path')=?`, fixture.Target).Scan(&assets); err != nil || assets != 1 {
 		t.Fatal("duplicate directory asset", assets, err)
 	}
 	secondHistory := historyRowForSource(t, a, source)
@@ -316,7 +316,7 @@ func TestDirectoryMergeReplacesOwnedMemberWithinSameAsset(t *testing.T) {
 		t.Fatalf("root ownership changed %v %v", rootOwner, err)
 	}
 	var assets int
-	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='asset' AND json_extract(payload,'$.path')=?`, fixture.Target).Scan(&assets); err != nil || assets != 1 {
+	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM library_asset WHERE json_extract(payload,'$.path')=?`, fixture.Target).Scan(&assets); err != nil || assets != 1 {
 		t.Fatal("replacement duplicated the directory asset", assets, err)
 	}
 }

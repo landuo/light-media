@@ -69,7 +69,7 @@ func TestOriginalTransferModuleActualReturnedTarget(t *testing.T) {
 			configureOriginalTransferTarget(t, a, object, cfg, mapped)
 			job := overwriteStart(t, a, plan)
 			if sample.rollback {
-				if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_target_transition_failure BEFORE UPDATE ON records WHEN NEW.kind='import_plan' AND json_extract(NEW.payload,'$.files[0].target')!=json_extract(OLD.payload,'$.files[0].target') BEGIN SELECT RAISE(ABORT,'owned_target_transition_failure'); END`); err != nil {
+				if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_target_transition_failure BEFORE UPDATE ON import_plan WHEN NEW.record_kind='import_plan' AND json_extract(NEW.payload,'$.files[0].target')!=json_extract(OLD.payload,'$.files[0].target') BEGIN SELECT RAISE(ABORT,'owned_target_transition_failure'); END`); err != nil {
 					t.Fatal(err)
 				}
 				if err := a.runImport(ctx, job, plan.ID, nil); err == nil {
@@ -190,7 +190,7 @@ func TestOriginalTransferReturnedTargetOwnershipBoundary(t *testing.T) {
 				}
 			}
 			var assets int
-			if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='asset'`).Scan(&assets); err != nil || assets != 0 {
+			if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM library_asset WHERE 1=1`).Scan(&assets); err != nil || assets != 0 {
 				t.Fatal("unverified asset", assets, err)
 			}
 		})

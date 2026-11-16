@@ -345,7 +345,7 @@ func verifyOwnedProductionScrapeBatch(t *testing.T, dir, origin string, request 
 			t.Fatal(e)
 		}
 		var event map[string]any
-		rows, e := a.Store.DB.Query(`SELECT payload FROM records WHERE kind='original_scrape_batch'`)
+		rows, e := a.Store.DB.Query(`SELECT payload FROM plugin_original_batch WHERE 1=1`)
 		if e != nil {
 			a.Close()
 			t.Fatal(e)

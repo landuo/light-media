@@ -581,8 +581,12 @@ func atoi(s string) int { v, _ := strconv.Atoi(s); return v }
 func (a *App) status(ctx context.Context) map[string]any {
 	counts := map[string]int{}
 	for _, k := range []string{"subscription", "intent", "asset", "import_plan"} {
+		table, ok := recordTableFor(k)
+		if !ok {
+			continue
+		}
 		var n int
-		_ = a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind=?`, k).Scan(&n)
+		_ = a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM `+table.name+` WHERE record_kind=?`, k).Scan(&n)
 		counts[k] = n
 	}
 	var active, failed int

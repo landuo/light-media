@@ -87,10 +87,10 @@ func TestOriginalTransferPartialTasksFixedSource(t *testing.T) {
 				}
 			}
 			var successes, failures, assets, slots int
-			if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='original_transfer_callback' AND json_extract(payload,'$.plan_id')=? AND json_extract(payload,'$.file.status')='imported'`, plan.ID).Scan(&successes); err != nil {
+			if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_original_callback WHERE json_extract(payload,'$.plan_id')=? AND json_extract(payload,'$.file.status')='imported'`, plan.ID).Scan(&successes); err != nil {
 				t.Fatal(err)
 			}
-			if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='original_transfer_callback' AND json_extract(payload,'$.plan_id')=? AND json_extract(payload,'$.file.status')='error'`, plan.ID).Scan(&failures); err != nil {
+			if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_original_callback WHERE json_extract(payload,'$.plan_id')=? AND json_extract(payload,'$.file.status')='error'`, plan.ID).Scan(&failures); err != nil {
 				t.Fatal(err)
 			}
 			if successes != sample.Completed || failures != sample.Failed {
@@ -106,7 +106,7 @@ func TestOriginalTransferPartialTasksFixedSource(t *testing.T) {
 					t.Fatal("job result changed a successful sibling", item)
 				}
 			}
-			_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='asset'`).Scan(&assets)
+			_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM library_asset WHERE 1=1`).Scan(&assets)
 			_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM asset_slots`).Scan(&slots)
 			wantAsset := 0
 			if sample.Outcomes[0] == true {
@@ -168,7 +168,7 @@ func TestOriginalTransferCallbackExceptionContinuesAndColdRecovers(t *testing.T)
 	}
 	// A real per-task SQL exception, matching the pinned loop's exception
 	// branch; only the first callback fails, so later callbacks must commit.
-	if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_partial_callback BEFORE INSERT ON records WHEN NEW.kind='original_transfer_callback' AND json_extract(NEW.payload,'$.file.parent_file_id') IS NULL BEGIN SELECT RAISE(ABORT,'owned callback exception');END`); err != nil {
+	if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_partial_callback BEFORE INSERT ON plugin_original_callback WHEN NEW.record_kind='original_transfer_callback' AND json_extract(NEW.payload,'$.file.parent_file_id') IS NULL BEGIN SELECT RAISE(ABORT,'owned callback exception');END`); err != nil {
 		t.Fatal(err)
 	}
 	job := overwriteStart(t, a, plan)
@@ -180,8 +180,8 @@ func TestOriginalTransferCallbackExceptionContinuesAndColdRecovers(t *testing.T)
 		t.Fatal("exception prevented remaining tasks", n)
 	}
 	var callbacks, managed int
-	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='original_transfer_callback'`).Scan(&callbacks)
-	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='managed_file'`).Scan(&managed)
+	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_original_callback WHERE 1=1`).Scan(&callbacks)
+	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM managed_file WHERE 1=1`).Scan(&managed)
 	if callbacks != 2 || managed != 3 {
 		t.Fatal("independent callbacks and actual ownership", callbacks, managed)
 	}
@@ -218,7 +218,7 @@ func TestOriginalTransferCallbackExceptionContinuesAndColdRecovers(t *testing.T)
 	if n := ownedModuleRead(t, value.(*originalPluginInstance)).Calls["module_execute"]; n != 0 {
 		t.Fatal("callback recovery repeated transfer", n)
 	}
-	_ = fresh.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='original_transfer_callback'`).Scan(&callbacks)
+	_ = fresh.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_original_callback WHERE 1=1`).Scan(&callbacks)
 	var actual ImportPlan
 	if err = fresh.Store.Get(ctx, "import_plan", plan.ID, &actual); err != nil || callbacks != 3 || actual.State != "complete" {
 		t.Fatal("all callbacks durably completed", callbacks, actual.State, err)

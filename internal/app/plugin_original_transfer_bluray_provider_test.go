@@ -63,7 +63,7 @@ func TestOriginalTransferBlurayTerminalProvider(t *testing.T) {
 				t.Fatal("source preserved", err)
 			}
 			var assets int
-			if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&assets); err != nil || assets != map[bool]int{true: 1, false: 0}[sample.code == ""] {
+			if err := a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&assets); err != nil || assets != map[bool]int{true: 1, false: 0}[sample.code == ""] {
 				t.Fatal("verified asset only", assets, err)
 			}
 			if sample.code == "" {

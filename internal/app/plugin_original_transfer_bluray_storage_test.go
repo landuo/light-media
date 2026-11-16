@@ -41,7 +41,7 @@ func TestOriginalTransferBluraySelectedStorage(t *testing.T) {
 			}
 			job := overwriteStart(t, a, plan)
 			if mode == "directory-names-cold" {
-				if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_named_directory_cancel AFTER UPDATE ON records WHEN NEW.kind='import_receipt' AND json_array_length(json_extract(NEW.payload,'$.directory_completed'))=1 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE kind='import'; END`); e != nil {
+				if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_named_directory_cancel AFTER UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND json_array_length(json_extract(NEW.payload,'$.directory_completed'))=1 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE kind='import'; END`); e != nil {
 					t.Fatal(e)
 				}
 			}

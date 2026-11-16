@@ -136,7 +136,7 @@ func TestOriginalTransferBlurayScrapeHistory(t *testing.T) {
 				t.Fatal(err)
 			}
 			if strings.HasPrefix(mode, "cold_") {
-				if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_disc_metadata_commit BEFORE UPDATE ON records WHEN NEW.kind='managed_file' BEGIN SELECT RAISE(ABORT,'owned metadata commit'); END`); err != nil {
+				if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_disc_metadata_commit BEFORE UPDATE ON managed_file WHEN NEW.record_kind='managed_file' BEGIN SELECT RAISE(ABORT,'owned metadata commit'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}

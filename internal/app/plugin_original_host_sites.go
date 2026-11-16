@@ -192,7 +192,7 @@ func (a *App) originalHostReadSiteMaterial(ctx context.Context, site SiteConfig,
 		return out, bad("INVALID_PLUGIN_VALUE", "RSS材料ID无效")
 	}
 	var sealed []byte
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, originalHostSiteMaterialKind, site.ID+":"+id).Scan(&sealed); err != nil {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, originalHostSiteMaterialKind, site.ID+":"+id).Scan(&sealed); err != nil {
 		return out, err
 	}
 	raw, err := a.pluginStore.unseal(originalHostSiteMaterialKind, "system", site.ID+":"+id, sealed)
@@ -327,7 +327,7 @@ func (a *App) originalConfiguredSiteRSS(ctx context.Context, site SiteConfig, au
 	}
 	defer tx.Rollback()
 	for key, sealed := range materials {
-		if _, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, originalHostSiteMaterialKind, key, sealed, now()); err != nil {
+		if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, originalHostSiteMaterialKind, key, sealed, now()); err != nil {
 			return out, err
 		}
 	}

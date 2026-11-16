@@ -156,7 +156,7 @@ func TestOriginalSiteUpdatedActualSDKConsumerCommitMessagesAndClone(t *testing.T
 	}
 	var sealed []byte
 	var snapshot siteSnapshot
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='site_stats_latest' AND id=?`, site.ID).Scan(&sealed); err != nil || a.Store.openSiteAccountSnapshot("site_stats_latest", site.ID, sealed, &snapshot) != nil || snapshot.SourceData == nil || snapshot.SourceData.Upload != 99 || *snapshot.SourceData.Username != "clone" {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM sitestatistic WHERE uid=?`, site.ID).Scan(&sealed); err != nil || a.Store.openSiteAccountSnapshot("site_stats_latest", site.ID, sealed, &snapshot) != nil || snapshot.SourceData == nil || snapshot.SourceData.Upload != 99 || *snapshot.SourceData.Username != "clone" {
 		t.Fatal("actual module clone DTO did not reach persisted account view", err)
 	}
 	// Source false is terminal: it must not reach the later clone or native.
@@ -200,7 +200,7 @@ func TestOriginalSiteUpdatedActualSDKConsumerCommitMessagesAndClone(t *testing.T
 			t.Fatal(err)
 		}
 		if n.Source == "owned-message-source" {
-			if _, err = a.Store.DB.Exec(`DELETE FROM records WHERE kind='notification' AND id=?`, n.ID); err != nil {
+			if _, err = a.Store.DB.Exec(`DELETE FROM message WHERE uid=?`, n.ID); err != nil {
 				t.Fatal(err)
 			}
 			deleted = true
@@ -220,7 +220,7 @@ func TestOriginalSiteUpdatedActualSDKConsumerCommitMessagesAndClone(t *testing.T
 	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM domain_events WHERE json_extract(payload,'$.event_type')='site.refreshed'`).Scan(&beforeFacts); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_site_refresh_failure BEFORE INSERT ON records WHEN NEW.kind='site_stats_history' BEGIN SELECT RAISE(ABORT,'owned account failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_site_refresh_failure BEFORE INSERT ON site_statistic_event WHEN NEW.record_kind='site_stats_history' BEGIN SELECT RAISE(ABORT,'owned account failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	send(map[string]any{"domain": peer.URL})
@@ -231,7 +231,7 @@ func TestOriginalSiteUpdatedActualSDKConsumerCommitMessagesAndClone(t *testing.T
 	if afterFacts != beforeFacts || count("notification") != 3 {
 		t.Fatal("failed account write emitted source fact or notice")
 	}
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='site_stats_latest' AND id=?`, site.ID).Scan(&sealed); err != nil || a.Store.openSiteAccountSnapshot("site_stats_latest", site.ID, sealed, &snapshot) != nil || snapshot.SourceData.Upload == 500 {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM sitestatistic WHERE uid=?`, site.ID).Scan(&sealed); err != nil || a.Store.openSiteAccountSnapshot("site_stats_latest", site.ID, sealed, &snapshot) != nil || snapshot.SourceData.Upload == 500 {
 		t.Fatal("failed account write replaced previous committed data", err)
 	}
 	if _, err := a.Store.DB.Exec(`DROP TRIGGER owned_site_refresh_failure`); err != nil {

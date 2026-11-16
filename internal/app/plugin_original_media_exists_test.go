@@ -62,7 +62,7 @@ func TestOriginalMediaExistsActualSubscriptionHost(t *testing.T) {
 	}
 	var queued, assets, slots int
 	a.Store.DB.QueryRow(`SELECT count(*) FROM jobs WHERE kind='subscription_completion_prepare'`).Scan(&queued)
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&assets)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&assets)
 	a.Store.DB.QueryRow(`SELECT count(*) FROM asset_slots`).Scan(&slots)
 	if queued != 1 || assets != 0 || slots != 0 {
 		t.Fatal("module fact did not reach completion or fabricated inventory", queued, assets, slots)
@@ -173,9 +173,9 @@ func TestOriginalMediaExistsCompletionUsesSealedObservation(t *testing.T) {
 		t.Fatal("completion did not make one fresh existence lookup", after.Calls, before.Calls)
 	}
 	var remaining, history, assets, slots int
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription'`).Scan(&remaining)
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription_history'`).Scan(&history)
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&assets)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM subscribe WHERE 1=1`).Scan(&remaining)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_record WHERE kind='subscription_history'`).Scan(&history)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&assets)
 	a.Store.DB.QueryRow(`SELECT count(*) FROM asset_slots`).Scan(&slots)
 	if remaining != 0 || history != 1 || assets != 0 || slots != 0 {
 		t.Fatal("completion failed or forged ownership", remaining, history, assets, slots)
@@ -211,7 +211,7 @@ func TestOriginalMediaExistsCompletionUsesSealedObservation(t *testing.T) {
 		t.Fatal("cold completed receipt replay", e)
 	}
 	var count int
-	cold.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='source_subscribe_complete'`).Scan(&count)
+	cold.Store.DB.QueryRow(`SELECT count(*) FROM plugin_record WHERE kind='source_subscribe_complete'`).Scan(&count)
 	if count != 1 {
 		t.Fatal("cold duplicated event", count)
 	}

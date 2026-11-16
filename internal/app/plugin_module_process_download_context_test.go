@@ -476,7 +476,7 @@ func verifyOwnedProductionDownloadContext(t *testing.T, dir string, request func
 			writeOwnedEventsProcessEvidence(t, "resource-selection-cold-"+label+"-acquisition.json", proof)
 			t.Log(label, string(proof))
 		}
-		if _, e = db.Exec(`CREATE TRIGGER owned_selection_intent_failure BEFORE INSERT ON records WHEN NEW.kind='intent' BEGIN SELECT RAISE(ABORT,'owned_selection_intent_failure'); END`); e != nil {
+		if _, e = db.Exec(`CREATE TRIGGER owned_selection_intent_failure BEFORE INSERT ON downloadhistory WHEN NEW.record_kind='intent' BEGIN SELECT RAISE(ABORT,'owned_selection_intent_failure'); END`); e != nil {
 			t.Fatal(e)
 		}
 		var queued struct{ Data Job }

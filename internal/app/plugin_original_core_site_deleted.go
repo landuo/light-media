@@ -42,7 +42,7 @@ func (a *App) consumeOriginalCoreSiteDeleted(ctx context.Context, raw json.RawMe
 	if err := a.pruneOriginalCoreSiteSelection(ctx, deleted, reset == "*", subscription); err != nil || !subscription {
 		return err
 	}
-	rows, err := a.Store.DB.QueryContext(ctx, `SELECT id FROM records WHERE kind='subscription' ORDER BY rowid`)
+	rows, err := a.Store.DB.QueryContext(ctx, `SELECT uid FROM subscribe ORDER BY rowid`)
 	if err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func (a *App) consumeOriginalCoreSiteDeleted(ctx context.Context, raw json.RawMe
 			return err
 		}
 		var raw []byte
-		err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription' AND id=?`, id).Scan(&raw)
+		err = tx.QueryRowContext(ctx, `SELECT payload FROM subscribe WHERE uid=?`, id).Scan(&raw)
 		if errors.Is(err, sql.ErrNoRows) {
 			tx.Rollback()
 			continue

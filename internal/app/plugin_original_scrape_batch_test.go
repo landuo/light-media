@@ -208,7 +208,7 @@ func originalScrapeBatchActualManualHost(t *testing.T, mode string) {
 			t.Fatal("aggregate real NFO", path, e)
 		}
 	}
-	if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='asset' AND json_extract(payload,'$.scrape_state')='scraped'`).Scan(&count); e != nil || count != wantFiles {
+	if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM library_asset WHERE json_extract(payload,'$.scrape_state')='scraped'`).Scan(&count); e != nil || count != wantFiles {
 		t.Fatal("all successful assets reflect same consumer", count, e)
 	}
 	if e = a.recoverOriginalScrapeBatches(ctx); e != nil {

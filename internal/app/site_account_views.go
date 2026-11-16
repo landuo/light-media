@@ -130,7 +130,7 @@ func (a *App) siteAccountViewTx(ctx context.Context, tx *sql.Tx, sites []SiteCon
 		}
 	}
 	for _, site := range sites {
-		rows, err := tx.QueryContext(ctx, `SELECT id,rowid,payload FROM records WHERE kind='site_stats_history' AND substr(id,1,?)=? ORDER BY id`, len(site.ID)+1, site.ID+":")
+		rows, err := tx.QueryContext(ctx, `SELECT id,rowid,payload FROM site_statistic_event WHERE substr(id,1,?)=? ORDER BY id`, len(site.ID)+1, site.ID+":")
 		if err != nil {
 			return v, err
 		}
@@ -171,7 +171,7 @@ func (a *App) siteAccountViewTx(ctx context.Context, tx *sql.Tx, sites []SiteCon
 		}
 		var raw []byte
 		var order int64
-		err = tx.QueryRowContext(ctx, `SELECT rowid,payload FROM records WHERE kind='site_stats_latest' AND id=?`, site.ID).Scan(&order, &raw)
+		err = tx.QueryRowContext(ctx, `SELECT rowid,payload FROM sitestatistic WHERE uid=?`, site.ID).Scan(&order, &raw)
 		if err == nil {
 			var s siteSnapshot
 			if err = a.Store.openSiteAccountSnapshot("site_stats_latest", site.ID, raw, &s); err != nil {

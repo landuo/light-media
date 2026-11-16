@@ -600,9 +600,9 @@ func (a *App) browserMutationReferences(ctx context.Context, path string, protec
 // for every torrent file. Callers must rebuild it for each confirmation/dispatch
 // and retain their mutation locks; this is deliberately not a global cache.
 func (a *App) browserMutationReferenceCheck(ctx context.Context, protectReferences bool) (func(string) error, error) {
-	query := `SELECT kind,payload FROM records WHERE kind IN ('asset','managed_file') UNION ALL SELECT kind,payload FROM records INDEXED BY import_plan_state WHERE kind='import_plan' AND json_extract(payload,'$.state') IN ('queued','running')`
+	query := `SELECT 'asset' AS kind,payload FROM library_asset UNION ALL SELECT 'managed_file' AS kind,payload FROM managed_file UNION ALL SELECT 'import_plan' AS kind,payload FROM import_plan INDEXED BY import_plan_state WHERE json_extract(payload,'$.state') IN ('queued','running')`
 	if !protectReferences {
-		query = `SELECT kind,payload FROM records INDEXED BY import_plan_state WHERE kind='import_plan' AND json_extract(payload,'$.state') IN ('queued','running')`
+		query = `SELECT 'import_plan' AS kind,payload FROM import_plan INDEXED BY import_plan_state WHERE json_extract(payload,'$.state') IN ('queued','running')`
 	}
 	rows, e := a.Store.reader().QueryContext(ctx, query)
 	if e != nil {
@@ -1093,7 +1093,7 @@ func (a *App) browserRecycle(ctx context.Context, rootID string) (any, error) {
 	if root.ID == "" {
 		return nil, bad("FILE_ROOT_REJECTED", "目录未获允许")
 	}
-	rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind='file_operation' AND json_extract(payload,'$.root.id')=? AND json_extract(payload,'$.action')='delete' AND json_extract(payload,'$.state') IN ('completed','partial','executing') ORDER BY updated_at DESC LIMIT 100`, rootID)
+	rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM file_operation WHERE json_extract(payload,'$.root.id')=? AND json_extract(payload,'$.action')='delete' AND json_extract(payload,'$.state') IN ('completed','partial','executing') ORDER BY updated_at DESC LIMIT 100`, rootID)
 	if e != nil {
 		return nil, e
 	}
@@ -1205,7 +1205,7 @@ func (a *App) browserScrape(ctx context.Context, paths []string) (any, error) {
 			return nil, bad("INVALID_SOURCE", "选择超出允许目录")
 		}
 	}
-	rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind='asset'`)
+	rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM library_asset WHERE 1=1`)
 	if e != nil {
 		return nil, e
 	}

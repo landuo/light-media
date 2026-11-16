@@ -281,13 +281,13 @@ func TestOriginalLarkManualSearchRejectedAndPausedQualityLinuxAMD64(t *testing.T
 	}
 	var rejectionCount, falseAccepts int
 	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT
-		(SELECT COUNT(*) FROM records WHERE kind='subscription_download_rejection'),
+		(SELECT COUNT(*) FROM plugin_record WHERE kind='subscription_download_rejection'),
 		(SELECT COUNT(*) FROM domain_events WHERE json_extract(payload,'$.event_type')='download.accepted'
 			AND json_extract(payload,'$.subscription_id')=?)`, active.ID).Scan(&rejectionCount, &falseAccepts); err != nil || rejectionCount != 1 || falseAccepts != 0 {
 		t.Fatalf("explicit Add failure did not produce exactly one rejection without false acceptance: rejections=%d accepted=%d err=%v", rejectionCount, falseAccepts, err)
 	}
 	var failureKey string
-	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT id FROM records WHERE kind='subscription_download_failure'`).Scan(&failureKey); err != nil {
+	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT id FROM plugin_record WHERE kind='subscription_download_failure'`).Scan(&failureKey); err != nil {
 		t.Fatal(err)
 	}
 	var failure subscriptionDownloadFailure
@@ -301,7 +301,7 @@ func TestOriginalLarkManualSearchRejectedAndPausedQualityLinuxAMD64(t *testing.T
 		t.Fatalf("accepted priority-100 paused acquisition did not retire the subscription: %v", err)
 	}
 	var key string
-	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT id FROM records WHERE kind='source_subscribe_complete'`).Scan(&key); err != nil {
+	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT id FROM plugin_record WHERE kind='source_subscribe_complete'`).Scan(&key); err != nil {
 		t.Fatal(err)
 	}
 	var receipt subscriptionCompletionReceipt

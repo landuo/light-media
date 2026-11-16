@@ -148,7 +148,7 @@ func TestCompletedDownloadPreparationFailurePersistsFilesOnce(t *testing.T) {
 			if err = f.app.Store.DB.QueryRow(`SELECT count(*) FROM jobs WHERE kind='import'`).Scan(&jobs); err != nil {
 				t.Fatal(err)
 			}
-			if err = f.app.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='import_plan'`).Scan(&plans); err != nil {
+			if err = f.app.Store.DB.QueryRow(`SELECT count(*) FROM import_plan WHERE 1=1`).Scan(&plans); err != nil {
 				t.Fatal(err)
 			}
 			if jobs != len(f.files) || plans != 1 {
@@ -170,7 +170,7 @@ func TestCompletedDownloadTransientPreparationHasNoFailureHistory(t *testing.T) 
 			case "connection":
 				f.fileStatus = http.StatusServiceUnavailable
 			case "metadata-unavailable":
-				if _, err := f.app.Store.DB.Exec(`DELETE FROM records WHERE kind='cache' AND id='season:123:1'`); err != nil {
+				if _, err := f.app.Store.DB.Exec(`DELETE FROM cache_entry WHERE id='season:123:1'`); err != nil {
 					t.Fatal(err)
 				}
 				installMetadataFixture(t, f.app, "fixture-key", []string{"/3/tv/123/season/1"}, func(*http.Request) (*http.Response, error) {
@@ -194,7 +194,7 @@ func TestCompletedDownloadTransientPreparationHasNoFailureHistory(t *testing.T) 
 			if err := f.app.Store.DB.QueryRow(`SELECT count(*) FROM jobs WHERE kind='import'`).Scan(&jobs); err != nil {
 				t.Fatal(err)
 			}
-			if err := f.app.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='import_plan'`).Scan(&plans); err != nil {
+			if err := f.app.Store.DB.QueryRow(`SELECT count(*) FROM import_plan WHERE 1=1`).Scan(&plans); err != nil {
 				t.Fatal(err)
 			}
 			if jobs != 0 || plans != 0 || f.intent.ImportPlanID != "" {

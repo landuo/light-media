@@ -38,7 +38,7 @@ func softlinkLifecycleFixture(t *testing.T, mode string) (*App, ImportPlan, Asse
 
 func softlinkLifecycleOwned(t *testing.T, a *App, asset Asset) []managedFile {
 	t.Helper()
-	rows, err := a.Store.DB.Query(`SELECT payload FROM records WHERE kind='managed_file' AND json_extract(payload,'$.asset_id')=?`, asset.ID)
+	rows, err := a.Store.DB.Query(`SELECT payload FROM managed_file WHERE json_extract(payload,'$.asset_id')=?`, asset.ID)
 	if err != nil {
 		t.Fatal(err)
 	}

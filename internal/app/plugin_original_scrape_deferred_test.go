@@ -102,7 +102,7 @@ func seedOriginalLegacyQualityCleanup(t *testing.T, a *App, parent Job, plan Imp
 		t.Fatal(err)
 	}
 	p.RootPaths[old.RootID] = oldRoot.Path
-	rows, err := a.Store.DB.Query(`SELECT payload FROM records WHERE kind='managed_file' AND json_extract(payload,'$.asset_id')=?`, old.ID)
+	rows, err := a.Store.DB.Query(`SELECT payload FROM managed_file WHERE json_extract(payload,'$.asset_id')=?`, old.ID)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -242,7 +242,7 @@ func TestOriginalScrapeDeferredReorganization(t *testing.T) {
 					importWrite(t, replacement.Path, []byte("changed replacement rejects cleanup"))
 				}
 				if mode == "sql-retry" {
-					if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_deferred_failure BEFORE INSERT ON records WHEN NEW.kind='original_scrape_batch' BEGIN SELECT RAISE(ABORT,'owned deferred commit failure'); END`); err != nil {
+					if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_deferred_failure BEFORE INSERT ON plugin_original_batch WHEN NEW.record_kind='original_scrape_batch' BEGIN SELECT RAISE(ABORT,'owned deferred commit failure'); END`); err != nil {
 						t.Fatal(err)
 					}
 				}

@@ -153,7 +153,7 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 	defer a.downloadMu.Unlock()
 	var previous []byte
 	var superseded *NativeDownload
-	err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='native_download' AND lower(json_extract(payload,'$.hash'))=lower(?) AND json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')!='cancelled' ORDER BY updated_at DESC LIMIT 1`, material.Hash, d.ID).Scan(&previous)
+	err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE lower(json_extract(payload,'$.hash'))=lower(?) AND json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')!='cancelled' ORDER BY updated_at DESC LIMIT 1`, material.Hash, d.ID).Scan(&previous)
 	if err == nil {
 		err = json.Unmarshal(previous, &out)
 		if err != nil || out.State != "failed" && out.State != "waiting" {
@@ -424,15 +424,13 @@ func (a *App) downloaderTaskAction(ctx context.Context, downloaderID, hash, acti
 			return e
 		}
 		defer tx.Rollback()
-		for _, kind := range []string{"intent", "native_download"} {
-			if _, e = tx.ExecContext(ctx, `UPDATE records SET payload=json_set(payload,'$.state','cancelled','$.updated_at',?),updated_at=? WHERE kind=? AND json_extract(payload,'$.downloader_id')=? AND length(json_extract(payload,'$.hash')) IN (40,64) AND (lower(json_extract(payload,'$.hash'))=lower(?) OR (length(json_extract(payload,'$.hash'))!=length(?) AND substr(lower(json_extract(payload,'$.hash')),1,40)=lower(?)))`, now(), now(), kind, d.ID, actual, actual, actual[:40]); e != nil {
-				return e
-			}
-		}
-		if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind IN ('download','native_download') AND json_extract(payload,'$.id') IN (SELECT id FROM records WHERE kind IN ('intent','native_download') AND json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')='cancelled') AND state IN ('queued','retry_wait','waiting_paused')`, now(), d.ID); e != nil {
+		if _, e = tx.ExecContext(ctx, `UPDATE downloadhistory SET payload=json_set(payload,'$.state','cancelled','$.updated_at',?),updated_at=? WHERE json_extract(payload,'$.downloader_id')=? AND length(json_extract(payload,'$.hash')) IN (40,64) AND (lower(json_extract(payload,'$.hash'))=lower(?) OR (length(json_extract(payload,'$.hash'))!=length(?) AND substr(lower(json_extract(payload,'$.hash')),1,40)=lower(?)))`, now(), now(), d.ID, actual, actual, actual[:40]); e != nil {
 			return e
 		}
-		if _, e = tx.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id IN (SELECT id FROM records WHERE kind='intent' AND json_extract(payload,'$.state')='cancelled')`); e != nil {
+		if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind IN ('download','native_download') AND json_extract(payload,'$.id') IN (SELECT uid FROM downloadhistory WHERE json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')='cancelled') AND state IN ('queued','retry_wait','waiting_paused')`, now(), d.ID); e != nil {
+			return e
+		}
+		if _, e = tx.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id IN (SELECT uid FROM downloadhistory WHERE json_extract(payload,'$.state')='cancelled')`); e != nil {
 			return e
 		}
 		if e = tx.Commit(); e != nil {

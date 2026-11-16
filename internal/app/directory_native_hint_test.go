@@ -82,7 +82,7 @@ func TestDirectoryMonitorUsesNativeMediaHintBeforeRuleTypeAndRejectsNFOConflict(
 					t.Fatalf("conflicting NFO was not rejected: %+v", observed)
 				}
 				var count int
-				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='import_plan'`).Scan(&count); err != nil || count != 1 {
+				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM import_plan WHERE 1=1`).Scan(&count); err != nil || count != 1 {
 					t.Fatal("conflicting hint did not persist exactly one failure", count, err)
 				}
 				var failed ImportPlan
@@ -96,7 +96,7 @@ func TestDirectoryMonitorUsesNativeMediaHintBeforeRuleTypeAndRejectsNFOConflict(
 				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM reservations`).Scan(&count); err != nil || count != 0 {
 					t.Fatal("conflicting hint reserved slots", count, err)
 				}
-				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&count); err != nil || count != 0 {
+				if err := a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&count); err != nil || count != 0 {
 					t.Fatal("conflicting hint published assets", count, err)
 				}
 			} else {

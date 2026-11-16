@@ -68,7 +68,7 @@ func (p *PluginStore) validateNoticeBusinessV2Steps(ctx context.Context, q plugi
 				continue
 			}
 			var raw []byte
-			if e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='notification' AND id=?`, saved.History.ID).Scan(&raw); e != nil {
+			if e := q.QueryRowContext(ctx, `SELECT payload FROM message WHERE uid=?`, saved.History.ID).Scan(&raw); e != nil {
 				return seedhost.ErrUnsafe
 			}
 			var record notificationRecord

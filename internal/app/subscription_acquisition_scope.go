@@ -113,13 +113,13 @@ func (a *App) saveAcquisitionTx(ctx context.Context, tx *sql.Tx, r subscriptionA
 	return txPutRaw(ctx, tx, "subscription_acquisition", r.ID, sealed)
 }
 func txPutRaw(ctx context.Context, tx *sql.Tx, kind, key string, b []byte) error {
-	_, e := tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, key, b, now())
+	_, e := tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, key, b, now())
 	return e
 }
 func (a *App) readAcquisition(ctx context.Context, q qualityReader, key string) (subscriptionAcquisition, error) {
 	var r subscriptionAcquisition
 	var sealed []byte
-	e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription_acquisition' AND id=?`, key).Scan(&sealed)
+	e := q.QueryRowContext(ctx, `SELECT payload FROM subscription_acquisition WHERE id=?`, key).Scan(&sealed)
 	if e != nil {
 		return r, e
 	}

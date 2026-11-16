@@ -369,12 +369,10 @@ func (a *App) originalHostDownloaderCancelDeleted(ctx context.Context, id string
 	}
 	defer tx.Rollback()
 	for _, hash := range hashes {
-		for _, kind := range []string{"intent", "native_download"} {
-			if _, err = tx.ExecContext(ctx, `UPDATE records SET payload=json_set(payload,'$.state','cancelled','$.updated_at',?),updated_at=? WHERE kind=? AND json_extract(payload,'$.downloader_id')=? AND length(json_extract(payload,'$.hash')) IN (40,64) AND (lower(json_extract(payload,'$.hash'))=lower(?) OR (length(json_extract(payload,'$.hash'))!=length(?) AND substr(lower(json_extract(payload,'$.hash')),1,40)=lower(?)))`, now(), now(), kind, id, hash, hash, hash[:40]); err != nil {
-				return err
-			}
+		if _, err = tx.ExecContext(ctx, `UPDATE downloadhistory SET payload=json_set(payload,'$.state','cancelled','$.updated_at',?),updated_at=? WHERE json_extract(payload,'$.downloader_id')=? AND length(json_extract(payload,'$.hash')) IN (40,64) AND (lower(json_extract(payload,'$.hash'))=lower(?) OR (length(json_extract(payload,'$.hash'))!=length(?) AND substr(lower(json_extract(payload,'$.hash')),1,40)=lower(?)))`, now(), now(), id, hash, hash, hash[:40]); err != nil {
+			return err
 		}
-		selected := `SELECT id FROM records WHERE kind IN ('intent','native_download') AND json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')='cancelled' AND length(json_extract(payload,'$.hash')) IN (40,64) AND (lower(json_extract(payload,'$.hash'))=lower(?) OR (length(json_extract(payload,'$.hash'))!=length(?) AND substr(lower(json_extract(payload,'$.hash')),1,40)=lower(?)))`
+		selected := `SELECT uid FROM downloadhistory WHERE json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')='cancelled' AND length(json_extract(payload,'$.hash')) IN (40,64) AND (lower(json_extract(payload,'$.hash'))=lower(?) OR (length(json_extract(payload,'$.hash'))!=length(?) AND substr(lower(json_extract(payload,'$.hash')),1,40)=lower(?)))`
 		if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind IN ('download','native_download') AND json_extract(payload,'$.id') IN (`+selected+`) AND state IN ('queued','retry_wait','waiting_paused')`, now(), id, hash, hash, hash[:40]); err != nil {
 			return err
 		}

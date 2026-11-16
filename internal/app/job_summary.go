@@ -48,18 +48,24 @@ type jobSummaryInput struct {
 	activity, activityAt string
 }
 
-const jobSummaryColumns = `subject.payload,old_asset.payload,COALESCE(latest.message,''),COALESCE(latest.time,'')`
+const jobSummarySubject = `COALESCE(subject_dl.payload,subject_sub.payload,subject_plan.payload,subject_asset.payload,subject_hist.payload)`
+
+const jobSummaryColumns = jobSummarySubject + `,old_asset.payload,COALESCE(latest.message,''),COALESCE(latest.time,'')`
 
 const jobSummaryJoins = `
  LEFT JOIN events latest ON latest.seq=(SELECT seq FROM events WHERE job_id=j.id ORDER BY seq DESC LIMIT 1)
- LEFT JOIN records subject ON subject.kind=CASE
-   WHEN j.kind IN ('download','lark_download','subscription_download','subscription_acquisition_receipt') THEN 'intent'
-   WHEN j.kind IN ('native_download','subscription','reorganize_cleanup') THEN j.kind
-   WHEN j.kind='import' THEN 'import_plan'
-   WHEN j.kind IN ('scrape','fnos_sync','asset_check') THEN 'asset'
- END AND subject.id=CASE WHEN json_valid(j.payload) THEN NULLIF(json_extract(j.payload,'$.id'),'') END
- LEFT JOIN records old_asset ON j.kind='reorganize_cleanup' AND old_asset.kind='asset'
-   AND old_asset.id=CASE WHEN json_valid(subject.payload) THEN NULLIF(json_extract(subject.payload,'$.old_asset_id'),'') END`
+ LEFT JOIN downloadhistory subject_dl ON j.kind IN ('download','lark_download','subscription_download','subscription_acquisition_receipt','native_download')
+   AND subject_dl.uid=CASE WHEN json_valid(j.payload) THEN NULLIF(json_extract(j.payload,'$.id'),'') END
+ LEFT JOIN subscribe subject_sub ON j.kind='subscription'
+   AND subject_sub.uid=CASE WHEN json_valid(j.payload) THEN NULLIF(json_extract(j.payload,'$.id'),'') END
+ LEFT JOIN import_plan subject_plan ON j.kind='import'
+   AND subject_plan.id=CASE WHEN json_valid(j.payload) THEN NULLIF(json_extract(j.payload,'$.id'),'') END
+ LEFT JOIN library_asset subject_asset ON j.kind IN ('scrape','fnos_sync','asset_check')
+   AND subject_asset.id=CASE WHEN json_valid(j.payload) THEN NULLIF(json_extract(j.payload,'$.id'),'') END
+ LEFT JOIN history_cleanup subject_hist ON j.kind='reorganize_cleanup'
+   AND subject_hist.id=CASE WHEN json_valid(j.payload) THEN NULLIF(json_extract(j.payload,'$.id'),'') END
+ LEFT JOIN library_asset old_asset ON j.kind='reorganize_cleanup'
+   AND old_asset.id=CASE WHEN json_valid(` + jobSummarySubject + `) THEN NULLIF(json_extract(` + jobSummarySubject + `,'$.old_asset_id'),'') END`
 
 const jobDisplayPriority = `CASE
    WHEN state='running' THEN 0

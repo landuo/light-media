@@ -220,7 +220,7 @@ func assertAutoBackupArchive(t *testing.T, a *App, name, category, marker string
 		t.Fatal("archive SQLite snapshot is not consistent", err)
 	}
 	var value []byte
-	if err := snapshot.QueryRow(`SELECT payload FROM records WHERE kind='backup-fixture' AND id='marker'`).Scan(&value); err != nil || string(value) != string(mustCleanSeedJSON(marker)) {
+	if err := snapshot.QueryRow(`SELECT payload FROM plugin_record WHERE kind='backup-fixture' AND id='marker'`).Scan(&value); err != nil || string(value) != string(mustCleanSeedJSON(marker)) {
 		t.Fatal("archive did not include the committed fixture data", err)
 	}
 }

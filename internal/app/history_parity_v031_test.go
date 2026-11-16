@@ -334,7 +334,7 @@ func TestHistoryParityV031QueueCancellationIsExactAndPreservesFiles(t *testing.T
 		t.Fatal(err)
 	}
 	var marked int
-	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='organize_file_cancel' AND id IN (?,?)`, multiJob.ID+"/"+multi.Files[0].ID, multiJob.ID+"/"+multi.Files[1].ID).Scan(&marked); err != nil || marked != 1 {
+	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM organize_cancel WHERE id IN (?,?)`, multiJob.ID+"/"+multi.Files[0].ID, multiJob.ID+"/"+multi.Files[1].ID).Scan(&marked); err != nil || marked != 1 {
 		t.Fatalf("cancel must select exactly one file: count=%d err=%v", marked, err)
 	}
 	for id, expected := range map[string]string{selectedJob.ID: "cancelled", otherJob.ID: "running", multiJob.ID: "queued", finishedJob.ID: "succeeded", scrapeJob.ID: "queued"} {

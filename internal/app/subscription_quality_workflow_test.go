@@ -77,7 +77,7 @@ func TestSubscriptionQualityExistingMovieStillPlansHigherResource(t *testing.T) 
 		t.Fatal(err)
 	}
 	var intents int
-	if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='intent' AND json_extract(payload,'$.subscription_id')=?`, s.ID).Scan(&intents); err != nil {
+	if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM downloadhistory WHERE json_extract(payload,'$.subscription_id')=?`, s.ID).Scan(&intents); err != nil {
 		t.Fatal(err)
 	}
 	var current Subscription
@@ -176,7 +176,7 @@ func qualityActualMovieWorkflow(t *testing.T, boundary string, completion ...fun
 				}
 			}
 			if boundary == "removed_after_add_import" {
-				if _, ce := a.Store.DB.Exec(`DELETE FROM records WHERE kind='subscription' AND id=?`, s.ID); ce != nil {
+				if _, ce := a.Store.DB.Exec(`DELETE FROM subscribe WHERE uid=?`, s.ID); ce != nil {
 					t.Error(ce)
 				}
 			}
@@ -218,7 +218,7 @@ func qualityActualMovieWorkflow(t *testing.T, boundary string, completion ...fun
 	}
 	checkJob := importClaim(t, a, "subscription", s.ID)
 	if boundary == "accept_commit" {
-		if _, err = a.Store.DB.Exec(`CREATE TRIGGER quality_accept_failure BEFORE INSERT ON records WHEN NEW.kind='subscription_quality_accepted' BEGIN SELECT RAISE(ABORT,'owned_quality_accept_boundary'); END`); err != nil {
+		if _, err = a.Store.DB.Exec(`CREATE TRIGGER quality_accept_failure BEFORE INSERT ON plugin_record WHEN NEW.kind='subscription_quality_accepted' BEGIN SELECT RAISE(ABORT,'owned_quality_accept_boundary'); END`); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -263,7 +263,7 @@ func qualityActualMovieWorkflow(t *testing.T, boundary string, completion ...fun
 		}
 	} else if boundary == "removed_after_add_import" {
 		var count int
-		if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='subscription' AND id=?`, s.ID).Scan(&count); err != nil || count != 0 {
+		if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM subscribe WHERE uid=?`, s.ID).Scan(&count); err != nil || count != 0 {
 			t.Fatal("accepted receipt recreated removed subscription", count, err)
 		}
 	} else if err = a.Store.Get(ctx, "subscription", s.ID, &current); err != nil || current.CurrentPriority == nil || *current.CurrentPriority != 100 || !bytes.Equal(mustCleanSeedJSON(current.SourceNote), []byte(`[1]`)) {
@@ -351,7 +351,7 @@ func qualityActualMovieWorkflow(t *testing.T, boundary string, completion ...fun
 		return
 	}
 	if boundary == "swap_commit_cold" || boundary == "subtitle_swap_cold" || boundary == "subtitle_cleanup_changed" {
-		if _, err = a.Store.DB.Exec(`CREATE TRIGGER quality_swap_failure BEFORE INSERT ON records WHEN NEW.kind='asset' AND json_extract(NEW.payload,'$.intent_id')!='' BEGIN SELECT RAISE(ABORT,'owned_quality_swap_boundary'); END`); err != nil {
+		if _, err = a.Store.DB.Exec(`CREATE TRIGGER quality_swap_failure BEFORE INSERT ON library_asset WHEN NEW.record_kind='asset' AND json_extract(NEW.payload,'$.intent_id')!='' BEGIN SELECT RAISE(ABORT,'owned_quality_swap_boundary'); END`); err != nil {
 			t.Fatal(err)
 		}
 		importJob = qualityRunningJob(t, a, importJob)
@@ -474,7 +474,7 @@ func qualityActualMovieWorkflow(t *testing.T, boundary string, completion ...fun
 	}
 	if boundary == "removed_after_add_import" {
 		var count int
-		if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='subscription' AND id=?`, s.ID).Scan(&count); err != nil || count != 0 {
+		if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM subscribe WHERE uid=?`, s.ID).Scan(&count); err != nil || count != 0 {
 			t.Fatal("old import resurrected deleted subscription", count, err)
 		}
 	}

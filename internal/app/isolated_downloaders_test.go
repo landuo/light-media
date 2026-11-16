@@ -319,7 +319,7 @@ func TestIsolatedDownloadersRealTransferAndImport(t *testing.T) {
 				t.Fatalf("import intent %+v err=%v", current, err)
 			}
 			var assets, slots int
-			a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='asset'`).Scan(&assets)
+			a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM library_asset WHERE 1=1`).Scan(&assets)
 			a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots`).Scan(&slots)
 			if assets != 1 || slots != 1 {
 				t.Fatalf("assets=%d slots=%d", assets, slots)

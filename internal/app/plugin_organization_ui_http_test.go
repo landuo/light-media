@@ -198,7 +198,7 @@ func TestPluginOrganizationUIInstalledAppendOrderAndRollback(t *testing.T) {
 	readOrganizationUIResponse(t, organizationUIRequest(t, a, cookie, "PUT", map[string]any{"order": []string{two, keep, source}}))
 	readOriginalInstalledIDs(t, a, cookie, []string{keep, source, two})
 	loaded, _ := a.pluginRunningInstances.Load(source)
-	if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_installed_order_failure BEFORE UPDATE ON records WHEN NEW.kind='plugin-original-installed-order-v1' BEGIN SELECT RAISE(ABORT,'owned installed order failure'); END`); err != nil {
+	if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_installed_order_failure BEFORE UPDATE ON plugin_record WHEN NEW.kind='plugin-original-installed-order-v1' BEGIN SELECT RAISE(ABORT,'owned installed order failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	r = callTest(t, a.Handler(), "DELETE", "/api/plugins/"+source, "", cookie, "")

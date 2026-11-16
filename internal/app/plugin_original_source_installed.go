@@ -24,7 +24,7 @@ type originalInstalledCache struct {
 
 func (p *PluginStore) readOriginalInstalledObservation(ctx context.Context, db originalInstalledOrderReader) ([]string, [sha256.Size]byte, error) {
 	var sealed []byte
-	err := db.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id='main'`, originalInstalledOrderKind).Scan(&sealed)
+	err := db.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id='main'`, originalInstalledOrderKind).Scan(&sealed)
 	if err == nil {
 		raw, e := p.unseal(originalInstalledOrderKind, "admin", "main", sealed)
 		if e != nil {
@@ -76,7 +76,7 @@ func (p *PluginStore) sourceSetOriginalInstalled(ctx context.Context, raw json.R
 		return false, err
 	}
 	var rowExists bool
-	if err = p.store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE kind=? AND id='main')`, originalInstalledOrderKind).Scan(&rowExists); err != nil {
+	if err = p.store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM plugin_record WHERE kind=? AND id='main')`, originalInstalledOrderKind).Scan(&rowExists); err != nil {
 		return false, err
 	}
 	state.mu.Lock()
@@ -96,12 +96,12 @@ func (p *PluginStore) sourceSetOriginalInstalled(ctx context.Context, raw json.R
 	}
 	defer tx.Rollback()
 	if rowExists && len(ids) == 0 {
-		_, err = tx.ExecContext(ctx, `DELETE FROM records WHERE kind=? AND id='main'`, originalInstalledOrderKind)
+		_, err = tx.ExecContext(ctx, `DELETE FROM plugin_record WHERE kind=? AND id='main'`, originalInstalledOrderKind)
 	} else {
 		var sealed []byte
 		sealed, err = p.seal(originalInstalledOrderKind, "admin", "main", raw)
 		if err == nil {
-			_, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,'main',?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, originalInstalledOrderKind, sealed, now())
+			_, err = tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,'main',?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, originalInstalledOrderKind, sealed, now())
 		}
 	}
 	if err != nil {

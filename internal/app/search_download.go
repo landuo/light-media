@@ -1026,7 +1026,7 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 		// before this transaction. Never create an obsolete selected intent or
 		// leave its reservation outside the subscription revision boundary.
 		var raw []byte
-		if e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription' AND id=?`, p.SubscriptionID).Scan(&raw); e != nil {
+		if e = tx.QueryRowContext(ctx, `SELECT payload FROM subscribe WHERE uid=?`, p.SubscriptionID).Scan(&raw); e != nil {
 			return intent, e
 		}
 		var current Subscription
@@ -1839,15 +1839,15 @@ func (a *App) pollDownloads(ctx context.Context) error {
 	// Only the completed-tag repair is bounded. Old pending downloads still
 	// need polling when recent history alone fills that window.
 	raw, e := a.Store.listRecordPayloads(ctx, `WITH recent_imported AS (
-		SELECT payload,updated_at,id FROM records WHERE kind='intent'
+		SELECT payload,updated_at,uid FROM downloadhistory WHERE 1=1
 		AND CASE WHEN json_valid(payload) THEN json_extract(payload,'$.state')='imported' END
-		ORDER BY updated_at DESC,id LIMIT 500
+		ORDER BY updated_at DESC,uid LIMIT 500
 	)
 	SELECT payload FROM (
-		SELECT payload,updated_at,id FROM records WHERE kind='intent'
+		SELECT payload,updated_at,uid FROM downloadhistory WHERE 1=1
 		AND CASE WHEN json_valid(payload) THEN json_extract(payload,'$.state') IN ('accepted','downloading','downloaded','reconcile_pending') END
-		UNION ALL SELECT payload,updated_at,id FROM recent_imported
-	) ORDER BY updated_at DESC,id`)
+		UNION ALL SELECT payload,updated_at,uid FROM recent_imported
+	) ORDER BY updated_at DESC,uid`)
 	if e != nil {
 		return e
 	}
@@ -2247,7 +2247,7 @@ func (a *App) saveIntentProgress(ctx context.Context, key string, t download.Tas
 	}
 	defer tx.Rollback()
 	var b []byte
-	if e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='intent' AND id=?`, key).Scan(&b); e != nil {
+	if e = tx.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, key).Scan(&b); e != nil {
 		return Intent{}, false, e
 	}
 	var in Intent
@@ -2280,6 +2280,6 @@ func (a *App) saveIntentProgress(ctx context.Context, key string, t download.Tas
 }
 
 func (a *App) saveIntentError(ctx context.Context, key, message string) error {
-	_, e := a.Store.DB.ExecContext(ctx, `UPDATE records SET payload=json_set(payload,'$.error',?,'$.updated_at',?),updated_at=? WHERE kind='intent' AND id=? AND json_extract(payload,'$.state') NOT IN ('imported','cancelled')`, message, now(), now(), key)
+	_, e := a.Store.DB.ExecContext(ctx, `UPDATE downloadhistory SET payload=json_set(payload,'$.error',?,'$.updated_at',?),updated_at=? WHERE uid=? AND json_extract(payload,'$.state') NOT IN ('imported','cancelled')`, message, now(), now(), key)
 	return e
 }

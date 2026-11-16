@@ -189,7 +189,7 @@ func TestDirectoryOverwriteSubtitleSQLFailureColdRecovery(t *testing.T) {
 	importWrite(t, strings.TrimSuffix(second, ".mkv")+".zh.srt", []byte("new actual subtitle"))
 	p = overwritePlan(t, a, second)
 	j = overwriteStart(t, a, p)
-	if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_subtitle_register_failure BEFORE INSERT ON records WHEN NEW.kind='asset' BEGIN SELECT RAISE(ABORT,'owned subtitle transaction failure'); END`); e != nil {
+	if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_subtitle_register_failure BEFORE INSERT ON library_asset WHEN NEW.record_kind='asset' BEGIN SELECT RAISE(ABORT,'owned subtitle transaction failure'); END`); e != nil {
 		t.Fatal(e)
 	}
 	if e := a.runImport(ctx, j, p.ID, nil); e == nil {

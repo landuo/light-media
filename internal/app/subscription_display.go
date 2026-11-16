@@ -36,7 +36,7 @@ func (a *App) loadSubscriptionDisplay(ctx context.Context) (*subscriptionDisplay
 	}
 	defer tx.Rollback()
 	out := &subscriptionDisplay{coverage: map[string]*subscriptionDisplayCoverage{}, words: map[string]string{}}
-	rows, err := tx.QueryContext(ctx, `SELECT payload FROM records WHERE kind='subscription' AND json_extract(payload,'$.state') IS NOT 'cancelled' ORDER BY updated_at DESC,id LIMIT 500`)
+	rows, err := tx.QueryContext(ctx, `SELECT payload FROM subscribe WHERE json_extract(payload,'$.state') IS NOT 'cancelled' ORDER BY updated_at DESC,uid LIMIT 500`)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func (a *App) loadSubscriptionDisplay(ctx context.Context) (*subscriptionDisplay
 	const selected = `WITH selected AS (SELECT json_extract(value,'$.media') AS media,json_extract(value,'$.season') AS season,json_extract(value,'$.key') AS key FROM json_each(?)) `
 	rows, err = tx.QueryContext(ctx, selected+`
  SELECT s.key,a.episode,'library','' FROM selected s JOIN asset_slots a ON a.media_key=s.media AND a.season=s.season
- UNION ALL SELECT s.key,r.episode,'reservation',COALESCE(json_extract(i.payload,'$.state'),'') FROM selected s JOIN reservations r ON r.media_key=s.media AND r.season=s.season LEFT JOIN records i ON i.kind='intent' AND i.id=r.intent_id`, string(pairJSON))
+ UNION ALL SELECT s.key,r.episode,'reservation',COALESCE(json_extract(i.payload,'$.state'),'') FROM selected s JOIN reservations r ON r.media_key=s.media AND r.season=s.season LEFT JOIN downloadhistory i ON i.uid=r.intent_id`, string(pairJSON))
 	if err != nil {
 		return nil, err
 	}
@@ -106,7 +106,7 @@ func (a *App) loadSubscriptionDisplay(ctx context.Context) (*subscriptionDisplay
 		return nil, err
 	}
 	// Range bounds use the records primary key instead of one LIKE scan per subscription.
-	rows, err = tx.QueryContext(ctx, selected+`SELECT s.key,e.id,e.payload FROM selected s JOIN records e ON e.kind='exclusion' AND e.id>=s.key||':' AND e.id<s.key||';'`, string(pairJSON))
+	rows, err = tx.QueryContext(ctx, selected+`SELECT s.key,e.id,e.payload FROM selected s JOIN media_exclusion e ON e.id>=s.key||':' AND e.id<s.key||';'`, string(pairJSON))
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +139,7 @@ func (a *App) loadSubscriptionDisplay(ctx context.Context) (*subscriptionDisplay
 		keys = append(keys, key)
 	}
 	rawKeys, _ := json.Marshal(keys)
-	rows, err = tx.QueryContext(ctx, `SELECT id,payload FROM records WHERE kind='cache' AND id IN (SELECT value FROM json_each(?))`, string(rawKeys))
+	rows, err = tx.QueryContext(ctx, `SELECT id,payload FROM cache_entry WHERE id IN (SELECT value FROM json_each(?))`, string(rawKeys))
 	if err != nil {
 		return nil, err
 	}

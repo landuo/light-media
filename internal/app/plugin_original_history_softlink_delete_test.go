@@ -131,12 +131,12 @@ func TestOriginalHistorySoftlinkDeleteActualSDK(t *testing.T) {
 				t.Fatal(err)
 			}
 			if sample.cold {
-				if _, err = a.Store.DB.Exec(`CREATE TRIGGER soft_delete_final_fail BEFORE UPDATE ON records WHEN NEW.kind='history_target_removal' AND json_extract(NEW.payload,'$.File.deleted')=1 BEGIN SELECT RAISE(FAIL,'real returned effect final commit interrupted'); END`); err != nil {
+				if _, err = a.Store.DB.Exec(`CREATE TRIGGER soft_delete_final_fail BEFORE UPDATE ON history_target_receipt WHEN NEW.record_kind='history_target_removal' AND json_extract(NEW.payload,'$.File.deleted')=1 BEGIN SELECT RAISE(FAIL,'real returned effect final commit interrupted'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
 			if sample.unknown {
-				if _, err = a.Store.DB.Exec(`CREATE TRIGGER soft_delete_return_fail BEFORE UPDATE ON records WHEN NEW.kind='history_target_removal' AND COALESCE(json_extract(OLD.payload,'$.File.source_operation'),'')!='' BEGIN SELECT RAISE(FAIL,'provider returned but result not committed'); END`); err != nil {
+				if _, err = a.Store.DB.Exec(`CREATE TRIGGER soft_delete_return_fail BEFORE UPDATE ON history_target_receipt WHEN NEW.record_kind='history_target_removal' AND COALESCE(json_extract(OLD.payload,'$.File.source_operation'),'')!='' BEGIN SELECT RAISE(FAIL,'provider returned but result not committed'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}

@@ -230,7 +230,7 @@ func TestMediaCategoryRefreshFailureDoesNotClassifyLegacyUnknownLanguage(t *test
 			t.Fatal("missing language was silently classified as a foreign film")
 		}
 		var plans int
-		if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='import_plan'`).Scan(&plans); err != nil || plans != 0 {
+		if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM import_plan WHERE 1=1`).Scan(&plans); err != nil || plans != 0 {
 			t.Fatal("incomplete classification created an execution plan", err)
 		}
 	})

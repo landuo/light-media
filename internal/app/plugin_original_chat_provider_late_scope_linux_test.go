@@ -14,7 +14,7 @@ func assertOriginalLarkProviderLateScope(t *testing.T, a *App, source, library, 
 	t.Helper()
 	ctx := t.Context()
 	var intentID string
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT id FROM records WHERE kind='intent'`).Scan(&intentID); err != nil {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT uid FROM downloadhistory WHERE 1=1`).Scan(&intentID); err != nil {
 		t.Fatal("accepted unscoped intent unavailable", err)
 	}
 	var before Intent

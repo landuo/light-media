@@ -25,7 +25,7 @@ func (a *App) historyPlannedFile(ctx context.Context, plan ImportPlan, item tran
 	}
 	var key string
 	var raw []byte
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT id,payload FROM records WHERE kind='original_transfer_callback' AND json_extract(payload,'$.plan_id')=? AND json_extract(payload,'$.file.id')=?`, plan.ID, item.executionFileID()).Scan(&key, &raw); err != nil {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT id,payload FROM plugin_original_callback WHERE json_extract(payload,'$.plan_id')=? AND json_extract(payload,'$.file.id')=?`, plan.ID, item.executionFileID()).Scan(&key, &raw); err != nil {
 		return PlanFile{}, false, "", err
 	}
 	var callback originalTransferCallback
@@ -130,7 +130,7 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 			// asset-removal preview. Adopt only that selected quarantine entry;
 			// never resume its other subtitle/audio files as a group.
 			var raw []byte
-			err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='removal_preview' AND json_extract(payload,'$.asset_id')=? AND json_extract(payload,'$.state')='deleting' ORDER BY updated_at DESC LIMIT 1`, file.AssetID).Scan(&raw)
+			err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM removal_preview WHERE json_extract(payload,'$.asset_id')=? AND json_extract(payload,'$.state')='deleting' ORDER BY updated_at DESC LIMIT 1`, file.AssetID).Scan(&raw)
 			if err != nil && !errors.Is(err, sql.ErrNoRows) {
 				return err
 			}
@@ -258,10 +258,10 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 	if ownedErr == nil {
 		var currentRaw []byte
 		var current managedFile
-		if err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='managed_file' AND id=?`, tokenHash(item.Target)).Scan(&currentRaw); err != nil || json.Unmarshal(currentRaw, &current) != nil || !reflect.DeepEqual(current, owned) {
+		if err := tx.QueryRowContext(ctx, `SELECT payload FROM managed_file WHERE id=?`, tokenHash(item.Target)).Scan(&currentRaw); err != nil || json.Unmarshal(currentRaw, &current) != nil || !reflect.DeepEqual(current, owned) {
 			return bad("HISTORY_TARGET_CHANGED", "关联目标归属已变化，删除收据需要核对")
 		}
-		result, err := tx.ExecContext(ctx, `DELETE FROM records WHERE kind='managed_file' AND id=? AND payload=?`, tokenHash(item.Target), currentRaw)
+		result, err := tx.ExecContext(ctx, `DELETE FROM managed_file WHERE id=? AND payload=?`, tokenHash(item.Target), currentRaw)
 		if err != nil {
 			return err
 		}
@@ -272,7 +272,7 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 	if !auxiliary {
 		var current Asset
 		var raw []byte
-		if err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='asset' AND id=?`, asset.ID).Scan(&raw); err != nil {
+		if err := tx.QueryRowContext(ctx, `SELECT payload FROM library_asset WHERE id=?`, asset.ID).Scan(&raw); err != nil {
 			return err
 		}
 		if json.Unmarshal(raw, &current) != nil || current.Path != asset.Path || current.RootID != asset.RootID || current.SourcePath != asset.SourcePath {

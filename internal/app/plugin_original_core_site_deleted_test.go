@@ -130,7 +130,7 @@ func TestOriginalCoreSiteDeletedKeepsEarlierSourceCommitsOnFailure(t *testing.T)
 		t.Fatal("fixed partial failure source replay", err)
 	}
 	a, cookie := ownedCoreSiteDeletedFixture(t)
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_site_ref_fail BEFORE UPDATE ON records WHEN NEW.kind='subscription' AND NEW.id='owned-2' BEGIN SELECT RAISE(ABORT,'owned reference failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_site_ref_fail BEFORE UPDATE ON subscribe WHEN NEW.record_kind='subscription' AND NEW.id='owned-2' BEGIN SELECT RAISE(ABORT,'owned reference failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	ownedSDKEventCall(t, a, cookie, "event.send", `{"kind":"broadcast","type":"site.deleted","data":{"site_id":"*"}}`)

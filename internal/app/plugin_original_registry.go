@@ -94,7 +94,7 @@ func (a *App) writeOriginalCodeAlias(ctx context.Context, in PluginInstallation,
 	if err != nil {
 		return err
 	}
-	_, err = a.Store.DB.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, originalPluginAliasKind, in.InstanceID, sealed, now())
+	_, err = a.Store.DB.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, originalPluginAliasKind, in.InstanceID, sealed, now())
 	return err
 }
 func (a *App) originalCodeAliasPresent(ctx context.Context, in PluginInstallation) (bool, error) {
@@ -106,7 +106,7 @@ func (a *App) originalCodeAliasPresent(ctx context.Context, in PluginInstallatio
 		return in.InstanceID == in.PluginID, nil
 	}
 	var sealed []byte
-	err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, originalPluginAliasKind, in.InstanceID).Scan(&sealed)
+	err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, originalPluginAliasKind, in.InstanceID).Scan(&sealed)
 	if errors.Is(err, sql.ErrNoRows) {
 		if !in.Installed {
 			return false, nil

@@ -220,9 +220,9 @@ func (a *App) historyReorganizedMoveSourceAllowed(ctx context.Context, plan Impo
 
 func (a *App) guardHistorySourceInUse(ctx context.Context, item transferHistoryItem) error {
 	var busy int
-	if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records r
- LEFT JOIN records m ON m.kind='import_meta' AND m.id=r.id
- WHERE r.kind='import_plan' AND r.id!=?
+	if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM import_plan r
+ LEFT JOIN import_meta m ON m.id=r.id
+ WHERE r.id!=?
  AND EXISTS(SELECT 1 FROM jobs j WHERE j.kind='import' AND json_extract(j.payload,'$.id')=r.id AND j.state IN ('queued','running','retry_wait','waiting_paused'))
  AND (EXISTS(SELECT 1 FROM json_each(r.payload,'$.files') f WHERE json_extract(f.value,'$.source')=?)
  OR EXISTS(SELECT 1 FROM json_each(m.payload,'$.sidecars') g,json_each(g.value) s WHERE json_extract(s.value,'$.source')=?))`, item.PlanID, item.Source, item.Source).Scan(&busy); e != nil {

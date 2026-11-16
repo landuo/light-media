@@ -61,8 +61,8 @@ func (a *App) notifyFailed(ctx context.Context, j Job, message string) {
 	_ = a.Store.Put(ctx, "notification", n.ID, n)
 }
 
-const notificationListSQL = `SELECT payload FROM records INDEXED BY notification_display_order WHERE kind='notification' ORDER BY updated_at DESC,id LIMIT ?`
-const notificationUnreadSQL = `SELECT COUNT(*) FROM records INDEXED BY notification_unread WHERE kind='notification' AND json_extract(payload,'$.read')=0`
+const notificationListSQL = `SELECT payload FROM message INDEXED BY notification_display_order ORDER BY updated_at DESC,uid LIMIT ?`
+const notificationUnreadSQL = `SELECT COUNT(*) FROM message INDEXED BY notification_unread WHERE json_extract(payload,'$.read')=0`
 
 func (a *App) notifications(ctx context.Context) (any, error) {
 	// The literal kind allows SQLite to select the notification-only ordering
@@ -110,7 +110,7 @@ func (a *App) auditRequest(ctx context.Context, operation, request string, statu
 	_ = a.Store.Put(ctx, "audit", id("audit_"), map[string]any{"time": now(), "actor": "admin", "operation": operation, "request_id": request, "http_status": status})
 }
 func (a *App) decisionRecords(ctx context.Context, wf string) ([]json.RawMessage, error) {
-	rows, e := a.Store.reader().QueryContext(ctx, `SELECT payload FROM records WHERE kind='decision' AND json_extract(payload,'$.workflow_id')=? ORDER BY updated_at LIMIT 10`, wf)
+	rows, e := a.Store.reader().QueryContext(ctx, `SELECT payload FROM decision_log WHERE json_extract(payload,'$.workflow_id')=? ORDER BY updated_at LIMIT 10`, wf)
 	if e != nil {
 		return nil, e
 	}

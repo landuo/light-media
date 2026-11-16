@@ -44,12 +44,12 @@ func TestDisplayReadsUseSelectiveIndexes(t *testing.T) {
 	if !strings.Contains(plan, "jobs_display_priority") || strings.Contains(plan, "TEMP B-TREE") {
 		t.Fatalf("queue priority sorts history: %s", plan)
 	}
-	plan = displayQueryPlan(t, a, `SELECT payload FROM records WHERE kind='subscription' AND json_extract(payload,'$.state') IS NOT 'cancelled' ORDER BY updated_at DESC,id LIMIT 500`)
+	plan = displayQueryPlan(t, a, `SELECT payload FROM subscribe WHERE json_extract(payload,'$.state') IS NOT 'cancelled' ORDER BY updated_at DESC,uid LIMIT 500`)
 	if !strings.Contains(plan, "subscription_display_order") || strings.Contains(plan, "TEMP B-TREE") {
 		t.Fatalf("subscription list sorts all records: %s", plan)
 	}
 	// These indexes must not evaluate JSON on unrelated encrypted payloads.
-	if _, err := a.Store.DB.Exec(`INSERT INTO records VALUES('opaque-test','encrypted',x'01020304','now')`); err != nil {
+	if _, err := a.Store.DB.Exec(`INSERT INTO plugin_record VALUES('opaque-test','encrypted',x'01020304','now')`); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -233,7 +233,7 @@ func BenchmarkDecorateMediaIndexed100k(b *testing.B) {
 	if err != nil {
 		b.Fatal(err)
 	}
-	stmt, err := tx.Prepare(`INSERT INTO records VALUES(?,?,?,?)`)
+	stmt, err := tx.Prepare(`INSERT INTO plugin_record VALUES(?,?,?,?)`)
 	if err != nil {
 		b.Fatal(err)
 	}

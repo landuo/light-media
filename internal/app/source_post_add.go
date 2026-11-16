@@ -120,7 +120,7 @@ func (a *App) sourcePostAddReceipt(ctx context.Context, q interface {
 }, in Intent) (sourcePostAddReceipt, error) {
 	var r sourcePostAddReceipt
 	var sealed []byte
-	if e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='download_post_add' AND id=?`, in.ID).Scan(&sealed); e != nil {
+	if e := q.QueryRowContext(ctx, `SELECT payload FROM download_post_add WHERE id=?`, in.ID).Scan(&sealed); e != nil {
 		return r, bad("REVIEW_POST_ADD_UNCONFIRMED", "下载后的原操作记录缺失，请核对原任务")
 	}
 	raw, e := a.pluginStore.unseal("download_post_add", "system", in.ID, sealed)
@@ -141,7 +141,7 @@ func (a *App) saveSourcePostAddAttempt(ctx context.Context, in Intent, r sourceP
 	defer tx.Rollback()
 	var raw []byte
 	var current Intent
-	if e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='intent' AND id=?`, in.ID).Scan(&raw); e != nil {
+	if e = tx.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, in.ID).Scan(&raw); e != nil {
 		return e
 	}
 	if json.Unmarshal(raw, &current) != nil || current.State != "post_add" || sourcePostAddInputSHA(current) != r.InputSHA {
@@ -156,7 +156,7 @@ func (a *App) saveSourcePostAddAttempt(ctx context.Context, in Intent, r sourceP
 func (a *App) putSourcePostAddReceiptTx(ctx context.Context, tx *sql.Tx, in Intent, r sourcePostAddReceipt) error {
 	raw := mustCleanSeedJSON(r)
 	var previous []byte
-	e := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='download_post_add' AND id=?`, in.ID).Scan(&previous)
+	e := tx.QueryRowContext(ctx, `SELECT payload FROM download_post_add WHERE id=?`, in.ID).Scan(&previous)
 	if e == nil {
 		accepted, e := a.pluginStore.unseal("download_post_add", "system", in.ID, previous)
 		if e != nil || !larkSameRaw(accepted, raw) {
@@ -171,7 +171,7 @@ func (a *App) putSourcePostAddReceiptTx(ctx context.Context, tx *sql.Tx, in Inte
 	if e != nil {
 		return e
 	}
-	_, e = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('download_post_add',?,?,?)`, in.ID, sealed, now())
+	_, e = tx.ExecContext(ctx, recordInsertSQL("download_post_add", recordTableForKind("download_post_add")), in.ID, sealed, now())
 	if e != nil {
 		return e
 	}

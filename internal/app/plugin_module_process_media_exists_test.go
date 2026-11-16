@@ -256,11 +256,11 @@ func verifyOwnedProductionMediaExists(t *testing.T, dir, origin string, request 
 		t.Fatal(err)
 	}
 	var assets, slots, intents, histories, completedEvents int
-	inspect.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&assets)
+	inspect.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&assets)
 	inspect.Store.DB.QueryRow(`SELECT count(*) FROM asset_slots`).Scan(&slots)
-	inspect.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='intent'`).Scan(&intents)
-	inspect.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription_history'`).Scan(&histories)
-	inspect.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='source_subscribe_complete'`).Scan(&completedEvents)
+	inspect.Store.DB.QueryRow(`SELECT count(*) FROM downloadhistory WHERE 1=1`).Scan(&intents)
+	inspect.Store.DB.QueryRow(`SELECT count(*) FROM plugin_record WHERE kind='subscription_history'`).Scan(&histories)
+	inspect.Store.DB.QueryRow(`SELECT count(*) FROM plugin_record WHERE kind='source_subscribe_complete'`).Scan(&completedEvents)
 	if histories != 1 || completedEvents != 1 {
 		t.Fatal("actual completion history/event missing or duplicated", histories, completedEvents)
 	}

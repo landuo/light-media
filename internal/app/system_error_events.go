@@ -85,7 +85,7 @@ func systemErrorEvidenceError() error {
 func (p *PluginStore) systemErrorReceipt(ctx context.Context, q subscriptionCompletionReader, key string) (siteSystemErrorReceipt, error) {
 	var r siteSystemErrorReceipt
 	var sealed []byte
-	if err := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='site_system_error' AND id=?`, key).Scan(&sealed); err != nil {
+	if err := q.QueryRowContext(ctx, `SELECT payload FROM site_system_error WHERE id=?`, key).Scan(&sealed); err != nil {
 		return r, err
 	}
 	raw, err := p.unseal("site_system_error", "system", key, sealed)
@@ -140,7 +140,7 @@ func validateSystemErrorDomainEvent(in DomainEvent) (DomainEvent, error) {
 }
 func validateSystemErrorBackingTx(ctx context.Context, tx *sql.Tx, event DomainEvent) error {
 	var found string
-	if err := tx.QueryRowContext(ctx, `SELECT id FROM records WHERE kind='site_system_error' AND id=?`, event.SystemErrorID).Scan(&found); err != nil {
+	if err := tx.QueryRowContext(ctx, `SELECT id FROM site_system_error WHERE id=?`, event.SystemErrorID).Scan(&found); err != nil {
 		return systemErrorEvidenceError()
 	}
 	return nil
@@ -186,7 +186,7 @@ func (a *App) stageSiteSystemErrorTx(ctx context.Context, tx *sql.Tx, origin sit
 	if err != nil {
 		return nil, err
 	}
-	if _, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('site_system_error',?,?,?)`, key, sealed, now()); err != nil {
+	if _, err = tx.ExecContext(ctx, recordInsertSQL("site_system_error", recordTableForKind("site_system_error")), key, sealed, now()); err != nil {
 		return nil, err
 	}
 	// Original helper.put precedes send_event. Stage the helper under one mutex,

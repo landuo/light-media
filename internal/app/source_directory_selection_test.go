@@ -49,7 +49,7 @@ func TestActualDirectorySourceLargeSelectionUsesCompactPublicationReference(t *t
 		t.Fatal("actual large preview", e)
 	}
 	var size int
-	if e = a.Store.DB.QueryRow(`SELECT length(payload) FROM records WHERE kind='native_directory_selection' AND id=?`, p.ID).Scan(&size); e != nil || size <= 1<<20 {
+	if e = a.Store.DB.QueryRow(`SELECT length(payload) FROM plugin_record WHERE kind='native_directory_selection' AND id=?`, p.ID).Scan(&size); e != nil || size <= 1<<20 {
 		t.Fatal("source selection did not cross old operation boundary", size, e)
 	}
 	j, e := a.executeImport(ctx, p.ID, []string{p.Files[0].ID})
@@ -258,7 +258,7 @@ func TestActualDirectorySourceAuthorizationRejectsPolicyAndMissingProofBeforeMut
 			}
 			switch mode {
 			case "delete_auth":
-				_, e = a.Store.DB.Exec(`DELETE FROM records WHERE kind='native_directory_selection' AND id=?`, p.ID)
+				_, e = a.Store.DB.Exec(`DELETE FROM plugin_record WHERE kind='native_directory_selection' AND id=?`, p.ID)
 			case "plaintext_auth":
 				e = a.Store.Put(ctx, "native_directory_selection", p.ID, map[string]any{"Version": 1, "Plan": p.ID})
 			case "policy":
@@ -297,7 +297,7 @@ func TestActualDirectorySourceAuthorizationRejectsPolicyAndMissingProofBeforeMut
 				t.Fatal("rejected selection changed bytes", se)
 			}
 			var assets int
-			if e = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&assets); e != nil || assets != 0 {
+			if e = a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&assets); e != nil || assets != 0 {
 				t.Fatal("rejected source selection registered asset", assets, e)
 			}
 		})

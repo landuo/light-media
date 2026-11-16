@@ -197,7 +197,7 @@ func (a *App) claimJob(ctx context.Context, lane jobLane) (Job, error) {
 		switch j.Kind {
 		case "organize_prepare", "organize_file", "reorganize_cleanup", "quality_cleanup", "scrape", "fnos_sync":
 			download, err := find(` AND kind='download' AND EXISTS (
-				SELECT 1 FROM records AS intent WHERE intent.kind='intent'
+				SELECT 1 FROM downloadhistory AS intent WHERE intent.record_kind='intent'
 				AND intent.id=json_extract(jobs.payload,'$.id')
 				AND COALESCE(json_extract(intent.payload,'$.subscription_id'),'')!='')`)
 			if err == nil {

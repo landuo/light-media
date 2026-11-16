@@ -141,7 +141,7 @@ func TestMaterialArchiveDeduplicatesExactBytesNotOnlyInfohash(t *testing.T) {
 		t.Fatal("exact raw bytes were not deduplicated", err)
 	}
 	var blobs int
-	a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='material_blob'`).Scan(&blobs)
+	a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM material_blob WHERE 1=1`).Scan(&blobs)
 	if blobs != 2 {
 		t.Fatalf("duplicate created %d blobs", blobs)
 	}
@@ -209,14 +209,14 @@ func TestMaterialArchiveRejectsWrongPurposeTamperingAndMissingBlob(t *testing.T)
 			}
 			if mode == "ciphertext" {
 				var sealed []byte
-				a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='material_blob' AND id=?`, ref).Scan(&sealed)
+				a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM material_blob WHERE id=?`, ref).Scan(&sealed)
 				sealed[len(sealed)-1] ^= 1
-				if _, err = a.Store.DB.ExecContext(ctx, `UPDATE records SET payload=? WHERE kind='material_blob' AND id=?`, sealed, ref); err != nil {
+				if _, err = a.Store.DB.ExecContext(ctx, `UPDATE material_blob SET payload=? WHERE id=?`, sealed, ref); err != nil {
 					t.Fatal(err)
 				}
 			}
 			if mode == "missing" {
-				a.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE kind='material_blob' AND id=?`, ref)
+				a.Store.DB.ExecContext(ctx, `DELETE FROM material_blob WHERE id=?`, ref)
 			}
 			_, err = a.resolveMaterial(ctx, ref, materialPurpose)
 			if mode == "missing" {

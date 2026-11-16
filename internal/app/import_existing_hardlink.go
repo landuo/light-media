@@ -30,7 +30,7 @@ func (a *App) reuseExistingImportHardlink(ctx context.Context, job Job, plan *Im
 			return importReceipt{}, false, nil
 		}
 		var overwriting bool
-		if err := a.Store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE kind='directory_overwrite' AND id=?)`,
+		if err := a.Store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM directory_overwrite WHERE id=?)`,
 			receipt.ID).Scan(&overwriting); err != nil {
 			return importReceipt{}, false, err
 		}
@@ -90,9 +90,8 @@ func checkExistingImportHardlink(ctx context.Context, q qualityReader, receipt i
 		return bad("REVIEW_TARGET_CHANGED", "已有硬链接与源文件已无法核对，请重新整理")
 	}
 	var owned bool
-	if err := q.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE
-		(kind='managed_file' AND id=?) OR
-		(kind='asset' AND json_extract(payload,'$.path')=? AND json_extract(payload,'$.state') NOT IN ('removed','superseded')))`,
+	if err := q.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM managed_file WHERE id=?)
+	 OR EXISTS(SELECT 1 FROM library_asset WHERE json_extract(payload,'$.path')=? AND json_extract(payload,'$.state') NOT IN ('removed','superseded'))`,
 		tokenHash(receipt.Target), receipt.Target).Scan(&owned); err != nil {
 		return err
 	}

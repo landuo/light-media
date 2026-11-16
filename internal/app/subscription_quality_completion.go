@@ -52,7 +52,7 @@ func completionEvidenceError() error {
 }
 func (p *PluginStore) readSubscriptionCompletionSealed(ctx context.Context, q subscriptionCompletionReader, kind, id string) (json.RawMessage, error) {
 	var sealed []byte
-	if e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, kind, id).Scan(&sealed); e != nil {
+	if e := q.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, kind, id).Scan(&sealed); e != nil {
 		return nil, completionEvidenceError()
 	}
 	raw, e := p.unseal(kind, "system", id, sealed)

@@ -191,7 +191,7 @@ func TestOriginalLarkSystemCommandsLinuxAMD64(t *testing.T) {
 		t.Fatal("clear_cache changed a persisted non-cache record", err)
 	}
 	var noticeCount int
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT count(*) FROM records WHERE kind='notification'`).Scan(&noticeCount); err != nil || noticeCount != 1 {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT count(*) FROM message WHERE 1=1`).Scan(&noticeCount); err != nil || noticeCount != 1 {
 		t.Fatal("system command responses should not be added to notification history", noticeCount, err)
 	}
 	t.Log("indexed Lark webhook returned both exact version lines from one isolated GitHub release request and cleared persistent and in-memory metadata caches without changing notification history")

@@ -131,7 +131,7 @@ func TestOriginalHostBusinessSubscriptionActualSDKPatchPreservesFields(t *testin
 	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM domain_events WHERE json_extract(payload,'$.event_type')='subscribe.modified'`).Scan(&events); err != nil || events != 0 {
 		t.Fatal("DB operator unexpectedly emitted UI event", events, err)
 	}
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_host_sub_rollback BEFORE UPDATE ON records WHEN NEW.kind='subscription' BEGIN SELECT RAISE(ABORT,'owned failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_host_sub_rollback BEFORE UPDATE ON subscribe WHEN NEW.record_kind='subscription' BEGIN SELECT RAISE(ABORT,'owned failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	patch.Revision = 8

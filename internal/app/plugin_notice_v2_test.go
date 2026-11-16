@@ -28,7 +28,7 @@ func noticeV2OnlyRoute(t *testing.T, a *App) pluginNoticeRoute {
 func noticeV2AddedCount(t *testing.T, a *App) int {
 	t.Helper()
 	var n int
-	if e := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription_added'`).Scan(&n); e != nil {
+	if e := a.Store.DB.QueryRow(`SELECT count(*) FROM subscription_event WHERE 1=1`).Scan(&n); e != nil {
 		t.Fatal(e)
 	}
 	return n
@@ -115,7 +115,7 @@ func TestPluginNoticeV2CoreDependencyAndMissingHistoryBlockSourceEvent(t *testin
 			case "dependency":
 				noticePreferenceTest(t, a, "templates", "NotificationTemplates", map[string]any{"subscribeAdded": "{'title':'{{ lipsum() }}'}"})
 			case "history_failure":
-				if _, e := a.Store.DB.Exec(`CREATE TRIGGER notice_v2_fail BEFORE INSERT ON records WHEN NEW.kind='notification' BEGIN SELECT RAISE(ABORT,'owned history failure'); END`); e != nil {
+				if _, e := a.Store.DB.Exec(`CREATE TRIGGER notice_v2_fail BEFORE INSERT ON message WHEN NEW.record_kind='notification' BEGIN SELECT RAISE(ABORT,'owned history failure'); END`); e != nil {
 					t.Fatal(e)
 				}
 			}
@@ -141,7 +141,7 @@ func TestPluginNoticeV2CoreDependencyAndMissingHistoryBlockSourceEvent(t *testin
 			if mode == "render_deleted" {
 				_, e = a.Store.DB.Exec(`DELETE FROM plugin_notice_route_steps WHERE route_id=? AND ordinal=1`, r.ID)
 			} else {
-				_, e = a.Store.DB.Exec(`DELETE FROM records WHERE kind='notification'`)
+				_, e = a.Store.DB.Exec(`DELETE FROM message WHERE 1=1`)
 			}
 			if e != nil {
 				t.Fatal(e)

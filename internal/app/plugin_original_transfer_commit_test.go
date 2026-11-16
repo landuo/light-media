@@ -22,7 +22,7 @@ func TestOriginalTransferHistoryCommitPrecedesBroadcastAndCleanupRetry(t *testin
 	if err != nil || len(plan.Files) != 1 || plan.Files[0].Status != "ready" {
 		t.Fatal("actual preview", err)
 	}
-	_, err = a.Store.DB.Exec(`CREATE TRIGGER owned_transfer_after_commit BEFORE UPDATE ON records WHEN NEW.kind='directory_overwrite' AND EXISTS(SELECT 1 FROM records WHERE kind='asset') BEGIN SELECT RAISE(ABORT,'owned post-commit cleanup failure');END`)
+	_, err = a.Store.DB.Exec(`CREATE TRIGGER owned_transfer_after_commit BEFORE UPDATE ON directory_overwrite WHEN NEW.record_kind='directory_overwrite' AND EXISTS(SELECT 1 FROM records WHERE kind='asset') BEGIN SELECT RAISE(ABORT,'owned post-commit cleanup failure');END`)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -299,7 +299,7 @@ func (a *App) cacheSearchResources(ctx context.Context, resources []sites.Resour
 			}
 		} else {
 			// A new native response supersedes a stale plugin-only context.
-			if _, err = tx.ExecContext(ctx, `DELETE FROM records WHERE kind='download_context' AND id=?`, "search_resource:"+resource.SiteID+":"+resource.ID); err != nil {
+			if _, err = tx.ExecContext(ctx, `DELETE FROM download_context WHERE id=?`, "search_resource:"+resource.SiteID+":"+resource.ID); err != nil {
 				return err
 			}
 		}

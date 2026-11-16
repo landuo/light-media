@@ -112,7 +112,7 @@ func (a *App) supersedeReplacedDirectoryMembersTx(ctx context.Context, tx *sql.T
 		}
 		old := *child.Replaced
 		var raw string
-		err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='managed_file' AND id=?`, tokenHash(old.Path)).Scan(&raw)
+		err = tx.QueryRowContext(ctx, `SELECT payload FROM managed_file WHERE id=?`, tokenHash(old.Path)).Scan(&raw)
 		if errors.Is(err, sql.ErrNoRows) {
 			continue
 		}
@@ -125,7 +125,7 @@ func (a *App) supersedeReplacedDirectoryMembersTx(ctx context.Context, tx *sql.T
 		}
 		// The payload compare above is the guard; SQLite may store the payload as
 		// BLOB while a string binding would compare unequal, so delete by id.
-		if _, err = tx.ExecContext(ctx, `DELETE FROM records WHERE kind='managed_file' AND id=?`, tokenHash(old.Path)); err != nil {
+		if _, err = tx.ExecContext(ctx, `DELETE FROM managed_file WHERE id=?`, tokenHash(old.Path)); err != nil {
 			return err
 		}
 		var prior Asset

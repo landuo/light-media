@@ -47,7 +47,7 @@ func subscriptionStatsInstallSettings(t *testing.T, a *App, host string, share b
 	if e != nil {
 		t.Fatal(e)
 	}
-	if _, e = a.Store.DB.Exec(`INSERT INTO records(kind,id,payload,updated_at) VALUES('source_statistics_settings','main',?,?)`, sealed, now()); e != nil {
+	if _, e = a.Store.DB.Exec(`INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES('source_statistics_settings','main',?,?)`, sealed, now()); e != nil {
 		t.Fatal(e)
 	}
 }
@@ -95,7 +95,7 @@ func TestSubscriptionStatsActualCoreCompletionHTTPAsyncColdAndLostACK(t *testing
 				if e != nil {
 					t.Fatal(e)
 				}
-				if _, e = a.Store.DB.Exec(`UPDATE records SET payload=? WHERE kind='source_statistics_settings' AND id='main'`, badSettings); e != nil {
+				if _, e = a.Store.DB.Exec(`UPDATE systemconfig SET payload=? WHERE uid='main'`, badSettings); e != nil {
 					t.Fatal(e)
 				}
 			}
@@ -218,7 +218,7 @@ func TestSubscriptionStatsActualCoreCompletionHTTPAsyncColdAndLostACK(t *testing
 			if calls.Load() != wantedCalls || subscriptionStatsCompletedCount(t, a) != 1 {
 				t.Fatal("child retry changed parent or duplicated HTTP")
 			}
-			if _, e = a.Store.DB.Exec(`DELETE FROM records WHERE kind='source_subscribe_complete'`); e != nil {
+			if _, e = a.Store.DB.Exec(`DELETE FROM plugin_record WHERE kind='source_subscribe_complete'`); e != nil {
 				t.Fatal(e)
 			}
 			if e = a.safeRun(context.Background(), j); e == nil {
@@ -334,7 +334,7 @@ func TestSubscriptionStatsActualCompletionAcceptedFactsNoticeAndHTTP(t *testing.
 					t.Fatal("completion child repeated POST", e, calls.Load())
 				}
 				// Already consumed source history remains an authenticated dependency.
-				if _, e = a.Store.DB.Exec(`DELETE FROM records WHERE kind='subscription_history'`); e != nil {
+				if _, e = a.Store.DB.Exec(`DELETE FROM plugin_record WHERE kind='subscription_history'`); e != nil {
 					t.Fatal(e)
 				}
 				if e = a.safeRun(ctx, stats); e == nil {
@@ -354,7 +354,7 @@ func TestSubscriptionStatsAdmissionFailureRollsBackSourceCompletion(t *testing.T
 		t.Fatal("thread admission failure falsely returned successful parent")
 	}
 	var stats int
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription_stats'`).Scan(&stats)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_record WHERE kind='subscription_stats'`).Scan(&stats)
 	if stats != 0 || subscriptionStatsCompletedCount(t, a) != 0 {
 		t.Fatal("failed child admission committed a partial source added", stats)
 	}
@@ -365,7 +365,7 @@ func TestSubscriptionStatsActualHTTPReceiptWriteFailureBecomesUnknownWithoutRetr
 	var calls atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		calls.Add(1)
-		if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_stats_finish_failure BEFORE UPDATE ON records WHEN NEW.kind='subscription_stats' BEGIN SELECT RAISE(ABORT,'owned final stats write failure'); END`); e != nil {
+		if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_stats_finish_failure BEFORE UPDATE ON plugin_record WHEN NEW.kind='subscription_stats' BEGIN SELECT RAISE(ABORT,'owned final stats write failure'); END`); e != nil {
 			t.Error(e)
 		}
 		w.WriteHeader(200)
@@ -400,7 +400,7 @@ func TestSubscriptionStatsSealedProxyEnvironmentAndJobGeneration(t *testing.T) {
 	defer server.Close()
 	subscriptionStatsInstallSettings(t, a, server.URL, true)
 	var sealed []byte
-	if e := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='source_statistics_settings' AND id='main'`).Scan(&sealed); e != nil {
+	if e := a.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed); e != nil {
 		t.Fatal(e)
 	}
 	raw, e := a.pluginStore.unseal("source_statistics_settings", "system", "main", sealed)
@@ -417,7 +417,7 @@ func TestSubscriptionStatsSealedProxyEnvironmentAndJobGeneration(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	if _, e = a.Store.DB.Exec(`UPDATE records SET payload=? WHERE kind='source_statistics_settings' AND id='main'`, sealed); e != nil {
+	if _, e = a.Store.DB.Exec(`UPDATE systemconfig SET payload=? WHERE uid='main'`, sealed); e != nil {
 		t.Fatal(e)
 	}
 	if e = a.safeRun(ctx, complete); e != nil {
@@ -540,7 +540,7 @@ func subscriptionStatsCompletionFixture(t *testing.T) (*App, Job, context.Contex
 func subscriptionStatsCompletedCount(t *testing.T, a *App) int {
 	t.Helper()
 	var count int
-	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='source_subscribe_complete'`).Scan(&count); err != nil {
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_record WHERE kind='source_subscribe_complete'`).Scan(&count); err != nil {
 		t.Fatal(err)
 	}
 	return count

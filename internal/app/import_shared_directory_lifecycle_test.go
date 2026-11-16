@@ -74,7 +74,7 @@ func TestSharedDirectoryActualMergeDeletionLifecycle(t *testing.T) {
 				t.Fatal(err)
 			}
 			if branch == "history-cold" {
-				if _, err = a.Store.DB.Exec(`CREATE TRIGGER shared_delete_final BEFORE UPDATE ON records WHEN NEW.kind='history_target_removal' AND json_extract(NEW.payload,'$.File.deleted')=1 BEGIN SELECT RAISE(FAIL,'shared final commit interrupted'); END`); err != nil {
+				if _, err = a.Store.DB.Exec(`CREATE TRIGGER shared_delete_final BEFORE UPDATE ON history_target_receipt WHEN NEW.record_kind='history_target_removal' AND json_extract(NEW.payload,'$.File.deleted')=1 BEGIN SELECT RAISE(FAIL,'shared final commit interrupted'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
@@ -188,7 +188,7 @@ func TestSharedDirectoryActualMergeMetadataColdRebase(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = a.Store.DB.Exec(`CREATE TRIGGER shared_metadata_final BEFORE UPDATE ON records WHEN NEW.kind='managed_file' AND NEW.id='` + tokenHash(asset.Path) + `' BEGIN SELECT RAISE(FAIL,'shared metadata commit interrupted'); END`); err != nil {
+	if _, err = a.Store.DB.Exec(`CREATE TRIGGER shared_metadata_final BEFORE UPDATE ON managed_file WHEN NEW.record_kind='managed_file' AND NEW.id='` + tokenHash(asset.Path) + `' BEGIN SELECT RAISE(FAIL,'shared metadata commit interrupted'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, job.ID); err != nil {

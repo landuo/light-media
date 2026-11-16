@@ -133,7 +133,7 @@ func (a *App) originalBrushOwnedTorrent(ctx context.Context, scope originalBaseC
 	for _, id := range daemonIDs {
 		var conflicting bool
 		suffix := tokenHash(id + "\x00" + strings.ToLower(hash))
-		err = tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE kind=? AND id LIKE ? AND id<>?)`, originalBrushOwnerKind, "%:"+suffix, key).Scan(&conflicting)
+		err = tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM plugin_record WHERE kind=? AND id LIKE ? AND id<>?)`, originalBrushOwnerKind, "%:"+suffix, key).Scan(&conflicting)
 		if err != nil {
 			return err
 		}
@@ -156,7 +156,7 @@ func (a *App) originalBrushOwnedTorrent(ctx context.Context, scope originalBaseC
 	if err != nil {
 		return err
 	}
-	result, err := tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO NOTHING`, originalBrushOwnerKind, key, sealed, now())
+	result, err := tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO NOTHING`, originalBrushOwnerKind, key, sealed, now())
 	if err != nil {
 		return err
 	}

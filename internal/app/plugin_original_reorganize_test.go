@@ -130,7 +130,7 @@ func originalMainHistoryReorganize(t *testing.T, sample originalReorganizeCase) 
 		}
 	}
 	if sample.fault {
-		if _, e = a.Store.DB.Exec(`CREATE TRIGGER owned_reorganize_meta_failure BEFORE UPDATE ON records WHEN NEW.kind='import_meta' AND json_extract(NEW.payload,'$.reorganize.target_removed')=1 BEGIN SELECT RAISE(ABORT,'owned reorganize metadata failure'); END`); e != nil {
+		if _, e = a.Store.DB.Exec(`CREATE TRIGGER owned_reorganize_meta_failure BEFORE UPDATE ON import_meta WHEN NEW.record_kind='import_meta' AND json_extract(NEW.payload,'$.reorganize.target_removed')=1 BEGIN SELECT RAISE(ABORT,'owned reorganize metadata failure'); END`); e != nil {
 			t.Fatal(e)
 		}
 		failed, e := a.manualOrganize(ctx, input)

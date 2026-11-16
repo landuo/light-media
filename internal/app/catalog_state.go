@@ -43,7 +43,8 @@ func (a *App) decorateMedia(ctx context.Context, items []catalog.Media) error {
 	marks := strings.TrimRight(strings.Repeat("?,", len(keys)), ",")
 	for _, kind := range []string{"asset", "subscription", "intent"} {
 		params[0] = kind
-		rows, e := tx.QueryContext(ctx, `SELECT payload FROM records WHERE kind=? AND (json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id')) IN (`+marks+`)`, params...)
+		table, _ := recordTableFor(kind)
+		rows, e := tx.QueryContext(ctx, `SELECT payload FROM `+table.name+` WHERE record_kind=? AND (json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id')) IN (`+marks+`)`, params...)
 		if e != nil {
 			return e
 		}

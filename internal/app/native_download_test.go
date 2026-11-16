@@ -98,7 +98,7 @@ func TestNativeDownloadWithoutMediaUsesSelectedDirectoryAndIsIdempotent(t *testi
 	}
 	var reservations, assets int
 	_ = a.Store.DB.QueryRow(`SELECT count(*) FROM reservations`).Scan(&reservations)
-	_ = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&assets)
+	_ = a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&assets)
 	if reservations != 0 || assets != 0 {
 		t.Fatal("unidentified download claimed media/library")
 	}

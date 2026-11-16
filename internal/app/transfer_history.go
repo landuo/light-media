@@ -68,7 +68,7 @@ const transferHistoryMainFile = `COALESCE(json_extract(cb.payload,'$.file'),f.va
 const transferHistoryExecutedFiles = `, executed_seed AS MATERIALIZED (
  SELECT r.id AS plan_id, f.fullkey AS file_json_path, cb.id AS callback_id, COALESCE(cb.updated_at,r.updated_at) AS updated_at,
  j.id AS job_id,j.state AS job_state,
- CASE WHEN EXISTS(SELECT 1 FROM records cancelled WHERE cancelled.kind='organize_file_cancel' AND cancelled.id=j.id||'/'||json_extract(f.value,'$.id')) THEN '此文件已从整理队列移除' ELSE j.error_message END AS job_error,j.created_at AS executed_at,j.execution_key,
+ CASE WHEN EXISTS(SELECT 1 FROM organize_cancel cancelled WHERE cancelled.id=j.id||'/'||json_extract(f.value,'$.id')) THEN '此文件已从整理队列移除' ELSE j.error_message END AS job_error,j.created_at AS executed_at,j.execution_key,
  json_extract(f.value,'$.id') AS file_id,
  json_extract(` + transferHistoryMainFile + `,'$.id') AS execution_file_id,
  json_extract(r.payload,'$.created_at') AS plan_created_at,
@@ -79,14 +79,14 @@ const transferHistoryExecutedFiles = `, executed_seed AS MATERIALIZED (
  CASE WHEN json_extract(cb.payload,'$.file.status')='imported' THEN 'success'
  WHEN json_extract(cb.payload,'$.file.status')='error' THEN 'failed'
  WHEN json_extract(f.value,'$.status') IN ('imported','already_imported') THEN 'success'
- WHEN EXISTS(SELECT 1 FROM records cancelled WHERE cancelled.kind='organize_file_cancel' AND cancelled.id=j.id||'/'||json_extract(f.value,'$.id')) THEN 'failed'
+ WHEN EXISTS(SELECT 1 FROM organize_cancel cancelled WHERE cancelled.id=j.id||'/'||json_extract(f.value,'$.id')) THEN 'failed'
  WHEN j.state IN ('queued','running','retry_wait','waiting_paused') THEN 'pending'
  ELSE 'failed' END AS status
- FROM records r,json_each(r.payload,'$.files') f
+ FROM import_plan r,json_each(r.payload,'$.files') f
  JOIN import_jobs j ON ` + transferHistoryJobMatch + `
- LEFT JOIN records meta ON meta.kind='import_meta' AND meta.id=r.id
- LEFT JOIN records cb ON cb.kind='original_transfer_callback' AND cb.id=r.id||'/'||json_extract(f.value,'$.id') AND json_extract(cb.payload,'$.job_id')=j.id
- WHERE r.kind='import_plan'`
+ LEFT JOIN import_meta meta ON meta.id=r.id
+ LEFT JOIN plugin_original_callback cb ON cb.id=r.id||'/'||json_extract(f.value,'$.id') AND json_extract(cb.payload,'$.job_id')=j.id
+`
 
 const transferHistoryAuxiliaryFiles = `), auxiliary_seed AS MATERIALIZED (
  SELECT r.id AS plan_id, NULL AS file_json_path, cb.id AS callback_id, cb.updated_at AS updated_at,
@@ -99,12 +99,12 @@ const transferHistoryAuxiliaryFiles = `), auxiliary_seed AS MATERIALIZED (
  json_extract(cb.payload,'$.file.target') AS target_path,
  json_extract(cb.payload,'$.file.source') AS resource_source,
  CASE WHEN json_extract(cb.payload,'$.file.status')='imported' THEN 'success' ELSE 'failed' END AS status
- FROM records r,json_each(r.payload,'$.files') f
+ FROM import_plan r,json_each(r.payload,'$.files') f
  JOIN import_jobs j ON ` + transferHistoryJobMatch + `
- JOIN records cb ON cb.kind='original_transfer_callback' AND json_extract(cb.payload,'$.plan_id')=(r.id||'')
+ JOIN plugin_original_callback cb ON json_extract(cb.payload,'$.plan_id')=(r.id||'')
  AND json_extract(cb.payload,'$.parent_file_id')=json_extract(f.value,'$.id')
  AND json_extract(cb.payload,'$.file.id')!=json_extract(f.value,'$.id') AND json_extract(cb.payload,'$.job_id')=j.id
- WHERE r.kind='import_plan'`
+`
 
 // Rank references and scalar fields, then read the JSON for the selected rows.
 // Carrying plan/file documents through each sorter can exhaust container /tmp.
@@ -120,7 +120,7 @@ const transferHistoryBaseCTE = transferHistoryJobsCTE + transferHistoryExecutedF
 // Materialize the small deletion-marker set once. Probing the main records
 // B-tree for every historical attempt adds thousands of cold random reads.
 const transferHistoryRanked = `, hidden_history AS MATERIALIZED (
- SELECT id,payload,updated_at FROM records WHERE kind='transfer_history_hidden'
+ SELECT id,payload,updated_at FROM history_hidden WHERE 1=1
 ), ranked_history AS (
  SELECT *,
  FIRST_VALUE(execution_file_id) OVER (PARTITION BY resource_source ORDER BY first_execution_key,execution_file_id) AS history_id,
@@ -144,8 +144,8 @@ const transferHistoryJSON = `json_remove(hp.payload,'$.files','$.media.cast','$.
 
 const transferHistoryColumns = transferHistoryJSON + `,h.job_id,h.job_state,h.job_error,h.updated_at,h.status,h.history_id,h.history_created_at,h.resource_source,h.execution_key`
 
-const transferHistoryHydrate = ` JOIN records hp ON hp.kind='import_plan' AND hp.id=h.plan_id
- LEFT JOIN records hc ON hc.kind='original_transfer_callback' AND hc.id=h.callback_id`
+const transferHistoryHydrate = ` JOIN import_plan hp ON hp.id=h.plan_id
+ LEFT JOIN plugin_original_callback hc ON hc.id=h.callback_id`
 
 // Current histories carry their own compact snapshots. The execution join is
 // retained only for migration and exact execution/queue lookups.

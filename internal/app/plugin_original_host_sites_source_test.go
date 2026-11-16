@@ -242,7 +242,7 @@ func TestSourceSitesGuardAndSQLiteFailureDoNotBecomeNone(t *testing.T) {
 	worker := sourceSitesFixture(t, a, cookie)
 	site := installResourceBrowseSite(t, a, "http://127.0.0.1:43100")
 	sourceSitesSetModule(t, a, cookie, module, json.RawMessage(`{"upload":17}`))
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_source_site_fail BEFORE INSERT ON records WHEN NEW.kind='site_stats_latest' BEGIN SELECT RAISE(FAIL,'owned-site-write-failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_source_site_fail BEFORE INSERT ON sitestatistic WHEN NEW.record_kind='site_stats_latest' BEGIN SELECT RAISE(FAIL,'owned-site-write-failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if err := hostDownloaderCall(t, worker, "source_refresh", plugins.SiteHostRefreshV1{ID: site.ID}, nil); err == nil {
@@ -296,7 +296,7 @@ func TestSourceSitesAllOwnerOrderNamesStopAndCommittedFailure(t *testing.T) {
 			ownedDownloaderSave(t, a, cfg)
 			// SQLite write failure at the second site leaves the first real commit/event.
 			if mode == "sql-failure-after-first" {
-				if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_second_site_fail BEFORE INSERT ON records WHEN NEW.kind='site_stats_latest' AND NEW.id='site-1' BEGIN SELECT RAISE(FAIL,'owned second source write'); END`); err != nil {
+				if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_second_site_fail BEFORE INSERT ON sitestatistic WHEN NEW.record_kind='site_stats_latest' AND NEW.id='site-1' BEGIN SELECT RAISE(FAIL,'owned second source write'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
@@ -401,7 +401,7 @@ func TestSourceSitesTransientGuardAfterNativeCannotManufactureNone(t *testing.T)
 		t.Fatal("guarded native request count", hits.Load())
 	}
 	var count int
-	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='site_stats_latest'`).Scan(&count); err != nil || count != 0 {
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM sitestatistic WHERE 1=1`).Scan(&count); err != nil || count != 0 {
 		t.Fatal("rejected native call published observation", count, err)
 	}
 	if err := scope.validate(context.Background()); err != nil {
@@ -431,7 +431,7 @@ func TestSourceSitesWideCurrentIntegersAndHistoricalFloat(t *testing.T) {
 	// The bounded native observation has no invented zero for this counter.
 	var sealed []byte
 	var snapshot siteSnapshot
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='site_stats_latest' AND id=?`, site.ID).Scan(&sealed); err != nil || a.Store.openSiteAccountSnapshot("site_stats_latest", site.ID, sealed, &snapshot) != nil || snapshot.Stats == nil || snapshot.Stats.Uploaded != nil {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM sitestatistic WHERE uid=?`, site.ID).Scan(&sealed); err != nil || a.Store.openSiteAccountSnapshot("site_stats_latest", site.ID, sealed, &snapshot) != nil || snapshot.Stats == nil || snapshot.Stats.Uploaded != nil {
 		t.Fatal("wide current value became fabricated native zero", snapshot, err)
 	}
 	for _, raw := range []json.RawMessage{json.RawMessage(`{"message_unread":` + integer + `}`), json.RawMessage(`{"upload":` + "1" + strings.Repeat("0", 400) + `}`)} {
@@ -465,7 +465,7 @@ func TestSourceSitesBindingErrorSkipRetainsWideCurrentAndUnreadMessage(t *testin
 	}
 	// Exact huge unread count reaches the existing message owner once.
 	var notices int
-	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='notification'`).Scan(&notices); err != nil || notices != 1 {
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM message WHERE 1=1`).Scan(&notices); err != nil || notices != 1 {
 		t.Fatal("wide unread summary missing", notices, err)
 	}
 	snapshot := siteSnapshot{SourceData: &sites.SourceUserData{}}
@@ -542,7 +542,7 @@ func TestSourceSitesCurrentAndHistoricalProjectionTable(t *testing.T) {
 				t.Fatal("source row lacks actual SQLite identity", string(fields))
 			}
 			var rowID int64
-			if err := a.Store.DB.QueryRow(`SELECT rowid FROM records WHERE kind='site_stats_history' AND id LIKE ?`, site.ID+":%").Scan(&rowID); err != nil || string(projected["id"]) != fmt.Sprint(rowID) {
+			if err := a.Store.DB.QueryRow(`SELECT rowid FROM site_statistic_event WHERE id LIKE ?`, site.ID+":%").Scan(&rowID); err != nil || string(projected["id"]) != fmt.Sprint(rowID) {
 				t.Fatal("native ID is not real history rowid", string(projected["id"]), rowID, err)
 			}
 			if row.skip {

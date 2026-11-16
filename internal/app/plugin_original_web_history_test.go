@@ -53,7 +53,7 @@ func TestOriginalWebMessageHistoryUsesFixedPaginationAndStableIdentity(t *testin
 			t.Fatal(err)
 		}
 		var id int64
-		if err = a.Store.DB.QueryRow(`SELECT rowid FROM records WHERE kind='notification' AND id=?`, n.ID).Scan(&id); err != nil {
+		if err = a.Store.DB.QueryRow(`SELECT rowid FROM message WHERE uid=?`, n.ID).Scan(&id); err != nil {
 			t.Fatal(err)
 		}
 		ids = append(ids, id)
@@ -120,7 +120,7 @@ func TestOriginalWebMessageHistoryOrdersPersistedSourceLocalTime(t *testing.T) {
 			t.Fatal("owned prior-process history could not be stored")
 		}
 		var id int64
-		if a.Store.DB.QueryRow(`SELECT rowid FROM records WHERE kind='notification' AND id=?`, n.ID).Scan(&id) != nil {
+		if a.Store.DB.QueryRow(`SELECT rowid FROM message WHERE uid=?`, n.ID).Scan(&id) != nil {
 			t.Fatal("owned source row identity missing")
 		}
 		ids[sample.ID] = id
@@ -159,7 +159,7 @@ func TestOriginalWebMessageActualSDKHistoryAndInvisibleNoHistoryPrompt(t *testin
 		t.Fatal("Notification accepted note unlike the fixed source model")
 	}
 	var payload []byte
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='notification' LIMIT 1`).Scan(&payload); err != nil {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM message LIMIT 1`).Scan(&payload); err != nil {
 		t.Fatal(err)
 	}
 	if strings.Contains(string(payload), "owned source body") {
@@ -211,8 +211,8 @@ func TestOriginalWebMessageActualSDKInputBeforeIncomingHistory(t *testing.T) {
 		t.Fatal("callback was recorded as ordinary user input")
 	}
 	var incoming, notifications int
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='message'`).Scan(&incoming)
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='notification'`).Scan(&notifications)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM message WHERE 1=1`).Scan(&incoming)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM message WHERE 1=1`).Scan(&notifications)
 	if incoming != 1 || notifications != 0 {
 		t.Fatal("incoming history polluted sent-notification center", incoming, notifications)
 	}

@@ -85,7 +85,7 @@ func TestSiteDataRefreshClockCoalescesAndDisables(t *testing.T) {
 		t.Fatal(err)
 	}
 	var raw []byte
-	a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='site_refresh_clock'`).Scan(&raw)
+	a.Store.DB.QueryRow(`SELECT payload FROM scheduler_state WHERE 1=1`).Scan(&raw)
 	var clock struct{ Next time.Time }
 	json.Unmarshal(raw, &clock)
 	if !clock.Next.Equal(at.Add(27 * time.Hour)) {

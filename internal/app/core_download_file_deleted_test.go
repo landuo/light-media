@@ -339,17 +339,17 @@ func TestCoreDownloadFileDeletedUnknownEvidenceAndConfigGuard(t *testing.T) {
 			case "config-drift":
 				a.config.Downloaders[0].BaseURL += "/changed"
 			case "receipt":
-				_, _ = a.Store.DB.Exec(`DELETE FROM records WHERE kind='core_download_removal' AND id=?`, r.ID)
+				_, _ = a.Store.DB.Exec(`DELETE FROM download_removal_root WHERE id=?`, r.ID)
 			case "root":
-				_, _ = a.Store.DB.Exec(`DELETE FROM records WHERE kind='core_download_removal_root' AND id=?`, r.ID)
+				_, _ = a.Store.DB.Exec(`DELETE FROM download_removal_root WHERE id=?`, r.ID)
 			case "source":
-				_, _ = a.Store.DB.Exec(`DELETE FROM records WHERE kind='history_download_file_event' AND id=?`, r.ID)
+				_, _ = a.Store.DB.Exec(`DELETE FROM download_file_event WHERE id=?`, r.ID)
 			case "accepted":
-				_, _ = a.Store.DB.Exec(`DELETE FROM records WHERE kind='download_added'`)
+				_, _ = a.Store.DB.Exec(`DELETE FROM downloadhistory WHERE 1=1`)
 			case "event":
 				_, _ = a.Store.DB.Exec(`DELETE FROM domain_events WHERE event_id=?`, domainEventID("downloadfile.deleted", r.ID))
 			case "chain":
-				_, _ = a.Store.DB.Exec(`DELETE FROM records WHERE kind='core_download_removal_chain' AND substr(id,1,69)=?`, r.ID+":")
+				_, _ = a.Store.DB.Exec(`DELETE FROM download_removal_chain WHERE substr(id,1,69)=?`, r.ID+":")
 			case "dispatching":
 				r.State = "dispatching"
 				if e := a.commitCoreDownloadRemoval(context.Background(), r, false); e != nil {
@@ -556,13 +556,13 @@ func TestCoreDownloadFileDeletedOldPairRollbackCannotReplay(t *testing.T) {
 	j := coreDeleteJob(t, a)
 	r := coreDeleteRecord(t, a, j)
 	var receipt, root []byte
-	_ = a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='core_download_removal' AND id=?`, r.ID).Scan(&receipt)
-	_ = a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='core_download_removal_root' AND id=?`, r.ID).Scan(&root)
+	_ = a.Store.DB.QueryRow(`SELECT payload FROM download_removal_root WHERE id=?`, r.ID).Scan(&receipt)
+	_ = a.Store.DB.QueryRow(`SELECT payload FROM download_removal_root WHERE id=?`, r.ID).Scan(&root)
 	if e := a.safeRun(context.Background(), j); pluginErrorCode(e) != "CORE_DOWNLOAD_DELETE_REVIEW" {
 		t.Fatal(e)
 	}
-	_, _ = a.Store.DB.Exec(`UPDATE records SET payload=? WHERE kind='core_download_removal' AND id=?`, receipt, r.ID)
-	_, _ = a.Store.DB.Exec(`UPDATE records SET payload=? WHERE kind='core_download_removal_root' AND id=?`, root, r.ID)
+	_, _ = a.Store.DB.Exec(`UPDATE download_removal_root SET payload=? WHERE id=?`, receipt, r.ID)
+	_, _ = a.Store.DB.Exec(`UPDATE download_removal_root SET payload=? WHERE id=?`, root, r.ID)
 	if e := a.safeRun(context.Background(), j); e == nil {
 		t.Fatal("rolled-back planned pair accepted")
 	}

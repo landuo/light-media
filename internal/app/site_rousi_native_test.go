@@ -20,7 +20,7 @@ func TestLegacyRousiLoadsNativeWithoutRewritingConfiguration(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = a.Store.DB.Exec(`INSERT INTO records VALUES('config','main',?,?)`, sealed, now()); err != nil {
+	if _, err = a.Store.DB.Exec(`INSERT INTO plugin_record VALUES('config','main',?,?)`, sealed, now()); err != nil {
 		t.Fatal(err)
 	}
 	dir := a.Dir
@@ -37,7 +37,7 @@ func TestLegacyRousiLoadsNativeWithoutRewritingConfiguration(t *testing.T) {
 		t.Fatal("legacy identity or credential changed")
 	}
 	var stored []byte
-	if err = cold.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&stored); err != nil || !bytes.Equal(stored, sealed) {
+	if err = cold.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&stored); err != nil || !bytes.Equal(stored, sealed) {
 		t.Fatal("load rewrote persistent config", err)
 	}
 }

@@ -64,7 +64,7 @@ func TestOrganizeEpisodeGroupCrossSeasonFileInventoryAndHistory(t *testing.T) {
 	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM asset_slots WHERE asset_id=?`, asset.ID).Scan(&count); err != nil || count != 2 {
 		t.Fatalf("slot count=%d %v", count, err)
 	}
-	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&count); err != nil || count != 1 {
+	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&count); err != nil || count != 1 {
 		t.Fatalf("one physical file became multiple assets: %d %v", count, err)
 	}
 	for _, slot := range expected {

@@ -30,7 +30,7 @@ func (run *importAdmission) includeOverwriteOwners(ctx context.Context, meta imp
 		hashes = append(hashes, tokenHash(path))
 	}
 	raw, _ := json.Marshal(hashes)
-	rows, err := run.app.Store.reader().QueryContext(ctx, `SELECT DISTINCT json_extract(payload,'$.asset_id') FROM records WHERE kind='managed_file' AND id IN (SELECT value FROM json_each(?))`, raw)
+	rows, err := run.app.Store.reader().QueryContext(ctx, `SELECT DISTINCT json_extract(payload,'$.asset_id') FROM managed_file WHERE id IN (SELECT value FROM json_each(?))`, raw)
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (run *importAdmission) includeOverwriteOwners(ctx context.Context, meta imp
 		return err
 	}
 	raw, _ = json.Marshal(owners)
-	rows, err = run.app.Store.reader().QueryContext(ctx, `SELECT payload FROM records WHERE kind='managed_file' AND json_extract(payload,'$.asset_id') IN (SELECT value FROM json_each(?))`, raw)
+	rows, err = run.app.Store.reader().QueryContext(ctx, `SELECT payload FROM managed_file WHERE json_extract(payload,'$.asset_id') IN (SELECT value FROM json_each(?))`, raw)
 	if err != nil {
 		return err
 	}

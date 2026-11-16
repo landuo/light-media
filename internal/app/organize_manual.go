@@ -960,10 +960,10 @@ type organizeQueuePreparation struct {
 const organizeQueueJobsSQL = `SELECT ` + jobColumns + ` FROM jobs
  WHERE id IN (
  SELECT id FROM jobs INDEXED BY jobs_due WHERE kind IN ('import','organize_prepare','organize_file') AND state IN ` + activeOrganizeStates + `
- UNION SELECT json_extract(payload,'$.job') FROM records INDEXED BY organize_queue_group
- WHERE kind='organize_queue_member' AND json_extract(payload,'$.group') IN (` + liveOrganizeGroups + `))
+ UNION SELECT json_extract(payload,'$.job') FROM organize_queue_member INDEXED BY organize_queue_group
+ WHERE json_extract(payload,'$.group') IN (` + liveOrganizeGroups + `))
  AND kind IN ('import','organize_prepare','organize_file') AND state!='cancelled'
- AND (kind!='organize_prepare' OR NOT EXISTS(SELECT 1 FROM records WHERE kind='organize_file_listing' AND records.id=jobs.id))
+ AND (kind!='organize_prepare' OR NOT EXISTS(SELECT 1 FROM organize_listing WHERE organize_listing.id=jobs.id))
  ORDER BY created_at DESC, id`
 
 func (a *App) organizeQueue(ctx context.Context) (any, error) {
@@ -1021,7 +1021,7 @@ func (a *App) organizeQueue(ctx context.Context) (any, error) {
 			}
 			seen[fileKey] = true
 			var cancelled bool
-			if err := a.Store.reader().QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE kind='organize_file_cancel' AND id=?)`, job.ID+"/"+f.ID).Scan(&cancelled); err != nil {
+			if err := a.Store.reader().QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM organize_cancel WHERE id=?)`, job.ID+"/"+f.ID).Scan(&cancelled); err != nil {
 				return nil, err
 			}
 			if cancelled {
@@ -1083,8 +1083,8 @@ func (a *App) cancelOrganizeQueueFile(ctx context.Context, key string) (any, err
 	var item transferHistoryItem
 	var plan ImportPlan
 	var planID string
-	if e := a.Store.reader().QueryRowContext(ctx, `SELECT r.id FROM records r,json_each(r.payload,'$.files') f
- WHERE r.kind='import_plan' AND json_extract(f.value,'$.id')=? ORDER BY r.updated_at DESC LIMIT 1`, key).Scan(&planID); e == nil {
+	if e := a.Store.reader().QueryRowContext(ctx, `SELECT r.id FROM import_plan r,json_each(r.payload,'$.files') f
+ WHERE json_extract(f.value,'$.id')=? ORDER BY r.updated_at DESC LIMIT 1`, key).Scan(&planID); e == nil {
 		if e = a.Store.Get(ctx, "import_plan", planID, &plan); e != nil {
 			return nil, e
 		}

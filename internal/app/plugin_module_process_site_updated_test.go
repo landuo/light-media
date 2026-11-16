@@ -133,7 +133,7 @@ func verifyOwnedProductionCoreSiteUpdated(t *testing.T, dir string, request func
 	read := func() siteSnapshot {
 		var raw []byte
 		var value siteSnapshot
-		if err := store.DB.QueryRow(`SELECT payload FROM records WHERE kind='site_stats_latest' AND id=?`, site.ID).Scan(&raw); err != nil || store.openSiteAccountSnapshot("site_stats_latest", site.ID, raw, &value) != nil || value.SourceData == nil {
+		if err := store.DB.QueryRow(`SELECT payload FROM sitestatistic WHERE uid=?`, site.ID).Scan(&raw); err != nil || store.openSiteAccountSnapshot("site_stats_latest", site.ID, raw, &value) != nil || value.SourceData == nil {
 			t.Fatal("actual source account cache missing", err)
 		}
 		return value
@@ -146,7 +146,7 @@ func verifyOwnedProductionCoreSiteUpdated(t *testing.T, dir string, request func
 	connectionStamp := func() string {
 		var raw []byte
 		var value siteSnapshot
-		if err := store.DB.QueryRow(`SELECT payload FROM records WHERE kind='site_connection' AND id=?`, site.ID).Scan(&raw); err != nil || store.openSiteAccountSnapshot("site_connection", site.ID, raw, &value) != nil {
+		if err := store.DB.QueryRow(`SELECT payload FROM site_state WHERE id=?`, site.ID).Scan(&raw); err != nil || store.openSiteAccountSnapshot("site_connection", site.ID, raw, &value) != nil {
 			t.Fatal("actual site connection observation missing", err)
 		}
 		return value.Connection.CheckedAt
@@ -158,7 +158,7 @@ func verifyOwnedProductionCoreSiteUpdated(t *testing.T, dir string, request func
 		t.Fatal("false source result continued into clone/core or changed daily data")
 	}
 	configure(source, map[string]any{"username": "must-rollback", "upload": 500, "message_unread": 1})
-	if _, err := store.DB.Exec(`CREATE TRIGGER owned_site_event_sql_failure BEFORE INSERT ON records WHEN NEW.kind='site_stats_history' BEGIN SELECT RAISE(ABORT,'owned source DB failure'); END`); err != nil {
+	if _, err := store.DB.Exec(`CREATE TRIGGER owned_site_event_sql_failure BEFORE INSERT ON site_statistic_event WHEN NEW.record_kind='site_stats_history' BEGIN SELECT RAISE(ABORT,'owned source DB failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	eventErrors := func() int {

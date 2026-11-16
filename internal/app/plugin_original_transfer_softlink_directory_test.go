@@ -71,12 +71,12 @@ func TestOriginalTransferModuleActualSDKDirectorySoftlinkAdoption(t *testing.T) 
 				absentPermission = "0"
 			}
 			for _, event := range []string{"INSERT", "UPDATE"} {
-				if _, err = a.Store.DB.Exec(`CREATE TRIGGER dir_soft_call_` + event + ` BEFORE ` + event + ` ON records WHEN NEW.kind='import_receipt' AND json_extract(NEW.payload,'$.original_module_started')=1 AND (COALESCE(json_extract(NEW.payload,'$.original_softlink_directory.permission.target_absent'),0)!=` + absentPermission + ` OR json_type(NEW.payload,'$.original_softlink_directory.entries') IS NULL) BEGIN SELECT RAISE(FAIL,'directory provider called without original inventory'); END`); err != nil {
+				if _, err = a.Store.DB.Exec(`CREATE TRIGGER dir_soft_call_` + event + ` BEFORE ` + event + ` ON import_receipt WHEN NEW.record_kind='import_receipt' AND json_extract(NEW.payload,'$.original_module_started')=1 AND (COALESCE(json_extract(NEW.payload,'$.original_softlink_directory.permission.target_absent'),0)!=` + absentPermission + ` OR json_type(NEW.payload,'$.original_softlink_directory.entries') IS NULL) BEGIN SELECT RAISE(FAIL,'directory provider called without original inventory'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
 			if branch == "asset-sql-cold" {
-				if _, err = a.Store.DB.Exec(`CREATE TRIGGER dir_soft_asset_failure BEFORE INSERT ON records WHEN NEW.kind='asset' BEGIN SELECT RAISE(FAIL,'synthetic directory softlink asset failure'); END`); err != nil {
+				if _, err = a.Store.DB.Exec(`CREATE TRIGGER dir_soft_asset_failure BEFORE INSERT ON library_asset WHEN NEW.record_kind='asset' BEGIN SELECT RAISE(FAIL,'synthetic directory softlink asset failure'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
@@ -148,7 +148,7 @@ func TestOriginalTransferModuleActualSDKDirectorySoftlinkAdoption(t *testing.T) 
 				t.Fatal("MP file-only recursion copied empty directory", err)
 			}
 			var children int
-			if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='import_receipt' AND id LIKE ?`, key+"/directory/%").Scan(&children); err != nil || children != 0 {
+			if err := a.Store.DB.QueryRow(`SELECT count(*) FROM import_receipt WHERE id LIKE ?`, key+"/directory/%").Scan(&children); err != nil || children != 0 {
 				t.Fatal("external provider acquired fabricated native child receipts", children, err)
 			}
 			if len(after.TransferEvents) != 1 {

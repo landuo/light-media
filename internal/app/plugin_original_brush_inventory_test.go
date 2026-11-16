@@ -225,10 +225,10 @@ func TestOriginalBrushInventoryActualSDKProjectionAndClone(t *testing.T) {
 	callback, closePhase := object.originalBaseSessionHost(ctx, "snapshot", nil)
 	defer closePhase()
 	var sealed []byte
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='site_stats_latest' AND id=?`, private.ID).Scan(&sealed); err != nil {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM sitestatistic WHERE uid=?`, private.ID).Scan(&sealed); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := a.Store.DB.Exec(`UPDATE records SET payload=? WHERE kind='site_stats_latest' AND id=?`, []byte("owned-invalid-snapshot"), private.ID); err != nil {
+	if _, err := a.Store.DB.Exec(`UPDATE sitestatistic SET payload=? WHERE uid=?`, []byte("owned-invalid-snapshot"), private.ID); err != nil {
 		t.Fatal(err)
 	}
 	before = ownedBrushInventoryChanges(t, a)
@@ -236,7 +236,7 @@ func TestOriginalBrushInventoryActualSDKProjectionAndClone(t *testing.T) {
 		t.Fatal("corrupt local statistics became a successful/partial inventory")
 	}
 	ownedBrushInventoryNoWrites(t, a, before)
-	if _, err := a.Store.DB.Exec(`UPDATE records SET payload=? WHERE kind='site_stats_latest' AND id=?`, sealed, private.ID); err != nil {
+	if _, err := a.Store.DB.Exec(`UPDATE sitestatistic SET payload=? WHERE uid=?`, sealed, private.ID); err != nil {
 		t.Fatal(err)
 	}
 	if value, err := callback(ctx, identity, plugins.BrushInventoryReadCapability, json.RawMessage(`{}`)); err != nil || len(value) == 0 {

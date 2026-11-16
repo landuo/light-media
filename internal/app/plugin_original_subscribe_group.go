@@ -130,6 +130,6 @@ func (p *PluginStore) appendOriginalSubscribeGroupEntryTx(ctx context.Context, t
 // Internally applied filters do not revoke previously selected materials from
 // the exact current revision. A stale user revision still cannot be promoted.
 func advanceOriginalSubscribeGroupIntentsTx(ctx context.Context, tx *sql.Tx, sub Subscription, previousRevision int) error {
-	_, err := tx.ExecContext(ctx, `UPDATE records SET payload=json_set(payload,'$.subscription_revision',?),updated_at=? WHERE kind='intent' AND json_extract(payload,'$.subscription_id')=? AND json_extract(payload,'$.subscription_revision')=? AND COALESCE(json_extract(payload,'$.subscription_acquisition'),'')='' AND json_extract(payload,'$.state') IN ('planned','submitting','reconcile_pending')`, sub.Revision, now(), sub.ID, previousRevision)
+	_, err := tx.ExecContext(ctx, `UPDATE downloadhistory SET payload=json_set(payload,'$.subscription_revision',?),updated_at=? WHERE json_extract(payload,'$.subscription_id')=? AND json_extract(payload,'$.subscription_revision')=? AND COALESCE(json_extract(payload,'$.subscription_acquisition'),'')='' AND json_extract(payload,'$.state') IN ('planned','submitting','reconcile_pending')`, sub.Revision, now(), sub.ID, previousRevision)
 	return err
 }

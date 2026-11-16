@@ -200,7 +200,7 @@ func (a *App) scanLibrary(ctx context.Context, job Job, rootID string) (returnEr
 			return err
 		}
 		var existingID string
-		err = a.Store.DB.QueryRowContext(ctx, `SELECT id FROM records WHERE kind='asset' AND json_extract(payload,'$.path')=? LIMIT 1`, name).Scan(&existingID)
+		err = a.Store.DB.QueryRowContext(ctx, `SELECT id FROM library_asset WHERE json_extract(payload,'$.path')=? LIMIT 1`, name).Scan(&existingID)
 		if err == nil {
 			if e := a.resolveLibraryCandidate(ctx, root.ID, name, existingID); e != nil {
 				scan["status"] = "incomplete"
@@ -326,7 +326,7 @@ func (a *App) scanLibrary(ctx context.Context, job Job, rootID string) (returnEr
 		scan["status"] = "incomplete"
 		return err
 	}
-	rows, err := a.Store.DB.QueryContext(ctx, `SELECT id FROM records WHERE kind='asset' AND json_extract(payload,'$.root_id')=? AND json_extract(payload,'$.state') NOT IN ('removed','missing_confirmed')`, root.ID)
+	rows, err := a.Store.DB.QueryContext(ctx, `SELECT id FROM library_asset WHERE json_extract(payload,'$.root_id')=? AND json_extract(payload,'$.state') NOT IN ('removed','missing_confirmed')`, root.ID)
 	if err != nil {
 		scan["status"] = "incomplete"
 		return err

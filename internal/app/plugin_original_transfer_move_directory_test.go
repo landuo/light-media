@@ -89,15 +89,15 @@ func TestOriginalTransferModuleActualSDKDirectoryMoveAdoption(t *testing.T) {
 				t.Fatal(err)
 			}
 			for _, statement := range []string{
-				`CREATE TRIGGER directory_move_insert_proof BEFORE INSERT ON records WHEN NEW.kind='import_receipt' AND json_extract(NEW.payload,'$.original_module_started')=1 AND json_type(NEW.payload,'$.original_move_directory.entries') IS NULL BEGIN SELECT RAISE(FAIL,'directory move started without original member proof'); END`,
-				`CREATE TRIGGER directory_move_update_proof BEFORE UPDATE ON records WHEN NEW.kind='import_receipt' AND json_extract(NEW.payload,'$.original_module_started')=1 AND json_type(NEW.payload,'$.original_move_directory.entries') IS NULL BEGIN SELECT RAISE(FAIL,'directory move started without original member proof'); END`,
+				`CREATE TRIGGER directory_move_insert_proof BEFORE INSERT ON import_receipt WHEN NEW.record_kind='import_receipt' AND json_extract(NEW.payload,'$.original_module_started')=1 AND json_type(NEW.payload,'$.original_move_directory.entries') IS NULL BEGIN SELECT RAISE(FAIL,'directory move started without original member proof'); END`,
+				`CREATE TRIGGER directory_move_update_proof BEFORE UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND json_extract(NEW.payload,'$.original_module_started')=1 AND json_type(NEW.payload,'$.original_move_directory.entries') IS NULL BEGIN SELECT RAISE(FAIL,'directory move started without original member proof'); END`,
 			} {
 				if _, err = a.Store.DB.Exec(statement); err != nil {
 					t.Fatal(err)
 				}
 			}
 			if coldRecovery {
-				if _, err = a.Store.DB.Exec(`CREATE TRIGGER directory_move_asset_failure BEFORE INSERT ON records WHEN NEW.kind='asset' BEGIN SELECT RAISE(FAIL,'synthetic directory move asset failure'); END`); err != nil {
+				if _, err = a.Store.DB.Exec(`CREATE TRIGGER directory_move_asset_failure BEFORE INSERT ON library_asset WHEN NEW.record_kind='asset' BEGIN SELECT RAISE(FAIL,'synthetic directory move asset failure'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
@@ -156,7 +156,7 @@ func TestOriginalTransferModuleActualSDKDirectoryMoveAdoption(t *testing.T) {
 					t.Fatal("failed directory proof replayed destructive provider")
 				}
 				var count int
-				if err = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&count); err != nil || count != 0 {
+				if err = a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&count); err != nil || count != 0 {
 					t.Fatal("corrupt directory result registered assets", count, err)
 				}
 				return

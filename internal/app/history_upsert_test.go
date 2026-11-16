@@ -377,7 +377,7 @@ func TestHistoryUpsertDownloadedSourceRetryKeepsIntent(t *testing.T) {
 		t.Fatalf("download was not completed: %+v %v", completed, err)
 	}
 	var asset Asset
-	if err := a.Store.DB.QueryRow(`SELECT json_extract(payload,'$.intent_id') FROM records WHERE kind='asset' AND json_extract(payload,'$.path')=?`, replacement.Files[0].Target).Scan(&asset.IntentID); err != nil || asset.IntentID != intent.ID {
+	if err := a.Store.DB.QueryRow(`SELECT json_extract(payload,'$.intent_id') FROM library_asset WHERE json_extract(payload,'$.path')=?`, replacement.Files[0].Target).Scan(&asset.IntentID); err != nil || asset.IntentID != intent.ID {
 		t.Fatalf("asset lost download provenance: %+v %v", asset, err)
 	}
 	latest := historyUpsertOnly(t, a, "status=success")
@@ -500,7 +500,7 @@ func TestHistoryUpsertOldExecutionFinishingLateCannotReplaceNewAttempt(t *testin
 	// This writes the older plan and job after the newer attempt was committed.
 	// Visibility must follow submission order, not completion/record timestamps.
 	reorgRunJob(t, a, firstJob)
-	if _, err := a.Store.DB.Exec(`UPDATE records SET updated_at='2099-12-31T23:59:59Z' WHERE kind='import_plan' AND id=?`, firstPlan.ID); err != nil {
+	if _, err := a.Store.DB.Exec(`UPDATE import_plan SET updated_at='2099-12-31T23:59:59Z' WHERE id=?`, firstPlan.ID); err != nil {
 		t.Fatal(err)
 	}
 	latest := historyUpsertOnly(t, a, "")

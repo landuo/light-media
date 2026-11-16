@@ -261,7 +261,7 @@ func TestOrdinaryCompletionNewRevisionRevokesOnlyObsoletePreparation(t *testing.
 			t.Fatal("current revision queue is not idempotent", count, e)
 		}
 		var intentCount int
-		if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='intent' AND json_extract(payload,'$.state')='accepted'`).Scan(&intentCount); e != nil || intentCount != 1 {
+		if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM downloadhistory WHERE json_extract(payload,'$.state')='accepted'`).Scan(&intentCount); e != nil || intentCount != 1 {
 			t.Fatal("preparation scope edit changed actual download", intentCount, e)
 		}
 	})

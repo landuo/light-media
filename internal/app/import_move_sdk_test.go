@@ -46,7 +46,7 @@ func TestImportMoveActualSDKCallbacksAndPlanRecovery(t *testing.T) {
 				expectedItems[path] = fields
 			}
 			if branch == "asset-sql-retry" {
-				if _, err = a.Store.DB.Exec(`CREATE TRIGGER move_sdk_asset_failure BEFORE INSERT ON records WHEN NEW.kind='asset' BEGIN SELECT RAISE(FAIL,'synthetic move SDK asset commit failure'); END`); err != nil {
+				if _, err = a.Store.DB.Exec(`CREATE TRIGGER move_sdk_asset_failure BEFORE INSERT ON library_asset WHEN NEW.record_kind='asset' BEGIN SELECT RAISE(FAIL,'synthetic move SDK asset commit failure'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}

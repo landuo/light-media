@@ -38,7 +38,7 @@ type qualityDownloadSnapshot struct {
 
 func qualityRecord(ctx context.Context, q qualityReader, kind, key string, value any) error {
 	var raw []byte
-	if e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, kind, key).Scan(&raw); e != nil {
+	if e := q.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, kind, key).Scan(&raw); e != nil {
 		return e
 	}
 	return json.Unmarshal(raw, value)
@@ -238,13 +238,13 @@ func (a *App) saveQualitySnapshotTx(ctx context.Context, tx *sql.Tx, p *qualityD
 	if e != nil {
 		return e
 	}
-	_, e = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('subscription_quality_download',?,?,?)`, key, sealed, now())
+	_, e = tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES('subscription_quality_download',?,?,?)`, key, sealed, now())
 	return e
 }
 func (a *App) qualitySnapshot(ctx context.Context, q qualityReader, kind, key, hash string) (*qualityDownloadSnapshot, error) {
 	identity := kind + ":" + key
 	var sealed []byte
-	e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription_quality_download' AND id=?`, identity).Scan(&sealed)
+	e := q.QueryRowContext(ctx, `SELECT payload FROM subscription_receipt WHERE id=?`, identity).Scan(&sealed)
 	if errors.Is(e, sql.ErrNoRows) {
 		return nil, nil
 	}

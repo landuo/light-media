@@ -97,7 +97,7 @@ func TestSourcePostAddActualWorkerForceUnknownAndAtomicColdRecovery(t *testing.T
 				trigger = "download_post_add"
 			}
 			if trigger != "" {
-				if _, e = a.Store.DB.Exec(`CREATE TRIGGER owned_post_add_failure BEFORE INSERT ON records WHEN NEW.kind='` + trigger + `' BEGIN SELECT RAISE(ABORT,'owned_post_add_boundary'); END`); e != nil {
+				if _, e = a.Store.DB.Exec(`CREATE TRIGGER owned_post_add_failure BEFORE INSERT ON ` + recordTableForKind(trigger).name + ` WHEN NEW.record_kind='` + trigger + `' BEGIN SELECT RAISE(ABORT,'owned_post_add_boundary'); END`); e != nil {
 					t.Fatal(e)
 				}
 			}
@@ -134,7 +134,7 @@ func TestSourcePostAddActualWorkerForceUnknownAndAtomicColdRecovery(t *testing.T
 				}
 			}
 			if boundary == "receipt_deleted" {
-				if _, e = a.Store.DB.Exec(`DELETE FROM records WHERE kind='download_post_add' AND id=?`, in.ID); e != nil {
+				if _, e = a.Store.DB.Exec(`DELETE FROM download_post_add WHERE id=?`, in.ID); e != nil {
 					t.Fatal(e)
 				}
 			}
@@ -157,7 +157,7 @@ func TestSourcePostAddActualWorkerForceUnknownAndAtomicColdRecovery(t *testing.T
 					t.Fatal("complete source receipt did not finish actual acceptance", in.State, e)
 				}
 				var n int
-				if e = cold.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='download_added'`).Scan(&n); e != nil || n != 1 {
+				if e = cold.Store.DB.QueryRow(`SELECT COUNT(*) FROM downloadhistory WHERE 1=1`).Scan(&n); e != nil || n != 1 {
 					t.Fatal("cold recovery duplicated or lost the accepted event", n, e)
 				}
 			}

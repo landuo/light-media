@@ -76,7 +76,7 @@ func TestPluginHTTPSettingsTokenRemainsEncryptedAndRedacted(t *testing.T) {
 		t.Fatal("anonymous key disclosure allowed")
 	}
 	var sealed []byte
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&sealed); err != nil || strings.Contains(string(sealed), syntheticPluginAPIKey) {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed); err != nil || strings.Contains(string(sealed), syntheticPluginAPIKey) {
 		t.Fatal("key stored in plaintext", err)
 	}
 	for _, token := range []string{"too-short", strings.Repeat("x", 513), "synthetic-key-with\nnewline"} {

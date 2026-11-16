@@ -241,7 +241,7 @@ func TestDirectoryOverwriteSQLFailureRetryAndTamper(t *testing.T) {
 	importWrite(t, next, []byte("new material larger"))
 	p = overwritePlan(t, a, next)
 	j = overwriteStart(t, a, p)
-	if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_overwrite_asset_failure BEFORE INSERT ON records WHEN NEW.kind='asset' BEGIN SELECT RAISE(ABORT,'owned asset transaction failure'); END`); e != nil {
+	if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_overwrite_asset_failure BEFORE INSERT ON library_asset WHEN NEW.record_kind='asset' BEGIN SELECT RAISE(ABORT,'owned asset transaction failure'); END`); e != nil {
 		t.Fatal(e)
 	}
 	if e := a.runImport(context.Background(), j, p.ID, nil); e == nil {

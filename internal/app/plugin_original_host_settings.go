@@ -278,7 +278,7 @@ func (a *App) originalHostSettingsResource(ctx context.Context, scope originalBa
 					if !clear && next == nil {
 						return txPut(effectCtx, tx, "plugin_host_setting_presence", in.Key, true)
 					}
-					_, err := tx.ExecContext(effectCtx, `DELETE FROM records WHERE kind='plugin_host_setting_presence' AND id=?`, in.Key)
+					_, err := tx.ExecContext(effectCtx, `DELETE FROM plugin_host_state WHERE id=?`, in.Key)
 					return err
 				})
 				a.pluginMu.Unlock()

@@ -15,7 +15,7 @@ func verifyIndependentExtraOwnerTx(ctx context.Context, tx *sql.Tx, owner manage
 	if !auxiliaryMaterialKind(owner.Kind) || owner.AssetID == "" || !within(rootPath, owner.Path) {
 		return invalid()
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT payload FROM records WHERE kind='import_receipt' AND json_extract(payload,'$.target')=? AND json_extract(payload,'$.state')='published'`, owner.Path)
+	rows, err := tx.QueryContext(ctx, `SELECT payload FROM import_receipt WHERE json_extract(payload,'$.target')=? AND json_extract(payload,'$.state')='published'`, owner.Path)
 	if err != nil {
 		return err
 	}
@@ -44,13 +44,13 @@ func verifyIndependentExtraOwnerTx(ctx context.Context, tx *sql.Tx, owner manage
 		var raw []byte
 		var plan ImportPlan
 		var meta importMetadata
-		if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='import_plan' AND id=?`, parts[0]).Scan(&raw); err != nil {
+		if err = tx.QueryRowContext(ctx, `SELECT payload FROM import_plan WHERE id=?`, parts[0]).Scan(&raw); err != nil {
 			return err
 		}
 		if json.Unmarshal(raw, &plan) != nil || plan.ID != parts[0] || plan.RootID != owner.RootID || mediaKey(plan.Media) != owner.MediaKey {
 			return invalid()
 		}
-		if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='import_meta' AND id=?`, plan.ID).Scan(&raw); err != nil {
+		if err = tx.QueryRowContext(ctx, `SELECT payload FROM import_meta WHERE id=?`, plan.ID).Scan(&raw); err != nil {
 			return err
 		}
 		if json.Unmarshal(raw, &meta) != nil || meta.RootPath != rootPath {

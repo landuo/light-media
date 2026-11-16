@@ -49,7 +49,7 @@ func (a *App) originalChatRestart(ctx context.Context, reply originalSlashReply)
 	if err != nil {
 		return err
 	}
-	result, err := a.Store.DB.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO NOTHING`,
+	result, err := a.Store.DB.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO NOTHING`,
 		originalChatRestartKind, originalChatRestartKey, prepared, now())
 	if err != nil {
 		return err
@@ -76,7 +76,7 @@ func (a *App) originalChatRestart(ctx context.Context, reply originalSlashReply)
 	if err != nil {
 		return err
 	}
-	result, err = a.Store.DB.ExecContext(ctx, `UPDATE records SET payload=?,updated_at=? WHERE kind=? AND id=? AND payload=?`,
+	result, err = a.Store.DB.ExecContext(ctx, `UPDATE plugin_record SET payload=?,updated_at=? WHERE kind=? AND id=? AND payload=?`,
 		pending, now(), originalChatRestartKind, originalChatRestartKey, prepared)
 	if err != nil {
 		return err
@@ -102,7 +102,7 @@ func (a *App) originalChatRestart(ctx context.Context, reply originalSlashReply)
 // itself. Only a pending receipt starts a cancellable background delivery.
 func (a *App) completeOriginalChatRestart(ctx context.Context) {
 	var sealed []byte
-	err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, originalChatRestartKind, originalChatRestartKey).Scan(&sealed)
+	err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, originalChatRestartKind, originalChatRestartKey).Scan(&sealed)
 	if errors.Is(err, sql.ErrNoRows) || ctx.Err() != nil {
 		return
 	}
@@ -151,7 +151,7 @@ func (a *App) completeOriginalChatRestart(ctx context.Context) {
 }
 
 func (a *App) removeOriginalChatRestartReceipt(ctx context.Context, sealed []byte) (bool, error) {
-	result, err := a.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE kind=? AND id=? AND payload=?`,
+	result, err := a.Store.DB.ExecContext(ctx, `DELETE FROM plugin_record WHERE kind=? AND id=? AND payload=?`,
 		originalChatRestartKind, originalChatRestartKey, sealed)
 	if err != nil {
 		return false, err

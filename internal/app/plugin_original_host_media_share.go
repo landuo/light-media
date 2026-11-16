@@ -340,7 +340,7 @@ func (a *App) originalHostMediaShareIncrement(ctx context.Context) error {
 	}
 	defer tx.Rollback()
 	var raw []byte
-	err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='plugin_host_media_recognize_count' AND id='main'`).Scan(&raw)
+	err = tx.QueryRowContext(ctx, `SELECT payload FROM plugin_host_state WHERE id='main'`).Scan(&raw)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return err
 	}
@@ -351,7 +351,7 @@ func (a *App) originalHostMediaShareIncrement(ctx context.Context) error {
 	if count == int64(^uint64(0)>>1) {
 		return errors.New("recognize share counter overflow")
 	}
-	_, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('plugin_host_media_recognize_count','main',?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, []byte(strconv.FormatInt(count+1, 10)), now())
+	_, err = tx.ExecContext(ctx, recordInsertSQL("plugin_host_media_recognize_count", recordTableForKind("plugin_host_media_recognize_count")), "main", []byte(strconv.FormatInt(count+1, 10)), now())
 	if err != nil {
 		return err
 	}

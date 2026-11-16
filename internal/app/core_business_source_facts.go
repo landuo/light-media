@@ -143,7 +143,7 @@ func (a *App) sourceSubscriptionOrigin(ctx context.Context, sub Subscription) (*
 		return nil, nil
 	}
 	var sealed []byte
-	if e := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='source_subscription_origin' AND id=?`, sub.ID).Scan(&sealed); e != nil {
+	if e := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM subscription_origin WHERE id=?`, sub.ID).Scan(&sealed); e != nil {
 		return nil, e
 	}
 	raw, e := a.pluginStore.unseal("source_subscription_origin", "system", sub.ID, sealed)
@@ -178,7 +178,7 @@ func (a *App) saveSourceSubscriptionOriginTx(ctx context.Context, tx *sql.Tx, su
 	if e != nil {
 		return e
 	}
-	_, e = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('source_subscription_origin',?,?,?)`, sub.ID, sealed, now())
+	_, e = tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES('source_subscription_origin',?,?,?)`, sub.ID, sealed, now())
 	return e
 }
 

@@ -17,7 +17,7 @@ func (a *App) resetSubscription(ctx context.Context, key string) (Subscription, 
 	}
 	defer tx.Rollback()
 	var raw []byte
-	if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription' AND id=?`, key).Scan(&raw); err != nil {
+	if err = tx.QueryRowContext(ctx, `SELECT payload FROM subscribe WHERE uid=?`, key).Scan(&raw); err != nil {
 		return Subscription{}, err
 	}
 	var s Subscription

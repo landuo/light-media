@@ -71,7 +71,7 @@ func TestOriginalTransferCompletedCancelledNativeResume(t *testing.T) {
 		t.Fatal("cancelled publication", err)
 	}
 	var count int
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='original_transfer_callback'`).Scan(&count); err != nil || count != 0 {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_original_callback WHERE 1=1`).Scan(&count); err != nil || count != 0 {
 		t.Fatal("cancelled execution forged callback", count, err)
 	}
 	before := ownedModuleRead(t, object)
@@ -100,7 +100,7 @@ func TestOriginalTransferCompletedCancelledNativeResume(t *testing.T) {
 	if got := ownedModuleRead(t, object).Calls["module_execute"]; got != before.Calls["module_execute"] {
 		t.Fatal("plugin decision replayed", got, before.Calls)
 	}
-	if err = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='original_transfer_callback'`).Scan(&count); err != nil || count != 1 {
+	if err = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_original_callback WHERE 1=1`).Scan(&count); err != nil || count != 1 {
 		t.Fatal("one successful physical callback", count, err)
 	}
 }

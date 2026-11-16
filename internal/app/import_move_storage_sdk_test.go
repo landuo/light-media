@@ -73,7 +73,7 @@ func TestImportMoveActualSDKSelectedStorage(t *testing.T) {
 			}
 			beforePID := pid(a)
 			if branch == "cold-recovery" {
-				if _, err = a.Store.DB.Exec(`CREATE TRIGGER selected_storage_move_asset_failure BEFORE INSERT ON records WHEN NEW.kind='asset' BEGIN SELECT RAISE(FAIL,'selected storage move asset failure'); END`); err != nil {
+				if _, err = a.Store.DB.Exec(`CREATE TRIGGER selected_storage_move_asset_failure BEFORE INSERT ON library_asset WHEN NEW.record_kind='asset' BEGIN SELECT RAISE(FAIL,'selected storage move asset failure'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
@@ -194,7 +194,7 @@ func TestImportMoveActualSDKSelectedStorage(t *testing.T) {
 				}
 				observe(a)
 				var assets int
-				if err = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&assets); err != nil || assets != 0 {
+				if err = a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&assets); err != nil || assets != 0 {
 					t.Fatal("unverified storage move acquired asset ownership", assets, err)
 				}
 				return

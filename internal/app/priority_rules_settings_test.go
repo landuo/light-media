@@ -87,7 +87,7 @@ func TestPriorityRuleSaveRollsBackConfigurationAndRevisionAndRejectsUnauthorized
 	for section, value := range map[string]any{"custom": []map[string]string{{"id": "A", "name": "same"}, {"id": "B", "name": "same"}}, "groups": []map[string]string{{"name": "same"}, {"name": "same"}}, "priority": []string{"unknown"}} {
 		putRules(t, a, cookie, section, 0, value, 400)
 	}
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER fail_rule_settings BEFORE INSERT ON records WHEN NEW.kind='config' AND NEW.id='main' BEGIN SELECT RAISE(ABORT,'synthetic persistence failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER fail_rule_settings BEFORE INSERT ON systemconfig WHEN NEW.record_kind='config' AND NEW.id='main' BEGIN SELECT RAISE(ABORT,'synthetic persistence failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	putRules(t, a, cookie, "priority", 0, []string{"site"}, 500)

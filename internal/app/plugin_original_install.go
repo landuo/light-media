@@ -262,7 +262,7 @@ func (a *App) installOriginalCloneArtifact(ctx context.Context, in, previous Plu
 	if err != nil {
 		return err
 	}
-	if _, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, originalPluginAliasKind, in.InstanceID, aliasSealed, now()); err != nil {
+	if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, originalPluginAliasKind, in.InstanceID, aliasSealed, now()); err != nil {
 		return err
 	}
 	return tx.Commit()

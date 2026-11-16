@@ -348,7 +348,7 @@ func (a *App) originalBrushRememberOwner(ctx context.Context, scope originalBase
 	if err != nil {
 		return err
 	}
-	result, err := a.Store.DB.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) SELECT ?,?,?,? FROM plugin_installations WHERE instance_id=? AND plugin_id='BrushFlowLanduo' AND installed=1 ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, originalBrushOwnerKind, key, sealed, now(), instance)
+	result, err := a.Store.DB.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) SELECT ?,?,?,? FROM plugin_installations WHERE instance_id=? AND plugin_id='BrushFlowLanduo' AND installed=1 ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, originalBrushOwnerKind, key, sealed, now(), instance)
 	if err != nil {
 		return err
 	}
@@ -363,7 +363,7 @@ func (a *App) originalBrushReadOwner(ctx context.Context, scope originalBaseCall
 	instance := scope.installation.InstanceID
 	key := originalBrushOwnerKey(instance, downloader.ID, hash)
 	var sealed []byte
-	err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, originalBrushOwnerKind, key).Scan(&sealed)
+	err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, originalBrushOwnerKind, key).Scan(&sealed)
 	if errors.Is(err, sql.ErrNoRows) {
 		return owner, nil
 	}
@@ -387,7 +387,7 @@ func (a *App) originalBrushForgetOwners(ctx context.Context, scope originalBaseC
 	}
 	defer tx.Rollback()
 	for _, hash := range hashes {
-		if _, err := tx.ExecContext(ctx, `DELETE FROM records WHERE kind=? AND id=?`, originalBrushOwnerKind, originalBrushOwnerKey(scope.installation.InstanceID, downloader, hash)); err != nil {
+		if _, err := tx.ExecContext(ctx, `DELETE FROM plugin_record WHERE kind=? AND id=?`, originalBrushOwnerKind, originalBrushOwnerKey(scope.installation.InstanceID, downloader, hash)); err != nil {
 			return err
 		}
 	}

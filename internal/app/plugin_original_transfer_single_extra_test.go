@@ -65,7 +65,7 @@ func TestOriginalSingleExtraManualActualSDK(t *testing.T) {
 			if _, e = os.Stat(original.Files[0].Target); !os.IsNotExist(e) {
 				t.Fatal("must not transfer main", e)
 			}
-			for _, query := range []string{"SELECT COUNT(*) FROM records WHERE kind='asset'", "SELECT COUNT(*) FROM asset_slots", "SELECT COUNT(*) FROM reservations"} {
+			for _, query := range []string{"\"SELECT COUNT(*) FROM library_asset WHERE 1=1\"", "SELECT COUNT(*) FROM asset_slots", "SELECT COUNT(*) FROM reservations"} {
 				var n int
 				if e = a.Store.DB.QueryRow(query).Scan(&n); e != nil || n != 0 {
 					t.Fatal("no false video inventory", query, n, e)

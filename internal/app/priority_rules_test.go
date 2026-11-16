@@ -63,7 +63,7 @@ func TestPriorityRulesRealSearchSettingsAndSubscriptionScopes(t *testing.T) {
 		t.Fatal("saved rule configuration unavailable", public.Code)
 	}
 	var sealed []byte
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&sealed); err != nil || strings.Contains(string(sealed), "synthetic-priority-private-pattern") {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed); err != nil || strings.Contains(string(sealed), "synthetic-priority-private-pattern") {
 		t.Fatal("priority config not encrypted", err)
 	}
 	var progress SearchOutput

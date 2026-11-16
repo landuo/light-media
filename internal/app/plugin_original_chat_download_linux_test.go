@@ -253,7 +253,7 @@ func TestOriginalLarkDownloadAddedLinuxAMD64(t *testing.T) {
 		t.Fatalf("wrong recipient or Add: receiver=%s type=%s materials=%d adds=%d", card.Receiver, card.ReceiverType, materials.Load(), adds.Load())
 	}
 	var intentID, state string
-	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT id,json_extract(payload,'$.state') FROM records WHERE kind='intent'`).Scan(&intentID, &state); err != nil || state != "accepted" {
+	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT uid,json_extract(payload,'$.state') FROM downloadhistory WHERE 1=1`).Scan(&intentID, &state); err != nil || state != "accepted" {
 		t.Fatalf("Lark success started before durable acceptance: %s %v", state, err)
 	}
 	var facts int
@@ -266,7 +266,7 @@ func TestOriginalLarkDownloadAddedLinuxAMD64(t *testing.T) {
 		t.Fatalf("accepted user's attribution is missing from sealed context: %v", err)
 	}
 	var sealed []byte
-	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT payload FROM records WHERE kind='download_context' AND id=?`, "intent:"+intentID).Scan(&sealed); err != nil || bytes.Contains(sealed, []byte(owner)) {
+	if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT payload FROM download_context WHERE id=?`, "intent:"+intentID).Scan(&sealed); err != nil || bytes.Contains(sealed, []byte(owner)) {
 		t.Fatal("persisted chat attribution must remain sealed")
 	}
 	var selected, submitted bool

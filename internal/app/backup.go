@@ -141,7 +141,7 @@ func ApplyPendingRestore(dir string) error {
 		return e
 	}
 	var cfg []byte
-	e = db.QueryRow(`SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&cfg)
+	e = db.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&cfg)
 	db.Close()
 	if e != nil && !errors.Is(e, sql.ErrNoRows) {
 		return e
@@ -188,7 +188,7 @@ func ApplyPendingRestore(dir string) error {
 	}
 	defer newDB.Close()
 	paused, _ := json.Marshal(map[string]string{"state": "paused"})
-	_, e = newDB.Exec(`INSERT INTO records VALUES('control','global',?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, paused, now())
+	_, e = newDB.Exec(`INSERT INTO plugin_record VALUES('control','global',?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, paused, now())
 	if e != nil {
 		return e
 	}

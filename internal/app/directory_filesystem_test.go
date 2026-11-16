@@ -96,7 +96,7 @@ func TestDirectoryFileBaselineAndChangedFileStability(t *testing.T) {
 		t.Fatalf("changed file bypassed stability: %+v", f)
 	}
 	var plans int
-	_ = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='import_plan'`).Scan(&plans)
+	_ = a.Store.DB.QueryRow(`SELECT count(*) FROM import_plan WHERE 1=1`).Scan(&plans)
 	if plans != 0 {
 		t.Fatal("unstable file created a plan")
 	}
@@ -152,8 +152,8 @@ func TestDirectoryFileNewStableVideoImportsOnceAndRetainsSource(t *testing.T) {
 				t.Fatal("hardlink not used")
 			}
 			var plans, assets int
-			_ = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='import_plan'`).Scan(&plans)
-			_ = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&assets)
+			_ = a.Store.DB.QueryRow(`SELECT count(*) FROM import_plan WHERE 1=1`).Scan(&plans)
+			_ = a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&assets)
 			if plans != 1 || assets != 1 {
 				t.Fatalf("duplicate processing plans=%d assets=%d", plans, assets)
 			}
@@ -181,7 +181,7 @@ func TestDirectoryFileRuleChangeBlocksQueuedPublication(t *testing.T) {
 				t.Fatalf("changed rule did not fail only this file: %+v", f)
 			}
 			var count int
-			_ = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&count)
+			_ = a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&count)
 			if count != 0 {
 				t.Fatal("changed rule created an asset")
 			}

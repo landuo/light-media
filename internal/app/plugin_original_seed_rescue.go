@@ -212,9 +212,9 @@ func (a *App) beginOriginalSeedRescueEffect(ctx context.Context, scope originalB
 		return nil, bad("PLUGIN_SNAPSHOT_STALE", "稀缺保种实例已卸载或替换")
 	}
 	key := a.originalSeedRescueEffectID(kind, effectKey)
-	result, err := a.Store.DB.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at)
+	result, err := a.Store.DB.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at)
 		VALUES(?,?,'"started"',?) ON CONFLICT(kind,id) DO UPDATE
-		SET payload=excluded.payload,updated_at=excluded.updated_at WHERE CAST(records.payload AS TEXT)='"confirmed"'`, originalSeedRescueEffectNamespace, key, now())
+		SET payload=excluded.payload,updated_at=excluded.updated_at WHERE CAST(plugin_record.payload AS TEXT)='"confirmed"'`, originalSeedRescueEffectNamespace, key, now())
 	if err != nil {
 		return nil, err
 	}
@@ -231,7 +231,7 @@ func (a *App) beginOriginalSeedRescueEffect(ctx context.Context, scope originalB
 		if confirmed {
 			return a.Store.Put(settle, originalSeedRescueEffectNamespace, key, "confirmed")
 		}
-		_, err := a.Store.DB.ExecContext(settle, "DELETE FROM records WHERE kind=? AND id=?", originalSeedRescueEffectNamespace, key)
+		_, err := a.Store.DB.ExecContext(settle, "DELETE FROM plugin_record WHERE kind=? AND id=?", originalSeedRescueEffectNamespace, key)
 		return err
 	}, nil
 }

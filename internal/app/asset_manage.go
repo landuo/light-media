@@ -134,7 +134,7 @@ func (a *App) previewAssetRemoval(ctx context.Context, asset Asset) (assetRemova
 	}
 	dir.Close()
 	var unfinishedRaw []byte
-	unfinishedErr := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='removal_preview' AND json_extract(payload,'$.asset_id')=? AND json_extract(payload,'$.state')='deleting' ORDER BY updated_at DESC LIMIT 1`, asset.ID).Scan(&unfinishedRaw)
+	unfinishedErr := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM removal_preview WHERE json_extract(payload,'$.asset_id')=? AND json_extract(payload,'$.state')='deleting' ORDER BY updated_at DESC LIMIT 1`, asset.ID).Scan(&unfinishedRaw)
 	if unfinishedErr == nil {
 		var unfinished assetRemovalPreview
 		if json.Unmarshal(unfinishedRaw, &unfinished) != nil || unfinished.RootID != root.ID || unfinished.RootPath != root.Path {
@@ -145,7 +145,7 @@ func (a *App) previewAssetRemoval(ctx context.Context, asset Asset) (assetRemova
 		return assetRemovalPreview{}, unfinishedErr
 	}
 	preview := assetRemovalPreview{ID: id("remove_"), AssetID: asset.ID, RootID: asset.RootID, RootPath: root.Path, Files: []assetRemovalFile{}, Expires: time.Now().Add(10 * time.Minute).UTC().Format(time.RFC3339Nano), State: "preview"}
-	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind='managed_file' AND json_extract(payload,'$.asset_id')=?`, asset.ID)
+	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM managed_file WHERE json_extract(payload,'$.asset_id')=?`, asset.ID)
 	if err != nil {
 		return preview, err
 	}
@@ -379,10 +379,10 @@ func (a *App) removeAssetLocked(ctx context.Context, assetID, previewID string, 
 		}
 		var raw []byte
 		var owned managedFile
-		if e := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='managed_file' AND id=?`, tokenHash(file.Path)).Scan(&raw); e != nil || json.Unmarshal(raw, &owned) != nil || owned.AssetID != asset.ID || owned.Snapshot != file.Snapshot || !sameSharedDirectoryProof(owned.SharedDirectory, file.SharedDirectory) {
+		if e := tx.QueryRowContext(ctx, `SELECT payload FROM managed_file WHERE id=?`, tokenHash(file.Path)).Scan(&raw); e != nil || json.Unmarshal(raw, &owned) != nil || owned.AssetID != asset.ID || owned.Snapshot != file.Snapshot || !sameSharedDirectoryProof(owned.SharedDirectory, file.SharedDirectory) {
 			return bad("REVIEW_MANAGED_FILE", "共享目录清理提交时归属已变化")
 		}
-		if _, e := tx.ExecContext(ctx, `DELETE FROM records WHERE kind='managed_file' AND id=? AND payload=?`, tokenHash(file.Path), raw); e != nil {
+		if _, e := tx.ExecContext(ctx, `DELETE FROM managed_file WHERE id=? AND payload=?`, tokenHash(file.Path), raw); e != nil {
 			return e
 		}
 	}

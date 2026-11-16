@@ -278,7 +278,7 @@ func (a *App) commitDirectoryOverwriteExtraTx(ctx context.Context, tx *sql.Tx, i
 func (a *App) commitDirectoryOverwriteFileTx(ctx context.Context, tx *sql.Tx, id string, replacement Asset, material *managedFile) error {
 	var cipher directoryOverwriteCipher
 	var raw []byte
-	e := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='directory_overwrite' AND id=?`, id).Scan(&raw)
+	e := tx.QueryRowContext(ctx, `SELECT payload FROM directory_overwrite WHERE id=?`, id).Scan(&raw)
 	if errors.Is(e, sql.ErrNoRows) {
 		return nil
 	}
@@ -297,7 +297,7 @@ func (a *App) commitDirectoryOverwriteFileTx(ctx context.Context, tx *sql.Tx, id
 		return bad("REVIEW_OVERWRITE_RECEIPT", "覆盖记录无效")
 	}
 	var r importReceipt
-	if e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='import_receipt' AND id=?`, id).Scan(&raw); e != nil {
+	if e = tx.QueryRowContext(ctx, `SELECT payload FROM import_receipt WHERE id=?`, id).Scan(&raw); e != nil {
 		return e
 	}
 	if json.Unmarshal(raw, &r) != nil || r.Target != op.Target || r.Source != op.Source || r.SourceSnapshot != op.SourceSnapshot || (r.State != "published" && r.State != "staged") {
@@ -330,7 +330,7 @@ func (a *App) commitDirectoryOverwriteFileTx(ctx context.Context, tx *sql.Tx, id
 			continue
 		}
 		owner := old.Owner
-		if e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='managed_file' AND id=?`, tokenHash(old.Path)).Scan(&raw); e != nil {
+		if e = tx.QueryRowContext(ctx, `SELECT payload FROM managed_file WHERE id=?`, tokenHash(old.Path)).Scan(&raw); e != nil {
 			return e
 		}
 		var current managedFile
@@ -338,7 +338,7 @@ func (a *App) commitDirectoryOverwriteFileTx(ctx context.Context, tx *sql.Tx, id
 			return bad("REVIEW_OVERWRITE_OWNER", "原目标登记已被其他操作修改")
 		}
 		var asset Asset
-		e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='asset' AND id=?`, owner.AssetID).Scan(&raw)
+		e = tx.QueryRowContext(ctx, `SELECT payload FROM library_asset WHERE id=?`, owner.AssetID).Scan(&raw)
 		if material != nil && errors.Is(e, sql.ErrNoRows) {
 			// Independent extras and successful extras of a rejected main have
 			// real publication ownership without a video inventory row.
@@ -363,13 +363,13 @@ func (a *App) commitDirectoryOverwriteFileTx(ctx context.Context, tx *sql.Tx, id
 				return e
 			}
 		}
-		if _, e = tx.ExecContext(ctx, `DELETE FROM records WHERE kind='managed_file' AND id=?`, tokenHash(old.Path)); e != nil {
+		if _, e = tx.ExecContext(ctx, `DELETE FROM managed_file WHERE id=?`, tokenHash(old.Path)); e != nil {
 			return e
 		}
 		// Same-path replacement also transfers verified, already owned metadata
 		// and subtitles. Latest's differently named old sidecars remain untouched.
 		if material == nil && old.Path == replacement.Path {
-			rows, err := tx.QueryContext(ctx, `SELECT id,payload FROM records WHERE kind='managed_file' AND json_extract(payload,'$.asset_id')=?`, asset.ID)
+			rows, err := tx.QueryContext(ctx, `SELECT id,payload FROM managed_file WHERE json_extract(payload,'$.asset_id')=?`, asset.ID)
 			if err != nil {
 				return err
 			}

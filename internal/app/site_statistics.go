@@ -301,7 +301,7 @@ func (a *App) scheduleSiteDataRefresh(ctx context.Context, at time.Time) error {
 		Hours int       `json:"hours"`
 		Next  time.Time `json:"next"`
 	}
-	err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='site_refresh_clock' AND id='main'`).Scan(&raw)
+	err = tx.QueryRowContext(ctx, `SELECT payload FROM scheduler_state WHERE id='main'`).Scan(&raw)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return err
 	}

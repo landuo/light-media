@@ -48,7 +48,7 @@ func TestOriginalMarketEnvironmentOverrideDoesNotOverwriteSavedSources(t *testin
 		t.Fatal(err)
 	}
 	var sealed []byte
-	if err = b.Store.DB.QueryRow("SELECT payload FROM records WHERE kind='config' AND id='main'").Scan(&sealed); err != nil {
+	if err = b.Store.DB.QueryRow("\"SELECT payload FROM systemconfig WHERE uid='main'\"").Scan(&sealed); err != nil {
 		t.Fatal(err)
 	}
 	var saved Settings

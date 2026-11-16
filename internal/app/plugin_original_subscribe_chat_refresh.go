@@ -175,8 +175,8 @@ func (a *App) originalChatRefreshSubscriptions(ctx context.Context) error {
 }
 
 func (a *App) originalChatLatestSubscriptions(ctx context.Context) ([]Subscription, error) {
-	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind='subscription'
-		AND json_extract(payload,'$.state') IN ('active','paused') ORDER BY id`)
+	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM subscribe WHERE 1=1
+		AND json_extract(payload,'$.state') IN ('active','paused') ORDER BY uid`)
 	if err != nil {
 		return nil, err
 	}
@@ -375,9 +375,9 @@ func (a *App) originalChatLatestPublish(ctx context.Context, subs []Subscription
 }
 
 func pruneOriginalChatLatestBatches(ctx context.Context, tx *sql.Tx) error {
-	_, err := tx.ExecContext(ctx, `DELETE FROM records WHERE kind=? AND NOT EXISTS(
+	_, err := tx.ExecContext(ctx, `DELETE FROM plugin_record WHERE kind=? AND NOT EXISTS(
 		SELECT 1 FROM jobs WHERE jobs.kind='subscription' AND state IN ('queued','running','retry_wait','waiting_paused')
-		AND json_extract(jobs.payload,'$.latest_batch')=records.id)`, originalChatLatestBatchKind)
+		AND json_extract(jobs.payload,'$.latest_batch')=plugin_record.id)`, originalChatLatestBatchKind)
 	return err
 }
 
@@ -449,7 +449,7 @@ func (a *App) originalChatLatestPruneOtherRSS(ctx context.Context, tx *sql.Tx, u
 	if len(invalid) == 0 {
 		return nil
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT id FROM records WHERE kind=? AND id GLOB 'rss:*'`, originalChatLatestCacheKind)
+	rows, err := tx.QueryContext(ctx, `SELECT id FROM plugin_record WHERE kind=? AND id GLOB 'rss:*'`, originalChatLatestCacheKind)
 	if err != nil {
 		return err
 	}
@@ -546,7 +546,7 @@ func (a *App) originalChatLatestWrite(ctx context.Context, tx *sql.Tx, kind, key
 	if err != nil {
 		return err
 	}
-	_, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,?,?,?)
+	_, err = tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?)
 		ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, key, sealed, now())
 	return err
 }
@@ -555,7 +555,7 @@ func (a *App) originalChatLatestRead(ctx context.Context, q interface {
 	QueryRowContext(context.Context, string, ...any) *sql.Row
 }, kind, key string, output any) error {
 	var sealed []byte
-	if err := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, kind, key).Scan(&sealed); err != nil {
+	if err := q.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, kind, key).Scan(&sealed); err != nil {
 		return err
 	}
 	raw, err := a.pluginStore.unseal(kind, "system", key, sealed)

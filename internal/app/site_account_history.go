@@ -103,7 +103,7 @@ func (r sourceAccountRow) statistic(siteID, domain string) statistic.Data {
 
 func (p *PluginStore) sourceAccountProofTx(ctx context.Context, tx pluginRemoveLinkJournalReader) (*sourceAccountProof, error) {
 	var sealed []byte
-	e := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id='main'`, sourceAccountKind).Scan(&sealed)
+	e := tx.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id='main'`, sourceAccountKind).Scan(&sealed)
 	if errors.Is(e, sql.ErrNoRows) {
 		var imported int
 		if e = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_migration_receipts WHERE source_plugin_id='SiteStatistic' AND instance_id='SiteStatistic' AND source_fingerprint=?`, reviewedStatisticFingerprint()).Scan(&imported); e != nil || imported != 0 {

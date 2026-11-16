@@ -178,7 +178,7 @@ func TestImportSoftlinkDirectoryMetadataCommitColdRecovery(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = a.Store.DB.Exec(`CREATE TRIGGER softlink_metadata_fail BEFORE UPDATE ON records WHEN NEW.kind='managed_file' AND NEW.id='` + tokenHash(asset.Path) + `' BEGIN SELECT RAISE(ABORT,'metadata commit fixture'); END`); err != nil {
+	if _, err = a.Store.DB.Exec(`CREATE TRIGGER softlink_metadata_fail BEFORE UPDATE ON managed_file WHEN NEW.record_kind='managed_file' AND NEW.id='` + tokenHash(asset.Path) + `' BEGIN SELECT RAISE(ABORT,'metadata commit fixture'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, scrape.ID); err != nil {
@@ -229,7 +229,7 @@ func TestImportSoftlinkDirectoryMetadataCommitColdRecovery(t *testing.T) {
 		t.Fatal("recovered owner/receipt", err)
 	}
 	var count int
-	if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='original_metadata_directory' AND id=?`, asset.ID).Scan(&count); err != nil || count != 0 {
+	if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_original_directory WHERE id=?`, asset.ID).Scan(&count); err != nil || count != 0 {
 		t.Fatal("journal not finalized", count, err)
 	}
 	for path, data := range contents {

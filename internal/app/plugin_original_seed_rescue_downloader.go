@@ -175,7 +175,7 @@ func (a *App) originalSeedRescueObserveAdds(ctx context.Context, scope originalB
 	}
 	for _, row := range rows {
 		key := a.originalSeedRescueEffectID("add", originalSeedRescueAddKey(config, row.Hash))
-		if _, err := a.Store.DB.ExecContext(ctx, `UPDATE records SET payload='"confirmed"',updated_at=?
+		if _, err := a.Store.DB.ExecContext(ctx, `UPDATE plugin_record SET payload='"confirmed"',updated_at=?
 			WHERE kind=? AND id=? AND CAST(payload AS TEXT)='"started"'`, now(), originalSeedRescueEffectNamespace, key); err != nil {
 			return err
 		}

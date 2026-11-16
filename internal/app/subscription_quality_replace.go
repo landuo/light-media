@@ -59,7 +59,7 @@ func qualityImportSHA(plan ImportPlan) string {
 }
 func (a *App) readQualitySealed(ctx context.Context, q qualityReader, kind, id string, out any) error {
 	var sealed []byte
-	if e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, kind, id).Scan(&sealed); e != nil {
+	if e := q.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, kind, id).Scan(&sealed); e != nil {
 		return e
 	}
 	raw, e := a.pluginStore.unseal(kind, "system", id, sealed)
@@ -73,7 +73,7 @@ func (a *App) writeQualitySealedTx(ctx context.Context, tx *sql.Tx, kind, id str
 	if e != nil {
 		return e
 	}
-	_, e = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, id, sealed, now())
+	_, e = tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, id, sealed, now())
 	return e
 }
 func (a *App) qualityImportDownload(ctx context.Context, request ImportRequest) (*qualityDownloadSnapshot, error) {
@@ -485,7 +485,7 @@ func (a *App) commitQualityReplacementTx(ctx context.Context, tx *sql.Tx, plan I
 			return e
 		}
 		cleanup.OldAssets = append(cleanup.OldAssets, current.ID)
-		rows, e := tx.QueryContext(ctx, `SELECT payload FROM records WHERE kind='managed_file' AND json_extract(payload,'$.asset_id')=?`, current.ID)
+		rows, e := tx.QueryContext(ctx, `SELECT payload FROM managed_file WHERE json_extract(payload,'$.asset_id')=?`, current.ID)
 		if e != nil {
 			return e
 		}
@@ -646,7 +646,7 @@ func (a *App) runQualityCleanup(ctx context.Context, j Job, id string) error {
 	}
 	defer tx.Rollback()
 	for _, owned := range p.Files {
-		if _, e = tx.ExecContext(ctx, `DELETE FROM records WHERE kind='managed_file' AND id=? AND json_extract(payload,'$.asset_id')=?`, tokenHash(owned.Path), owned.AssetID); e != nil {
+		if _, e = tx.ExecContext(ctx, `DELETE FROM managed_file WHERE id=? AND json_extract(payload,'$.asset_id')=?`, tokenHash(owned.Path), owned.AssetID); e != nil {
 			return e
 		}
 	}

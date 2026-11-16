@@ -29,7 +29,7 @@ func findDownloadImportRetry(ctx context.Context, q qualityReader, owner string,
 	// A partial pack may have several failed files. Earlier failed plans remain
 	// evidence after another file is retried; no active attempt may be replaced.
 	var active bool
-	if err := q.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM jobs j INDEXED BY jobs_due CROSS JOIN records p ON p.kind='import_plan' AND p.id=json_extract(j.payload,'$.id') WHERE j.kind='import' AND j.state IN ('queued','running','retry_wait','waiting_paused') AND json_extract(p.payload,'$.intent_id')=?)`, owner).Scan(&active); err != nil || active {
+	if err := q.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM jobs j INDEXED BY jobs_due CROSS JOIN import_plan p ON p.id=json_extract(j.payload,'$.id') WHERE j.kind='import' AND j.state IN ('queued','running','retry_wait','waiting_paused') AND json_extract(p.payload,'$.intent_id')=?)`, owner).Scan(&active); err != nil || active {
 		return nil, err
 	}
 	var old ImportPlan
@@ -38,7 +38,7 @@ func findDownloadImportRetry(ctx context.Context, q qualityReader, owner string,
 	}
 	if !failedDownloadSource(old, file.Source) {
 		var raw []byte
-		err := q.QueryRowContext(ctx, `SELECT p.payload FROM records p WHERE p.kind='import_plan' AND json_extract(p.payload,'$.intent_id')=? AND json_extract(p.payload,'$.state') IN ('partial','failed','superseded') AND EXISTS(SELECT 1 FROM json_each(p.payload,'$.files') f WHERE json_extract(f.value,'$.source')=? AND json_extract(f.value,'$.status')='error') ORDER BY json_extract(p.payload,'$.created_at') DESC LIMIT 1`, owner, file.Source).Scan(&raw)
+		err := q.QueryRowContext(ctx, `SELECT p.payload FROM import_plan p WHERE json_extract(p.payload,'$.intent_id')=? AND json_extract(p.payload,'$.state') IN ('partial','failed','superseded') AND EXISTS(SELECT 1 FROM json_each(p.payload,'$.files') f WHERE json_extract(f.value,'$.source')=? AND json_extract(f.value,'$.status')='error') ORDER BY json_extract(p.payload,'$.created_at') DESC LIMIT 1`, owner, file.Source).Scan(&raw)
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
 		}

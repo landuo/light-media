@@ -7,7 +7,7 @@ func (a *App) organizeImportFileCancelled(ctx context.Context, job Job, fileID s
 		return err
 	}
 	var cancelled bool
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE kind='organize_file_cancel' AND id=?)`, job.ID+"/"+fileID).Scan(&cancelled); err != nil {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM organize_cancel WHERE id=?)`, job.ID+"/"+fileID).Scan(&cancelled); err != nil {
 		return err
 	}
 	if cancelled {

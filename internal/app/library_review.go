@@ -62,7 +62,7 @@ func libraryCandidateID(root Root, path string, locked importSnapshot) string {
 	return "lib_candidate_" + tokenHash(fmt.Sprintf("%s\x00%s\x00%s\x00%d:%d:%d:%d", root.ID, root.Path, path, locked.Device, locked.Inode, locked.Size, locked.ModNS))
 }
 func (a *App) pendingLibraryCandidates(ctx context.Context, rootID, path string) ([]LibraryCandidate, error) {
-	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind='library_candidate' AND json_extract(payload,'$.state')='pending' AND json_extract(payload,'$.root_id')=? AND (?='' OR json_extract(payload,'$.path')=?) ORDER BY id LIMIT 10001`, rootID, path, path)
+	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM library_candidate WHERE json_extract(payload,'$.state')='pending' AND json_extract(payload,'$.root_id')=? AND (?='' OR json_extract(payload,'$.path')=?) ORDER BY id LIMIT 10001`, rootID, path, path)
 	if err != nil {
 		return nil, err
 	}
@@ -230,7 +230,7 @@ func (a *App) libraryCandidates(ctx context.Context, rootID string, limit int, c
 		}
 		after = state.After
 	}
-	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind='library_candidate' AND id>? AND json_extract(payload,'$.state')='pending' AND (?='' OR json_extract(payload,'$.root_id')=?) ORDER BY id LIMIT ?`, after, rootID, rootID, limit+1)
+	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM library_candidate WHERE id>? AND json_extract(payload,'$.state')='pending' AND (?='' OR json_extract(payload,'$.root_id')=?) ORDER BY id LIMIT ?`, after, rootID, rootID, limit+1)
 	if err != nil {
 		return out, err
 	}
@@ -357,7 +357,7 @@ func (a *App) registerLibraryAsset(ctx context.Context, in LibraryRegisterReques
 	}
 	defer tx.Rollback()
 	var count int
-	if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='asset' AND json_extract(payload,'$.path')=?`, asset.Path).Scan(&count); err != nil {
+	if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM library_asset WHERE json_extract(payload,'$.path')=?`, asset.Path).Scan(&count); err != nil {
 		return empty, err
 	}
 	if count != 0 {

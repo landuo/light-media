@@ -39,10 +39,10 @@ func TestOriginalPluginStorageActualSDKDeletesRegisteredTargetRetainsHistoryAndS
 		t.Fatal("interactive registered-file protection lost", err)
 	}
 	var assetsBefore, managedBefore int
-	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&assetsBefore); err != nil || assetsBefore == 0 {
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&assetsBefore); err != nil || assetsBefore == 0 {
 		t.Fatal("real imported asset missing", err)
 	}
-	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='managed_file'`).Scan(&managedBefore); err != nil || managedBefore == 0 {
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM managed_file WHERE 1=1`).Scan(&managedBefore); err != nil || managedBefore == 0 {
 		t.Fatal("real imported file registration missing", err)
 	}
 	raw, err := ownedHostServicesCall(t, object, plugins.StorageDeleteCapability, plugins.StorageFilesRequest{FileItem: hostServiceItem(t, item.Target)})
@@ -60,8 +60,8 @@ func TestOriginalPluginStorageActualSDKDeletesRegisteredTargetRetainsHistoryAndS
 		t.Fatal("storage delete silently removed history", err)
 	}
 	var assetsAfter, managedAfter int
-	_ = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='asset'`).Scan(&assetsAfter)
-	_ = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='managed_file'`).Scan(&managedAfter)
+	_ = a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&assetsAfter)
+	_ = a.Store.DB.QueryRow(`SELECT count(*) FROM managed_file WHERE 1=1`).Scan(&managedAfter)
 	if assetsAfter != assetsBefore || managedAfter != managedBefore {
 		t.Fatal("physical storage delete silently removed audit/index records")
 	}

@@ -19,7 +19,7 @@ func (a *App) originalSubscribeGroupDownloadHistory(ctx context.Context, hash st
 		return out, err
 	}
 	defer tx.Rollback()
-	rows, err := tx.QueryContext(ctx, `SELECT kind,id FROM records WHERE kind IN ('intent','native_download') AND json_extract(payload,'$.hash')=?`, hash)
+	rows, err := tx.QueryContext(ctx, `SELECT record_kind,uid FROM downloadhistory WHERE json_extract(payload,'$.hash')=?`, hash)
 	if err != nil {
 		return out, err
 	}
@@ -100,7 +100,7 @@ func (a *App) originalSubscribeGroupDownloadHistory(ctx context.Context, hash st
 		}
 	}
 	var raw json.RawMessage
-	if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, fact.DownloadKind, fact.DownloadID).Scan(&raw); err != nil {
+	if err = tx.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, fact.DownloadID).Scan(&raw); err != nil {
 		return out, err
 	}
 	if fact.DownloadKind == "native_download" {

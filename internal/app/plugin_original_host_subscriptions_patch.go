@@ -200,7 +200,7 @@ func (a *App) originalHostExtendedSubscriptionPatch(ctx context.Context, tx *sql
 				return nil, false, bad("INVALID_MAPPING", "修改季号须先通过原生编辑器调整既有集号映射")
 			}
 		}
-		rows, err := tx.QueryContext(ctx, `SELECT payload FROM records WHERE kind='subscription' AND id<>?`, s.ID)
+		rows, err := tx.QueryContext(ctx, `SELECT payload FROM subscribe WHERE uid<>?`, s.ID)
 		if err != nil {
 			return nil, false, err
 		}

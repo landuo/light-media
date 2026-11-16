@@ -293,7 +293,7 @@ func (a *App) managedFileByInode(ctx context.Context, device, inode uint64) (man
 		return managedFile{}, false
 	}
 	var raw []byte
-	err := a.Store.reader().QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='managed_file'
+	err := a.Store.reader().QueryRowContext(ctx, `SELECT payload FROM managed_file WHERE 1=1
 		AND json_extract(payload,'$.kind')='video'
 		AND json_extract(payload,'$.snapshot.device')=? AND json_extract(payload,'$.snapshot.inode')=?
 		LIMIT 1`, device, inode).Scan(&raw)
@@ -1106,7 +1106,7 @@ func (a *App) assetAtPath(ctx context.Context, path string, dst *Asset) error {
 	phase := a.performanceStages(ctx, "asset_lookup", "read_by_path")
 	defer phase("")
 	var raw []byte
-	err := a.Store.reader().QueryRowContext(ctx, `SELECT payload FROM records INDEXED BY asset_path WHERE kind='asset' AND json_extract(payload,'$.path')=? AND json_extract(payload,'$.state') NOT IN ('removed','superseded') LIMIT 1`, path).Scan(&raw)
+	err := a.Store.reader().QueryRowContext(ctx, `SELECT payload FROM library_asset INDEXED BY asset_path WHERE json_extract(payload,'$.path')=? AND json_extract(payload,'$.state') NOT IN ('removed','superseded') LIMIT 1`, path).Scan(&raw)
 	if err != nil {
 		return err
 	}

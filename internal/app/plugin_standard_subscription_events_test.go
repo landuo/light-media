@@ -55,7 +55,7 @@ func TestStandardSubscriptionMutationActualHTTPAndSDKCommitRollbackIsolation(t *
 	request.Keyword = "owned new keyword"
 	request.TotalEpisodes = 6
 	request.CustomWords = subscriptionWordsRaw(t, "owned new words")
-	if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_sub_event_rollback BEFORE UPDATE ON records WHEN NEW.kind='subscription' BEGIN SELECT RAISE(ABORT,'owned rollback'); END`); err != nil {
+	if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_sub_event_rollback BEFORE UPDATE ON subscribe WHEN NEW.record_kind='subscription' BEGIN SELECT RAISE(ABORT,'owned rollback'); END`); err != nil {
 		t.Fatal(err)
 	}
 	response = callTest(t, a.Handler(), "PUT", "/api/subscriptions/"+sub.ID, subscriptionWordsRequestBody(t, request), cookie, "")
@@ -122,7 +122,7 @@ func TestStandardSubscriptionMutationActualHTTPAndSDKCommitRollbackIsolation(t *
 		t.Fatal("plugin callback failure changed committed core response")
 	}
 	requireBusinessEventCount(t, a, clone, "subscribe.modified", 2)
-	if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_sub_delete_rollback BEFORE UPDATE ON records WHEN NEW.kind='subscription' BEGIN SELECT RAISE(ABORT,'owned rollback'); END`); err != nil {
+	if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_sub_delete_rollback BEFORE UPDATE ON subscribe WHEN NEW.record_kind='subscription' BEGIN SELECT RAISE(ABORT,'owned rollback'); END`); err != nil {
 		t.Fatal(err)
 	}
 	response = callTest(t, a.Handler(), "DELETE", "/api/subscriptions/"+sub.ID, "", cookie, "")
@@ -193,7 +193,7 @@ func TestStandardSubscriptionStatusActualHTTPPreservesFieldsAndMissingReferences
 		}
 	}
 	requireBusinessEventCount(t, a, ownedEventFixtureID, "subscribe.modified", 0)
-	if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_status_rollback BEFORE UPDATE ON records WHEN NEW.kind='subscription' BEGIN SELECT RAISE(ABORT,'owned rollback'); END`); err != nil {
+	if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_status_rollback BEFORE UPDATE ON subscribe WHEN NEW.record_kind='subscription' BEGIN SELECT RAISE(ABORT,'owned rollback'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if response := status("paused", sub.Revision); response.Code == 200 {

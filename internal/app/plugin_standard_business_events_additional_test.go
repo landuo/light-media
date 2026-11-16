@@ -26,7 +26,7 @@ func TestStandardBusinessEventsActualSiteCreateUpdatePayloadAndRollback(t *testi
 	saved := a.Settings().Sites[0]
 	identity := identityRequire(t, a, saved.ID)
 	saved.Name = "Owned updated name"
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER deny_standard_site_update BEFORE UPDATE ON records WHEN NEW.kind='config' BEGIN SELECT RAISE(ABORT,'owned rollback'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER deny_standard_site_update BEFORE UPDATE ON systemconfig WHEN NEW.record_kind='config' BEGIN SELECT RAISE(ABORT,'owned rollback'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if identityHTTP(t, a, cookie, "POST", "/api/sites/manage", saved) == 200 {

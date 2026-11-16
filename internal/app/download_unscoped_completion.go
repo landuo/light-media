@@ -196,7 +196,7 @@ func (s completedUnscopedScope) matches(plan ImportPlan) bool {
 
 func (a *App) readCompletedUnscopedPlan(ctx context.Context, q qualityReader, in Intent, plan ImportPlan) (*completedUnscopedScope, error) {
 	var reviewed bool
-	if err := q.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE kind='download_review' AND id=?
+	if err := q.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM download_preview WHERE id=?
 		AND json_extract(payload,'$.intent_id')=? AND json_extract(payload,'$.plan.id')=?
 		AND json_extract(payload,'$.confirmed')=1)`, plan.ID, in.ID, plan.ID).Scan(&reviewed); err != nil {
 		return nil, err

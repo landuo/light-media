@@ -50,7 +50,7 @@ func TestDownloaderAPIKeySettingsProjectionRetentionClearAndBinding(t *testing.T
 		t.Fatal("log redaction omitted new key")
 	}
 	var sealed []byte
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&sealed); err != nil {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed); err != nil {
 		t.Fatal(err)
 	}
 	if strings.Contains(string(sealed), "owned-downloader-api-secret") || strings.Contains(string(sealed), "owned-password") {
@@ -71,7 +71,7 @@ func TestDownloaderAPIKeySettingsProjectionRetentionClearAndBinding(t *testing.T
 	if saved.APIKey != "" || saved.Password != "" {
 		t.Fatal("credential crossed daemon endpoint")
 	}
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&sealed); err != nil {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed); err != nil {
 		t.Fatal(err)
 	}
 	persisted = Settings{} // JSON omits a cleared key; decode into a fresh config, like startup.

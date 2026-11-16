@@ -101,13 +101,13 @@ func (a *App) saveDownloadContextTx(ctx context.Context, tx *sql.Tx, snapshot do
 	if err != nil {
 		return err
 	}
-	_, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('download_context',?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, key, sealed, now())
+	_, err = tx.ExecContext(ctx, recordInsertSQL("download_context", recordTableForKind("download_context")), key, sealed, now())
 	return err
 }
 func (a *App) loadDownloadContext(ctx context.Context, kind, key, hash string) (*downloadContextSnapshot, error) {
 	identity := kind + ":" + key
 	var sealed []byte
-	err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='download_context' AND id=?`, identity).Scan(&sealed)
+	err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM download_context WHERE id=?`, identity).Scan(&sealed)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	} // Pre-producer legacy rows have no source Context.
@@ -196,7 +196,7 @@ func (a *App) recordDownloadAddedTx(ctx context.Context, tx *sql.Tx, event Domai
 		return bad("INVALID_DOWNLOAD_EVENT", "下载历史的种子标识无效")
 	}
 	var accepted []byte
-	if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, snapshot.DownloadKind, snapshot.DownloadID).Scan(&accepted); err != nil {
+	if err = tx.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, snapshot.DownloadID).Scan(&accepted); err != nil {
 		return err
 	}
 	var history struct {
@@ -225,7 +225,7 @@ func (a *App) recordDownloadAddedTx(ctx context.Context, tx *sql.Tx, event Domai
 	}
 	// A retry preserves the original Context. Moving ciphertext to another
 	// fact is prevented by authenticated event-ID binding and reader checks.
-	if _, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('download_added',?,?,?) ON CONFLICT(kind,id) DO NOTHING`, valid.EventID, sealed, now()); err != nil {
+	if _, err = tx.ExecContext(ctx, recordInsertSQLNoop("download_added", recordTableForKind("download_added")), valid.EventID, sealed, now()); err != nil {
 		return err
 	}
 	return recordDomainEventTx(ctx, tx, valid)
@@ -243,7 +243,7 @@ func (p *PluginStore) downloadAddedSnapshotFrom(ctx context.Context, q PluginPro
 		return snapshot, bad("INVALID_DOWNLOAD_EVENT", "下载事件引用无法核对")
 	}
 	var sealed []byte
-	if err = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='download_added' AND id=?`, valid.EventID).Scan(&sealed); err != nil {
+	if err = q.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, valid.EventID).Scan(&sealed); err != nil {
 		return snapshot, err
 	}
 	raw, err := p.unseal("download_added", "system", valid.EventID, sealed)
@@ -254,7 +254,7 @@ func (p *PluginStore) downloadAddedSnapshotFrom(ctx context.Context, q PluginPro
 		return snapshot, bad("INVALID_DOWNLOAD_EVENT", "下载事件与保存上下文不符")
 	}
 	var stored []byte
-	if err = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, snapshot.DownloadKind, snapshot.DownloadID).Scan(&stored); err != nil {
+	if err = q.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, snapshot.DownloadID).Scan(&stored); err != nil {
 		return snapshot, err
 	}
 	var history struct {

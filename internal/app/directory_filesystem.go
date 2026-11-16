@@ -84,7 +84,7 @@ func directoryFileID(ruleID, path string) string {
 func sameDirectorySnapshot(a, b importSnapshot) bool { return a == b }
 
 func (a *App) listDirectoryFiles(ctx context.Context, ruleID string) ([]DirectoryObservedFile, error) {
-	rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind='directory_file' AND json_extract(payload,'$.directory_id')=? ORDER BY json_extract(payload,'$.last_seen') DESC LIMIT 500`, ruleID)
+	rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM directory_file WHERE json_extract(payload,'$.directory_id')=? ORDER BY json_extract(payload,'$.last_seen') DESC LIMIT 500`, ruleID)
 	if e != nil {
 		return nil, e
 	}
@@ -486,7 +486,7 @@ func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, so
 	} else {
 		for _, d := range a.Settings().Downloaders {
 			if !downloaderEnabled(d) {
-				rows, err := a.Store.DB.QueryContext(ctx, `SELECT json_extract(payload,'$.download_path') FROM records WHERE kind IN ('intent','native_download') AND json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state') NOT IN ('cancelled','imported')`, d.ID)
+				rows, err := a.Store.DB.QueryContext(ctx, `SELECT json_extract(payload,'$.download_path') FROM downloadhistory WHERE json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state') NOT IN ('cancelled','imported')`, d.ID)
 				if err != nil {
 					return nil, nil, err
 				}
@@ -553,7 +553,7 @@ func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, so
 func (a *App) directoryObservations(ctx context.Context, ruleID string) (map[string]DirectoryObservedFile, map[string]map[string]directoryDownloadFile, error) {
 	all := map[string]DirectoryObservedFile{}
 	stored := map[string]map[string]directoryDownloadFile{}
-	rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind='directory_file' AND json_extract(payload,'$.directory_id')=?`, ruleID)
+	rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM directory_file WHERE json_extract(payload,'$.directory_id')=?`, ruleID)
 	if e != nil {
 		return nil, nil, e
 	}
@@ -589,7 +589,7 @@ type directoryTaskState struct {
 // two queries instead of two queries per task.
 func (a *App) directoryDownloadTaskState(ctx context.Context, downloaderID string) (map[string]directoryTaskState, map[string]NativeDownload, error) {
 	states := map[string]directoryTaskState{}
-	rows, e := a.Store.reader().QueryContext(ctx, `SELECT lower(json_extract(payload,'$.hash')), count(*), coalesce(max(json_extract(payload,'$.state')='imported'),0) FROM records WHERE kind='intent' AND json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')!='cancelled' GROUP BY 1`, downloaderID)
+	rows, e := a.Store.reader().QueryContext(ctx, `SELECT lower(json_extract(payload,'$.hash')), count(*), coalesce(max(json_extract(payload,'$.state')='imported'),0) FROM downloadhistory WHERE json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')!='cancelled' GROUP BY 1`, downloaderID)
 	if e != nil {
 		return nil, nil, e
 	}
@@ -608,7 +608,7 @@ func (a *App) directoryDownloadTaskState(ctx context.Context, downloaderID strin
 	}
 	rows.Close()
 	natives := map[string]NativeDownload{}
-	nrows, e := a.Store.reader().QueryContext(ctx, `SELECT payload FROM records WHERE kind='native_download' AND json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')!='cancelled' ORDER BY updated_at DESC`, downloaderID)
+	nrows, e := a.Store.reader().QueryContext(ctx, `SELECT payload FROM downloadhistory WHERE json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')!='cancelled' ORDER BY updated_at DESC`, downloaderID)
 	if e != nil {
 		return nil, nil, e
 	}

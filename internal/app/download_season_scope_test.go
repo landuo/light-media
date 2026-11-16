@@ -52,7 +52,7 @@ func TestSubscriptionSingleSeasonSkipsMultiSeasonBeforeMaterialOrAdd(t *testing.
 		t.Fatal(e)
 	}
 	var intents int
-	if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='intent'`).Scan(&intents); e != nil || intents != 0 || gets.Load() != 0 || adds.Load() != 0 {
+	if e = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM downloadhistory WHERE 1=1`).Scan(&intents); e != nil || intents != 0 || gets.Load() != 0 || adds.Load() != 0 {
 		t.Fatal("single-season original subset gate was widened", intents, gets.Load(), adds.Load(), e)
 	}
 }

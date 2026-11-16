@@ -285,7 +285,7 @@ func (p *PluginStore) rebindOriginalDeletedCloneTx(ctx context.Context, tx *sql.
 		return conflict
 	}
 	var sealed []byte
-	if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, originalPluginAliasKind, next.InstanceID).Scan(&sealed); err != nil {
+	if err = tx.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, originalPluginAliasKind, next.InstanceID).Scan(&sealed); err != nil {
 		return conflict
 	}
 	raw, err := p.unseal(originalPluginAliasKind, next.InstanceID, "main", sealed)

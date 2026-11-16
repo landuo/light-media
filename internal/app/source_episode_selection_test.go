@@ -133,7 +133,7 @@ func TestSourceEpisodeSelectionThroughActualIntentWorkerAndColdReceipts(t *testi
 				t.Fatal("actual native selected-file worker failed", e, adds.Load(), reads.Load(), sets.Load(), starts.Load())
 			}
 			var sealed []byte
-			if e = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='download_episode_selection' AND id=?`, in.ID).Scan(&sealed); e != nil {
+			if e = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM download_selection WHERE id=?`, in.ID).Scan(&sealed); e != nil {
 				t.Fatal(e)
 			}
 			raw, e := a.pluginStore.unseal("download_episode_selection", "system", in.ID, sealed)
@@ -149,7 +149,7 @@ func TestSourceEpisodeSelectionThroughActualIntentWorkerAndColdReceipts(t *testi
 			if e = a.runDownload(context.Background(), j, in.ID); e != nil || adds.Load() != 1 || sets.Load() != 1 || starts.Load() != 1 {
 				t.Fatal("cold accepted workflow repeated native writes", e)
 			}
-			if _, e = a.Store.DB.Exec(`DELETE FROM records WHERE kind='download_episode_selection' AND id=?`, in.ID); e != nil {
+			if _, e = a.Store.DB.Exec(`DELETE FROM download_selection WHERE id=?`, in.ID); e != nil {
 				t.Fatal(e)
 			}
 			if e = a.runDownload(context.Background(), j, in.ID); pluginErrorCodeInternal(e) != "REVIEW_FILE_SELECTION_UNCONFIRMED" || adds.Load() != 1 || sets.Load() != 1 {

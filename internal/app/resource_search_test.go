@@ -128,8 +128,8 @@ func TestKeywordResourceSearchDoesNotInventIdentityOrFetchPrivateMaterial(t *tes
 		t.Fatal("search asserted identity or fetched metainfo", result)
 	}
 	var intents, blobs int
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='intent'`).Scan(&intents)
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='material_blob'`).Scan(&blobs)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM downloadhistory WHERE 1=1`).Scan(&intents)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM material_blob WHERE 1=1`).Scan(&blobs)
 	if intents != 0 || blobs != 0 {
 		t.Fatal("search created a download", intents, blobs)
 	}

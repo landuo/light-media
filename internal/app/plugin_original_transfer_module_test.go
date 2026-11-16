@@ -92,7 +92,7 @@ func TestOriginalTransferModuleActualSDKFixedSource(t *testing.T) {
 				}
 			}
 			var count int
-			if e := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='asset'`).Scan(&count); e != nil || count != map[bool]int{true: 1, false: 0}[success] {
+			if e := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM library_asset WHERE 1=1`).Scan(&count); e != nil || count != map[bool]int{true: 1, false: 0}[success] {
 				t.Fatal("actual asset registration", count, e)
 			}
 			a.wg.Wait()
@@ -212,11 +212,11 @@ func TestOriginalTransferModuleCopyAndOwnershipGuards(t *testing.T) {
 				t.Fatal("source preserved", err)
 			}
 			var assets int
-			if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='asset'`).Scan(&assets); err != nil || assets != map[bool]int{true: 1, false: 0}[sample.code == ""] {
+			if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM library_asset WHERE 1=1`).Scan(&assets); err != nil || assets != map[bool]int{true: 1, false: 0}[sample.code == ""] {
 				t.Fatal("no unverified asset", assets, err)
 			}
 			var rows []byte
-			if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='import_receipt' AND id=?`, plan.ID+"/"+plan.Files[0].ID).Scan(&rows); err != nil || bytes.Contains(rows, []byte("owned-private-transfer-result")) {
+			if err := a.Store.DB.QueryRow(`SELECT payload FROM import_receipt WHERE id=?`, plan.ID+"/"+plan.Files[0].ID).Scan(&rows); err != nil || bytes.Contains(rows, []byte("owned-private-transfer-result")) {
 				t.Fatal("private module result encrypted", err)
 			}
 		})
@@ -276,7 +276,7 @@ func testOriginalTransferModuleAssetCommitFailureColdRecovery(t *testing.T, retu
 		wantCalls, wantEvents = 2, 2
 	}
 	job := overwriteStart(t, a, plan)
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_module_asset_failure BEFORE INSERT ON records WHEN NEW.kind='asset' BEGIN SELECT RAISE(ABORT,'owned_module_asset_failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_module_asset_failure BEFORE INSERT ON library_asset WHEN NEW.record_kind='asset' BEGIN SELECT RAISE(ABORT,'owned_module_asset_failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.runImport(ctx, job, plan.ID, nil); err == nil {

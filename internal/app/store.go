@@ -100,33 +100,17 @@ func OpenStore(dir string) (*Store, error) {
 	}
 	if versionTable != 0 {
 		var version int
-		if err = db.QueryRow(`SELECT MAX(version) FROM migrations`).Scan(&version); err != nil || version != 1 {
+		if err = db.QueryRow(`SELECT MAX(version) FROM migrations`).Scan(&version); err != nil || version < 1 || version > 2 {
 			db.Close()
 			return fail(errors.New("database schema is not supported by this application version"))
 		}
 	}
 	schema := `PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000; PRAGMA synchronous=FULL;
  CREATE TABLE IF NOT EXISTS migrations(version INTEGER PRIMARY KEY,applied_at TEXT NOT NULL);
- CREATE TABLE IF NOT EXISTS records(kind TEXT NOT NULL,id TEXT NOT NULL,payload BLOB NOT NULL,updated_at TEXT NOT NULL,PRIMARY KEY(kind,id));
  CREATE TABLE IF NOT EXISTS priority_rule_revisions(section TEXT PRIMARY KEY,revision INTEGER NOT NULL);
  CREATE TABLE IF NOT EXISTS admin(id INTEGER PRIMARY KEY CHECK(id=1),username TEXT NOT NULL,password_hash BLOB NOT NULL);
  CREATE TABLE IF NOT EXISTS sessions(token_hash TEXT PRIMARY KEY,expires_at INTEGER NOT NULL);
  CREATE TABLE IF NOT EXISTS jobs(id TEXT PRIMARY KEY,workflow_id TEXT NOT NULL,kind TEXT NOT NULL,state TEXT NOT NULL,payload BLOB NOT NULL,attempt INTEGER NOT NULL DEFAULT 0,generation INTEGER NOT NULL DEFAULT 0,run_at INTEGER NOT NULL,lease_until INTEGER NOT NULL DEFAULT 0,error_code TEXT NOT NULL DEFAULT '',error_message TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL,updated_at TEXT NOT NULL);
- CREATE INDEX IF NOT EXISTS organize_queue_source ON records(json_extract(payload,'$.source')) WHERE kind='organize_queue_member';
- CREATE INDEX IF NOT EXISTS organize_queue_group ON records(json_extract(payload,'$.group')) WHERE kind='organize_queue_member';
- CREATE INDEX IF NOT EXISTS organize_queue_job ON records(json_extract(payload,'$.job')) WHERE kind='organize_queue_member';
- CREATE INDEX IF NOT EXISTS organize_queue_meta ON records(json_extract(payload,'$.meta'),json_extract(payload,'$.group')) WHERE kind='organize_queue_member';
- CREATE INDEX IF NOT EXISTS organize_queue_media ON records(json_extract(payload,'$.media'),json_extract(payload,'$.group')) WHERE kind='organize_queue_member';
- CREATE INDEX IF NOT EXISTS managed_file_asset ON records(json_extract(payload,'$.asset_id')) WHERE kind='managed_file';
- CREATE INDEX IF NOT EXISTS asset_path ON records(json_extract(payload,'$.path')) WHERE kind='asset';
- CREATE INDEX IF NOT EXISTS import_plan_state ON records(json_extract(payload,'$.state')) WHERE kind='import_plan';
- CREATE INDEX IF NOT EXISTS import_plan_intent ON records(json_extract(payload,'$.intent_id')) WHERE kind='import_plan';
- CREATE INDEX IF NOT EXISTS asset_media_key ON records(kind,(json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id'))) WHERE kind='asset';
- CREATE INDEX IF NOT EXISTS subscription_media_key ON records(kind,(json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id'))) WHERE kind='subscription';
- CREATE INDEX IF NOT EXISTS intent_media_key ON records(kind,(json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id'))) WHERE kind='intent';
- CREATE INDEX IF NOT EXISTS notification_display_order ON records(kind,updated_at DESC,id) WHERE kind='notification';
- CREATE INDEX IF NOT EXISTS notification_unread ON records(json_extract(payload,'$.read')) WHERE kind='notification';
- CREATE INDEX IF NOT EXISTS subscription_display_order ON records(kind,updated_at DESC,id) WHERE kind='subscription' AND json_extract(payload,'$.state') IS NOT 'cancelled';
  CREATE INDEX IF NOT EXISTS jobs_display_priority ON jobs((` + jobDisplayPriority + `),created_at DESC,id);
  CREATE INDEX IF NOT EXISTS jobs_due ON jobs(state,run_at);
  CREATE INDEX IF NOT EXISTS jobs_subject ON jobs(kind,json_extract(payload,'$.id'),created_at);
@@ -141,9 +125,24 @@ func OpenStore(dir string) (*Store, error) {
  CREATE TABLE IF NOT EXISTS quota(site_id TEXT NOT NULL,day TEXT NOT NULL,used INTEGER NOT NULL,PRIMARY KEY(site_id,day));
  INSERT OR IGNORE INTO migrations VALUES(1,strftime('%Y-%m-%dT%H:%M:%fZ','now'));
  `
-	if _, err = db.Exec(schema + nativeSiteIdentitySchema + sourceAccountSchema + originalSubscriptionAliasSchema + originalTransferAliasSchema + transferHistoryMPSchema()); err != nil {
+	if _, err = db.Exec(schema + recordDDL() + nativeSiteIdentitySchema + sourceAccountSchema + originalSubscriptionAliasSchema + originalTransferAliasSchema + transferHistoryMPSchema()); err != nil {
 		db.Close()
-		return fail(err)
+		return fail(fmt.Errorf("schema: %w", err))
+	}
+	if err = migrateRecordsV2(context.Background(), db); err != nil {
+		db.Close()
+		return fail(fmt.Errorf("records migration: %w", err))
+	}
+	// Subscribe aliases are allocated by a trigger on subscribe; re-run the
+	// idempotent backfill so rows migrated from records also get their stable
+	// numeric ID before any plugin call can observe them.
+	if _, err = db.Exec(originalSubscriptionAliasSchema); err != nil {
+		db.Close()
+		return fail(fmt.Errorf("subscription alias backfill: %w", err))
+	}
+	if _, err = db.Exec(recordCompatViewDDL() + recordCompatWriteDDL()); err != nil {
+		db.Close()
+		return fail(fmt.Errorf("records view: %w", err))
 	}
 	if err = migrateTransferHistoryMP(context.Background(), db); err != nil {
 		db.Close()
@@ -249,12 +248,28 @@ func (s *Store) Put(ctx context.Context, kind, key string, value any) error {
 			return e
 		}
 	}
-	_, e = s.DB.ExecContext(ctx, `INSERT INTO records VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, key, b, now())
-	return e
+	at := now()
+	t, ok := recordTableFor(kind)
+	if !ok {
+		_, e = s.DB.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, key, b, at)
+		return e
+	}
+	if _, e = s.DB.ExecContext(ctx, recordInsertSQL(kind, t), key, b, at); e != nil {
+		return e
+	}
+	return recordChildren(ctx, s.DB, kind, key, b, at)
 }
 func (s *Store) Get(ctx context.Context, kind, key string, dst any) error {
 	var b []byte
-	e := s.reader().QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, kind, key).Scan(&b)
+	t, ok := recordTableFor(kind)
+	if !ok {
+		e := s.reader().QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, kind, key).Scan(&b)
+		if e != nil {
+			return e
+		}
+		return json.Unmarshal(b, dst)
+	}
+	e := s.reader().QueryRowContext(ctx, `SELECT payload FROM `+t.name+` WHERE `+recordKeyColumn(t)+`=?`, key).Scan(&b)
 	if e != nil {
 		return e
 	}
@@ -270,7 +285,22 @@ func (s *Store) List(ctx context.Context, kind string, limit, offset int) ([]jso
 	if offset < 0 {
 		offset = 0
 	}
-	return s.listRecordPayloads(ctx, `SELECT payload FROM records WHERE kind=? ORDER BY updated_at DESC,id LIMIT ? OFFSET ?`, kind, limit, offset)
+	t, ok := recordTableFor(kind)
+	if !ok {
+		return s.listRecordPayloads(ctx, `SELECT payload FROM plugin_record WHERE kind=? ORDER BY updated_at DESC,id LIMIT ? OFFSET ?`, kind, limit, offset)
+	}
+	return s.listRecordPayloads(ctx, `SELECT payload FROM `+t.name+` ORDER BY updated_at DESC,`+recordKeyColumn(t)+` LIMIT ? OFFSET ?`, limit, offset)
+}
+func (s *Store) Delete(ctx context.Context, kind, key string) error {
+	t, ok := recordTableFor(kind)
+	if !ok {
+		_, e := s.DB.ExecContext(ctx, `DELETE FROM plugin_record WHERE kind=? AND id=?`, kind, key)
+		return e
+	}
+	if _, e := s.DB.ExecContext(ctx, `DELETE FROM `+t.name+` WHERE `+recordKeyColumn(t)+`=?`, key); e != nil {
+		return e
+	}
+	return recordChildrenDelete(ctx, s.DB, kind, key)
 }
 func (s *Store) listRecordPayloads(ctx context.Context, query string, args ...any) ([]json.RawMessage, error) {
 	rows, e := s.reader().QueryContext(ctx, query, args...)
@@ -288,17 +318,21 @@ func (s *Store) listRecordPayloads(ctx context.Context, query string, args ...an
 	}
 	return out, rows.Err()
 }
-func (s *Store) Delete(ctx context.Context, kind, key string) error {
-	_, e := s.DB.ExecContext(ctx, `DELETE FROM records WHERE kind=? AND id=?`, kind, key)
-	return e
-}
 func txPut(ctx context.Context, tx *sql.Tx, kind, key string, value any) error {
 	b, e := json.Marshal(value)
 	if e != nil {
 		return e
 	}
-	_, e = tx.ExecContext(ctx, `INSERT INTO records VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, key, b, now())
-	return e
+	at := now()
+	t, ok := recordTableFor(kind)
+	if !ok {
+		_, e = tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, key, b, at)
+		return e
+	}
+	if _, e = tx.ExecContext(ctx, recordInsertSQL(kind, t), key, b, at); e != nil {
+		return e
+	}
+	return recordChildren(ctx, tx, kind, key, b, at)
 }
 func (s *Store) Backup(ctx context.Context, dir string) (string, error) {
 	if e := os.MkdirAll(dir, 0700); e != nil {

@@ -210,7 +210,7 @@ func New(opts Options) (*App, error) {
 		a.pluginMarketOverride = &sources
 	}
 	var raw []byte
-	e = s.DB.QueryRow(`SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&raw)
+	e = s.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&raw)
 	if e == nil {
 		e = s.Unseal(raw, &a.config)
 	} else if errors.Is(e, sql.ErrNoRows) {
@@ -237,6 +237,14 @@ func New(opts Options) (*App, error) {
 		}
 	}
 	if e = a.bootstrapNativeSiteIdentities(context.Background()); e != nil {
+		s.Close()
+		return nil, e
+	}
+	if e = a.ensureSiteTable(context.Background()); e != nil {
+		s.Close()
+		return nil, e
+	}
+	if e = ensureUserTable(context.Background(), s.DB); e != nil {
 		s.Close()
 		return nil, e
 	}
@@ -536,13 +544,16 @@ func (a *App) persistSettingsWithEffect(ctx context.Context, c Settings, effect 
 	if err != nil {
 		return err
 	}
-	if _, err := tx.ExecContext(ctx, `INSERT INTO records VALUES('config','main',?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, sealed, now()); err != nil {
+	if _, err := tx.ExecContext(ctx, `INSERT INTO systemconfig(uid,key,payload,updated_at,record_kind) VALUES('main','main',?,?,'config') ON CONFLICT(uid) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, sealed, now()); err != nil {
+		return err
+	}
+	if err := replaceSiteTableTx(ctx, tx, c.Sites); err != nil {
 		return err
 	}
 	for _, site := range c.Sites {
 		for _, old := range previous.Sites {
 			if old.ID == site.ID && a.managedSiteKey(old) != a.managedSiteKey(site) {
-				if _, err := tx.ExecContext(ctx, `DELETE FROM records WHERE kind='site_cooldown' AND id=?`, site.ID); err != nil {
+				if _, err := tx.ExecContext(ctx, `DELETE FROM site_state WHERE id=?`, site.ID); err != nil {
 					return err
 				}
 			}
@@ -706,6 +717,9 @@ func (a *App) auth(w http.ResponseWriter, r *http.Request) (bool, error) {
 		if _, e = a.Store.DB.ExecContext(r.Context(), `INSERT INTO admin(id,username,password_hash) VALUES(1,?,?)`, in.Username, hash); e != nil {
 			return false, &APIError{"ALREADY_CONFIGURED", "管理员已创建，请登录", 409}
 		}
+		if e = syncAdminUser(r.Context(), a.Store.DB, in.Username, hash); e != nil {
+			return false, e
+		}
 	} else {
 		var name string
 		var hash []byte
@@ -773,4 +787,68 @@ func (a *App) recentLogs(job string) ([]map[string]any, error) {
 		}
 	}
 	return out, nil
+}
+
+// replaceSiteTableTx populates MoviePilot's site table from the settings
+// payload. Sites stay authored in the encrypted config until the read path is
+// switched, but the table is the canonical relational projection and keeps the
+// MoviePilot columns and indexes authoritative for lookups.
+func replaceSiteTableTx(ctx context.Context, tx *sql.Tx, sites []SiteConfig) error {
+	if _, err := tx.ExecContext(ctx, `DELETE FROM site`); err != nil {
+		return err
+	}
+	table := recordTableForKind("site")
+	at := now()
+	for _, site := range sites {
+		raw, err := json.Marshal(site)
+		if err != nil {
+			return err
+		}
+		if _, err := tx.ExecContext(ctx, recordInsertSQL("site", table), site.ID, raw, at); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// ensureSiteTable backfills the site table once for databases that predate the
+// split and for a fresh import of an existing config.
+func (a *App) ensureSiteTable(ctx context.Context) error {
+	var rows int
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM site`).Scan(&rows); err != nil {
+		return err
+	}
+	if rows > 0 || len(a.config.Sites) == 0 {
+		return nil
+	}
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	if err = replaceSiteTableTx(ctx, tx, a.config.Sites); err != nil {
+		return err
+	}
+	return tx.Commit()
+}
+
+// ensureUserTable backfills MoviePilot's user row from the single administrator
+// for installs created before the split.
+func ensureUserTable(ctx context.Context, db *sql.DB) error {
+	var rows int
+	if err := db.QueryRowContext(ctx, `SELECT COUNT(*) FROM "user"`).Scan(&rows); err != nil {
+		return err
+	}
+	if rows > 0 {
+		return nil
+	}
+	var name string
+	var hash []byte
+	if err := db.QueryRowContext(ctx, `SELECT username,password_hash FROM admin WHERE id=1`).Scan(&name, &hash); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil
+		}
+		return err
+	}
+	return syncAdminUser(ctx, db, name, hash)
 }

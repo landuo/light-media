@@ -85,7 +85,7 @@ func TestOriginalTransferBlurayHistory(t *testing.T) {
 				importWrite(t, filepath.Join(item.Target, "foreign.txt"), []byte("keep me"))
 			}
 			if mode == "cold_source" {
-				if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_dir_remove_commit BEFORE UPDATE ON records WHEN NEW.kind='history_source_removal' AND json_extract(NEW.payload,'$.state')='completed' BEGIN SELECT RAISE(ABORT,'owned directory removal commit'); END`); err != nil {
+				if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_dir_remove_commit BEFORE UPDATE ON history_receipt WHEN NEW.record_kind='history_source_removal' AND json_extract(NEW.payload,'$.state')='completed' BEGIN SELECT RAISE(ABORT,'owned directory removal commit'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
@@ -129,7 +129,7 @@ func TestOriginalTransferBlurayHistory(t *testing.T) {
 			}
 			if mode == "ordinary_source" {
 				var factID string
-				if err := a.Store.DB.QueryRow(`SELECT id FROM records WHERE kind='history_download_file_event'`).Scan(&factID); err != nil {
+				if err := a.Store.DB.QueryRow(`SELECT id FROM download_file_event WHERE 1=1`).Scan(&factID); err != nil {
 					t.Fatal("source endpoint still publishes on retained directory", err)
 				}
 				dir := a.Dir
@@ -156,7 +156,7 @@ func TestOriginalTransferBlurayHistory(t *testing.T) {
 				}
 			}
 			var hidden int
-			if e := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='transfer_history_hidden' AND id=?`, item.ID).Scan(&hidden); e != nil || hidden != 1 {
+			if e := a.Store.DB.QueryRow(`SELECT count(*) FROM history_hidden WHERE id=?`, item.ID).Scan(&hidden); e != nil || hidden != 1 {
 				t.Fatal("history hidden after actual success", hidden, e)
 			}
 		})

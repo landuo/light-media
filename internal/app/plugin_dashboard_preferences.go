@@ -18,7 +18,7 @@ func (a *App) pluginDashboardSettingsHTTP(w http.ResponseWriter, r *http.Request
 	ctx := r.Context()
 	if r.Method == http.MethodGet {
 		var sealed []byte
-		err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, kind, key).Scan(&sealed)
+		err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, kind, key).Scan(&sealed)
 		if errors.Is(err, sql.ErrNoRows) {
 			return map[string]any{"value": nil}, nil
 		}
@@ -46,6 +46,6 @@ func (a *App) pluginDashboardSettingsHTTP(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		return nil, err
 	}
-	_, err = a.Store.DB.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, key, sealed, now())
+	_, err = a.Store.DB.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, key, sealed, now())
 	return map[string]bool{"saved": err == nil}, err
 }

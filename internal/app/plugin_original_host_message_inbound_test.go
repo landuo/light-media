@@ -164,7 +164,7 @@ func TestOriginalIncomingMessageActualSDKSourceOrdinaryRoutes(t *testing.T) {
 				}
 			}
 			var historyCount int
-			if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='message'`).Scan(&historyCount); err != nil {
+			if err := a.Store.DB.QueryRow(`SELECT count(*) FROM message WHERE 1=1`).Scan(&historyCount); err != nil {
 				t.Fatal(err)
 			}
 			expectedHistory := 0

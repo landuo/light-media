@@ -31,7 +31,7 @@ func (a *App) recordSubscriptionAddedTx(ctx context.Context, tx *sql.Tx, subscri
 	if err != nil {
 		return err
 	}
-	if _, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('subscription_added',?,?,?)`, event.EventID, sealed, now()); err != nil {
+	if _, err = tx.ExecContext(ctx, recordInsertSQL("subscription_added", recordTableForKind("subscription_added")), event.EventID, sealed, now()); err != nil {
 		return err
 	}
 	return recordDomainEventTx(ctx, tx, event)
@@ -49,7 +49,7 @@ func (p *PluginStore) subscriptionAddedSnapshotFrom(ctx context.Context, q Plugi
 		return snapshot, bad("INVALID_SUBSCRIPTION_EVENT", "订阅事件引用无法核对")
 	}
 	var sealed []byte
-	if err = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription_added' AND id=?`, event.EventID).Scan(&sealed); err != nil {
+	if err = q.QueryRowContext(ctx, `SELECT payload FROM subscription_event WHERE id=?`, event.EventID).Scan(&sealed); err != nil {
 		return snapshot, err
 	}
 	raw, err := p.unseal("subscription_added", "system", event.EventID, sealed)

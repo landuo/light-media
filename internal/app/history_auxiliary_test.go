@@ -111,7 +111,7 @@ func TestAuxiliaryHistoryIndependentFileChoicesFixedSource(t *testing.T) {
 				}
 			}
 			var assets, slots, histories int
-			if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='asset' AND json_extract(payload,'$.state')!='removed'`).Scan(&assets); err != nil || assets != 1 {
+			if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM library_asset WHERE json_extract(payload,'$.state')!='removed'`).Scan(&assets); err != nil || assets != 1 {
 				t.Fatal("independent deletion removed video asset", assets, err)
 			}
 			if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM asset_slots`).Scan(&slots); err != nil || slots != 1 {
@@ -143,7 +143,7 @@ func TestAuxiliaryHistoryTargetChangeAndColdDeletionRecovery(t *testing.T) {
 				}
 				return
 			}
-			if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_aux_remove_commit BEFORE UPDATE ON records WHEN NEW.kind='history_target_removal' AND json_extract(NEW.payload,'$.State')='completed' BEGIN SELECT RAISE(ABORT,'owned auxiliary removal commit'); END`); err != nil {
+			if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_aux_remove_commit BEFORE UPDATE ON history_target_receipt WHEN NEW.record_kind='history_target_removal' AND json_extract(NEW.payload,'$.State')='completed' BEGIN SELECT RAISE(ABORT,'owned auxiliary removal commit'); END`); err != nil {
 				t.Fatal(err)
 			}
 			if _, err := a.deleteTransferHistory(ctx, item, historyDeleteRequest{Confirm: true, DeleteTarget: true, FileID: item.executionFileID()}); err == nil {
@@ -173,7 +173,7 @@ func TestAuxiliaryHistoryTargetChangeAndColdDeletionRecovery(t *testing.T) {
 				}
 			}
 			var owned int
-			if err := fresh.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='managed_file' AND id=?`, tokenHash(item.Target)).Scan(&owned); err != nil || owned != 0 {
+			if err := fresh.Store.DB.QueryRow(`SELECT COUNT(*) FROM managed_file WHERE id=?`, tokenHash(item.Target)).Scan(&owned); err != nil || owned != 0 {
 				t.Fatal("cold recovery did not finish only auxiliary ownership", owned, err)
 			}
 		})

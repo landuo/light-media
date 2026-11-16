@@ -63,7 +63,7 @@ func TestDownloadAddedWriterRejectsPlannedAndRequiresBusinessTransaction(t *test
 			if err != nil || len(page.Events) != 0 {
 				t.Fatal("planned row left a download fact", err)
 			}
-			if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='download_added'`).Scan(&snapshots); err != nil || snapshots != 0 {
+			if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM downloadhistory WHERE 1=1`).Scan(&snapshots); err != nil || snapshots != 0 {
 				t.Fatal("planned row left a frozen download snapshot", err)
 			}
 		})
@@ -106,7 +106,7 @@ func TestDownloadAddedOutboxFailureRollsBackAcceptedRowAndFrozenSnapshot(t *test
 				t.Fatal("accepted state escaped rollback", err)
 			}
 			var snapshots int
-			if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='download_added'`).Scan(&snapshots); err != nil || snapshots != 0 {
+			if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM downloadhistory WHERE 1=1`).Scan(&snapshots); err != nil || snapshots != 0 {
 				t.Fatal("private snapshot escaped failed outbox transaction", err)
 			}
 			if page, err := a.domainEvents(ctx, 0, 10); err != nil || len(page.Events) != 0 {

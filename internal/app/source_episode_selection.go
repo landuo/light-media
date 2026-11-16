@@ -84,7 +84,7 @@ func (a *App) guardSourceEpisodeReceipt(ctx context.Context, in Intent) error {
 		return nil
 	}
 	var sealed []byte
-	if e := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='download_episode_selection' AND id=?`, in.ID).Scan(&sealed); e != nil {
+	if e := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM download_selection WHERE id=?`, in.ID).Scan(&sealed); e != nil {
 		return bad("REVIEW_FILE_SELECTION_UNCONFIRMED", "按集下载的原文件选择记录缺失")
 	}
 	raw, e := a.pluginStore.unseal("download_episode_selection", "system", in.ID, sealed)
@@ -111,7 +111,7 @@ func (a *App) saveSourceEpisodeSelectionTx(ctx context.Context, tx *sql.Tx, in I
 		return e
 	}
 	var previous []byte
-	e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='download_episode_selection' AND id=?`, in.ID).Scan(&previous)
+	e = tx.QueryRowContext(ctx, `SELECT payload FROM download_selection WHERE id=?`, in.ID).Scan(&previous)
 	if e == nil {
 		accepted, e := a.pluginStore.unseal("download_episode_selection", "system", in.ID, previous)
 		if e != nil || !larkSameRaw(accepted, raw) {
@@ -126,6 +126,6 @@ func (a *App) saveSourceEpisodeSelectionTx(ctx context.Context, tx *sql.Tx, in I
 	if e != nil {
 		return e
 	}
-	_, e = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('download_episode_selection',?,?,?)`, in.ID, sealed, now())
+	_, e = tx.ExecContext(ctx, recordInsertSQL("download_episode_selection", recordTableForKind("download_episode_selection")), in.ID, sealed, now())
 	return e
 }

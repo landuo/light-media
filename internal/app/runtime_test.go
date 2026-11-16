@@ -67,7 +67,7 @@ func TestAuthenticationSecretStorageAndOrigin(t *testing.T) {
 		t.Fatalf("settings leaked or failed %d %s", w.Code, w.Body)
 	}
 	var raw []byte
-	if e := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='config'`).Scan(&raw); e != nil {
+	if e := a.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE 1=1`).Scan(&raw); e != nil {
 		t.Fatal(e)
 	}
 	if strings.Contains(string(raw), secret) {

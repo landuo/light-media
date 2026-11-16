@@ -96,7 +96,7 @@ func TestSubscriptionQualityActualBatchFullPackFirstKnownFailureFallbackUnknownS
 								t.Error(e)
 							}
 						} else {
-							if _, e := a.Store.DB.Exec(`DELETE FROM records WHERE kind='subscription_acquisition' AND id=?`, job.ID); e != nil {
+							if _, e := a.Store.DB.Exec(`DELETE FROM subscription_acquisition WHERE id=?`, job.ID); e != nil {
 								t.Error(e)
 							}
 						}
@@ -177,12 +177,12 @@ func TestSubscriptionQualityActualBatchFullPackFirstKnownFailureFallbackUnknownS
 						}
 					}
 					if branch == "root_deleted_after_add" {
-						if _, e := a.Store.DB.Exec(`DELETE FROM records WHERE kind='subscription_acquisition' AND id=?`, job.ID); e != nil {
+						if _, e := a.Store.DB.Exec(`DELETE FROM subscription_acquisition WHERE id=?`, job.ID); e != nil {
 							t.Error(e)
 						}
 					}
 					if branch == "removed_after_add" {
-						if _, e := a.Store.DB.Exec(`DELETE FROM records WHERE kind='subscription' AND id=?`, s.ID); e != nil {
+						if _, e := a.Store.DB.Exec(`DELETE FROM subscribe WHERE uid=?`, s.ID); e != nil {
 							t.Error(e)
 						}
 					}
@@ -279,7 +279,7 @@ func TestSubscriptionQualityActualBatchFullPackFirstKnownFailureFallbackUnknownS
 			}
 			job = importClaim(t, a, "subscription", s.ID)
 			if branch == "accept_commit_cold" || branch == "cancel_after_add_cold_fault" || strings.HasPrefix(branch, "receipt_") {
-				if _, e = a.Store.DB.Exec(`CREATE TRIGGER acquisition_accept_failure BEFORE INSERT ON records WHEN NEW.kind='subscription_quality_accepted' BEGIN SELECT RAISE(ABORT,'owned_acquisition_accept_boundary'); END`); e != nil {
+				if _, e = a.Store.DB.Exec(`CREATE TRIGGER acquisition_accept_failure BEFORE INSERT ON plugin_record WHEN NEW.kind='subscription_quality_accepted' BEGIN SELECT RAISE(ABORT,'owned_acquisition_accept_boundary'); END`); e != nil {
 					t.Fatal(e)
 				}
 			}
@@ -364,11 +364,11 @@ func TestSubscriptionQualityActualBatchFullPackFirstKnownFailureFallbackUnknownS
 				if branch == "receipt_tamper_cold" {
 					var sealed []byte
 					var key string
-					if ce = a.Store.DB.QueryRow(`SELECT id,payload FROM records WHERE kind='subscription_acquisition_receipt'`).Scan(&key, &sealed); ce != nil {
+					if ce = a.Store.DB.QueryRow(`SELECT id,payload FROM subscription_receipt WHERE 1=1`).Scan(&key, &sealed); ce != nil {
 						t.Fatal(ce)
 					}
 					sealed[len(sealed)-1] ^= 1
-					if _, ce = a.Store.DB.Exec(`UPDATE records SET payload=? WHERE kind='subscription_acquisition_receipt' AND id=?`, sealed, key); ce != nil {
+					if _, ce = a.Store.DB.Exec(`UPDATE subscription_receipt SET payload=? WHERE id=?`, sealed, key); ce != nil {
 						t.Fatal(ce)
 					}
 				}
@@ -440,8 +440,8 @@ func TestSubscriptionQualityActualBatchFullPackFirstKnownFailureFallbackUnknownS
 				if ce = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM jobs WHERE kind='subscription_acquisition_receipt'`).Scan(&jobs); ce != nil {
 					t.Fatal(ce)
 				}
-				a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='subscription_quality_accepted'`).Scan(&facts)
-				a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='subscription_acquisition_receipt_error'`).Scan(&markers)
+				a.Store.DB.QueryRow(`SELECT COUNT(*) FROM subscription_receipt WHERE 1=1`).Scan(&facts)
+				a.Store.DB.QueryRow(`SELECT COUNT(*) FROM subscription_receipt WHERE 1=1`).Scan(&markers)
 				if jobs != 0 || facts != 0 || markers != 1 {
 					t.Fatal("missing scope fabricated native authority or dropped known receipt marker", jobs, facts, markers)
 				}
@@ -488,7 +488,7 @@ func TestSubscriptionQualityActualBatchFullPackFirstKnownFailureFallbackUnknownS
 				}
 				if branch == "removed_after_add" {
 					var count int
-					if ce = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='subscription' AND id=?`, s.ID).Scan(&count); ce != nil || count != 0 || fact.Disposition != "subscription_removed" {
+					if ce = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM subscribe WHERE uid=?`, s.ID).Scan(&count); ce != nil || count != 0 || fact.Disposition != "subscription_removed" {
 						t.Fatal("old receipt resurrected removed subscription", count, fact.Disposition, ce)
 					}
 				}
@@ -509,7 +509,7 @@ func TestSubscriptionQualityActualBatchFullPackFirstKnownFailureFallbackUnknownS
 					t.Fatal("known normal receipt became unknown after parent cancellation", current.SourceNote, current.EpisodePriority, e, ce)
 				}
 				var state string
-				if ce := a.Store.DB.QueryRow(`SELECT json_extract(payload,'$.state') FROM records WHERE kind='intent'`).Scan(&state); ce != nil || state != "accepted" {
+				if ce := a.Store.DB.QueryRow(`SELECT json_extract(payload,'$.state') FROM downloadhistory WHERE 1=1`).Scan(&state); ce != nil || state != "accepted" {
 					t.Fatal("known native accepted fact lost after cancellation", state, ce)
 				}
 				if retry := a.checkSubscription(ctx, job, s.ID, s.Revision); retry == nil {

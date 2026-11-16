@@ -76,7 +76,7 @@ func TestSharedDirectorySoftlinkActualPrefixAndLifecycle(t *testing.T) {
 				}
 			}
 			if options.Storage {
-				if _, e := a.Store.DB.Exec(`CREATE TRIGGER shared_soft_stage AFTER UPDATE ON records WHEN NEW.kind='import_receipt' AND NEW.id LIKE '` + key + `/directory/%' AND json_extract(NEW.payload,'$.state')='planned' AND length(json_extract(NEW.payload,'$.storage_softlink.result'))>0 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE id='` + job.ID + `'; END`); e != nil {
+				if _, e := a.Store.DB.Exec(`CREATE TRIGGER shared_soft_stage AFTER UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND NEW.id LIKE '` + key + `/directory/%' AND json_extract(NEW.payload,'$.state')='planned' AND length(json_extract(NEW.payload,'$.storage_softlink.result'))>0 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE id='` + job.ID + `'; END`); e != nil {
 					t.Fatal(e)
 				}
 			}
@@ -233,7 +233,7 @@ func TestSharedDirectoryMoveActualNativeAndSelectedCold(t *testing.T) {
 			a, _, plan, job, fixture := prepareSharedDirectoryImportConfigured(t, "move", sharedDirectoryFixtureOptions{Contents: sharedTwoLeafContents(), Storage: selected})
 			key := plan.ID + "/" + plan.Files[0].ID
 			if selected {
-				if _, e := a.Store.DB.Exec(`CREATE TRIGGER shared_move_stage AFTER UPDATE ON records WHEN NEW.kind='import_receipt' AND NEW.id LIKE '` + key + `/directory/%' AND json_extract(NEW.payload,'$.state')='planned' AND length(json_extract(NEW.payload,'$.storage_move.result'))>0 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE id='` + job.ID + `'; END`); e != nil {
+				if _, e := a.Store.DB.Exec(`CREATE TRIGGER shared_move_stage AFTER UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND NEW.id LIKE '` + key + `/directory/%' AND json_extract(NEW.payload,'$.state')='planned' AND length(json_extract(NEW.payload,'$.storage_move.result'))>0 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE id='` + job.ID + `'; END`); e != nil {
 					t.Fatal(e)
 				}
 			}

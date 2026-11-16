@@ -104,7 +104,7 @@ func TestImportSoftlinkEntryPublicationAndColdRecovery(t *testing.T) {
 				t.Fatal(err)
 			}
 			if branch != "success" {
-				if _, err = a.Store.DB.Exec(`CREATE TRIGGER softlink_publish_fail BEFORE UPDATE ON records WHEN NEW.kind='import_receipt' AND json_extract(NEW.payload,'$.state')='published' BEGIN SELECT RAISE(FAIL,'synthetic softlink publication SQL failure'); END`); err != nil {
+				if _, err = a.Store.DB.Exec(`CREATE TRIGGER softlink_publish_fail BEFORE UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND json_extract(NEW.payload,'$.state')='published' BEGIN SELECT RAISE(FAIL,'synthetic softlink publication SQL failure'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
@@ -185,7 +185,7 @@ func TestImportSoftlinkActualSDKVideoSubtitleAndAssetRecovery(t *testing.T) {
 				t.Fatal("subtitle plan", meta, err)
 			}
 			if branch != "success" {
-				if _, err = a.Store.DB.Exec(`CREATE TRIGGER softlink_asset_fail BEFORE INSERT ON records WHEN NEW.kind='asset' BEGIN SELECT RAISE(FAIL,'synthetic softlink asset failure'); END`); err != nil {
+				if _, err = a.Store.DB.Exec(`CREATE TRIGGER softlink_asset_fail BEFORE INSERT ON library_asset WHEN NEW.record_kind='asset' BEGIN SELECT RAISE(FAIL,'synthetic softlink asset failure'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}

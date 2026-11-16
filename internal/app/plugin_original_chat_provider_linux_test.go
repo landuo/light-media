@@ -688,7 +688,7 @@ func assertOriginalLarkUnscopedProviderDownload(t *testing.T, a *App, source, fi
 	ctx := t.Context()
 	const media = "tv:anilist:777"
 	var intentID string
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT id FROM records WHERE kind='intent'`).Scan(&intentID); err != nil {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT uid FROM downloadhistory WHERE 1=1`).Scan(&intentID); err != nil {
 		t.Fatal("no intent from explicit whole download", err)
 	}
 	var intent Intent
@@ -724,7 +724,7 @@ func assertOriginalLarkUnscopedProviderDownload(t *testing.T, a *App, source, fi
 		t.Fatalf("unscoped completion did not remain available for review: state=%s error=%q plan=%q read=%v", intent.State, intent.Error, intent.ImportPlanID, err)
 	}
 	var reservations, slots, assets int
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT (SELECT count(*) FROM reservations), (SELECT count(*) FROM asset_slots), (SELECT count(*) FROM records WHERE kind='asset')`).Scan(&reservations, &slots, &assets); err != nil ||
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT (SELECT count(*) FROM reservations), (SELECT count(*) FROM asset_slots), (SELECT count(*) FROM library_asset WHERE 1=1)`).Scan(&reservations, &slots, &assets); err != nil ||
 		reservations != 0 || slots != 0 || assets != 0 || adds.Load() != 1 || materials.Load() != 1 {
 		t.Fatalf("whole Add invented a scope or repeated a write: reservations=%d slots=%d assets=%d material=%d add=%d err=%v", reservations, slots, assets, materials.Load(), adds.Load(), err)
 	}
@@ -772,7 +772,7 @@ func assertOriginalLarkProviderRSSQualityAcceptance(t *testing.T, a *App, owner 
 			var live int
 			var eventKey string
 			if err = a.Store.DB.QueryRowContext(ctx, `SELECT
-				(SELECT count(*) FROM records WHERE kind='subscription' AND id=?),
+				(SELECT count(*) FROM subscribe WHERE uid=?),
 				(SELECT json_extract(payload,'$.media_id') FROM domain_events WHERE event_id=?)`, owner.ID,
 				domainEventID("subscription.completed", receipt.Identity.ID)).Scan(&live, &eventKey); err != nil || live != 0 || eventKey != key {
 				t.Fatalf("source retirement did not delete the exact subscription and commit its provider event: live=%d key=%q err=%v", live, eventKey, err)
@@ -866,7 +866,7 @@ func assertOriginalLarkNativeProviderDownload(t *testing.T, a *App, source, libr
 		provider, key = owner.Media.ProviderSource, mediaKey(owner.Media)
 	}
 	var intentID string
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT id FROM records WHERE kind='intent'`).Scan(&intentID); err != nil {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT uid FROM downloadhistory WHERE 1=1`).Scan(&intentID); err != nil {
 		t.Fatal("no durable provider intent after qB acceptance", err)
 	}
 	var intent Intent

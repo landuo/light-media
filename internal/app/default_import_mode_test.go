@@ -37,7 +37,7 @@ func TestLegacyGlobalModeLoadsAsHardlink(t *testing.T) {
 			legacy.AutoImportMode = oldMode
 			sealed, err := a.Store.Seal(legacy)
 			if err == nil {
-				_, err = a.Store.DB.Exec(`INSERT INTO records VALUES('config','main',?,?)`, sealed, now())
+				_, err = a.Store.DB.Exec(`INSERT INTO plugin_record VALUES('config','main',?,?)`, sealed, now())
 			}
 			closeErr := a.Close()
 			if err != nil || closeErr != nil {

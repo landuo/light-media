@@ -200,7 +200,7 @@ func TestSubscriptionQualityActualDirectoryOverwriteAndCoexistence(t *testing.T)
 					_ = tx.Rollback()
 					t.Fatal("actual new quality proof missing", er)
 				}
-				_, er = tx.ExecContext(ctx, `DELETE FROM records WHERE kind='directory_overwrite' AND id=?`, plan.ID+"/"+plan.Files[0].ID)
+				_, er = tx.ExecContext(ctx, `DELETE FROM directory_overwrite WHERE id=?`, plan.ID+"/"+plan.Files[0].ID)
 				if er == nil {
 					er = a.requireQualityDirectoryOverwriteTx(ctx, tx, plan, plan.Files[0], proof)
 				}
@@ -247,7 +247,7 @@ func TestSubscriptionQualityActualDirectoryOverwriteAndCoexistence(t *testing.T)
 				}
 			}
 			var cleanups int
-			a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='subscription_quality_cleanup'`).Scan(&cleanups)
+			a.Store.DB.QueryRow(`SELECT COUNT(*) FROM subscription_receipt WHERE 1=1`).Scan(&cleanups)
 			if cleanups != 0 {
 				t.Fatal("old slot cleanup bypasses per-file source policy", cleanups)
 			}

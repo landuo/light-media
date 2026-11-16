@@ -110,7 +110,7 @@ func (a *App) beginSubscriptionAcquisition(ctx context.Context, j Job, s Subscri
 		return nil, e
 	}
 	var count int
-	if e = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='intent' AND json_extract(payload,'$.subscription_acquisition')=?`, j.ID).Scan(&count); e != nil {
+	if e = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM downloadhistory WHERE json_extract(payload,'$.subscription_acquisition')=?`, j.ID).Scan(&count); e != nil {
 		return nil, e
 	}
 	if count != 0 {

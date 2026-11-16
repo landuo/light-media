@@ -77,7 +77,7 @@ func installSystemFailureSite(t *testing.T, a *App, kind, body string, gate func
 
 func systemErrorReceipts(t *testing.T, a *App) []siteSystemErrorReceipt {
 	t.Helper()
-	rows, err := a.Store.DB.Query(`SELECT id FROM records WHERE kind='site_system_error' ORDER BY rowid`)
+	rows, err := a.Store.DB.Query(`SELECT id FROM site_system_error ORDER BY rowid`)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -131,7 +131,7 @@ func completeOriginalDeferredScrapeTx(ctx context.Context, tx *sql.Tx, job Job, 
 func readOriginalScrapeBatch(ctx context.Context, tx *sql.Tx, key string) (originalScrapeBatch, error) {
 	var raw []byte
 	var batch originalScrapeBatch
-	err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='original_scrape_batch' AND id=?`, key).Scan(&raw)
+	err := tx.QueryRowContext(ctx, `SELECT payload FROM plugin_original_batch WHERE id=?`, key).Scan(&raw)
 	if err == nil {
 		err = json.Unmarshal(raw, &batch)
 	}
@@ -288,7 +288,7 @@ func (a *App) closeOriginalScrapeBatch(ctx context.Context, key string, close bo
 }
 
 func (a *App) recoverOriginalScrapeBatches(ctx context.Context) error {
-	rows, err := a.Store.DB.QueryContext(ctx, `SELECT id FROM records WHERE kind='original_scrape_batch' AND json_extract(payload,'$.flushed')=0 ORDER BY updated_at,id`)
+	rows, err := a.Store.DB.QueryContext(ctx, `SELECT id FROM plugin_original_batch WHERE json_extract(payload,'$.flushed')=0 ORDER BY updated_at,id`)
 	if err != nil {
 		return err
 	}

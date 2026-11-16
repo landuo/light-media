@@ -106,7 +106,7 @@ func TestSubscriptionWordsEditorRawRoundTripOmissionAndExplicitClear(t *testing.
 	// The private editor value must never become part of the ordinary core
 	// record, public outbox fact or even the decrypted added-event identity.
 	var core []byte
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='subscription' AND id=?`, sub.ID).Scan(&core); err != nil {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM subscribe WHERE uid=?`, sub.ID).Scan(&core); err != nil {
 		t.Fatal(err)
 	}
 	ordinary, _ := json.Marshal(sub)
@@ -127,7 +127,7 @@ func TestSubscriptionWordsEditorRawRoundTripOmissionAndExplicitClear(t *testing.
 	identity, _ := json.Marshal(snapshot)
 	outbox, _ := json.Marshal(page)
 	var sealedIdentity []byte
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='subscription_added' AND id=?`, added[0].EventID).Scan(&sealedIdentity); err != nil {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM subscription_event WHERE id=?`, added[0].EventID).Scan(&sealedIdentity); err != nil {
 		t.Fatal(err)
 	}
 	for name, raw := range map[string][]byte{"core row": core, "ordinary subscription JSON": ordinary, "outbox": outbox, "decrypted event identity": identity, "sealed event identity": sealedIdentity} {

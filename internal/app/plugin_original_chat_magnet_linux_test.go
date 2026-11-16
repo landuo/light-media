@@ -305,7 +305,7 @@ func testOriginalLarkChatMagnet(t *testing.T, mediaType string, multiSeason bool
 	click(session + selection)
 	next("开始下载", release)
 	var intentID string
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT id FROM records WHERE kind='intent'`).Scan(&intentID); err != nil {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT uid FROM downloadhistory WHERE 1=1`).Scan(&intentID); err != nil {
 		t.Fatal(err)
 	}
 	var intent Intent
@@ -317,7 +317,7 @@ func testOriginalLarkChatMagnet(t *testing.T, mediaType string, multiSeason bool
 		t.Fatal("listed single-season Add did not retain its exact episode scope")
 	}
 	var sealed []byte
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='material_blob' AND id=?`, intent.MaterialRef).Scan(&sealed); err != nil || bytes.Contains(sealed, []byte(privateMarker)) {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM material_blob WHERE id=?`, intent.MaterialRef).Scan(&sealed); err != nil || bytes.Contains(sealed, []byte(privateMarker)) {
 		t.Fatal("ordinary magnet material was not sealed", err)
 	}
 	material, err := a.resolveDownloadMaterial(ctx, intent.MaterialRef, materialPurpose, true)
@@ -420,7 +420,7 @@ func testOriginalLarkChatMagnet(t *testing.T, mediaType string, multiSeason bool
 			t.Fatal("completion rewrote the provisional Add proof", err)
 		}
 		var subscriptions int
-		if err = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='subscription'`).Scan(&subscriptions); err != nil || subscriptions != 0 {
+		if err = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM subscribe WHERE 1=1`).Scan(&subscriptions); err != nil || subscriptions != 0 {
 			t.Fatal("whole-pack acceptance created a fallback subscription", subscriptions, err)
 		}
 		t.Log("one unpaused magnet Add kept two fileless provisional seasons; a partial daemon inventory created no import, then the full inventory produced two scoped hardlinks")

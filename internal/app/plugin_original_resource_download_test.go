@@ -151,7 +151,7 @@ func TestOriginalDownloadContextPreservesPrivateSearchModelsThroughNativeBoundar
 		t.Fatal("actual encrypted search context", err)
 	}
 	var public []byte
-	if err = a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='resource' AND id=?`, resource.SiteID+":"+resource.ID).Scan(&public); err != nil || bytes.Contains(public, []byte("synthetic-private")) {
+	if err = a.Store.DB.QueryRow(`SELECT payload FROM cache_entry WHERE id=?`, resource.SiteID+":"+resource.ID).Scan(&public); err != nil || bytes.Contains(public, []byte("synthetic-private")) {
 		t.Fatal("private model exposed in public cache", err)
 	}
 	id := installOwnedTransferObserver(t, a, nil, nil)
@@ -186,7 +186,7 @@ func TestOriginalDownloadContextPreservesPrivateSearchModelsThroughNativeBoundar
 		}
 	}
 	var sealed []byte
-	if err = a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='download_context' AND id=?`, "search_resource:"+resource.SiteID+":"+resource.ID).Scan(&sealed); err != nil || json.Valid(sealed) || bytes.Contains(sealed, []byte("synthetic-private")) {
+	if err = a.Store.DB.QueryRow(`SELECT payload FROM download_context WHERE id=?`, "search_resource:"+resource.SiteID+":"+resource.ID).Scan(&sealed); err != nil || json.Valid(sealed) || bytes.Contains(sealed, []byte("synthetic-private")) {
 		t.Fatal("search context plaintext", err)
 	}
 	if err = a.cacheSearchResources(ctx, []sites.Resource{{ID: resource.ID, SiteID: resource.SiteID, Title: resource.Title}}, nil, 1, ""); err != nil {
@@ -269,7 +269,7 @@ func TestOriginalDownloadEventsActualNativeAddAndEncryptedContext(t *testing.T) 
 					t.Fatal("actual full download context", string(rows[1].Data))
 				}
 				var sealed []byte
-				if err = a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='download_context' AND id=?`, "native_download:"+native.ID).Scan(&sealed); err != nil || json.Valid(sealed) || bytes.Contains(sealed, []byte("synthetic-cookie")) {
+				if err = a.Store.DB.QueryRow(`SELECT payload FROM download_context WHERE id=?`, "native_download:"+native.ID).Scan(&sealed); err != nil || json.Valid(sealed) || bytes.Contains(sealed, []byte("synthetic-cookie")) {
 					t.Fatal("private download context leaked", err)
 				}
 				if err = a.runNativeDownload(context.Background(), job, native.ID); err != nil {

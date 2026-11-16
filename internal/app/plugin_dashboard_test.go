@@ -29,7 +29,7 @@ func TestPluginDashboardPreferencesEncryptedAuthProfilesAndCold(t *testing.T) {
 		t.Fatal("desktop leaked into mobile", w.Code)
 	}
 	var sealed []byte
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='plugin_dashboard_settings' AND id='desktop'`).Scan(&sealed); err != nil {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM plugin_record WHERE kind='plugin_dashboard_settings' AND id='desktop'`).Scan(&sealed); err != nil {
 		t.Fatal(err)
 	}
 	if strings.Contains(string(sealed), "SystemProcess") {

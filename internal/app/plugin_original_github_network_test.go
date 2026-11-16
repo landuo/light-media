@@ -97,7 +97,7 @@ func TestOriginalGitHubSettingsActualHTTPEncryptedPreservedAndSecretEvents(t *te
 		t.Fatal("credential change event did not carry key-only bulk semantics")
 	}
 	var sealed []byte
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&sealed); err != nil || bytes.Contains(sealed, []byte(token)) || bytes.Contains(sealed, []byte(repoToken)) {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed); err != nil || bytes.Contains(sealed, []byte(token)) || bytes.Contains(sealed, []byte(repoToken)) {
 		t.Fatal("credential configuration was not encrypted", err)
 	}
 	var decoded Settings

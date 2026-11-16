@@ -226,7 +226,7 @@ func TestCheckCompletedSubscriptionDoesNotSearchAgain(t *testing.T) {
 	}
 	var preparation, histories, stats int
 	a.Store.DB.QueryRow(`SELECT count(*) FROM jobs WHERE kind='subscription_completion_prepare' AND json_extract(payload,'$.id')=?`, s.ID).Scan(&preparation)
-	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription_history'`).Scan(&histories)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_record WHERE kind='subscription_history'`).Scan(&histories)
 	a.Store.DB.QueryRow(`SELECT count(*) FROM jobs WHERE kind='subscription_stats'`).Scan(&stats)
 	if preparation != 1 || histories != 0 || stats != 0 {
 		t.Fatal("coverage observation fabricated completion or duplicated preparation", preparation, histories, stats)

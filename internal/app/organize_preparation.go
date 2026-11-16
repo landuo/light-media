@@ -46,7 +46,7 @@ func (a *App) runOrganizePreparation(ctx context.Context, job Job) error {
 		return err
 	}
 	var committed bool
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE kind='organize_file_listing' AND id=?)`, job.ID).Scan(&committed); err != nil || committed {
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM organize_listing WHERE id=?)`, job.ID).Scan(&committed); err != nil || committed {
 		return err
 	}
 	ctx = context.WithValue(ctx, organizePreparationKey{}, job)
@@ -86,7 +86,7 @@ func (a *App) preparedOrganizeSources(ctx context.Context, jobID string, out *ma
 	rows, err := a.Store.DB.QueryContext(ctx, `SELECT json_extract(p.payload,'$.files[0].source'),
 			COALESCE(json_extract(p.payload,'$.files[0].history_source'),''), j.id,
 			COALESCE(json_extract(j.payload,'$.manual_preparation_failed'),0), j.error_message
-		FROM jobs j JOIN records p ON p.kind='import_plan' AND p.id=json_extract(j.payload,'$.id')
+		FROM jobs j JOIN import_plan p ON p.id=json_extract(j.payload,'$.id')
 		WHERE j.kind='import' AND json_extract(j.payload,'$._parent_job_id')=?`, jobID)
 	if err != nil {
 		return nil, nil, err

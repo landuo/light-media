@@ -109,7 +109,7 @@ func (a *App) transitionOriginalTransferTargetAt(ctx context.Context, job Job, p
 			return err
 		}
 		var count int
-		if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='asset' AND json_extract(payload,'$.path')=? AND json_extract(payload,'$.state') IN ('present','external')`, receipt.Target).Scan(&count); err != nil {
+		if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM library_asset WHERE json_extract(payload,'$.path')=? AND json_extract(payload,'$.state') IN ('present','external')`, receipt.Target).Scan(&count); err != nil {
 			return err
 		}
 		if count != 0 {

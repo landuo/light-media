@@ -356,11 +356,11 @@ func TestCompletedPackPollContinuesPastBadIntentAndRecentHistory(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if _, err := a.Store.DB.ExecContext(ctx, `UPDATE records SET updated_at=CASE id WHEN 'bad-intent' THEN '2026-02-01' ELSE '2026-01-01' END WHERE kind='intent'`); err != nil {
+	if _, err := a.Store.DB.ExecContext(ctx, `UPDATE downloadhistory SET updated_at=CASE uid WHEN 'bad-intent' THEN '2026-02-01' ELSE '2026-01-01' END WHERE 1=1`); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := a.Store.DB.ExecContext(ctx, `WITH RECURSIVE history(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM history WHERE n<500)
-		INSERT INTO records SELECT 'intent','historical-'||n,json_object('state','cancelled'),'2026-03-01' FROM history`); err != nil {
+		INSERT INTO plugin_record SELECT 'intent','historical-'||n,json_object('state','cancelled'),'2026-03-01' FROM history`); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.pollDownloads(ctx); err != nil {

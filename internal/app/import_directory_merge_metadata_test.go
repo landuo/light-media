@@ -46,7 +46,7 @@ func TestSharedDirectorySoftlinkLinkedNFOActualColdRebase(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = a.Store.DB.Exec(`CREATE TRIGGER shared_linked_nfo_fail BEFORE UPDATE ON records WHEN NEW.kind='managed_file' AND NEW.id='` + tokenHash(asset.Path) + `' BEGIN SELECT RAISE(FAIL,'shared linked NFO metadata interrupted'); END`); err != nil {
+	if _, err = a.Store.DB.Exec(`CREATE TRIGGER shared_linked_nfo_fail BEFORE UPDATE ON managed_file WHEN NEW.record_kind='managed_file' AND NEW.id='` + tokenHash(asset.Path) + `' BEGIN SELECT RAISE(FAIL,'shared linked NFO metadata interrupted'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, job.ID); err != nil {

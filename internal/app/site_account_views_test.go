@@ -107,12 +107,12 @@ func TestSiteAccountDailyFailuresAndRecoveryMatchOriginal(t *testing.T) {
 	// Successful collections must no longer erase unrelated history at 90 days.
 	old := ownedAccountObservation(t, a, site, "2026-01-01", "01:02:03", "", &seven)
 	ownedRecordAccount(t, a, site, old)
-	if _, err := a.Store.DB.Exec(`UPDATE records SET updated_at='2020-01-01T00:00:00Z' WHERE kind='site_stats_history'`); err != nil {
+	if _, err := a.Store.DB.Exec(`UPDATE site_statistic_event SET updated_at='2020-01-01T00:00:00Z' WHERE 1=1`); err != nil {
 		t.Fatal(err)
 	}
 	ownedRecordAccount(t, a, site, ownedAccountObservation(t, a, site, "2026-10-21", "12:00:00", "", &seven))
 	var count int
-	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='site_stats_history'`).Scan(&count); err != nil || count != 4 {
+	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM site_statistic_event WHERE 1=1`).Scan(&count); err != nil || count != 4 {
 		t.Fatal("history still pruned", count, err)
 	}
 }
@@ -128,7 +128,7 @@ func TestSiteAccountFirstHTTPFailureIsRecordedAndAtomic(t *testing.T) {
 	if err := a.saveSettings(ctx, config); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER reject_owned_history BEFORE INSERT ON records WHEN NEW.kind='site_stats_history' BEGIN SELECT RAISE(ABORT,'owned failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER reject_owned_history BEFORE INSERT ON site_statistic_event WHEN NEW.record_kind='site_stats_history' BEGIN SELECT RAISE(ABORT,'owned failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := a.collectManagedSite(ctx, site.ID, "", nil); err == nil {
@@ -165,7 +165,7 @@ func TestSiteAccountSnapshotEncryptionBindingAndLegacyRead(t *testing.T) {
 		t.Fatal(err)
 	}
 	var raw []byte
-	if err := s.DB.QueryRow(`SELECT payload FROM records WHERE kind='site_stats_latest' AND id='owned'`).Scan(&raw); err != nil {
+	if err := s.DB.QueryRow(`SELECT payload FROM sitestatistic WHERE uid='owned'`).Scan(&raw); err != nil {
 		t.Fatal(err)
 	}
 	if !bytes.HasPrefix(raw, []byte(siteAccountSnapshotPrefix)) || bytes.Contains(raw, []byte(snapshot.Stats.Username)) {
@@ -184,13 +184,13 @@ func TestSiteAccountSnapshotEncryptionBindingAndLegacyRead(t *testing.T) {
 		t.Fatal("modified native account accepted")
 	}
 	legacy, _ := json.Marshal(snapshot)
-	if _, err := s.DB.Exec(`UPDATE records SET payload=? WHERE kind='site_stats_latest' AND id='owned'`, legacy); err != nil {
+	if _, err := s.DB.Exec(`UPDATE sitestatistic SET payload=? WHERE uid='owned'`, legacy); err != nil {
 		t.Fatal(err)
 	}
 	if err := s.Get(ctx, "site_stats_latest", "owned", &read); err != nil || !reflect.DeepEqual(read, snapshot) {
 		t.Fatal("pre-upgrade snapshot unreadable", err)
 	}
-	if _, err := s.DB.Exec(`UPDATE records SET payload=? WHERE kind='site_stats_latest' AND id='owned'`, bad); err != nil {
+	if _, err := s.DB.Exec(`UPDATE sitestatistic SET payload=? WHERE uid='owned'`, bad); err != nil {
 		t.Fatal(err)
 	}
 	if s.Get(ctx, "site_stats_latest", "owned", &read) == nil {

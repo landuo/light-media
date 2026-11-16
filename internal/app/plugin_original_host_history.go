@@ -35,7 +35,7 @@ func (a *App) originalHostHistoryResource(ctx context.Context, scope originalBas
 			return json.Marshal(out)
 		}
 		var b []byte
-		err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='intent' AND json_extract(payload,'$.hash')=? ORDER BY json_extract(payload,'$.created_at') DESC,id DESC LIMIT 1`, in.Hash).Scan(&b)
+		err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE json_extract(payload,'$.hash')=? ORDER BY json_extract(payload,'$.created_at') DESC,uid DESC LIMIT 1`, in.Hash).Scan(&b)
 		out := plugins.DownloadHistoryResultV1{SchemaVersion: 1}
 		if errors.Is(err, sql.ErrNoRows) {
 			return json.Marshal(out)

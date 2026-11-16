@@ -200,7 +200,7 @@ func TestNativeSiteIdentityActualSaveRollbackIncludesMappingConfigAndDeleteCache
 	ctx := context.Background()
 	a := newTestApp(t)
 	cookie := setupTestAdmin(t, a)
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_identity_config_fail BEFORE INSERT ON records WHEN NEW.kind='config' BEGIN SELECT RAISE(ABORT,'owned config failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_identity_config_fail BEFORE INSERT ON systemconfig WHEN NEW.record_kind='config' BEGIN SELECT RAISE(ABORT,'owned config failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if identityHTTP(t, a, cookie, "POST", "/api/sites/manage", identityTestSite("Alpha", "alpha.example.com")) != 500 {
@@ -210,7 +210,7 @@ func TestNativeSiteIdentityActualSaveRollbackIncludesMappingConfigAndDeleteCache
 		t.Fatal("mapping escaped config rollback")
 	}
 	var n int
-	a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='config'`).Scan(&n)
+	a.Store.DB.QueryRow(`SELECT COUNT(*) FROM systemconfig WHERE 1=1`).Scan(&n)
 	if n != 0 {
 		t.Fatal("config persisted")
 	}
@@ -228,7 +228,7 @@ func TestNativeSiteIdentityActualSaveRollbackIncludesMappingConfigAndDeleteCache
 	if err := a.Store.Put(ctx, "site_connection", site.ID, map[string]string{"owned": "synthetic"}); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_identity_cache_fail BEFORE DELETE ON records WHEN OLD.kind='site_connection' BEGIN SELECT RAISE(ABORT,'owned cache failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_identity_cache_fail BEFORE DELETE ON site_state WHEN OLD.record_kind='site_connection' BEGIN SELECT RAISE(ABORT,'owned cache failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if identityHTTP(t, a, cookie, "DELETE", "/api/sites/manage/"+site.ID, nil) != 500 {
@@ -308,7 +308,7 @@ func TestNativeSiteIdentityExplicitOldSettingsBootstrapAndReadOnlyQueries(t *tes
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = store.DB.Exec(`INSERT INTO records VALUES('config','main',?,?)`, sealed, now()); err != nil {
+	if _, err = store.DB.Exec(`INSERT INTO plugin_record VALUES('config','main',?,?)`, sealed, now()); err != nil {
 		t.Fatal(err)
 	}
 	if _, err = store.nativeSiteByAppID(ctx, "legacy-a"); !errors.Is(err, sql.ErrNoRows) {

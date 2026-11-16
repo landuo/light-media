@@ -78,7 +78,7 @@ func TestOriginalTransferInfoConstructorActualSDKFallback(t *testing.T) {
 				t.Fatal("explicit nullable flag lost", observed)
 			}
 			var count int
-			if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='asset'`).Scan(&count); err != nil || count != map[bool]int{true: 1, false: 0}[invalid] {
+			if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM library_asset WHERE 1=1`).Scan(&count); err != nil || count != map[bool]int{true: 1, false: 0}[invalid] {
 				t.Fatal("actual constructor asset result", count, err)
 			}
 		})

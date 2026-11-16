@@ -55,7 +55,7 @@ func TestImportSoftlinkActualSDKSelectedSourceStorage(t *testing.T) {
 			job := overwriteStart(t, a, plan)
 			if branch == "cold-stage" {
 				key := plan.ID + "/" + plan.Files[0].ID
-				_, err = a.Store.DB.Exec(`CREATE TRIGGER storage_softlink_pause AFTER UPDATE ON records WHEN NEW.kind='import_receipt' AND NEW.id='` + key + `' AND json_extract(NEW.payload,'$.state')='planned' AND length(json_extract(NEW.payload,'$.storage_softlink.result'))>0 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE id='` + job.ID + `'; END`)
+				_, err = a.Store.DB.Exec(`CREATE TRIGGER storage_softlink_pause AFTER UPDATE ON import_receipt WHEN NEW.record_kind='import_receipt' AND NEW.id='` + key + `' AND json_extract(NEW.payload,'$.state')='planned' AND length(json_extract(NEW.payload,'$.storage_softlink.result'))>0 BEGIN UPDATE jobs SET state='cancelled',generation=generation+1 WHERE id='` + job.ID + `'; END`)
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -114,7 +114,7 @@ func TestImportSoftlinkActualSDKSelectedSourceStorage(t *testing.T) {
 			}
 			if !positive {
 				var assets int
-				if e := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='asset'`).Scan(&assets); e != nil || assets != 0 {
+				if e := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM library_asset WHERE 1=1`).Scan(&assets); e != nil || assets != 0 {
 					t.Fatal("counterfeit actor got asset", assets, e)
 				}
 				if _, e := os.Lstat(plan.Files[0].Target); !os.IsNotExist(e) {

@@ -149,9 +149,9 @@ func (a *App) importJobScope(ctx context.Context, job Job, native bool) *importA
 		return run
 	}
 	var special bool
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM records WHERE kind='subscription_quality_import' AND id=?1)
- OR EXISTS(SELECT 1 FROM records WHERE kind='directory_overwrite' AND id>=?2 AND id<?3)
- OR EXISTS(SELECT 1 FROM records WHERE kind='import_receipt' AND id>=?2 AND id<?3 AND json_extract(payload,'$.original_module_started')=1)`,
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM plugin_record WHERE kind='subscription_quality_import' AND id=?1)
+ OR EXISTS(SELECT 1 FROM directory_overwrite WHERE id>=?2 AND id<?3)
+ OR EXISTS(SELECT 1 FROM import_receipt WHERE id>=?2 AND id<?3 AND json_extract(payload,'$.original_module_started')=1)`,
 		plan.ID, plan.ID+"/", plan.ID+"0").Scan(&special); err != nil || special {
 		return run
 	}

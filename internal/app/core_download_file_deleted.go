@@ -112,7 +112,7 @@ func (a *App) historyDownloadIdentity(ctx context.Context, item transferHistoryI
 	if err != nil || accepted.DownloadKind != "intent" || accepted.DownloadID != in.ID || !sameHash(accepted.Hash, in.Hash) {
 		return out, coreDeleteInvalid()
 	}
-	if err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='download_added' AND id=?`, acceptedID).Scan(&sealed); err != nil {
+	if err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, acceptedID).Scan(&sealed); err != nil {
 		return out, err
 	}
 	return historyDownloadIdentity{Hash: accepted.Hash, AcceptedID: acceptedID, AcceptedDigest: coreDeleteDigest(sealed)}, nil
@@ -154,7 +154,7 @@ func (a *App) publishHistoryDownloadFileDeleted(ctx context.Context, item transf
 	}
 	defer tx.Rollback()
 	var old []byte
-	err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='history_download_file_event' AND id=?`, fact.ID).Scan(&old)
+	err = tx.QueryRowContext(ctx, `SELECT payload FROM download_file_event WHERE id=?`, fact.ID).Scan(&old)
 	if err == nil {
 		opened, e := a.pluginStore.unseal("history_download_file_event", "system", fact.ID, old)
 		var priorFact historyDownloadFileFact
@@ -192,7 +192,7 @@ func (a *App) publishHistoryDownloadFileDeleted(ctx context.Context, item transf
 	if prior != 0 {
 		return coreDeleteReview()
 	}
-	if _, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('history_download_file_event',?,?,?)`, fact.ID, sealed, now()); err != nil {
+	if _, err = tx.ExecContext(ctx, recordInsertSQL("history_download_file_event", recordTableForKind("history_download_file_event")), fact.ID, sealed, now()); err != nil {
 		return err
 	}
 	if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_download_file_events(file_event_id,instance_id,generation,sealed) VALUES(?,'system',1,?)`, fact.ID, sealed); err != nil {
@@ -235,7 +235,7 @@ func (p *PluginStore) historyDownloadFileFact(ctx context.Context, q pluginRemov
 		return f, coreDeleteInvalid()
 	}
 	var sealed, tableSealed []byte
-	if err := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='history_download_file_event' AND id=?`, key).Scan(&sealed); err != nil {
+	if err := q.QueryRowContext(ctx, `SELECT payload FROM download_file_event WHERE id=?`, key).Scan(&sealed); err != nil {
 		return f, err
 	}
 	if err := q.QueryRowContext(ctx, `SELECT sealed FROM plugin_download_file_events WHERE file_event_id=? AND instance_id='system' AND generation=1`, key).Scan(&tableSealed); err != nil {
@@ -270,7 +270,7 @@ func (p *PluginStore) historyDownloadFileFact(ctx context.Context, q pluginRemov
 		return f, err
 	}
 	var planRaw, removalRaw []byte
-	if err = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='import_plan' AND id=?`, f.PlanID).Scan(&planRaw); err != nil {
+	if err = q.QueryRowContext(ctx, `SELECT payload FROM import_plan WHERE id=?`, f.PlanID).Scan(&planRaw); err != nil {
 		return f, err
 	}
 	var plan ImportPlan
@@ -287,7 +287,7 @@ func (p *PluginStore) historyDownloadFileFact(ctx context.Context, q pluginRemov
 	if !matched {
 		return f, coreDeleteInvalid()
 	}
-	if err = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='history_source_removal' AND id=?`, f.FileID).Scan(&removalRaw); err != nil {
+	if err = q.QueryRowContext(ctx, `SELECT payload FROM history_receipt WHERE id=?`, f.FileID).Scan(&removalRaw); err != nil {
 		return f, err
 	}
 	var removal historySourceRemoval
@@ -299,7 +299,7 @@ func (p *PluginStore) historyDownloadFileFact(ctx context.Context, q pluginRemov
 		if f.Identity.AcceptedID != domainEventID("download.accepted", plan.IntentID) || plan.IntentID == "" {
 			return f, coreDeleteInvalid()
 		}
-		if err = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='download_added' AND id=?`, f.Identity.AcceptedID).Scan(&acceptedSealed); err != nil {
+		if err = q.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, f.Identity.AcceptedID).Scan(&acceptedSealed); err != nil {
 			return f, err
 		}
 		if coreDeleteDigest(acceptedSealed) != f.Identity.AcceptedDigest {
@@ -320,7 +320,7 @@ func (p *PluginStore) historyDownloadFileFact(ctx context.Context, q pluginRemov
 		if json.Unmarshal(eventRaw, &event) != nil || event.SubjectID != accepted.DownloadID || event.JobID != accepted.JobID || event.Type != "download.accepted" {
 			return f, coreDeleteInvalid()
 		}
-		if err = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='intent' AND id=?`, plan.IntentID).Scan(&intentRaw); err != nil {
+		if err = q.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, plan.IntentID).Scan(&intentRaw); err != nil {
 			return f, err
 		}
 		var in Intent
@@ -345,7 +345,7 @@ func (a *App) writeCoreDownloadRemoval(ctx context.Context, tx *sql.Tx, r coreDo
 	root := coreDownloadRemovalRoot{Version: 1, ID: r.ID, JobID: r.JobID, Digest: coreDeleteDigest(raw), Sequence: 1}
 	if initialize {
 		var prior int
-		if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE (kind IN ('core_download_removal','core_download_removal_root') AND id=?) OR (kind='core_download_removal_chain' AND substr(id,1,69)=?)`, r.ID, r.ID+":").Scan(&prior); err != nil {
+		if err = tx.QueryRowContext(ctx, `SELECT (SELECT COUNT(*) FROM download_removal_root WHERE id=?) + (SELECT COUNT(*) FROM download_removal_chain WHERE substr(id,1,69)=?)`, r.ID, r.ID+":").Scan(&prior); err != nil {
 			return err
 		}
 		if prior != 0 || r.State != "planned" {
@@ -354,7 +354,7 @@ func (a *App) writeCoreDownloadRemoval(ctx context.Context, tx *sql.Tx, r coreDo
 	} else {
 		var previousSealed []byte
 		var previous coreDownloadRemovalRoot
-		if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='core_download_removal_root' AND id=?`, r.ID).Scan(&previousSealed); err != nil {
+		if err = tx.QueryRowContext(ctx, `SELECT payload FROM download_removal_root WHERE id=?`, r.ID).Scan(&previousSealed); err != nil {
 			return coreDeleteReview()
 		}
 		previousRaw, e := a.pluginStore.unseal("core_download_removal_root", "system", r.ID, previousSealed)
@@ -371,7 +371,7 @@ func (a *App) writeCoreDownloadRemoval(ctx context.Context, tx *sql.Tx, r coreDo
 	if e != nil {
 		return e
 	}
-	if _, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('core_download_removal_chain',?,?,?)`, entryKey, entrySealed, now()); err != nil {
+	if _, err = tx.ExecContext(ctx, recordInsertSQL("core_download_removal_chain", recordTableForKind("core_download_removal_chain")), entryKey, entrySealed, now()); err != nil {
 		return err
 	}
 	root.Tip = coreDeleteDigest(entryRaw)
@@ -384,7 +384,8 @@ func (a *App) writeCoreDownloadRemoval(ctx context.Context, tx *sql.Tx, r coreDo
 		kind string
 		body []byte
 	}{{"core_download_removal", sealed}, {"core_download_removal_root", rootSealed}} {
-		if _, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, row.kind, r.ID, row.body, now()); err != nil {
+		table, _ := recordTableFor(row.kind)
+		if _, err = tx.ExecContext(ctx, recordInsertSQL(row.kind, table), r.ID, row.body, now()); err != nil {
 			return err
 		}
 	}
@@ -394,10 +395,10 @@ func (a *App) writeCoreDownloadRemoval(ctx context.Context, tx *sql.Tx, r coreDo
 func (a *App) readCoreDownloadRemoval(ctx context.Context, q pluginRemoveLinkJournalReader, key string) (coreDownloadRemoval, error) {
 	var r coreDownloadRemoval
 	var sealed, rootSealed []byte
-	if err := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='core_download_removal' AND id=?`, key).Scan(&sealed); err != nil {
+	if err := q.QueryRowContext(ctx, `SELECT payload FROM download_removal_root WHERE id=?`, key).Scan(&sealed); err != nil {
 		return r, coreDeleteReview()
 	}
-	if err := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='core_download_removal_root' AND id=?`, key).Scan(&rootSealed); err != nil {
+	if err := q.QueryRowContext(ctx, `SELECT payload FROM download_removal_root WHERE id=?`, key).Scan(&rootSealed); err != nil {
 		return r, coreDeleteReview()
 	}
 	raw, err := a.pluginStore.unseal("core_download_removal", "system", key, sealed)
@@ -416,7 +417,7 @@ func (a *App) readCoreDownloadRemoval(ctx context.Context, q pluginRemoveLinkJou
 		return r, coreDeleteReview()
 	}
 	var total int
-	if err = q.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='core_download_removal_chain' AND substr(id,1,69)=?`, key+":").Scan(&total); err != nil {
+	if err = q.QueryRowContext(ctx, `SELECT COUNT(*) FROM download_removal_chain WHERE substr(id,1,69)=?`, key+":").Scan(&total); err != nil {
 		return r, err
 	}
 	if int64(total) != root.Sequence {
@@ -426,7 +427,7 @@ func (a *App) readCoreDownloadRemoval(ctx context.Context, q pluginRemoveLinkJou
 	for sequence := int64(1); sequence <= root.Sequence; sequence++ {
 		entryKey := fmt.Sprintf("%s:%012d", key, sequence)
 		var entrySealed []byte
-		if err = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='core_download_removal_chain' AND id=?`, entryKey).Scan(&entrySealed); err != nil {
+		if err = q.QueryRowContext(ctx, `SELECT payload FROM download_removal_chain WHERE id=?`, entryKey).Scan(&entrySealed); err != nil {
 			return r, coreDeleteReview()
 		}
 		entryRaw, e := a.pluginStore.unseal("core_download_removal_chain", "system", entryKey, entrySealed)
@@ -762,7 +763,7 @@ func (a *App) historyDownloadTaskAuthorized(ctx context.Context, item transferHi
 
 func validateDownloadDeletedBackingTx(ctx context.Context, tx *sql.Tx, event DomainEvent) error {
 	var n int
-	err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM records r JOIN records a ON a.id=r.id AND a.kind='core_download_removal_root' WHERE r.kind='core_download_removal' AND r.id=?`, "hfe_"+event.DownloadDeletedID[4:]).Scan(&n)
+	err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM download_removal_root r JOIN download_removal_receipt a ON a.id=r.id WHERE r.id=?`, "hfe_"+event.DownloadDeletedID[4:]).Scan(&n)
 	if err != nil {
 		return err
 	}
@@ -796,7 +797,7 @@ func coreDeleteEndpointDigest(d DownloaderConfig) string {
 func (a *App) guardCoreDownloadUnknown(ctx context.Context, current coreDownloadRemoval, hash string) error {
 	after := ""
 	for {
-		rows, err := a.Store.DB.QueryContext(ctx, `SELECT id,payload FROM records WHERE kind='history_download_file_event' AND id>? ORDER BY id LIMIT 100`, after)
+		rows, err := a.Store.DB.QueryContext(ctx, `SELECT id,payload FROM download_file_event WHERE id>? ORDER BY id LIMIT 100`, after)
 		if err != nil {
 			return err
 		}

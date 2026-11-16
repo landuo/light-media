@@ -156,7 +156,7 @@ func verifyOwnedProductionCoreSiteDeleted(t *testing.T, dir string, request func
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = inspector.Store.DB.Exec(`CREATE TRIGGER owned_core_site_partial BEFORE UPDATE ON records WHEN NEW.kind='subscription' AND NEW.id='owned-core-site-2' BEGIN SELECT RAISE(ABORT,'owned second update failure'); END`); err != nil {
+	if _, err = inspector.Store.DB.Exec(`CREATE TRIGGER owned_core_site_partial BEFORE UPDATE ON subscribe WHEN NEW.record_kind='subscription' AND NEW.id='owned-core-site-2' BEGIN SELECT RAISE(ABORT,'owned second update failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if err = inspector.Close(); err != nil {

@@ -100,10 +100,10 @@ func TestOriginalResourceSelectionQualitySelectedContextColdRecovery(t *testing.
 		id = installOwnedTransferObserver(t, f.app, map[string]map[string]any{"resource.selection": {"updated": true, "updated_contexts": rows}}, nil, map[string]any{"mediainfo": full})
 	})
 	a := f.app
-	if _, err := a.Store.DB.Exec(`DELETE FROM records WHERE kind='cache' AND id='media:tv:206484'`); err != nil {
+	if _, err := a.Store.DB.Exec(`DELETE FROM cache_entry WHERE id='media:tv:206484'`); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_selection_intent_failure BEFORE INSERT ON records WHEN NEW.kind='intent' BEGIN SELECT RAISE(ABORT,'owned_selection_intent_failure'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_selection_intent_failure BEFORE INSERT ON downloadhistory WHEN NEW.record_kind='intent' BEGIN SELECT RAISE(ABORT,'owned_selection_intent_failure'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.safeRun(ctx, f.checkJob); err == nil || !strings.Contains(err.Error(), "owned_selection_intent_failure") || f.adds.Load() != 0 {

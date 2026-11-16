@@ -131,7 +131,7 @@ func TestNativeDownloadProducerFreezesContextAndEventAuthority(t *testing.T) {
 				}
 			}
 			var sealed []byte
-			if err = a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='download_added' AND id=?`, accepted.EventID).Scan(&sealed); err != nil || json.Valid(sealed) || bytes.Contains(sealed, []byte("FixtureTeam")) {
+			if err = a.Store.DB.QueryRow(`SELECT payload FROM downloadhistory WHERE uid=?`, accepted.EventID).Scan(&sealed); err != nil || json.Valid(sealed) || bytes.Contains(sealed, []byte("FixtureTeam")) {
 				t.Fatal("private Context stored in plaintext", err)
 			}
 		})
@@ -159,7 +159,7 @@ func TestNativeDownloadAcceptanceOutboxFailureReconcilesWithoutReadding(t *testi
 		t.Fatal("first actual add missing")
 	}
 	var snapshots int
-	if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind='download_added'`).Scan(&snapshots); err != nil || snapshots != 0 {
+	if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM downloadhistory WHERE 1=1`).Scan(&snapshots); err != nil || snapshots != 0 {
 		t.Fatal("snapshot escaped rollback", snapshots, err)
 	}
 	page, err := a.domainEvents(ctx, 0, 100)

@@ -39,7 +39,7 @@ func BenchmarkSubscriptionCoverageExclusions(b *testing.B) {
 		b.Fatal(err)
 	}
 	for i := 0; i < 10000; i++ {
-		if _, err = tx.Exec(`INSERT INTO records(kind,id,payload,updated_at) VALUES('exclusion',?,'{"blocked":true}','2026-01-01')`, fmt.Sprintf("tv:%d:1:1", i+100)); err != nil {
+		if _, err = tx.Exec(`INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES('exclusion',?,'{"blocked":true}','2026-01-01')`, fmt.Sprintf("tv:%d:1:1", i+100)); err != nil {
 			b.Fatal(err)
 		}
 	}
@@ -92,7 +92,7 @@ func TestSubscriptionCoverageExclusionRangeUsesExactSeasonAndIndex(t *testing.T)
 	if !reflect.DeepEqual(got.Excluded, []int{1}) || !reflect.DeepEqual(got.Missing, []int{2}) {
 		t.Fatalf("wrong exclusion scope: %+v", got)
 	}
-	rows, err := a.Store.reader().QueryContext(ctx, `EXPLAIN QUERY PLAN SELECT id,payload FROM records WHERE kind='exclusion' AND id>=? AND id<?`, "tv:42:1:", "tv:42:1;")
+	rows, err := a.Store.reader().QueryContext(ctx, `EXPLAIN QUERY PLAN SELECT id,payload FROM media_exclusion WHERE id>=? AND id<?`, "tv:42:1:", "tv:42:1;")
 	if err != nil {
 		t.Fatal(err)
 	}
