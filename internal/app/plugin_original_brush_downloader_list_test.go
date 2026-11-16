@@ -66,3 +66,31 @@ func TestOriginalDownloaderListBrushCheckAcceptsQBittorrent5Login(t *testing.T) 
 		t.Fatalf("check-phase list did not preserve the exact daemon task: login=%v listed=%v tasks=%v %v", login, listed, tasks.Tasks, err)
 	}
 }
+
+func TestOriginalBrushQBSourceLoginSelection(t *testing.T) {
+	enabled := true
+	a := &App{}
+	a.config.Downloaders = []DownloaderConfig{
+		{Config: download.Config{ID: "qb", Kind: "qb"}, Name: "qb", Enabled: &enabled},
+		{Config: download.Config{ID: "qbx", Kind: "qbittorrent"}, Name: "qbx", Enabled: &enabled},
+		{Config: download.Config{ID: "tr", Kind: "transmission"}, Name: "tr", Enabled: &enabled},
+	}
+	brush := &originalPluginInstance{installation: PluginInstallation{PluginID: "BrushFlowLanduo"}}
+	other := &originalPluginInstance{installation: PluginInstallation{PluginID: "Other"}}
+	for _, sample := range []struct {
+		name  string
+		scope originalBaseCallScope
+		id    string
+		want  bool
+	}{
+		{"brush-qb", originalBaseCallScope{object: brush, phase: "check"}, "qb", true},
+		{"brush-qbittorrent", originalBaseCallScope{object: brush, phase: "promotion_expiry"}, "qbx", true},
+		{"brush-transmission", originalBaseCallScope{object: brush, phase: "check"}, "tr", false},
+		{"other-qb", originalBaseCallScope{object: other, phase: "check"}, "qb", false},
+		{"missing", originalBaseCallScope{object: brush, phase: "check"}, "absent", false},
+	} {
+		if got := a.originalBrushQBSourceLogin(sample.scope, sample.id); got != sample.want {
+			t.Fatalf("%s: source login = %v, want %v", sample.name, got, sample.want)
+		}
+	}
+}

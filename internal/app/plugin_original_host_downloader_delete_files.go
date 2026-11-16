@@ -50,7 +50,7 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 	a.importMu.Lock()
 	defer a.importMu.Unlock()
 	phase("validate_and_delete")
-	reader, kind, baseGuard, err := a.originalHostDownloaderMutationClient(ctx, scope, request.DownloaderID)
+	reader, kind, baseGuard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, request.BrushOwnership && a.originalBrushQBSourceLogin(scope, request.DownloaderID))
 	if err != nil {
 		return nil, err
 	}
