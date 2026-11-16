@@ -475,6 +475,7 @@ func (a *App) guardDirectoryFilePlan(ctx context.Context, planID string) error {
 }
 
 func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, source string, fingerprints map[string]string, stored map[string]map[string]directoryDownloadFile) (map[string]directoryDownloadFile, map[string]string, error) {
+	settings := a.Settings()
 	out := map[string]directoryDownloadFile{}
 	configs := []DownloaderConfig{}
 	if rule.DownloaderID != "" {
@@ -484,7 +485,7 @@ func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, so
 		}
 		configs = append(configs, d)
 	} else {
-		for _, d := range a.Settings().Downloaders {
+		for _, d := range settings.Downloaders {
 			if !downloaderEnabled(d) {
 				rows, err := a.Store.DB.QueryContext(ctx, `SELECT json_extract(payload,'$.download_path') FROM downloadhistory WHERE json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state') NOT IN ('cancelled','imported')`, d.ID)
 				if err != nil {
@@ -500,7 +501,7 @@ func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, so
 					if path.String == "" {
 						path.String = d.DownloadPath
 					}
-					mapped, mapErr := mapDownloaderPath(a.Settings(), d, path.String)
+					mapped, mapErr := mapDownloaderPath(settings, d, path.String)
 					if mapErr == nil && (within(source, mapped) || within(mapped, source)) {
 						blocked = true
 					}
@@ -647,6 +648,7 @@ func directoryNativeHint(native NativeDownload) *importInferredMedia {
 // listing is needed. This is the single incremental state shared with the
 // filesystem side.
 func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfig, source string, fingerprints map[string]string, stored map[string]map[string]directoryDownloadFile) (map[string]directoryDownloadFile, map[string]string, error) {
+	settings := a.Settings()
 	out := map[string]directoryDownloadFile{}
 	next := map[string]string{}
 	for hash, fingerprint := range fingerprints {
@@ -690,7 +692,7 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 		if sharedPath != "" {
 			pathToCheck = sharedPath
 		}
-		mapped, e := mapDownloaderPath(a.Settings(), d, pathToCheck)
+		mapped, e := mapDownloaderPath(settings, d, pathToCheck)
 		if e != nil {
 			if within(source, t.DownloadDir) || within(t.DownloadDir, source) {
 				return nil, nil, bad("DIRECTORY_PATH_UNVERIFIED", "下载器路径不在应用容器可见目录内，本轮未整理")
@@ -732,7 +734,7 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 				if d.SharedPaths && !within(source, candidate) {
 					continue
 				}
-				path, err := mapDownloaderPath(a.Settings(), d, candidate)
+				path, err := mapDownloaderPath(settings, d, candidate)
 				if err != nil {
 					return nil, nil, err
 				}

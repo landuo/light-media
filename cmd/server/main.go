@@ -7,8 +7,10 @@ import (
 	"golang.org/x/sys/unix"
 	"light-media/internal/app"
 	"light-media/web"
+	"log"
 	"net"
 	"net/http"
+	"net/http/pprof"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -19,6 +21,25 @@ import (
 	_ "time/tzdata"
 )
 
+// startDebugListener exposes pprof on an explicitly configured address. It is
+// off by default so the public listener never carries profiling endpoints.
+func startDebugListener(addr string) {
+	addr = strings.TrimSpace(addr)
+	if addr == "" {
+		return
+	}
+	mux := http.NewServeMux()
+	mux.HandleFunc("/debug/pprof/", pprof.Index)
+	mux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+	mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
+	go func() {
+		log.Printf("debug listener on %s", addr)
+		_ = http.ListenAndServe(addr, mux)
+	}()
+}
+
 func main() {
 	var addr, dir string
 	var bootstrap, safe bool
@@ -27,6 +48,7 @@ func main() {
 	flag.BoolVar(&bootstrap, "bootstrap-stdin", false, "one-time encrypted configuration and administrator bootstrap from stdin")
 	flag.BoolVar(&safe, "safe", false, "start management without plugins, schedulers, monitors or automatic synchronization")
 	flag.Parse()
+	startDebugListener(os.Getenv("LIGHT_MEDIA_DEBUG_ADDR"))
 	absolute, e := filepath.Abs(dir)
 	if e != nil {
 		fatal("invalid_data_directory")

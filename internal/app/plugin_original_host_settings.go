@@ -368,5 +368,6 @@ func (a *App) originalHostInitializeMediaExtensions(lookup func(string) (string,
 		return err
 	}
 	a.config.RMTMediaExt = normalized
+	a.invalidateSettings()
 	return nil
 }

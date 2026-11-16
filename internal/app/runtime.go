@@ -105,6 +105,7 @@ type App struct {
 	web                              http.Handler
 	frontendVersion                  string
 	cfgMu                            sync.RWMutex
+	settingsCache                    atomic.Pointer[Settings] // Derived snapshot; invalidated on every config write.
 	settingsMu                       sync.Mutex
 	originalHostOCRHost              string // Immutable ordinary OCR_HOST startup snapshot; never exposed to workers.
 	originalHostBrowserEmulation     string
@@ -286,6 +287,7 @@ func New(opts Options) (*App, error) {
 	if a.config.LogLevel == "DEBUG" {
 		a.config.LogLevel = "INFO"
 	}
+	a.invalidateSettings()
 	a.logs, e = newRuntimeLogger(a)
 	if e != nil {
 		s.Close()
@@ -426,11 +428,18 @@ func (a *App) Close() error {
 	return a.Store.Close()
 }
 func (a *App) Settings() Settings {
+	// Settings is read on hot paths such as the directory monitor, where the
+	// JSON round trip and per-site credential decoding used to dominate CPU.
+	// The cached value is only read by callers; slices are never mutated in
+	// place, so sharing them keeps the copy cheap.
+	if cached := a.settingsCache.Load(); cached != nil {
+		return *cached
+	}
 	a.cfgMu.RLock()
-	defer a.cfgMu.RUnlock()
 	b, _ := json.Marshal(a.config)
 	var c Settings
 	_ = json.Unmarshal(b, &c)
+	a.cfgMu.RUnlock()
 	if c.PluginServerURL == nil {
 		value := originalPluginDefaultServerURL(os.LookupEnv)
 		c.PluginServerURL = &value
@@ -438,7 +447,13 @@ func (a *App) Settings() Settings {
 	if a.pluginMarketOverride != nil {
 		c.PluginMarkets = append([]string{}, (*a.pluginMarketOverride)...)
 	}
+	a.settingsCache.Store(&c)
 	return c
+}
+
+// invalidateSettings drops the derived snapshot after any config write.
+func (a *App) invalidateSettings() {
+	a.settingsCache.Store(nil)
 }
 func (a *App) saveSettings(ctx context.Context, c Settings) error {
 	a.pluginMu.Lock()
@@ -567,6 +582,7 @@ func (a *App) persistSettingsWithEffect(ctx context.Context, c Settings, effect 
 	a.cfgMu.Lock()
 	a.config = c
 	a.cfgMu.Unlock()
+	a.invalidateSettings()
 	a.reloadInitializedOriginalSourceConnections(ctx, previous.Downloaders, c.Downloaders)
 	a.emitStandardSiteDeletions(ctx, previous, c)
 	a.emitStandardPluginSettingsChanged(ctx, previous, a.Settings())

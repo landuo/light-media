@@ -657,10 +657,7 @@ func (a *App) browserMutationReferenceCheck(ctx context.Context, protectReferenc
 		identities[dir], identityErrors[dir] = value, err
 		return value, err
 	}
-	return func(path string) error {
-		if err := ctx.Err(); err != nil {
-			return err
-		}
+	check := func(path string) error {
 		contains := func(referenced string) bool {
 			return referenced != "" && sharedDirectoryContainsWithIdentity(path, referenced, identity)
 		}
@@ -695,6 +692,21 @@ func (a *App) browserMutationReferenceCheck(ctx context.Context, protectReferenc
 			}
 		}
 		return nil
+	}
+	// A delete-files batch checks each path twice (snapshot and dispatch guard)
+	// and may repeat paths across facts. The reference set is fixed for this
+	// closure, so a repeated path keeps the same answer.
+	checked := map[string]error{}
+	return func(path string) error {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+		if result, ok := checked[path]; ok {
+			return result
+		}
+		result := check(path)
+		checked[path] = result
+		return result
 	}, nil
 }
 func browserManifest(ctx context.Context, path string) ([]browserStamp, error) {
