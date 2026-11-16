@@ -263,7 +263,7 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 				}
 			}
 		}
-		client, kind, guard, err := a.originalHostDownloaderMutationClient(ctx, scope, request.DownloaderID)
+		client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, a.originalBrushQBSourceLogin(scope, request.DownloaderID))
 		if err != nil {
 			return nil, err
 		}
@@ -504,7 +504,7 @@ func (a *App) originalHostDownloaderControlOutcome(ctx context.Context, scope or
 }
 
 func (a *App) originalHostDownloaderTags(ctx context.Context, scope originalBaseCallScope, request plugins.DownloaderTagsRequestV1) (json.RawMessage, error) {
-	client, kind, guard, err := a.originalHostDownloaderClient(ctx, scope, request.DownloaderID)
+	client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, a.originalBrushQBSourceLogin(scope, request.DownloaderID))
 	if err != nil {
 		return nil, err
 	}
