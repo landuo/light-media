@@ -871,8 +871,14 @@ func (a *App) recordSubscriptionCheck(ctx context.Context, s Subscription, reaso
 	return a.Store.Put(ctx, "subscription", s.ID, current)
 }
 
-func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision int) error {
-	ctx, err := a.originalChatPausedSearchFromJob(ctx, j, key, revision)
+func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision int) (err error) {
+	phase := "start"
+	defer func() {
+		if err != nil && strings.Contains(err.Error(), "no rows") {
+			err = fmt.Errorf("chk[%s]: %w", phase, err)
+		}
+	}()
+	ctx, err = a.originalChatPausedSearchFromJob(ctx, j, key, revision)
 	if err != nil {
 		return err
 	}
@@ -901,6 +907,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	if s.BestVersion {
 		return a.checkQualitySubscription(ctx, j, s)
 	}
+	phase = "rss-own"
 	rssOrdinary, err := a.originalChatRSSOwnsSearch(ctx, a.Store.DB, j, s)
 	if err != nil {
 		return err
@@ -911,6 +918,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	if ownedOrdinary {
 		// A pristine queued child owns reservations already. Resolve it before
 		// coverage could otherwise make the parent skip it after a restart.
+		phase = "resume-downloads"
 		recovered, recoveredRejections, err = a.resumeOrdinarySearchDownloads(ctx, j, s)
 		if err != nil {
 			return err
@@ -926,6 +934,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		if e := a.guardSubscriptionContext(ctx); e != nil {
 			return e
 		}
+		phase = "season"
 		season, err = a.season(ctx, s.Media.ID, s.Season)
 		if err != nil {
 			_ = a.recordSubscriptionCheck(ctx, s, "元数据暂不可用，下次继续检查", nil)
@@ -933,6 +942,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		}
 	}
 	episodeScope := s
+	phase = "completion-scope"
 	s, resolved, e := a.refreshOrdinaryCompletionScopeResolved(ctx, s)
 	if e != nil {
 		var apiErr *APIError
@@ -1048,6 +1058,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	// that snapshot below; per-episode download admission must not rerun plugin
 	// recognition, batch search, filter mutations or MediaInfo.clear.
 	sharedRequest := SearchRequest{originalSubscription: &s, originalSearchInfo: originalSearchInfo, Query: query, MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: searchEpisodes, Policy: s.Policy, SiteIDs: selectedSiteIDs, Mappings: s.Mappings, AllowEarly: s.AllowEarly, EpisodeDates: dates}
+	phase = "search"
 	result, searchErr := a.originalSubscriptionCandidates(ctx, sharedRequest)
 	if searchErr != nil {
 		// A failed aggregate/filter result is diagnostic, not an admitted
@@ -1191,6 +1202,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 				if active {
 					continue
 				}
+				phase = "preview"
 				preview, e := a.previewDownload(ctx, PreviewRequest{SearchRequest: previewRequest, sourceContext: candidate.originalSelectionContext, sourceMeta: candidate.originalSelectionMeta, subscriptionFailureFingerprint: fingerprint, automaticSeasonPack: pack, SiteID: site.ID, ResourceID: candidate.Resource.ID, DownloaderID: s.DownloaderID, RootID: subscriptionLegacyRoot(s), DirectoryID: s.DirectoryID, DownloadPath: s.DownloadPath, SubscriptionID: s.ID, Revision: s.Revision}, true)
 				if e != nil {
 					if sites.IsSubscriptionMaterialFailure(e) {
@@ -1215,6 +1227,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 				if ownedOrdinary {
 					intent, e = a.confirmOrdinarySearchDownload(ctx, j, preview.ID)
 				} else {
+					phase = "confirm"
 					intent, e = a.confirmDownload(ctx, preview.ID, false)
 				}
 				if e != nil {

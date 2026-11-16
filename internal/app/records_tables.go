@@ -1,6 +1,8 @@
 package app
 
 import (
+	"context"
+	"database/sql"
 	"sort"
 	"strings"
 )
@@ -391,7 +393,7 @@ var recordKinds = map[string]string{
 	// Download domain.
 	"intent":                     "downloadhistory",
 	"native_download":            "downloadhistory",
-	"download_added":             "downloadhistory",
+	"download_added":             "download_accepted",
 	"download_review":            "download_preview",
 	"download_preview":           "download_preview",
 	"download_season_scope":      "download_selection",
@@ -795,4 +797,15 @@ var mpCols = map[string][]recordColumn{
 		{"credential_id", "$.credential_id", "TEXT", ""}, {"public_key", "$.public_key", "TEXT", ""},
 		{"sign_count", "$.sign_count", "INTEGER", ""}, {"name", "$.name", "TEXT", ""},
 	},
+}
+
+// recordReadRow resolves a record kind to its feature table, or to the sealed
+// plugin namespace for kinds without a mapping.
+func recordReadRow(ctx context.Context, q interface {
+	QueryRowContext(context.Context, string, ...any) *sql.Row
+}, kind, key string) *sql.Row {
+	if t := recordTableForKind(kind); t.name != "" {
+		return q.QueryRowContext(ctx, `SELECT payload FROM `+t.name+` WHERE `+recordKeyColumn(t)+`=?`, key)
+	}
+	return q.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, kind, key)
 }

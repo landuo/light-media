@@ -59,7 +59,7 @@ func qualityImportSHA(plan ImportPlan) string {
 }
 func (a *App) readQualitySealed(ctx context.Context, q qualityReader, kind, id string, out any) error {
 	var sealed []byte
-	if e := q.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, kind, id).Scan(&sealed); e != nil {
+	if e := recordReadRow(ctx, q, kind, id).Scan(&sealed); e != nil {
 		return e
 	}
 	raw, e := a.pluginStore.unseal(kind, "system", id, sealed)
@@ -71,6 +71,10 @@ func (a *App) readQualitySealed(ctx context.Context, q qualityReader, kind, id s
 func (a *App) writeQualitySealedTx(ctx context.Context, tx *sql.Tx, kind, id string, value any) error {
 	sealed, e := a.pluginStore.seal(kind, "system", id, mustCleanSeedJSON(value))
 	if e != nil {
+		return e
+	}
+	if t := recordTableForKind(kind); t.name != "" {
+		_, e = tx.ExecContext(ctx, recordInsertSQL(kind, t), id, sealed, now())
 		return e
 	}
 	_, e = tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, id, sealed, now())

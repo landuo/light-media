@@ -37,8 +37,10 @@ type qualityDownloadSnapshot struct {
 }
 
 func qualityRecord(ctx context.Context, q qualityReader, kind, key string, value any) error {
+	// Follow the same table mapping as Store: mapped kinds live in their
+	// feature table, only unmapped ones stay in plugin_record.
 	var raw []byte
-	if e := q.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, kind, key).Scan(&raw); e != nil {
+	if e := recordReadRow(ctx, q, kind, key).Scan(&raw); e != nil {
 		return e
 	}
 	return json.Unmarshal(raw, value)
