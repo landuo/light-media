@@ -441,14 +441,12 @@ var recordKinds = map[string]string{
 	"core_download_removal_chain": "download_removal_chain",
 
 	// Plugin compatibility state.
-	"original_transfer_callback":        "plugin_original_callback",
-	"original_transfer_task_failures":   "plugin_original_failure",
-	"original_scrape_batch":             "plugin_original_batch",
-	"original_metadata_directory":       "plugin_original_directory",
-	"plugin_host_tmdb_cache":            "plugin_host_state",
-	"plugin_host_media_recognize_count": "plugin_host_state",
-	"plugin_host_setting_presence":      "plugin_host_state",
-	"core_settings_lifecycle":           "settings_lifecycle",
+	"original_transfer_callback":      "plugin_original_callback",
+	"original_transfer_task_failures": "plugin_original_failure",
+	"original_scrape_batch":           "plugin_original_batch",
+	"original_metadata_directory":     "plugin_original_directory",
+	"plugin_host_tmdb_cache":          "plugin_host_state",
+	"core_settings_lifecycle":         "settings_lifecycle",
 
 	// MoviePilot tables written directly by the settings/auth paths.
 	"user": "user",

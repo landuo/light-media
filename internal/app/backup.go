@@ -188,7 +188,8 @@ func ApplyPendingRestore(dir string) error {
 	}
 	defer newDB.Close()
 	paused, _ := json.Marshal(map[string]string{"state": "paused"})
-	_, e = newDB.Exec(`INSERT INTO plugin_record VALUES('control','global',?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, paused, now())
+	controlTable := recordTableForKind("control")
+	_, e = newDB.Exec(recordInsertSQL("control", controlTable), "global", paused, now())
 	if e != nil {
 		return e
 	}

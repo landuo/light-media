@@ -9,7 +9,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 	"time"
 
@@ -339,20 +338,15 @@ func (a *App) originalHostMediaShareIncrement(ctx context.Context) error {
 		return err
 	}
 	defer tx.Rollback()
-	var raw []byte
-	err = tx.QueryRowContext(ctx, `SELECT payload FROM plugin_host_state WHERE id='main'`).Scan(&raw)
+	var count int64
+	err = qualityRecord(ctx, tx, "plugin_host_media_recognize_count", "main", &count)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return err
-	}
-	count := int64(0)
-	if len(raw) > 0 && json.Unmarshal(raw, &count) != nil {
-		return errors.New("invalid recognize share counter")
 	}
 	if count == int64(^uint64(0)>>1) {
 		return errors.New("recognize share counter overflow")
 	}
-	_, err = tx.ExecContext(ctx, recordInsertSQL("plugin_host_media_recognize_count", recordTableForKind("plugin_host_media_recognize_count")), "main", []byte(strconv.FormatInt(count+1, 10)), now())
-	if err != nil {
+	if err = txPut(ctx, tx, "plugin_host_media_recognize_count", "main", count+1); err != nil {
 		return err
 	}
 	return tx.Commit()
