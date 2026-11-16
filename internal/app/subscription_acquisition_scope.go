@@ -119,7 +119,7 @@ func txPutRaw(ctx context.Context, tx *sql.Tx, kind, key string, b []byte) error
 func (a *App) readAcquisition(ctx context.Context, q qualityReader, key string) (subscriptionAcquisition, error) {
 	var r subscriptionAcquisition
 	var sealed []byte
-	e := q.QueryRowContext(ctx, `SELECT payload FROM subscription_acquisition WHERE id=?`, key).Scan(&sealed)
+	e := q.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind='subscription_acquisition' AND id=?`, key).Scan(&sealed)
 	if e != nil {
 		return r, e
 	}

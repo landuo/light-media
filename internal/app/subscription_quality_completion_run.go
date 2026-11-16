@@ -77,7 +77,7 @@ func (a *App) enqueueQualityCompletionForTx(ctx context.Context, tx *sql.Tx, s S
 }
 
 func (a *App) completionAcceptedClosure(ctx context.Context, q qualityReader, s Subscription) ([]subscriptionCompletionAccepted, error) {
-	rows, e := q.QueryContext(ctx, `SELECT id,payload FROM subscription_receipt ORDER BY id`)
+	rows, e := q.QueryContext(ctx, `SELECT id,payload FROM plugin_record WHERE kind='subscription_quality_accepted' ORDER BY id`)
 	if e != nil {
 		return nil, e
 	}

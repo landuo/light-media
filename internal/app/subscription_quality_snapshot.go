@@ -244,7 +244,7 @@ func (a *App) saveQualitySnapshotTx(ctx context.Context, tx *sql.Tx, p *qualityD
 func (a *App) qualitySnapshot(ctx context.Context, q qualityReader, kind, key, hash string) (*qualityDownloadSnapshot, error) {
 	identity := kind + ":" + key
 	var sealed []byte
-	e := q.QueryRowContext(ctx, `SELECT payload FROM subscription_receipt WHERE id=?`, identity).Scan(&sealed)
+	e := q.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind='subscription_quality_download' AND id=?`, identity).Scan(&sealed)
 	if errors.Is(e, sql.ErrNoRows) {
 		return nil, nil
 	}

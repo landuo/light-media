@@ -76,7 +76,7 @@ func (a *App) applySubscriptionQualityDefaults(ctx context.Context, in *Subscrip
 	if defaults == nil {
 		environment := subscriptiondefaults.Object{}
 		var sealed []byte
-		e := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM subscription_origin WHERE id='main'`).Scan(&sealed)
+		e := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind='source_subscription_environment' AND id='main'`).Scan(&sealed)
 		if e == nil {
 			raw, e := a.pluginStore.unseal("source_subscription_environment", "system", "main", sealed)
 			if e != nil {

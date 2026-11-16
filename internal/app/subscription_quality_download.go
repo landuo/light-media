@@ -101,7 +101,7 @@ func (a *App) acceptSubscriptionQualityTx(ctx context.Context, tx *sql.Tx, in In
 		fact.Disposition = "existing_hash"
 	}
 	var existing []byte
-	err = tx.QueryRowContext(ctx, `SELECT payload FROM subscription_receipt WHERE id=?`, in.ID).Scan(&existing)
+	err = tx.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind='subscription_quality_accepted' AND id=?`, in.ID).Scan(&existing)
 	if err == nil {
 		raw, e := a.pluginStore.unseal("subscription_quality_accepted", "system", in.ID, existing)
 		if e != nil {

@@ -151,3 +151,26 @@ func TestNoLegacyRecordsReferences(t *testing.T) {
 		}
 	}
 }
+
+// TestNoOrphanSealedTables catches the failure mode found on the production
+// deployment: a kind whose rows live in plugin_record but whose readers still
+// query the dedicated table, which is empty.
+func TestNoOrphanSealedTables(t *testing.T) {
+	files, _ := filepath.Glob("../app/*.go")
+	orphan := regexp.MustCompile(`\b(FROM|JOIN)\s+(subscription_origin|subscription_acquisition|subscription_receipt)\b`)
+	for _, file := range files {
+		body, err := os.ReadFile(file)
+		if err != nil {
+			t.Fatal(err)
+		}
+		base := filepath.Base(file)
+		if strings.HasSuffix(base, "_test.go") {
+			continue
+		}
+		for i, line := range strings.Split(string(body), "\n") {
+			if orphan.MatchString(line) {
+				t.Errorf("%s:%d reads a table that no kind maps to: %s", base, i+1, strings.TrimSpace(line))
+			}
+		}
+	}
+}

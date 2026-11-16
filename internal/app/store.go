@@ -274,7 +274,7 @@ func (s *Store) Get(ctx context.Context, kind, key string, dst any) error {
 	}
 	e := s.reader().QueryRowContext(ctx, `SELECT payload FROM `+t.name+` WHERE `+recordKeyColumn(t)+`=?`, key).Scan(&b)
 	if e != nil {
-		return e
+		return fmt.Errorf("record %s/%s: %w", kind, key, e)
 	}
 	if siteAccountSnapshotKind(kind) {
 		return s.openSiteAccountSnapshot(kind, key, b, dst)

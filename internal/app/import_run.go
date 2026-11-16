@@ -888,7 +888,7 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 				return err
 			}
 			var qualityCleanupCount int
-			if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM subscription_receipt WHERE id=?`, plan.ID+"/"+file.ID).Scan(&qualityCleanupCount); err != nil {
+			if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_record WHERE kind='subscription_quality_import' AND id=?`, plan.ID+"/"+file.ID).Scan(&qualityCleanupCount); err != nil {
 				return err
 			}
 			if wantsScrape {

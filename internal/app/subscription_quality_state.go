@@ -79,7 +79,7 @@ func (a *App) subscriptionQualitySourceStateFrom(ctx context.Context, q PluginPr
 		return state, nil
 	}
 	var sealed []byte
-	if e := q.QueryRowContext(ctx, `SELECT payload FROM subscription_origin WHERE id=?`, s.ID).Scan(&sealed); e != nil {
+	if e := q.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind='source_subscription_origin' AND id=?`, s.ID).Scan(&sealed); e != nil {
 		return state, e
 	}
 	raw, e := a.pluginStore.unseal("source_subscription_origin", "system", s.ID, sealed)
