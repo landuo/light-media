@@ -1,0 +1,66 @@
+光影启动自更新（程序本体）
+================================
+
+与 MoviePilot 的 app/cli.py `_best_effort_auto_update` 对齐：**监听端口之前**检查并安装更新，
+失败一律继续用当前版本启动，绝不阻塞服务。
+
+流程
+----
+1. 读 `LIGHT_MEDIA_AUTO_UPDATE`（缺省回退 `MOVIEPILOT_AUTO_UPDATE`）；
+   `release` / `true` / 空 = 开启，`off` / `false` / `0` = 关闭。
+2. GET release feed（默认 `https://api.github.com/repos/landuo/light-media/releases`，
+   可用 `LIGHT_MEDIA_UPDATE_RELEASES` 覆盖）。超时 15 s，整体预算 30 s。
+3. 只在**同一主版本系列**内挑选，且版本号必须严格高于当前编译版本；跳过
+   draft / prerelease。
+4. 下载二进制与校验文件，**sha256 必须匹配**，否则不安装。
+5. 原子写入 `<data-dir>/bin/light-media-server-<version>`（0755），
+   然后 `syscall.Exec` 自身，带 `LIGHT_MEDIA_UPDATED_TO=<tag>` 标记防重入。
+6. 任一步失败：写一条 stderr JSON（`startup_update_failed`）后继续启动。
+
+发布侧契约（仓库目前没有任何 release，需先补齐）
+----------------------------------------------
+Tag 形如 `v0.5.0`。每个 release 必须提供：
+
+| 资产名 | 说明 |
+|---|---|
+| `light-media-server-linux-arm64` | 目标二进制（与 GOOS/GOARCH 对应） |
+| `light-media-server-linux-arm64.sha256` | 校验文件；也可命名为 `SHA256SUMS` / `checksums.txt` |
+| `light-media-server-linux-amd64` + 同名 `.sha256` | amd64 版本（按需） |
+
+校验文件格式支持三种：`<hash>  <文件名>`、`<hash> *<文件名>`、仅一行 `<hash>`。
+
+没有 release 时行为
+------------------
+feed 返回空数组 → 记录 `startup_update_skipped`（reason=`no_release_for_platform`），
+照常启动。因此该功能可以在未发布 artifacts 前先上线，不会产生副作用。
+
+容器部署注意
+------------
+容器的 `/app/light-media-server` 是只读 bind mount，进程无法覆盖它。因此新版本
+装在 `<data-dir>/bin/`（即 NAS 上 `/vol1/1000/docker/light-media/data/bin/`），
+由 `syscall.Exec` 切换过去；`/app` 里那份只作引导。
+
+这意味着：
+
+- 手工部署（换挂载文件）仍有效：新挂载版本高于本地 bin 时照常启动，自更新只在
+  feed 有更高版本时接管。
+- 容器重启会回到引导二进制，再按 feed 与本地 bin 重新判断一次；结果一致，不会循环
+  （`LIGHT_MEDIA_UPDATED_TO` 标记只在 exec 后的进程内有效）。
+- 回滚：删掉 `<data-dir>/bin/light-media-server-*`，或把 `LIGHT_MEDIA_AUTO_UPDATE=off`
+  后重启，即回到挂载版本。
+
+环境变量
+--------
+| 变量 | 作用 |
+|---|---|
+| `LIGHT_MEDIA_AUTO_UPDATE` | `release`（默认）/ `off` |
+| `MOVIEPILOT_AUTO_UPDATE` | 兼容原版设置名，作为回退 |
+| `LIGHT_MEDIA_UPDATE_RELEASES` | 覆盖 feed 地址（自建镜像或内网存档） |
+| `LIGHT_MEDIA_UPDATE_TOKEN` / `GITHUB_TOKEN` | 私有 feed 的 Bearer token |
+| `HTTP_PROXY` / `HTTPS_PROXY` | 沿用标准代理，容器已配置 |
+
+测试
+----
+`internal/selfupdate` 覆盖：同系列升级安装、同版本/降级/跨主版本跳过、
+校验不匹配不落盘、缺校验资产不收、关闭模式不访问网络、feed 不可达、
+重入标记、版本比较。`cmd/server` 覆盖环境变量到选项的映射与回退。

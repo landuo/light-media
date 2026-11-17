@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"golang.org/x/sys/unix"
 	"light-media/internal/app"
+	"light-media/internal/selfupdate"
 	"light-media/web"
 	"log"
 	"net"
@@ -14,6 +15,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"syscall"
@@ -65,6 +67,13 @@ func main() {
 	}
 	if e = os.MkdirAll(absolute, 0700); e != nil {
 		fatal("data_directory_unavailable")
+	}
+	// Source startup updates the install before the service binds. The check is
+	// best effort: a stale feed or a rejected artifact must never block startup.
+	// The container mounts /app read-only, so the artifact is installed under the
+	// data directory and this process re-executes from there.
+	if e = applyStartupUpdate(absolute); e != nil {
+		fmt.Fprintf(os.Stderr, `{"level":"WARN","event":"startup_update_failed","reason":%q}`+"\n", e.Error())
 	}
 	large, e := bigMemoryMode(os.LookupEnv)
 	if e != nil {
@@ -223,4 +232,53 @@ func pluginMarketEnvironment(lookup func(string) (string, bool)) *[]string {
 		}
 	}
 	return &sources
+}
+
+// applyStartupUpdate mirrors the source startup update: check the project's own
+// release feed, install a verified newer build, then re-execute it. When it
+// returns nil the process keeps running the current build.
+// startupUpdateOptions maps the startup environment onto the updater. It is a
+// pure function so the wiring stays testable without touching the network.
+func startupUpdateOptions(dataDir string, lookup func(string) (string, bool)) selfupdate.Options {
+	get := func(key string) string {
+		value, _ := lookup(key)
+		return value
+	}
+	mode := get("LIGHT_MEDIA_AUTO_UPDATE")
+	if mode == "" {
+		mode = get("MOVIEPILOT_AUTO_UPDATE")
+	}
+	token := get("LIGHT_MEDIA_UPDATE_TOKEN")
+	if token == "" {
+		token = get("GITHUB_TOKEN")
+	}
+	return selfupdate.Options{
+		Mode:           mode,
+		CurrentVersion: app.Version(),
+		ReleasesURL:    get("LIGHT_MEDIA_UPDATE_RELEASES"),
+		DataDir:        dataDir,
+		GOOS:           runtime.GOOS,
+		GOARCH:         runtime.GOARCH,
+		Token:          token,
+		Logf: func(format string, args ...any) {
+			fmt.Fprintf(os.Stderr, format+"\n", args...)
+		},
+	}
+}
+
+func applyStartupUpdate(dataDir string) error {
+	opts := startupUpdateOptions(dataDir, os.LookupEnv)
+	if !selfupdate.ModeEnabled(opts.Mode) {
+		return nil
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	outcome, err := selfupdate.Run(ctx, opts)
+	if err != nil {
+		return err
+	}
+	if outcome.Checked && outcome.Installed == "" {
+		fmt.Fprintf(os.Stderr, `{"level":"INFO","event":"startup_update_skipped","reason":%q}`+"\n", outcome.Reason)
+	}
+	return nil
 }

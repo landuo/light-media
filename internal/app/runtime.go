@@ -173,6 +173,10 @@ type Options struct {
 
 const appVersion = "0.4.19"
 
+// Version reports the compiled application version. The startup updater needs
+// it before any App exists.
+func Version() string { return appVersion }
+
 type APIError struct {
 	Code    string `json:"code"`
 	Message string `json:"message"`
