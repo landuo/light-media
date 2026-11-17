@@ -97,12 +97,13 @@ func (a *App) updateStatus() map[string]any {
 		Execed    bool   `json:"execed"`
 		Reason    string `json:"reason"`
 		Error     string `json:"error"`
+		Proxy     string `json:"proxy"`
 	}
 	if json.Unmarshal(raw, &record) != nil {
 		return nil
 	}
 	out := map[string]any{"time": record.Time, "checked": record.Checked, "current_version": record.Current}
-	for key, value := range map[string]string{"tag": record.Tag, "reason": record.Reason, "installed": record.Installed} {
+	for key, value := range map[string]string{"tag": record.Tag, "reason": record.Reason, "installed": record.Installed, "proxy": record.Proxy} {
 		if value != "" {
 			out[key] = value
 		}
