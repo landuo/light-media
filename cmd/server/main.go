@@ -286,11 +286,11 @@ func applyStartupUpdate(dataDir string) error {
 	if !selfupdate.ModeEnabled(opts.Mode) {
 		return nil
 	}
-	// A startup check gets a hard overall budget so a broken proxy cannot hold
-	// the listener hostage; the next start retries.
-	budget := 120 * time.Second
+	// The updater enforces per-transfer budgets (60 s silence, 20 min cap); this
+	// outer deadline only stops a runaway implementation.
+	budget := 25 * time.Minute
 	if raw, ok := lookupValue("LIGHT_MEDIA_UPDATE_TIMEOUT_SECONDS"); ok {
-		if seconds, convErr := strconv.Atoi(raw); convErr == nil && seconds > 0 && seconds <= 900 {
+		if seconds, convErr := strconv.Atoi(raw); convErr == nil && seconds > 0 && seconds <= 3600 {
 			budget = time.Duration(seconds) * time.Second
 		}
 	}

@@ -171,7 +171,9 @@ type Options struct {
 	FrontendVersion         string
 }
 
-const appVersion = "0.5.5"
+// appVersion is a var so a release build can stamp the deployed version without
+// editing the tree.
+var appVersion = "0.5.6"
 
 // Version reports the compiled application version. The startup updater needs
 // it before any App exists.

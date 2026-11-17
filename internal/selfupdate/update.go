@@ -63,6 +63,8 @@ type Options struct {
 	// ProxySetting is the saved proxy from the instance settings. A nonblank
 	// value wins over the environment, exactly like the rest of the app.
 	ProxySetting string
+	// TotalTimeout caps one transfer (default 20 minutes).
+	TotalTimeout time.Duration
 	// lastProxy records which hop actually served the run, for the status file.
 	lastProxy string
 }
@@ -246,7 +248,17 @@ func (o Options) stall() time.Duration {
 	if o.StallTimeout > 0 {
 		return o.StallTimeout
 	}
-	return 20 * time.Second
+	return 60 * time.Second
+}
+
+// totalTimeout bounds one transfer. It is generous on purpose: a slow but
+// progressing link must be able to finish, while the stall watchdog still
+// aborts a dead one quickly.
+func (o Options) totalTimeout() time.Duration {
+	if o.TotalTimeout > 0 {
+		return o.TotalTimeout
+	}
+	return 20 * time.Minute
 }
 
 // proxy resolves the instance proxy setting the same way the rest of the app
@@ -366,6 +378,8 @@ func (s *fetchSession) getWith(ctx context.Context, target string, stage int) ([
 	// instead of burning the whole startup budget.
 	watchdog := time.AfterFunc(o.stall(), cancel)
 	defer watchdog.Stop()
+	hardCap := time.AfterFunc(o.totalTimeout(), cancel)
+	defer hardCap.Stop()
 	var out bytes.Buffer
 	buf := make([]byte, 32<<10)
 	for {
