@@ -133,7 +133,7 @@ func selectOriginalMarketDeclarations(sources []artifacts.Discovery) []artifacts
 	positions := make(map[string]int)
 	for _, source := range sources {
 		if n, exists := positions[source.PluginID]; exists {
-			if compareOriginalPluginVersion(source.CurrentVersion, selected[n].CurrentVersion) > 0 {
+			if originalMarketDeclarationPreferred(source, selected[n]) {
 				selected[n] = source
 			}
 			continue
@@ -142,6 +142,19 @@ func selectOriginalMarketDeclarations(sources []artifacts.Discovery) []artifacts
 		selected = append(selected, source)
 	}
 	return selected
+}
+
+// An installable artifact outranks metadata that only describes the upstream
+// Python plugin, even when that upstream version number is higher. Updates are
+// driven by this host's own repository, never by a release this build cannot
+// install.
+func originalMarketDeclarationPreferred(candidate, current artifacts.Discovery) bool {
+	candidateUsable := candidate.UnavailableReason == ""
+	currentUsable := current.UnavailableReason == ""
+	if candidateUsable != currentUsable {
+		return candidateUsable
+	}
+	return compareOriginalPluginVersion(candidate.CurrentVersion, current.CurrentVersion) > 0
 }
 
 // StringUtils.compare_version is deliberately not SemVer: separators are dot

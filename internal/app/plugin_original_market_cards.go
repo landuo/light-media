@@ -28,7 +28,9 @@ func (a *App) originalMarketCards(locals []pluginCard, sources []artifacts.Disco
 			if local.DisplayVersion != "" {
 				version = local.DisplayVersion
 			}
-			card.HasUpdate = compareOriginalPluginVersion(source.CurrentVersion, version) > 0
+			// Only an installable declaration can be an update target; Python
+			// metadata entries stay view-only and never raise the badge.
+			card.HasUpdate = source.UnavailableReason == "" && compareOriginalPluginVersion(source.CurrentVersion, version) > 0
 			card.SourceInstanceID = local.SourceInstanceID
 			card.UpdateBlockedReason = source.UnavailableReason
 		}
