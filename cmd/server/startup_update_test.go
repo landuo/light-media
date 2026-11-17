@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"light-media/internal/selfupdate"
 )
@@ -74,5 +75,21 @@ func TestStartupUpdateReadsPinnedFeedFile(t *testing.T) {
 	})
 	if opts.ReleasesURL != "http://env.invalid/releases" {
 		t.Fatalf("environment must win: %q", opts.ReleasesURL)
+	}
+}
+
+func TestBlockModeBudget(t *testing.T) {
+	env := map[string]string{}
+	get := func(key string) string { return env[key] }
+	if got := startupBlockBudget(get); got != 180*time.Second {
+		t.Fatalf("default budget %s", got)
+	}
+	env["LIGHT_MEDIA_UPDATE_STARTUP_TIMEOUT"] = "45"
+	if got := startupBlockBudget(get); got != 45*time.Second {
+		t.Fatalf("configured budget %s", got)
+	}
+	env["LIGHT_MEDIA_UPDATE_STARTUP_TIMEOUT"] = "0"
+	if got := startupBlockBudget(get); got != 180*time.Second {
+		t.Fatalf("invalid budget must fall back: %s", got)
 	}
 }

@@ -532,6 +532,57 @@ func (o Options) writeStatus(outcome Outcome, runErr error) {
 	_ = os.Rename(staged, o.StatusPath)
 }
 
+// maxStartAttempts bounds how often a build may replace the bootstrap before it
+// is considered unable to start. A bad release must not crash-loop the service.
+const maxStartAttempts = 3
+
+type attemptRecord struct {
+	Version  string `json:"version"`
+	Attempts int    `json:"attempts"`
+}
+
+func attemptsPath(dataDir string) string { return filepath.Join(dataDir, "update-attempts.json") }
+
+func readAttempts(dataDir string) attemptRecord {
+	raw, err := os.ReadFile(attemptsPath(dataDir))
+	if err != nil {
+		return attemptRecord{}
+	}
+	var record attemptRecord
+	if json.Unmarshal(raw, &record) != nil {
+		return attemptRecord{}
+	}
+	return record
+}
+
+// recordStartAttempt persists that this build is about to replace the bootstrap.
+func recordStartAttempt(dataDir, version string) {
+	record := readAttempts(dataDir)
+	if record.Version == version {
+		record.Attempts++
+	} else {
+		record = attemptRecord{Version: version, Attempts: 1}
+	}
+	payload, err := json.Marshal(record)
+	if err != nil {
+		return
+	}
+	_ = os.WriteFile(attemptsPath(dataDir), payload, 0600)
+}
+
+// MarkHealthy clears the failure counter once the process is actually serving.
+func MarkHealthy(dataDir string) {
+	_ = os.Remove(attemptsPath(dataDir))
+}
+
+func blockedVersion(dataDir string) string {
+	record := readAttempts(dataDir)
+	if record.Attempts >= maxStartAttempts {
+		return record.Version
+	}
+	return ""
+}
+
 // installedBuild returns the highest verified build already published under
 // <data>/bin. It makes an update durable across restarts and keeps startup off
 // the network when the artifact is already on disk.
@@ -541,6 +592,7 @@ func (o Options) installedBuild() (string, string) {
 		return "", ""
 	}
 	bestPath, bestVersion := "", ""
+	blocked := blockedVersion(o.DataDir)
 	for _, entry := range entries {
 		if entry.IsDir() {
 			continue
@@ -551,6 +603,9 @@ func (o Options) installedBuild() (string, string) {
 		}
 		version := strings.TrimPrefix(name, "light-media-server-")
 		if !Newer(version, o.CurrentVersion) || !SameSeries(version, o.CurrentVersion) {
+			continue
+		}
+		if blocked != "" && version == blocked {
 			continue
 		}
 		if bestVersion == "" || Newer(version, bestVersion) {
@@ -611,6 +666,7 @@ func PreferInstalled(opts Options) (Outcome, error) {
 		return Outcome{Reason: "no_local_build"}, nil
 	}
 	outcome := Outcome{Tag: "v" + version, Installed: path, Reason: "local_build"}
+	recordStartAttempt(opts.DataDir, version)
 	exec := opts.Exec
 	if exec == nil {
 		exec = Exec

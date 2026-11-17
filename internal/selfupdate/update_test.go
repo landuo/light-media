@@ -496,3 +496,50 @@ func TestTricklingTransferIsRejected(t *testing.T) {
 		t.Fatalf("throughput floor too slow: %s", elapsed)
 	}
 }
+
+// A build that replaces the bootstrap and then fails to serve must be retired
+// after a bounded number of attempts, or the container crash-loops forever.
+func TestUnstartableBuildIsRetiredAfterAttempts(t *testing.T) {
+	dir := t.TempDir()
+	bin := filepath.Join(dir, "bin")
+	if err := os.MkdirAll(bin, 0755); err != nil {
+		t.Fatal(err)
+	}
+	bad := filepath.Join(bin, "light-media-server-0.9.0")
+	good := filepath.Join(bin, "light-media-server-0.8.0")
+	for _, path := range []string{bad, good} {
+		if err := os.WriteFile(path, []byte("x"), 0755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	var execd []string
+	opts := Options{Mode: "release", CurrentVersion: "0.5.0", DataDir: dir, GOOS: "linux", GOARCH: "arm64",
+		Exec: func(path string, _ []string, _ []string) error { execd = append(execd, path); return nil }}
+
+	// Three failed starts of 0.9.0 (each call records one attempt).
+	for i := 0; i < maxStartAttempts; i++ {
+		if _, err := PreferInstalled(opts); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if got := execd[len(execd)-1]; got != bad {
+		t.Fatalf("attempt %d should still try the highest build: %s", maxStartAttempts, got)
+	}
+	// The fourth start must fall back to the next build instead of looping.
+	execd = nil
+	if _, err := PreferInstalled(opts); err != nil {
+		t.Fatal(err)
+	}
+	if len(execd) != 1 || execd[0] != good {
+		t.Fatalf("retired build still selected: %v", execd)
+	}
+	// Reaching service clears the counter, so the build is eligible again.
+	MarkHealthy(dir)
+	execd = nil
+	if _, err := PreferInstalled(opts); err != nil {
+		t.Fatal(err)
+	}
+	if len(execd) != 1 || execd[0] != bad {
+		t.Fatalf("healthy reset lost: %v", execd)
+	}
+}

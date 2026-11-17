@@ -132,6 +132,16 @@ func main() {
 			defer close(started)
 			a.Start(ctx)
 		}()
+		// A build that reaches serving is healthy: clear the crash counter.
+		go func() {
+			timer := time.NewTimer(20 * time.Second)
+			defer timer.Stop()
+			select {
+			case <-timer.C:
+				selfupdate.MarkHealthy(absolute)
+			case <-parent.Done():
+			}
+		}()
 		fmt.Printf("light-media listening at %s\n", addr)
 		restart := false
 		select {
@@ -285,13 +295,43 @@ func applyStartupUpdate(dataDir string) error {
 	outcome, err := selfupdate.PreferInstalled(opts)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, `{"level":"WARN","event":"startup_update_failed","reason":%q}`+"\n", err.Error())
-		return nil
 	}
 	if outcome.Execed {
 		return nil
 	}
+	if strings.EqualFold(strings.TrimSpace(lookupEnv("LIGHT_MEDIA_UPDATE_STARTUP")), "block") {
+		// Source-style ordering is opt-in: wait for the feed, but never longer
+		// than the operator's budget. On timeout the transfer continues in the
+		// background and the current build serves.
+		budget := startupBlockBudget(lookupEnv)
+		ctx, cancel := context.WithTimeout(context.Background(), budget)
+		blocked, blockErr := selfupdate.UpdateFromFeed(ctx, opts)
+		cancel()
+		if blockErr == nil && blocked.Installed != "" {
+			if execErr := selfupdate.Exec(blocked.Installed, os.Args, append(os.Environ(), selfupdate.UpdatedToEnv+"="+strings.TrimPrefix(blocked.Tag, "v"))); execErr == nil {
+				return nil
+			}
+		}
+		if blockErr != nil {
+			fmt.Fprintf(os.Stderr, `{"level":"WARN","event":"startup_update_deferred","reason":%q}`+"\n", blockErr.Error())
+		}
+	}
 	go backgroundUpdate(opts)
 	return nil
+}
+
+func lookupEnv(key string) string {
+	value, _ := os.LookupEnv(key)
+	return value
+}
+
+func startupBlockBudget(getenv func(string) string) time.Duration {
+	if raw := strings.TrimSpace(getenv("LIGHT_MEDIA_UPDATE_STARTUP_TIMEOUT")); raw != "" {
+		if seconds, err := strconv.Atoi(raw); err == nil && seconds > 0 && seconds <= 1800 {
+			return time.Duration(seconds) * time.Second
+		}
+	}
+	return 180 * time.Second
 }
 
 // backgroundUpdate checks the feed after the service is serving. A slow mirror
