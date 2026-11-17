@@ -50,6 +50,9 @@ type Options struct {
 	Logf           func(format string, args ...any)
 	// Exec replaces the current process. Tests inject a recorder.
 	Exec func(path string, argv, env []string) error
+	// StatusPath receives one JSON record per startup check. Operators need the
+	// reason on the device; the process is re-executed before any log sink opens.
+	StatusPath string
 }
 
 type Asset struct {
@@ -198,9 +201,15 @@ func (o Options) client() *http.Client {
 	if o.Client != nil {
 		return o.Client
 	}
-	// A startup check must never stall the listener; the source update is best
-	// effort and the next start retries.
-	return &http.Client{Timeout: 15 * time.Second}
+	// A startup check must never stall the listener, but a release artifact is
+	// tens of megabytes: bound connection setup and the response head, and let
+	// the caller's context cap the body transfer.
+	return &http.Client{Transport: &http.Transport{
+		Proxy:                 http.ProxyFromEnvironment,
+		ResponseHeaderTimeout: 20 * time.Second,
+		IdleConnTimeout:       30 * time.Second,
+		ForceAttemptHTTP2:     true,
+	}}
 }
 
 func (o Options) fetch(ctx context.Context, target string) ([]byte, error) {
@@ -248,9 +257,63 @@ func (o Options) logf(format string, args ...any) {
 	}
 }
 
+type statusRecord struct {
+	Time      string `json:"time"`
+	Mode      string `json:"mode"`
+	Current   string `json:"current_version"`
+	Checked   bool   `json:"checked"`
+	Tag       string `json:"tag,omitempty"`
+	Installed string `json:"installed,omitempty"`
+	Execed    bool   `json:"execed"`
+	Reason    string `json:"reason,omitempty"`
+	Error     string `json:"error,omitempty"`
+	Feed      string `json:"feed"`
+	Platform  string `json:"platform"`
+}
+
+// writeStatus records the attempt so a container without log access can still
+// explain what happened at startup.
+func (o Options) writeStatus(outcome Outcome, runErr error) {
+	if o.StatusPath == "" {
+		return
+	}
+	record := statusRecord{
+		Time: nowUTC(), Mode: o.Mode, Current: o.CurrentVersion, Checked: outcome.Checked,
+		Tag: outcome.Tag, Installed: outcome.Installed, Execed: outcome.Execed,
+		Reason: outcome.Reason, Feed: o.ReleasesURL, Platform: o.GOOS + "/" + o.GOARCH,
+	}
+	if record.Feed == "" {
+		record.Feed = DefaultReleasesURL
+	}
+	if runErr != nil {
+		record.Error = runErr.Error()
+	}
+	payload, err := json.Marshal(record)
+	if err != nil {
+		return
+	}
+	dir := filepath.Dir(o.StatusPath)
+	if err = os.MkdirAll(dir, 0755); err != nil {
+		return
+	}
+	staged := o.StatusPath + ".tmp"
+	if err = os.WriteFile(staged, append(payload, '\n'), 0600); err != nil {
+		return
+	}
+	_ = os.Rename(staged, o.StatusPath)
+}
+
+func nowUTC() string { return time.Now().UTC().Format(time.RFC3339) }
+
 // Run performs one check. When it installs and re-executes, Run does not
 // return: the process image is replaced.
 func Run(ctx context.Context, opts Options) (Outcome, error) {
+	outcome, runErr := run(ctx, opts)
+	opts.writeStatus(outcome, runErr)
+	return outcome, runErr
+}
+
+func run(ctx context.Context, opts Options) (Outcome, error) {
 	if !ModeEnabled(opts.Mode) {
 		return Outcome{Reason: "disabled"}, nil
 	}

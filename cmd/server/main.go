@@ -257,6 +257,7 @@ func startupUpdateOptions(dataDir string, lookup func(string) (string, bool)) se
 		CurrentVersion: app.Version(),
 		ReleasesURL:    get("LIGHT_MEDIA_UPDATE_RELEASES"),
 		DataDir:        dataDir,
+		StatusPath:     filepath.Join(dataDir, "update-status.json"),
 		GOOS:           runtime.GOOS,
 		GOARCH:         runtime.GOARCH,
 		Token:          token,
@@ -271,7 +272,7 @@ func applyStartupUpdate(dataDir string) error {
 	if !selfupdate.ModeEnabled(opts.Mode) {
 		return nil
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Minute)
 	defer cancel()
 	outcome, err := selfupdate.Run(ctx, opts)
 	if err != nil {

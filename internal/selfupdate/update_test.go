@@ -10,8 +10,10 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 func assetFor(goos, goarch, body string) ([]byte, string) {
@@ -206,3 +208,65 @@ func TestVersionComparison(t *testing.T) {
 }
 
 var _ = runtime.GOOS
+
+func TestStatusRecordExplainsEveryAttempt(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "update-status.json")
+	server := feed(t, "v0.5.0", "light-media-server-linux-arm64", "payload", nil)
+	opts := baseOptions(t, server)
+	opts.StatusPath = path
+	if _, err := Run(context.Background(), opts); err != nil {
+		t.Fatal(err)
+	}
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var record map[string]any
+	if err = json.Unmarshal(raw, &record); err != nil {
+		t.Fatal(err)
+	}
+	if record["execed"] != true || record["tag"] != "v0.5.0" || record["current_version"] != "0.4.19" {
+		t.Fatalf("status record %s", raw)
+	}
+}
+
+// A slow release body must not be aborted by the connection budget: the client
+// only bounds setup and headers, the caller's context caps the transfer.
+func TestSlowBodyIsNotCutByHeaderTimeout(t *testing.T) {
+	name := "light-media-server-linux-arm64"
+	payload := strings.Repeat("x", 64<<10)
+	sum := sha256.Sum256([]byte(payload))
+	mux := http.NewServeMux()
+	var server *httptest.Server
+	mux.HandleFunc("/releases", func(w http.ResponseWriter, r *http.Request) {
+		raw, _ := json.Marshal([]release{{Tag: "v0.5.0", Assets: []Asset{
+			{Name: name, URL: server.URL + "/bin"},
+			{Name: name + ".sha256", URL: server.URL + "/sums"},
+		}}})
+		_, _ = w.Write(raw)
+	})
+	mux.HandleFunc("/bin", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Length", strconv.Itoa(len(payload)))
+		for i := 0; i < len(payload); i += 16 << 10 {
+			end := i + 16<<10
+			if end > len(payload) {
+				end = len(payload)
+			}
+			_, _ = w.Write([]byte(payload[i:end]))
+			w.(http.Flusher).Flush()
+			time.Sleep(120 * time.Millisecond) // 4 chunks = ~0.5 s total
+		}
+	})
+	mux.HandleFunc("/sums", func(w http.ResponseWriter, r *http.Request) {
+		_, _ = w.Write([]byte(hex.EncodeToString(sum[:]) + "  " + name + "\n"))
+	})
+	server = httptest.NewServer(mux)
+	defer server.Close()
+
+	opts := baseOptions(t, server)
+	opts.Client = nil
+	if _, err := Run(context.Background(), opts); err != nil {
+		t.Fatalf("slow body rejected: %v", err)
+	}
+}
