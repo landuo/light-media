@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"light-media/internal/jinja/exec"
 	"light-media/internal/notice"
+	"light-media/internal/pyrepr"
 	"math"
 	"math/big"
 	"strconv"
@@ -46,7 +46,7 @@ func readValue(dec *json.Decoder, repr bool) (string, error) {
 		return "False", nil
 	case string:
 		if repr {
-			return exec.PythonRepr(exec.AsValue(v)), nil
+			return pyrepr.String(v), nil
 		}
 		return v, nil
 	case json.Number:
@@ -61,7 +61,7 @@ func readValue(dec *json.Decoder, repr bool) (string, error) {
 			if math.IsInf(number, -1) {
 				return "-inf", nil
 			}
-			return exec.AsValue(number).String(), nil
+			return pyrepr.Float(number), nil
 		}
 		number, ok := new(big.Int).SetString(string(v), 10)
 		if !ok {
@@ -108,7 +108,7 @@ func readValue(dec *json.Decoder, repr bool) (string, error) {
 			}
 			pairs := make([]string, len(keys))
 			for i, key := range keys {
-				pairs[i] = exec.PythonRepr(exec.AsValue(key)) + ": " + values[key]
+				pairs[i] = pyrepr.String(key) + ": " + values[key]
 			}
 			return "{" + strings.Join(pairs, ", ") + "}", nil
 		}

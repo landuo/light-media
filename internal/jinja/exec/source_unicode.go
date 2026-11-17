@@ -5,9 +5,10 @@ import (
 	"compress/gzip"
 	_ "embed"
 	"encoding/json"
-	"sort"
 	"strconv"
 	"strings"
+
+	"light-media/internal/pyrepr"
 )
 
 // These tables are generated offline by the exact CPython 3.12 Unicode database
@@ -17,7 +18,6 @@ import (
 var unicodeCompressed []byte
 var unicodeMappings map[rune][4]string
 var unicodeCased, unicodeIgnorable map[rune]bool
-var printableRanges [][2]rune
 
 func init() {
 	z, err := gzip.NewReader(bytes.NewReader(unicodeCompressed))
@@ -29,7 +29,6 @@ func init() {
 		Version          string
 		Mapping          map[string][4]string
 		Cased, Ignorable []int
-		Printable        [][2]rune
 	}
 	if err = json.NewDecoder(z).Decode(&data); err != nil {
 		panic(err)
@@ -37,7 +36,6 @@ func init() {
 	if data.Version != "15.0.0" {
 		panic("unexpected CPython Unicode version")
 	}
-	printableRanges = data.Printable
 	unicodeMappings = map[rune][4]string{}
 	for k, v := range data.Mapping {
 		n, err := strconv.Atoi(k)
@@ -55,10 +53,7 @@ func init() {
 		unicodeIgnorable[rune(n)] = true
 	}
 }
-func pythonPrintable(r rune) bool {
-	at := sort.Search(len(printableRanges), func(i int) bool { return printableRanges[i][1] >= r })
-	return at < len(printableRanges) && printableRanges[at][0] <= r
-}
+func pythonPrintable(r rune) bool { return pyrepr.Printable(r) }
 func PythonCase(s, method string) string {
 	runes := []rune(s)
 	var b strings.Builder
