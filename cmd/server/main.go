@@ -276,32 +276,44 @@ func startupUpdateOptions(dataDir string, lookup func(string) (string, bool)) se
 }
 
 func applyStartupUpdate(dataDir string) error {
-	lookupValue := os.LookupEnv
-	opts := startupUpdateOptions(dataDir, lookupValue)
-	// The saved proxy is what the user configured for slow external networks;
-	// the updater runs before any App exists, so read just that field.
+	opts := startupUpdateOptions(dataDir, os.LookupEnv)
 	if proxy, proxyErr := app.StartupProxyHost(dataDir); proxyErr == nil {
 		opts.ProxySetting = proxy
 	}
-	if !selfupdate.ModeEnabled(opts.Mode) {
+	// Only a verified build already on disk may block startup; it needs no
+	// network. The feed check runs after the listener is up.
+	outcome, err := selfupdate.PreferInstalled(opts)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, `{"level":"WARN","event":"startup_update_failed","reason":%q}`+"\n", err.Error())
 		return nil
 	}
-	// The updater enforces per-transfer budgets (60 s silence, 20 min cap); this
-	// outer deadline only stops a runaway implementation.
+	if outcome.Execed {
+		return nil
+	}
+	go backgroundUpdate(opts)
+	return nil
+}
+
+// backgroundUpdate checks the feed after the service is serving. A slow mirror
+// must never delay the listener, so the artifact is only installed here; the
+// next restart picks it up through PreferInstalled.
+func backgroundUpdate(opts selfupdate.Options) {
 	budget := 25 * time.Minute
-	if raw, ok := lookupValue("LIGHT_MEDIA_UPDATE_TIMEOUT_SECONDS"); ok {
+	if raw, ok := os.LookupEnv("LIGHT_MEDIA_UPDATE_TIMEOUT_SECONDS"); ok {
 		if seconds, convErr := strconv.Atoi(raw); convErr == nil && seconds > 0 && seconds <= 3600 {
 			budget = time.Duration(seconds) * time.Second
 		}
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), budget)
 	defer cancel()
-	outcome, err := selfupdate.Run(ctx, opts)
+	opts.NoExec = true
+	outcome, err := selfupdate.UpdateFromFeed(ctx, opts)
 	if err != nil {
-		return err
+		fmt.Fprintf(os.Stderr, `{"level":"WARN","event":"background_update_failed","reason":%q}`+"\n", err.Error())
+		return
 	}
-	if outcome.Checked && outcome.Installed == "" {
-		fmt.Fprintf(os.Stderr, `{"level":"INFO","event":"startup_update_skipped","reason":%q}`+"\n", outcome.Reason)
+	if outcome.Installed != "" {
+		fmt.Fprintf(os.Stderr, `{"level":"INFO","event":"background_update_ready","tag":%q,"path":%q}`+"\n", outcome.Tag, outcome.Installed)
 	}
-	return nil
+	opts.WriteStatus(outcome, nil)
 }

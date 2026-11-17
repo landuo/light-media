@@ -65,6 +65,10 @@ type Options struct {
 	ProxySetting string
 	// TotalTimeout caps one transfer (default 20 minutes).
 	TotalTimeout time.Duration
+	// NoExec installs the artifact without replacing the running process. The
+	// listener must never wait on a slow mirror, so the background path uses it
+	// and the next start picks the build up from disk.
+	NoExec bool
 	// lastProxy records which hop actually served the run, for the status file.
 	lastProxy string
 }
@@ -445,6 +449,10 @@ type statusRecord struct {
 
 // writeStatus records the attempt so a container without log access can still
 // explain what happened at startup.
+// WriteStatus records an attempt. The background updater calls it directly
+// because it is not inside Run.
+func (o Options) WriteStatus(outcome Outcome, runErr error) { o.writeStatus(outcome, runErr) }
+
 func (o Options) writeStatus(outcome Outcome, runErr error) {
 	if o.StatusPath == "" {
 		return
@@ -541,6 +549,40 @@ func Run(ctx context.Context, opts Options) (Outcome, error) {
 	return outcome, runErr
 }
 
+// PreferInstalled is the only step allowed to block startup: it re-executes an
+// artifact that is already verified on disk and needs no network.
+func PreferInstalled(opts Options) (Outcome, error) {
+	if !ModeEnabled(opts.Mode) {
+		return Outcome{Reason: "disabled"}, nil
+	}
+	if os.Getenv(UpdatedToEnv) != "" {
+		return Outcome{Reason: "already_updated_this_boot"}, nil
+	}
+	path, version := opts.installedBuild()
+	if path == "" {
+		return Outcome{Reason: "no_local_build"}, nil
+	}
+	outcome := Outcome{Tag: "v" + version, Installed: path, Reason: "local_build"}
+	exec := opts.Exec
+	if exec == nil {
+		exec = Exec
+	}
+	if err := exec(path, os.Args, append(os.Environ(), UpdatedToEnv+"="+version)); err != nil {
+		return outcome, err
+	}
+	outcome.Execed = true
+	return outcome, nil
+}
+
+// UpdateFromFeed runs after the listener is up. A slow mirror costs the
+// operator nothing but a completed download applied on the next restart.
+func UpdateFromFeed(ctx context.Context, opts Options) (Outcome, error) {
+	if !ModeEnabled(opts.Mode) {
+		return Outcome{Reason: "disabled"}, nil
+	}
+	return run(ctx, opts)
+}
+
 func run(ctx context.Context, opts Options) (Outcome, error) {
 	if !ModeEnabled(opts.Mode) {
 		return Outcome{Reason: "disabled"}, nil
@@ -602,7 +644,6 @@ func run(ctx context.Context, opts Options) (Outcome, error) {
 	return outcome, nil
 }
 
-// install downloads, verifies and publishes the artifact under the data
 // directory. It never touches the currently running file.
 func (s *fetchSession) install(ctx context.Context, tag string, binary, sums Asset) (string, error) {
 	o := s.opts
