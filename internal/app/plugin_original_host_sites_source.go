@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"net/url"
 	"sort"
 	"sync"
 	"time"
@@ -102,6 +103,16 @@ func originalSourceSiteProjection(fields map[string]any, rows []originalSourceSi
 		return nil, nil
 	}
 	out := &plugins.SiteSourceIndexerV1{}
+	// Catalog-only entries describe their base address as domain. Configured
+	// site rows carry url, and SDK consumers read url; expose the catalog
+	// address under both names instead of dropping it.
+	if _, present := fields["url"]; !present {
+		if base, ok := fields["domain"].(string); ok {
+			if parsed, err := url.Parse(base); err == nil && (parsed.Scheme == "http" || parsed.Scheme == "https") && parsed.Hostname() != "" {
+				fields["url"] = base
+			}
+		}
+	}
 	// Source id comes from host-owned registry/DB projections, never worker input.
 	for _, row := range rows {
 		if fields["id"] == row.sourceID && fields["url"] == row.fields["url"] {
