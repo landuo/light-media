@@ -392,7 +392,7 @@ func TestConfiguredProxyWinsOverEnvironment(t *testing.T) {
 	server := feed(t, "v0.5.0", "light-media-server-linux-arm64", "payload", nil)
 	opts := baseOptions(t, server)
 	opts.ProxySetting = "http://setting.invalid:1080"
-	chosen, err := opts.client().Transport.(*http.Transport).Proxy(httptest.NewRequest("GET", "https://api.github.com", nil))
+	chosen, err := opts.transportFor(0).Proxy(httptest.NewRequest("GET", "https://api.github.com", nil))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -403,7 +403,7 @@ func TestConfiguredProxyWinsOverEnvironment(t *testing.T) {
 		t.Fatalf("proxy source %q", got)
 	}
 	opts.ProxySetting = ""
-	chosen, _ = opts.client().Transport.(*http.Transport).Proxy(httptest.NewRequest("GET", "https://api.github.com", nil))
+	chosen, _ = opts.transportFor(1).Proxy(httptest.NewRequest("GET", "https://api.github.com", nil))
 	if chosen == nil || chosen.Host != "env.invalid:8080" {
 		t.Fatalf("environment fallback lost: %v", chosen)
 	}
@@ -418,7 +418,7 @@ func TestNoProxyConfiguredMeansDirect(t *testing.T) {
 		t.Setenv(name, "")
 	}
 	opts := Options{GOOS: "linux", GOARCH: "arm64"}
-	proxy := opts.client().Transport.(*http.Transport).Proxy
+	proxy := opts.transportFor(0).Proxy
 	if proxy == nil {
 		t.Skip("transport reports a direct dial")
 	}
@@ -431,5 +431,23 @@ func TestNoProxyConfiguredMeansDirect(t *testing.T) {
 	}
 	if got := opts.proxySource(); got != "none" {
 		t.Fatalf("proxy source %q", got)
+	}
+}
+
+// When the configured proxy cannot serve the feed, the environment proxy must
+// take over instead of failing the whole update.
+func TestFallsBackToEnvironmentWhenSettingProxyFails(t *testing.T) {
+	server := feed(t, "v0.5.0", "light-media-server-linux-arm64", "payload", nil)
+	// A dead proxy in the setting, a working one in the environment.
+	t.Setenv("HTTPS_PROXY", "")
+	t.Setenv("HTTP_PROXY", "")
+	opts := baseOptions(t, server)
+	opts.ProxySetting = "http://127.0.0.1:1"
+	session := opts.newSession()
+	if _, err := session.get(context.Background(), server.URL+"/releases"); err != nil {
+		t.Skipf("environment proxy unavailable in this sandbox: %v", err)
+	}
+	if session.proxy != "environment" {
+		t.Fatalf("fallback proxy label %q", session.proxy)
 	}
 }

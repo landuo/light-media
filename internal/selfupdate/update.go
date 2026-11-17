@@ -63,6 +63,8 @@ type Options struct {
 	// ProxySetting is the saved proxy from the instance settings. A nonblank
 	// value wins over the environment, exactly like the rest of the app.
 	ProxySetting string
+	// lastProxy records which hop actually served the run, for the status file.
+	lastProxy string
 }
 
 type Asset struct {
@@ -207,19 +209,37 @@ func selectRelease(raw []byte, current, goos, goarch string) (release, Asset, As
 	return release{}, Asset{}, Asset{}, "no_release_for_platform"
 }
 
-func (o Options) client() *http.Client {
-	if o.Client != nil {
-		return o.Client
+// fetchSession carries the proxy that actually served a request. The configured
+// proxy is tried first, then the environment: one flaky hop must not decide
+// whether the update happens.
+type fetchSession struct {
+	opts  Options
+	proxy string
+}
+
+func (o Options) newSession() *fetchSession {
+	session := &fetchSession{opts: o}
+	if o.Client == nil {
+		session.proxy = o.proxySource()
+	} else {
+		session.proxy = "custom"
 	}
-	// A startup check must never stall the listener, but a release artifact is
-	// tens of megabytes: bound connection setup and the response head, and let
-	// the caller's context cap the body transfer.
-	return &http.Client{Transport: &http.Transport{
-		Proxy:                 o.proxy(),
+	return session
+}
+
+func (o Options) transportFor(stage int) *http.Transport {
+	transport := &http.Transport{
 		ResponseHeaderTimeout: 20 * time.Second,
 		IdleConnTimeout:       30 * time.Second,
 		ForceAttemptHTTP2:     true,
-	}}
+	}
+	switch stage {
+	case 0:
+		transport.Proxy = o.proxy()
+	case 1:
+		transport.Proxy = http.ProxyFromEnvironment
+	}
+	return transport
 }
 
 func (o Options) stall() time.Duration {
@@ -250,6 +270,13 @@ func (o Options) proxy() func(*http.Request) (*url.URL, error) {
 	return http.ProxyURL(parsed)
 }
 
+func (o Options) reportProxy() string {
+	if o.lastProxy != "" {
+		return o.lastProxy
+	}
+	return o.proxySource()
+}
+
 // proxySource labels the resolved path for the status record.
 func (o Options) proxySource() string {
 	config, err := networkproxy.Resolve(o.ProxySetting, os.Getenv)
@@ -266,6 +293,57 @@ func (o Options) proxySource() string {
 }
 
 func (o Options) fetch(ctx context.Context, target string) ([]byte, error) {
+	return o.newSession().get(ctx, target)
+}
+
+func (s *fetchSession) client(stage int) *http.Client {
+	if s.opts.Client != nil {
+		return s.opts.Client
+	}
+	return &http.Client{Transport: s.opts.transportFor(stage)}
+}
+
+// stages: 0 = configured proxy, 1 = environment proxy. A blank stage is skipped.
+func (s *fetchSession) stages() []int {
+	if s.opts.Client != nil {
+		return []int{0}
+	}
+	config, err := networkproxy.Resolve(s.opts.ProxySetting, os.Getenv)
+	if err != nil {
+		return []int{1}
+	}
+	if config.HTTPS == "" && config.HTTP == "" {
+		return []int{0}
+	}
+	if s.opts.ProxySetting == "" {
+		return []int{1}
+	}
+	return []int{0, 1}
+}
+
+func (s *fetchSession) get(ctx context.Context, target string) ([]byte, error) {
+	var lastErr error
+	for _, stage := range s.stages() {
+		data, err := s.getWith(ctx, target, stage)
+		if err == nil {
+			switch stage {
+			case 0:
+				s.proxy = s.opts.proxySource()
+			case 1:
+				s.proxy = "environment"
+			}
+			return data, nil
+		}
+		lastErr = err
+		if ctx.Err() != nil {
+			break
+		}
+	}
+	return nil, lastErr
+}
+
+func (s *fetchSession) getWith(ctx context.Context, target string, stage int) ([]byte, error) {
+	o := s.opts
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 	request, err := http.NewRequestWithContext(ctx, http.MethodGet, target, nil)
@@ -276,7 +354,7 @@ func (o Options) fetch(ctx context.Context, target string) ([]byte, error) {
 	if o.Token != "" {
 		request.Header.Set("Authorization", "Bearer "+o.Token)
 	}
-	response, err := o.client().Do(request)
+	response, err := s.client(stage).Do(request)
 	if err != nil {
 		return nil, err
 	}
@@ -361,7 +439,7 @@ func (o Options) writeStatus(outcome Outcome, runErr error) {
 		Time: nowUTC(), Mode: o.Mode, Current: o.CurrentVersion, Checked: outcome.Checked,
 		Tag: outcome.Tag, Installed: outcome.Installed, Execed: outcome.Execed,
 		Reason: outcome.Reason, Feed: o.ReleasesURL, Platform: o.GOOS + "/" + o.GOARCH,
-		Proxy: o.proxySource(),
+		Proxy: o.reportProxy(),
 	}
 	if record.Feed == "" {
 		record.Feed = DefaultReleasesURL
@@ -484,7 +562,8 @@ func run(ctx context.Context, opts Options) (Outcome, error) {
 	if feed == "" {
 		feed = DefaultReleasesURL
 	}
-	raw, err := opts.fetch(ctx, feed)
+	session := opts.newSession()
+	raw, err := session.get(ctx, feed)
 	if err != nil {
 		return Outcome{Checked: true, Reason: "feed_unavailable"}, err
 	}
@@ -492,10 +571,11 @@ func run(ctx context.Context, opts Options) (Outcome, error) {
 	if reason != "" {
 		return Outcome{Checked: true, Reason: reason}, nil
 	}
-	path, err := opts.install(ctx, item.Tag, binary, sums)
+	path, err := session.install(ctx, item.Tag, binary, sums)
 	if err != nil {
 		return Outcome{Checked: true, Tag: item.Tag, Reason: "install_failed"}, err
 	}
+	opts.lastProxy = session.proxy
 	outcome := Outcome{Checked: true, Tag: item.Tag, Installed: path}
 	exec := opts.Exec
 	if exec == nil {
@@ -510,12 +590,13 @@ func run(ctx context.Context, opts Options) (Outcome, error) {
 
 // install downloads, verifies and publishes the artifact under the data
 // directory. It never touches the currently running file.
-func (o Options) install(ctx context.Context, tag string, binary, sums Asset) (string, error) {
-	payload, err := o.fetch(ctx, binary.URL)
+func (s *fetchSession) install(ctx context.Context, tag string, binary, sums Asset) (string, error) {
+	o := s.opts
+	payload, err := s.get(ctx, binary.URL)
 	if err != nil {
 		return "", err
 	}
-	expected, err := o.fetch(ctx, sums.URL)
+	expected, err := s.get(ctx, sums.URL)
 	if err != nil {
 		return "", err
 	}
