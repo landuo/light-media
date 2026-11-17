@@ -27,9 +27,6 @@ func (a *App) originalManagerHTTP(w http.ResponseWriter, r *http.Request, path s
 	if path == "markets" {
 		return a.pluginMarketsHTTP(w, r)
 	}
-	if path == "markets/sync-wiki" && r.Method == http.MethodPost {
-		return a.originalMarketWikiHTTP(w, r)
-	}
 	if path == "organization" {
 		return a.pluginOrganizationHTTP(w, r)
 	}

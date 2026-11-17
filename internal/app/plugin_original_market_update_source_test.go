@@ -45,14 +45,20 @@ func TestUpdateBadgeIgnoresUnavailableDeclarationAlone(t *testing.T) {
 	}
 	locals := []pluginCard{{InstanceID: "IYUUAutoSeed", Manifest: plugins.Manifest{Version: "2.19"}, Installed: true}}
 	cards := a_generateCards(locals, []artifacts.Discovery{python})
-	if len(cards) != 1 {
-		t.Fatalf("expected one card, got %+v", cards)
+	if len(cards) != 0 {
+		t.Fatalf("upstream-only metadata must not offer an update: %+v", cards)
 	}
-	if cards[0].HasUpdate {
-		t.Fatalf("upstream-only metadata must not raise an update badge: %+v", cards[0])
+	// The same declaration is still listed as view-only for a plugin that is
+	// not installed, so the reason must stay attached.
+	discovery := artifacts.Discovery{
+		PluginID:          python.PluginID,
+		CurrentVersion:    python.CurrentVersion,
+		RepositoryURL:     python.RepositoryURL,
+		UnavailableReason: python.UnavailableReason,
 	}
-	if cards[0].UpdateBlockedReason == "" {
-		t.Fatal("view-only declarations still have to explain why they cannot be installed")
+	cards = a_generateCards(nil, []artifacts.Discovery{discovery})
+	if len(cards) != 1 || cards[0].HasUpdate || cards[0].Available || cards[0].UnavailableReason == "" {
+		t.Fatalf("view-only declaration must explain why it cannot be installed: %+v", cards)
 	}
 }
 
@@ -69,8 +75,14 @@ func TestUpdateBadgeComparesVersionsInsideInstallableRepository(t *testing.T) {
 	for _, c := range cases {
 		source := artifacts.Discovery{PluginID: "RemoveLink", CurrentVersion: c.version, RepositoryURL: "https://github.com/landuo/light-media-plugins"}
 		cards := a_generateCards(locals, []artifacts.Discovery{source})
-		if len(cards) != 1 || cards[0].HasUpdate != c.want {
-			t.Fatalf("repository version %s: got %+v, want has_update=%v", c.version, cards, c.want)
+		if c.want {
+			if len(cards) != 1 || !cards[0].HasUpdate {
+				t.Fatalf("repository version %s: got %+v, want an update card", c.version, cards)
+			}
+			continue
+		}
+		if len(cards) != 0 {
+			t.Fatalf("repository version %s: an up-to-date plugin must not be listed, got %+v", c.version, cards)
 		}
 	}
 }

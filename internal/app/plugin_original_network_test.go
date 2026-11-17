@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -15,7 +14,7 @@ import (
 // Fixed helper/plugin.py:1643 prefers the configured proxy and retries the
 // ordinary request on HTTP/network failure. system.py:835 supplies PROXY to
 // Wiki directly, without that repository fallback. No global transport changes.
-func TestOriginalMarketProxyMetadataInstallFallbackAndWikiFailure(t *testing.T) {
+func TestOriginalMarketProxyMetadataInstallFallback(t *testing.T) {
 	for _, name := range []string{"HTTP_PROXY", "http_proxy", "HTTPS_PROXY", "https_proxy", "ALL_PROXY", "all_proxy", "NO_PROXY", "no_proxy"} {
 		t.Setenv(name, "")
 	}
@@ -87,16 +86,6 @@ func TestOriginalMarketProxyMetadataInstallFallbackAndWikiFailure(t *testing.T) 
 	loaded, ok := a.pluginRunningInstances.Load(index.PluginID)
 	if !ok || ownedStandardVersionRead(t, loaded.(*originalPluginInstance)).Version != "1.0" || originPayloads.Load() != 1 || proxyGets.Load() != 4 {
 		t.Fatal("proxy fallback did not acquire and execute the actual Go artifact")
-	}
-	before := a.Settings().PluginMarkets
-	response = callTest(t, a.Handler(), "POST", "/api/plugins/markets/sync-wiki", `{}`, cookie, "")
-	var result struct{ Data struct{ Success bool } }
-	if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &result) != nil || result.Data.Success || proxyConnects.Load() != 1 || !reflect.DeepEqual(before, a.Settings().PluginMarkets) || strings.Contains(response.Body.String(), "failure body") {
-		t.Fatal("Wiki proxy failure changed settings, escaped its direct proxy policy or leaked a remote body")
-	}
-	response = callTest(t, a.Handler(), "POST", "/api/plugins/markets/sync-wiki", `{"wiki_url":"https://other.invalid/wiki"}`, cookie, "")
-	if proxyConnects.Load() != 1 || !strings.Contains(response.Body.String(), "不支持的 Wiki") {
-		t.Fatal("unapproved Wiki destination reached the network")
 	}
 }
 

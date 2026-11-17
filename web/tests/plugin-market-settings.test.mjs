@@ -37,7 +37,6 @@ function fixture({
   statisticShare = true,
   githubProxy = '', githubToken = '', repoGitHubToken = '', githubTokenSet = false, repoGitHubTokenSet = false,
   result = { success: true },
-  wikiResult = { success: true, repos: [first, second], message: '原版 Python 仓库需 Go 适配' },
   readError,
   writeError,
   wait,
@@ -55,7 +54,6 @@ function fixture({
       return {
         api: async (path, body, method) => {
           requests.push({ path, body, method });
-          if (path === '/plugins/markets/sync-wiki') return wikiResult;
           assert.equal(path, '/plugins/markets');
           if (!method) {
             if (readError) throw new Error(readError);
@@ -142,11 +140,6 @@ test('environment-locked repositories reject every mutation and preserve exact s
   assert.deepEqual(f.state.repos.value, sources);
   let controls = f.nodes();
   assert.equal(controls.find((node) => node.props?.class === 'repo-list').props.disabled, true);
-  assert.equal(
-    controls.find((node) => node.props?.['prepend-icon'] === 'mdi-cloud-sync-outline').props
-      .disabled,
-    true,
-  );
   for (const label of [
     '本地插件仓库目录',
     '本地插件文件修改后自动重载',
@@ -172,7 +165,6 @@ test('environment-locked repositories reject every mutation and preserve exact s
   f.state.saveEdit();
   f.state.removeRepo(0);
   f.state.switchMode('text');
-  await f.state.syncWiki();
   assert.deepEqual(f.state.repos.value, sources);
   assert.equal(f.state.editingIndex.value, null);
   assert.equal(f.state.mode.value, 'list');
@@ -278,34 +270,6 @@ test('successful PUT sends ordered sources without unrelated system settings and
   });
   assert.deepEqual(f.emitted, [['saved']]);
   assert.equal(f.toasts.length, 1);
-});
-test('Wiki sync writes through its own endpoint and updates draft without closing editor', async () => {
-  const f = fixture();
-  await f.state.load();
-  await f.state.syncWiki();
-  assert.deepEqual(f.requests[1], {
-    path: '/plugins/markets/sync-wiki',
-    body: {},
-    method: undefined,
-  });
-  assert.deepEqual(f.state.repos.value, [first, second]);
-  assert.equal(f.state.text.value, first + '\n' + second);
-  assert.match(f.state.warning.value, /Go 适配/);
-  assert.deepEqual(f.emitted, []);
-  assert.equal(f.state.saving.value, false);
-});
-test('failed or malformed Wiki response preserves local editor and does not claim success', async () => {
-  for (const wikiResult of [
-    { success: false, message: '来源不可用' },
-    { success: true, repos: ['file:///tmp/source'] },
-  ]) {
-    const f = fixture({ wikiResult });
-    await f.state.load();
-    await f.state.syncWiki();
-    assert.deepEqual(f.state.repos.value, [first]);
-    assert.notEqual(f.state.error.value, '');
-    assert.deepEqual(f.toasts, []);
-  }
 });
 test('local-only sources preserve source order/duplicates and explicitly opt into reload', async () => {
   const f = systemFixture({ markets: [], localPaths: ['/plugins/one'], autoReload: false });

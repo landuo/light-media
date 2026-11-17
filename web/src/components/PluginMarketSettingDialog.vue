@@ -31,7 +31,6 @@ const loading = ref(true),
   saving = ref(false),
   error = ref(''),
   warning = ref('');
-const syncingWiki = ref(false);
 // The original editor accepts HTTP(S) text; the Go backend additionally rejects
 // credentials/fragments. Syntax acceptance is not repository compatibility.
 function validURL(value: string) {
@@ -198,31 +197,6 @@ async function save() {
   } catch (e) {
     error.value = errorText(e);
   } finally {
-    saving.value = false;
-  }
-}
-async function syncWiki() {
-  if (marketsLocked.value || !loaded.value || loading.value || saving.value) return;
-  saving.value = true;
-  syncingWiki.value = true;
-  error.value = '';
-  try {
-    const result = await api('/plugins/markets/sync-wiki', {});
-    if (result?.success !== true) throw new Error(result?.message || 'Wiki 同步失败');
-    if (
-      !Array.isArray(result.repos) ||
-      !result.repos.every((value: unknown) => typeof value === 'string' && validURL(value))
-    )
-      throw new Error('Wiki 同步响应无效，请重新读取已保存设置');
-    repos.value = result.repos;
-    text.value = repos.value.join('\n');
-    newRepo.value = '';
-    warning.value = result.message || '仓库清单已保存；兼容性以发现结果为准';
-    toast('已从 Wiki 同步并保存仓库清单');
-  } catch (e) {
-    error.value = errorText(e);
-  } finally {
-    syncingWiki.value = false;
     saving.value = false;
   }
 }
@@ -442,14 +416,6 @@ onMounted(load);
         </div>
       </VCardText>
       <VCardActions class="app-dialog-actions"
-        ><VBtn
-          color="success"
-          variant="tonal"
-          prepend-icon="mdi-cloud-sync-outline"
-          :loading="syncingWiki"
-          :disabled="marketsLocked || !loaded || loading || saving"
-          @click="syncWiki"
-          >同步 Wiki</VBtn
         ><VSpacer /><VBtn
           color="primary"
           variant="flat"

@@ -3,12 +3,9 @@ package app
 import (
 	"context"
 	"encoding/json"
-	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"os"
-	"reflect"
 	"runtime"
 	"strings"
 	"sync/atomic"
@@ -61,27 +58,6 @@ func TestOriginalMarketHistoryPreservesAuthorWireOrder(t *testing.T) {
 	body := response.Body.String()
 	if response.Code != 200 || !strings.Contains(body, `"history":{"2.0":"new","1.0":"old","0.1":"notes only"}`) {
 		t.Fatal("HTTP history did not preserve the source widget's author order", body)
-	}
-}
-
-func TestOriginalMarketWikiExtractionPinnedSourceOracle(t *testing.T) {
-	raw, err := os.ReadFile("../../testdata/standard-market/wiki-oracle.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var oracle struct {
-		Cases []struct {
-			Document     string   `json:"document"`
-			Repositories []string `json:"repositories"`
-		} `json:"cases"`
-	}
-	if err = json.Unmarshal(raw, &oracle); err != nil {
-		t.Fatal(err)
-	}
-	for _, test := range oracle.Cases {
-		if got := extractOriginalWikiRepositories(test.Document); !reflect.DeepEqual(got, test.Repositories) {
-			t.Errorf("fixed Wiki marker/fallback/canonicalization output differs: got %v, want %v", got, test.Repositories)
-		}
 	}
 }
 
@@ -196,58 +172,6 @@ func TestOriginalMarketGuideHistoryReleasesMetadataOnlyAndFailures(t *testing.T)
 type guideMarketTransport func(*http.Request) (*http.Response, error)
 
 func (f guideMarketTransport) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
-
-func TestOriginalMarketGuideWikiFixedSourceActualHTTPAndMerge(t *testing.T) {
-	markdown := "https://github.com/Outside/Ignore\n<!-- plugin-market-repos:start -->\nhttps://github.com/Owner/A.git\nhttps://github.com/owner/a/\nhttps://github.com/Owner/B\n<!-- plugin-market-repos:end -->"
-	var calls atomic.Int32
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		calls.Add(1)
-		io.WriteString(w, markdown)
-	}))
-	defer server.Close()
-	local, _ := url.Parse(server.URL)
-	client := &http.Client{Transport: guideMarketTransport(func(r *http.Request) (*http.Response, error) {
-		if r.URL.String() != originalPluginMarketWikiURL {
-			t.Error("unexpected source")
-		}
-		copy := r.Clone(r.Context())
-		value := *r.URL
-		value.Scheme, value.Host = local.Scheme, local.Host
-		copy.URL, copy.Host = &value, local.Host
-		return server.Client().Transport.RoundTrip(copy)
-	})}
-	repos, err := fetchOriginalMarketWiki(context.Background(), originalPluginMarketWikiURL, client)
-	if err != nil || !reflect.DeepEqual(repos, []string{"https://github.com/Owner/A", "https://github.com/Owner/B"}) {
-		t.Fatalf("wiki parse: %v %v", repos, err)
-	}
-	if _, err = fetchOriginalMarketWiki(context.Background(), "https://other.invalid/wiki", client); err == nil || calls.Load() != 1 {
-		t.Fatal("arbitrary source fetched")
-	}
-	markdown = "no repositories"
-	if _, err = fetchOriginalMarketWiki(context.Background(), originalPluginMarketWikiURL, client); err == nil {
-		t.Fatal("empty response succeeded")
-	}
-	a, err := New(Options{DataDir: t.TempDir()})
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer a.Close()
-	settings := a.Settings()
-	settings.PluginMarkets = []string{"https://owned.invalid/go/index.json", "https://github.com/owner/a/"}
-	settings.PluginAutoReload = true
-	if err = a.saveSettings(context.Background(), settings); err != nil {
-		t.Fatal(err)
-	}
-	result, err := a.saveOriginalWikiRepositories(context.Background(), repos)
-	if err != nil || result["added_count"] != 1 || !a.Settings().PluginAutoReload || !reflect.DeepEqual(a.Settings().PluginMarkets, []string{"https://owned.invalid/go/index.json", "https://github.com/owner/a/", "https://github.com/Owner/B"}) {
-		t.Fatalf("merge changed existing settings: %+v %v", result, err)
-	}
-	cookie := setupTestAdmin(t, a)
-	res := callTest(t, a.Handler(), "POST", "/api/plugins/markets/sync-wiki", `{"wiki_url":"https://other.invalid/wiki"}`, cookie, "")
-	if res.Code != 200 || !strings.Contains(res.Body.String(), `"success":false`) || len(a.Settings().PluginMarkets) != 3 {
-		t.Fatal("invalid source changed saved repositories")
-	}
-}
 
 func TestOriginalMarketGuideConcurrentFetchKeepsConfiguredOrder(t *testing.T) {
 	a, err := New(Options{DataDir: t.TempDir()})

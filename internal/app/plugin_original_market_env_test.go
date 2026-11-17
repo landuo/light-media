@@ -37,9 +37,6 @@ func TestOriginalMarketEnvironmentOverrideDoesNotOverwriteSavedSources(t *testin
 	if response.Code < 400 || !strings.Contains(response.Body.String(), "PLUGIN_MARKET_ENV_OVERRIDE") {
 		t.Fatal("UI replaced environment source", response.Code, response.Body.String())
 	}
-	if _, err = b.saveOriginalWikiRepositories(context.Background(), []string{"https://github.com/owned/plugins/"}); pluginErrorCode(err) != "PLUGIN_MARKET_ENV_OVERRIDE" {
-		t.Fatal("wiki replaced environment source", err)
-	}
 	// An unrelated save must preserve the original persisted sources, even
 	// though the caller obtained its settings snapshot under the env override.
 	settings = b.Settings()
@@ -48,7 +45,7 @@ func TestOriginalMarketEnvironmentOverrideDoesNotOverwriteSavedSources(t *testin
 		t.Fatal(err)
 	}
 	var sealed []byte
-	if err = b.Store.DB.QueryRow("\"SELECT payload FROM systemconfig WHERE uid='main'\"").Scan(&sealed); err != nil {
+	if err = b.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed); err != nil {
 		t.Fatal(err)
 	}
 	var saved Settings

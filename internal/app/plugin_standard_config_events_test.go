@@ -61,7 +61,7 @@ func TestStandardPluginSettingsEventAfterCommitNotOnFailureOrNoChange(t *testing
 
 func TestStandardPluginSettingValuesMatchOriginalSingleKeyEndpoints(t *testing.T) {
 	// Fixed system.py:892-922 publishes the saved value and one-key set;
-	// system.py:847-876 does the same after Wiki merge. /env remains the
+	// system.py:847-876 does the same for the committed source list. /env remains the
 	// separate bulk-key/no-value path exercised above.
 	a := newTestApp(t)
 	cookie := installOwnedEventFixture(t, a)
@@ -104,17 +104,19 @@ func TestStandardPluginSettingValuesMatchOriginalSingleKeyEndpoints(t *testing.T
 	}
 	a.wg.Wait()
 	requireBusinessEventCount(t, a, ownedEventFixtureID, "config.updated", 2)
-	if _, err := a.saveOriginalWikiRepositories(context.Background(), []string{"https://github.com/Owner/New"}); err != nil {
-		t.Fatal(err)
-	}
+	// A later save must publish the newly committed source list, not the
+	// snapshot the caller happened to hold before it.
+	merged, _ := json.Marshal(map[string]any{"plugin_markets": []string{server.URL + "/index", "https://github.com/Owner/New"}})
+	response = callTest(t, a.Handler(), "PUT", "/api/plugins/markets", string(merged), cookie, "")
+	assertOriginalRegistrySuccess(t, response.Code, response.Body.Bytes())
 	a.wg.Wait()
 	events = requireBusinessEventCount(t, a, ownedEventFixtureID, "config.updated", 3)
-	var wiki struct {
+	var updated struct {
 		Key   []string `json:"key"`
 		Value string   `json:"value"`
 	}
-	if json.Unmarshal(events[2].Data, &wiki) != nil || !reflect.DeepEqual(wiki.Key, []string{"PLUGIN_MARKET"}) || wiki.Value != server.URL+"/index,https://github.com/Owner/New" {
-		t.Fatal("Wiki did not publish the committed merged value", string(events[2].Data))
+	if json.Unmarshal(events[2].Data, &updated) != nil || !reflect.DeepEqual(updated.Key, []string{"PLUGIN_MARKET"}) || updated.Value != server.URL+"/index,https://github.com/Owner/New" {
+		t.Fatal("PLUGIN_MARKET was not published with the committed value", string(events[2].Data))
 	}
 	before := a.Settings().PluginMarkets
 	response = callTest(t, a.Handler(), "PUT", "/api/plugins/markets", `{"plugin_auto_reload":false,"plugin_statistic_share":false}`, cookie, "")
