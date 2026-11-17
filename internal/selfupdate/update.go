@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -28,6 +29,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"light-media/internal/networkproxy"
 )
 
 // DefaultReleasesURL is the project's own release feed.
@@ -57,6 +60,9 @@ type Options struct {
 	// StallTimeout aborts a transfer that stops producing bytes. It is the guard
 	// that keeps a half-open connection from holding startup hostage.
 	StallTimeout time.Duration
+	// ProxySetting is the saved proxy from the instance settings. A nonblank
+	// value wins over the environment, exactly like the rest of the app.
+	ProxySetting string
 }
 
 type Asset struct {
@@ -209,7 +215,7 @@ func (o Options) client() *http.Client {
 	// tens of megabytes: bound connection setup and the response head, and let
 	// the caller's context cap the body transfer.
 	return &http.Client{Transport: &http.Transport{
-		Proxy:                 http.ProxyFromEnvironment,
+		Proxy:                 o.proxy(),
 		ResponseHeaderTimeout: 20 * time.Second,
 		IdleConnTimeout:       30 * time.Second,
 		ForceAttemptHTTP2:     true,
@@ -221,6 +227,42 @@ func (o Options) stall() time.Duration {
 		return o.StallTimeout
 	}
 	return 20 * time.Second
+}
+
+// proxy resolves the instance proxy setting the same way the rest of the app
+// does: a nonblank setting wins, otherwise the standard environment variables.
+func (o Options) proxy() func(*http.Request) (*url.URL, error) {
+	config, err := networkproxy.Resolve(o.ProxySetting, os.Getenv)
+	if err != nil {
+		return http.ProxyFromEnvironment
+	}
+	target := config.HTTPS
+	if target == "" {
+		target = config.HTTP
+	}
+	if target == "" {
+		return nil
+	}
+	parsed, err := url.Parse(target)
+	if err != nil || parsed.Host == "" {
+		return http.ProxyFromEnvironment
+	}
+	return http.ProxyURL(parsed)
+}
+
+// proxySource labels the resolved path for the status record.
+func (o Options) proxySource() string {
+	config, err := networkproxy.Resolve(o.ProxySetting, os.Getenv)
+	if err != nil {
+		return "invalid"
+	}
+	if config.HTTPS != "" {
+		if o.ProxySetting != "" {
+			return "setting"
+		}
+		return "environment"
+	}
+	return "none"
 }
 
 func (o Options) fetch(ctx context.Context, target string) ([]byte, error) {
@@ -306,6 +348,7 @@ type statusRecord struct {
 	Error     string `json:"error,omitempty"`
 	Feed      string `json:"feed"`
 	Platform  string `json:"platform"`
+	Proxy     string `json:"proxy"`
 }
 
 // writeStatus records the attempt so a container without log access can still
@@ -318,6 +361,7 @@ func (o Options) writeStatus(outcome Outcome, runErr error) {
 		Time: nowUTC(), Mode: o.Mode, Current: o.CurrentVersion, Checked: outcome.Checked,
 		Tag: outcome.Tag, Installed: outcome.Installed, Execed: outcome.Execed,
 		Reason: outcome.Reason, Feed: o.ReleasesURL, Platform: o.GOOS + "/" + o.GOARCH,
+		Proxy: o.proxySource(),
 	}
 	if record.Feed == "" {
 		record.Feed = DefaultReleasesURL

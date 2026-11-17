@@ -278,6 +278,11 @@ func startupUpdateOptions(dataDir string, lookup func(string) (string, bool)) se
 func applyStartupUpdate(dataDir string) error {
 	lookupValue := os.LookupEnv
 	opts := startupUpdateOptions(dataDir, lookupValue)
+	// The saved proxy is what the user configured for slow external networks;
+	// the updater runs before any App exists, so read just that field.
+	if proxy, proxyErr := app.StartupProxyHost(dataDir); proxyErr == nil {
+		opts.ProxySetting = proxy
+	}
 	if !selfupdate.ModeEnabled(opts.Mode) {
 		return nil
 	}

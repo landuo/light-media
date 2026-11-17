@@ -383,3 +383,53 @@ func TestFailedInstallBacksOffOnNextStart(t *testing.T) {
 		t.Fatalf("backoff ignored: %+v", outcome)
 	}
 }
+
+// The instance proxy setting governs update traffic; the environment is only a
+// fallback. This is what makes a slow external network usable.
+func TestConfiguredProxyWinsOverEnvironment(t *testing.T) {
+	t.Setenv("HTTPS_PROXY", "http://env.invalid:8080")
+	t.Setenv("HTTP_PROXY", "http://env.invalid:8080")
+	server := feed(t, "v0.5.0", "light-media-server-linux-arm64", "payload", nil)
+	opts := baseOptions(t, server)
+	opts.ProxySetting = "http://setting.invalid:1080"
+	chosen, err := opts.client().Transport.(*http.Transport).Proxy(httptest.NewRequest("GET", "https://api.github.com", nil))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if chosen == nil || chosen.Host != "setting.invalid:1080" {
+		t.Fatalf("configured proxy not used: %v", chosen)
+	}
+	if got := opts.proxySource(); got != "setting" {
+		t.Fatalf("proxy source %q", got)
+	}
+	opts.ProxySetting = ""
+	chosen, _ = opts.client().Transport.(*http.Transport).Proxy(httptest.NewRequest("GET", "https://api.github.com", nil))
+	if chosen == nil || chosen.Host != "env.invalid:8080" {
+		t.Fatalf("environment fallback lost: %v", chosen)
+	}
+	if got := opts.proxySource(); got != "environment" {
+		t.Fatalf("proxy source %q", got)
+	}
+}
+
+// With neither source set the updater must talk directly rather than fail.
+func TestNoProxyConfiguredMeansDirect(t *testing.T) {
+	for _, name := range []string{"HTTP_PROXY", "http_proxy", "HTTPS_PROXY", "https_proxy", "ALL_PROXY", "all_proxy"} {
+		t.Setenv(name, "")
+	}
+	opts := Options{GOOS: "linux", GOARCH: "arm64"}
+	proxy := opts.client().Transport.(*http.Transport).Proxy
+	if proxy == nil {
+		t.Skip("transport reports a direct dial")
+	}
+	chosen, err := proxy(httptest.NewRequest("GET", "https://api.github.com", nil))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if chosen != nil {
+		t.Fatalf("expected a direct connection, got %v", chosen)
+	}
+	if got := opts.proxySource(); got != "none" {
+		t.Fatalf("proxy source %q", got)
+	}
+}
