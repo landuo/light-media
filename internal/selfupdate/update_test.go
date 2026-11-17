@@ -451,3 +451,48 @@ func TestFallsBackToEnvironmentWhenSettingProxyFails(t *testing.T) {
 		t.Fatalf("fallback proxy label %q", session.proxy)
 	}
 }
+
+// A proxy that trickles bytes is unusable for a 60 MB artifact: the throughput
+// floor must reject the stage so the next candidate gets a chance.
+func TestTricklingTransferIsRejected(t *testing.T) {
+	name := "light-media-server-linux-arm64"
+	mux := http.NewServeMux()
+	var server *httptest.Server
+	mux.HandleFunc("/releases", func(w http.ResponseWriter, r *http.Request) {
+		raw, _ := json.Marshal([]release{{Tag: "v0.9.0", Assets: []Asset{
+			{Name: name, URL: server.URL + "/bin"},
+			{Name: name + ".sha256", URL: server.URL + "/sums"},
+		}}})
+		_, _ = w.Write(raw)
+	})
+	mux.HandleFunc("/bin", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Length", strconv.Itoa(8<<20))
+		for i := 0; i < 8<<20/1024; i++ {
+			if _, err := w.Write(make([]byte, 1024)); err != nil {
+				return
+			}
+			w.(http.Flusher).Flush()
+			time.Sleep(50 * time.Millisecond) // ~20 KB/s
+		}
+	})
+	mux.HandleFunc("/sums", func(w http.ResponseWriter, r *http.Request) {
+		_, _ = w.Write([]byte(strings.Repeat("a", 64) + "  " + name + "\n"))
+	})
+	server = httptest.NewServer(mux)
+	defer server.Close()
+
+	opts := baseOptions(t, server)
+	opts.StallTimeout = 30 * time.Second
+	opts.TotalTimeout = time.Minute
+	start := time.Now()
+	_, err := Run(context.Background(), opts)
+	if err == nil {
+		t.Fatal("trickling transfer must fail")
+	}
+	if strings.Contains(err.Error(), "stalled") {
+		t.Fatalf("expected a throughput rejection, got %v", err)
+	}
+	if elapsed := time.Since(start); elapsed > 25*time.Second {
+		t.Fatalf("throughput floor too slow: %s", elapsed)
+	}
+}

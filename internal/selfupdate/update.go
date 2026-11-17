@@ -28,6 +28,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"light-media/internal/networkproxy"
@@ -42,6 +43,14 @@ const UpdatedToEnv = "LIGHT_MEDIA_UPDATED_TO"
 
 // maxAssetBytes bounds a downloaded artifact; the current build is ~60 MiB.
 const maxAssetBytes = 256 << 20
+
+// A large transfer keeps a minimum throughput; below it the hop is treated as
+// unusable and the next proxy candidate is tried. Without this a proxy that
+// trickles bytes would hold the update forever.
+const (
+	minThroughputWindow = 5 * time.Second
+	minThroughputBytes  = 250 << 10 // 50 KB/s sustained
+)
 
 type Options struct {
 	Mode           string // "", "off", "release"
@@ -380,15 +389,47 @@ func (s *fetchSession) getWith(ctx context.Context, target string, stage int) ([
 	}
 	// Reset on progress, fire on silence: a stalled socket cancels the request
 	// instead of burning the whole startup budget.
-	watchdog := time.AfterFunc(o.stall(), cancel)
+	var stalled, tooSlow atomic.Bool
+	watchdog := time.AfterFunc(o.stall(), func() { stalled.Store(true); cancel() })
 	defer watchdog.Stop()
 	hardCap := time.AfterFunc(o.totalTimeout(), cancel)
 	defer hardCap.Stop()
+	var received atomic.Int64
+	monitorStop := make(chan struct{})
+	if response.ContentLength > 1<<20 {
+		go func() {
+			ticker := time.NewTicker(minThroughputWindow)
+			defer ticker.Stop()
+			var last int64
+			slow := 0
+			for {
+				select {
+				case <-monitorStop:
+					return
+				case <-ticker.C:
+					current := received.Load()
+					if current-last < minThroughputBytes {
+						slow++
+						if slow >= 2 {
+							tooSlow.Store(true)
+							cancel()
+							return
+						}
+					} else {
+						slow = 0
+					}
+					last = current
+				}
+			}
+		}()
+	}
+	defer close(monitorStop)
 	var out bytes.Buffer
 	buf := make([]byte, 32<<10)
 	for {
 		n, readErr := response.Body.Read(buf)
 		if n > 0 {
+			received.Add(int64(n))
 			watchdog.Reset(o.stall())
 			if out.Len()+n > maxAssetBytes {
 				return nil, errors.New("asset too large")
@@ -400,7 +441,14 @@ func (s *fetchSession) getWith(ctx context.Context, target string, stage int) ([
 		}
 		if readErr != nil {
 			if ctx.Err() != nil {
-				return nil, errors.New("transfer stalled")
+				switch {
+				case tooSlow.Load():
+					return nil, errors.New("transfer too slow")
+				case stalled.Load():
+					return nil, errors.New("transfer stalled")
+				default:
+					return nil, errors.New("transfer cancelled")
+				}
 			}
 			return nil, readErr
 		}
