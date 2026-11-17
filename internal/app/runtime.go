@@ -171,7 +171,7 @@ type Options struct {
 	FrontendVersion         string
 }
 
-const appVersion = "0.5.3"
+const appVersion = "0.5.4"
 
 // Version reports the compiled application version. The startup updater needs
 // it before any App exists.
