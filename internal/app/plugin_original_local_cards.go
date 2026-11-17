@@ -13,6 +13,20 @@ import (
 // for state, then sorts class metadata by plugin_order. state=installed filters
 // that result afterwards. It never asks a repository or infers a class from an
 // installed-ID row, and a failed initializer may still have class metadata.
+// runningPluginVersion is the build actually executing for an instance. It is
+// the only version that can be compared against a repository release.
+func (a *App) runningPluginVersion(id string) string {
+	value, ok := a.pluginRunningInstances.Load(id)
+	if !ok {
+		return ""
+	}
+	object, ok := value.(*originalPluginInstance)
+	if !ok {
+		return ""
+	}
+	return object.manifest.Version
+}
+
 func (a *App) originalLocalPluginCards(ctx context.Context, installedOnly bool, validate ...func(context.Context) error) ([]pluginCard, error) {
 	installed, err := a.originalInstalledPluginIDs(ctx)
 	if err != nil {
@@ -47,7 +61,15 @@ func (a *App) originalLocalPluginCards(ctx context.Context, installedOnly bool, 
 		card.Installed, card.Available = slices.Contains(installed, id), true
 		card.HasPage = manifest.HasPage
 		if running, loaded := a.pluginRunningInstances.Load(id); loaded {
-			state, stateErr := running.(*originalPluginInstance).getState(ctx)
+			object := running.(*originalPluginInstance)
+			// The loaded object's manifest is the build actually executing. The
+			// installation column carries whatever the source index declared at
+			// install time, which for older packages was a placeholder 1.0.0 and
+			// made every built-in look outdated.
+			if version := a.runningPluginVersion(id); version != "" {
+				card.Version = version
+			}
+			state, stateErr := object.getState(ctx)
 			if stateErr == nil {
 				card.State = state
 			} else {
