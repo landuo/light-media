@@ -340,6 +340,61 @@ func (o Options) writeStatus(outcome Outcome, runErr error) {
 	_ = os.Rename(staged, o.StatusPath)
 }
 
+// installedBuild returns the highest verified build already published under
+// <data>/bin. It makes an update durable across restarts and keeps startup off
+// the network when the artifact is already on disk.
+func (o Options) installedBuild() (string, string) {
+	entries, err := os.ReadDir(filepath.Join(o.DataDir, "bin"))
+	if err != nil {
+		return "", ""
+	}
+	bestPath, bestVersion := "", ""
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		if !strings.HasPrefix(name, "light-media-server-") {
+			continue
+		}
+		version := strings.TrimPrefix(name, "light-media-server-")
+		if !Newer(version, o.CurrentVersion) || !SameSeries(version, o.CurrentVersion) {
+			continue
+		}
+		if bestVersion == "" || Newer(version, bestVersion) {
+			info, statErr := entry.Info()
+			if statErr != nil || info.Mode().Perm()&0111 == 0 {
+				continue
+			}
+			bestPath, bestVersion = filepath.Join(o.DataDir, "bin", name), version
+		}
+	}
+	return bestPath, bestVersion
+}
+
+// recentInstallFailure reports whether the previous attempt failed while
+// transferring. A broken mirror must not cost the whole budget on every start.
+func (o Options) recentInstallFailure(now time.Time) bool {
+	raw, err := os.ReadFile(o.StatusPath)
+	if err != nil {
+		return false
+	}
+	var record struct {
+		Time   string `json:"time"`
+		Reason string `json:"reason"`
+	}
+	if json.Unmarshal(raw, &record) != nil || record.Reason != "install_failed" {
+		return false
+	}
+	at, err := time.Parse(time.RFC3339, record.Time)
+	if err != nil || at.After(now) {
+		return false
+	}
+	return now.Sub(at) < installFailureBackoff
+}
+
+const installFailureBackoff = 6 * time.Hour
+
 func nowUTC() string { return time.Now().UTC().Format(time.RFC3339) }
 
 // Run performs one check. When it installs and re-executes, Run does not
@@ -363,6 +418,23 @@ func run(ctx context.Context, opts Options) (Outcome, error) {
 	if os.Getenv(UpdatedToEnv) != "" {
 		// This process already replaced the mounted build; never loop.
 		return Outcome{Reason: "already_updated_this_boot"}, nil
+	}
+	// A verified build already on disk wins: restarting must not depend on the
+	// feed, and it must not re-download the same artifact.
+	if path, version := opts.installedBuild(); path != "" {
+		outcome := Outcome{Checked: false, Tag: "v" + version, Installed: path, Reason: "local_build"}
+		exec := opts.Exec
+		if exec == nil {
+			exec = Exec
+		}
+		if err := exec(path, os.Args, append(os.Environ(), UpdatedToEnv+"="+version)); err != nil {
+			return outcome, err
+		}
+		outcome.Execed = true
+		return outcome, nil
+	}
+	if opts.StatusPath != "" && opts.recentInstallFailure(time.Now()) {
+		return Outcome{Reason: "backoff_after_failure"}, nil
 	}
 	feed := opts.ReleasesURL
 	if feed == "" {

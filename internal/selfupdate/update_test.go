@@ -312,3 +312,74 @@ func TestStalledTransferAbortsWithinBudget(t *testing.T) {
 		t.Fatalf("stalled transfer left files: %v", entries)
 	}
 }
+
+// A build that was already verified and published under <data>/bin must be used
+// without the network: restarts are the normal case, not the exception.
+func TestLocalVerifiedBuildWinsWithoutNetwork(t *testing.T) {
+	dir := t.TempDir()
+	bin := filepath.Join(dir, "bin")
+	if err := os.MkdirAll(bin, 0755); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(bin, "light-media-server-0.7.0")
+	if err := os.WriteFile(path, []byte("#!/bin/sh\nexit 0\n"), 0755); err != nil {
+		t.Fatal(err)
+	}
+	var execd string
+	opts := Options{
+		Mode: "release", CurrentVersion: "0.4.19", DataDir: dir, GOOS: "linux", GOARCH: "arm64",
+		ReleasesURL: "http://127.0.0.1:1/unreachable",
+		Exec:        func(p string, _ []string, _ []string) error { execd = p; return nil },
+	}
+	outcome, err := Run(context.Background(), opts)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !outcome.Execed || execd != path || outcome.Reason != "local_build" {
+		t.Fatalf("local build ignored: %+v exec=%q", outcome, execd)
+	}
+}
+
+// An installed build that is not newer must not be executed.
+func TestLocalBuildOfSameVersionIsIgnored(t *testing.T) {
+	dir := t.TempDir()
+	bin := filepath.Join(dir, "bin")
+	if err := os.MkdirAll(bin, 0755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(bin, "light-media-server-0.4.19"), []byte("x"), 0755); err != nil {
+		t.Fatal(err)
+	}
+	server := feed(t, "v0.4.19", "light-media-server-linux-arm64", "payload", nil)
+	opts := baseOptions(t, server)
+	opts.DataDir = dir
+	outcome, err := Run(context.Background(), opts)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if outcome.Execed {
+		t.Fatalf("same-version local build executed: %+v", outcome)
+	}
+}
+
+// A failed transfer backs off so the next start does not spend the budget again.
+func TestFailedInstallBacksOffOnNextStart(t *testing.T) {
+	dir := t.TempDir()
+	status := filepath.Join(dir, "update-status.json")
+	if err := os.WriteFile(status, []byte(`{"time":"`+time.Now().UTC().Format(time.RFC3339)+`","reason":"install_failed"}`), 0600); err != nil {
+		t.Fatal(err)
+	}
+	opts := Options{
+		Mode: "release", CurrentVersion: "0.4.19", DataDir: dir, GOOS: "linux", GOARCH: "arm64",
+		StatusPath:  status,
+		ReleasesURL: "http://127.0.0.1:1/unreachable",
+		Exec:        func(string, []string, []string) error { return nil },
+	}
+	outcome, err := Run(context.Background(), opts)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if outcome.Reason != "backoff_after_failure" || outcome.Checked {
+		t.Fatalf("backoff ignored: %+v", outcome)
+	}
+}
