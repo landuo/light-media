@@ -130,7 +130,7 @@ func (a *App) handler() http.Handler {
 			http.Error(w, "database unavailable", 503)
 			return
 		}
-		payload := map[string]any{"status": "ok", "version": appVersion}
+		payload := map[string]any{"status": "ok", "version": appVersion, "build": buildID}
 		if update := a.updateStatus(); update != nil {
 			payload["update"] = update
 		}

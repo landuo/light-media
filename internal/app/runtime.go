@@ -175,9 +175,16 @@ type Options struct {
 // editing the tree.
 var appVersion = "0.5.7"
 
+// buildID identifies the exact build so a deployment can be verified without
+// trusting file size. Release builds stamp it with the commit hash.
+var buildID = "dev"
+
 // Version reports the compiled application version. The startup updater needs
 // it before any App exists.
 func Version() string { return appVersion }
+
+// BuildID reports the stamped build identifier.
+func BuildID() string { return buildID }
 
 type APIError struct {
 	Code    string `json:"code"`
