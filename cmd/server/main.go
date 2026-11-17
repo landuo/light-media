@@ -268,11 +268,20 @@ func startupUpdateOptions(dataDir string, lookup func(string) (string, bool)) se
 }
 
 func applyStartupUpdate(dataDir string) error {
-	opts := startupUpdateOptions(dataDir, os.LookupEnv)
+	lookupValue := os.LookupEnv
+	opts := startupUpdateOptions(dataDir, lookupValue)
 	if !selfupdate.ModeEnabled(opts.Mode) {
 		return nil
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Minute)
+	// A startup check gets a hard overall budget so a broken proxy cannot hold
+	// the listener hostage; the next start retries.
+	budget := 120 * time.Second
+	if raw, ok := lookupValue("LIGHT_MEDIA_UPDATE_TIMEOUT_SECONDS"); ok {
+		if seconds, convErr := strconv.Atoi(raw); convErr == nil && seconds > 0 && seconds <= 900 {
+			budget = time.Duration(seconds) * time.Second
+		}
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), budget)
 	defer cancel()
 	outcome, err := selfupdate.Run(ctx, opts)
 	if err != nil {

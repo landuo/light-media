@@ -12,6 +12,7 @@
 package selfupdate
 
 import (
+	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -53,6 +54,9 @@ type Options struct {
 	// StatusPath receives one JSON record per startup check. Operators need the
 	// reason on the device; the process is re-executed before any log sink opens.
 	StatusPath string
+	// StallTimeout aborts a transfer that stops producing bytes. It is the guard
+	// that keeps a half-open connection from holding startup hostage.
+	StallTimeout time.Duration
 }
 
 type Asset struct {
@@ -212,7 +216,16 @@ func (o Options) client() *http.Client {
 	}}
 }
 
+func (o Options) stall() time.Duration {
+	if o.StallTimeout > 0 {
+		return o.StallTimeout
+	}
+	return 20 * time.Second
+}
+
 func (o Options) fetch(ctx context.Context, target string) ([]byte, error) {
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
 	request, err := http.NewRequestWithContext(ctx, http.MethodGet, target, nil)
 	if err != nil {
 		return nil, err
@@ -229,7 +242,31 @@ func (o Options) fetch(ctx context.Context, target string) ([]byte, error) {
 	if response.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("http %d", response.StatusCode)
 	}
-	return io.ReadAll(io.LimitReader(response.Body, maxAssetBytes))
+	// Reset on progress, fire on silence: a stalled socket cancels the request
+	// instead of burning the whole startup budget.
+	watchdog := time.AfterFunc(o.stall(), cancel)
+	defer watchdog.Stop()
+	var out bytes.Buffer
+	buf := make([]byte, 32<<10)
+	for {
+		n, readErr := response.Body.Read(buf)
+		if n > 0 {
+			watchdog.Reset(o.stall())
+			if out.Len()+n > maxAssetBytes {
+				return nil, errors.New("asset too large")
+			}
+			out.Write(buf[:n])
+		}
+		if readErr == io.EOF {
+			return out.Bytes(), nil
+		}
+		if readErr != nil {
+			if ctx.Err() != nil {
+				return nil, errors.New("transfer stalled")
+			}
+			return nil, readErr
+		}
+	}
 }
 
 // checksumFor reads "hash  name" / "hash *name" / bare-hash lines and returns

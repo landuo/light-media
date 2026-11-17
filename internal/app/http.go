@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/netip"
 	"net/url"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -78,6 +79,46 @@ func (a *App) writeError(w http.ResponseWriter, r *http.Request, e error) {
 	w.WriteHeader(out.Status)
 	_ = json.NewEncoder(w).Encode(map[string]any{"error": out, "request_id": w.Header().Get("X-Request-ID")})
 }
+
+// updateStatus exposes the last startup self-update attempt. The updater runs
+// before any log sink exists and may re-exec the process, so this file is the
+// only place an operator can read what happened on the device.
+func (a *App) updateStatus() map[string]any {
+	raw, err := os.ReadFile(filepath.Join(a.Dir, "update-status.json"))
+	if err != nil {
+		return nil
+	}
+	var record struct {
+		Time      string `json:"time"`
+		Current   string `json:"current_version"`
+		Tag       string `json:"tag"`
+		Installed string `json:"installed"`
+		Checked   bool   `json:"checked"`
+		Execed    bool   `json:"execed"`
+		Reason    string `json:"reason"`
+		Error     string `json:"error"`
+	}
+	if json.Unmarshal(raw, &record) != nil {
+		return nil
+	}
+	out := map[string]any{"time": record.Time, "checked": record.Checked, "current_version": record.Current}
+	for key, value := range map[string]string{"tag": record.Tag, "reason": record.Reason, "installed": record.Installed} {
+		if value != "" {
+			out[key] = value
+		}
+	}
+	if record.Execed {
+		out["execed"] = true
+	}
+	if record.Error != "" {
+		if len(record.Error) > 160 {
+			record.Error = record.Error[:160]
+		}
+		out["error"] = record.Error
+	}
+	return out
+}
+
 func (a *App) Handler() http.Handler {
 	return mountEntrypoints(a.requestLogged(nativeDisplayDeadline(a.handler(), 30*time.Second)))
 }
@@ -88,7 +129,11 @@ func (a *App) handler() http.Handler {
 			http.Error(w, "database unavailable", 503)
 			return
 		}
-		writeJSON(w, r, map[string]string{"status": "ok", "version": appVersion})
+		payload := map[string]any{"status": "ok", "version": appVersion}
+		if update := a.updateStatus(); update != nil {
+			payload["update"] = update
+		}
+		writeJSON(w, r, payload)
 	})
 	mux.HandleFunc("/api/", a.api)
 	if a.web != nil {

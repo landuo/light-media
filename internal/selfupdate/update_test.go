@@ -270,3 +270,45 @@ func TestSlowBodyIsNotCutByHeaderTimeout(t *testing.T) {
 		t.Fatalf("slow body rejected: %v", err)
 	}
 }
+
+// A server that sends headers and then goes silent must not hold startup: the
+// stall watchdog aborts the transfer and the caller keeps its current build.
+func TestStalledTransferAbortsWithinBudget(t *testing.T) {
+	name := "light-media-server-linux-arm64"
+	release1 := http.NewServeMux()
+	var server *httptest.Server
+	release1.HandleFunc("/releases", func(w http.ResponseWriter, r *http.Request) {
+		raw, _ := json.Marshal([]release{{Tag: "v0.9.0", Assets: []Asset{
+			{Name: name, URL: server.URL + "/bin"},
+			{Name: name + ".sha256", URL: server.URL + "/sums"},
+		}}})
+		_, _ = w.Write(raw)
+	})
+	release1.HandleFunc("/bin", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Length", "1048576")
+		_, _ = w.Write([]byte(strings.Repeat("x", 4096)))
+		w.(http.Flusher).Flush()
+		<-r.Context().Done() // never finish the body
+	})
+	release1.HandleFunc("/sums", func(w http.ResponseWriter, r *http.Request) {
+		_, _ = w.Write([]byte(strings.Repeat("a", 64) + "  " + name + "\n"))
+	})
+	server = httptest.NewServer(release1)
+	defer server.Close()
+
+	opts := baseOptions(t, server)
+	opts.StallTimeout = 300 * time.Millisecond
+	started := time.Now()
+	_, err := Run(context.Background(), opts)
+	elapsed := time.Since(started)
+	if err == nil {
+		t.Fatal("stalled transfer must fail")
+	}
+	if elapsed > 3*time.Second {
+		t.Fatalf("stall watchdog too slow: %s", elapsed)
+	}
+	entries, _ := os.ReadDir(filepath.Join(opts.DataDir, "bin"))
+	if len(entries) != 0 {
+		t.Fatalf("stalled transfer left files: %v", entries)
+	}
+}
