@@ -252,10 +252,18 @@ func startupUpdateOptions(dataDir string, lookup func(string) (string, bool)) se
 	if token == "" {
 		token = get("GITHUB_TOKEN")
 	}
+	// A mirror can be pinned per install without recreating the container: the
+	// environment wins, otherwise the data directory may carry a feed URL.
+	feed := get("LIGHT_MEDIA_UPDATE_RELEASES")
+	if feed == "" {
+		if raw, err := os.ReadFile(filepath.Join(dataDir, "update-feed-url")); err == nil {
+			feed = strings.TrimSpace(string(raw))
+		}
+	}
 	return selfupdate.Options{
 		Mode:           mode,
 		CurrentVersion: app.Version(),
-		ReleasesURL:    get("LIGHT_MEDIA_UPDATE_RELEASES"),
+		ReleasesURL:    feed,
 		DataDir:        dataDir,
 		StatusPath:     filepath.Join(dataDir, "update-status.json"),
 		GOOS:           runtime.GOOS,

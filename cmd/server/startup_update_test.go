@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 
 	"light-media/internal/selfupdate"
@@ -50,5 +52,27 @@ func TestStartupUpdateDisabledByDefaultEnvironment(t *testing.T) {
 	opts := startupUpdateOptions("/config", func(string) (string, bool) { return "", false })
 	if !selfupdate.ModeEnabled(opts.Mode) {
 		t.Fatal("an unset mode follows the source default and enables the check")
+	}
+}
+
+// A pinned mirror must work without recreating the container: the data
+// directory carries the feed URL when the environment does not.
+func TestStartupUpdateReadsPinnedFeedFile(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "update-feed-url"), []byte("  http://mirror.invalid/releases\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	opts := startupUpdateOptions(dir, func(string) (string, bool) { return "", false })
+	if opts.ReleasesURL != "http://mirror.invalid/releases" {
+		t.Fatalf("pinned feed ignored: %q", opts.ReleasesURL)
+	}
+	// The environment still wins when both are present.
+	env := map[string]string{"LIGHT_MEDIA_UPDATE_RELEASES": "http://env.invalid/releases"}
+	opts = startupUpdateOptions(dir, func(key string) (string, bool) {
+		value, ok := env[key]
+		return value, ok
+	})
+	if opts.ReleasesURL != "http://env.invalid/releases" {
+		t.Fatalf("environment must win: %q", opts.ReleasesURL)
 	}
 }
