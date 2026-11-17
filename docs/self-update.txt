@@ -64,3 +64,18 @@ feed 返回空数组 → 记录 `startup_update_skipped`（reason=`no_release_fo
 `internal/selfupdate` 覆盖：同系列升级安装、同版本/降级/跨主版本跳过、
 校验不匹配不落盘、缺校验资产不收、关闭模式不访问网络、feed 不可达、
 重入标记、版本比较。`cmd/server` 覆盖环境变量到选项的映射与回退。
+
+本地验证流程（无需发布 Release）
+----------------------------
+1. 用当前树构建一个本机二进制：`go build -o /tmp/e2e/server ./cmd/server`。
+2. 准备 feed 目录：一个假的"新版本"可执行文件（打印一行即可）、它的 `.sha256`、
+   一段 GitHub 形状的 release JSON（tag 高于当前版本，资产 URL 指向本地地址）。
+3. 起本地静态服务：`cd /tmp/e2e/feed && python3 -m http.server 8902 --bind 127.0.0.1`。
+4. 运行：`LIGHT_MEDIA_AUTO_UPDATE=release LIGHT_MEDIA_UPDATE_RELEASES=http://127.0.0.1:8902/releases \
+   ./server -listen 127.0.0.1:3199 -data-dir /tmp/e2e/data`。
+
+预期：进程打印假二进制的内容（说明已 exec 过去），`<data>/bin/light-media-server-<ver>`
+出现且为 0755，旧进程从未监听端口。
+
+已验证场景：新版本安装并 exec（argv 保留）、校验不匹配不落盘仍启动、feed 不可达仍启动、
+版本相同跳过、开关关闭零网络、重复启动会重新安装并再次 exec。
