@@ -179,7 +179,7 @@ func parseVideo(title string, subtitle *string, isfile bool, options Options) (M
 			s.lastType, s.stopName = "fps", true
 		}
 	}
-	m.Quality = strings.TrimSpace(strings.Join(s.sources, " "))
+	m.Quality = uhdBluRaySource(s.sources)
 	slices.Reverse(s.effects)
 	m.Effect = strings.Join(s.effects, " ")
 	if strings.Contains(m.Quality, "BluRay") && (subtitle != nil && rxHas(`DIY`, *subtitle, true) || rxHas(`-DIY@`, title, true)) {
@@ -338,6 +338,33 @@ func initResourceType(s *videoState, token, mode string) bool {
 		return true
 	}
 	return false
+}
+
+// Source's "preserve split UHD BluRay source" fix collapses the label to
+// "UHD BluRay" when the title carries UHD before BluRay; a REMUX token that
+// follows is not part of that label and must not survive as a suffix. The
+// reverse order stays "BluRay UHD" because the recorded installed-build oracle
+// for that shape has not been re-captured yet.
+func uhdBluRaySource(sources []string) string {
+	uhdAt, blurayAt := -1, -1
+	for i, source := range sources {
+		switch {
+		case strings.EqualFold(source, "UHD BluRay"):
+			return "UHD BluRay"
+		case strings.EqualFold(source, "UHD"):
+			if uhdAt < 0 {
+				uhdAt = i
+			}
+		case strings.Contains(strings.ToLower(source), "bluray"):
+			if blurayAt < 0 {
+				blurayAt = i
+			}
+		}
+	}
+	if uhdAt >= 0 && blurayAt >= 0 && uhdAt < blurayAt {
+		return "UHD BluRay"
+	}
+	return strings.TrimSpace(strings.Join(sources, " "))
 }
 
 func appendSource(s *videoState, value string) {

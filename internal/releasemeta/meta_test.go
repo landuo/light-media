@@ -81,7 +81,7 @@ func TestSharedSourceExpressionsAreSafeForConcurrentPluginEvents(t *testing.T) {
 			defer group.Done()
 			for repeat := 0; repeat < 4; repeat++ {
 				got, err := Parse("Synthetic Show S04E02 2160p UHD BluRay REMUX HDR10 CustomB CustomA-MySynthetic.mkv", nil, options)
-				if err != nil || got.Season != "S04" || got.Resolution != "2160p" || got.Quality != "UHD BluRay REMUX" || got.Team != "MySynthetic" || got.Customization != "CustomA@CustomB" {
+				if err != nil || got.Season != "S04" || got.Resolution != "2160p" || got.Quality != "UHD BluRay" || got.Team != "MySynthetic" || got.Customization != "CustomA@CustomB" {
 					t.Errorf("concurrent metadata=%+v error=%v", got, err)
 				}
 			}
