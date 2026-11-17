@@ -485,6 +485,7 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 			}
 		}
 	}()
+	noticeFiles := []PlanFile{}
 	for _, index := range indices {
 		file := &plan.Files[index]
 		originalFailedFile, originalFailedAuxiliary = nil, nil
@@ -519,6 +520,9 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 			return err
 		}
 		publicationCommitted := false
+		// A transfer context supplied before publication belongs to a plugin's
+		// own transfer flow; native flows get theirs filled in below.
+		_, sourcedTransfer := meta.OriginalTransfer[file.ID]
 		var taskFailures []error
 		cleanupKeys := []string{}
 		failures := originalTransferTaskFailures{OverwriteCleanupKeys: &cleanupKeys}
@@ -936,6 +940,9 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 				return err
 			}
 			publicationCommitted = true
+			if mainSucceeded && organizeSuccessNoticeApplies(*file, receipt, sourcedTransfer) {
+				noticeFiles = append(noticeFiles, *file)
+			}
 			if len(owned) != 0 {
 				message := "已登记本次实际发布成功的文件；源文件保留"
 				if file.Method == "move" {
@@ -962,6 +969,9 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 			return err
 		}
 		batchFailures = append(batchFailures, taskFailures...)
+	}
+	if len(noticeFiles) > 0 {
+		a.postOriginalOrganizeSuccessNotice(ctx, plan, noticeFiles)
 	}
 	if len(batchFailures) > 0 {
 		return errors.Join(batchFailures...)
