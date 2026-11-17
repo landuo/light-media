@@ -160,8 +160,13 @@ func OpenStore(dir string) (*Store, error) {
 	_ = os.Chmod(filepath.Join(dir, "light-media.db"), 0600)
 	// WAL readers do not wait for the organizer's single writer connection.
 	// Keep writes serialized; configure every reader connection through its DSN.
+	// A pure-Go SQLite page cache lives on the Go heap and is never reclaimed by
+	// GC, so the budget is per connection and multiplies: four readers reserve
+	// four times this number for a working set that fits in a fraction of it.
+	// The pool keeps four connections so concurrent UI reads and history
+	// transactions never queue behind each other while the cache drops.
 	readURL := url.URL{Scheme: "file", Path: dbPath}
-	params := url.Values{"mode": {"ro"}, "_pragma": {"busy_timeout(5000)", "query_only(ON)", "foreign_keys(ON)", "cache_size(-4096)"}}
+	params := url.Values{"mode": {"ro"}, "_pragma": {"busy_timeout(5000)", "query_only(ON)", "foreign_keys(ON)", "cache_size(-2048)"}}
 	readURL.RawQuery = params.Encode()
 	readDB, err := sql.Open("sqlite", readURL.String())
 	if err == nil {
