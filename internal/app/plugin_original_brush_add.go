@@ -358,26 +358,29 @@ func (a *App) originalBrushRememberOwner(ctx context.Context, scope originalBase
 	return nil
 }
 
-func (a *App) originalBrushReadOwner(ctx context.Context, scope originalBaseCallScope, downloader DownloaderConfig, hash string) (originalBrushOwner, error) {
+func (a *App) originalBrushReadOwner(ctx context.Context, scope originalBaseCallScope, downloader DownloaderConfig, hash string) (originalBrushOwner, bool, error) {
 	var owner originalBrushOwner
 	instance := scope.installation.InstanceID
 	key := originalBrushOwnerKey(instance, downloader.ID, hash)
 	var sealed []byte
 	err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, originalBrushOwnerKind, key).Scan(&sealed)
 	if errors.Is(err, sql.ErrNoRows) {
-		return owner, nil
+		return owner, false, nil
 	}
 	if err != nil {
-		return owner, err
+		return owner, false, err
 	}
 	plain, err := a.pluginStore.unseal(originalBrushOwnerKind, instance, key, sealed)
 	if err != nil || json.Unmarshal(plain, &owner) != nil || owner.TaskID == "" || owner.InstanceID != instance || owner.DownloaderID != downloader.ID || owner.Hash != hash {
-		return originalBrushOwner{}, bad("PLUGIN_CAPABILITY_DENIED", "刷流种子归属无法核对")
+		return originalBrushOwner{}, false, bad("PLUGIN_CAPABILITY_DENIED", "刷流种子归属无法核对")
 	}
 	if owner.DownloaderKey != tokenHash(string(mustCleanSeedJSON(downloader.Config))) {
-		return originalBrushOwner{}, nil
+		// A receipt bound to an older daemon configuration is not a valid
+		// confirmation, but its row still proves this instance once adopted the
+		// task. Report it as stale so the legacy path may replace the binding.
+		return originalBrushOwner{}, true, nil
 	}
-	return owner, nil
+	return owner, false, nil
 }
 
 func (a *App) originalBrushForgetOwners(ctx context.Context, scope originalBaseCallScope, downloader string, hashes []string) error {
@@ -417,7 +420,7 @@ func (a *App) originalBrushControlAllowed(ctx context.Context, scope originalBas
 	}
 	var legacy []string
 	for _, hash := range hashes {
-		owner, err := a.originalBrushReadOwner(ctx, scope, downloader, hash)
+		owner, _, err := a.originalBrushReadOwner(ctx, scope, downloader, hash)
 		if err != nil {
 			return err
 		}

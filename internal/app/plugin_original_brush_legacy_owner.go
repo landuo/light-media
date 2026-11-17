@@ -79,7 +79,7 @@ func originalBrushDaemonAddress(configured DownloaderConfig) string {
 // Callers serialize downloader effects with downloadMu.
 func (a *App) originalBrushOwnedTorrent(ctx context.Context, scope originalBaseCallScope, downloader DownloaderConfig, hash, directory string, tags []string, allowAdopt bool) error {
 	deny := bad("DOWNLOAD_NOT_MANAGED", "此种子缺少当前刷流实例的可靠归属")
-	owner, err := a.originalBrushReadOwner(ctx, scope, downloader, hash)
+	owner, stale, err := a.originalBrushReadOwner(ctx, scope, downloader, hash)
 	if err != nil {
 		return err
 	}
@@ -156,7 +156,15 @@ func (a *App) originalBrushOwnedTorrent(ctx context.Context, scope originalBaseC
 	if err != nil {
 		return err
 	}
-	result, err := tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO NOTHING`, originalBrushOwnerKind, key, sealed, now())
+	// A stale receipt (same instance, downloader and hash bound to an older
+	// daemon configuration) has already been rejected as a confirmation, so the
+	// verified legacy evidence replaces that binding instead of blocking
+	// adoption forever. Every other pre-existing record stays untouched.
+	insert := `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO NOTHING`
+	if stale {
+		insert = `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`
+	}
+	result, err := tx.ExecContext(ctx, insert, originalBrushOwnerKind, key, sealed, now())
 	if err != nil {
 		return err
 	}

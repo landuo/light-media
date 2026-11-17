@@ -150,7 +150,7 @@ func TestBrushFlowLegacyOwnershipThroughHostDaemon(t *testing.T) {
 		t.Fatal("proven legacy task did not reach source reannounce", err)
 	}
 	scope := originalBaseCallScope{installation: meta}
-	owner, err := a.originalBrushReadOwner(ctx, scope, downloader, valid)
+	owner, _, err := a.originalBrushReadOwner(ctx, scope, downloader, valid)
 	if err != nil || owner.TaskID != taskID || owner.AdoptedPath != root {
 		t.Fatal("independent daemon and source evidence did not persist the adopted identity", err)
 	}
@@ -169,7 +169,7 @@ func TestBrushFlowLegacyOwnershipThroughHostDaemon(t *testing.T) {
 	if _, err := os.Stat(filepath.Join(root, fileName(valid))); !os.IsNotExist(err) {
 		t.Fatal("owned daemon did not remove the selected file", err)
 	}
-	owner, err = a.originalBrushReadOwner(ctx, scope, downloader, valid)
+	owner, _, err = a.originalBrushReadOwner(ctx, scope, downloader, valid)
 	if err != nil || owner.TaskID != "" {
 		t.Fatal("confirmed deletion did not retire the adopted ownership", err)
 	}
@@ -177,5 +177,97 @@ func TestBrushFlowLegacyOwnershipThroughHostDaemon(t *testing.T) {
 	defer mu.Unlock()
 	if !slices.Equal(reannounced, []string{valid}) || !slices.Equal(deleted, []string{valid}) {
 		t.Fatal("isolated daemon observed unexpected effects", len(reannounced), len(deleted))
+	}
+}
+
+// A receipt bound to an older daemon configuration is not a confirmation, but
+// it must not block the proven legacy adoption either: the verified marker,
+// destination and task replace that stale binding exactly once.
+func TestBrushFlowStaleOwnerReceiptIsReplacedByVerifiedLegacyEvidence(t *testing.T) {
+	a := newTestApp(t)
+	ctx := t.Context()
+	root, err := filepath.EvalSymlinks(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	const taskID = "stale-owner-task"
+	hash := strings.Repeat("e", 40)
+	if err := os.WriteFile(filepath.Join(root, "e.mkv"), []byte("owned"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	var reannounced []string
+	peer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/api/v2/auth/login":
+			http.SetCookie(w, &http.Cookie{Name: "SID", Value: "fixture-only", Path: "/"})
+			_, _ = io.WriteString(w, "Ok.")
+		case "/api/v2/app/version":
+			_, _ = io.WriteString(w, "v5.0.5")
+		case "/api/v2/torrents/info":
+			row := workflowTask(hash, 1)
+			row["save_path"], row["tags"] = root, "已整理, 刷流, "+originalBrushTaskTag(taskID)
+			workflowJSON(w, []map[string]any{row})
+		case "/api/v2/torrents/files":
+			workflowJSON(w, []map[string]any{{"name": "e.mkv", "size": 5, "progress": 1}})
+		case "/api/v2/torrents/reannounce":
+			reannounced = append(reannounced, r.FormValue("hashes"))
+			_, _ = io.WriteString(w, "Ok.")
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	t.Cleanup(peer.Close)
+	settings := a.Settings()
+	downloader := DownloaderConfig{Config: download.Config{ID: "owned-stale-brush", Kind: "qbittorrent", BaseURL: peer.URL}, Name: "Owned stale qB"}
+	settings.Downloaders = []DownloaderConfig{downloader}
+	settings.AllowedRoots = []string{root}
+	if err := a.saveSettings(ctx, settings); err != nil {
+		t.Fatal(err)
+	}
+	meta := PluginInstallation{InstanceID: "BrushFlowLanduo", PluginID: "BrushFlowLanduo", Version: "5.2.18", ManifestSchemaVersion: 1, Manifest: json.RawMessage(`{}`)}
+	if err := a.pluginStore.Install(ctx, meta); err != nil {
+		t.Fatal(err)
+	}
+	meta, err = a.pluginStore.Installation(ctx, meta.InstanceID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	cfg := originalBrushStoredConfig{Enabled: true, Tasks: []originalBrushAddTask{{ID: taskID, SiteID: 301, Downloader: downloader.Name, Enabled: true}}}
+	if _, err := a.pluginStore.saveOriginalPluginConfiguration(ctx, meta, mustCleanSeedJSON(cfg)); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.pluginStore.originalBaseSaveData(ctx, meta.InstanceID, "task."+taskID+".torrents", mustCleanSeedJSON(map[string]map[string]any{hash: {"task_id": taskID, "site": 301, "title": "owned source record", "deleted": false}})); err != nil {
+		t.Fatal(err)
+	}
+	key := originalBrushOwnerKey(meta.InstanceID, downloader.ID, hash)
+	stale := originalBrushOwner{InstanceID: meta.InstanceID, DownloaderID: downloader.ID, DownloaderKey: tokenHash("older-daemon-configuration"), Hash: hash, TaskID: taskID, AdoptedPath: root}
+	sealed, err := a.pluginStore.seal(originalBrushOwnerKind, meta.InstanceID, key, mustCleanSeedJSON(stale))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = a.Store.DB.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?)`, originalBrushOwnerKind, key, sealed, now()); err != nil {
+		t.Fatal(err)
+	}
+	object := &originalPluginInstance{app: a, installation: meta, hostContract: pluginResourcesSDKContract,
+		manifest: plugins.Manifest{Capabilities: []string{plugins.DownloaderSourceControlCapability}}}
+	lease, callCtx, err := object.reserveOriginalSubmission()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { object.releaseOriginalSubmission(lease); a.wg.Done() })
+	host, closeScope := object.originalBaseSessionHost(callCtx, "check", nil)
+	t.Cleanup(closeScope)
+	identity := plugins.Identity{PluginID: meta.PluginID, InstanceID: meta.InstanceID, Version: meta.Version}
+	raw, err := host(callCtx, identity, plugins.DownloaderSourceControlCapability, mustCleanSeedJSON(plugins.DownloaderControlRequestV1{DownloaderID: downloader.ID, Hashes: []string{hash}, Action: "reannounce"}))
+	var outcome plugins.DownloaderSourceMutationResultV1
+	if err != nil || json.Unmarshal(raw, &outcome) != nil || !outcome.Accepted {
+		t.Fatalf("stale receipt still blocked the proven legacy reannounce: %v", err)
+	}
+	if !slices.Equal(reannounced, []string{hash}) {
+		t.Fatalf("daemon did not observe the reannounce: %v", reannounced)
+	}
+	owner, staleReceipt, err := a.originalBrushReadOwner(ctx, originalBaseCallScope{installation: meta}, downloader, hash)
+	if err != nil || staleReceipt || owner.TaskID != taskID || owner.AdoptedPath != root {
+		t.Fatalf("stale binding was not replaced by the verified owner: %+v stale=%v err=%v", owner, staleReceipt, err)
 	}
 }
