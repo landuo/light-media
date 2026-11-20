@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload any, wf string) (Job, error) {
+func (a *App) enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload any, wf string) (Job, error) {
 	if kind == "import" {
 		if err := guardOrganizePreparation(ctx, tx); err != nil {
 			return Job{}, err
@@ -44,7 +44,12 @@ func enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload any, wf str
 		ID string `json:"id"`
 	}
 	_ = json.Unmarshal(b, &identity)
-	if identity.ID != "" {
+	if identity.ID != "" && kind != "import" && kind != "organize_prepare" && a.subjectBusy(kind, identity.ID) {
+		// The pending set lives in memory, so this refusal no longer costs a
+		// query inside the caller's transaction.
+		return Job{}, bad("JOB_EXISTS", "已有该对象的任务正在等待或执行")
+	}
+	if identity.ID != "" && (kind == "import" || kind == "organize_prepare") {
 		var found string
 		active := "state IN " + activeOrganizeStates
 		if kind == "organize_prepare" {
@@ -75,6 +80,11 @@ func enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload any, wf str
 	if e == nil {
 		e = registerOrganizeQueueTx(ctx, tx, j)
 	}
+	if e == nil {
+		// Registered now so a waiter wakes immediately after commit; the claim
+		// confirms against the row, so an aborted transaction is harmless.
+		a.indexEnqueue(j)
+	}
 	return j, e
 }
 func (a *App) enqueue(ctx context.Context, kind string, payload any, wf string) (Job, error) {
@@ -83,7 +93,7 @@ func (a *App) enqueue(ctx context.Context, kind string, payload any, wf string) 
 		return Job{}, e
 	}
 	defer tx.Rollback()
-	j, e := enqueueTx(ctx, tx, kind, payload, wf)
+	j, e := a.enqueueTx(ctx, tx, kind, payload, wf)
 	if e != nil {
 		return Job{}, e
 	}
@@ -166,6 +176,27 @@ func (a *App) claim(ctx context.Context) (Job, error) {
 }
 
 func (a *App) claimJob(ctx context.Context, lane jobLane) (Job, error) {
+	if lane == importJobs {
+		return a.claimImportJob(ctx)
+	}
+	// Dispatch reads the in-memory index; the row is only confirmed, never
+	// searched. That removes the per-tick claim query entirely.
+	if j, err := a.claimFromIndex(ctx, lane); err == nil {
+		return j, nil
+	} else if !errors.Is(err, sql.ErrNoRows) {
+		return Job{}, err
+	}
+	// Fallback: the index could be empty because loading failed or because a
+	// row was written by another path. One table lookup re-admits whatever it
+	// finds, so a damaged index degrades to the old behaviour instead of a
+	// queue that silently stops moving.
+	j, err := a.claimJobByQuery(ctx, lane)
+	if err == nil {
+		a.indexRefresh(j)
+	}
+	return j, err
+}
+func (a *App) claimJobByQuery(ctx context.Context, lane jobLane) (Job, error) {
 	if lane == importJobs {
 		return a.claimImportJob(ctx)
 	}

@@ -47,13 +47,21 @@ func (a *App) finishJob(ctx context.Context, j Job, state, code, message string,
 	}
 	var events []json.RawMessage
 	if j.Kind == "import" || j.Kind == "organize_file" || j.Kind == "reorganize_cleanup" || j.Kind == "quality_cleanup" {
-		events, e = flushOriginalScrapeBatchTx(ctx, tx, originalScrapeBatchID(j), false)
+		events, e = a.flushOriginalScrapeBatchTx(ctx, tx, originalScrapeBatchID(j), false)
 		if e != nil {
 			return false, e
 		}
 	}
 	if e = tx.Commit(); e != nil {
 		return false, e
+	}
+	// The index follows the row: a retry re-arms the job, a terminal state drops
+	// it. Without this the worker would keep seeing work that no longer exists.
+	if j2 := j; true {
+		j2.State = state
+		j2.RunAt = runAt
+		j2.UpdatedAt = now()
+		a.indexRefresh(j2)
 	}
 	if err := a.finishOriginalTransferTorrent(ctx, j, state); err != nil {
 		a.log("WARN", "imports", "torrent_completion_check_failed", a.clean(err.Error()), j.WorkflowID, j.ID)

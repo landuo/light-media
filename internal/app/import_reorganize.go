@@ -237,7 +237,7 @@ func reorganizeReserveTx(ctx context.Context, tx *sql.Tx, plan ImportPlan) error
 
 // Register the replacement and its cleanup in the same transaction as the new
 // asset. No old file or slot is removed before the new video is published.
-func commitImportReorganizeTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, meta importMetadata, asset Asset, owned []managedFile) error {
+func (a *App) commitImportReorganizeTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, meta importMetadata, asset Asset, owned []managedFile) error {
 	if meta.Reorganize == nil {
 		return nil
 	}
@@ -308,7 +308,7 @@ func commitImportReorganizeTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, 
 	if err := txPut(ctx, tx, "reorganize_cleanup", cleanup.ID, cleanup); err != nil {
 		return err
 	}
-	_, err := enqueueTx(ctx, tx, "reorganize_cleanup", map[string]string{"id": plan.ID}, plan.WorkflowID)
+	_, err := a.enqueueTx(ctx, tx, "reorganize_cleanup", map[string]string{"id": plan.ID}, plan.WorkflowID)
 	return err
 }
 
@@ -370,7 +370,7 @@ func (a *App) runReorganizeCleanup(ctx context.Context, job Job, key string) err
 		return err
 	}
 	if cleanup.Scrape && !deferred {
-		if _, err = enqueueTx(ctx, tx, "scrape", map[string]string{"id": cleanup.NewAssetID}, job.WorkflowID); err != nil {
+		if _, err = a.enqueueTx(ctx, tx, "scrape", map[string]string{"id": cleanup.NewAssetID}, job.WorkflowID); err != nil {
 			return err
 		}
 	}

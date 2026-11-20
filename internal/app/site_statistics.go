@@ -177,7 +177,7 @@ func (a *App) siteStatisticsSnapshot(ctx context.Context) (statistic.Snapshot, e
 // A full refresh is a host job, as in SiteChain.refresh_userdatas. The plugin's
 // three-second date callback only submits it; slow sites do not hold a plugin
 // process or block all other plugin configuration for minutes.
-func enqueueSiteRefreshTx(ctx context.Context, tx *sql.Tx) (Job, error) {
+func (a *App) enqueueSiteRefreshTx(ctx context.Context, tx *sql.Tx) (Job, error) {
 	job, err := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind='site_refresh' AND state IN ('queued','running') ORDER BY created_at LIMIT 1`))
 	if err == nil {
 		return job, nil
@@ -185,7 +185,7 @@ func enqueueSiteRefreshTx(ctx context.Context, tx *sql.Tx) (Job, error) {
 	if !errors.Is(err, sql.ErrNoRows) {
 		return job, err
 	}
-	return enqueueTx(ctx, tx, "site_refresh", map[string]string{"id": "site_refresh"}, "")
+	return a.enqueueTx(ctx, tx, "site_refresh", map[string]string{"id": "site_refresh"}, "")
 }
 
 func (a *App) runSiteRefresh(ctx context.Context, job Job) error {
@@ -316,7 +316,7 @@ func (a *App) scheduleSiteDataRefresh(ctx context.Context, at time.Time) error {
 	} else if clock.Hours != hours || clock.Next.IsZero() {
 		clock.Hours, clock.Next = hours, at.Add(interval)
 	} else if !clock.Next.After(at) {
-		if _, err = enqueueSiteRefreshTx(ctx, tx); err != nil {
+		if _, err = a.enqueueSiteRefreshTx(ctx, tx); err != nil {
 			return err
 		}
 		clock.Next = clock.Next.Add((at.Sub(clock.Next)/interval + 1) * interval)

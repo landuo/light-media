@@ -144,7 +144,7 @@ func TestReservationAndJobCommitRollback(t *testing.T) {
 	if e = a.Store.Reserve(ctx, tx, "tv:1418", 7, []int{17}, "intent1"); e != nil {
 		t.Fatal(e)
 	}
-	j, e := enqueueTx(ctx, tx, "download", map[string]string{"id": "intent1"}, "wf1")
+	j, e := a.enqueueTx(ctx, tx, "download", map[string]string{"id": "intent1"}, "wf1")
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -162,7 +162,7 @@ func TestReservationAndJobCommitRollback(t *testing.T) {
 	if e = a.Store.Reserve(ctx, tx, "tv:1418", 7, []int{17}, "intent1"); e != nil {
 		t.Fatal(e)
 	}
-	if _, e = enqueueTx(ctx, tx, "download", map[string]string{"id": "intent1"}, "wf1"); e != nil {
+	if _, e = a.enqueueTx(ctx, tx, "download", map[string]string{"id": "intent1"}, "wf1"); e != nil {
 		t.Fatal(e)
 	}
 	if e = tx.Commit(); e != nil {

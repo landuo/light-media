@@ -535,7 +535,7 @@ func (a *App) commitQualityReplacementTx(ctx context.Context, tx *sql.Tx, plan I
 	if e = a.writeQualitySealedTx(ctx, tx, "subscription_quality_cleanup", cleanup.ID, cleanup); e != nil {
 		return e
 	}
-	_, e = enqueueTx(ctx, tx, "quality_cleanup", map[string]string{"id": cleanup.ID}, plan.WorkflowID)
+	_, e = a.enqueueTx(ctx, tx, "quality_cleanup", map[string]string{"id": cleanup.ID}, plan.WorkflowID)
 	return e
 }
 
@@ -659,7 +659,7 @@ func (a *App) runQualityCleanup(ctx context.Context, j Job, id string) error {
 		return e
 	}
 	if replacement.ScrapeState == "pending" && !deferred {
-		if _, e = enqueueTx(ctx, tx, "scrape", map[string]string{"id": replacement.ID}, j.WorkflowID); e != nil {
+		if _, e = a.enqueueTx(ctx, tx, "scrape", map[string]string{"id": replacement.ID}, j.WorkflowID); e != nil {
 			return e
 		}
 	}

@@ -85,7 +85,7 @@ func (a *App) recordImportFileSubmissionFailure(ctx context.Context, planID, fil
 		return err
 	}
 	defer tx.Rollback()
-	job, err := enqueueTx(ctx, tx, "import", map[string]any{"id": plan.ID, "file_ids": []string{fileID}}, plan.WorkflowID)
+	job, err := a.enqueueTx(ctx, tx, "import", map[string]any{"id": plan.ID, "file_ids": []string{fileID}}, plan.WorkflowID)
 	if err != nil {
 		return err
 	}

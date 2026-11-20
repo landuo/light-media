@@ -67,6 +67,8 @@ type App struct {
 	pluginIdleTicks atomic.Int64
 	// startupReconcile carries the last startup source-reconcile outcome.
 	startupReconcile atomic.Pointer[startupReconcileStats]
+	// jobIndex holds every pending task so dispatch never scans the table.
+	jobIndex *jobIndex
 	// pluginBuiltinDisabled forces the external worker path. It exists for two
 	// honest reasons: an operator rollback (LIGHT_MEDIA_PLUGIN_BUILTIN=off)
 	// and framework tests that exercise the wire path with a compiled sample.
@@ -184,7 +186,7 @@ type Options struct {
 
 // appVersion is a var so a release build can stamp the deployed version without
 // editing the tree.
-var appVersion = "0.8.2"
+var appVersion = "0.8.3"
 
 // buildID identifies the exact build so a deployment can be verified without
 // trusting file size. Release builds stamp it with the commit hash.
@@ -346,6 +348,12 @@ func (a *App) Start(parent context.Context) {
 	// same mapped heap without running any plugin.
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.runMemoryReclaim(ctx) }()
+	// Load pending work into the dispatch index before any worker starts, so
+	// rows written by a previous run are claimable and the queue never needs a
+	// table scan to find them.
+	if err := a.loadJobIndex(ctx); err != nil {
+		a.log("WARN", "jobs", "index_load_failed", "无法装入待执行任务，调度将退回表查询", "", "")
+	}
 	// One pass per start releases source files a restart could have baselined.
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.runDirectoryStartupReconcile(ctx) }()

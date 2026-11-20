@@ -208,7 +208,7 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		}
 		job, err = promoteOrganizeFileTx(ctx, tx, work, plan.ID, fileIDs, "queued", "", "")
 	} else {
-		job, err = enqueueTx(ctx, tx, "import", map[string]any{"id": plan.ID, "file_ids": fileIDs, "original_scrape_batch": batchID}, plan.WorkflowID)
+		job, err = a.enqueueTx(ctx, tx, "import", map[string]any{"id": plan.ID, "file_ids": fileIDs, "original_scrape_batch": batchID}, plan.WorkflowID)
 	}
 	if err != nil {
 		return Job{}, err
@@ -832,7 +832,7 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 						return err
 					}
 				}
-				if err = commitImportReorganizeTx(ctx, tx, plan, meta, asset, owned); err != nil {
+				if err = a.commitImportReorganizeTx(ctx, tx, plan, meta, asset, owned); err != nil {
 					return err
 				}
 				if err = a.commitDirectoryOverwriteTx(ctx, tx, plan.ID+"/"+file.ID, asset); err != nil {
@@ -927,7 +927,7 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 				}
 				if batched {
 					originalMetadataEvent = nil
-				} else if _, err = enqueueTx(ctx, tx, "scrape", payload, job.WorkflowID); err != nil {
+				} else if _, err = a.enqueueTx(ctx, tx, "scrape", payload, job.WorkflowID); err != nil {
 					return err
 				}
 			}
@@ -1125,7 +1125,7 @@ func (a *App) importCompleteIntent(ctx context.Context, tx *sql.Tx, plan ImportP
 				return bad("REVIEW_SUBSCRIPTION", "关联订阅记录无效")
 			}
 			if subscription.State == "active" && subscription.Revision == intent.SubscriptionRevision {
-				_, err = enqueueTx(ctx, tx, "subscription", map[string]any{"id": subscription.ID, "revision": subscription.Revision}, plan.WorkflowID)
+				_, err = a.enqueueTx(ctx, tx, "subscription", map[string]any{"id": subscription.ID, "revision": subscription.Revision}, plan.WorkflowID)
 				if err != nil {
 					var api *APIError
 					if !errors.As(err, &api) || api.Code != "JOB_EXISTS" {

@@ -469,7 +469,7 @@ func (a *App) confirmDownloadReview(ctx context.Context, key, planID string, con
 	if err = txPut(ctx, tx, "download_review", plan.ID, review); err != nil {
 		return Job{}, err
 	}
-	job, err := enqueueTx(ctx, tx, "import", map[string]any{"id": plan.ID}, in.WorkflowID)
+	job, err := a.enqueueTx(ctx, tx, "import", map[string]any{"id": plan.ID}, in.WorkflowID)
 	if err != nil {
 		return Job{}, err
 	}

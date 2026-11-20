@@ -242,7 +242,7 @@ func TestOrdinaryCompletionNewRevisionRevokesOnlyObsoletePreparation(t *testing.
 		}
 		defer tx.Rollback()
 		for i := 0; i < 2; i++ {
-			if e = enqueueSubscriptionCompletionPreparationForTx(ctx, tx, current, old.WorkflowID); e != nil {
+			if e = a.enqueueSubscriptionCompletionPreparationForTx(ctx, tx, current, old.WorkflowID); e != nil {
 				t.Fatal("obsolete revision blocked actual accepted transaction", e)
 			}
 		}

@@ -229,7 +229,7 @@ func recordOriginalScrapeTargetTx(ctx context.Context, tx *sql.Tx, job Job, raw 
 	return true, txPut(ctx, tx, "original_scrape_batch", key, batch)
 }
 
-func flushOriginalScrapeBatchTx(ctx context.Context, tx *sql.Tx, key string, close bool) ([]json.RawMessage, error) {
+func (a *App) flushOriginalScrapeBatchTx(ctx context.Context, tx *sql.Tx, key string, close bool) ([]json.RawMessage, error) {
 	if key == "" {
 		return nil, nil
 	}
@@ -254,7 +254,7 @@ func flushOriginalScrapeBatchTx(ctx context.Context, tx *sql.Tx, key string, clo
 				continue
 			}
 			payload := map[string]any{"id": target.Assets[0], "original_metadata_assets": target.Assets, "original_metadata_event": target.Event}
-			if _, err = enqueueTx(ctx, tx, "scrape", payload, key); err != nil {
+			if _, err = a.enqueueTx(ctx, tx, "scrape", payload, key); err != nil {
 				return nil, err
 			}
 			events = append(events, target.Event)
@@ -276,7 +276,7 @@ func (a *App) closeOriginalScrapeBatch(ctx context.Context, key string, close bo
 		return err
 	}
 	defer tx.Rollback()
-	events, err := flushOriginalScrapeBatchTx(ctx, tx, key, close)
+	events, err := a.flushOriginalScrapeBatchTx(ctx, tx, key, close)
 	if err != nil {
 		return err
 	}

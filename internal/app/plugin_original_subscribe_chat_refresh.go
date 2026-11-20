@@ -331,7 +331,7 @@ func (a *App) originalChatLatestPublish(ctx context.Context, subs []Subscription
 		if !originalChatLatestActive(sub) || len(batch.Sites) == 0 {
 			continue
 		}
-		job, err := enqueueTx(ctx, tx, "subscription", originalChatLatestJob{ID: sub.ID, Revision: sub.Revision, LatestBatch: batchID}, "")
+		job, err := a.enqueueTx(ctx, tx, "subscription", originalChatLatestJob{ID: sub.ID, Revision: sub.Revision, LatestBatch: batchID}, "")
 		if err != nil {
 			var api *APIError
 			if errors.As(err, &api) && api.Code == "JOB_EXISTS" {
@@ -413,7 +413,7 @@ func (a *App) enqueueOriginalChatRSSMatch(ctx context.Context, sub Subscription,
 		return Job{}, err
 	}
 	defer tx.Rollback()
-	job, err := enqueueTx(ctx, tx, "subscription", originalChatLatestJob{ID: sub.ID, Revision: sub.Revision, LatestBatch: batchID, RSSFallback: true}, id("wf_"))
+	job, err := a.enqueueTx(ctx, tx, "subscription", originalChatLatestJob{ID: sub.ID, Revision: sub.Revision, LatestBatch: batchID, RSSFallback: true}, id("wf_"))
 	if err != nil {
 		return Job{}, err
 	}

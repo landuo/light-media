@@ -422,7 +422,7 @@ func verifyOwnedProductionScrapeBatch(t *testing.T, dir, origin string, request 
 			a.Close()
 			t.Fatal(e)
 		}
-		cleanup, e := enqueueTx(ctx, tx, "quality_cleanup", map[string]any{"id": key, "original_scrape_batch": batchID, "original_scrape_deferred": true, "original_metadata_event": event}, batchID)
+		cleanup, e := a.enqueueTx(ctx, tx, "quality_cleanup", map[string]any{"id": key, "original_scrape_batch": batchID, "original_scrape_deferred": true, "original_metadata_event": event}, batchID)
 		if e != nil {
 			tx.Rollback()
 			a.Close()

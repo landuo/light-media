@@ -208,7 +208,7 @@ func siteMessageClaimBatch(t *testing.T, a *App) Job {
 		t.Fatal(err)
 	}
 	defer tx.Rollback()
-	job, err := enqueueSiteRefreshTx(ctx, tx)
+	job, err := a.enqueueSiteRefreshTx(ctx, tx)
 	if err != nil {
 		t.Fatal(err)
 	}

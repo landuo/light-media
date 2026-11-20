@@ -340,7 +340,7 @@ func (a *App) finishAssetScrape(ctx context.Context, job Job, asset *Asset) erro
 		if asset.FNOSRefreshTransfer != "" && (job.ParentJobID != "" || len(source.Metadata) > 0) {
 			payload["original_fnos_transfer"] = asset.FNOSRefreshTransfer
 		}
-		if _, err = enqueueTx(ctx, tx, "fnos_sync", payload, job.WorkflowID); err != nil {
+		if _, err = a.enqueueTx(ctx, tx, "fnos_sync", payload, job.WorkflowID); err != nil {
 			var api *APIError
 			if !errors.As(err, &api) || api.Code != "JOB_EXISTS" {
 				return err

@@ -33,7 +33,7 @@ func (a *App) enqueueDirectoryOrganizeFile(ctx context.Context, guard directoryI
 	if err = txPut(ctx, tx, "original_scrape_batch", payload.BatchID, originalScrapeBatch{ID: payload.BatchID, Closed: true}); err != nil {
 		return err
 	}
-	job, err := enqueueTx(ctx, tx, "organize_file", payload, id("wf_"))
+	job, err := a.enqueueTx(ctx, tx, "organize_file", payload, id("wf_"))
 	if err != nil {
 		return err
 	}

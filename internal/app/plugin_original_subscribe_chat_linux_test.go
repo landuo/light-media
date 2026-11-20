@@ -252,7 +252,7 @@ func TestOriginalLarkSubscribeInteractionLinuxAMD64(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer tx.Rollback()
-	job, err := enqueueTx(t.Context(), tx, "subscription", map[string]any{"id": s.ID, "revision": paused.Revision}, id("wf_"))
+	job, err := a.enqueueTx(t.Context(), tx, "subscription", map[string]any{"id": s.ID, "revision": paused.Revision}, id("wf_"))
 	if err != nil {
 		t.Fatal(err)
 	}

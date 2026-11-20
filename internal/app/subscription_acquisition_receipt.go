@@ -190,7 +190,7 @@ func (a *App) enqueueAcquisitionReceiptTx(ctx context.Context, tx *sql.Tx, in In
 	}
 	out := subscriptionAcquisitionReceipt{Version: 1, IntentID: in.ID, IntentSHA: acquisitionIntentSHA(in), RootID: r.ID, StepSHA: r.Steps[ordinal].InputSHA, ChildID: child.ID, ChildSHA: tokenHash(string(child.Payload)), WorkflowID: in.WorkflowID, PostSHA: tokenHash(string(mustCleanSeedJSON(post))), Phase: "prepared"}
 	jobCtx := context.WithValue(ctx, jobTraceKey{}, jobTrace{Job: child.ID})
-	job, e := enqueueTx(jobCtx, tx, "subscription_acquisition_receipt", map[string]string{"id": in.ID, "root": r.ID, "input_sha": out.StepSHA, "post_sha": out.PostSHA}, in.WorkflowID)
+	job, e := a.enqueueTx(jobCtx, tx, "subscription_acquisition_receipt", map[string]string{"id": in.ID, "root": r.ID, "input_sha": out.StepSHA, "post_sha": out.PostSHA}, in.WorkflowID)
 	if e != nil {
 		return e
 	}

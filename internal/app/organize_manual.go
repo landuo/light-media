@@ -719,10 +719,10 @@ func (a *App) recordManualOrganizeFailurePlan(ctx context.Context, path, wf stri
 	if isFileJob {
 		job, e = promoteOrganizeFileTx(ctx, tx, work, plan.ID, []string{plan.Files[0].ID}, "failed", code, reason)
 		if e == nil {
-			events, e = flushOriginalScrapeBatchTx(ctx, tx, work.BatchID, false)
+			events, e = a.flushOriginalScrapeBatchTx(ctx, tx, work.BatchID, false)
 		}
 	} else {
-		job, e = enqueueTx(ctx, tx, "import", payload, wf)
+		job, e = a.enqueueTx(ctx, tx, "import", payload, wf)
 		if e == nil {
 			_, e = tx.ExecContext(ctx, `UPDATE jobs SET state='failed',attempt=1,error_code=?,error_message=?,updated_at=? WHERE id=?`, code, reason, now(), job.ID)
 		}

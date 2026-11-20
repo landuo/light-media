@@ -36,7 +36,7 @@ func (a *App) enqueueSubscriptionCompletionPreparationTx(ctx context.Context, tx
 	if deferRSS, e := a.deferOriginalChatRSSQualityCompletionTx(ctx, tx, in, s); e != nil || deferRSS {
 		return e
 	}
-	return enqueueSubscriptionCompletionPreparationForTx(ctx, tx, s, in.WorkflowID)
+	return a.enqueueSubscriptionCompletionPreparationForTx(ctx, tx, s, in.WorkflowID)
 }
 
 func (a *App) requestPausedQualityCompletion(ctx context.Context, j Job, s Subscription) error {
@@ -73,7 +73,7 @@ func (a *App) enqueueQualityCompletionForTx(ctx context.Context, tx *sql.Tx, s S
 		}
 		return err
 	}
-	return enqueueSubscriptionCompletionPreparationForTx(ctx, tx, s, workflow)
+	return a.enqueueSubscriptionCompletionPreparationForTx(ctx, tx, s, workflow)
 }
 
 func (a *App) completionAcceptedClosure(ctx context.Context, q qualityReader, s Subscription) ([]subscriptionCompletionAccepted, error) {
@@ -291,7 +291,7 @@ func (a *App) prepareSubscriptionCompletion(ctx context.Context, j Job, key stri
 	if _, e = tx.ExecContext(ctx, `DELETE FROM subscribe WHERE uid=?`, s.ID); e != nil {
 		return e
 	}
-	job, e := enqueueTx(ctx, tx, "subscription_completion", map[string]string{"id": identity.ID}, j.WorkflowID)
+	job, e := a.enqueueTx(ctx, tx, "subscription_completion", map[string]string{"id": identity.ID}, j.WorkflowID)
 	if e != nil {
 		return e
 	}

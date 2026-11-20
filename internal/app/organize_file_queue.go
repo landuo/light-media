@@ -121,7 +121,7 @@ func (a *App) enqueueOrganizeFiles(ctx context.Context, parent Job, files []impo
 			out.Submitted++
 			continue
 		}
-		if _, err = enqueueTx(ctx, tx, "organize_file", candidate, parent.WorkflowID); err != nil {
+		if _, err = a.enqueueTx(ctx, tx, "organize_file", candidate, parent.WorkflowID); err != nil {
 			return out, err
 		}
 		queued++
@@ -159,7 +159,7 @@ func (a *App) cancelOrganizeFile(ctx context.Context, job Job) (any, error) {
 		}
 		return nil, bad("QUEUE_FILE_CHANGED", "文件任务已变化，请刷新整理队列后操作")
 	}
-	events, err := flushOriginalScrapeBatchTx(ctx, tx, originalScrapeBatchID(job), false)
+	events, err := a.flushOriginalScrapeBatchTx(ctx, tx, originalScrapeBatchID(job), false)
 	if err != nil {
 		return nil, err
 	}

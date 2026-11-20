@@ -202,7 +202,7 @@ func (a *App) publishHistoryDownloadFileDeleted(ctx context.Context, item transf
 		return err
 	}
 	if identity.Hash != "" {
-		job, e := enqueueTx(ctx, tx, "download_file_deleted", map[string]string{"id": fact.ID}, item.WorkflowID)
+		job, e := a.enqueueTx(ctx, tx, "download_file_deleted", map[string]string{"id": fact.ID}, item.WorkflowID)
 		if e != nil {
 			return e
 		}

@@ -215,7 +215,7 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 	if err = a.saveDownloadContextTx(ctx, tx, sourceContext); err != nil {
 		return out, err
 	}
-	if _, err = enqueueTx(ctx, tx, "native_download", map[string]string{"id": out.ID}, out.WorkflowID); err != nil {
+	if _, err = a.enqueueTx(ctx, tx, "native_download", map[string]string{"id": out.ID}, out.WorkflowID); err != nil {
 		return out, err
 	}
 	if err = tx.Commit(); err != nil {

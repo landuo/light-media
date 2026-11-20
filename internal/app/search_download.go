@@ -1088,7 +1088,7 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 			return intent, e
 		}
 	}
-	child, e := enqueueTx(ctx, tx, jobKind, childPayload, intent.WorkflowID)
+	child, e := a.enqueueTx(ctx, tx, jobKind, childPayload, intent.WorkflowID)
 	if e != nil {
 		return intent, e
 	}

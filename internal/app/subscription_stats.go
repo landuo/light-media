@@ -129,7 +129,7 @@ func (a *App) enqueueSubscriptionStatsTx(ctx context.Context, tx *sql.Tx, input 
 	if !errors.Is(e, sql.ErrNoRows) {
 		return "", e
 	}
-	job, e := enqueueTx(ctx, tx, "subscription_stats", map[string]string{"id": key}, wf)
+	job, e := a.enqueueTx(ctx, tx, "subscription_stats", map[string]string{"id": key}, wf)
 	if e != nil {
 		return "", e
 	}

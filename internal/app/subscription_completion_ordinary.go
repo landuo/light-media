@@ -348,7 +348,7 @@ type subscriptionCompletionPreparationPayload struct {
 	PausedSearchJob string `json:"_chat_paused_search_job,omitempty"`
 }
 
-func enqueueSubscriptionCompletionPreparationForTx(ctx context.Context, tx *sql.Tx, s Subscription, workflow string) error {
+func (a *App) enqueueSubscriptionCompletionPreparationForTx(ctx context.Context, tx *sql.Tx, s Subscription, workflow string) error {
 	// The generic queue deduplicates kind+object, while a completion is bound
 	// to one exact subscription revision. Revoke only obsolete preparations;
 	// a running one also loses its generation before its final source check.
@@ -363,7 +363,7 @@ func enqueueSubscriptionCompletionPreparationForTx(ctx context.Context, tx *sql.
 		return nil
 	}
 	payload := subscriptionCompletionPreparationPayload{ID: s.ID, Revision: s.Revision, PausedSearchJob: originalChatPausedSearchJob(ctx, s)}
-	_, e := enqueueTx(ctx, tx, "subscription_completion_prepare", payload, workflow)
+	_, e := a.enqueueTx(ctx, tx, "subscription_completion_prepare", payload, workflow)
 	return e
 }
 
@@ -398,7 +398,7 @@ func (a *App) requestOrdinarySubscriptionCompletion(ctx context.Context, j Job, 
 	if current.Revision != s.Revision || !a.subscriptionSearchState(ctx, current) || current.SourceState == "P" || current.BestVersion {
 		return nil
 	}
-	if e = enqueueSubscriptionCompletionPreparationForTx(ctx, tx, current, j.WorkflowID); e != nil {
+	if e = a.enqueueSubscriptionCompletionPreparationForTx(ctx, tx, current, j.WorkflowID); e != nil {
 		return e
 	}
 	current.LastReason = "目标已满足，等待原订阅完成判定、历史与通知流程"

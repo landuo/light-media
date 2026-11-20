@@ -131,7 +131,7 @@ func (a *App) admitUISubscriptionAdd(ctx context.Context, input subscriptionAddI
 		return identity, Job{}, e
 	}
 	defer tx.Rollback()
-	job, e := enqueueTx(ctx, tx, "subscription_add", map[string]string{"id": identity.ID}, identity.ID)
+	job, e := a.enqueueTx(ctx, tx, "subscription_add", map[string]string{"id": identity.ID}, identity.ID)
 	if e != nil {
 		return identity, job, e
 	}

@@ -21,7 +21,7 @@ func TestOriginalScrapeRetryPreservesSourceNumbers(t *testing.T) {
 	if e = txPut(ctx, tx, "original_scrape_batch", batch.ID, batch); e != nil {
 		t.Fatal(e)
 	}
-	j, e := enqueueTx(ctx, tx, "quality_cleanup", map[string]any{"id": "owned-cleanup", "original_scrape_batch": batch.ID, "original_metadata_event": raw}, "")
+	j, e := a.enqueueTx(ctx, tx, "quality_cleanup", map[string]any{"id": "owned-cleanup", "original_scrape_batch": batch.ID, "original_metadata_event": raw}, "")
 	if e != nil {
 		t.Fatal(e)
 	}
