@@ -388,6 +388,14 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 				if e = a.enqueueDirectoryOrganizeFile(ctx, guard, file, &f); e != nil {
 					return e
 				}
+				// enqueue already wrote the observation. Re-read it so this pass does
+				// not clobber what the task recorded in the meantime — writing the
+				// stale copy back turned "queued → imported" into "queued → observing"
+				// and the file never settled.
+				var live DirectoryObservedFile
+				if err := a.Store.Get(ctx, "directory_file", f.ID, &live); err == nil {
+					f = live
+				}
 			}
 		}
 		if owner, ok := downloads[file.Path]; ok {
@@ -862,11 +870,20 @@ func (a *App) directoryTitleMatches(ctx context.Context, kind string, year int, 
 			if number == 1 {
 				totalPages, totalResults = page.TotalPages, page.TotalResults
 			}
+			// A site names a release after the show's English title, while TMDB
+			// answers with the localized one, so an exact title comparison can never
+			// match. A single unambiguous result for the parsed title and year is
+			// accepted; ambiguity still requires the operator to choose.
+			unique := page.TotalResults == 1 && len(page.Results) == 1 && page.TotalPages == 1
 			for _, m := range page.Results {
 				if m.MediaType != kind || year > 0 && year != m.Year {
 					continue
 				}
 				if titles[directoryTitle(m.Title)] || titles[directoryTitle(m.OriginalTitle)] {
+					matches[m.ID] = m
+					continue
+				}
+				if unique {
 					matches[m.ID] = m
 				}
 			}
