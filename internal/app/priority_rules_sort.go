@@ -28,8 +28,24 @@ func (a *App) preparePrioritySorter(ctx context.Context, in SearchRequest, confi
 	if config.PriorityRules != nil {
 		s.priorities = append([]string{}, config.PriorityRules.TorrentPriority...)
 	}
+	// Site order becomes the only meaningful signal when no rule group is
+	// configured: every release then carries priority 0, so "torrent" compares
+	// equal for all of them and the choice falls through to upload and seeders,
+	// which ignores the preference the site list expresses. The order is taken
+	// from the list itself when no explicit priority was set.
+	rankedSites := false
 	for _, site := range config.Sites {
-		s.orders[site.ID] = site.Priority
+		if site.Priority > 0 {
+			rankedSites = true
+			break
+		}
+	}
+	for index, site := range config.Sites {
+		if rankedSites {
+			s.orders[site.ID] = site.Priority
+		} else {
+			s.orders[site.ID] = index + 1
+		}
 		s.names[site.ID] = site.Name
 		var snapshot siteSnapshot
 		err := a.Store.Get(ctx, "site_stats_latest", site.ID, &snapshot)
@@ -53,6 +69,19 @@ func (s prioritySorter) sort(a *App, candidates []Candidate, policy Policy) {
 	if s.media == nil {
 		sortSearchCandidates(candidates, policy)
 		return
+	}
+	// With no rule group every release scores 0 on "torrent", so the site order
+	// is promoted ahead of it. Once rules exist, the configured order wins again.
+	priorities := s.priorities
+	anyPriority := false
+	for _, candidate := range candidates {
+		if candidate.Resource.PriorityOrder != 0 {
+			anyPriority = true
+			break
+		}
+	}
+	if !anyPriority && len(s.orders) > 0 {
+		priorities = []string{"site", "torrent", "upload", "seeder"}
 	}
 	type keyed struct {
 		candidate Candidate
@@ -79,7 +108,7 @@ func (s prioritySorter) sort(a *App, candidates []Candidate, policy Policy) {
 			}
 			episodes = len(parsed.Original.Episodes)
 		}
-		values[i] = keyed{candidate, priorityrules.SortKey(priorityrules.SortInput{Title: s.media.Title, SiteOrder: s.orders[candidate.Resource.SiteID], Upload: s.uploads[s.names[candidate.Resource.SiteID]], Priority: candidate.Resource.PriorityOrder, Seeders: candidate.Resource.Seeders, Seasons: seasons, Episodes: episodes}, s.priorities)}
+		values[i] = keyed{candidate, priorityrules.SortKey(priorityrules.SortInput{Title: s.media.Title, SiteOrder: s.orders[candidate.Resource.SiteID], Upload: s.uploads[s.names[candidate.Resource.SiteID]], Priority: candidate.Resource.PriorityOrder, Seeders: candidate.Resource.Seeders, Seasons: seasons, Episodes: episodes}, priorities)}
 	}
 	sort.SliceStable(values, func(i, j int) bool {
 		if values[i].candidate.Accepted != values[j].candidate.Accepted {

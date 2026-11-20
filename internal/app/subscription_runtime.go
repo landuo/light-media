@@ -1138,6 +1138,57 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 			reason = "站点访问失败，详见任务日志，下次继续补漏"
 		}
 	}
+	// Each name was sorted on its own, so concatenating them would rank every hit
+	// of the first name above every hit of the second. Re-sort the merged list
+	// with the same comparator (site priority, uploads, group rules), which is
+	// what picks one release over another.
+	if len(result.Candidates) > 1 {
+		if info := sharedRequest.originalSearchInfo; info != nil {
+			sharedRequest.priorityMedia = &info.Media
+		}
+		if sorter, err := a.preparePrioritySorter(ctx, sharedRequest, a.Settings()); err == nil {
+			sorter.sort(a, result.Candidates, s.Policy)
+		}
+	}
+	// Record the ranking inputs of the top candidates: "picked X over Y" is only
+	// answerable with the fields the comparator sees.
+	{
+		detail := []string{}
+		for i, candidate := range result.Candidates {
+			if i >= 8 {
+				break
+			}
+			detail = append(detail, fmt.Sprintf("[%d] %s | site=%s seeders=%d pri=%d size=%.2fG", i,
+				candidate.Resource.Title, candidate.Resource.SiteID, candidate.Resource.Seeders,
+				candidate.Resource.PriorityOrder, float64(candidate.Resource.Size)/(1<<30)))
+		}
+		a.event(ctx, j, "INFO", "subscriptions", "candidate_rank", strings.Join(detail, " || "))
+		perSite := map[string]int{}
+		for _, candidate := range result.Candidates {
+			perSite[candidate.Resource.SiteID]++
+		}
+		sites := []string{}
+		for id, count := range perSite {
+			sites = append(sites, fmt.Sprintf("%s=%d", id, count))
+		}
+		sort.Strings(sites)
+		a.event(ctx, j, "INFO", "subscriptions", "candidate_sites", strings.Join(sites, " "))
+		// The top site in the list may simply lack the episode; name its releases
+		// so "why was another site picked" is answerable.
+		for index, site := range settings.Sites {
+			if index >= 2 {
+				break
+			}
+			titles := []string{}
+			for _, candidate := range result.Candidates {
+				if candidate.Resource.SiteID != site.ID || len(titles) >= 6 {
+					continue
+				}
+				titles = append(titles, candidate.Resource.Title)
+			}
+			a.event(ctx, j, "INFO", "subscriptions", "site_releases", a.clean(site.Name)+": "+strings.Join(titles, " | "))
+		}
+	}
 	// Record what the sites actually returned: without this a "no download" report
 	// cannot be told apart from "the candidate was filtered".
 	{
