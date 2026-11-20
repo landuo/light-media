@@ -92,7 +92,7 @@ func (a *App) transitionOriginalTransferTargetAt(ctx context.Context, job Job, p
 	if !reflect.DeepEqual(before, *plan) || !reflect.DeepEqual(actualMeta, *meta) || beforeReceipt.Target != file.Target || beforeReceipt.Source != file.Source || beforeReceipt.SourceSnapshot != receipt.SourceSnapshot || beforeReceipt.State != "planned" || beforeReceipt.OriginalNativeInterrupted != receipt.OriginalNativeInterrupted || !reflect.DeepEqual(beforeReceipt.OriginalModuleResult, receipt.OriginalModuleResult) {
 		return deny()
 	}
-	currentJob, err := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, job.ID))
+	currentJob, err := a.jobByID(ctx, job.ID)
 	if err != nil {
 		return err
 	}

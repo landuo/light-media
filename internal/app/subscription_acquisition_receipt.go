@@ -76,7 +76,7 @@ func (a *App) acquisitionReceiptInputTx(ctx context.Context, tx *sql.Tx, in Inte
 	} else if e != nil {
 		return r, 0, Job{}, e
 	}
-	parent, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, r.ID))
+	parent, e := a.jobByID(ctx, r.ID)
 	if e != nil {
 		return r, 0, Job{}, e
 	}
@@ -90,7 +90,7 @@ func (a *App) acquisitionReceiptInputTx(ctx context.Context, tx *sql.Tx, in Inte
 		if step.Phase != "confirmed" && step.Phase != "accepted" || step.IntentSHA != acquisitionIntentSHA(in) || r.Subscription.ID != in.SubscriptionID || r.Subscription.Revision != in.SubscriptionRevision {
 			return r, 0, Job{}, acquisitionEvidence()
 		}
-		child, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, step.ChildID))
+		child, e := a.jobByID(ctx, step.ChildID)
 		if e != nil {
 			return r, 0, Job{}, e
 		}
@@ -123,7 +123,7 @@ func (a *App) readAcquisitionReceiptTx(ctx context.Context, tx *sql.Tx, in Inten
 	if out.Phase == "accepted" && r.Steps[ordinal].Phase != "accepted" {
 		return out, acquisitionEvidence()
 	}
-	job, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, out.JobID))
+	job, e := a.jobByID(ctx, out.JobID)
 	if e != nil {
 		return out, e
 	}
@@ -222,7 +222,7 @@ func (a *App) acceptAcquisitionReceiptTx(ctx context.Context, tx *sql.Tx, in Int
 		if !xok || execution == nil || execution.a != a || execution.receipt.JobID != receipt.JobID || execution.receipt.JobSHA != receipt.JobSHA {
 			return acquisitionEvidence()
 		}
-		actual, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, receipt.JobID))
+		actual, e := a.jobByID(ctx, receipt.JobID)
 		if e != nil {
 			return e
 		}
@@ -239,7 +239,7 @@ func (a *App) acceptAcquisitionReceiptTx(ctx context.Context, tx *sql.Tx, in Int
 		}
 		return nil
 	}
-	parent, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, r.ID))
+	parent, e := a.jobByID(ctx, r.ID)
 	if e != nil {
 		return e
 	}
@@ -275,7 +275,7 @@ func (a *App) runAcquisitionReceipt(ctx context.Context, j Job, key string) erro
 		return e
 	}
 	defer tx.Rollback()
-	actual, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, j.ID))
+	actual, e := a.jobByID(ctx, j.ID)
 	if e != nil {
 		return e
 	}
@@ -307,7 +307,7 @@ func (a *App) runAcquisitionReceipt(ctx context.Context, j Job, key string) erro
 	if e != nil {
 		return e
 	}
-	if e = tx.Commit(); e != nil {
+	if e = a.commitWithJobs(tx); e != nil {
 		return e
 	}
 	in.State, in.Error, in.UpdatedAt = "accepted", "", now()

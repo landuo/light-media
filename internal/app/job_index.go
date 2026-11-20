@@ -327,3 +327,37 @@ func (a *App) preferSubscriptionDownload(ctx context.Context) (Job, bool) {
 	}
 	return Job{}, false
 }
+
+// jobByID reads a task by id, preferring the dispatch index. A rowless task has
+// no row to read, and the index is authoritative for the tasks this process is
+// running, so callers that inspect "my own job" keep working after the row is
+// gone.
+func (a *App) jobByID(ctx context.Context, id string) (Job, error) {
+	if id != "" {
+		ix := a.index()
+		ix.mu.Lock()
+		j, ok := ix.entries[id]
+		ix.mu.Unlock()
+		if ok {
+			return j, nil
+		}
+	}
+	// Fall back to the row for tasks queued by an older build or by a path that
+	// still writes one.
+	return scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, id))
+}
+
+// jobStateByID reports a task's state (and generation) from the index, falling
+// back to the row. Rowless tasks have no row, so a direct SELECT would report
+// "not found" and the caller would treat live work as cancelled.
+func (a *App) jobStateByID(ctx context.Context, id string, state *string, generation *int) error {
+	j, err := a.jobByID(ctx, id)
+	if err != nil {
+		return err
+	}
+	*state = j.State
+	if generation != nil {
+		*generation = j.Generation
+	}
+	return nil
+}

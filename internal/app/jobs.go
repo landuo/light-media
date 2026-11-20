@@ -113,9 +113,12 @@ func (a *App) enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload an
 // the table is the first step of removing the jobs table entirely.
 func ephemeralKind(kind string) bool {
 	switch kind {
-	case "subscription", "site_refresh", "subscription_stats", "library_scan", "asset_check",
+	case "subscription", "site_refresh", "library_scan", "asset_check",
 		"organize_file", "import", "scrape", "quality_cleanup", "reorganize_cleanup",
-		"download", "native_download":
+		"download", "native_download",
+		"subscription_add", "subscription_stats", "subscription_completion_prepare",
+		"subscription_completion", "organize_prepare", "fnos_sync",
+		"subscription_acquisition_receipt":
 		return true
 	}
 	return false
@@ -127,6 +130,16 @@ func (a *App) enqueueEphemeral(ctx context.Context, kind string, payload any, wf
 	b, e := json.Marshal(payload)
 	if e != nil {
 		return Job{}, e
+	}
+	// The scheduler ticks on a fixed interval and re-derives the same work until
+	// the subject's own timestamp advances. Without this check every tick would
+	// add another copy, so the queue would grow and the subject would be checked
+	// concurrently.
+	var subject struct {
+		ID string `json:"id"`
+	}
+	if json.Unmarshal(b, &subject) == nil && subject.ID != "" && a.subjectBusy(kind, subject.ID) {
+		return Job{}, bad("JOB_EXISTS", "已有该对象的任务正在等待或执行")
 	}
 	j := Job{ID: id("job_"), WorkflowID: wf, Kind: kind, State: "queued", Payload: b, RunAt: time.Now().Unix(), CreatedAt: now(), UpdatedAt: now()}
 	j.Ephemeral = true
@@ -383,7 +396,7 @@ func (a *App) runClaimedJob(ctx context.Context, j Job) {
 	}
 	var currentState string
 	var currentGeneration int
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT state,generation FROM jobs WHERE id=?`, j.ID).Scan(&currentState, &currentGeneration); err != nil || currentState != "running" || currentGeneration != j.Generation {
+	if err := a.jobStateByID(ctx, j.ID, &currentState, &currentGeneration); err != nil || currentState != "running" || currentGeneration != j.Generation {
 		return
 	}
 	state, code, message := "succeeded", "", ""
@@ -509,7 +522,7 @@ func (a *App) jobCancelled(ctx context.Context, j Job) error {
 	}
 	var state string
 	var gen int
-	e := a.Store.DB.QueryRowContext(ctx, `SELECT state,generation FROM jobs WHERE id=?`, j.ID).Scan(&state, &gen)
+	e := a.jobStateByID(ctx, j.ID, &state, &gen)
 	if e != nil {
 		return e
 	}

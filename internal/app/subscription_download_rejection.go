@@ -84,7 +84,7 @@ func (a *App) rejectOrdinarySubscriptionDownload(ctx context.Context, j Job, in 
 		return err
 	}
 	defer tx.Rollback()
-	child, err := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, j.ID))
+	child, err := a.jobByID(ctx, j.ID)
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func (a *App) rejectOrdinarySubscriptionDownload(ctx context.Context, j Job, in 
 	if child.Kind != "download" || child.State != "running" || child.Generation != j.Generation || child.ParentJobID == "" || child.WorkflowID != in.WorkflowID || !slices.Equal(child.Payload, j.Payload) || json.Unmarshal(child.Payload, &input) != nil || input.ID != in.ID {
 		return acquisitionEvidence()
 	}
-	parent, err := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, child.ParentJobID))
+	parent, err := a.jobByID(ctx, child.ParentJobID)
 	if err != nil {
 		return err
 	}

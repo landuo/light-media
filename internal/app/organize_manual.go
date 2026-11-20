@@ -1154,7 +1154,7 @@ func (a *App) cancelOrganizeQueueFile(ctx context.Context, key string) (any, err
 	if e = a.commitWithJobs(tx); e != nil {
 		return nil, e
 	}
-	job, e := scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, item.JobID))
+	job, e := a.jobByID(ctx, item.JobID)
 	if e != nil {
 		return nil, e
 	}

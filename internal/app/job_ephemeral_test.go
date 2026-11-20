@@ -74,3 +74,23 @@ func TestDurableKindsStillWriteRows(t *testing.T) {
 		t.Fatalf("durable work needs its row, got %d", rows)
 	}
 }
+
+// The scheduler ticks repeatedly while a subject's timestamp is stale, so a
+// second enqueue for the same subject must be refused or the queue grows.
+func TestEphemeralEnqueueDeduplicatesSubject(t *testing.T) {
+	a := newTestApp(t)
+	ctx := context.Background()
+	if _, err := a.enqueue(ctx, "subscription", map[string]any{"id": "sub_dup", "revision": 1}, "wf_dup"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.enqueue(ctx, "subscription", map[string]any{"id": "sub_dup", "revision": 1}, "wf_dup"); err == nil {
+		t.Fatal("a second check for the same subscription must be refused")
+	}
+	if depth := a.indexDepth(); depth != 1 {
+		t.Fatalf("depth = %d, want 1", depth)
+	}
+	// A different subject is unaffected.
+	if _, err := a.enqueue(ctx, "subscription", map[string]any{"id": "sub_other", "revision": 1}, "wf_dup"); err != nil {
+		t.Fatalf("an unrelated subject must be accepted: %v", err)
+	}
+}

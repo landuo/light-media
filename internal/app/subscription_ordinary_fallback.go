@@ -29,7 +29,7 @@ func ordinarySearchDownloadReview() error {
 }
 
 func (a *App) ordinarySearchParentTx(ctx context.Context, tx *sql.Tx, parent Job, owner Subscription) (bool, error) {
-	actual, err := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, parent.ID))
+	actual, err := a.jobByID(ctx, parent.ID)
 	if err != nil {
 		return false, err
 	}
@@ -211,7 +211,7 @@ func (a *App) runOrdinarySearchDownload(ctx context.Context, parent Job, sub Sub
 	if e := a.Store.Get(ctx, "intent", intentID, &in); e != nil {
 		return false, e
 	}
-	actual, e := scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, child.ID))
+	actual, e := a.jobByID(ctx, child.ID)
 	if e != nil {
 		return false, e
 	}

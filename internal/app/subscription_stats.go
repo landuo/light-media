@@ -170,7 +170,7 @@ func (a *App) validateSubscriptionStatsSource(ctx context.Context, q pluginRemov
 	phase = "job"
 	var job Job
 	var e error
-	job, e = scanJob(q.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, r.JobID))
+	job, e = a.jobByID(ctx, r.JobID)
 	if e != nil || job.Kind != "subscription_stats" || job.State != "running" || job.Generation != running.Generation || job.ID != running.ID || job.WorkflowID != running.WorkflowID {
 		return subscriptionStatsEvidenceError()
 	}

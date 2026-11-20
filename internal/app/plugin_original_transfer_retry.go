@@ -98,7 +98,7 @@ func (a *App) submitOriginalTransferRetry(ctx context.Context, attempt originalT
 	if len(out.Items) != 1 || out.Failed != 0 || out.Submitted != 1 {
 		return Job{}, bad("TRANSFER_RETRY_FAILED", firstManualOrganizeFailure(out))
 	}
-	return scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, out.Items[0].JobID))
+	return a.jobByID(ctx, out.Items[0].JobID)
 }
 
 func (a *App) recognizeOriginalTransferRetry(ctx context.Context, path string, prior ImportPlan, file PlanFile) (json.RawMessage, error) {

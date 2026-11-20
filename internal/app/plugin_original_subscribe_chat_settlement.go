@@ -62,7 +62,7 @@ func (a *App) awaitOriginalChatSearchChild(ctx context.Context, child Job) (Job,
 	if err != nil {
 		return Job{}, err
 	}
-	job, err := scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, child.ID))
+	job, err := a.jobByID(ctx, child.ID)
 	if err != nil {
 		return Job{}, err
 	}
@@ -161,7 +161,7 @@ func (a *App) awaitOriginalChatSearchAcquisitionReceipt(ctx context.Context, roo
 	if receipt.Phase != "accepted" || receipt.RootID != root || receipt.ChildID != child.ID || receipt.ChildSHA != tokenHash(string(child.Payload)) {
 		return Job{}, acquisitionEvidence()
 	}
-	receiptJob, err := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, receipt.JobID))
+	receiptJob, err := a.jobByID(ctx, receipt.JobID)
 	if err != nil {
 		return Job{}, err
 	}

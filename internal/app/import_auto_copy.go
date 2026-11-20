@@ -182,7 +182,7 @@ func (a *App) adoptImportAutoCopy(ctx context.Context, job Job, plan *ImportPlan
 		return e
 	}
 	defer tx.Rollback()
-	actualJob, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, job.ID))
+	actualJob, e := a.jobByID(ctx, job.ID)
 	if e != nil {
 		return e
 	}

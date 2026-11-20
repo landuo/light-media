@@ -116,7 +116,7 @@ func (a *App) beginSubscriptionAcquisition(ctx context.Context, j Job, s Subscri
 	if count != 0 {
 		return nil, acquisitionEvidence()
 	}
-	actual, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, j.ID))
+	actual, e := a.jobByID(ctx, j.ID)
 	if e != nil {
 		return nil, e
 	}

@@ -93,7 +93,7 @@ func (a *App) guardUISubscriptionAddMutationTx(ctx context.Context, tx *sql.Tx, 
 	}
 	var state string
 	var generation int
-	if e = tx.QueryRowContext(ctx, `SELECT state,generation FROM jobs WHERE id=?`, scope.Job.ID).Scan(&state, &generation); e != nil || state != "running" || generation != scope.Job.Generation {
+	if e = a.jobStateByID(ctx, scope.Job.ID, &state, &generation); e != nil || state != "running" || generation != scope.Job.Generation {
 		return subscriptionAddEvidenceError()
 	}
 	return nil

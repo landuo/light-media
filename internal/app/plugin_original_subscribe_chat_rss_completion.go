@@ -13,7 +13,7 @@ func (a *App) deferOriginalChatRSSQualityCompletionTx(ctx context.Context, tx *s
 	if in.SubscriptionAcquisition == "" || !in.LatestResource || !s.BestVersion || s.Revision != in.SubscriptionRevision || !originalChatLatestActive(s) {
 		return false, nil
 	}
-	parent, err := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, in.SubscriptionAcquisition))
+	parent, err := a.jobByID(ctx, in.SubscriptionAcquisition)
 	if err != nil {
 		return false, err
 	}

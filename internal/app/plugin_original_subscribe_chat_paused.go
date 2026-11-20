@@ -92,7 +92,7 @@ func (a *App) originalChatPausedSearchRoot(ctx context.Context, root, key string
 	if root == "" {
 		return ctx, nil
 	}
-	parent, err := scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, root))
+	parent, err := a.jobByID(ctx, root)
 	if errors.Is(err, sql.ErrNoRows) {
 		return ctx, nil
 	}

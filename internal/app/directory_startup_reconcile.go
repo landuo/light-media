@@ -211,7 +211,7 @@ func (a *App) releaseStrandedObservation(ctx context.Context, rule DirectoryRule
 	}
 	if f.JobID != "" {
 		var state string
-		if err := a.Store.DB.QueryRowContext(ctx, `SELECT state FROM jobs WHERE id=?`, f.JobID).Scan(&state); err != nil || !jobLive(state) {
+		if err := a.jobStateByID(ctx, f.JobID, &state, nil); err != nil || !jobLive(state) {
 			f.JobID = ""
 		} else {
 			return false, "live job " + state

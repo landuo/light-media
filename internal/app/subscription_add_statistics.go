@@ -118,7 +118,7 @@ func (a *App) awaitUISubscriptionAddStatistics(ctx context.Context, j Job, r sub
 			return e
 		}
 		if count == 1 {
-			job, e := scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, child.JobID))
+			job, e := a.jobByID(ctx, child.JobID)
 			if e != nil {
 				return e
 			}
@@ -172,7 +172,7 @@ func (a *App) awaitUISubscriptionAddStatistics(ctx context.Context, j Job, r sub
 			return subscriptionStatsEvidenceError()
 		case "accepted", "intent":
 			var state string
-			if e := a.Store.DB.QueryRowContext(ctx, `SELECT state FROM jobs WHERE id=?`, child.JobID).Scan(&state); e != nil {
+			if e := a.jobStateByID(ctx, child.JobID, &state, nil); e != nil {
 				return e
 			}
 			if state != "running" {

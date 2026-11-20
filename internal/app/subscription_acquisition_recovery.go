@@ -11,7 +11,7 @@ import (
 // downloader outcome from List. A pending Add/selection with no normally
 // returned receipt keeps its original generation and requires review.
 func (a *App) advanceAcquisitionGenerationTx(ctx context.Context, tx *sql.Tx, j Job, r subscriptionAcquisition) (subscriptionAcquisition, error) {
-	actual, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, r.ID))
+	actual, e := a.jobByID(ctx, r.ID)
 	if e != nil {
 		return r, e
 	}
@@ -32,7 +32,7 @@ func (a *App) advanceAcquisitionGenerationTx(ctx context.Context, tx *sql.Tx, j 
 			if e = qualityRecord(ctx, tx, "intent", step.IntentID, &in); e != nil {
 				return r, e
 			}
-			child, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, step.ChildID))
+			child, e := a.jobByID(ctx, step.ChildID)
 			if e != nil {
 				return r, e
 			}

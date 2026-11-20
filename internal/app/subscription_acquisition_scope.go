@@ -148,7 +148,7 @@ func (a *App) acquisitionScopeTx(ctx context.Context, q qualityReader, want *sub
 	if r.JobSHA != want.JobSHA || r.Generation != want.Generation || r.RulesSHA != want.RulesSHA || r.RSSBatchID != want.RSSBatchID || r.Subscription.ID != want.Subscription.ID || r.Subscription.Revision != want.Subscription.Revision || r.Subscription.SourceContextSHA != want.Subscription.SourceContextSHA || mediaKey(r.Subscription.Media) != mediaKey(want.Subscription.Media) {
 		return r, acquisitionEvidence()
 	}
-	j, e := scanJob(q.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, r.ID))
+	j, e := a.jobByID(ctx, r.ID)
 	if e != nil {
 		return r, e
 	}
@@ -222,7 +222,7 @@ func (a *App) acquisitionChildTx(ctx context.Context, tx *sql.Tx, j Job, in Inte
 		return nil, r, e
 	}
 	s := r.Steps[g.ordinal]
-	actual, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, j.ID))
+	actual, e := a.jobByID(ctx, j.ID)
 	if e != nil {
 		return nil, r, e
 	}
@@ -248,7 +248,7 @@ func (a *App) guardAcquisitionChild(ctx context.Context, j Job, in Intent) error
 		if e != nil {
 			return e
 		}
-		actual, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, j.ID))
+		actual, e := a.jobByID(ctx, j.ID)
 		if e != nil {
 			return e
 		}
@@ -288,7 +288,7 @@ func (a *App) submitAcquisitionChild(ctx context.Context, in Intent) (Intent, er
 	if step.Phase != "confirmed" || step.IntentID != in.ID || step.IntentSHA != acquisitionIntentSHA(in) {
 		return empty, acquisitionEvidence()
 	}
-	j, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, step.ChildID))
+	j, e := a.jobByID(ctx, step.ChildID)
 	if e != nil {
 		return empty, e
 	}
