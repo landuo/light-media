@@ -59,12 +59,12 @@ func TestEphemeralSubscriptionNeedsNoRow(t *testing.T) {
 func TestDurableKindsStillWriteRows(t *testing.T) {
 	a := newTestApp(t)
 	ctx := context.Background()
-	j, err := a.enqueue(ctx, "scrape", map[string]string{"id": "asset_durable"}, "wf_probe")
+	j, err := a.enqueue(ctx, "download_file_deleted", map[string]string{"id": "file_durable"}, "wf_probe")
 	if err != nil {
 		t.Fatal(err)
 	}
 	if j.Ephemeral {
-		t.Fatal("scrape must stay durable")
+		t.Fatal("an external file-event task must stay durable")
 	}
 	var rows int
 	if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE id=?`, j.ID).Scan(&rows); err != nil {

@@ -1122,6 +1122,7 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 	return intent, a.commitWithJobs(tx)
 }
 func (a *App) runDownload(ctx context.Context, j Job, key string) error {
+	a.log("INFO", "download", "run_download_enter", "开始提交下载："+key, j.WorkflowID, j.ID)
 	a.downloadMu.Lock()
 	defer a.downloadMu.Unlock()
 	var in Intent
@@ -1889,7 +1890,7 @@ func (a *App) pollDownloads(ctx context.Context) error {
 	)
 	SELECT payload FROM (
 		SELECT payload,updated_at,uid FROM downloadhistory WHERE record_kind='intent'
-		AND CASE WHEN json_valid(payload) THEN json_extract(payload,'$.state') IN ('accepted','downloading','downloaded','reconcile_pending') END
+		AND CASE WHEN json_valid(payload) THEN json_extract(payload,'$.state') IN ('planned','accepted','downloading','downloaded','reconcile_pending') END
 		UNION ALL SELECT payload,updated_at,uid FROM recent_imported
 	) ORDER BY updated_at DESC,uid`)
 	if e != nil {
@@ -1911,6 +1912,20 @@ func (a *App) pollDownloads(ctx context.Context) error {
 		}
 	}
 	for instance, intents := range byInstance {
+		// A "planned" intent means the preview was confirmed but the submitting
+		// task never ran — it was lost with the process, or it was queued while
+		// the queue was being rebuilt. Re-derive the work so the download is not
+		// stranded forever.
+		for _, in := range intents {
+			if in.State != "planned" || in.ID == "" {
+				continue
+			}
+			if a.subjectBusy("download", in.ID) {
+				continue
+			}
+			a.submitMemoryJob("download", map[string]string{"id": in.ID}, in.WorkflowID, id("job_"))
+			a.log("INFO", "downloads", "planned_intent_resubmitted", "计划中的下载意图重新提交", in.WorkflowID, "")
+		}
 		d, e := a.downloader(instance)
 		if e != nil {
 			continue

@@ -201,6 +201,28 @@ func (a *App) handler() http.Handler {
 		// Rowless tasks live only in the index; their depth is the only way to
 		// see that work is queued without a jobs row.
 		payload["jobs_in_memory"] = a.indexDepth()
+		// Diagnostic: the download intents for the media under investigation.
+		if rows, err := a.Store.DB.QueryContext(r.Context(), `SELECT payload FROM downloadhistory WHERE record_kind='intent' AND json_extract(payload,'$.request.tmdb_id')=228429`); err == nil {
+			probe := []map[string]any{}
+			for rows.Next() {
+				var raw []byte
+				if rows.Scan(&raw) != nil {
+					continue
+				}
+				var in struct {
+					State    string `json:"state"`
+					Error    string `json:"error"`
+					Episodes []int  `json:"episodes"`
+				}
+				if json.Unmarshal(raw, &in) == nil {
+					probe = append(probe, map[string]any{"state": in.State, "error": in.Error, "eps": in.Episodes})
+				}
+			}
+			rows.Close()
+			if len(probe) > 0 {
+				payload["intent_probe"] = probe
+			}
+		}
 		if snap := a.indexSnapshot(); len(snap) > 0 {
 			payload["memory_jobs"] = snap
 		}
