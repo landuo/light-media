@@ -994,7 +994,8 @@ onUnmounted(() => {
           label="结束时间"
         />
         <div class="button-row">
-          <button class="primary">查询日志</button
+          <button type="button" class="button" @click="go('jobs')">任务队列</button
+          ><button class="primary">查询日志</button
           ><a class="button" :href="apiURL('/logs/export?' + logParams())" download>导出当前筛选</a
           ><label class="check"
             ><input v-model="live" type="checkbox" @change="stream" />实时跟随</label

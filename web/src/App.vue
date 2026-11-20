@@ -116,7 +116,6 @@ const nav = [
     items: [
       ['sites', 'globe', '站点管理'],
       ['plugins', 'plugin', '插件'],
-      ['jobs', 'jobs', '任务队列'],
       ['logs', 'logs', '日志'],
       ['settings', 'settings', '设置'],
     ],
