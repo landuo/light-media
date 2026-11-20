@@ -201,6 +201,21 @@ func (a *App) handler() http.Handler {
 		// Rowless tasks live only in the index; their depth is the only way to
 		// see that work is queued without a jobs row.
 		payload["jobs_in_memory"] = a.indexDepth()
+		// Recent download-module events: the submission path logs there, and a
+		// failed submit is otherwise invisible without file access.
+		if rows, err := a.Store.DB.QueryContext(r.Context(), `SELECT time,level,event,substr(message,1,120) FROM events WHERE module IN ('download','downloads') ORDER BY seq DESC LIMIT 12`); err == nil {
+			ev := []map[string]any{}
+			for rows.Next() {
+				var t, lv, name, msg string
+				if rows.Scan(&t, &lv, &name, &msg) == nil {
+					ev = append(ev, map[string]any{"time": t, "level": lv, "event": name, "message": msg})
+				}
+			}
+			rows.Close()
+			if len(ev) > 0 {
+				payload["download_events"] = ev
+			}
+		}
 		// Diagnostic: the download intents for the media under investigation.
 		if rows, err := a.Store.DB.QueryContext(r.Context(), `SELECT payload FROM downloadhistory WHERE record_kind='intent' AND json_extract(payload,'$.request.tmdb_id')=228429`); err == nil {
 			probe := []map[string]any{}

@@ -390,9 +390,19 @@ func (a *App) runClaimedJob(ctx context.Context, j Job) {
 		defer j.importRun.release()
 	}
 	a.event(ctx, j, "INFO", j.Kind, "started", "开始执行任务")
-	e := a.safeRun(a.traceContext(ctx, j.WorkflowID, j.ID, j.RequestID), j)
+	// Every task gets a deadline. Without one, a task blocked inside a network
+	// call holds its lane forever — and the download path also holds a global
+	// mutex, so one stalled submit stops every later download.
+	runCtx, cancel := context.WithTimeout(ctx, jobRunBudget(j.Kind))
+	e := a.safeRun(a.traceContext(runCtx, j.WorkflowID, j.ID, j.RequestID), j)
+	timedOut := runCtx.Err() == context.DeadlineExceeded
+	cancel()
 	if ctx.Err() != nil {
 		return
+	}
+	if timedOut && e == nil {
+		e = bad("TASK_TIMEOUT", "任务执行超时，请稍后重试")
+		a.event(ctx, j, "WARN", j.Kind, "timeout", "任务执行超时")
 	}
 	var currentState string
 	var currentGeneration int
@@ -693,3 +703,18 @@ func (a *App) scheduleSubscriptions(ctx context.Context, at time.Time) {
 }
 
 func jobErr(code string, e error) error { return bad(code, fmt.Sprint(e)) }
+
+// jobRunBudget bounds one execution. Downloads and imports touch the network and
+// the file system, so they get the longest budget; everything else is quick.
+func jobRunBudget(kind string) time.Duration {
+	switch kind {
+	case "download", "native_download", "subscription_download":
+		return 5 * time.Minute
+	case "import", "organize_file", "organize_prepare", "scrape":
+		return 10 * time.Minute
+	case "subscription", "subscription_add", "subscription_stats",
+		"subscription_completion", "subscription_completion_prepare":
+		return 10 * time.Minute
+	}
+	return 2 * time.Minute
+}

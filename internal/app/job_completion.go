@@ -8,11 +8,25 @@ import (
 
 func (a *App) finishJob(ctx context.Context, j Job, state, code, message string, runAt int64) (bool, error) {
 	if j.Ephemeral {
-		// Nothing to persist: the index is the only record for this task.
+		// Nothing to persist: the index is the only record for this task. The
+		// outcome still goes to the event log, otherwise a failing rowless task
+		// leaves no trace at all and looks like it vanished.
 		done := j
 		done.State, done.ErrorCode, done.ErrorMessage = state, code, message
 		done.RunAt, done.UpdatedAt = runAt, now()
 		a.indexRefresh(done)
+		level, event, description := "INFO", "completed", "任务完成"
+		if state != "succeeded" {
+			level, event, description = "ERROR", code, message
+		}
+		if code == "PLUGIN_REFRESH_PENDING" {
+			level = "INFO"
+		}
+		if _, err := a.Store.DB.ExecContext(context.WithoutCancel(ctx),
+			`INSERT INTO events(time,workflow_id,job_id,level,module,event,message) VALUES(?,?,?,?,?,?,?)`,
+			now(), j.WorkflowID, j.ID, level, j.Kind, event, description); err != nil {
+			a.log("WARN", "jobs", "ephemeral_event_failed", a.clean(err.Error()), j.WorkflowID, j.ID)
+		}
 		if state != "succeeded" && code != "PLUGIN_REFRESH_PENDING" {
 			a.log("ERROR", j.Kind, code, message, j.WorkflowID, j.ID)
 		}

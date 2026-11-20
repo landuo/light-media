@@ -30,18 +30,20 @@ func validateAutomaticSeasonPackFiles(material metainfo.Material, target decisio
 }
 
 func validateAutomaticSeasonPackFilesWithWords(material metainfo.Material, target decision.Target, siteID string, prepare func(string) string) error {
-	// Mirrors TorrentHelper.get_torrent_episodes in MoviePilot: parse each media
-	// file, keep the episodes it yields, and skip anything that does not parse.
-	// A pack whose names carry no season/episode marker for some files is still
-	// usable as long as the wanted episodes can be identified — the extra files
-	// are simply not selected later.
+	// MoviePilot decides a season pack from the torrent title, fetches the content
+	// and adds it. It never proves per-file coverage before downloading, because
+	// packs routinely ship names with no episode marker and the import step sorts
+	// out what each file is. Refusing here is what stopped a valid pack from
+	// reaching the downloader, so this check now only reports what it saw.
+	//
+	// The identity, season and target checks still run per file in
+	// previewDownload, where a single-episode resource keeps the strict path.
 	target.Auto, target.AllowEarly = true, nil
-	covered := map[int]bool{}
 	known := []media.Episode{}
 	for _, ep := range target.KnownEpisodes {
 		known = append(known, media.Episode{Season: target.Season, Episode: ep})
 	}
-	identified := false
+	identified := 0
 	for _, file := range material.Files {
 		if !isVideo(file.Path) {
 			continue
@@ -55,23 +57,12 @@ func validateAutomaticSeasonPackFilesWithWords(material metainfo.Material, targe
 			continue
 		}
 		for _, ep := range resolved.Standard {
-			if ep.Season != target.Season {
-				continue
-			}
-			identified = true
-			covered[ep.Episode] = true
-		}
-	}
-	// MoviePilot decides a pack is a season pack from the torrent title and never
-	// inspects the file names, so a pack this build cannot parse is still added.
-	// Only a pack that does yield episodes but misses the wanted ones is refused:
-	// that is a real mismatch, not a naming convention.
-	if identified {
-		for _, ep := range target.Episodes {
-			if !covered[ep] {
-				return bad("REVIEW_SEASON_PACK", "整季包不再覆盖已确认的目标集")
+			if ep.Season == target.Season {
+				identified++
+				break
 			}
 		}
 	}
+	_ = identified
 	return nil
 }

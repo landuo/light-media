@@ -1123,8 +1123,19 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 }
 func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	a.log("INFO", "download", "run_download_enter", "开始提交下载："+key, j.WorkflowID, j.ID)
-	a.downloadMu.Lock()
-	defer a.downloadMu.Unlock()
+	// The mutex serialises submissions. A timeout keeps one slow submit from
+	// blocking the whole download lane now that tasks have budgets.
+	locked := make(chan struct{})
+	go func() {
+		a.downloadMu.Lock()
+		close(locked)
+	}()
+	select {
+	case <-locked:
+		defer a.downloadMu.Unlock()
+	case <-ctx.Done():
+		return ctx.Err()
+	}
 	var in Intent
 	if e := a.Store.Get(ctx, "intent", key, &in); e != nil {
 		return e
@@ -1924,6 +1935,8 @@ func (a *App) pollDownloads(ctx context.Context) error {
 				continue
 			}
 			a.submitMemoryJob("download", map[string]string{"id": in.ID}, in.WorkflowID, id("job_"))
+			_, _ = a.Store.DB.ExecContext(ctx, `INSERT INTO events(time,workflow_id,job_id,level,module,event,message) VALUES(?,?,?,?,?,?,?)`,
+				now(), in.WorkflowID, "", "INFO", "downloads", "planned_intent_resubmitted", "计划中的下载意图重新提交")
 			a.log("INFO", "downloads", "planned_intent_resubmitted", "计划中的下载意图重新提交", in.WorkflowID, "")
 		}
 		d, e := a.downloader(instance)
