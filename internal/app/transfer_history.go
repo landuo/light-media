@@ -80,7 +80,7 @@ const transferHistoryExecutedFiles = `, executed_seed AS MATERIALIZED (
  WHEN json_extract(cb.payload,'$.file.status')='error' THEN 'failed'
  WHEN json_extract(f.value,'$.status') IN ('imported','already_imported') THEN 'success'
  WHEN EXISTS(SELECT 1 FROM organize_cancel cancelled WHERE cancelled.id=j.id||'/'||json_extract(f.value,'$.id')) THEN 'failed'
- WHEN j.state IN ('queued','running','retry_wait','waiting_paused') THEN 'pending'
+ WHEN j.state IN ('queued','running') THEN 'pending'
  ELSE 'failed' END AS status
  FROM import_plan r,json_each(r.payload,'$.files') f
  JOIN import_jobs j ON ` + transferHistoryJobMatch + `
@@ -352,7 +352,7 @@ func (a *App) transferHistoryCapabilities(ctx context.Context, item *transferHis
 	}
 	if item.CanRetry {
 		var active int
-		if e := a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, item.PlanID).Scan(&active); e != nil || active > 0 {
+		if e := a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, item.PlanID).Scan(&active); e != nil || active > 0 {
 			item.CanRetry = false
 			return
 		}

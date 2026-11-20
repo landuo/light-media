@@ -376,7 +376,7 @@ func (a *App) originalChatLatestPublish(ctx context.Context, subs []Subscription
 
 func pruneOriginalChatLatestBatches(ctx context.Context, tx *sql.Tx) error {
 	_, err := tx.ExecContext(ctx, `DELETE FROM plugin_record WHERE kind=? AND NOT EXISTS(
-		SELECT 1 FROM jobs WHERE jobs.kind='subscription' AND state IN ('queued','running','retry_wait','waiting_paused')
+		SELECT 1 FROM jobs WHERE jobs.kind='subscription' AND state IN ('queued','running')
 		AND json_extract(jobs.payload,'$.latest_batch')=plugin_record.id)`, originalChatLatestBatchKind)
 	return err
 }

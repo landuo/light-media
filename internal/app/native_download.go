@@ -202,7 +202,7 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 		if err = txPut(ctx, tx, "native_download", superseded.ID, superseded); err != nil {
 			return out, err
 		}
-		if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind='native_download' AND json_extract(payload,'$.id')=? AND state IN ('queued','retry_wait','waiting_paused')`, now(), superseded.ID); err != nil {
+		if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind='native_download' AND json_extract(payload,'$.id')=? AND state='queued'`, now(), superseded.ID); err != nil {
 			return out, err
 		}
 	}
@@ -427,7 +427,7 @@ func (a *App) downloaderTaskAction(ctx context.Context, downloaderID, hash, acti
 		if _, e = tx.ExecContext(ctx, `UPDATE downloadhistory SET payload=json_set(payload,'$.state','cancelled','$.updated_at',?),updated_at=? WHERE json_extract(payload,'$.downloader_id')=? AND length(json_extract(payload,'$.hash')) IN (40,64) AND (lower(json_extract(payload,'$.hash'))=lower(?) OR (length(json_extract(payload,'$.hash'))!=length(?) AND substr(lower(json_extract(payload,'$.hash')),1,40)=lower(?)))`, now(), now(), d.ID, actual, actual, actual[:40]); e != nil {
 			return e
 		}
-		if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind IN ('download','native_download') AND json_extract(payload,'$.id') IN (SELECT uid FROM downloadhistory WHERE json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')='cancelled') AND state IN ('queued','retry_wait','waiting_paused')`, now(), d.ID); e != nil {
+		if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind IN ('download','native_download') AND json_extract(payload,'$.id') IN (SELECT uid FROM downloadhistory WHERE json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')='cancelled') AND state='queued'`, now(), d.ID); e != nil {
 			return e
 		}
 		if _, e = tx.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id IN (SELECT uid FROM downloadhistory WHERE json_extract(payload,'$.state')='cancelled')`); e != nil {

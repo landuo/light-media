@@ -66,7 +66,7 @@ func writePrunedCoreSubscriptionSiteTx(ctx context.Context, tx *sql.Tx, sub Subs
 	if err := txPut(ctx, tx, "subscription", sub.ID, sub); err != nil {
 		return err
 	}
-	_, err := tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), sub.ID)
+	_, err := tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), sub.ID)
 	return err
 }
 

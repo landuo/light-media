@@ -448,7 +448,7 @@ func (a *App) originalHostDownloaderCancelDeleted(ctx context.Context, id string
 			return err
 		}
 		selected := `SELECT uid FROM downloadhistory WHERE json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')='cancelled' AND length(json_extract(payload,'$.hash')) IN (40,64) AND (lower(json_extract(payload,'$.hash'))=lower(?) OR (length(json_extract(payload,'$.hash'))!=length(?) AND substr(lower(json_extract(payload,'$.hash')),1,40)=lower(?)))`
-		if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind IN ('download','native_download') AND json_extract(payload,'$.id') IN (`+selected+`) AND state IN ('queued','retry_wait','waiting_paused')`, now(), id, hash, hash, hash[:40]); err != nil {
+		if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind IN ('download','native_download') AND json_extract(payload,'$.id') IN (`+selected+`) AND state='queued'`, now(), id, hash, hash, hash[:40]); err != nil {
 			return err
 		}
 		if _, err = tx.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id IN (`+selected+`)`, id, hash, hash, hash[:40]); err != nil {

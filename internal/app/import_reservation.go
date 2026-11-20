@@ -81,7 +81,7 @@ func failedImportSourceUnpublished(ctx context.Context, q qualityReader, old Imp
 	if err := q.QueryRowContext(ctx, `SELECT
 		EXISTS(SELECT 1 FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state='failed'
 			AND (COALESCE(json_array_length(payload,'$.file_ids'),0)=0 OR EXISTS(SELECT 1 FROM json_each(payload,'$.file_ids') WHERE value=?))),
-		EXISTS(SELECT 1 FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused'))`,
+		EXISTS(SELECT 1 FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running'))`,
 		old.ID, retryable.ID, old.ID).Scan(&failed, &active); err != nil || !failed || active {
 		return false, err
 	}

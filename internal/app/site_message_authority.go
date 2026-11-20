@@ -141,7 +141,7 @@ func (a *App) requireSiteMessageQueueAuthorityTx(ctx context.Context, tx *sql.Tx
 					return siteMessageAuthorityRevoked{}
 				}
 				switch state {
-				case "queued", "running", "retry_wait", "waiting_paused", "succeeded", "failed":
+				case "queued", "running", "succeeded", "failed":
 					// These states describe the collection worker, not this
 					// already-completed ordinal. A later local unknown effect
 					// may leave the collection incomplete across retries or

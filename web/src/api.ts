@@ -320,8 +320,6 @@ export const labels: Record<string, string> = {
   move: '移动',
   auto: '自动',
   success: '成功',
-  retry_wait: '等待重试',
-  waiting_paused: '暂停等待',
   pending_confirmation: '集号待确认',
   predicted: '周期预测',
   skipped: '已跳过',

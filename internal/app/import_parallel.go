@@ -63,7 +63,7 @@ func (a *App) claimImportJob(ctx context.Context) (Job, error) {
 	defer a.importAdmissionsMu.Unlock()
 	at := time.Now()
 	jobs, err := a.queryJobs(ctx, `SELECT `+jobColumns+` FROM jobs
- WHERE kind='import' AND state IN ('queued','retry_wait')
+ WHERE kind='import' AND state='queued'
  ORDER BY created_at,id`)
 	if err != nil {
 		return Job{}, err

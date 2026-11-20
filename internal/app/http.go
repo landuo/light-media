@@ -784,7 +784,7 @@ func (a *App) status(ctx context.Context) map[string]any {
 		counts[k] = n
 	}
 	var active, failed int
-	_ = a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE state IN ('queued','running','retry_wait','waiting_paused')`).Scan(&active)
+	_ = a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE state IN ('queued','running')`).Scan(&active)
 	_ = a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE state='failed'`).Scan(&failed)
 	counts["active_jobs"] = active
 	counts["failed_jobs"] = failed

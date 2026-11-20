@@ -1335,7 +1335,7 @@ func (a *App) browserScrape(ctx context.Context, paths []string) (any, error) {
 	}
 	jobs := []Job{}
 	for _, asset := range assets {
-		existing, findErr := scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind='scrape' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused') ORDER BY created_at DESC LIMIT 1`, asset.ID))
+		existing, findErr := scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind='scrape' AND json_extract(payload,'$.id')=? AND state IN ('queued','running') ORDER BY created_at DESC LIMIT 1`, asset.ID))
 		if findErr == nil {
 			jobs = append(jobs, existing)
 			continue

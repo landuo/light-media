@@ -923,7 +923,7 @@ onUnmounted(() => {
             </td>
             <td class="job-timing">
               <small>更新：{{ date(j.updated_at) }}</small>
-              <small v-if="['queued', 'retry_wait', 'waiting_paused'].includes(j.state)">
+              <small v-if="j.state === 'queued'">
                 计划：{{ date(j.run_at * 1000) }}
               </small>
               <small>{{ j.attempt > 0 ? `已尝试 ${j.attempt} 次` : '尚未执行' }}</small>
@@ -934,14 +934,14 @@ onUnmounted(() => {
                 ><button
                   class="small"
                   @click="jobAction(j, 'retry')"
-                  :disabled="!['failed', 'cancelled', 'retry_wait'].includes(j.state)"
+                  :disabled="!['failed', 'cancelled'].includes(j.state)"
                 >
                   重试</button
                 ><button
                   class="small danger"
                   @click="jobAction(j, 'cancel')"
                   :disabled="
-                    !['queued', 'running', 'retry_wait', 'waiting_paused'].includes(j.state)
+                    !['queued', 'running'].includes(j.state)
                   "
                 >
                   取消
@@ -1274,14 +1274,14 @@ onUnmounted(() => {
         ><button @click="go('logs/' + encodeURIComponent(jobDetail.job.id))">查看关联日志</button
         ><button
           @click="jobAction(jobDetail.job, 'retry')"
-          :disabled="!['failed', 'cancelled', 'retry_wait'].includes(jobDetail.job.state)"
+          :disabled="!['failed', 'cancelled'].includes(jobDetail.job.state)"
         >
           重试任务</button
         ><button
           class="danger"
           @click="jobAction(jobDetail.job, 'cancel')"
           :disabled="
-            !['queued', 'running', 'retry_wait', 'waiting_paused'].includes(jobDetail.job.state)
+            !['queued', 'running'].includes(jobDetail.job.state)
           "
         >
           取消任务

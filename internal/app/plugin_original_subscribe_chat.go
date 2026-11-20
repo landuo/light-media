@@ -438,7 +438,7 @@ func (a *App) enqueueOriginalChatSubscriptionSearch(ctx context.Context, s Subsc
 		err = a.Store.DB.QueryRowContext(ctx, `SELECT id,json_extract(payload,'$.revision'),json_extract(payload,'$.latest_batch'),
 			COALESCE(json_extract(payload,'$._chat_paused_search'),0),COALESCE(json_type(payload,'$._chat_manual_search')='true',0)
 			FROM jobs WHERE kind='subscription' AND json_extract(payload,'$.id')=?
-			AND state IN ('queued','running','retry_wait','waiting_paused') ORDER BY created_at DESC,id DESC LIMIT 1`, s.ID).Scan(&activeID, &revision, &latest, &activePaused, &activeManual)
+			AND state IN ('queued','running') ORDER BY created_at DESC,id DESC LIMIT 1`, s.ID).Scan(&activeID, &revision, &latest, &activePaused, &activeManual)
 		if errors.Is(err, sql.ErrNoRows) {
 			continue
 		}
@@ -452,7 +452,7 @@ func (a *App) enqueueOriginalChatSubscriptionSearch(ctx context.Context, s Subsc
 		if err != nil {
 			return Job{}, err
 		}
-		if state == "waiting_paused" {
+		if state == "queued" {
 			break
 		}
 	}
@@ -470,7 +470,7 @@ func (a *App) awaitOriginalChatSubscriptionJob(ctx context.Context, id string) (
 			return "", err
 		}
 		switch state {
-		case "succeeded", "failed", "cancelled", "waiting_paused", "needs_review":
+		case "succeeded", "failed", "cancelled", "needs_review":
 			return state, nil
 		}
 		select {

@@ -48,7 +48,7 @@ func (a *App) resetSubscription(ctx context.Context, key string) (Subscription, 
 	if err = txPut(ctx, tx, "subscription", key, s); err != nil {
 		return s, err
 	}
-	if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), key); err != nil {
+	if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), key); err != nil {
 		return s, err
 	}
 	var event json.RawMessage

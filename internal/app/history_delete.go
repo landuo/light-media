@@ -47,7 +47,7 @@ func (a *App) deleteTransferHistory(ctx context.Context, item transferHistoryIte
 		defer a.downloadMu.Unlock()
 	}
 	var active int
-	if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, item.PlanID).Scan(&active); e != nil {
+	if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, item.PlanID).Scan(&active); e != nil {
 		return nil, e
 	}
 	if active > 0 && (in.DeleteSource || in.DeleteTarget) {
@@ -223,7 +223,7 @@ func (a *App) guardHistorySourceInUse(ctx context.Context, item transferHistoryI
 	if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM import_plan r
  LEFT JOIN import_meta m ON m.id=r.id
  WHERE r.id!=?
- AND EXISTS(SELECT 1 FROM jobs j WHERE j.kind='import' AND json_extract(j.payload,'$.id')=r.id AND j.state IN ('queued','running','retry_wait','waiting_paused'))
+ AND EXISTS(SELECT 1 FROM jobs j WHERE j.kind='import' AND json_extract(j.payload,'$.id')=r.id AND j.state IN ('queued','running'))
  AND (EXISTS(SELECT 1 FROM json_each(r.payload,'$.files') f WHERE json_extract(f.value,'$.source')=?)
  OR EXISTS(SELECT 1 FROM json_each(m.payload,'$.sidecars') g,json_each(g.value) s WHERE json_extract(s.value,'$.source')=?))`, item.PlanID, item.Source, item.Source).Scan(&busy); e != nil {
 		return e

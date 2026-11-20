@@ -39,8 +39,6 @@ import {
 const preparationLabels = {
   queued: '等待准备',
   running: '正在准备整理',
-  retry_wait: '等待重试',
-  waiting_paused: '已暂停',
 };
 type QueuePreparation = {
   id: string;

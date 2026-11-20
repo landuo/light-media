@@ -178,7 +178,7 @@ func (a *App) siteStatisticsSnapshot(ctx context.Context) (statistic.Snapshot, e
 // three-second date callback only submits it; slow sites do not hold a plugin
 // process or block all other plugin configuration for minutes.
 func enqueueSiteRefreshTx(ctx context.Context, tx *sql.Tx) (Job, error) {
-	job, err := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind='site_refresh' AND state IN ('queued','running','retry_wait','waiting_paused') ORDER BY created_at LIMIT 1`))
+	job, err := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind='site_refresh' AND state IN ('queued','running') ORDER BY created_at LIMIT 1`))
 	if err == nil {
 		return job, nil
 	}

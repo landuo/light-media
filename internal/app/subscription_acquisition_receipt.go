@@ -261,7 +261,7 @@ func (a *App) acceptAcquisitionReceiptTx(ctx context.Context, tx *sql.Tx, in Int
 	}
 	// The primary producer just did the receipt job's actual local work in this
 	// transaction. A concurrent claimed receipt worker finishes its own lease.
-	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='succeeded',lease_until=0,updated_at=? WHERE id=? AND state IN ('queued','retry_wait','waiting_paused')`, now(), receipt.JobID); e != nil {
+	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='succeeded',lease_until=0,updated_at=? WHERE id=? AND state='queued'`, now(), receipt.JobID); e != nil {
 		return e
 	}
 	if gok && grant != nil && grant.root != nil {

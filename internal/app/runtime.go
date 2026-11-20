@@ -184,7 +184,7 @@ type Options struct {
 
 // appVersion is a var so a release build can stamp the deployed version without
 // editing the tree.
-var appVersion = "0.7.2"
+var appVersion = "0.8.0"
 
 // buildID identifies the exact build so a deployment can be verified without
 // trusting file size. Release builds stamp it with the commit hash.
@@ -674,7 +674,8 @@ func (a *App) setControl(ctx context.Context, pause bool) error {
 	}
 	a.control = state
 	if !pause {
-		_, _ = a.Store.DB.ExecContext(ctx, `UPDATE jobs SET state='queued',run_at=unixepoch() WHERE state='waiting_paused'`)
+		// Rows parked by older builds are released with the rest of the queue.
+		_, _ = a.Store.DB.ExecContext(ctx, `UPDATE jobs SET state='queued',run_at=unixepoch() WHERE state IN ('waiting_paused','retry_wait')`)
 		select {
 		case a.jobWake <- struct{}{}:
 		default:

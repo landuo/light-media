@@ -244,7 +244,7 @@ func (a *App) previewDownloadReview(ctx context.Context, key string, request Dow
 		episodes = append([]int{}, in.Episodes...)
 	}
 	var active int
-	if err = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND state IN ('queued','running','retry_wait','waiting_paused') AND json_extract(payload,'$.id')=?`, in.ImportPlanID).Scan(&active); err != nil {
+	if err = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND state IN ('queued','running') AND json_extract(payload,'$.id')=?`, in.ImportPlanID).Scan(&active); err != nil {
 		return out, err
 	}
 	if active > 0 {
@@ -372,7 +372,7 @@ func (a *App) confirmDownloadReview(ctx context.Context, key, planID string, con
 		return Job{}, bad("REVIEW_INTENT_CHANGED", "关联下载已变化，请重新预览")
 	}
 	var active int
-	if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND state IN ('queued','running','retry_wait','waiting_paused') AND json_extract(payload,'$.id')=?`, in.ImportPlanID).Scan(&active); err != nil {
+	if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND state IN ('queued','running') AND json_extract(payload,'$.id')=?`, in.ImportPlanID).Scan(&active); err != nil {
 		return Job{}, err
 	}
 	if active > 0 {
@@ -406,7 +406,7 @@ func (a *App) confirmDownloadReview(ctx context.Context, key, planID string, con
 					return Job{}, err
 				}
 			}
-			if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), sub.ID); err != nil {
+			if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), sub.ID); err != nil {
 				return Job{}, err
 			}
 		}
@@ -436,7 +436,7 @@ func (a *App) confirmDownloadReview(ctx context.Context, key, planID string, con
 		} else if !errors.Is(err, sql.ErrNoRows) {
 			return Job{}, err
 		}
-		if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), in.ImportPlanID); err != nil {
+		if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), in.ImportPlanID); err != nil {
 			return Job{}, err
 		}
 	}

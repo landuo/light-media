@@ -109,7 +109,7 @@ func (a *App) awaitUISubscriptionAddStatistics(ctx context.Context, j Job, r sub
 	// The source awaits its helper. Claim this real admitted child, or await the
 	// generic worker which claimed it first. There is still one durable intent.
 	if child.Stage == "accepted" {
-		result, e := a.Store.DB.ExecContext(ctx, `UPDATE jobs SET state='running',generation=generation+1,lease_until=?,updated_at=? WHERE id=? AND kind='subscription_stats' AND state IN ('queued','retry_wait')`, time.Now().Add(2*time.Minute).Unix(), now(), child.JobID)
+		result, e := a.Store.DB.ExecContext(ctx, `UPDATE jobs SET state='running',generation=generation+1,lease_until=?,updated_at=? WHERE id=? AND kind='subscription_stats' AND state='queued'`, time.Now().Add(2*time.Minute).Unix(), now(), child.JobID)
 		if e != nil {
 			return e
 		}

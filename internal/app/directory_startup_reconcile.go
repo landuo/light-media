@@ -87,7 +87,7 @@ func (a *App) importPlanJobLive(ctx context.Context, planID string) bool {
 // jobLive reports whether a job is still pending or running.
 func jobLive(state string) bool {
 	switch state {
-	case "queued", "running", "retry_wait", "waiting_paused":
+	case "queued", "running":
 		return true
 	}
 	return false

@@ -498,7 +498,7 @@ async function organize(background: boolean) {
         ).length;
         result.value = { ...response, items: [...response.items] };
         progress.value =
-          job.state === 'retry_wait'
+          job.state === 'queued'
             ? job.error_message || '任务稍后重试'
             : `正在整理 ${completed.value} / ${totalJobs.value}`;
       }

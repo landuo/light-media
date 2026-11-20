@@ -174,13 +174,21 @@ func (a *App) claimJob(ctx context.Context, lane jobLane) (Job, error) {
 		return Job{}, e
 	}
 	defer tx.Rollback()
-	const due = `SELECT ` + jobColumns + ` FROM jobs WHERE state IN ('queued','retry_wait')
+	// One pending state. Delayed work waits in "queued" behind run_at instead of
+	// a separate "retry_wait", and a paused automation simply stops claiming
+	// instead of parking rows in "waiting_paused".
+	const due = `SELECT ` + jobColumns + ` FROM jobs WHERE state='queued'
 		AND kind NOT IN ('lark_download','subscription_download')
 		AND (kind!='download' OR COALESCE(json_extract(payload,'$._ordinary_search_attempt'),'')='')
-		AND run_at<=?`
+		AND run_at<=?
+		AND (kind='asset_check' OR ?)`
 	claimAt := time.Now()
+	runnable := 0
+	if !a.paused() {
+		runnable = 1
+	}
 	find := func(filter string) (Job, error) {
-		return scanJob(tx.QueryRowContext(ctx, due+filter+` ORDER BY run_at,created_at LIMIT 1`, claimAt.Unix()))
+		return scanJob(tx.QueryRowContext(ctx, due+filter+` ORDER BY run_at,created_at LIMIT 1`, claimAt.Unix(), runnable))
 	}
 	var j Job
 	switch lane {
@@ -215,9 +223,8 @@ func (a *App) claimJob(ctx context.Context, lane jobLane) (Job, error) {
 	j.State = "running"
 	j.Attempt++
 	j.Generation++
-	j.LeaseUntil = claimAt.Add(10 * time.Minute).Unix()
 	j.UpdatedAt = now()
-	_, e = tx.ExecContext(ctx, `UPDATE jobs SET state=?,attempt=?,generation=?,lease_until=?,updated_at=? WHERE id=?`, j.State, j.Attempt, j.Generation, j.LeaseUntil, j.UpdatedAt, j.ID)
+	_, e = tx.ExecContext(ctx, `UPDATE jobs SET state=?,attempt=?,generation=?,updated_at=? WHERE id=?`, j.State, j.Attempt, j.Generation, j.UpdatedAt, j.ID)
 	if e != nil {
 		return Job{}, e
 	}
@@ -258,10 +265,6 @@ func (a *App) runClaimedJob(ctx context.Context, j Job) {
 	if j.importRun != nil {
 		defer j.importRun.release()
 	}
-	if a.paused() && j.Kind != "asset_check" {
-		_, _ = a.Store.DB.ExecContext(ctx, `UPDATE jobs SET state='waiting_paused',attempt=attempt-1,updated_at=? WHERE id=? AND generation=?`, now(), j.ID, j.Generation)
-		return
-	}
 	a.event(ctx, j, "INFO", j.Kind, "started", "开始执行任务")
 	e := a.safeRun(a.traceContext(ctx, j.WorkflowID, j.ID, j.RequestID), j)
 	if ctx.Err() != nil {
@@ -282,19 +285,17 @@ func (a *App) runClaimedJob(ctx context.Context, j Job) {
 		if errors.As(e, &api) {
 			code = api.Code
 		}
-		// The pinned transfer task ends on an explicit false result;
-		// only a new user action retries that rejected operation.
+		// Two cases ask for their own delay; everything else fails outright and
+		// waits for the next scheduled cycle, which is what a periodic schedule
+		// already provides. No attempt counter, no exponential backoff.
 		if code == "PLUGIN_REFRESH_PENDING" {
-			state = "retry_wait"
+			state = "queued"
 			runAt = time.Now().Add(2 * time.Second).Unix()
 		} else if code == "DOWNLOADER_DISABLED" {
-			state = "retry_wait"
+			state = "queued"
 			runAt = time.Now().Add(time.Minute).Unix()
 		} else if code == "AUTOMATION_PAUSED" {
-			state = "waiting_paused"
-		} else if code != "PLUGIN_ADAPTER_UNAVAILABLE" && code != "PLUGIN_TRANSFER_FAILED" && (j.Kind != "import" || code != "TRANSFER_OVERWRITE_DENIED") && j.Kind != "import" && j.Kind != "organize_file" && j.Kind != "organize_prepare" && j.Attempt < 3 && !strings.Contains(code, "REVIEW") && !strings.Contains(code, "CONFLICT") && !strings.Contains(code, "INVALID") && !strings.Contains(code, "EXCLUDED") {
-			state = "retry_wait"
-			runAt = time.Now().Add(time.Duration(1<<j.Attempt) * 30 * time.Second).Unix()
+			state = "queued"
 		}
 	}
 	changed, updateErr := a.finishJob(ctx, j, state, code, message, runAt)

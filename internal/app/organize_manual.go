@@ -948,7 +948,7 @@ func (a *App) recognizeBrowserFile(ctx context.Context, path string) (any, error
 	return map[string]any{"media": identity, "parsed": files[0].Parsed, "season": request.Files[0].Season, "episodes": request.Files[0].Episodes}, nil
 }
 
-const activeOrganizeStates = `('queued','running','retry_wait','waiting_paused')`
+const activeOrganizeStates = `('queued','running')`
 
 type organizeQueuePreparation struct {
 	ID           string   `json:"id"`
@@ -1027,7 +1027,7 @@ func (a *App) organizeQueue(ctx context.Context) (any, error) {
 			if cancelled {
 				continue
 			}
-			canCancel := job.State == "queued" || job.State == "running" || job.State == "retry_wait" || job.State == "waiting_paused"
+			canCancel := job.State == "queued" || job.State == "running"
 			entry := map[string]any{"id": f.ID, "source": f.Source, "target": f.Target, "size": f.Size, "status": f.Status, "error": f.Reason, "job_id": job.ID, "job_state": job.State, "can_cancel": canCancel}
 			if progress, ok := a.organizeFileProgress(f); ok {
 				entry["progress"] = progress

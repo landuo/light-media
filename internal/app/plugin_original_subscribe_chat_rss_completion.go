@@ -18,7 +18,7 @@ func (a *App) deferOriginalChatRSSQualityCompletionTx(ctx context.Context, tx *s
 		return false, err
 	}
 	switch parent.State {
-	case "queued", "running", "retry_wait", "waiting_paused":
+	case "queued", "running":
 		return a.originalChatRSSOwnsSearch(ctx, tx, parent, s)
 	default:
 		return false, nil

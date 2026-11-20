@@ -29,7 +29,7 @@ func findDownloadImportRetry(ctx context.Context, q qualityReader, owner string,
 	// A partial pack may have several failed files. Earlier failed plans remain
 	// evidence after another file is retried; no active attempt may be replaced.
 	var active bool
-	if err := q.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM jobs j INDEXED BY jobs_due CROSS JOIN import_plan p ON p.id=json_extract(j.payload,'$.id') WHERE j.kind='import' AND j.state IN ('queued','running','retry_wait','waiting_paused') AND json_extract(p.payload,'$.intent_id')=?)`, owner).Scan(&active); err != nil || active {
+	if err := q.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM jobs j INDEXED BY jobs_due CROSS JOIN import_plan p ON p.id=json_extract(j.payload,'$.id') WHERE j.kind='import' AND j.state IN ('queued','running') AND json_extract(p.payload,'$.intent_id')=?)`, owner).Scan(&active); err != nil || active {
 		return nil, err
 	}
 	var old ImportPlan

@@ -193,7 +193,7 @@ func ApplyPendingRestore(dir string) error {
 	if e != nil {
 		return e
 	}
-	if _, e = newDB.Exec(`DELETE FROM sessions; UPDATE jobs SET state='waiting_paused',generation=generation+1 WHERE state IN ('queued','running','retry_wait');`); e != nil {
+	if _, e = newDB.Exec(`DELETE FROM sessions; UPDATE jobs SET state='queued',generation=generation+1 WHERE state IN ('queued','running');`); e != nil {
 		return e
 	}
 	return os.Rename(p, p+".applied-"+time.Now().UTC().Format("20060102T150405"))

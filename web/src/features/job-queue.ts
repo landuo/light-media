@@ -27,8 +27,6 @@ const typeLabels: Record<string, string> = {
 const fallbackStages: Record<string, string> = {
   queued: '等待执行',
   running: '正在执行，暂无阶段记录',
-  retry_wait: '等待下一次重试',
-  waiting_paused: '等待自动化恢复',
   completed: '执行完成',
   succeeded: '执行完成',
   failed: '执行失败',

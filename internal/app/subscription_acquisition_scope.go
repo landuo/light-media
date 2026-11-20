@@ -303,7 +303,7 @@ func (a *App) submitAcquisitionChild(ctx context.Context, in Intent) (Intent, er
 		if e != nil || !post.SourceReturned || post.SourceError != "" {
 			return empty, bad("REVIEW_POST_ADD_UNCONFIRMED", "下载后原操作尚未确认，未重试外部动作")
 		}
-		if j.State != "running" && j.State != "queued" && j.State != "retry_wait" {
+		if j.State != "running" && j.State != "queued" {
 			return empty, acquisitionEvidence()
 		}
 		oldGeneration, oldState := j.Generation, j.State

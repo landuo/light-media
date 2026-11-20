@@ -352,11 +352,11 @@ func enqueueSubscriptionCompletionPreparationForTx(ctx context.Context, tx *sql.
 	// The generic queue deduplicates kind+object, while a completion is bound
 	// to one exact subscription revision. Revoke only obsolete preparations;
 	// a running one also loses its generation before its final source check.
-	if _, e := tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription_completion_prepare' AND json_extract(payload,'$.id')=? AND COALESCE(json_extract(payload,'$.revision'),0)!=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), s.ID, s.Revision); e != nil {
+	if _, e := tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription_completion_prepare' AND json_extract(payload,'$.id')=? AND COALESCE(json_extract(payload,'$.revision'),0)!=? AND state IN ('queued','running')`, now(), s.ID, s.Revision); e != nil {
 		return e
 	}
 	var count int
-	if e := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='subscription_completion_prepare' AND json_extract(payload,'$.id')=? AND json_extract(payload,'$.revision')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, s.ID, s.Revision).Scan(&count); e != nil {
+	if e := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='subscription_completion_prepare' AND json_extract(payload,'$.id')=? AND json_extract(payload,'$.revision')=? AND state IN ('queued','running')`, s.ID, s.Revision).Scan(&count); e != nil {
 		return e
 	}
 	if count > 0 {

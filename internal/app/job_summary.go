@@ -360,10 +360,6 @@ func jobSummaryStage(j Job) string {
 		return "等待" + verb
 	case "running":
 		return "正在" + verb
-	case "retry_wait":
-		return "等待重试"
-	case "waiting_paused":
-		return "自动化已暂停，等待恢复"
 	case "cancelled":
 		return "任务已取消"
 	case "needs_review":

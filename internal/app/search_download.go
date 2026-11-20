@@ -1842,7 +1842,7 @@ func (a *App) downloadAction(ctx context.Context, key, action string) error {
 		if _, e = tx.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id=?`, in.ID); e != nil {
 			return e
 		}
-		if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind IN ('download','lark_download') AND json_extract(payload,'$.id')=? AND state IN ('queued','retry_wait','waiting_paused')`, now(), in.ID); e != nil {
+		if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind IN ('download','lark_download') AND json_extract(payload,'$.id')=? AND state='queued'`, now(), in.ID); e != nil {
 			return e
 		}
 		if e = tx.Commit(); e != nil {

@@ -505,7 +505,7 @@ func (a *App) originalChatSubmitDownloadMedia(ctx context.Context, request Searc
 			a.postOriginalChatDownloadFailure(ctx, origin, request, candidate, failure)
 			return failure
 		}
-		if job.State == "waiting_paused" || job.State == "needs_review" || actual.SourceModuleStarted || actual.State != "planned" {
+		if job.State == "needs_review" || actual.SourceModuleStarted || actual.State != "planned" {
 			return bad("CHAT_DOWNLOAD_UNCONFIRMED", "所选资源的下载结果待确认")
 		}
 		if message == "" {
