@@ -742,6 +742,16 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		fileChoice := a.evaluateResourceContext(ctx, fileResource, fileTarget, decision.Policy{})
 		if !fileChoice.Accepted || fileChoice.NeedsConfirmation {
 			if auto {
+				// MoviePilot resolves episodes from the pack's *title* and adds the
+				// torrent without inspecting file names (inspectSubscribePack only
+				// fetches the content). For an already-verified season pack, a file
+				// this build cannot parse is therefore not a reason to refuse the
+				// whole resource: it simply is not selected on import.
+				if verifiedPack {
+					a.log("INFO", "download", "pack_file_unparsed", filepath.Base(f.Path)+" | "+strings.Join(fileChoice.Reasons, ","), "", "")
+					p.ExtraFiles = true
+					continue
+				}
 				a.log("WARN", "download", "file_identity_rejected", filepath.Base(f.Path)+" | "+strings.Join(fileChoice.Reasons, ","), "", "")
 				return p, bad("REVIEW_FILE_IDENTITY", "种子实际视频文件名不能确认目标身份，请手动核对")
 			}
@@ -781,22 +791,33 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		return p, bad("NO_MEDIA_FILES", "种子未包含支持的视频文件")
 	}
 	if verifiedPack && !in.qualitySelection {
-		if unknownFile || len(coverage) == 0 {
-			return p, bad("REVIEW_SEASON_PACK", "整季包包含目标缺集之外或无法确认的文件，请人工核对")
-		}
-		// Every actual video already passed the normal strict automatic identity,
-		// season, known/aired and target checks above. Freeze exactly that subset.
+		// MoviePilot identifies a season pack from the torrent title and adds it
+		// without inspecting the file list. When the names carry no episode
+		// numbers this build cannot prove coverage, so it freezes the episodes the
+		// subscription asked for and lets import decide per file — the same
+		// outcome as adding the pack and sorting it out afterwards.
 		p.Episodes = []int{}
 		for ep := range coverage {
 			p.Episodes = append(p.Episodes, ep)
+		}
+		if len(p.Episodes) == 0 {
+			a.log("INFO", "download", "pack_coverage_from_request", fresh.Title+" | files carry no episode numbers", "", "")
+			p.Episodes = append([]int(nil), in.Episodes...)
+			unknownFile = false
 		}
 		sort.Ints(p.Episodes)
 		in.Episodes = append([]int{}, p.Episodes...)
 		p.Request.Episodes = append([]int{}, p.Episodes...)
 		p.Request.VerifiedSeasonPack = true
 		p.Warnings, p.NeedsConfirmation = []string{}, false
+		if unknownFile {
+			a.log("INFO", "download", "pack_has_unknown_files", fresh.Title, "", "")
+		}
 	}
-	if t.Media.MediaType == "tv" && seasonProof == nil && magnet == "" {
+	// A verified season pack is added on the strength of its title, exactly like
+	// MoviePilot: it never proves per-file coverage before the download. The check
+	// still applies to single-episode resources, where a mismatch is a real error.
+	if t.Media.MediaType == "tv" && seasonProof == nil && magnet == "" && !verifiedPack {
 		for _, ep := range in.Episodes {
 			if !coverage[ep] {
 				return p, bad("REVIEW_TORRENT_COVERAGE", "种子文件无法证明覆盖所选目标集，请修正集号映射或更换资源")
@@ -816,7 +837,10 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		}
 		p.Warnings, p.NeedsConfirmation = []string{}, false
 	}
-	if p.ExtraFiles && !in.qualitySelection {
+	// Extra videos inside a verified season pack are expected: MoviePilot adds the
+	// pack and lets import pick the wanted episodes. Only a single-episode
+	// resource with surprising extra files still asks for confirmation.
+	if p.ExtraFiles && !in.qualitySelection && !verifiedPack {
 		p.Warnings = append(p.Warnings, "此资源还包含额外视频，确认后仅整理所选目标")
 		p.NeedsConfirmation = true
 	}

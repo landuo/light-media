@@ -129,20 +129,24 @@ func TestAutomaticSeasonPackCreatesOneIntentForOnlyItsProvenMissingEpisodes(t *t
 		t.Fatal("reserved pack was created twice", len(again))
 	}
 }
-func TestAutomaticSeasonPackUnsafeFilesRequireManualReviewWithoutIntent(t *testing.T) {
+
+// A pack whose extra files are out of scope is still usable: only the wanted
+// episodes are frozen, and the rest are ignored on import. This matches
+// MoviePilot, which parses a pack's file list for episode numbers and skips
+// anything it cannot parse.
+func TestAutomaticSeasonPackExtraFilesDoNotBlock(t *testing.T) {
 	cases := []struct {
 		name     string
 		files    []string
 		start    int
 		existing bool
 		future   bool
+		want     []int
 	}{
-		{"before-start", []string{"测试剧集 S01E01 1080p.mkv", "测试剧集 S01E02 1080p.mkv"}, 2, false, false},
-		{"already-in-library", []string{"测试剧集 S01E01 1080p.mkv", "测试剧集 S01E02 1080p.mkv"}, 1, true, false},
-		{"cross-season", []string{"测试剧集 S01E01 1080p.mkv", "测试剧集 S02E02 1080p.mkv"}, 1, false, false},
-		{"future", []string{"测试剧集 S01E02 1080p.mkv", "测试剧集 S01E03 1080p.mkv"}, 1, false, true},
-		{"unknown-episode", []string{"测试剧集 S01E01 1080p.mkv", "测试剧集 S01E04 1080p.mkv"}, 1, false, false},
-		{"ambiguous-file", []string{"测试剧集 S01E01 1080p.mkv", "unexpected.mkv"}, 1, false, false},
+		{"before-start", []string{"测试剧集 S01E01 1080p.mkv", "测试剧集 S01E02 1080p.mkv"}, 2, false, false, []int{2}},
+		{"already-in-library", []string{"测试剧集 S01E01 1080p.mkv", "测试剧集 S01E02 1080p.mkv"}, 1, true, false, []int{2}},
+		{"cross-season", []string{"测试剧集 S01E01 1080p.mkv", "测试剧集 S02E02 1080p.mkv"}, 1, false, false, []int{1}},
+		{"ambiguous-file", []string{"测试剧集 S01E01 1080p.mkv", "unexpected.mkv"}, 1, false, false, []int{1}},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -154,15 +158,30 @@ func TestAutomaticSeasonPackUnsafeFilesRequireManualReviewWithoutIntent(t *testi
 			}
 			runAutomaticPackCheck(t, a, s)
 			rows, _ := a.Store.List(context.Background(), "intent", 10, 0)
-			if len(rows) != 0 || adds.Load() != 0 {
-				t.Fatal("unsafe pack became a download", len(rows), adds.Load())
+			if len(rows) != 1 {
+				var current Subscription
+				a.Store.Get(context.Background(), "subscription", s.ID, &current)
+				t.Fatalf("usable pack was refused: intents=%d adds=%d reason=%s", len(rows), adds.Load(), current.LastReason)
 			}
-			var current Subscription
-			a.Store.Get(context.Background(), "subscription", s.ID, &current)
-			if !strings.Contains(current.LastReason, "人工核对") {
-				t.Fatal("manual review was hidden", current.LastReason)
+			var in Intent
+			if err := json.Unmarshal(rows[0], &in); err != nil {
+				t.Fatal(err)
+			}
+			if !reflect.DeepEqual(in.Episodes, tc.want) {
+				t.Fatalf("frozen episodes = %v, want %v", in.Episodes, tc.want)
 			}
 		})
+	}
+}
+
+// When no file in the pack yields an episode number there is nothing to trust.
+func TestAutomaticSeasonPackWithoutIdentifiableEpisodesIsRefused(t *testing.T) {
+	a, s, adds := automaticPackApp(t, []string{"unexpected.mkv", "another.mkv"}, false)
+	a.Store.Put(context.Background(), "subscription", s.ID, s)
+	runAutomaticPackCheck(t, a, s)
+	rows, _ := a.Store.List(context.Background(), "intent", 10, 0)
+	if len(rows) != 0 || adds.Load() != 0 {
+		t.Fatalf("a pack with no episode numbers must not download: %d %d", len(rows), adds.Load())
 	}
 }
 

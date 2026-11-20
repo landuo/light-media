@@ -937,7 +937,8 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		phase = "season"
 		season, err = a.season(ctx, s.Media.ID, s.Season)
 		if err != nil {
-			_ = a.recordSubscriptionCheck(ctx, s, "元数据暂不可用，下次继续检查", nil)
+			// The generic message hid which call failed and why.
+			_ = a.recordSubscriptionCheck(ctx, s, "元数据暂不可用："+a.clean(err.Error()), nil)
 			return err
 		}
 	}
@@ -1213,7 +1214,9 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 					}
 					a.event(ctx, j, "WARN", "subscriptions", "candidate_rejected", candidate.Resource.Title+" | "+e.Error())
 					if pack {
-						reason = "整季包包含起始集、在库或未知范围，需要人工核对；继续寻找符合条件的资源"
+						// The real verdict only existed in the event log. Surface it
+						// in the subscription's reason so the UI explains itself.
+						reason = "整季包候选被拒：" + a.clean(e.Error())
 					}
 					continue
 				}

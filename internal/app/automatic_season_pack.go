@@ -30,46 +30,48 @@ func validateAutomaticSeasonPackFiles(material metainfo.Material, target decisio
 }
 
 func validateAutomaticSeasonPackFilesWithWords(material metainfo.Material, target decision.Target, siteID string, prepare func(string) string) error {
+	// Mirrors TorrentHelper.get_torrent_episodes in MoviePilot: parse each media
+	// file, keep the episodes it yields, and skip anything that does not parse.
+	// A pack whose names carry no season/episode marker for some files is still
+	// usable as long as the wanted episodes can be identified — the extra files
+	// are simply not selected later.
 	target.Auto, target.AllowEarly = true, nil
 	covered := map[int]bool{}
 	known := []media.Episode{}
 	for _, ep := range target.KnownEpisodes {
 		known = append(known, media.Episode{Season: target.Season, Episode: ep})
 	}
+	identified := false
 	for _, file := range material.Files {
 		if !isVideo(file.Path) {
 			continue
 		}
-		resource := sites.Resource{Title: prepare(filepath.Base(file.Path)), Size: file.Size, Seeders: 0, SiteID: siteID}
-		choice := decision.Evaluate(resource, target, decision.Policy{})
-		if !choice.Accepted || choice.NeedsConfirmation {
-			return bad("REVIEW_SEASON_PACK", "整季包实际文件的影视身份、已播日期或目标范围已变化，请人工核对")
-		}
 		parsed := media.Parse(prepare(filepath.Base(file.Path)))
 		if parsed.Status != media.Parsed || parsed.Original == nil {
-			return bad("REVIEW_SEASON_PACK", "整季包含未知文件，无法自动获取")
+			continue
 		}
 		resolved := media.Resolve(mediaKey(target.Media), decision.AliasSeasonNumbering(target.Media, target.Season, *parsed.Original), media.Source{Site: siteID}, target.Mappings, known, nil)
 		if resolved.Status != media.Parsed {
-			return bad("REVIEW_SEASON_PACK", "整季包季集映射无法确认")
+			continue
 		}
 		for _, ep := range resolved.Standard {
-			if ep.Season != target.Season || !containsInt(target.Episodes, ep.Episode) {
-				return bad("REVIEW_SEASON_PACK", "整季包包含当前缺集范围之外的剧集")
+			if ep.Season != target.Season {
+				continue
 			}
-			if covered[ep.Episode] {
-				return bad("REVIEW_SEASON_PACK", "整季包同一集包含多个视频版本")
-			}
+			identified = true
 			covered[ep.Episode] = true
 		}
 	}
-	for _, ep := range target.Episodes {
-		if !covered[ep] {
-			return bad("REVIEW_SEASON_PACK", "整季包不再覆盖已确认的目标集")
+	// MoviePilot decides a pack is a season pack from the torrent title and never
+	// inspects the file names, so a pack this build cannot parse is still added.
+	// Only a pack that does yield episodes but misses the wanted ones is refused:
+	// that is a real mismatch, not a naming convention.
+	if identified {
+		for _, ep := range target.Episodes {
+			if !covered[ep] {
+				return bad("REVIEW_SEASON_PACK", "整季包不再覆盖已确认的目标集")
+			}
 		}
-	}
-	if len(covered) == 0 {
-		return bad("REVIEW_SEASON_PACK", "整季包没有可确认的剧集文件")
 	}
 	return nil
 }
