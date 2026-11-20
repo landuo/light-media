@@ -620,8 +620,10 @@ func titleIdentity(title string, m catalog.Media) (bool, int) {
 		// The release year is evidence even when the title already matched: a
 		// franchise entry and its predecessor share a base name, and the year is
 		// the only thing telling "Soul Land" (2018) from "Soul Land 2" (2023).
-		if loc := yearMarker.FindStringIndex(stem); loc != nil {
-			year, _ := strconv.Atoi(stem[loc[0]:loc[1]])
+		// Only a year after the title is a release year. A year inside the title
+		// ("2012") belongs to the name and must not become identity evidence.
+		if loc := yearMarker.FindStringIndex(stem[len(prefix):]); loc != nil {
+			year, _ := strconv.Atoi(stem[len(prefix)+loc[0] : len(prefix)+loc[1]])
 			return true, year
 		}
 		return true, 0

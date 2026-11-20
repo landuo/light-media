@@ -31,6 +31,10 @@ func qualityEvaluationTarget(target decision.Target) decision.Target {
 }
 func (a *App) validateQualityOrAutomaticFiles(ctx context.Context, p *qualityDownloadSnapshot, material metainfo.Material, target decision.Target, site string) error {
 	if p == nil || !p.BestVersion {
+		// The file list is checked, because a release whose title omits the episode
+		// number is not necessarily a season pack: "S01 2023" turned out to hold a
+		// single S01E110 file. Guidance is that a real pack passes this check now
+		// that a single-season show normalises the site's S02 labelling.
 		return a.validateAutomaticSeasonPackFilesContext(ctx, material, target, site)
 	}
 	identity := qualityEvaluationTarget(target)

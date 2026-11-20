@@ -12,7 +12,7 @@ func TestDetailAppendedIMDbAndRegionalAliases(t *testing.T) {
 	for _, kind := range []string{"movie", "tv"} {
 		t.Run(kind, func(t *testing.T) {
 			client := testClient(t, func(writer http.ResponseWriter, request *http.Request) {
-				if request.URL.Query().Get("append_to_response") != "credits,recommendations,external_ids,alternative_titles" {
+				if request.URL.Query().Get("append_to_response") != "credits,recommendations,external_ids,alternative_titles,translations" {
 					t.Error("search identities not appended")
 				}
 				titleField, originalField, listField := "title", "original_title", "titles"

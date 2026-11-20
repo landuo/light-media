@@ -20,7 +20,7 @@ func TestDetailRecommendationsCastAndEnglishFallback(t *testing.T) {
 			fmt.Fprint(writer, `{"id":1418,"name":"The Big Bang Theory","overview":"English synopsis"}`)
 			return
 		}
-		if request.URL.Query().Get("append_to_response") != "credits,recommendations,external_ids,alternative_titles" {
+		if request.URL.Query().Get("append_to_response") != "credits,recommendations,external_ids,alternative_titles,translations" {
 			t.Error("cast/recommendations not requested")
 		}
 		fmt.Fprint(writer, `{"id":1418,"name":"生活大爆炸","original_name":"The Big Bang Theory","first_air_date":"2007-09-24","status":"Ended","number_of_episodes":279,"number_of_seasons":12,"genres":[{"id":35,"name":"喜剧"}],"credits":{"cast":[{"id":2,"name":"演员二","character":"角色二","profile_path":"/two.jpg","order":1},{"id":1,"name":"演员一","character":"角色一","order":0}]},"recommendations":{"results":[{"id":12,"name":"推荐剧","first_air_date":"2000-01-01"}]},"seasons":[{"id":7,"season_number":7,"name":"第七季","episode_count":24,"air_date":"2013-09-26"}]}`)

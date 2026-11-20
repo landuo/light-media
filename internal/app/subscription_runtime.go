@@ -1081,6 +1081,19 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	if e := a.jobCancelled(ctx, j); e != nil {
 		return e
 	}
+	// A subscription keeps the media snapshot from when it was created. Aliases
+	// gained since then (the English name TMDB returns in translations) are what a
+	// site release is actually named after, so refresh the snapshot when the
+	// catalog knows more names than the stored copy.
+	if fresh, err := a.media(ctx, s.Media.MediaType, s.Media.ID); err == nil && len(fresh.Aliases) > len(s.Media.Aliases) {
+		if fresh.OriginalTitle != "" {
+			s.Media.OriginalTitle = fresh.OriginalTitle
+		}
+		s.Media.Aliases = fresh.Aliases
+		if e := a.Store.Put(ctx, "subscription", s.ID, s); e == nil {
+			a.event(ctx, j, "INFO", "subscriptions", "aliases_refreshed", "别名已刷新："+strings.Join(fresh.Aliases, " | "))
+		}
+	}
 	query := s.Keyword
 	if s.SourceSearchIMDb && s.Media.IMDbID != "" {
 		query = s.Media.IMDbID
