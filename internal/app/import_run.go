@@ -936,7 +936,7 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 					return err
 				}
 			}
-			if err = tx.Commit(); err != nil {
+			if err = a.commitWithJobs(tx); err != nil {
 				return err
 			}
 			publicationCommitted = true

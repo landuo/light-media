@@ -69,6 +69,8 @@ type App struct {
 	startupReconcile atomic.Pointer[startupReconcileStats]
 	// jobIndex holds every pending task so dispatch never scans the table.
 	jobIndex atomic.Pointer[jobIndex]
+	// pendingJobs holds tasks registered inside a transaction until it commits.
+	pendingJobs pendingJobs
 	// pluginBuiltinDisabled forces the external worker path. It exists for two
 	// honest reasons: an operator rollback (LIGHT_MEDIA_PLUGIN_BUILTIN=off)
 	// and framework tests that exercise the wire path with a compiled sample.
@@ -186,7 +188,7 @@ type Options struct {
 
 // appVersion is a var so a release build can stamp the deployed version without
 // editing the tree.
-var appVersion = "0.9.4"
+var appVersion = "0.10.1"
 
 // buildID identifies the exact build so a deployment can be verified without
 // trusting file size. Release builds stamp it with the commit hash.

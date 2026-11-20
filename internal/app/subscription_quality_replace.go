@@ -667,5 +667,5 @@ func (a *App) runQualityCleanup(ctx context.Context, j Job, id string) error {
 	if e = a.writeQualitySealedTx(ctx, tx, "subscription_quality_cleanup", id, p); e != nil {
 		return e
 	}
-	return tx.Commit()
+	return a.commitWithJobs(tx)
 }

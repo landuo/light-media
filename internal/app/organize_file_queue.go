@@ -96,7 +96,7 @@ func (a *App) enqueueOrganizeFiles(ctx context.Context, parent Job, files []impo
 		return out, err
 	}
 	defer tx.Rollback()
-	if err = guardOrganizePreparation(ctx, tx); err != nil {
+	if err = a.guardOrganizePreparation(ctx, tx); err != nil {
 		return out, err
 	}
 	if err = txPut(ctx, tx, "organize_file_listing", parent.ID, struct{}{}); err != nil {

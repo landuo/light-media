@@ -14,8 +14,27 @@ import (
 
 func (a *App) enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload any, wf string) (Job, error) {
 	if kind == "import" {
-		if err := guardOrganizePreparation(ctx, tx); err != nil {
+		if err := a.guardOrganizePreparation(ctx, tx); err != nil {
 			return Job{}, err
+		}
+	}
+	if ephemeralKind(kind) {
+		// No row: the task is released when the transaction commits, and the
+		// work can be re-derived from business state if this process dies first.
+		// The duplicate check therefore has to read the index, since the pending
+		// task never becomes a row this query could see.
+		var subject struct {
+			ID string `json:"id"`
+		}
+		if raw, err := json.Marshal(payload); err == nil {
+			_ = json.Unmarshal(raw, &subject)
+		}
+		if subject.ID != "" && a.subjectBusy(kind, subject.ID) {
+			return Job{}, bad("JOB_EXISTS", "已有该对象的任务正在等待或执行")
+		}
+		if j, ok := newRowlessJob(kind, payload, wf); ok {
+			a.notePendingJob(tx, j)
+			return j, nil
 		}
 	}
 	b, e := json.Marshal(payload)
@@ -95,7 +114,7 @@ func (a *App) enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload an
 func ephemeralKind(kind string) bool {
 	switch kind {
 	case "subscription", "site_refresh", "subscription_stats", "library_scan", "asset_check",
-		"organize_file":
+		"organize_file", "import", "scrape", "quality_cleanup", "reorganize_cleanup":
 		return true
 	}
 	return false

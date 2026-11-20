@@ -378,5 +378,5 @@ func (a *App) runReorganizeCleanup(ctx context.Context, job Job, key string) err
 	if err = txPut(ctx, tx, "reorganize_cleanup", cleanup.ID, cleanup); err != nil {
 		return err
 	}
-	return tx.Commit()
+	return a.commitWithJobs(tx)
 }

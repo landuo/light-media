@@ -104,5 +104,5 @@ func (a *App) recordImportFileSubmissionFailure(ctx context.Context, planID, fil
 			break
 		}
 	}
-	return tx.Commit()
+	return a.commitWithJobs(tx)
 }

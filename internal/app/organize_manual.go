@@ -1151,7 +1151,7 @@ func (a *App) cancelOrganizeQueueFile(ctx context.Context, key string) (any, err
 	if _, e = tx.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id=?`, reservationOwner); e != nil {
 		return nil, e
 	}
-	if e = tx.Commit(); e != nil {
+	if e = a.commitWithJobs(tx); e != nil {
 		return nil, e
 	}
 	job, e := scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, item.JobID))

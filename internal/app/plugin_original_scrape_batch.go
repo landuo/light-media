@@ -280,7 +280,7 @@ func (a *App) closeOriginalScrapeBatch(ctx context.Context, key string, close bo
 	if err != nil {
 		return err
 	}
-	if err = tx.Commit(); err != nil {
+	if err = a.commitWithJobs(tx); err != nil {
 		return err
 	}
 	a.broadcastOriginalScrapeBatch(ctx, events)

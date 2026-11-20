@@ -116,9 +116,22 @@ func (a *App) preparedOrganizeSources(ctx context.Context, jobID string, out *ma
 	return paths, historySources, rows.Err()
 }
 
-func guardOrganizePreparation(ctx context.Context, tx *sql.Tx) error {
+func (a *App) guardOrganizePreparation(ctx context.Context, tx *sql.Tx) error {
 	job, ok := ctx.Value(organizePreparationKey{}).(Job)
 	if !ok {
+		return nil
+	}
+	// A rowless preparation task has no row to confirm, so it is checked in the
+	// index first; without this the guard would read zero rows and cancel the
+	// preparation it is meant to protect.
+	if job.Ephemeral {
+		ix := a.index()
+		ix.mu.Lock()
+		entry, found := ix.entries[job.ID]
+		ix.mu.Unlock()
+		if !found || entry.State != "running" {
+			return bad("JOB_CANCELLED", "整理准备已取消")
+		}
 		return nil
 	}
 	var active bool
