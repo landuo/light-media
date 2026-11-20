@@ -40,11 +40,14 @@ type categoryEditorStandardFixture struct {
 	indexURL            string
 	indexHits, fileHits atomic.Int32
 	unexpected          atomic.Int32
-	sessions            map[*plugins.Client]struct{}
+	sessions            map[plugins.Session]struct{}
 }
 
 func newCategoryEditorStandardFixture(t *testing.T, initialPolicy *string) *categoryEditorStandardFixture {
 	t.Helper()
+	// This suite exercises the wire framework with CategoryEditor as its
+	// compiled sample; CategoryEditor itself now ships compiled-in, so the
+	// sample must take the external path here.
 	binary := os.Getenv("CATEGORYEDITOR_WORKER_BINARY")
 	if binary == "" {
 		t.Fatal("CATEGORYEDITOR_WORKER_BINARY must identify the actual compiled CategoryEditor standard SDK executable; this integration test must not skip")
@@ -81,7 +84,7 @@ func newCategoryEditorStandardFixture(t *testing.T, initialPolicy *string) *cate
 	hash := sha256.Sum256(payload)
 	digest := hex.EncodeToString(hash[:])
 	index := artifacts.Index{SchemaVersion: 1, PluginID: manifest.PluginID, CurrentVersion: manifest.Version, Releases: []artifacts.Release{{Version: manifest.Version, Manifest: manifest, Artifacts: []artifacts.Artifact{{Platform: runtime.GOOS + "-" + runtime.GOARCH, Format: "executable", SHA256: digest, ExecutableSHA256: digest, Size: int64(len(payload)), HostContract: "light-media.sdk-resources/v1"}}}}}
-	f := &categoryEditorStandardFixture{sessions: map[*plugins.Client]struct{}{}}
+	f := &categoryEditorStandardFixture{sessions: map[plugins.Session]struct{}{}}
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/index":
@@ -109,6 +112,7 @@ func newCategoryEditorStandardFixture(t *testing.T, initialPolicy *string) *cate
 	if err != nil {
 		t.Fatal(err)
 	}
+	f.app.pluginBuiltinDisabled = true
 	t.Cleanup(func() {
 		if f.app != nil {
 			if err := f.app.Close(); err != nil {
@@ -264,6 +268,7 @@ func (f *categoryEditorStandardFixture) coldReopen(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	a.pluginBuiltinDisabled = true
 	f.app = a
 	// Run the actual installed-list startup manager, without unrelated scheduler
 	// threads/network services. The full server/browser startup is separate QA.

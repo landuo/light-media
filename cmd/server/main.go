@@ -42,6 +42,20 @@ func startDebugListener(addr string) {
 	}()
 }
 
+// debugAddress keeps profiling off unless the operator asks for it. The
+// environment is the primary switch; a data-directory file is the fallback for
+// a container whose environment cannot be edited without a rebuild.
+func debugAddress(dataDir string) string {
+	if value := strings.TrimSpace(os.Getenv("LIGHT_MEDIA_DEBUG_ADDR")); value != "" {
+		return value
+	}
+	raw, err := os.ReadFile(filepath.Join(dataDir, "debug.addr"))
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(raw))
+}
+
 func main() {
 	var addr, dir string
 	var bootstrap, safe bool
@@ -50,11 +64,11 @@ func main() {
 	flag.BoolVar(&bootstrap, "bootstrap-stdin", false, "one-time encrypted configuration and administrator bootstrap from stdin")
 	flag.BoolVar(&safe, "safe", false, "start management without plugins, schedulers, monitors or automatic synchronization")
 	flag.Parse()
-	startDebugListener(os.Getenv("LIGHT_MEDIA_DEBUG_ADDR"))
 	absolute, e := filepath.Abs(dir)
 	if e != nil {
 		fatal("invalid_data_directory")
 	}
+	startDebugListener(debugAddress(absolute))
 	if bootstrap {
 		if e = app.Bootstrap(absolute, os.Stdin); e != nil {
 			fatal(e.Error())

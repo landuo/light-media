@@ -60,31 +60,42 @@ type App struct {
 	pluginOriginalRegisteredCommands map[string]json.RawMessage
 	pluginOriginalServicesMu         sync.Mutex
 	pluginOriginalBackground         originalBackgroundAdmission
-	pluginOriginalUserUID            atomic.Pointer[string]
-	pluginOriginalDirectJobs         originalDirectJobs
-	pluginRegisteredAPIs             sync.Map // Exact instance routes refreshed by original register_plugin_api.
-	pluginOriginalClasses            sync.Map // Original _plugins: imported compiled class, independent of running and installed.
-	pluginOriginalClassOrder         []string // guarded by pluginOriginalRunningMu; source _plugins insertion order
-	pluginSubmittedObjects           sync.Map // Exact objects held by accepted asynchronous calls, including failed init.
-	pluginRunningInstances           sync.Map // Original _running_plugins: successful initialized call objects, not business enable state.
-	systemMessages                   systemMessageRuntime
-	bigMemoryMode                    bool               // Trusted startup option; not worker or plugin configuration.
-	safeMode                         bool               // Recovery startup skips automatic plugin and background execution.
-	pluginDeveloperMode              bool               // Immutable DEV startup option, scoped to plugin local monitoring.
-	pluginMarketOverride             *[]string          // Immutable process environment override; never persisted by the settings UI.
-	brushRoots                       []string           // Trusted mounts for brush file checks; never exposed as media roots.
-	pluginLogRotation                *PluginLogRotation // Source ordinary log environment overrides, fixed for this process.
-	resourceSearchPages              *big.Int           // Trusted ordinary SEARCH_RESOURCE_PAGES, normalized at main startup.
-	originalSearchKeywordMu          sync.Mutex
-	originalSearchKeywordNext        time.Time
-	originalSearchKeywordOverflow    bool
-	mediaSearchConfiguration         *MediaSearchConfiguration
-	transferExtensions               nativeTransferExtensionRuntime
-	subscriptionStats                subscriptionStatsRuntime
-	recognitionMu                    sync.Mutex
-	recognitionMatcher               atomic.Pointer[words.Matcher]
-	directoryFileMu                  sync.Mutex
-	brushInventoryCache              struct {
+	// pluginLoadFailure keeps the most recent plugin load error for the public
+	// health endpoint so an operator can read the cause without log access.
+	pluginLoadFailure atomic.Pointer[string]
+	// pluginIdleTicks counts reaper passes for the health diagnostic probe.
+	pluginIdleTicks atomic.Int64
+	// startupReconcile carries the last startup source-reconcile outcome.
+	startupReconcile atomic.Pointer[startupReconcileStats]
+	// pluginBuiltinDisabled forces the external worker path. It exists for two
+	// honest reasons: an operator rollback (LIGHT_MEDIA_PLUGIN_BUILTIN=off)
+	// and framework tests that exercise the wire path with a compiled sample.
+	pluginBuiltinDisabled         bool
+	pluginOriginalUserUID         atomic.Pointer[string]
+	pluginOriginalDirectJobs      originalDirectJobs
+	pluginRegisteredAPIs          sync.Map // Exact instance routes refreshed by original register_plugin_api.
+	pluginOriginalClasses         sync.Map // Original _plugins: imported compiled class, independent of running and installed.
+	pluginOriginalClassOrder      []string // guarded by pluginOriginalRunningMu; source _plugins insertion order
+	pluginSubmittedObjects        sync.Map // Exact objects held by accepted asynchronous calls, including failed init.
+	pluginRunningInstances        sync.Map // Original _running_plugins: successful initialized call objects, not business enable state.
+	systemMessages                systemMessageRuntime
+	bigMemoryMode                 bool               // Trusted startup option; not worker or plugin configuration.
+	safeMode                      bool               // Recovery startup skips automatic plugin and background execution.
+	pluginDeveloperMode           bool               // Immutable DEV startup option, scoped to plugin local monitoring.
+	pluginMarketOverride          *[]string          // Immutable process environment override; never persisted by the settings UI.
+	brushRoots                    []string           // Trusted mounts for brush file checks; never exposed as media roots.
+	pluginLogRotation             *PluginLogRotation // Source ordinary log environment overrides, fixed for this process.
+	resourceSearchPages           *big.Int           // Trusted ordinary SEARCH_RESOURCE_PAGES, normalized at main startup.
+	originalSearchKeywordMu       sync.Mutex
+	originalSearchKeywordNext     time.Time
+	originalSearchKeywordOverflow bool
+	mediaSearchConfiguration      *MediaSearchConfiguration
+	transferExtensions            nativeTransferExtensionRuntime
+	subscriptionStats             subscriptionStatsRuntime
+	recognitionMu                 sync.Mutex
+	recognitionMatcher            atomic.Pointer[words.Matcher]
+	directoryFileMu               sync.Mutex
+	brushInventoryCache           struct {
 		mu    sync.Mutex
 		at    time.Time
 		value plugins.BrushInventoryV1
@@ -173,7 +184,7 @@ type Options struct {
 
 // appVersion is a var so a release build can stamp the deployed version without
 // editing the tree.
-var appVersion = "0.5.8"
+var appVersion = "0.7.2"
 
 // buildID identifies the exact build so a deployment can be verified without
 // trusting file size. Release builds stamp it with the commit hash.
@@ -331,10 +342,24 @@ func New(opts Options) (*App, error) {
 func (a *App) Start(parent context.Context) {
 	ctx, cancel := context.WithCancel(parent)
 	a.cancel = cancel
+	// Return idle high-water pages even in safe mode: recovery sessions hold the
+	// same mapped heap without running any plugin.
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.runMemoryReclaim(ctx) }()
+	// One pass per start releases source files a restart could have baselined.
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.runDirectoryStartupReconcile(ctx) }()
+	// Plugin worker retirement is a no-op in safe mode: no plugin object is
+	// loaded, so the loop observes an empty snapshot.
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.runPluginIdleReaper(ctx) }()
 	if a.safeMode {
 		a.log("INFO", "runtime", "safe_mode", "安全模式已启动：跳过插件加载、定时任务、监控和自动同步，管理接口仍可使用", "", "")
 		return
 	}
+	// Align persisted installation rows with the compiled-in catalog before
+	// any object loads: shipping this build upgrades every builtin plugin.
+	a.adoptBuiltinVersions(ctx)
 	if err := a.restoreOriginalPluginCode(ctx); err != nil {
 		a.log("ERROR", "plugins", "code_restore_failed", "恢复插件代码备份失败，继续加载现有插件", "", "")
 	}

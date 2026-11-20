@@ -31,9 +31,26 @@ type originalPluginInstance struct {
 	frontendPackageSHA256 atomic.Pointer[string] // verified resource identity may advance without replacing the backend object
 	frontendReader        artifacts.FrontendReader
 	sessionMu             sync.Mutex
-	session               *plugins.Client
+	session               plugins.Session
 	sessionStarted        bool
-	sourceLogSecrets      originalSourceLogSecrets
+	// sessionRetired marks a session retired by the idle reaper. A retired
+	// object may build a new session; an explicitly stopped one may not.
+	sessionRetired atomic.Bool
+	// sessionNeedsInit gates the replay-on-wake: the first business call after
+	// a retire re-runs the initializer before the method itself.
+	sessionNeedsInit atomic.Bool
+	// wakeMu serializes retire and wake so the old worker fully stops before
+	// a new one starts; it is a leaf lock never taken above sessionMu.
+	wakeMu      sync.Mutex
+	inflight    atomic.Int64
+	lastUsed    atomic.Int64 // unix nanoseconds of the latest admitted call
+	marketMu    sync.Mutex
+	marketState atomic.Bool
+	marketKnown atomic.Bool // last successful market status read, valid only while retired
+	// builtin marks a compiled-in plugin: it has no worker process, so the
+	// idle reaper has nothing to reclaim and must leave its session alone.
+	builtin          atomic.Bool
+	sourceLogSecrets originalSourceLogSecrets
 }
 
 func (p *originalPluginInstance) frontendPackageHash() string {
@@ -64,6 +81,40 @@ type originalInitializationCall struct {
 func (p *originalPluginInstance) init(ctx context.Context) error {
 	unlock := p.lockOriginalMethod()
 	defer unlock()
+	return p.initSerialized(ctx)
+}
+
+// rememberMarketState caches the last successful market status read so the
+// periodic market refresh can answer from memory for a retired worker instead
+// of waking it every cycle.
+func (p *originalPluginInstance) rememberMarketState(state bool) {
+	p.marketMu.Lock()
+	p.marketState.Store(state)
+	p.marketKnown.Store(true)
+	p.marketMu.Unlock()
+}
+
+// cachedMarketState reports whether the cached state stands in for a live
+// read: only while the worker is idle-retired, so an awake object always
+// answers fresh and any real use refreshes through the live path.
+func (p *originalPluginInstance) cachedMarketState() (bool, bool) {
+	if !p.sessionRetired.Load() {
+		return false, false
+	}
+	p.marketMu.Lock()
+	defer p.marketMu.Unlock()
+	if !p.marketKnown.Load() {
+		return false, false
+	}
+	return p.marketState.Load(), true
+}
+
+// initSerialized is the initializer body without the method lock. The idle
+// retire path replays exactly this sequence after rebuilding a session: a
+// fresh manager configuration read, the standard initializer call, and the
+// applied-config record. A replay therefore behaves like the manager's own
+// re-init action on a running object, never like a snapshot replay.
+func (p *originalPluginInstance) initSerialized(ctx context.Context) error {
 	if !p.external {
 		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "插件尚未适配新的标准模块")
 	}
@@ -114,6 +165,7 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 	if err == nil {
 		implementation, resolveErr := a.resolvePluginImplementation(ctx, in)
 		if resolveErr != nil {
+			a.recordPluginLoadFailure(instance, resolveErr)
 			return nil
 		}
 		if !implementation.External {
@@ -142,6 +194,20 @@ func (a *App) prepareOriginalPluginObject(ctx context.Context, in PluginInstalla
 	object.setFrontendPackageHash(implementation.PackageSHA256)
 	return object, class, nil
 }
+
+// recordPluginLoadFailure keeps a bounded operator-readable cause for the
+// health endpoint. It never carries configuration payloads.
+func (a *App) recordPluginLoadFailure(instance string, err error) {
+	if err == nil {
+		return
+	}
+	detail := instance + ": " + err.Error()
+	if len(detail) > 600 {
+		detail = detail[:600]
+	}
+	a.pluginLoadFailure.Store(&detail)
+}
+
 func (a *App) startPreparedOriginalPlugin(ctx context.Context, object *originalPluginInstance, class originalPluginClass) *originalPluginInstance {
 	instance := object.installation.InstanceID
 	a.storeOriginalPluginClass(instance, class)
@@ -149,7 +215,8 @@ func (a *App) startPreparedOriginalPlugin(ctx context.Context, object *originalP
 	err := object.init(ctx)
 	if err != nil {
 		object.finishOriginalInitialization(false)
-		a.log("ERROR", "plugins", "load_failed", "插件初始化失败，实例未加载", "", "")
+		a.recordPluginLoadFailure(instance, err)
+		a.log("ERROR", "plugins", "load_failed", "插件初始化失败，实例未加载："+instance+" "+err.Error(), "", "")
 		return nil
 	}
 	// Source start unconditionally inserts the pre-imported object after init,

@@ -278,7 +278,11 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}{file.InferredMedia, file.Numbering, file.IdentityReason})
 		evidenceSum := sha256.Sum256(evidenceJSON)
 		evidence := hex.EncodeToString(evidenceSum[:])
-		retryIdentity := !file.Unchanged && !fresh && !changed && (f.State == "needs_review" || f.State == "error") && f.EvidenceFingerprint != evidence
+		// Retry an identity failure whenever the evidence changed, independent of
+		// whether the file itself changed. The download's media identity can
+		// arrive after the first attempt; requiring an unchanged file here made
+		// that correction unreachable and left the record terminal forever.
+		retryIdentity := !fresh && !changed && (f.State == "needs_review" || f.State == "error") && f.EvidenceFingerprint != evidence
 		if fresh || changed || retryIdentity {
 			f = DirectoryObservedFile{ID: key, DirectoryID: rule.ID, Path: file.Path, State: "observing", Reason: "等待文件至少60秒保持稳定", Snapshot: stamp, StableSince: time.Now().UnixNano(), RuleFingerprint: fingerprint, EvidenceFingerprint: evidence}
 			if fresh && initial && !rule.IncludeExisting {
@@ -314,18 +318,17 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 		terminal := f.State == "baseline" || f.State == "imported" || f.State == "queued" || f.State == "cancelled" || f.State == "needs_review" || f.State == "error"
 		if !terminal && !fresh && !changed && time.Since(time.Unix(0, f.StableSince)) >= directoryStableTime {
-			if owner, ok := downloads[file.Path]; ok && owner.Managed {
-				f.State = "tracking"
-				f.Reason = "本应用下载任务，由下载完成核验流程整理"
-				if owner.Imported {
-					f.State = "imported"
-					f.Reason = "下载任务已整理完成，源文件保留"
-				}
-			} else if ok && (!owner.Complete || owner.Size != stamp.Size) {
-				f.State = "downloading"
-				f.Reason = "下载器仍在写入或尚未确认文件完成"
-				f.StableSince = time.Now().UnixNano()
-			} else if !ok && rule.MonitorType == "downloader" {
+			// A finished managed download that has no plan yet must be organized
+			// here: nothing in this build advances download history to
+			// "imported", so parking it in "tracking" would wait forever.
+			// Organization is driven by the file system, not by provenance: a
+			// file that sits complete in a monitored directory is organized no
+			// matter which client produced it. The download record only adds the
+			// media identity used for recognition, and the ownership hash.
+			_, hasOwner := downloads[file.Path]
+			if !hasOwner && rule.MonitorType == "downloader" {
+				// A downloader-mode rule watches a client's queue rather than the
+				// directory, so it still needs the client to confirm the task.
 				f.State = "observing"
 				f.Reason = "等待下载器确认此目录中的文件已完成"
 			} else if stamp.Size <= 0 {
@@ -349,17 +352,26 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 					if reason != "" {
 						file.IdentityReason = reason
 					}
-					if owner, ok := downloads[file.Path]; ok {
-						if owner.IdentityConflict {
-							file.IdentityReason = "下载任务的影视身份存在冲突"
-						} else if owner.Hint != nil {
-							if file.InferredMedia != nil && (file.InferredMedia.ID != owner.Hint.ID || file.InferredMedia.Type != owner.Hint.Type) {
-								file.IdentityReason = "下载任务与NFO影视身份存在冲突"
-							} else if file.IdentityReason == "" {
-								file.InferredMedia = owner.Hint
-								if file.Numbering == nil {
-									file.Numbering = file.Parsed.Original
-								}
+				}
+				// The download owner is applied unconditionally: it must not depend
+				// on the "unchanged" fast path, because a fluctuating identity would
+				// change the evidence fingerprint and reset the stability clock on
+				// every pass, so the file would never reach the organize step.
+				if owner, ok := downloads[file.Path]; ok {
+					if owner.IdentityConflict {
+						file.IdentityReason = "下载任务的影视身份存在冲突"
+					} else if owner.Hint != nil {
+						if file.InferredMedia != nil && (file.InferredMedia.ID != owner.Hint.ID || file.InferredMedia.Type != owner.Hint.Type) {
+							file.IdentityReason = "下载任务与NFO影视身份存在冲突"
+						} else {
+							// The acquisition requested this media, so its identity
+							// outranks a guess from the file name. A failed name parse
+							// must not veto a download we placed ourselves.
+							file.InferredMedia = owner.Hint
+							file.IdentityReason = ""
+							file.IdentitySource = "download"
+							if file.Numbering == nil && file.Parsed.Status == media.Parsed {
+								file.Numbering = file.Parsed.Original
 							}
 						}
 					}
@@ -375,6 +387,17 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 			f.OwnerHash = ""
 		}
 		if !reflect.DeepEqual(before, f) {
+			// The pass reads every observation up front, so a row can change
+			// while this loop runs (the startup reconcile releases stranded
+			// rows). Writing this copy back whole would silently revert that
+			// change, so the stored verdict wins and only harmless fields from
+			// this pass are kept.
+			var live DirectoryObservedFile
+			if err := a.Store.Get(ctx, "directory_file", f.ID, &live); err == nil && live.State != before.State {
+				f.State, f.Reason = live.State, live.Reason
+				f.PlanID, f.JobID = live.PlanID, live.JobID
+				f.StableSince = live.StableSince
+			}
 			if e = a.Store.Put(ctx, "directory_file", f.ID, f); e != nil {
 				return e
 			}
@@ -434,6 +457,9 @@ func (a *App) refreshDirectoryFilePlan(ctx context.Context, f *DirectoryObserved
 	if a.Store.DB.QueryRowContext(ctx, `SELECT state,error_message FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? ORDER BY created_at DESC LIMIT 1`, p.ID).Scan(&state, &reason) == nil && (state == "failed" || state == "cancelled") {
 		f.State = "error"
 		f.Reason = a.clean(reason)
+		// Keep the verdict but drop the dead references so the next pass can
+		// enqueue a fresh attempt instead of reading this failed plan again.
+		f.PlanID, f.JobID = "", ""
 	}
 }
 func (a *App) guardDirectoryFilePlan(ctx context.Context, planID string) error {
@@ -584,24 +610,31 @@ func (a *App) directoryObservations(ctx context.Context, ruleID string) (map[str
 type directoryTaskState struct {
 	Files    int
 	Imported int
+	// A core download records the media it was acquired for. Reusing that
+	// identity is what lets a finished download be organized without a second
+	// recognition pass, which for an anime name is often ambiguous.
+	TMDBID    int64
+	MediaType string
 }
 
 // directoryDownloadTaskState loads intent/native state for one downloader in
 // two queries instead of two queries per task.
 func (a *App) directoryDownloadTaskState(ctx context.Context, downloaderID string) (map[string]directoryTaskState, map[string]NativeDownload, error) {
 	states := map[string]directoryTaskState{}
-	rows, e := a.Store.reader().QueryContext(ctx, `SELECT lower(json_extract(payload,'$.hash')), count(*), coalesce(max(json_extract(payload,'$.state')='imported'),0) FROM downloadhistory WHERE json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')!='cancelled' GROUP BY 1`, downloaderID)
+	rows, e := a.Store.reader().QueryContext(ctx, `SELECT lower(json_extract(payload,'$.hash')), count(*), coalesce(max(json_extract(payload,'$.state')='imported'),0), coalesce(max(json_extract(payload,'$.request.tmdb_id')),0), coalesce(max(json_extract(payload,'$.request.media_type')),'') FROM downloadhistory WHERE json_extract(payload,'$.downloader_id')=? AND json_extract(payload,'$.state')!='cancelled' GROUP BY 1`, downloaderID)
 	if e != nil {
 		return nil, nil, e
 	}
 	for rows.Next() {
 		var hash string
 		var count, imported int
-		if e = rows.Scan(&hash, &count, &imported); e != nil {
+		var tmdbID int64
+		var mediaType string
+		if e = rows.Scan(&hash, &count, &imported, &tmdbID, &mediaType); e != nil {
 			rows.Close()
 			return nil, nil, e
 		}
-		states[hash] = directoryTaskState{Files: count, Imported: imported}
+		states[hash] = directoryTaskState{Files: count, Imported: imported, TMDBID: tmdbID, MediaType: mediaType}
 	}
 	if e = rows.Err(); e != nil {
 		rows.Close()
@@ -633,6 +666,19 @@ func (a *App) directoryDownloadTaskState(ctx context.Context, downloaderID strin
 
 func directoryTaskFingerprint(t download.Task) string {
 	return fmt.Sprintf("%s|%.6f|%d|%d|%s", t.Status, t.Progress, t.Completed, t.TotalSize, t.Name)
+}
+
+// directoryDownloadHint prefers the recorded native media, then the identity the
+// acquisition requested. A core download carries tmdb_id, so a finished file is
+// organized against the media it was bought for instead of being re-recognized.
+func directoryDownloadHint(native NativeDownload, state directoryTaskState) *importInferredMedia {
+	if hint := directoryNativeHint(native); hint != nil {
+		return hint
+	}
+	if validMedia(state.MediaType, state.TMDBID) {
+		return &importInferredMedia{Type: state.MediaType, MediaType: state.MediaType, ID: state.TMDBID}
+	}
+	return nil
 }
 
 func directoryNativeHint(native NativeDownload) *importInferredMedia {
@@ -742,7 +788,7 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 					continue
 				}
 				entry := directoryDownloadFile{Complete: ready && f.Size > 0 && f.Completed >= f.Size && f.Progress >= 1, Managed: state.Files > 0, Imported: state.Imported > 0, Size: f.Size, OwnerHash: hash}
-				if hint := directoryNativeHint(native); hint != nil {
+				if hint := directoryDownloadHint(native, state); hint != nil {
 					entry.Hint = hint
 				}
 				if old, ok := entries[path]; ok {
@@ -757,7 +803,7 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 				entry.Managed = state.Files > 0
 				entry.Imported = state.Imported > 0
 				entry.Complete = ready && entry.Size > 0
-				entry.Hint = directoryNativeHint(native)
+				entry.Hint = directoryDownloadHint(native, state)
 				entries[path] = entry
 			}
 		}

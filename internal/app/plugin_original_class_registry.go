@@ -81,17 +81,33 @@ func (a *App) originalLocalPluginVersion(ctx context.Context, id string) (string
 // _process_plugin_info asks the current object once for each declaration,
 // even when that declaration was read from the helper metadata cache or later
 // loses source selection. Release-list downloads alone do not do this.
+// originalMarketProbeKey marks the market refresh's status reads. These reads
+// are periodic bookkeeping, not business use: they must neither refresh the
+// idle clock nor wake a worker that the idle reaper has retired.
+type originalMarketProbeKey struct{}
+
 func (a *App) readOriginalMarketPluginStates(ctx context.Context, declarations []artifacts.Discovery, observed ...map[string]bool) {
+	ctx = context.WithValue(ctx, originalMarketProbeKey{}, true)
 	for _, entry := range declarations {
 		if ctx.Err() != nil {
 			return
 		}
 		if value, exists := a.pluginRunningInstances.Load(entry.PluginID); exists {
-			state, err := value.(*originalPluginInstance).getState(ctx)
+			object := value.(*originalPluginInstance)
+			if state, cached := object.cachedMarketState(); cached {
+				if len(observed) > 0 && observed[0] != nil {
+					observed[0][entry.RepositoryURL+"\x00"+entry.PluginID] = state
+				}
+				continue
+			}
+			state, err := object.getState(ctx)
 			if err != nil {
 				a.log("ERROR", "plugins", "state_read_failed", "获取插件状态失败", "", "")
-			} else if len(observed) > 0 && observed[0] != nil {
-				observed[0][entry.RepositoryURL+"\x00"+entry.PluginID] = state
+			} else {
+				object.rememberMarketState(state)
+				if len(observed) > 0 && observed[0] != nil {
+					observed[0][entry.RepositoryURL+"\x00"+entry.PluginID] = state
+				}
 			}
 		}
 	}

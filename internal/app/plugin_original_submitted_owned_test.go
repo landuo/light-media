@@ -138,7 +138,7 @@ func ownedSubmittedDone(t *testing.T, a *App, id, token string, pid int) {
 		t.Fatal("retained parent HostCaller succeeded")
 	}
 }
-func ownedSubmittedClient(p *originalPluginInstance) *plugins.Client {
+func ownedSubmittedClient(p *originalPluginInstance) plugins.Session {
 	p.sessionMu.Lock()
 	defer p.sessionMu.Unlock()
 	return p.session

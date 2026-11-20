@@ -155,7 +155,7 @@ func TestIYUULinuxLifecycleAndClone(t *testing.T) {
 	for _, instance := range []struct {
 		id      string
 		object  *originalPluginInstance
-		session *plugins.Client
+		session plugins.Session
 	}{
 		{iyuuLifecycleSource, source, sourceSession},
 		{iyuuLifecycleClone, clone, cloneSession},
@@ -251,7 +251,7 @@ func iyuuLifecycleDownloader(t *testing.T, hash string, scans *atomic.Int32) str
 	return server.URL
 }
 
-func iyuuLifecycleSession(t *testing.T, object *originalPluginInstance, enabled bool) *plugins.Client {
+func iyuuLifecycleSession(t *testing.T, object *originalPluginInstance, enabled bool) plugins.Session {
 	t.Helper()
 	var state bool
 	if err := object.readSession(t.Context(), "get_state", &state); err != nil || state != enabled {

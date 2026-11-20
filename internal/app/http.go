@@ -131,6 +131,132 @@ func (a *App) handler() http.Handler {
 			return
 		}
 		payload := map[string]any{"status": "ok", "version": appVersion, "build": buildID}
+		if failure := a.pluginLoadFailure.Load(); failure != nil {
+			payload["plugin_load_failure"] = *failure
+		}
+		if probe := a.pluginIdleProbe(); probe != nil {
+			payload["plugin_idle"] = probe
+		}
+		// Loaded-versus-declared is the one number an operator needs when a
+		// plugin page looks empty: it separates "no objects" from "objects
+		// present but a getter is slow".
+		a.pluginOriginalRunningMu.Lock()
+		loaded := len(a.pluginOriginalRunningOrder)
+		a.pluginOriginalRunningMu.Unlock()
+		payload["plugins_loaded"] = loaded
+		if stats := a.startupReconcileSnapshot(); stats != nil {
+			payload["startup_reconcile"] = stats
+		}
+		// Per-rule observation states: the difference between "still observing",
+		// "needs review" and "error" is what tells an operator whether the
+		// pipeline is stuck on time, identity or a hard failure.
+		stuck := map[string]any{}
+		for _, rule := range a.Settings().Directories {
+			if !rule.Enabled {
+				continue
+			}
+			files, err := a.listDirectoryFiles(r.Context(), rule.ID)
+			if err != nil {
+				continue
+			}
+			counts := map[string]int{}
+			pending := []map[string]any{}
+			for _, f := range files {
+				counts[f.State]++
+				if f.State == "needs_review" || f.State == "error" || f.State == "observing" {
+					if len(pending) < 5 {
+						reason := f.Reason
+						if len([]rune(reason)) > 80 {
+							reason = string([]rune(reason)[:80])
+						}
+						pending = append(pending, map[string]any{
+							"file": filepath.Base(f.Path), "state": f.State, "reason": reason,
+						})
+					}
+				}
+			}
+			stuck[rule.Name] = map[string]any{"counts": counts, "pending": pending}
+		}
+		if len(stuck) > 0 {
+			payload["directory_states"] = stuck
+		}
+		// Recent import/organize jobs: their stored error text is what the
+		// observation reason is copied from, so it reveals the real verdict.
+		jobRows := []map[string]any{}
+		if rows, err := a.Store.DB.QueryContext(r.Context(), `SELECT id,kind,state,COALESCE(error_message,''),created_at FROM jobs WHERE kind IN ('import','organize_file') ORDER BY created_at DESC LIMIT 12`); err == nil {
+			for rows.Next() {
+				var id, kind, state, msg, created string
+				if rows.Scan(&id, &kind, &state, &msg, &created) == nil {
+					if len([]rune(msg)) > 100 {
+						msg = string([]rune(msg)[:100])
+					}
+					jobRows = append(jobRows, map[string]any{"id": id, "kind": kind, "state": state, "error": msg, "created": created})
+				}
+			}
+			rows.Close()
+		}
+		if len(jobRows) > 0 {
+			payload["recent_jobs"] = jobRows
+		}
+		// enabled counts objects whose event state is on: a plugin that is
+		// builtin and loaded but disabled still does nothing, which looks like
+		// a broken feature rather than a disabled toggle.
+		enabled := 0
+		for _, object := range a.originalLoadedPluginSnapshot() {
+			object.configMu.RLock()
+			on := object.eventsEnabled
+			object.configMu.RUnlock()
+			if on {
+				enabled++
+			}
+		}
+		payload["plugins_enabled"] = enabled
+		// Automation state and the subscription queue are what decide whether a
+		// scheduled check ever runs; both are invisible from the UI when a
+		// subscription silently stops finding resources.
+		a.controlMu.Lock()
+		automation := a.control
+		a.controlMu.Unlock()
+		payload["automation"] = automation
+		if raw, err := a.Store.List(r.Context(), "subscription", 500, 0); err == nil {
+			active, due := 0, 0
+			earliest := ""
+			now := time.Now()
+			for _, item := range raw {
+				var sub Subscription
+				if json.Unmarshal(item, &sub) != nil || sub.State != "active" {
+					continue
+				}
+				active++
+				next, err := time.Parse(time.RFC3339Nano, sub.NextCheck)
+				if err != nil || !next.After(now) {
+					due++
+					continue
+				}
+				if earliest == "" || next.Format(time.RFC3339) < earliest {
+					earliest = next.Format(time.RFC3339)
+				}
+			}
+			// Reasons are the only way to tell a silent filter from a failed
+			// check; ids are shortened and titles are never included.
+			reasons := []map[string]any{}
+			for _, item := range raw {
+				var sub Subscription
+				if json.Unmarshal(item, &sub) != nil || sub.State != "active" || sub.LastReason == "" {
+					continue
+				}
+				reason := sub.LastReason
+				if len([]rune(reason)) > 90 {
+					reason = string([]rune(reason)[:90])
+				}
+				id := sub.ID
+				if len(id) > 8 {
+					id = id[:8]
+				}
+				reasons = append(reasons, map[string]any{"id": id, "reason": reason})
+			}
+			payload["subscriptions"] = map[string]any{"active": active, "due": due, "next_check": earliest, "reasons": reasons}
+		}
 		if update := a.updateStatus(); update != nil {
 			payload["update"] = update
 		}
@@ -488,6 +614,10 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 			var s Subscription
 			e = a.Store.Get(ctx, "subscription", key, &s)
 			if e == nil {
+				// An explicit check is the operator asking for fresh data: drop
+				// the cached season snapshot so a stale or partial one (for
+				// example taken while the proxy was down) cannot answer again.
+				a.dropSubscriptionSeasonCache(ctx, s)
 				out, e = a.enqueue(ctx, "subscription", map[string]any{"id": key, "revision": s.Revision}, id("wf_"))
 			}
 		} else if strings.HasSuffix(key, "/reset") && method == "POST" {
@@ -558,6 +688,17 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		e = decodeBody(w, r, &in)
 		if e == nil {
 			out, e = a.previewImport(ctx, in)
+		}
+	case p == "import/repair" && method == "POST":
+		// Releases a source file the monitor pipeline stranded: the observation
+		// row is dropped and reservations held by an already-downloaded intent
+		// are freed, so the next scan treats the file as new work again.
+		var in struct {
+			Path string `json:"path"`
+		}
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.repairStrandedSource(ctx, in.Path)
 		}
 	case p == "import/execute" && method == "POST":
 		var in struct {
@@ -1096,6 +1237,20 @@ func (a *App) media(ctx context.Context, kind string, tmdb int64) (catalog.Media
 	_, e := a.cached(ctx, "media:"+kind+":"+strconv.FormatInt(tmdb, 10), 24*time.Hour, &m, func() (any, error) { return a.catalog().Detail(ctx, kind, tmdb) })
 	return m, e
 }
+
+// dropSubscriptionSeasonCache forgets the season snapshot a subscription reads,
+// so a manual check refetches it instead of replaying a cached copy for up to
+// twelve hours.
+func (a *App) dropSubscriptionSeasonCache(ctx context.Context, s Subscription) {
+	if s.Media.ID == 0 {
+		return
+	}
+	key := fmt.Sprintf("season:%d:%d", s.Media.ID, s.Season)
+	if err := a.Store.Delete(ctx, "cache", key); err != nil && !errors.Is(err, sql.ErrNoRows) {
+		a.log("WARN", "catalog", "season_cache_drop_failed", "清理季缓存失败："+key, "", "")
+	}
+}
+
 func (a *App) season(ctx context.Context, tmdb int64, n int) (catalog.Season, error) {
 	groups, err := a.originalPluginModules(ctx, "")
 	if err != nil {

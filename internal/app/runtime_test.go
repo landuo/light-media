@@ -19,6 +19,12 @@ func newTestApp(t *testing.T) *App {
 	if e != nil {
 		t.Fatal(e)
 	}
+	// The framework suites install compiled samples and assert the external
+	// worker path: market indexes, receipts, wire expansion, clone isolation.
+	// Those remain the supported path for marketplace plugins, so the shared
+	// test app keeps it. The compiled-in path has its own coverage in
+	// plugin_builtin_app_test.go.
+	a.pluginBuiltinDisabled = true
 	t.Cleanup(func() { _ = a.Close() })
 	return a
 }

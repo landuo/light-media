@@ -1922,6 +1922,17 @@ func (a *App) pollDownloads(ctx context.Context) error {
 					}
 					break
 				}
+				// A pending reconciliation whose receipt never arrived is
+				// recovered from downloader evidence before progress is read:
+				// otherwise the guard below rejects every observation and the
+				// finished torrent is never adopted.
+				if advanced, e := a.confirmReconciledAcceptance(ctx, in, t); e != nil {
+					a.log("WARN", "downloads", "acceptance_reconcile_failed", a.clean(e.Error()), in.WorkflowID, "")
+				} else if advanced {
+					if err := a.Store.Get(ctx, "intent", in.ID, &in); err != nil {
+						break
+					}
+				}
 				latest, terminal, err := a.saveIntentProgress(ctx, in.ID, t)
 				if err != nil {
 					if ctx.Err() != nil {

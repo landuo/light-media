@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/url"
 	"slices"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -205,6 +206,13 @@ func (a *App) originalPluginMarketHTTP(r *http.Request) (any, error) {
 			return nil, bad("INVALID_PLUGIN_QUERY", "force必须为布尔值")
 		}
 	}
+	if a.pluginAcquisitionClosed() {
+		// A builtin deployment has no remote index to consult: the catalog in
+		// this binary is the whole answer, so this read must never touch the
+		// network or the plugin workers. The page load awaits it on every
+		// render, so a slow mirror here would stall the plugin list.
+		return a.builtinMarketResponse(r.Context(), r.URL.Query().Get("details") == "true")
+	}
 	_, items, statuses, err := a.originalPluginCatalog(r.Context(), force)
 	if err != nil {
 		return nil, err
@@ -213,6 +221,34 @@ func (a *App) originalPluginMarketHTTP(r *http.Request) (any, error) {
 		return map[string]any{"items": items, "sources": statuses}, nil
 	}
 	return items, nil
+}
+
+// builtinMarketResponse renders the compiled-in catalog in the market card
+// shape the UI already understands: every class is a locally sourced plugin
+// that is always available and never has an update (the build owns it).
+func (a *App) builtinMarketResponse(ctx context.Context, details bool) (any, error) {
+	catalog, err := builtinCatalogLoad()
+	if err != nil {
+		return nil, err
+	}
+	items := make([]pluginCard, 0, len(catalog))
+	for class, entry := range catalog {
+		card := pluginCard{Manifest: entry.manifest, InstanceID: class, Available: true}
+		if in, err := a.pluginStore.Installation(ctx, class); err == nil {
+			card.Installed = in.Installed
+			card.State = in.DesiredEnabled
+			if in.Version != entry.manifest.Version {
+				card.DisplayVersion = in.Version
+			}
+		}
+		items = append(items, card)
+	}
+	sort.Slice(items, func(i, j int) bool { return items[i].InstanceID < items[j].InstanceID })
+	if !details {
+		return items, nil
+	}
+	sources := []originalMarketSourceStatus{{RepositoryURL: "", Success: true, Message: "插件随光影版本内置"}}
+	return map[string]any{"items": items, "sources": sources}, nil
 }
 
 func (a *App) originalPluginCatalog(ctx context.Context, force bool) ([]pluginCard, []pluginCard, []originalMarketSourceStatus, error) {

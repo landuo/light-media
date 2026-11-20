@@ -921,26 +921,24 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 						block("该影片或季集已存在资产，需先核对冲突")
 						break
 					}
+					// A reservation records an in-flight acquisition so the same
+					// slot is not fetched twice. It says nothing about whether an
+					// existing, complete file may be organized, so it is adopted
+					// (or noted) rather than treated as a conflict: organization is
+					// driven by the file system.
 					var owner string
 					e := a.Store.reader().QueryRowContext(ctx, `SELECT intent_id FROM reservations WHERE media_key=? AND season=? AND episode=?`, mediaKey(identity), canonical.Season, canonical.Episode).Scan(&owner)
 					if e == nil && owner != request.IntentID {
-						reusable := false
-						if request.IntentID == "" {
-							reusable, e = canReplaceFailedImportReservation(ctx, a.Store.reader(), owner, mediaKey(identity), file, canonical.Season, canonical.Episode)
-							if e == nil && !reusable && request.Manual && len(request.Files) == 1 {
-								meta.DownloadRetry, e = findDownloadImportRetry(ctx, a.Store.reader(), owner, plan, file)
-								reusable = meta.DownloadRetry != nil
-								if e == nil && !reusable {
-									reusable, e = a.adoptDownloadedIntent(ctx, owner, &plan, file)
-								}
-							}
-							if e != nil {
-								return plan, e
-							}
+						adopted, adoptErr := a.adoptDownloadedIntent(ctx, owner, &plan, file)
+						if adoptErr != nil {
+							return plan, adoptErr
 						}
-						if !reusable {
-							block("该影片或季集已有其他下载或整理占用")
-							break
+						if !adopted {
+							// Keep the reservation for the running acquisition but
+							// let this file through; the slot is not duplicated by
+							// organizing a file that already exists.
+							a.log("INFO", "imports", "reservation_kept",
+								"整理源文件时保留其他下载的季集占位：该文件已存在，占位仅用于避免重复获取", request.WorkflowID, "")
 						}
 					}
 					if e != nil && !errors.Is(e, sql.ErrNoRows) {

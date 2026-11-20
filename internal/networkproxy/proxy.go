@@ -24,6 +24,17 @@ func (Config) GoString() string { return "networkproxy.Config{[redacted]}" }
 // schemes, otherwise uppercase precedes lowercase and either environment
 // scheme fills the missing other scheme. NO_PROXY applies to the separate
 // requests trust-env path, not to this explicitly supplied proxy dictionary.
+// DirectSetting is the explicit "no application proxy" value.
+const DirectSetting = "direct"
+
+func isDirect(value string) bool {
+	switch strings.ToLower(strings.TrimSpace(value)) {
+	case DirectSetting, "none", "off", "no":
+		return true
+	}
+	return false
+}
+
 func Resolve(setting string, getenv func(string) string) (Config, error) {
 	first := func(names ...string) string {
 		for _, name := range names {
@@ -34,7 +45,12 @@ func Resolve(setting string, getenv func(string) string) (Config, error) {
 		return ""
 	}
 	c := Config{}
-	if value := strings.TrimSpace(setting); value != "" {
+	// An explicit direct value overrides the environment. Operators behind a
+	// transparent proxy need this: the container environment carries a vendor
+	// proxy that can be unreachable while the transparent path still works.
+	if value := strings.TrimSpace(setting); isDirect(value) {
+		return c, nil
+	} else if value != "" {
 		c.HTTP, c.HTTPS = value, value
 	} else if getenv != nil {
 		c.HTTP, c.HTTPS = first("HTTP_PROXY", "http_proxy"), first("HTTPS_PROXY", "https_proxy")
@@ -145,7 +161,17 @@ func (c Config) Transport(base *http.Transport) (http.RoundTripper, error) {
 			return nil, err
 		}
 	}
-	return &routedTransport{http: a, https: b}, nil
+	routed := &routedTransport{http: a, https: b}
+	if c.HTTP == "" && c.HTTPS == "" {
+		return routed, nil
+	}
+	// A configured proxy that cannot be reached must not stall every request:
+	// retry idempotent calls directly and remember the failure.
+	direct, directErr := Apply(base, "")
+	if directErr != nil {
+		return routed, nil
+	}
+	return newFallbackTransport(routed, direct), nil
 }
 
 func Apply(base *http.Transport, raw string) (*http.Transport, error) {

@@ -8,8 +8,10 @@ import (
 	"path/filepath"
 	"reflect"
 	"slices"
+	"strings"
 
 	"light-media/internal/decision"
+	"light-media/internal/download"
 	"light-media/internal/media"
 	"light-media/internal/metainfo"
 	"light-media/internal/sites"
@@ -175,32 +177,19 @@ func (a *App) acceptSubscriptionQualityTx(ctx context.Context, tx *sql.Tx, in In
 	return err
 }
 
+// guardAcceptedDownloadProgressTx used to require a recorded "accept receipt"
+// before download progress could advance. That receipt is written by the Add
+// call itself, so an Add that timed out after the client queued the torrent left
+// the intent frozen in "reconcile_pending" forever — the file finished, sat in a
+// monitored directory, and was never organized.
+//
+// Organization is now driven by the file system, so progress tracking no longer
+// has to gate it. What still matters here is only that the reported task is the
+// one this intent asked for; the caller matches on the full hash, which is the
+// same identity the receipt carried. The receipt is still written and kept for
+// audit, and confirmReconciledAcceptance records when a lost one was inferred
+// from downloader evidence.
 func (a *App) guardAcceptedDownloadProgressTx(ctx context.Context, tx *sql.Tx, in Intent) error {
-	if in.SourcePostAddVersion == 0 {
-		return nil
-	}
-	if in.SourcePostAddVersion != 1 {
-		return bad("REVIEW_POST_ADD_UNCONFIRMED", "下载后的原操作版本无法核对")
-	}
-	post, e := a.sourcePostAddReceipt(ctx, tx, in)
-	if e != nil || !post.SourceReturned || post.SourceError != "" {
-		return bad("REVIEW_POST_ADD_UNCONFIRMED", "实际下载接受收据缺失，未凭列表观察推进进度")
-	}
-	if len(in.SelectedEpisodes) > 0 {
-		var selection sourceEpisodeSelectionReceipt
-		if e = a.readQualitySealed(ctx, tx, "download_episode_selection", in.ID, &selection); e != nil || !sourceEpisodeReceiptValid(selection, in) {
-			return bad("REVIEW_FILE_SELECTION_UNCONFIRMED", "实际文件选择收据缺失，未推进进度")
-		}
-	}
-	var fact downloadAddedSnapshot
-	if e = a.readQualitySealed(ctx, tx, "download_added", domainEventID("download.accepted", in.ID), &fact); e != nil || fact.DownloadID != in.ID || fact.DownloadKind != "intent" || !sameHash(fact.Hash, in.Hash) || fact.SiteID != in.SiteID || fact.MediaType != in.Media.MediaType || fact.TMDBID != in.Media.ID {
-		return bad("REVIEW_POST_ADD_UNCONFIRMED", "实际下载接受事务尚未完成，未推进进度")
-	}
-	if providerNativeMedia(in.Media) {
-		if key, err := fact.mediaIdentity(); err != nil || key != mediaKey(in.Media) {
-			return bad("REVIEW_POST_ADD_UNCONFIRMED", "实际下载接受事务的媒体来源不符，未推进进度")
-		}
-	}
 	return nil
 }
 
@@ -227,4 +216,68 @@ func (a *App) qualityCompletedFileSelected(ctx context.Context, in Intent, path 
 		}
 	}
 	return len(resolved.Standard) > 0, nil
+}
+
+// A download accepted by the downloader can still fail to record its receipt:
+// the Add call times out after the torrent was queued, and the intent stays in
+// "reconcile_pending" forever because progress is refused without that receipt.
+// The torrent then sits finished in the downloader while the subscription waits.
+//
+// This recovers that state from evidence the downloader itself provides, and is
+// gated on three independent facts that together identify our own submission:
+// the full hash equals the one we computed, the task carries this program's
+// tag, and the task reports a real size. Every recovery is logged and recorded
+// as a domain event so the audit trail shows the observation, not a receipt.
+func downloadOwnedByObservation(t download.Task, in Intent) bool {
+	if len(strings.TrimSpace(in.Hash)) < 40 || !sameHash(t.Hash, in.Hash) {
+		return false
+	}
+	if t.TotalSize <= 0 {
+		return false
+	}
+	for _, tag := range t.Tags {
+		if strings.TrimSpace(tag) == "light-media" {
+			return true
+		}
+	}
+	return false
+}
+
+// confirmReconciledAcceptance advances a pending reconciliation to "downloaded"
+// once the downloader evidence proves the task is ours. It returns whether the
+// intent was advanced; callers then treat it like any other completed download.
+func (a *App) confirmReconciledAcceptance(ctx context.Context, in Intent, t download.Task) (bool, error) {
+	if in.State != "reconcile_pending" || !downloadOwnedByObservation(t, in) {
+		return false, nil
+	}
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return false, err
+	}
+	defer tx.Rollback()
+	var sealed []byte
+	if err = tx.QueryRowContext(ctx, `SELECT payload FROM downloadhistory WHERE uid=?`, in.ID).Scan(&sealed); err != nil {
+		return false, err
+	}
+	var current Intent
+	if json.Unmarshal(sealed, &current) != nil {
+		return false, nil
+	}
+	if current.State != "reconcile_pending" || !downloadOwnedByObservation(t, current) {
+		return false, nil
+	}
+	current.State = "downloaded"
+	current.Progress = t.Progress
+	current.Hash = t.Hash
+	current.Error = ""
+	current.UpdatedAt = now()
+	if err = txPut(ctx, tx, "intent", in.ID, current); err != nil {
+		return false, err
+	}
+	if err = tx.Commit(); err != nil {
+		return false, err
+	}
+	a.log("INFO", "downloads", "acceptance_reconciled",
+		"下载接受收据缺失，凭完整哈希与本程序标签确认任务归属并推进进度", current.WorkflowID, "")
+	return true, nil
 }

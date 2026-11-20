@@ -44,7 +44,8 @@ func (a *App) initializeOriginalPlugins(ctx context.Context) error {
 	for _, in := range installed {
 		implementation, err := a.resolvePluginImplementation(ctx, in)
 		if err != nil {
-			a.log("ERROR", "plugins", "load_failed", "插件实现读取失败，继续加载其他插件", "", "")
+			a.recordPluginLoadFailure(in.InstanceID, err)
+			a.log("ERROR", "plugins", "load_failed", "插件实现读取失败，继续加载其他插件："+in.InstanceID+" "+err.Error(), "", "")
 			continue
 		}
 		orders[in.InstanceID] = implementation.Manifest.PluginOrder
@@ -87,7 +88,8 @@ func (a *App) initializeOriginalPlugins(ctx context.Context) error {
 				_, err = object.originalSessionClient(ctx, plugins.Runner{Timeout: 10 * time.Second})
 			}
 			if err != nil {
-				a.log("ERROR", "plugins", "load_failed", "插件实现预加载失败，继续加载其他插件", "", "")
+				a.recordPluginLoadFailure(in.InstanceID, err)
+				a.log("ERROR", "plugins", "load_failed", "插件实现预加载失败，继续加载其他插件："+in.InstanceID+" "+err.Error(), "", "")
 				continue
 			}
 			preloaded = append(preloaded, imported{object, class})
@@ -109,7 +111,37 @@ func (a *App) initializeOriginalPlugins(ctx context.Context) error {
 // _load_selective_plugins scans physical packages before stable plugin_order
 // sorting. Membership order (including source duplicates) cannot reorder equal
 // classes. File.ReadDir retains native directory order; os.ReadDir sorts it.
+// builtinInstalledPackages enumerates the compiled catalog instead of the
+// on-disk package root. A builtin class needs no directory to start, so the
+// startup list must not depend on one: cleaning plugin-packages would
+// otherwise silence every plugin.
+func (a *App) builtinInstalledPackages(ctx context.Context, ids []string) ([]PluginInstallation, error) {
+	catalog, err := builtinCatalogLoad()
+	if err != nil {
+		return nil, err
+	}
+	wanted := make(map[string]bool, len(ids))
+	for _, id := range ids {
+		wanted[id] = true
+	}
+	installed := make([]PluginInstallation, 0, len(wanted))
+	for class := range catalog {
+		if !wanted[class] {
+			continue
+		}
+		in, err := a.pluginStore.Installation(ctx, class)
+		if err != nil || !in.Installed {
+			continue
+		}
+		installed = append(installed, in)
+	}
+	return installed, nil
+}
+
 func (a *App) originalInstalledPackages(ctx context.Context, ids []string) ([]PluginInstallation, error) {
+	if a.pluginAcquisitionClosed() {
+		return a.builtinInstalledPackages(ctx, ids)
+	}
 	// pathlib.exists precedes the empty-target check. Stat needs only search
 	// access; it must neither turn EACCES into absence nor require directory read.
 	if _, err := os.Stat(a.pluginPackageRoot()); err != nil {

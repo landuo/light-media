@@ -316,3 +316,33 @@ func TestSOCKSHandshakeRespectsParentCancellation(t *testing.T) {
 		t.Fatal("parent cancellation ignored")
 	}
 }
+
+// A transparent-proxy deployment carries a vendor proxy in the environment
+// that may be unreachable while the transparent path works. The explicit
+// direct value must win over that environment.
+func TestDirectSettingOverridesEnvironment(t *testing.T) {
+	env := func(string) string { return "http://172.30.0.2:1082" }
+	for _, value := range []string{"direct", "DIRECT", "direct ", "none", "off", "no"} {
+		config, err := Resolve(value, env)
+		if err != nil {
+			t.Fatalf("%q: %v", value, err)
+		}
+		if config.HTTP != "" || config.HTTPS != "" {
+			t.Fatalf("%q must bypass the environment proxy, got %+v", value, config)
+		}
+	}
+	config, err := Resolve("http://127.0.0.1:7890", env)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if config.HTTPS != "http://127.0.0.1:7890" {
+		t.Fatalf("explicit proxy must be used: %+v", config)
+	}
+	config, err = Resolve("", env)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if config.HTTPS != "http://172.30.0.2:1082" {
+		t.Fatalf("empty setting must fall back to the environment: %+v", config)
+	}
+}

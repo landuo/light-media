@@ -29,7 +29,7 @@ type originalSubmittedState struct {
 	publicRetiring         bool
 	publicRetireReady      bool
 	publicRetireStarted    bool
-	publicClient           *plugins.Client
+	publicClient           plugins.Session
 }
 
 type originalSubmittedLease struct {
@@ -37,7 +37,7 @@ type originalSubmittedLease struct {
 	privateScheduler bool
 	publicService    bool
 	sourceKind       originalSourceInvocationKind
-	client           *plugins.Client // set once under submitted.mu before actual SDK admission
+	client           plugins.Session // set once under submitted.mu before actual SDK admission
 	cancel           context.CancelFunc
 	active           atomic.Bool
 }
@@ -69,10 +69,10 @@ func (p *originalPluginInstance) reserveOriginalOwnedSubmission(parent *original
 	return p.reserveOriginalSubmissionKind(parent, ownership, nil)
 }
 
-func (p *originalPluginInstance) reserveOriginalSubmissionKind(parent *originalSubmittedLease, ownership string, publicClient *plugins.Client) (*originalSubmittedLease, context.Context, error) {
+func (p *originalPluginInstance) reserveOriginalSubmissionKind(parent *originalSubmittedLease, ownership string, publicClient plugins.Session) (*originalSubmittedLease, context.Context, error) {
 	return p.reserveOriginalSourceSubmission(parent, ownership, publicClient, originalSourceScheduler)
 }
-func (p *originalPluginInstance) reserveOriginalSourceSubmission(parent *originalSubmittedLease, ownership string, publicClient *plugins.Client, sourceKind originalSourceInvocationKind) (*originalSubmittedLease, context.Context, error) {
+func (p *originalPluginInstance) reserveOriginalSourceSubmission(parent *originalSubmittedLease, ownership string, publicClient plugins.Session, sourceKind originalSourceInvocationKind) (*originalSubmittedLease, context.Context, error) {
 	global := &p.app.pluginOriginalBackground
 	global.mu.Lock()
 	defer global.mu.Unlock()
@@ -269,7 +269,7 @@ func (a *App) originalSubmitResource(ctx context.Context, scope originalBaseCall
 		return nil, err
 	}
 	parent, _ := ctx.Value(originalSubmittedObjectKey{}).(*originalSubmittedLease)
-	var client *plugins.Client
+	var client plugins.Session
 	if p.originalPublicServiceScopeAllowed(ctx) {
 		client = parent.client
 	} else {

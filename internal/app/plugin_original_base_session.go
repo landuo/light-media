@@ -14,7 +14,7 @@ import (
 type originalBaseStopKey struct{}
 type originalBaseStopCall struct {
 	object       *originalPluginInstance
-	client       *plugins.Client
+	client       plugins.Session
 	businessHook bool // close/stop_service only; never the physical transport stop
 }
 

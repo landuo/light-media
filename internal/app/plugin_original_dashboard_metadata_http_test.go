@@ -93,7 +93,7 @@ type ownedDashboardMetadataObservation struct {
 func ownedDashboardMetadataRead(t *testing.T, a *App, cookie *http.Cookie, want []map[string]any, observations ...ownedDashboardMetadataObservation) {
 	t.Helper()
 	before := make([]ownedStandardSnapshot, len(observations))
-	clients := make([]*plugins.Client, len(observations))
+	clients := make([]plugins.Session, len(observations))
 	for i, observation := range observations {
 		object := observation.object
 		before[i] = ownedStandardSnapshotRead(t, object)
