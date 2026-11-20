@@ -234,31 +234,57 @@ func (a *App) worker(ctx context.Context) {
 	a.jobWorker(ctx, allJobs)
 }
 
+// jobWorker claims until the queue is empty, then sleeps for exactly as long as
+// the earliest queued row needs, or until something wakes it. There is no fixed
+// poll: an idle queue costs one indexed MIN(run_at) query per drained batch
+// instead of a query every tick.
 func (a *App) jobWorker(ctx context.Context, lane jobLane) {
-	timer := time.NewTicker(2 * time.Second)
-	defer timer.Stop()
 	wake := (<-chan struct{})(a.jobWake)
 	if lane == subscriptionJobs || lane == importJobs {
 		wake = nil // Leave general job wakeups for the workers that can claim them.
 	}
 	for {
-		select {
-		case <-ctx.Done():
+		if ctx.Err() != nil {
 			return
-		default:
 		}
 		j, e := a.claimJob(ctx, lane)
-		if e != nil {
-			select {
-			case <-ctx.Done():
-				return
-			case <-timer.C:
-			case <-wake:
-			}
+		if e == nil {
+			a.runClaimedJob(ctx, j)
 			continue
 		}
-		a.runClaimedJob(ctx, j)
+		if ctx.Err() != nil {
+			return
+		}
+		delay := a.nextQueueDelay(ctx)
+		timer := time.NewTimer(delay)
+		select {
+		case <-ctx.Done():
+			timer.Stop()
+			return
+		case <-timer.C:
+		case <-wake:
+			timer.Stop()
+		}
 	}
+}
+
+// nextQueueDelay reports how long until the earliest queued row is due, bounded
+// so a clock change or a row inserted by another path is still picked up.
+func (a *App) nextQueueDelay(ctx context.Context) time.Duration {
+	var runAt sql.NullInt64
+	err := a.Store.DB.QueryRowContext(ctx,
+		`SELECT MIN(run_at) FROM jobs WHERE state='queued'`).Scan(&runAt)
+	if err != nil || !runAt.Valid {
+		return 2 * time.Second
+	}
+	wait := time.Until(time.Unix(runAt.Int64, 0))
+	if wait < 50*time.Millisecond {
+		return 50 * time.Millisecond
+	}
+	if wait > 30*time.Second {
+		return 30 * time.Second
+	}
+	return wait
 }
 
 func (a *App) runClaimedJob(ctx context.Context, j Job) {
