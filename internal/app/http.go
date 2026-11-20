@@ -201,6 +201,17 @@ func (a *App) handler() http.Handler {
 		// Rowless tasks live only in the index; their depth is the only way to
 		// see that work is queued without a jobs row.
 		payload["jobs_in_memory"] = a.indexDepth()
+		// Diagnostic: compare the native TMDB season with what the plugin path
+		// returned, when the request names a probe series.
+		if probe := r.URL.Query().Get("season_probe"); probe != "" {
+			if id, err := strconv.ParseInt(probe, 10, 64); err == nil {
+				if season, err := a.catalog().Season(r.Context(), id, 1); err == nil {
+					payload["season_probe"] = map[string]any{"episodes": len(season.Episodes), "error": ""}
+				} else {
+					payload["season_probe"] = map[string]any{"episodes": 0, "error": err.Error()}
+				}
+			}
+		}
 		// Recent download-module events: the submission path logs there, and a
 		// failed submit is otherwise invisible without file access.
 		if rows, err := a.Store.DB.QueryContext(r.Context(), `SELECT time,level,event,substr(message,1,120) FROM events WHERE module IN ('download','downloads') ORDER BY seq DESC LIMIT 12`); err == nil {
@@ -1307,9 +1318,29 @@ func (a *App) season(ctx context.Context, tmdb int64, n int) (catalog.Season, er
 		return a.originalCatalogNativeEpisodeRows(ctx, tmdb, n, nil, &view)
 	}, groups)
 	if err != nil {
+		// A provider failure must not hide the season TMDB itself has.
+		if native, nativeErr := a.nativeSeason(ctx, tmdb, n); nativeErr == nil && len(native.Episodes) > 0 {
+			a.log("WARN", "catalog", "episode_provider_failed_native", "剧集提供方失败，改用 TMDB 原生季数据", "", "")
+			return native, nil
+		}
 		return catalog.Season{}, err
 	}
-	return originalCatalogSeasonProjection(view, rows)
+	projected, projectionErr := originalCatalogSeasonProjection(view, rows)
+	if projectionErr != nil {
+		if native, nativeErr := a.nativeSeason(ctx, tmdb, n); nativeErr == nil && len(native.Episodes) > 0 {
+			return native, nil
+		}
+		return catalog.Season{}, projectionErr
+	}
+	// A provider that returns fewer episodes than TMDB has would make a long
+	// season look like a handful of episodes: the subscription then asks for
+	// episodes the metadata does not know about. TMDB is authoritative here, which
+	// is what MoviePilot reads directly.
+	if native, nativeErr := a.nativeSeason(ctx, tmdb, n); nativeErr == nil && len(native.Episodes) > len(projected.Episodes) {
+		a.log("INFO", "catalog", "season_provider_short", "剧集提供方返回的集数少于 TMDB，改用原生季数据", "", "")
+		return native, nil
+	}
+	return projected, nil
 }
 
 func (a *App) nativeSeason(ctx context.Context, tmdb int64, n int) (catalog.Season, error) {
