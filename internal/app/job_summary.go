@@ -105,6 +105,22 @@ func (a *App) jobQueue(ctx context.Context) ([]jobView, error) {
 	if err := rows.Close(); err != nil {
 		return nil, err
 	}
+	// Rowless work lives only in the dispatch index; without this the queue view
+	// would look empty while tasks are running.
+	for _, j := range a.memoryJobs(64) {
+		item := entry{job: j}
+		var input jobSummaryInput
+		if err := a.Store.reader().QueryRowContext(ctx, `SELECT `+jobSummaryColumns+` FROM (SELECT ? AS id,? AS kind,? AS payload) j`+jobSummaryJoins,
+			j.ID, j.Kind, []byte(j.Payload)).Scan(&input.subject, &input.oldAsset, &input.activity, &input.activityAt); err == nil {
+			item.input = input
+		}
+		// A rowless task has no event history, so it reports its own creation.
+		if item.input.activity == "" {
+			item.input.activity = "任务已加入队列"
+			item.input.activityAt = j.CreatedAt
+		}
+		entries = append(entries, item)
+	}
 	// Formatting and redaction should not keep the database connection busy.
 	settings := a.Settings()
 	result := make([]jobView, 0, len(entries))

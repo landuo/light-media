@@ -28,10 +28,16 @@ type jobIndex struct {
 }
 
 func (a *App) index() *jobIndex {
-	if a.jobIndex == nil {
-		a.jobIndex = &jobIndex{entries: map[string]Job{}}
+	// Initialised in New; the fallback keeps a zero-value App usable in tests
+	// without racing two goroutines into two different indexes.
+	if ix := a.jobIndex.Load(); ix != nil {
+		return ix
 	}
-	return a.jobIndex
+	ix := &jobIndex{entries: map[string]Job{}}
+	if a.jobIndex.CompareAndSwap(nil, ix) {
+		return ix
+	}
+	return a.jobIndex.Load()
 }
 
 // indexEnqueue registers a job as claimable. It is safe to call for a job whose
@@ -79,6 +85,42 @@ func (a *App) indexRefresh(j Job) {
 		ix.order = append(ix.order, j.ID)
 	}
 	ix.entries[j.ID] = j
+}
+
+// memoryJobs returns the rowless tasks, newest first, for the queue view.
+func (a *App) memoryJobs(limit int) []Job {
+	ix := a.index()
+	ix.mu.Lock()
+	out := make([]Job, 0, len(ix.entries))
+	for _, j := range ix.entries {
+		if j.Ephemeral {
+			out = append(out, j)
+		}
+	}
+	ix.mu.Unlock()
+	sort.SliceStable(out, func(i, k int) bool { return out[i].CreatedAt > out[k].CreatedAt })
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return out
+}
+
+// indexSnapshot describes the tracked jobs, for the health probe.
+func (a *App) indexSnapshot() []map[string]any {
+	ix := a.index()
+	ix.mu.Lock()
+	defer ix.mu.Unlock()
+	out := make([]map[string]any, 0, len(ix.entries))
+	for _, j := range ix.entries {
+		out = append(out, map[string]any{
+			"kind": j.Kind, "state": j.State, "id": j.ID,
+			"run_at": j.RunAt, "attempt": j.Attempt, "ephemeral": j.Ephemeral,
+		})
+		if len(out) >= 8 {
+			break
+		}
+	}
+	return out
 }
 
 // indexDepth reports how many jobs are tracked, for the health probe.

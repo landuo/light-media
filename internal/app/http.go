@@ -201,6 +201,9 @@ func (a *App) handler() http.Handler {
 		// Rowless tasks live only in the index; their depth is the only way to
 		// see that work is queued without a jobs row.
 		payload["jobs_in_memory"] = a.indexDepth()
+		if snap := a.indexSnapshot(); len(snap) > 0 {
+			payload["memory_jobs"] = snap
+		}
 		// enabled counts objects whose event state is on: a plugin that is
 		// builtin and loaded but disabled still does nothing, which looks like
 		// a broken feature rather than a disabled toggle.

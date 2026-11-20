@@ -68,7 +68,7 @@ type App struct {
 	// startupReconcile carries the last startup source-reconcile outcome.
 	startupReconcile atomic.Pointer[startupReconcileStats]
 	// jobIndex holds every pending task so dispatch never scans the table.
-	jobIndex *jobIndex
+	jobIndex atomic.Pointer[jobIndex]
 	// pluginBuiltinDisabled forces the external worker path. It exists for two
 	// honest reasons: an operator rollback (LIGHT_MEDIA_PLUGIN_BUILTIN=off)
 	// and framework tests that exercise the wire path with a compiled sample.
@@ -186,7 +186,7 @@ type Options struct {
 
 // appVersion is a var so a release build can stamp the deployed version without
 // editing the tree.
-var appVersion = "0.9.1"
+var appVersion = "0.9.4"
 
 // buildID identifies the exact build so a deployment can be verified without
 // trusting file size. Release builds stamp it with the commit hash.
@@ -213,6 +213,7 @@ func New(opts Options) (*App, error) {
 		return nil, e
 	}
 	a := &App{pluginDeveloperMode: opts.PluginDeveloperMode, bigMemoryMode: opts.BigMemoryMode, safeMode: opts.SafeMode, RestartRequested: make(chan struct{}, 1), Store: s, Dir: opts.DataDir, web: opts.Web, control: "running", authAttempts: map[string][]time.Time{}, jobWake: make(chan struct{}, 1), materials: map[string][]byte{}}
+	a.jobIndex.Store(&jobIndex{entries: map[string]Job{}})
 	a.frontendVersion = opts.FrontendVersion
 	a.originalHostDouban.searchStamp = time.Now().Format("20060102")
 	a.originalHostOCRHost = originalHostOCRStartupHost(os.LookupEnv)
