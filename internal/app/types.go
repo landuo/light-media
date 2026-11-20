@@ -327,21 +327,24 @@ type ImportPlan struct {
 	CreatedAt              string        `json:"created_at"`
 }
 type Job struct {
-	importRun    *importAdmission
-	ParentJobID  string          `json:"parent_job_id,omitempty"`
-	RequestID    string          `json:"request_id,omitempty"`
-	ID           string          `json:"id"`
-	WorkflowID   string          `json:"workflow_id"`
-	Kind         string          `json:"kind"`
-	State        string          `json:"state"`
-	Payload      json.RawMessage `json:"payload"`
-	Attempt      int             `json:"attempt"`
-	Generation   int             `json:"generation"`
-	RunAt        int64           `json:"run_at"`
-	ErrorCode    string          `json:"error_code"`
-	ErrorMessage string          `json:"error_message"`
-	CreatedAt    string          `json:"created_at"`
-	UpdatedAt    string          `json:"updated_at"`
+	importRun   *importAdmission
+	ParentJobID string          `json:"parent_job_id,omitempty"`
+	RequestID   string          `json:"request_id,omitempty"`
+	ID          string          `json:"id"`
+	WorkflowID  string          `json:"workflow_id"`
+	Kind        string          `json:"kind"`
+	State       string          `json:"state"`
+	Payload     json.RawMessage `json:"payload"`
+	Attempt     int             `json:"attempt"`
+	Generation  int             `json:"generation"`
+	// Ephemeral marks a task that lives only in the dispatch index; it has no
+	// row, so nothing needs to be written back or recovered for it.
+	Ephemeral    bool   `json:"-"`
+	RunAt        int64  `json:"run_at"`
+	ErrorCode    string `json:"error_code"`
+	ErrorMessage string `json:"error_message"`
+	CreatedAt    string `json:"created_at"`
+	UpdatedAt    string `json:"updated_at"`
 }
 type Event struct {
 	Seq        int64  `json:"seq"`

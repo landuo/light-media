@@ -87,7 +87,40 @@ func (a *App) enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload an
 	}
 	return j, e
 }
+
+// ephemeralKind lists task kinds that do not need a durable row. They are
+// triggered by a schedule or by a user action and are re-derived after a
+// restart: a missed run simply happens at the next tick. Keeping them out of
+// the table is the first step of removing the jobs table entirely.
+func ephemeralKind(kind string) bool {
+	switch kind {
+	case "subscription", "site_refresh", "subscription_stats", "library_scan", "asset_check":
+		return true
+	}
+	return false
+}
+
+// enqueueEphemeral queues a task that lives only in the dispatch index. Nothing
+// is written to the jobs table, so there is no row to reconcile or recover.
+func (a *App) enqueueEphemeral(ctx context.Context, kind string, payload any, wf string) (Job, error) {
+	b, e := json.Marshal(payload)
+	if e != nil {
+		return Job{}, e
+	}
+	j := Job{ID: id("job_"), WorkflowID: wf, Kind: kind, State: "queued", Payload: b, RunAt: time.Now().Unix(), CreatedAt: now(), UpdatedAt: now()}
+	j.Ephemeral = true
+	a.indexEnqueue(j)
+	select {
+	case a.jobWake <- struct{}{}:
+	default:
+	}
+	return j, nil
+}
+
 func (a *App) enqueue(ctx context.Context, kind string, payload any, wf string) (Job, error) {
+	if ephemeralKind(kind) {
+		return a.enqueueEphemeral(ctx, kind, payload, wf)
+	}
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
 		return Job{}, e
@@ -441,6 +474,17 @@ func (a *App) jobCancelled(ctx context.Context, j Job) error {
 	}
 	if a.paused() {
 		return &APIError{"AUTOMATION_PAUSED", "自动化已暂停，将在恢复后继续", 409}
+	}
+	if j.Ephemeral {
+		// Memory-only tasks have no row to read: the index is the record.
+		ix := a.index()
+		ix.mu.Lock()
+		entry, ok := ix.entries[j.ID]
+		ix.mu.Unlock()
+		if !ok || entry.State != "running" {
+			return bad("JOB_CANCELLED", "任务已取消")
+		}
+		return nil
 	}
 	var state string
 	var gen int

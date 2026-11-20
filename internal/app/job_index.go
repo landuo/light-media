@@ -221,6 +221,15 @@ func (a *App) claimFromIndex(ctx context.Context, lane jobLane) (Job, error) {
 		if ctx.Err() != nil {
 			return Job{}, ctx.Err()
 		}
+		if j.Ephemeral {
+			// No row to confirm: a memory-only task is claimed by marking it
+			// running in the index.
+			j.State = "running"
+			j.Attempt++
+			j.UpdatedAt = now()
+			a.indexRefresh(j)
+			return j, nil
+		}
 		j.State = "running"
 		j.Attempt++
 		j.Generation++

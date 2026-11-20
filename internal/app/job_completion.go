@@ -7,6 +7,17 @@ import (
 )
 
 func (a *App) finishJob(ctx context.Context, j Job, state, code, message string, runAt int64) (bool, error) {
+	if j.Ephemeral {
+		// Nothing to persist: the index is the only record for this task.
+		done := j
+		done.State, done.ErrorCode, done.ErrorMessage = state, code, message
+		done.RunAt, done.UpdatedAt = runAt, now()
+		a.indexRefresh(done)
+		if state != "succeeded" && code != "PLUGIN_REFRESH_PENDING" {
+			a.log("ERROR", j.Kind, code, message, j.WorkflowID, j.ID)
+		}
+		return true, nil
+	}
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
 		return false, e
