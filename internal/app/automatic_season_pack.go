@@ -44,6 +44,7 @@ func validateAutomaticSeasonPackFilesWithWords(material metainfo.Material, targe
 		known = append(known, media.Episode{Season: target.Season, Episode: ep})
 	}
 	identified := 0
+	covered := map[int]bool{}
 	for _, file := range material.Files {
 		if !isVideo(file.Path) {
 			continue
@@ -59,10 +60,21 @@ func validateAutomaticSeasonPackFilesWithWords(material metainfo.Material, targe
 		for _, ep := range resolved.Standard {
 			if ep.Season == target.Season {
 				identified++
-				break
+				covered[ep.Episode] = true
 			}
 		}
 	}
-	_ = identified
+	// A pack that yields episode numbers must still contain the wanted ones: a
+	// pack of S01E01-E23 cannot satisfy a request for episode 180, and adding it
+	// would download 19 GB of the wrong episodes. Trusting the title is only for
+	// packs whose file names carry no episode marker at all, which is what
+	// MoviePilot effectively does (it parses file names and skips the rest).
+	if identified > 0 {
+		for _, ep := range target.Episodes {
+			if !covered[ep] {
+				return bad("REVIEW_SEASON_PACK", "整季包不包含目标集，已跳过该资源")
+			}
+		}
+	}
 	return nil
 }

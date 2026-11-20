@@ -809,6 +809,12 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		in.Episodes = append([]int{}, p.Episodes...)
 		p.Request.Episodes = append([]int{}, p.Episodes...)
 		p.Request.VerifiedSeasonPack = true
+		// MoviePilot adds the pack and then marks every non-target file as
+		// skipped (selectEpisodeFileIDs + SetFilePriority), so only the wanted
+		// episodes download. Without this the whole 19.6 GB pack is fetched.
+		if len(p.SelectedEpisodes) == 0 && !in.qualitySelection {
+			p.SelectedEpisodes = append([]int(nil), p.Episodes...)
+		}
 		p.Warnings, p.NeedsConfirmation = []string{}, false
 		if unknownFile {
 			a.log("INFO", "download", "pack_has_unknown_files", fresh.Title, "", "")
@@ -1956,6 +1962,28 @@ func (a *App) pollDownloads(ctx context.Context) error {
 			continue
 		}
 		for _, in := range intents {
+			// A task the client no longer has (deleted by hand, or removed with its
+			// files) leaves the intent "downloading" forever, which blocks any retry
+			// for that episode. After a grace period it is marked failed so the next
+			// check can acquire it again.
+			if in.State == "downloading" || in.State == "accepted" {
+				present := false
+				for _, t := range tasks {
+					if sameHash(t.Hash, in.Hash) {
+						present = true
+						break
+					}
+				}
+				if !present && in.Hash != "" {
+					if updated, err := time.Parse(time.RFC3339Nano, in.UpdatedAt); err == nil && time.Since(updated) > 10*time.Minute {
+						_ = a.saveIntentError(ctx, in.ID, "下载任务已不在下载器中，允许重新获取")
+						_, _ = a.Store.DB.ExecContext(ctx, `UPDATE downloadhistory SET payload=json_set(payload,'$.state','failed','$.updated_at',?),updated_at=? WHERE uid=? AND json_extract(payload,'$.state') IN ('downloading','accepted')`, now(), now(), in.ID)
+						_, _ = a.Store.DB.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id=?`, in.ID)
+						a.log("INFO", "downloads", "intent_task_missing", "下载任务已不存在，意图标记失败以便重新获取", in.WorkflowID, "")
+						continue
+					}
+				}
+			}
 			for _, t := range tasks {
 				if !sameHash(t.Hash, in.Hash) {
 					continue
