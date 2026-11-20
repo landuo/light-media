@@ -214,6 +214,19 @@ func (a *App) handler() http.Handler {
 		}
 		// Recent download-module events: the submission path logs there, and a
 		// failed submit is otherwise invisible without file access.
+		if rows, err := a.Store.DB.QueryContext(r.Context(), `SELECT time,level,event,substr(message,1,200) FROM events WHERE module='subscriptions' ORDER BY seq DESC LIMIT 10`); err == nil {
+			ev := []map[string]any{}
+			for rows.Next() {
+				var t, lv, name, msg string
+				if rows.Scan(&t, &lv, &name, &msg) == nil {
+					ev = append(ev, map[string]any{"time": t, "level": lv, "event": name, "message": msg})
+				}
+			}
+			rows.Close()
+			if len(ev) > 0 {
+				payload["subscription_events"] = ev
+			}
+		}
 		if rows, err := a.Store.DB.QueryContext(r.Context(), `SELECT time,level,event,substr(message,1,120) FROM events WHERE module IN ('download','downloads') ORDER BY seq DESC LIMIT 12`); err == nil {
 			ev := []map[string]any{}
 			for rows.Next() {

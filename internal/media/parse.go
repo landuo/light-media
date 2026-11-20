@@ -50,7 +50,29 @@ var (
 
 // Parse accepts explicit SxxExx and EPxxx forms, and conservative Title (year)
 // movies. Numeric suffixes without a marker never imply an episode number.
+// spacedSeasonEpisode matches the "S01 E43" / "S01.E43" / "S01_E43" forms that
+// many sites use. MoviePilot's recognizer accepts them, so a resource named that
+// way must not look like an unidentified file.
+var spacedSeasonEpisode = regexp.MustCompile(`(?i)(^|[ ._\-])S(\d{1,2})[ ._]+E(\d{1,3})`)
+
+// Parse is parseStrict with a fallback for spaced season/episode markers: when
+// the strict form yields no episode number, the markers are joined and parsed
+// again. The fallback only ever adds an episode number, never changes a title.
 func Parse(filename string) ParseResult {
+	result := parseStrict(filename)
+	if result.Original != nil && len(result.Original.Episodes) > 0 {
+		return result
+	}
+	joined := spacedSeasonEpisode.ReplaceAllString(filename, "${1}S${2}E${3}")
+	if joined != filename {
+		if alt := parseStrict(joined); alt.Original != nil && len(alt.Original.Episodes) > 0 {
+			return alt
+		}
+	}
+	return result
+}
+
+func parseStrict(filename string) ParseResult {
 	if filename == "" || strings.ContainsAny(filename, `/\`) {
 		return review("filename_must_be_basename")
 	}

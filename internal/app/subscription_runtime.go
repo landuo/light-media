@@ -661,6 +661,26 @@ func (a *App) subscriptionCoverageLoadedAt(ctx context.Context, s Subscription, 
 	pendingImport := map[int]bool{}
 	excludedSet := map[int]bool{}
 	dateByEpisode := map[int]string{}
+	// Reservations whose intent already ended are dropped before anything reads
+	// them. This runs regardless of a cached display snapshot: otherwise the stale
+	// row keeps the episode "in flight" and the subscription waits for a download
+	// that will never start.
+	{
+		rows, err := a.Store.reader().QueryContext(ctx, `SELECT r.episode,COALESCE(json_extract(i.payload,'$.state'),''),COALESCE(json_extract(i.payload,'$.error'),''),r.intent_id FROM reservations r LEFT JOIN downloadhistory i ON i.uid=r.intent_id WHERE r.media_key=? AND r.season=?`, mediaKey(s.Media), s.Season)
+		if err == nil {
+			for rows.Next() {
+				var ep int
+				var state, reason, intentID string
+				if rows.Scan(&ep, &state, &reason, &intentID) != nil {
+					continue
+				}
+				if state == "failed" || state == "cancelled" || (state == "" && intentID != "") || strings.TrimSpace(reason) != "" {
+					_, _ = a.Store.DB.ExecContext(ctx, `DELETE FROM reservations WHERE media_key=? AND season=? AND episode=?`, mediaKey(s.Media), s.Season, ep)
+				}
+			}
+			rows.Close()
+		}
+	}
 	if snapshot != nil {
 		occupied, reservedSet, pendingImport, excludedSet = snapshot.library, snapshot.reserved, snapshot.pending, snapshot.excluded
 		dateByEpisode = snapshot.dates
@@ -702,22 +722,37 @@ func (a *App) subscriptionCoverageLoadedAt(ctx context.Context, s Subscription, 
 		// completed task remains reserved until its import commits an asset slot.
 		// Read its persisted intent in the same query; viewing subscriptions never
 		// polls downloaders or makes one metadata request per episode.
-		rows, e := a.Store.reader().QueryContext(ctx, `SELECT r.episode,COALESCE(json_extract(i.payload,'$.state'),'') FROM reservations r LEFT JOIN downloadhistory i ON i.uid=r.intent_id WHERE r.media_key=? AND r.season=?`, mediaKey(s.Media), s.Season)
+		rows, e := a.Store.reader().QueryContext(ctx, `SELECT r.episode,COALESCE(json_extract(i.payload,'$.state'),''),COALESCE(json_extract(i.payload,'$.error'),'') FROM reservations r LEFT JOIN downloadhistory i ON i.uid=r.intent_id WHERE r.media_key=? AND r.season=?`, mediaKey(s.Media), s.Season)
 		if e != nil {
 			return out, e
 		}
+		stale := []int{}
 		for rows.Next() {
 			var ep int
-			var state string
-			if e = rows.Scan(&ep, &state); e != nil {
+			var state, reason string
+			if e = rows.Scan(&ep, &state, &reason); e != nil {
 				rows.Close()
 				return out, e
+			}
+			// A failed intent still owns a reservation row, and counting it as "in
+			// flight" makes the subscription wait forever for a download that will
+			// never start. An intent carrying an error cannot succeed either, so
+			// both cases release the slot here.
+			if state == "failed" || state == "cancelled" || strings.TrimSpace(reason) != "" {
+				stale = append(stale, ep)
+				continue
 			}
 			reservedSet[ep] = true
 			pendingImport[ep] = state == "downloaded"
 		}
 		e = rows.Err()
 		rows.Close()
+		if len(stale) > 0 {
+			for _, ep := range stale {
+				_, _ = a.Store.DB.ExecContext(ctx, `DELETE FROM reservations WHERE media_key=? AND season=? AND episode=?`, mediaKey(s.Media), s.Season, ep)
+			}
+			a.log("INFO", "subscriptions", "stale_reservation_released", "释放已失败下载的预留", "", "")
+		}
 		if e != nil {
 			return out, e
 		}
@@ -1060,7 +1095,37 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	// recognition, batch search, filter mutations or MediaInfo.clear.
 	sharedRequest := SearchRequest{originalSubscription: &s, originalSearchInfo: originalSearchInfo, Query: query, MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: searchEpisodes, Policy: s.Policy, SiteIDs: selectedSiteIDs, Mappings: s.Mappings, AllowEarly: s.AllowEarly, EpisodeDates: dates}
 	phase = "search"
-	result, searchErr := a.originalSubscriptionCandidates(ctx, sharedRequest)
+	// MoviePilot searches a list of names (title, original title, aliases) rather
+	// than a single string, and a long-running series is usually only findable
+	// under one of them: the Chinese title matches an old pack while the current
+	// episodes are posted under the romanized name. Every name is searched and
+	// the candidates are merged, so a hit on the first name never hides the rest.
+	result := SearchOutput{}
+	searchErr := error(nil)
+	seenCandidates := map[string]bool{}
+	for _, query := range subscriptionSearchQueries(s) {
+		request := sharedRequest
+		request.Query = query
+		found, err := a.originalSubscriptionCandidates(ctx, request)
+		if err != nil {
+			if searchErr == nil {
+				searchErr = err
+			}
+			continue
+		}
+		result.Sites = append(result.Sites, found.Sites...)
+		for _, candidate := range found.Candidates {
+			key := candidate.Resource.ID
+			if key == "" {
+				key = candidate.Resource.Title
+			}
+			if key != "" && seenCandidates[key] {
+				continue
+			}
+			seenCandidates[key] = true
+			result.Candidates = append(result.Candidates, candidate)
+		}
+	}
 	if searchErr != nil {
 		// A failed aggregate/filter result is diagnostic, not an admitted
 		// candidate snapshot. Do not turn partial output into a download.
@@ -1072,6 +1137,18 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		if status.Status == "failed" {
 			reason = "站点访问失败，详见任务日志，下次继续补漏"
 		}
+	}
+	// Record what the sites actually returned: without this a "no download" report
+	// cannot be told apart from "the candidate was filtered".
+	{
+		titles := []string{}
+		for i, candidate := range result.Candidates {
+			if i >= 20 {
+				break
+			}
+			titles = append(titles, candidate.Resource.Title)
+		}
+		a.event(ctx, j, "INFO", "subscriptions", "candidates", "搜索到 "+strconv.Itoa(len(result.Candidates))+" 个候选："+strings.Join(titles, " | "))
 	}
 	if searchErr == nil && len(result.Candidates) > 0 {
 		result.Candidates, e = a.originalSubscriptionResourceSelection(ctx, s, sharedRequest, result.Candidates)

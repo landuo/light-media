@@ -3,7 +3,6 @@
 package decision
 
 import (
-	"unicode"
 	"context"
 	"fmt"
 	"path/filepath"
@@ -12,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 
 	"light-media/internal/catalog"
 	"light-media/internal/media"
@@ -178,6 +178,25 @@ func EvaluateContext(ctx context.Context, resource sites.Resource, target Target
 		return finish()
 	}
 	if year != 0 && target.Media.Year != 0 && year != target.Media.Year && year != target.SeasonYear {
+		// A franchise entry is told apart from its predecessors by year: "Soul
+		// Land" (2018) shares a base name with "Soul Land 2" (2023), and only the
+		// release year separates them. A one-year slack absorbs season-year
+		// labelling; anything wider is a different work.
+		diff := year - target.Media.Year
+		if diff < 0 {
+			diff = -diff
+		}
+		seasonDiff := 0
+		if target.SeasonYear != 0 {
+			seasonDiff = year - target.SeasonYear
+			if seasonDiff < 0 {
+				seasonDiff = -seasonDiff
+			}
+		}
+		if diff >= 2 && seasonDiff >= 2 {
+			reject("series_year_conflict")
+			return finish()
+		}
 		review("series_year_conflict")
 	}
 	filename := resourceFilename(resource.Title)
@@ -386,6 +405,7 @@ func episodeSet(values []int) (map[int]bool, bool) {
 func normalizeTitle(value string) string {
 	return media.NormalizeTitle(value)
 }
+
 // trailingSeasonMarker matches a normalized alias' trailing season numbering
 // ("Soul Land 2" -> "2", "Soul Land S02" -> "s02", "Rocky II" -> "ii").
 // Franchise releases often drop that suffix ("Soul Land" for "Soul Land 2"),
@@ -496,11 +516,26 @@ func bilingualTitleEvidence(value, candidate string, names []string) bool {
 // season when the media aliases themselves declare that franchise season
 // ("Soul Land S02E179" for a media stored as season 1).
 func AliasSeasonNumbering(m catalog.Media, targetSeason int, n media.Numbering) media.Numbering {
-	if n.Season != nil && *n.Season != targetSeason && aliasSeasonNumbers(m)[*n.Season] {
+	if n.Season == nil || *n.Season == targetSeason {
+		return n
+	}
+	if aliasSeasonNumbers(m)[*n.Season] {
 		season := targetSeason
 		n.Season = &season
+		return n
 	}
 	return n
+}
+
+// aliasesCarrySeasonNumber reports whether any alias ends in a season number,
+// meaning the franchise entry is numbered and must be matched exactly.
+func aliasesCarrySeasonNumber(aliases []string) bool {
+	for _, a := range aliases {
+		if trailingSeasonMarker.MatchString(a) {
+			return true
+		}
+	}
+	return false
 }
 
 func matchesTitle(value string, m catalog.Media) bool {

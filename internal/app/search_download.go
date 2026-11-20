@@ -1835,9 +1835,30 @@ func (a *App) downloadAction(ctx context.Context, key, action string) error {
 		return e
 	}
 	switch action {
-	case "start", "pause", "verify", "remove_keep_data":
+	case "start", "pause", "verify", "remove_keep_data", "cancel":
 	default:
 		return bad("INVALID_ACTION", "未知下载操作")
+	}
+	if action == "cancel" {
+		// Cancelling an intent releases the episode it holds. Without this an
+		// intent whose submit keeps failing blocks that episode forever, because
+		// the subscription reads its reservation as an in-flight download.
+		tasks, err := c.List(ctx)
+		if err == nil {
+			for _, t := range tasks {
+				if sameHash(t.Hash, in.Hash) {
+					_ = c.Control(ctx, t.Hash, "remove_keep_data")
+					break
+				}
+			}
+		}
+		in.State, in.Error, in.UpdatedAt = "cancelled", "", now()
+		if err = a.Store.Put(ctx, "intent", in.ID, in); err != nil {
+			return err
+		}
+		_, _ = a.Store.DB.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id=?`, in.ID)
+		a.log("INFO", "downloads", "intent_cancelled", "已取消下载意图并释放占位", in.WorkflowID, "")
+		return nil
 	}
 	var moduleErr error
 	if action == "remove_keep_data" {
