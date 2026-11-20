@@ -148,7 +148,7 @@ func (a *App) cancelOrganizeFile(ctx context.Context, job Job) (any, error) {
 		return nil, err
 	}
 	defer tx.Rollback()
-	result, err := tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=?
+	result, err := tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=?
 		WHERE id=? AND kind='organize_file' AND generation=? AND state IN `+activeOrganizeStates, now(), job.ID, job.Generation)
 	if err != nil {
 		return nil, err

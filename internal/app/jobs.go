@@ -116,7 +116,7 @@ func scanJob(row interface{ Scan(...any) error }) (Job, error) {
 
 func scanJobRow(row interface{ Scan(...any) error }, extra ...any) (Job, error) {
 	var j Job
-	columns := []any{&j.ID, &j.WorkflowID, &j.Kind, &j.State, &j.Payload, &j.Attempt, &j.Generation, &j.RunAt, &j.LeaseUntil, &j.ErrorCode, &j.ErrorMessage, &j.CreatedAt, &j.UpdatedAt}
+	columns := []any{&j.ID, &j.WorkflowID, &j.Kind, &j.State, &j.Payload, &j.Attempt, &j.Generation, &j.RunAt, &j.ErrorCode, &j.ErrorMessage, &j.CreatedAt, &j.UpdatedAt}
 	e := row.Scan(append(columns, extra...)...)
 	return j, e
 }
@@ -131,7 +131,7 @@ func readJobTrace(j *Job) {
 	}
 }
 
-const jobColumns = `id,workflow_id,kind,state,payload,attempt,generation,run_at,lease_until,error_code,error_message,created_at,updated_at`
+const jobColumns = `id,workflow_id,kind,state,payload,attempt,generation,run_at,error_code,error_message,created_at,updated_at`
 
 func privateOrdinarySearchDownloadJob(j Job) bool {
 	var payload struct {

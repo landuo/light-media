@@ -1133,7 +1133,7 @@ func (a *App) cancelOrganizeQueueFile(ctx context.Context, key string) (any, err
 		return nil, e
 	}
 	defer tx.Rollback()
-	result, e := tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE id=? AND state IN `+activeOrganizeStates, now(), item.JobID)
+	result, e := tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE id=? AND state IN `+activeOrganizeStates, now(), item.JobID)
 	if e != nil {
 		return nil, e
 	}

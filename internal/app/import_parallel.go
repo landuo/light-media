@@ -106,11 +106,11 @@ func (a *App) claimImportJob(ctx context.Context) (Job, error) {
 			waiting = append(waiting, run)
 			continue
 		}
-		job.UpdatedAt, job.LeaseUntil = now(), at.Add(10*time.Minute).Unix()
+		job.UpdatedAt = now()
 		result, err := a.Store.DB.ExecContext(ctx, `UPDATE jobs
- SET state='running',attempt=attempt+1,generation=generation+1,lease_until=?,updated_at=?
+ SET state='running',attempt=attempt+1,generation=generation+1,updated_at=?
  WHERE id=? AND kind='import' AND generation=? AND state=? AND run_at<=?`,
-			job.LeaseUntil, job.UpdatedAt, job.ID, job.Generation, job.State, at.Unix())
+			job.UpdatedAt, job.ID, job.Generation, job.State, at.Unix())
 		if err != nil {
 			return Job{}, err
 		}

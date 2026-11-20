@@ -338,7 +338,6 @@ type Job struct {
 	Attempt      int             `json:"attempt"`
 	Generation   int             `json:"generation"`
 	RunAt        int64           `json:"run_at"`
-	LeaseUntil   int64           `json:"lease_until"`
 	ErrorCode    string          `json:"error_code"`
 	ErrorMessage string          `json:"error_message"`
 	CreatedAt    string          `json:"created_at"`

@@ -320,7 +320,7 @@ func (a *App) originalHostUpdateSubscription(ctx context.Context, scope original
 			return nil, err
 		}
 	}
-	if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), s.ID); err != nil {
+	if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), s.ID); err != nil {
 		return nil, err
 	}
 	row, err := a.subscriptionSourceProjectionFrom(ctx, tx, s)

@@ -342,7 +342,7 @@ func TestHistoryParityV031QueueCancellationIsExactAndPreservesFiles(t *testing.T
 		if e != nil || job.State != expected {
 			t.Fatalf("cancel touched unrelated job: %s state=%s err=%v want=%s", id, job.State, e, expected)
 		}
-		if id == selectedJob.ID && (job.Generation != 1 || job.LeaseUntil != 0) {
+		if id == selectedJob.ID && job.Generation != 1 {
 			t.Fatalf("cancel did not invalidate worker lease: %+v", job)
 		}
 	}

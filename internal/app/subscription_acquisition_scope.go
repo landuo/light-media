@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"reflect"
 	"slices"
-	"time"
 
 	"light-media/internal/releasemeta"
 )
@@ -310,8 +309,7 @@ func (a *App) submitAcquisitionChild(ctx context.Context, in Intent) (Intent, er
 		j.State = "running"
 		j.Generation++
 		j.Attempt++
-		j.LeaseUntil = time.Now().Add(10 * time.Minute).Unix()
-		res, e := tx.ExecContext(ctx, `UPDATE jobs SET state='running',generation=?,attempt=?,lease_until=?,updated_at=? WHERE id=? AND state=? AND generation=?`, j.Generation, j.Attempt, j.LeaseUntil, now(), j.ID, oldState, oldGeneration)
+		res, e := tx.ExecContext(ctx, `UPDATE jobs SET state='running',generation=?,attempt=?,updated_at=? WHERE id=? AND state=? AND generation=?`, j.Generation, j.Attempt, now(), j.ID, oldState, oldGeneration)
 		if e != nil {
 			return empty, e
 		}
@@ -324,8 +322,7 @@ func (a *App) submitAcquisitionChild(ctx context.Context, in Intent) (Intent, er
 			return empty, acquisitionEvidence()
 		}
 		j.State, j.Attempt, j.Generation = "running", 1, 1
-		j.LeaseUntil = time.Now().Add(10 * time.Minute).Unix()
-		res, e := tx.ExecContext(ctx, `UPDATE jobs SET state='running',attempt=1,generation=1,lease_until=?,updated_at=? WHERE id=? AND state='queued' AND attempt=0 AND generation=0`, j.LeaseUntil, now(), j.ID)
+		res, e := tx.ExecContext(ctx, `UPDATE jobs SET state='running',attempt=1,generation=1,updated_at=? WHERE id=? AND state='queued' AND attempt=0 AND generation=0`, now(), j.ID)
 		if e != nil {
 			return empty, e
 		}
@@ -375,7 +372,7 @@ func (a *App) rejectAcquisitionChild(ctx context.Context, j Job, in Intent, caus
 	if _, e = tx.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id=?`, in.ID); e != nil {
 		return e
 	}
-	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='failed',lease_until=0,error_code=?,error_message=?,updated_at=? WHERE id=? AND state='running' AND generation=?`, pluginErrorCodeInternal(cause), current.Error, now(), j.ID, j.Generation); e != nil {
+	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='failed',error_code=?,error_message=?,updated_at=? WHERE id=? AND state='running' AND generation=?`, pluginErrorCodeInternal(cause), current.Error, now(), j.ID, j.Generation); e != nil {
 		return e
 	}
 	r.Steps[g.ordinal].Phase, r.Steps[g.ordinal].Error = "rejected", current.Error

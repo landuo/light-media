@@ -406,7 +406,7 @@ func (a *App) confirmDownloadReview(ctx context.Context, key, planID string, con
 					return Job{}, err
 				}
 			}
-			if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), sub.ID); err != nil {
+			if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), sub.ID); err != nil {
 				return Job{}, err
 			}
 		}
@@ -436,7 +436,7 @@ func (a *App) confirmDownloadReview(ctx context.Context, key, planID string, con
 		} else if !errors.Is(err, sql.ErrNoRows) {
 			return Job{}, err
 		}
-		if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), in.ImportPlanID); err != nil {
+		if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), in.ImportPlanID); err != nil {
 			return Job{}, err
 		}
 	}

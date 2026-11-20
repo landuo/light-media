@@ -256,12 +256,12 @@ func (a *App) acceptAcquisitionReceiptTx(ctx context.Context, tx *sql.Tx, in Int
 	if e = a.writeQualitySealedTx(ctx, tx, "subscription_acquisition_receipt", in.ID, receipt); e != nil {
 		return e
 	}
-	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='succeeded',lease_until=0,updated_at=? WHERE id=?`, now(), child.ID); e != nil {
+	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='succeeded',updated_at=? WHERE id=?`, now(), child.ID); e != nil {
 		return e
 	}
 	// The primary producer just did the receipt job's actual local work in this
 	// transaction. A concurrent claimed receipt worker finishes its own lease.
-	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='succeeded',lease_until=0,updated_at=? WHERE id=? AND state='queued'`, now(), receipt.JobID); e != nil {
+	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='succeeded',updated_at=? WHERE id=? AND state='queued'`, now(), receipt.JobID); e != nil {
 		return e
 	}
 	if gok && grant != nil && grant.root != nil {

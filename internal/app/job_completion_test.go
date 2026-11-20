@@ -37,7 +37,7 @@ func TestFinishJobFailureAndDomainFactShareCommit(t *testing.T) {
 		t.Fatal("failure completion", changed, err)
 	}
 	stored, err := scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=?`, job.ID))
-	if err != nil || stored.State != "failed" || stored.Attempt != 1 || stored.ErrorCode != "SYNTHETIC_FAILURE" || stored.LeaseUntil != 0 {
+	if err != nil || stored.State != "failed" || stored.Attempt != 1 || stored.ErrorCode != "SYNTHETIC_FAILURE" {
 		t.Fatalf("stored failed job %+v %v", stored, err)
 	}
 	if jobEventCount(t, a, job.ID) != before+1 {

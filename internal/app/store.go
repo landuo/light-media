@@ -151,7 +151,7 @@ func OpenStore(dir string) (*Store, error) {
 		db.Close()
 		return fail(err)
 	}
-	recovery, err := db.Exec(`UPDATE jobs SET state='queued',lease_until=0,run_at=unixepoch(),generation=generation+1 WHERE state='running'`)
+	recovery, err := db.Exec(`UPDATE jobs SET state='queued',run_at=unixepoch(),generation=generation+1 WHERE state='running'`)
 	if err != nil {
 		db.Close()
 		return fail(err)

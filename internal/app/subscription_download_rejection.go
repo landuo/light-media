@@ -141,7 +141,7 @@ func (a *App) rejectOrdinarySubscriptionDownload(ctx context.Context, j Job, in 
 	if err := a.writeQualitySealedTx(ctx, tx, ordinarySubscriptionDownloadRejectionKind, current.ID, receipt); err != nil {
 		return err
 	}
-	result, err := tx.ExecContext(ctx, `UPDATE jobs SET state='failed',run_at=?,lease_until=0,error_code=?,error_message=?,updated_at=? WHERE id=? AND generation=? AND state='running'`, time.Now().Unix(), ordinarySubscriptionDownloadRejectionCode, message, now(), child.ID, child.Generation)
+	result, err := tx.ExecContext(ctx, `UPDATE jobs SET state='failed',run_at=?,error_code=?,error_message=?,updated_at=? WHERE id=? AND generation=? AND state='running'`, time.Now().Unix(), ordinarySubscriptionDownloadRejectionCode, message, now(), child.ID, child.Generation)
 	if err != nil {
 		return err
 	}

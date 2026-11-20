@@ -34,7 +34,7 @@ func promoteOrganizeFileTx(ctx context.Context, tx *sql.Tx, work organizeFileWor
 	}
 	job, err := scanJob(tx.QueryRowContext(ctx, `UPDATE jobs
 		SET kind='import', state=?, payload=?, attempt=?, generation=generation+1,
-			lease_until=0, error_code=?, error_message=?, updated_at=?
+			error_code=?, error_message=?, updated_at=?
 		WHERE id=? AND kind='organize_file' AND state='running' AND generation=?
 		RETURNING `+jobColumns, state, payload, attempt, code, reason, now(), work.Job.ID, work.Job.Generation))
 	if errors.Is(err, sql.ErrNoRows) {

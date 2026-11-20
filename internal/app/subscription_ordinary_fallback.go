@@ -308,7 +308,7 @@ func (a *App) claimOrdinarySearchDownload(ctx context.Context, parent Job, sub S
 			return child, in, false, ordinarySearchDownloadReview()
 		}
 	}
-	result, err := tx.ExecContext(ctx, `UPDATE jobs SET state='running',attempt=attempt+1,generation=generation+1,lease_until=?,updated_at=? WHERE id=? AND generation=? AND attempt=? AND state='queued'`, time.Now().Add(10*time.Minute).Unix(), now(), child.ID, child.Generation, child.Attempt)
+	result, err := tx.ExecContext(ctx, `UPDATE jobs SET state='running',attempt=attempt+1,generation=generation+1,updated_at=? WHERE id=? AND generation=? AND attempt=? AND state='queued'`, now(), child.ID, child.Generation, child.Attempt)
 	if err != nil {
 		return child, in, false, err
 	}

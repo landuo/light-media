@@ -534,7 +534,7 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	if e = a.saveSubscriptionWordsTx(ctx, tx, key, customWords); e != nil {
 		return s, e
 	}
-	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), key); e != nil {
+	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), key); e != nil {
 		return s, e
 	}
 	if old.ID == "" && in.source == nil {
@@ -604,7 +604,7 @@ func (a *App) cancelSubscriptionWithEvent(ctx context.Context, key string, annou
 	if e = txPut(ctx, tx, "subscription", key, s); e != nil {
 		return e
 	}
-	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), key); e != nil {
+	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, now(), key); e != nil {
 		return e
 	}
 	if e = tx.Commit(); e != nil {

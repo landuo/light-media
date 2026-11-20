@@ -142,7 +142,7 @@ func (a *App) admitUISubscriptionAdd(ctx context.Context, input subscriptionAddI
 	}
 	// Inline source async_add owns this real job first. A cold process recovers
 	// it through the same generic worker, not a second independent operation.
-	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='running',generation=1,lease_until=? WHERE id=? AND state='queued'`, time.Now().Add(2*time.Minute).Unix(), job.ID); e != nil {
+	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='running',generation=1 WHERE id=? AND state='queued'`, job.ID); e != nil {
 		return identity, job, e
 	}
 	job.State, job.Generation = "running", 1

@@ -241,7 +241,7 @@ func TestPluginNoticeV2CoreExactSourceInputAndSealedCompletionGuard(t *testing.T
 				t.Fatal("actual UI retry due time was not advanced", count, e)
 			}
 			claimed, e := a.claim(ctx)
-			if e != nil || claimed.ID != job.ID || claimed.Kind != "subscription_add" || claimed.State != "running" || claimed.Generation != job.Generation+1 || claimed.Attempt != job.Attempt+1 || claimed.LeaseUntil <= 0 {
+			if e != nil || claimed.ID != job.ID || claimed.Kind != "subscription_add" || claimed.State != "running" || claimed.Generation != job.Generation+1 || claimed.Attempt != job.Attempt+1 {
 				t.Fatal("production claim did not reacquire the same actual UI source job", claimed, e)
 			}
 			var payload sourceBusinessNotice
