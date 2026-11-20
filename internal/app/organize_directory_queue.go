@@ -1,6 +1,10 @@
 package app
 
-import "context"
+import (
+	"context"
+	"encoding/json"
+	"time"
+)
 
 func (a *App) enqueueDirectoryOrganizeFile(ctx context.Context, guard directoryImportGuard, file importScanFile, observed *DirectoryObservedFile) error {
 	payload := organizeFilePayload{ID: tokenHash(observed.ID + observed.LastSeen), File: file, Snapshot: observed.Snapshot,
@@ -19,7 +23,7 @@ func (a *App) enqueueDirectoryOrganizeFile(ctx context.Context, guard directoryI
 		}
 		return tx.Commit()
 	}
-	existing, err := activeOrganizeSourceTx(ctx, tx, file.Path)
+	existing, err := a.activeOrganizeSourceTx(ctx, tx, file.Path)
 	if err != nil {
 		return err
 	}
@@ -33,15 +37,61 @@ func (a *App) enqueueDirectoryOrganizeFile(ctx context.Context, guard directoryI
 	if err = txPut(ctx, tx, "original_scrape_batch", payload.BatchID, originalScrapeBatch{ID: payload.BatchID, Closed: true}); err != nil {
 		return err
 	}
-	job, err := a.enqueueTx(ctx, tx, "organize_file", payload, id("wf_"))
-	if err != nil {
-		return err
-	}
-	observed.JobID, observed.State, observed.Reason = job.ID, "queued", "文件已加入整理队列，等待识别"
+	// The task id is minted before commit so the observation can point at it;
+	// the task itself is registered in memory afterwards. Nothing about the work
+	// needs a row: if the process dies, the file is still in the directory and
+	// the next scan re-derives it.
+	taskID := id("job_")
+	observed.JobID, observed.State, observed.Reason = taskID, "queued", "文件已加入整理队列，等待识别"
 	if err = txPut(ctx, tx, "directory_file", observed.ID, observed); err != nil {
 		return err
 	}
-	return tx.Commit()
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+	a.submitMemoryJob("organize_file", payload, id("wf_"), taskID)
+	return nil
+}
+
+// submitMemoryJob registers a rowless task after its business state committed.
+func (a *App) submitMemoryJob(kind string, payload any, wf, taskID string) Job {
+	b, e := json.Marshal(payload)
+	if e != nil {
+		return Job{}
+	}
+	j := Job{ID: taskID, WorkflowID: wf, Kind: kind, State: "queued", Payload: b, RunAt: time.Now().Unix(), CreatedAt: now(), UpdatedAt: now()}
+	j.Ephemeral = true
+	a.indexEnqueue(j)
+	select {
+	case a.jobWake <- struct{}{}:
+	default:
+	}
+	return j
+}
+
+// indexSourceActive answers "is this source file already being organized" from
+// the dispatch index, which now holds the organizing tasks that have no row.
+func (a *App) indexSourceActive(source string) (string, bool) {
+	if source == "" {
+		return "", false
+	}
+	ix := a.index()
+	ix.mu.Lock()
+	defer ix.mu.Unlock()
+	for _, j := range ix.entries {
+		if j.Kind != "organize_file" || j.State != "queued" {
+			continue
+		}
+		var payload struct {
+			File struct {
+				Path string `json:"path"`
+			} `json:"file"`
+		}
+		if json.Unmarshal(j.Payload, &payload) == nil && payload.File.Path == source {
+			return j.ID, true
+		}
+	}
+	return "", false
 }
 
 func (a *App) runDirectoryOrganizeFile(ctx context.Context, payload organizeFilePayload, file importScanFile, known *ImportPlan, fail func(error) error) error {

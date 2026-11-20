@@ -65,7 +65,7 @@ func TestOrganizeQueueSeeksActiveGroupsAndKeepsUnfinishedBatch(t *testing.T) {
 				t.Fatalf("submission group=%q want=%q err=%v", group, wantGroup, err)
 			}
 		}
-		job, err := activeOrganizeSourceTx(ctx, tx, "/fixture/completed-peer")
+		job, err := a.activeOrganizeSourceTx(ctx, tx, "/fixture/completed-peer")
 		if err != nil || job != wantJob {
 			t.Fatalf("active duplicate job=%q want=%q err=%v", job, wantJob, err)
 		}

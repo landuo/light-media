@@ -43,7 +43,11 @@ const matchingOrganizeGroups = `WITH matches(group_id) AS (
 )
 SELECT m.group_id FROM matches m WHERE ` + activeOrganizeGroup
 
-func activeOrganizeSourceTx(ctx context.Context, tx *sql.Tx, source string) (string, error) {
+func (a *App) activeOrganizeSourceTx(ctx context.Context, tx *sql.Tx, source string) (string, error) {
+	// Rowless organizing tasks are only visible in the index.
+	if id, ok := a.indexSourceActive(source); ok {
+		return id, nil
+	}
 	var job string
 	err := tx.QueryRowContext(ctx, `WITH candidates AS (
 	 SELECT json_extract(payload,'$.job') AS job_id,json_extract(payload,'$.file') AS file_id,json_extract(payload,'$.group') AS group_id

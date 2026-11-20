@@ -112,7 +112,7 @@ func (a *App) enqueueOrganizeFiles(ctx context.Context, parent Job, files []impo
 	}
 	queued := 0
 	for _, candidate := range candidates {
-		existing, err := activeOrganizeSourceTx(ctx, tx, candidate.File.Path)
+		existing, err := a.activeOrganizeSourceTx(ctx, tx, candidate.File.Path)
 		if err != nil {
 			return out, err
 		}

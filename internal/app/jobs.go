@@ -94,7 +94,8 @@ func (a *App) enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload an
 // the table is the first step of removing the jobs table entirely.
 func ephemeralKind(kind string) bool {
 	switch kind {
-	case "subscription", "site_refresh", "subscription_stats", "library_scan", "asset_check":
+	case "subscription", "site_refresh", "subscription_stats", "library_scan", "asset_check",
+		"organize_file":
 		return true
 	}
 	return false
