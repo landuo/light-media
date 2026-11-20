@@ -218,7 +218,7 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 	if _, err = a.enqueueTx(ctx, tx, "native_download", map[string]string{"id": out.ID}, out.WorkflowID); err != nil {
 		return out, err
 	}
-	if err = tx.Commit(); err != nil {
+	if err = a.commitWithJobs(tx); err != nil {
 		return out, err
 	}
 	select {

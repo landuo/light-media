@@ -1095,7 +1095,7 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 	if e = a.acquisitionConfirmTx(ctx, tx, p, intent, child); e != nil {
 		return intent, e
 	}
-	return intent, tx.Commit()
+	return intent, a.commitWithJobs(tx)
 }
 func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	a.downloadMu.Lock()

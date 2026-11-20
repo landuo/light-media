@@ -36,7 +36,7 @@ func TestJobIndexDropsRowThatMovedOn(t *testing.T) {
 	a := newTestApp(t)
 	ctx := context.Background()
 	// A durable kind: this case is about the row moving on underneath the index.
-	j, err := a.enqueue(ctx, "native_download", map[string]string{"id": "native_probe2"}, "wf_probe")
+	j, err := a.enqueue(ctx, "subscription_add", map[string]string{"id": "sub_add_probe2"}, "wf_probe")
 	if err != nil {
 		t.Fatal(err)
 	}

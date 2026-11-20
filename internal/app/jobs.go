@@ -114,7 +114,8 @@ func (a *App) enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload an
 func ephemeralKind(kind string) bool {
 	switch kind {
 	case "subscription", "site_refresh", "subscription_stats", "library_scan", "asset_check",
-		"organize_file", "import", "scrape", "quality_cleanup", "reorganize_cleanup":
+		"organize_file", "import", "scrape", "quality_cleanup", "reorganize_cleanup",
+		"download", "native_download":
 		return true
 	}
 	return false
