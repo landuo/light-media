@@ -1934,7 +1934,10 @@ func (a *App) pollDownloads(ctx context.Context) error {
 		// the queue was being rebuilt. Re-derive the work so the download is not
 		// stranded forever.
 		for _, in := range intents {
-			if in.State != "planned" || in.ID == "" {
+			// A planned intent whose submit already failed (the resource no longer
+			// qualifies, for instance) must not be retried forever: the error is
+			// recorded on the intent, and the next check derives a fresh one.
+			if in.State != "planned" || in.ID == "" || strings.TrimSpace(in.Error) != "" {
 				continue
 			}
 			if a.subjectBusy("download", in.ID) {
