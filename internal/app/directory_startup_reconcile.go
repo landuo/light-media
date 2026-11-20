@@ -136,6 +136,24 @@ func (a *App) runDirectoryStartupReconcile(ctx context.Context) {
 			// An observation whose source is gone describes nothing: the file
 			// was deleted (or a test file was removed) and the row would keep
 			// reporting a pending state forever.
+			// A record stuck in "queued" whose task no longer exists is a leftover
+			// from a run that ended without writing back (the task was rowless, so
+			// nothing else could update it). Release it for another attempt.
+			if f.State == "queued" && f.JobID != "" {
+				ix := a.index()
+				ix.mu.Lock()
+				_, live := ix.entries[f.JobID]
+				ix.mu.Unlock()
+				if !live {
+					f.State, f.Reason = "observing", "整理任务已结束但未回写，重新排队"
+					f.StableSince = time.Now().UnixNano()
+					f.LastSeen = now()
+					if err := a.Store.Put(ctx, "directory_file", f.ID, f); err == nil {
+						stats.Released++
+					}
+					continue
+				}
+			}
 			if _, statErr := os.Stat(f.Path); errors.Is(statErr, fs.ErrNotExist) {
 				if err := a.Store.Delete(ctx, "directory_file", f.ID); err == nil {
 					stats.Released++

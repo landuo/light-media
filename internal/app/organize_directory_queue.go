@@ -10,6 +10,7 @@ func (a *App) enqueueDirectoryOrganizeFile(ctx context.Context, guard directoryI
 	payload := organizeFilePayload{ID: tokenHash(observed.ID + observed.LastSeen), File: file, Snapshot: observed.Snapshot,
 		Title: file.Parsed.Title, Directory: &guard, BatchID: id("scrape_batch_"),
 		Item: file.originalItem, DirectoryPlanned: file.originalDirectoryPlanned, MetadataPath: file.originalMetadataPath}
+	_ = observed
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -51,6 +52,21 @@ func (a *App) enqueueDirectoryOrganizeFile(ctx context.Context, guard directoryI
 	}
 	a.submitMemoryJob("organize_file", payload, id("wf_"), taskID)
 	return nil
+}
+
+// recordDirectoryOrganizeVerdict writes the outcome back to the observation.
+func (a *App) recordDirectoryOrganizeVerdict(ctx context.Context, item organizeFilePayload, path, state, reason string) {
+	if item.Directory == nil || item.Directory.Rule.ID == "" || path == "" {
+		return
+	}
+	key := directoryFileID(item.Directory.Rule.ID, path)
+	var f DirectoryObservedFile
+	if err := a.Store.Get(ctx, "directory_file", key, &f); err != nil {
+		return
+	}
+	f.State, f.Reason = state, reason
+	f.LastSeen = now()
+	_ = a.Store.Put(ctx, "directory_file", key, f)
 }
 
 // submitMemoryJob registers a rowless task after its business state committed.
@@ -131,5 +147,8 @@ func (a *App) runDirectoryOrganizeFile(ctx context.Context, payload organizeFile
 		}
 		return fail(err)
 	}
+	// Success used to be observed by a later scan reading the plan's state.
+	// Record it here so a rowless run leaves the same trail.
+	a.recordDirectoryOrganizeVerdict(ctx, payload, file.Path, "imported", "整理完成，源文件保留")
 	return nil
 }

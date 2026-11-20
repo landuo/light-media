@@ -230,6 +230,10 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 		known.Mode, known.RootID = item.Directory.Rule.Mode, item.Directory.Rule.RootID
 	}
 	fail := func(cause error) error {
+		// The observation used to be updated by a scan that copied the job's
+		// error text. Rowless organizing tasks have no row to copy from, so the
+		// verdict is written where the observation lives.
+		a.recordDirectoryOrganizeVerdict(ctx, item, file.Path, "error", a.clean(cause.Error()))
 		_, err := a.recordManualOrganizeFailurePlan(ctx, file.Path, job.WorkflowID, cause, item.HistorySource, known)
 		return err
 	}
