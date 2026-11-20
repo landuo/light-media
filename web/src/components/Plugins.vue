@@ -201,6 +201,24 @@ const folderError = ref(""),
 let dragged: PluginGridItem | undefined,
   droppedIntoFolder = false,
   loadSerial = 0;
+// The installed grid mixes folders and plugins. Splitting the plugin cards by
+// their own state is what lets the operator tell "on" from "off" at a glance;
+// sorting mode keeps the single draggable grid so manual order still works.
+type GridFolder = Extract<PluginGridItem, { type: "folder" }>;
+type GridPlugin = Extract<PluginGridItem, { type: "plugin" }>;
+const gridFolders = computed<GridFolder[]>(() =>
+  grid.value.filter((item): item is GridFolder => item.type === "folder"),
+);
+const gridEnabled = computed<GridPlugin[]>(() =>
+  grid.value.filter(
+    (item): item is GridPlugin => item.type === "plugin" && !!item.plugin.state,
+  ),
+);
+const gridDisabled = computed<GridPlugin[]>(() =>
+  grid.value.filter(
+    (item): item is GridPlugin => item.type === "plugin" && !item.plugin.state,
+  ),
+);
 function rebuildGrid() {
   if (!dragging.value)
     grid.value = organizationGrid(
@@ -673,9 +691,9 @@ onActivated(() => {
 <template>
   <VThemeProvider theme="light" with-background class="plugin-surface">
     <div class="plugin-toolbar">
+      <!-- Plugins ship inside the light-media build: there is no market surface. -->
       <VTabs v-model="tab" color="primary"
-        ><VTab value="installed" prepend-icon="mdi-apps">我的插件</VTab
-        ><VTab value="market" prepend-icon="mdi-shopping">插件市场</VTab></VTabs
+        ><VTab value="installed" prepend-icon="mdi-apps">我的插件</VTab></VTabs
       >
       <div class="plugin-toolbar-actions">
         <VBtn variant="text" icon="mdi-magnify" aria-label="搜索插件" :disabled="busy || organizing" @click="openSearch" />
@@ -882,6 +900,57 @@ onActivated(() => {
               : "尚未安装插件"
         }}
       </div>
+      <template v-else-if="!currentFolder && !sortMode">
+        <template v-if="gridFolders.length">
+          <h3 class="plugin-group-title">文件夹</h3>
+          <div class="plugin-grid">
+            <PluginFolderCard
+              v-for="element in gridFolders"
+              :key="element.id"
+              :name="element.id"
+              :count="element.count"
+              :config="element.config"
+              :sortable="false"
+              @open="currentFolder = element.id"
+              @rename="editFolder('rename', element.id)"
+              @appearance="editFolder('appearance', element.id)"
+              @delete="deleteFolder = element.id"
+            />
+          </div>
+        </template>
+        <template v-if="gridEnabled.length">
+          <h3 class="plugin-group-title">
+            已启用<span class="plugin-group-count">{{ gridEnabled.length }}</span>
+          </h3>
+          <div class="plugin-grid">
+            <PluginManageCard
+              v-for="element in gridEnabled"
+              :key="element.id"
+              :plugin="element.plugin"
+              :busy="busy || organizing"
+              :sortable="false"
+              :in-folder="false"
+              @action="cardAction"
+            />
+          </div>
+        </template>
+        <template v-if="gridDisabled.length">
+          <h3 class="plugin-group-title">
+            未启用<span class="plugin-group-count">{{ gridDisabled.length }}</span>
+          </h3>
+          <div class="plugin-grid">
+            <PluginManageCard
+              v-for="element in gridDisabled"
+              :key="element.id"
+              :plugin="element.plugin"
+              :busy="busy || organizing"
+              :sortable="false"
+              :in-folder="false"
+              @action="cardAction"
+            />
+          </div>
+        </template>
+      </template>
       <Draggable
         v-else
         v-model="grid"
@@ -1079,6 +1148,27 @@ onActivated(() => {
   </VThemeProvider>
 </template>
 <style scoped>
+.plugin-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgb(var(--v-theme-on-surface));
+  opacity: 0.86;
+}
+.plugin-group-count {
+  min-width: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+  background: rgba(var(--v-theme-primary), 0.12);
+  color: rgb(var(--v-theme-primary));
+}
 .plugin-run-recovery {
   flex-basis: 100%;
   border-inline-start: 3px solid rgb(var(--v-theme-warning));
