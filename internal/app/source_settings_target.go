@@ -97,6 +97,8 @@ func openSourceSettingsTarget(ctx context.Context, dir string, apply bool) (*sou
 		return nil, errors.New("source_settings_target_transaction_failed")
 	}
 
+	// This checks a foreign database file (settings import/export), so it must
+	// read that file's own rows rather than this process's dispatch index.
 	var active int
 	if tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE state IN ('running','queued')`).Scan(&active) != nil || active != 0 {
 		return nil, errors.New("source_settings_target_has_active_work")

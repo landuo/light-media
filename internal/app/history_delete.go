@@ -46,9 +46,11 @@ func (a *App) deleteTransferHistory(ctx context.Context, item transferHistoryIte
 		a.downloadMu.Lock()
 		defer a.downloadMu.Unlock()
 	}
-	var active int
-	if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running')`, item.PlanID).Scan(&active); e != nil {
-		return nil, e
+	// The dispatch index holds every pending job, so this gate costs no query.
+	// Rows cancelled outside the index only make the answer more conservative.
+	active := 0
+	if a.subjectBusy("import", item.PlanID) {
+		active = 1
 	}
 	if active > 0 && (in.DeleteSource || in.DeleteTarget) {
 		return nil, bad("TRANSFER_BUSY", "整理任务仍在进行，请完成或停止后再删除记录")

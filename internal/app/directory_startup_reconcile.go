@@ -2,7 +2,9 @@ package app
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -131,6 +133,15 @@ func (a *App) runDirectoryStartupReconcile(ctx context.Context) {
 			}
 			stats.Examined++
 			stats.States[f.State]++
+			// An observation whose source is gone describes nothing: the file
+			// was deleted (or a test file was removed) and the row would keep
+			// reporting a pending state forever.
+			if _, statErr := os.Stat(f.Path); errors.Is(statErr, fs.ErrNotExist) {
+				if err := a.Store.Delete(ctx, "directory_file", f.ID); err == nil {
+					stats.Released++
+				}
+				continue
+			}
 			if !startupReconcileCandidate(f) {
 				continue
 			}

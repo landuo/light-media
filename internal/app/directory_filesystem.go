@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/fs"
 	"path/filepath"
 	"reflect"
 	"regexp"
@@ -252,6 +253,14 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 		stamp, e := snapshotTransferPath(file.Path)
 		if e != nil {
+			// A source that disappeared is not a failure to inspect: the file is
+			// gone, so its observation has nothing left to describe. Without this
+			// a deleted test file or a removed download leaves a record stuck in
+			// "queued" forever, which looks like a stuck task in the UI.
+			if errors.Is(e, fs.ErrNotExist) {
+				_ = a.Store.Delete(ctx, "directory_file", directoryFileID(rule.ID, file.Path))
+				continue
+			}
 			if e = inspectFailed(file.Path, e); e != nil {
 				return e
 			}
