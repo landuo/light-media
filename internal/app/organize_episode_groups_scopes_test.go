@@ -16,7 +16,7 @@ func runEpisodeGroupJob(t *testing.T, a *App, job Job) {
 	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, job.ID); err != nil {
 		t.Fatal(err)
 	}
-	job, err := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, job.ID))
+	job, err := a.jobByID(context.Background(), job.ID)
 	if err != nil {
 		t.Fatal(err)
 	}

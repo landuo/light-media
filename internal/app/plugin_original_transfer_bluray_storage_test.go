@@ -65,7 +65,7 @@ func TestOriginalTransferBluraySelectedStorage(t *testing.T) {
 				if err = a.initializeOriginalPlugins(ctx); err != nil {
 					t.Fatal(err)
 				}
-				current, e := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, job.ID))
+				current, e := a.jobByID(context.Background(), job.ID)
 				if e != nil {
 					t.Fatal(e)
 				}
@@ -75,7 +75,7 @@ func TestOriginalTransferBluraySelectedStorage(t *testing.T) {
 				if _, e = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, job.ID); e != nil {
 					t.Fatal(e)
 				}
-				job, e = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, job.ID))
+				job, e = a.jobByID(context.Background(), job.ID)
 				if e != nil {
 					t.Fatal(e)
 				}

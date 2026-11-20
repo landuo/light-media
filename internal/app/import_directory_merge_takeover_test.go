@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -42,14 +43,14 @@ func TestDirectoryMergeTakesOverAnotherAssetsLeaf(t *testing.T) {
 	if err != nil || first.Failed != 0 || first.Submitted != 1 {
 		t.Fatal("single-file submission", first, err)
 	}
-	firstJob, err := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, first.Items[0].JobID))
+	firstJob, err := a.jobByID(context.Background(), first.Items[0].JobID)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, firstJob.ID); err != nil {
 		t.Fatal(err)
 	}
-	if firstJob, err = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, firstJob.ID)); err != nil {
+	if firstJob, err = a.jobByID(context.Background(), firstJob.ID); err != nil {
 		t.Fatal(err)
 	}
 	if err = a.runImport(t.Context(), firstJob, first.Items[0].PlanID, nil); err != nil {
@@ -91,14 +92,14 @@ func TestDirectoryMergeTakesOverAnotherAssetsLeaf(t *testing.T) {
 	if err != nil || second.Failed != 0 || second.Submitted != 1 {
 		t.Fatal("directory submission", second, err)
 	}
-	secondJob, err := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, second.Items[0].JobID))
+	secondJob, err := a.jobByID(context.Background(), second.Items[0].JobID)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, secondJob.ID); err != nil {
 		t.Fatal(err)
 	}
-	if secondJob, err = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, secondJob.ID)); err != nil {
+	if secondJob, err = a.jobByID(context.Background(), secondJob.ID); err != nil {
 		t.Fatal(err)
 	}
 	if err = a.runImport(t.Context(), secondJob, second.Items[0].PlanID, nil); err != nil {

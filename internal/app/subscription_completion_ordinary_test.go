@@ -249,7 +249,7 @@ func TestOrdinaryCompletionNewRevisionRevokesOnlyObsoletePreparation(t *testing.
 		if e = tx.Commit(); e != nil {
 			t.Fatal(e)
 		}
-		prior, e := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, old.ID))
+		prior, e := a.jobByID(context.Background(), old.ID)
 		if e != nil || prior.State != "cancelled" || prior.Generation <= old.Generation {
 			t.Fatal("running obsolete preparation retained mutation scope", prior, e)
 		}

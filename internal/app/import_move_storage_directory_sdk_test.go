@@ -2,6 +2,7 @@ package app
 
 import (
 	"bytes"
+	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -160,7 +161,7 @@ func TestImportMoveDirectoryActualSDKSelectedStorage(t *testing.T) {
 				if pid(a) == firstPID {
 					t.Fatal("cold recovery did not replace SDK process")
 				}
-				current, err := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, job.ID))
+				current, err := a.jobByID(context.Background(), job.ID)
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -170,7 +171,7 @@ func TestImportMoveDirectoryActualSDKSelectedStorage(t *testing.T) {
 				if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, job.ID); err != nil {
 					t.Fatal(err)
 				}
-				job, err = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, job.ID))
+				job, err = a.jobByID(context.Background(), job.ID)
 				if err != nil {
 					t.Fatal(err)
 				}

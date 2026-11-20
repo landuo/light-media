@@ -2,6 +2,7 @@ package app
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -41,7 +42,7 @@ func TestImportSoftlinkScrapeWritesBesideLibraryLink(t *testing.T) {
 	if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, scrape.ID); err != nil {
 		t.Fatal(err)
 	}
-	scrape, err = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, scrape.ID))
+	scrape, err = a.jobByID(context.Background(), scrape.ID)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -220,7 +221,7 @@ func TestImportSoftlinkActualSDKVideoSubtitleAndAssetRecovery(t *testing.T) {
 				if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, job.ID); err != nil {
 					t.Fatal(err)
 				}
-				job, err = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, job.ID))
+				job, err = a.jobByID(context.Background(), job.ID)
 				if err != nil {
 					t.Fatal(err)
 				}

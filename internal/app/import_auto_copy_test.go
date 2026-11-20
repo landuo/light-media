@@ -544,7 +544,7 @@ func TestAutoCopyRejectsUnknownJobPayloadField(t *testing.T) {
 		t.Fatal(err)
 	}
 	var err error
-	j, err = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, j.ID))
+	j, err = a.jobByID(context.Background(), j.ID)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -66,7 +66,7 @@ func directoryRecognize(t *testing.T, a *App, rule DirectoryRule, path string) D
 	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, f.JobID); err != nil {
 		t.Fatal(err)
 	}
-	job, err := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, f.JobID))
+	job, err := a.jobByID(context.Background(), f.JobID)
 	if err != nil {
 		t.Fatal(err)
 	}

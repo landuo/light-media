@@ -69,14 +69,14 @@ func TestMPTransferHistorySingleTableRealImportTarget(t *testing.T) {
 	if err != nil || out.Submitted != 1 || out.Failed != 0 {
 		t.Fatal("actual organize submission", out, err)
 	}
-	job, err := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, out.Items[0].JobID))
+	job, err := a.jobByID(context.Background(), out.Items[0].JobID)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, job.ID); err != nil {
 		t.Fatal(err)
 	}
-	if job, err = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, job.ID)); err != nil {
+	if job, err = a.jobByID(context.Background(), job.ID); err != nil {
 		t.Fatal(err)
 	}
 	if err = a.runImport(t.Context(), job, out.Items[0].PlanID, nil); err != nil {

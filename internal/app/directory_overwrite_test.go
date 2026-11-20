@@ -39,7 +39,7 @@ func overwriteStart(t *testing.T, a *App, p ImportPlan) Job {
 	if _, e = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, j.ID); e != nil {
 		t.Fatal(e)
 	}
-	j, e = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, j.ID))
+	j, e = a.jobByID(context.Background(), j.ID)
 	if e != nil {
 		t.Fatal(e)
 	}

@@ -14,7 +14,7 @@ func TestJobTraceSurvivesPersistence(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	persisted, e := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, j.ID))
+	persisted, e := a.jobByID(context.Background(), j.ID)
 	if e != nil {
 		t.Fatal(e)
 	}

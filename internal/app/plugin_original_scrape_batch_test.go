@@ -136,7 +136,7 @@ func originalScrapeBatchActualManualHost(t *testing.T, mode string) {
 		if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, item.JobID); err != nil {
 			t.Fatal(err)
 		}
-		job, e := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, item.JobID))
+		job, e := a.jobByID(context.Background(), item.JobID)
 		if e != nil {
 			t.Fatal(e)
 		}

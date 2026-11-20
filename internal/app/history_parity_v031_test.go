@@ -338,7 +338,7 @@ func TestHistoryParityV031QueueCancellationIsExactAndPreservesFiles(t *testing.T
 		t.Fatalf("cancel must select exactly one file: count=%d err=%v", marked, err)
 	}
 	for id, expected := range map[string]string{selectedJob.ID: "cancelled", otherJob.ID: "running", multiJob.ID: "queued", finishedJob.ID: "succeeded", scrapeJob.ID: "queued"} {
-		job, e := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, id))
+		job, e := a.jobByID(context.Background(), id)
 		if e != nil || job.State != expected {
 			t.Fatalf("cancel touched unrelated job: %s state=%s err=%v want=%s", id, job.State, e, expected)
 		}

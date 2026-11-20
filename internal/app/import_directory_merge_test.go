@@ -2,6 +2,7 @@ package app
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"net/http"
 	"os"
@@ -129,7 +130,7 @@ func prepareSharedDirectoryImportConfigured(t *testing.T, mode string, options s
 	if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, out.Items[0].JobID); err != nil {
 		t.Fatal(err)
 	}
-	job, err := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, out.Items[0].JobID))
+	job, err := a.jobByID(context.Background(), out.Items[0].JobID)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -192,7 +193,7 @@ func TestImportDirectoryMergeNativePreservesUnrelatedAndColdPublication(t *testi
 				if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, job.ID); err != nil {
 					t.Fatal(err)
 				}
-				job, err = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, job.ID))
+				job, err = a.jobByID(context.Background(), job.ID)
 				if err != nil {
 					t.Fatal(err)
 				}

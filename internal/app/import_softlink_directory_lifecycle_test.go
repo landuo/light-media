@@ -2,6 +2,7 @@ package app
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -13,7 +14,7 @@ func runSoftlinkDirectoryJob(t *testing.T, a *App, id string) Job {
 	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, id); err != nil {
 		t.Fatal(err)
 	}
-	job, err := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, id))
+	job, err := a.jobByID(context.Background(), id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -25,7 +26,7 @@ func runSoftlinkDirectoryJob(t *testing.T, a *App, id string) Job {
 	} else if !changed {
 		// organize_file hands the same durable job to its import phase with
 		// a new generation; run that phase just as the worker claims it next.
-		current, e := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, job.ID))
+		current, e := a.jobByID(context.Background(), job.ID)
 		if e == nil && job.Kind == "organize_file" && current.Kind == "import" && current.State == "queued" {
 			return runSoftlinkDirectoryJob(t, a, id)
 		}
@@ -184,7 +185,7 @@ func TestImportSoftlinkDirectoryMetadataCommitColdRecovery(t *testing.T) {
 	if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, scrape.ID); err != nil {
 		t.Fatal(err)
 	}
-	scrape, err = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, scrape.ID))
+	scrape, err = a.jobByID(context.Background(), scrape.ID)
 	if err != nil {
 		t.Fatal(err)
 	}

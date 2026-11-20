@@ -234,7 +234,7 @@ func TestOriginalScrapeDeferredReorganization(t *testing.T) {
 				if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, cleanup.ID); err != nil {
 					t.Fatal(err)
 				}
-				cleanup, err = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, cleanup.ID))
+				cleanup, err = a.jobByID(context.Background(), cleanup.ID)
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -281,7 +281,7 @@ func TestOriginalScrapeDeferredReorganization(t *testing.T) {
 					if _, err = a.Store.DB.Exec(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=?`, retry.ID); err != nil {
 						t.Fatal(err)
 					}
-					retry, err = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, retry.ID))
+					retry, err = a.jobByID(context.Background(), retry.ID)
 					if err != nil {
 						t.Fatal(err)
 					}

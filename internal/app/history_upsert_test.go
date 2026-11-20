@@ -37,7 +37,7 @@ func historyUpsertFileID(t *testing.T, item transferHistoryItem) string {
 
 func historyUpsertAttempt(t *testing.T, a *App, jobID string) (ImportPlan, Job) {
 	t.Helper()
-	job, err := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, jobID))
+	job, err := a.jobByID(context.Background(), jobID)
 	if err != nil || job.Kind != "import" {
 		t.Fatalf("missing actual import execution %s: %+v %v", jobID, job, err)
 	}
@@ -538,7 +538,7 @@ func TestHistoryUpsertQueueCancelAddressesOldExecutionNotLatestHistory(t *testin
 		t.Fatal("old waiting queue item was not independently cancelled", err)
 	}
 	for jobID, state := range map[string]string{firstJob.ID: "cancelled", secondJob.ID: "failed"} {
-		job, err := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, jobID))
+		job, err := a.jobByID(context.Background(), jobID)
 		if err != nil || job.State != state {
 			t.Fatal("queue cancellation changed wrong execution", jobID, job.State, state, err)
 		}

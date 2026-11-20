@@ -15,7 +15,7 @@ func reorgRunJob(t *testing.T, a *App, job Job) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	job, err = scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE id=?`, job.ID))
+	job, err = a.jobByID(context.Background(), job.ID)
 	if err != nil {
 		t.Fatal(err)
 	}
