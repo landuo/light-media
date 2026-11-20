@@ -1306,41 +1306,11 @@ func (a *App) dropSubscriptionSeasonCache(ctx context.Context, s Subscription) {
 }
 
 func (a *App) season(ctx context.Context, tmdb int64, n int) (catalog.Season, error) {
-	groups, err := a.originalPluginModules(ctx, "")
-	if err != nil {
-		return catalog.Season{}, err
-	}
-	if !originalModuleGroupsHaveMethod(groups, "tmdb_episodes") {
-		return a.nativeSeason(ctx, tmdb, n)
-	}
-	view := catalog.Season{SeriesID: tmdb, SeasonNumber: n}
-	rows, err := a.originalCatalogEpisodesMethod(ctx, "tmdb_episodes", tmdb, n, nil, func() (json.RawMessage, error) {
-		return a.originalCatalogNativeEpisodeRows(ctx, tmdb, n, nil, &view)
-	}, groups)
-	if err != nil {
-		// A provider failure must not hide the season TMDB itself has.
-		if native, nativeErr := a.nativeSeason(ctx, tmdb, n); nativeErr == nil && len(native.Episodes) > 0 {
-			a.log("WARN", "catalog", "episode_provider_failed_native", "剧集提供方失败，改用 TMDB 原生季数据", "", "")
-			return native, nil
-		}
-		return catalog.Season{}, err
-	}
-	projected, projectionErr := originalCatalogSeasonProjection(view, rows)
-	if projectionErr != nil {
-		if native, nativeErr := a.nativeSeason(ctx, tmdb, n); nativeErr == nil && len(native.Episodes) > 0 {
-			return native, nil
-		}
-		return catalog.Season{}, projectionErr
-	}
-	// A provider that returns fewer episodes than TMDB has would make a long
-	// season look like a handful of episodes: the subscription then asks for
-	// episodes the metadata does not know about. TMDB is authoritative here, which
-	// is what MoviePilot reads directly.
-	if native, nativeErr := a.nativeSeason(ctx, tmdb, n); nativeErr == nil && len(native.Episodes) > len(projected.Episodes) {
-		a.log("INFO", "catalog", "season_provider_short", "剧集提供方返回的集数少于 TMDB，改用原生季数据", "", "")
-		return native, nil
-	}
-	return projected, nil
+	// MoviePilot reads the season from TMDB directly and keeps it authoritative.
+	// A plugin provider used to answer here and could return a short list (five
+	// episodes for a 182-episode season), which made the subscription compute its
+	// missing episodes against a season that does not exist.
+	return a.nativeSeason(ctx, tmdb, n)
 }
 
 func (a *App) nativeSeason(ctx context.Context, tmdb int64, n int) (catalog.Season, error) {
