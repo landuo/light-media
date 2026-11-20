@@ -163,7 +163,7 @@ func (a *App) handler() http.Handler {
 			pending := []map[string]any{}
 			for _, f := range files {
 				counts[f.State]++
-				if f.State == "needs_review" || f.State == "error" || f.State == "observing" {
+				if f.State == "needs_review" || f.State == "error" || f.State == "observing" || f.State == "baseline" {
 					if len(pending) < 5 {
 						reason := f.Reason
 						if len([]rune(reason)) > 80 {
