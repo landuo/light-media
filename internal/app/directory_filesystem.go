@@ -291,7 +291,17 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		// whether the file itself changed. The download's media identity can
 		// arrive after the first attempt; requiring an unchanged file here made
 		// that correction unreachable and left the record terminal forever.
-		retryIdentity := !fresh && !changed && (f.State == "needs_review" || f.State == "error") && f.EvidenceFingerprint != evidence
+		// An identity failure is retried when the evidence changed, and also after a
+		// cooldown: recognition depends on remote metadata and on the download
+		// record, both of which can arrive later. Without the cooldown a single
+		// failure parked the file forever even once the missing piece existed.
+		identityCooldown := !fresh && (f.State == "needs_review" || f.State == "error") &&
+			f.LastSeen != "" && func() bool {
+			last, err := time.Parse(time.RFC3339, f.LastSeen)
+			return err != nil || time.Since(last) >= 10*time.Minute
+		}()
+		retryIdentity := !fresh && !changed && (f.State == "needs_review" || f.State == "error") &&
+			(f.EvidenceFingerprint != evidence || identityCooldown)
 		if fresh || changed || retryIdentity {
 			f = DirectoryObservedFile{ID: key, DirectoryID: rule.ID, Path: file.Path, State: "observing", Reason: "等待文件至少60秒保持稳定", Snapshot: stamp, StableSince: time.Now().UnixNano(), RuleFingerprint: fingerprint, EvidenceFingerprint: evidence}
 			if fresh && initial && !rule.IncludeExisting {
