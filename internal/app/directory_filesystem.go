@@ -201,6 +201,16 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		guard.DownloaderSnapshot = downloaderSnapshot(d)
 	}
 	for _, file := range files {
+		// A Blu-ray is organized as one unit: promote a STREAM member to the disc
+		// root so it is recognized by the disc's name instead of an m2ts fragment.
+		if root, ok := blurayDiscRoot(file.Path); ok {
+			if stamp, err := snapshotTransferPath(root); err == nil {
+				file.Path = root
+				file.Size = stamp.Size
+				file.Parsed = a.parseMediaName(filepath.Base(root))
+				file.Snapshot = &stamp
+			}
+		}
 		if file.Snapshot != nil && file.Snapshot.Directory != "" {
 			owner, known, e := automaticDiscDownloadOwner(file.Path, *file.Snapshot, downloads)
 			if e != nil {

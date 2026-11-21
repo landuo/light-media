@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"path/filepath"
+	"strings"
 )
 
 // Only the automatic monitor opts into disc-root grouping. Its ordinary scanner
@@ -102,4 +103,21 @@ func automaticDiscDownloadOwner(path string, expected importSnapshot, files map[
 		}
 	}
 	return out, true, nil
+}
+
+// blurayDiscRoot returns the disc root for a file inside BDMV/STREAM. MoviePilot
+// promotes such an event to the disc's parent directory (monitorBlurayDiscRoot):
+// a Blu-ray is organized as one unit, never as a pile of STREAM fragments.
+func blurayDiscRoot(path string) (string, bool) {
+	normalized := filepath.ToSlash(path)
+	lower := strings.ToLower(normalized)
+	idx := strings.Index(lower, "/bdmv/stream/")
+	if idx < 0 {
+		return "", false
+	}
+	root := normalized[:idx]
+	if root == "" {
+		return "", false
+	}
+	return filepath.FromSlash(root), true
 }
