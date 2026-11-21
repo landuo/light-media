@@ -7,6 +7,16 @@ import (
 	"unicode"
 )
 
+type wireTranslations struct {
+	Translations []struct {
+		ISO639 string `json:"iso_639_1"`
+		Data   struct {
+			Name  string `json:"name"`
+			Title string `json:"title"`
+		} `json:"data"`
+	} `json:"translations"`
+}
+
 type wireExternalIDs struct {
 	ID      int64  `json:"id"`
 	IMDbID  string `json:"imdb_id"`
@@ -93,6 +103,29 @@ func (c *Client) searchIdentities(raw wireMedia, kind, title, original string) (
 		seen[key] = true
 		aliases = append(aliases, value)
 		if len(aliases) >= 16 {
+			break
+		}
+	}
+	// The English name is the identity a release usually carries; a Chinese title
+	// is not what a site writes for an English-subbed pack. MoviePilot searches
+	// title, original title and en_title for exactly this reason.
+	if raw.Translations != nil {
+		for _, entry := range raw.Translations.Translations {
+			if !strings.EqualFold(strings.TrimSpace(entry.ISO639), "en") {
+				continue
+			}
+			name := strings.Join(strings.Fields(entry.Data.Name), " ")
+			if name == "" {
+				name = strings.Join(strings.Fields(entry.Data.Title), " ")
+			}
+			if name == "" || !aliasText(name) || !queryOK(name) || c.text(name, 512) != name {
+				continue
+			}
+			key := strings.ToLower(name)
+			if !seen[key] {
+				seen[key] = true
+				aliases = append([]string{name}, aliases...)
+			}
 			break
 		}
 	}

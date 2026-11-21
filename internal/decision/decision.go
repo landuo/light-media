@@ -3,7 +3,6 @@
 package decision
 
 import (
-	"unicode"
 	"context"
 	"fmt"
 	"path/filepath"
@@ -12,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 
 	"light-media/internal/catalog"
 	"light-media/internal/media"
@@ -178,6 +178,25 @@ func EvaluateContext(ctx context.Context, resource sites.Resource, target Target
 		return finish()
 	}
 	if year != 0 && target.Media.Year != 0 && year != target.Media.Year && year != target.SeasonYear {
+		// A franchise entry is told apart from its predecessors by year: "Soul
+		// Land" (2018) shares a base name with "Soul Land 2" (2023), and only the
+		// release year separates them. A one-year slack absorbs season-year
+		// labelling; anything wider is a different work.
+		diff := year - target.Media.Year
+		if diff < 0 {
+			diff = -diff
+		}
+		seasonDiff := 0
+		if target.SeasonYear != 0 {
+			seasonDiff = year - target.SeasonYear
+			if seasonDiff < 0 {
+				seasonDiff = -seasonDiff
+			}
+		}
+		if diff >= 2 && seasonDiff >= 2 {
+			reject("series_year_conflict")
+			return finish()
+		}
 		review("series_year_conflict")
 	}
 	filename := resourceFilename(resource.Title)
@@ -213,8 +232,14 @@ func EvaluateContext(ctx context.Context, resource sites.Resource, target Target
 		review("numbering_" + mapping.Reason)
 		return finish()
 	}
+	// Sites number a show's episodes inconsistently: the same series is posted
+	// as "S01E180" on one site and "S02E180" on another. A release year that
+	// matches the series is the stronger identity evidence, so a season label
+	// that disagrees with it is accepted; a release from a different year is
+	// rejected above, which is what keeps a predecessor series out.
+	yearConfirms := year != 0 && (year == target.Media.Year || year == target.SeasonYear)
 	for _, ep := range mapping.Standard {
-		if ep.Season != target.Season {
+		if ep.Season != target.Season && !yearConfirms {
 			review("resource_season_outside_target")
 		}
 		out.Season = ep.Season
@@ -386,6 +411,7 @@ func episodeSet(values []int) (map[int]bool, bool) {
 func normalizeTitle(value string) string {
 	return media.NormalizeTitle(value)
 }
+
 // trailingSeasonMarker matches a normalized alias' trailing season numbering
 // ("Soul Land 2" -> "2", "Soul Land S02" -> "s02", "Rocky II" -> "ii").
 // Franchise releases often drop that suffix ("Soul Land" for "Soul Land 2"),
@@ -496,11 +522,43 @@ func bilingualTitleEvidence(value, candidate string, names []string) bool {
 // season when the media aliases themselves declare that franchise season
 // ("Soul Land S02E179" for a media stored as season 1).
 func AliasSeasonNumbering(m catalog.Media, targetSeason int, n media.Numbering) media.Numbering {
-	if n.Season != nil && *n.Season != targetSeason && aliasSeasonNumbers(m)[*n.Season] {
+	if n.Season == nil || *n.Season == targetSeason {
+		return n
+	}
+	if aliasSeasonNumbers(m)[*n.Season] {
+		season := targetSeason
+		n.Season = &season
+		return n
+	}
+	// A series with a single season has no other season to confuse. Sites label
+	// "斗罗大陆Ⅱ" as S02 because it is the second series, while TMDB keeps one
+	// season with 182 episodes; this build already imported S02E168 and S02E179
+	// that way. The year check above is what keeps the 2018 predecessor out.
+	if singleSeasonSeries(m, targetSeason) {
 		season := targetSeason
 		n.Season = &season
 	}
 	return n
+}
+
+// singleSeasonSeries reports whether the series has exactly one season and it is
+// the one being requested.
+func singleSeasonSeries(m catalog.Media, targetSeason int) bool {
+	if len(m.Seasons) != 1 || targetSeason <= 0 {
+		return false
+	}
+	return m.Seasons[0].SeasonNumber == targetSeason
+}
+
+// aliasesCarrySeasonNumber reports whether any alias ends in a season number,
+// meaning the franchise entry is numbered and must be matched exactly.
+func aliasesCarrySeasonNumber(aliases []string) bool {
+	for _, a := range aliases {
+		if trailingSeasonMarker.MatchString(a) {
+			return true
+		}
+	}
+	return false
 }
 
 func matchesTitle(value string, m catalog.Media) bool {
@@ -559,6 +617,15 @@ func titleIdentity(title string, m catalog.Media) (bool, int) {
 	cut := markerCut(stem)
 	prefix := strings.Trim(stem[:cut], " ._()-")
 	if matchesTitle(prefix, m) {
+		// The release year is evidence even when the title already matched: a
+		// franchise entry and its predecessor share a base name, and the year is
+		// the only thing telling "Soul Land" (2018) from "Soul Land 2" (2023).
+		// Only a year after the title is a release year. A year inside the title
+		// ("2012") belongs to the name and must not become identity evidence.
+		if loc := yearMarker.FindStringIndex(stem[len(prefix):]); loc != nil {
+			year, _ := strconv.Atoi(stem[len(prefix)+loc[0] : len(prefix)+loc[1]])
+			return true, year
+		}
 		return true, 0
 	}
 	// A year is recognized as identity evidence only if its preceding title

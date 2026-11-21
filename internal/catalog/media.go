@@ -49,6 +49,7 @@ type wireMedia struct {
 	IMDbID              string                 `json:"imdb_id"`
 	ExternalIDs         *wireExternalIDs       `json:"external_ids"`
 	AlternativeTitles   *wireAlternativeTitles `json:"alternative_titles"`
+	Translations        *wireTranslations      `json:"translations"`
 }
 
 type wireCredits struct {
@@ -110,7 +111,7 @@ func (c *Client) DetailForCategory(ctx context.Context, kind string, id int64, f
 	path := kind + "/" + strconv.FormatInt(id, 10)
 	var response wireMedia
 	var categoryFields map[string]CategoryField
-	query := url.Values{"append_to_response": {"credits,recommendations,external_ids,alternative_titles"}}
+	query := url.Values{"append_to_response": {"credits,recommendations,external_ids,alternative_titles,translations"}}
 	if len(fields) > 0 {
 		if len(fields) > 128 {
 			return Media{}, &Error{Code: "invalid_input"}

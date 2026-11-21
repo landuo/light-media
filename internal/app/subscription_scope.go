@@ -1,5 +1,11 @@
 package app
 
+import (
+	"os"
+	"strconv"
+	"strings"
+)
+
 // A season subscription follows provider-confirmed episodes as the season grows.
 // The start threshold is not a fabricated episode or a snapshot of today's list.
 func normalizeSubscriptionScope(in *SubscriptionRequest, old Subscription, kind string) error {
@@ -53,4 +59,48 @@ func subscriptionTargetEpisodes(s Subscription, episodes []int) []int {
 		}
 	}
 	return out
+}
+
+// subscriptionSearchQueries lists the names a subscription is searched under,
+// in MoviePilot's order: its own keyword first when set, then the title, the
+// original title and any alias.
+func subscriptionSearchQueries(s Subscription) []string {
+	if keyword := strings.TrimSpace(s.Keyword); keyword != "" {
+		return []string{keyword}
+	}
+	out := []string{}
+	seen := map[string]bool{}
+	add := func(name string) {
+		name = strings.TrimSpace(name)
+		if name == "" || seen[name] {
+			return
+		}
+		seen[name] = true
+		out = append(out, name)
+	}
+	add(s.Media.Title)
+	add(s.Media.OriginalTitle)
+	for _, alias := range s.Media.Aliases {
+		add(alias)
+	}
+	// MoviePilot searches at most MAX_SEARCH_NAME_LIMIT names, default 3: title,
+	// original title and the English one. Searching every alias multiplies the
+	// site requests by the alias count and is what made one subscription check
+	// hold the queue for minutes.
+	if limit := subscriptionSearchNameLimit(); limit > 0 && len(out) > limit {
+		out = out[:limit]
+	}
+
+	return out
+}
+
+// subscriptionSearchNameLimit mirrors MoviePilot's MAX_SEARCH_NAME_LIMIT setting,
+// whose default is 3. Zero or a negative value leaves the list uncapped.
+func subscriptionSearchNameLimit() int {
+	if raw := strings.TrimSpace(os.Getenv("MAX_SEARCH_NAME_LIMIT")); raw != "" {
+		if n, err := strconv.Atoi(raw); err == nil {
+			return n
+		}
+	}
+	return 3
 }
