@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"runtime/debug"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -644,6 +645,7 @@ func (a *App) scheduler(ctx context.Context) {
 	defer ticker.Stop()
 	lastPoll := time.Time{}
 	lastMaterialCleanup := time.Time{}
+	lastMetadataRefresh := time.Time{}
 	for {
 		select {
 		case <-ctx.Done():
@@ -655,6 +657,13 @@ func (a *App) scheduler(ctx context.Context) {
 				a.log("WARN", "downloads", "material_cleanup_failed", "未确认的种子材料清理失败", "", "")
 			}
 			lastMaterialCleanup = time.Now()
+		}
+		// MoviePilot refreshes subscription metadata every six hours
+		// (subscribe_tmdb: Interval 6h). Without it a subscription keeps the
+		// snapshot from creation and never learns new aliases or episodes.
+		if time.Since(lastMetadataRefresh) >= 6*time.Hour {
+			a.refreshSubscriptionMetadata(ctx)
+			lastMetadataRefresh = time.Now()
 		}
 		if time.Since(lastPoll) >= 30*time.Second {
 			if e := a.pollDownloads(ctx); e != nil {
@@ -709,6 +718,15 @@ func (a *App) scheduleSubscriptions(ctx context.Context, at time.Time) {
 		// site budget. Let that check run and calculate its normal schedule.
 		oldBudgetDelay := s.LastReason == "站点调用预算不足，已按最早恢复时间延期检查" ||
 			strings.HasSuffix(s.LastReason, "；部分站点预算不足，检查将按恢复时间延期")
+		// MoviePilot runs a separate five-minute pass over subscriptions created in
+		// the last minute, so a new subscription is searched almost immediately
+		// instead of waiting for the next full refresh.
+		if !oldBudgetDelay && strings.TrimSpace(s.LastCheck) == "" {
+			if created, err := time.Parse(time.RFC3339Nano, s.CreatedAt); err == nil && at.Sub(created) < 5*time.Minute {
+				_, _ = a.enqueue(ctx, "subscription", map[string]any{"id": s.ID, "revision": s.Revision}, id("wf_"))
+				continue
+			}
+		}
 		if !oldBudgetDelay && e == nil && t.After(at) {
 			continue
 		}
@@ -734,4 +752,49 @@ func jobRunBudget(kind string) time.Duration {
 		return 10 * time.Minute
 	}
 	return 2 * time.Minute
+}
+
+// refreshSubscriptionMetadata re-reads every active subscription's media, which
+// is MoviePilot's subscribe_tmdb pass. It also refreshes the stored snapshot when
+// the provider knows names the subscription does not have yet.
+func (a *App) refreshSubscriptionMetadata(ctx context.Context) {
+	raw, err := a.Store.List(ctx, "subscription", 500, 0)
+	if err != nil {
+		return
+	}
+	refreshed := 0
+	for _, b := range raw {
+		var s Subscription
+		if json.Unmarshal(b, &s) != nil || s.State != "active" || s.Media.ID == 0 {
+			continue
+		}
+		if ctx.Err() != nil {
+			return
+		}
+		fresh, err := a.media(ctx, s.Media.MediaType, s.Media.ID)
+		if err != nil {
+			continue
+		}
+		changed := fresh.Title != "" && fresh.Title != s.Media.Title ||
+			len(fresh.Aliases) > len(s.Media.Aliases) ||
+			fresh.NumberOfEpisodes != s.Media.NumberOfEpisodes
+		if !changed {
+			continue
+		}
+		if fresh.Title != "" {
+			s.Media.Title = fresh.Title
+		}
+		if fresh.OriginalTitle != "" {
+			s.Media.OriginalTitle = fresh.OriginalTitle
+		}
+		s.Media.Aliases = fresh.Aliases
+		s.Media.Seasons = fresh.Seasons
+		s.Media.NumberOfEpisodes = fresh.NumberOfEpisodes
+		if err := a.Store.Put(ctx, "subscription", s.ID, s); err == nil {
+			refreshed++
+		}
+	}
+	if refreshed > 0 {
+		a.log("INFO", "subscriptions", "metadata_refreshed", "已刷新订阅元数据 "+strconv.Itoa(refreshed)+" 个", "", "")
+	}
 }

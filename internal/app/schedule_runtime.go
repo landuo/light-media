@@ -1,6 +1,7 @@
 package app
 
 import (
+	"math/rand"
 	"sort"
 	"strconv"
 	"strings"
@@ -255,6 +256,15 @@ func nextScheduleCheck(s Schedule, after time.Time, metadataDates []string) time
 	if active {
 		interval = s.ActiveMinutes
 	}
+	// MoviePilot refreshes subscriptions on randomized schedules instead of a
+	// fixed cadence: 32 runs a day between 07:00 and 23:00, each 20-40 minutes
+	// after the previous one. A fixed interval makes the request pattern obvious
+	// to the sites. The randomized interval is used for the ordinary refresh; an
+	// approaching known airing still wins because it can only make the wait
+	// shorter.
+	if jitter := subscriptionCheckJitter(after.In(loc)); jitter > 0 {
+		interval = jitter
+	}
 	next := after.Add(time.Duration(interval) * time.Minute)
 	for _, start := range starts {
 		if start.Before(next) {
@@ -313,4 +323,24 @@ func effectiveEpisodeDate(s Subscription, ep int, original string) (string, bool
 		}
 	}
 	return strings.TrimSpace(date), false
+}
+
+// subscriptionCheckJitter returns the randomized interval MoviePilot uses for its
+// subscriber refresh (app/scheduler.py random crons: 20-40 minutes, 07:00-23:00),
+// or a wait until the next morning's window. Zero means "outside the window".
+func subscriptionCheckJitter(local time.Time) int {
+	hour := local.Hour()
+	if hour >= 23 || hour < 7 {
+		// Outside the daily window: wait until 07:00 local time.
+		target := time.Date(local.Year(), local.Month(), local.Day(), 7, 0, 0, 0, local.Location())
+		if !local.Before(target) {
+			target = target.AddDate(0, 0, 1)
+		}
+		wait := int(target.Sub(local).Minutes())
+		if wait < 1 {
+			wait = 1
+		}
+		return wait
+	}
+	return 20 + rand.Intn(21)
 }
