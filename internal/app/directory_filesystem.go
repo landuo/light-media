@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"io/fs"
+	"os"
 	"path/filepath"
 	"reflect"
 	"regexp"
@@ -433,6 +434,18 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 	}
 	if inspectionError != nil {
 		return inspectionError
+	}
+	// An observation whose source is gone has nothing left to describe. The
+	// startup pass already drops these, but a long-running process would keep
+	// showing them as pending forever — and they block deleting the parent folder
+	// because the row still claims the file is in use.
+	for path, observed := range allObserved {
+		if _, statErr := os.Stat(path); !errors.Is(statErr, fs.ErrNotExist) {
+			continue
+		}
+		if err := a.Store.Delete(ctx, "directory_file", observed.ID); err == nil {
+			a.log("INFO", "directories", "orphan_observation_removed", "源文件已删除，清理观测记录："+path, "", "")
+		}
 	}
 	return a.Store.Put(ctx, "directory_file_state", rule.ID, directoryBaseline{Fingerprint: fingerprint, LastScan: now(), Tasks: taskFingerprints})
 }
