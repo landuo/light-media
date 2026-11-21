@@ -5,8 +5,6 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
-
-	"light-media/internal/download"
 )
 
 type historyDeleteRequest struct {
@@ -170,9 +168,6 @@ func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryI
 				return importSnapshot{}, false, checkErr
 			}
 			if location != "gone" {
-				if guardErr := a.guardHistoryDownloaderSource(ctx, item); guardErr != nil {
-					return importSnapshot{}, false, guardErr
-				}
 				return expected, true, nil
 			}
 			if receipt.State != "completed" {
@@ -186,9 +181,6 @@ func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryI
 	}
 	if expected != actual {
 		return importSnapshot{}, false, bad("FILE_SNAPSHOT_CHANGED", "源文件在整理后发生变化，不能按旧历史删除")
-	}
-	if e = a.guardHistoryDownloaderSource(ctx, item); e != nil {
-		return importSnapshot{}, false, e
 	}
 	if e = a.guardHistorySourceInUse(ctx, item); e != nil {
 		return importSnapshot{}, false, e
@@ -232,45 +224,6 @@ func (a *App) guardHistorySourceInUse(ctx context.Context, item transferHistoryI
 	}
 	if busy > 0 {
 		return bad("FILE_IN_USE", "其他整理任务正在使用源文件")
-	}
-	return nil
-}
-
-// Downloaders no longer need configured save paths: their actual task paths
-// are the only reliable evidence that a selected source is still in use.
-func (a *App) guardHistoryDownloaderSource(ctx context.Context, item transferHistoryItem) error {
-	path := item.Source
-	for _, configured := range a.Settings().Downloaders {
-		client, err := download.New(configured.Config)
-		if err != nil {
-			return bad("FILE_DOWNLOADER_UNVERIFIED", "无法连接下载器核对做种源，已停止删除源文件")
-		}
-		tasks, err := client.List(ctx)
-		if err != nil {
-			return bad("FILE_DOWNLOADER_UNVERIFIED", "无法读取下载器任务核对做种源，已停止删除源文件")
-		}
-		for _, task := range tasks {
-			directory, err := mapDownloaderPath(a.Settings(), configured, task.DownloadDir)
-			if err != nil || !importPath(directory) {
-				// An unmappable directory only matters when it could be this file's
-				// directory. Judging every task by its own path kept the whole delete
-				// refused because of an unrelated task (a brush task, typically).
-				if _, overlap := sharedDirectoryPath(task.DownloadDir, path); !overlap {
-					continue
-				}
-				return bad("FILE_DOWNLOADER_UNVERIFIED", "下载器返回了无法核对的任务目录，已停止删除源文件")
-			}
-			if fileInTaskDirectory(directory, path) {
-				authorized, checkErr := a.historyDownloadTaskAuthorized(ctx, item, configured, task)
-				if checkErr != nil {
-					return checkErr
-				}
-				if authorized {
-					continue
-				}
-				return bad("FILE_DOWNLOADER_SOURCE_PROTECTED", "源文件位于现有下载任务目录中，请先在下载器中处理该任务")
-			}
-		}
 	}
 	return nil
 }

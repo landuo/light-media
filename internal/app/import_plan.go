@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"light-media/internal/decision"
 	"os"
 	"path/filepath"
@@ -839,10 +840,16 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			if file.Status == "ready" && qualityDownload == nil && reorganize == nil && request.Mode != "move" && request.Mode != "softlink" {
 				if owner, ok := a.managedFileByInode(ctx, file.Device, file.Inode); ok && owner.AssetID != "" {
 					var existing Asset
+					// The record saying "present" is not proof: a file removed outside the
+					// program leaves the row behind, and treating that as a completed
+					// import made every re-organize answer already_imported — no history
+					// row, no copy, nothing in the library.
 					if a.Store.Get(ctx, "asset", owner.AssetID, &existing) == nil && existing.State == "present" && existing.RootID == root.ID && existing.SourcePath == file.Source && mediaKey(existing.Media) == mediaKey(identity) && sameCanonicalSlots(existing.inventorySlots(), file.inventorySlots()) {
-						file.Status = "already_imported"
-						file.AssetID = existing.ID
-						file.Target = existing.Path
+						if _, statErr := os.Stat(existing.Path); statErr == nil || !errors.Is(statErr, fs.ErrNotExist) {
+							file.Status = "already_imported"
+							file.AssetID = existing.ID
+							file.Target = existing.Path
+						}
 					}
 				}
 			}
