@@ -113,12 +113,8 @@ func (a *App) releaseFinishedReservations(ctx context.Context) (released int, er
 			continue
 		}
 		if in.State != "downloaded" && in.State != "imported" {
-			// A reservation whose intent never finished still blocks the episode:
-			// repair exists to release exactly that kind of hold, so it is dropped
-			// here as well instead of only for completed downloads.
-			if _, err := a.Store.DB.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id=?`, owner); err != nil {
-				return released, err
-			}
+			// An unfinished download keeps its reservation: the slot is held until
+			// that download completes or is cancelled.
 			continue
 		}
 		res, err := a.Store.DB.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id=?`, owner)
