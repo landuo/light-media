@@ -9,7 +9,7 @@ import (
 
 // Keep the visible file job through recognition and import. The generation
 // check lets cancellation win before reservations or a failure record commit.
-func promoteOrganizeFileTx(ctx context.Context, tx *sql.Tx, work organizeFileWork, planID string, fileIDs []string, state, code, reason string) (Job, error) {
+func (a *App) promoteOrganizeFileTx(ctx context.Context, tx *sql.Tx, work organizeFileWork, planID string, fileIDs []string, state, code, reason string) (Job, error) {
 	payload, err := json.Marshal(struct {
 		ID                      string   `json:"id"`
 		FileIDs                 []string `json:"file_ids"`
@@ -32,11 +32,25 @@ func promoteOrganizeFileTx(ctx context.Context, tx *sql.Tx, work organizeFileWor
 	if state == "failed" {
 		attempt = 1
 	}
-	job, err := scanJob(tx.QueryRowContext(ctx, `UPDATE jobs
+	// Promotion updates the organizing task's row into an import task. A rowless
+	// organizing task has no row to promote, so the import task is created
+	// directly instead.
+	var job Job
+	if work.Job.Ephemeral {
+		// payload is already the marshalled object; hand enqueueTx the value so it
+		// is not encoded a second time (a []byte would become a base64 string).
+		var decoded map[string]any
+		if err = json.Unmarshal(payload, &decoded); err != nil {
+			return Job{}, err
+		}
+		job, err = a.enqueueTx(ctx, tx, "import", decoded, work.Job.WorkflowID)
+	} else {
+		job, err = scanJob(tx.QueryRowContext(ctx, `UPDATE jobs
 		SET kind='import', state=?, payload=?, attempt=?, generation=generation+1,
 			error_code=?, error_message=?, updated_at=?
 		WHERE id=? AND kind='organize_file' AND state='running' AND generation=?
 		RETURNING `+jobColumns, state, payload, attempt, code, reason, now(), work.Job.ID, work.Job.Generation))
+	}
 	if errors.Is(err, sql.ErrNoRows) {
 		return Job{}, bad("JOB_CANCELLED", "整理文件任务已取消或已由其他执行接管")
 	}

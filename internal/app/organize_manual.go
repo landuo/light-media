@@ -717,7 +717,7 @@ func (a *App) recordManualOrganizeFailurePlan(ctx context.Context, path, wf stri
 	work, isFileJob := ctx.Value(organizeFileKey{}).(organizeFileWork)
 	var events []json.RawMessage
 	if isFileJob {
-		job, e = promoteOrganizeFileTx(ctx, tx, work, plan.ID, []string{plan.Files[0].ID}, "failed", code, reason)
+		job, e = a.promoteOrganizeFileTx(ctx, tx, work, plan.ID, []string{plan.Files[0].ID}, "failed", code, reason)
 		if e == nil {
 			events, e = a.flushOriginalScrapeBatchTx(ctx, tx, work.BatchID, false)
 		}

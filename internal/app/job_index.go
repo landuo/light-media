@@ -361,3 +361,22 @@ func (a *App) jobStateByID(ctx context.Context, id string, state *string, genera
 	}
 	return nil
 }
+
+// jobIndexHas reports whether a task is currently dispatchable.
+func (a *App) jobIndexHas(id string) bool {
+	if id == "" {
+		return false
+	}
+	ix := a.index()
+	ix.mu.Lock()
+	defer ix.mu.Unlock()
+	j, ok := ix.entries[id]
+	return ok && j.State == "queued"
+}
+
+// requeueExistingJobTx resets a stored task so it can run again.
+func (a *App) requeueExistingJobTx(ctx context.Context, tx *sql.Tx, j *Job) error {
+	j.State, j.Attempt, j.RunAt, j.ErrorCode, j.ErrorMessage = "queued", 0, time.Now().Unix(), "", ""
+	_, err := tx.ExecContext(ctx, `UPDATE jobs SET state='queued',attempt=0,run_at=?,error_code='',error_message='',updated_at=? WHERE id=?`, j.RunAt, now(), j.ID)
+	return err
+}

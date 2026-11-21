@@ -125,11 +125,14 @@ func (a *App) guardOrganizePreparation(ctx context.Context, tx *sql.Tx) error {
 	// index first; without this the guard would read zero rows and cancel the
 	// preparation it is meant to protect.
 	if job.Ephemeral {
+		// Only an explicit terminal state means cancelled. An absent entry happens
+		// for reasons unrelated to cancellation (claim/refresh/re-register) and used
+		// to cancel every rowless preparation it was meant to protect.
 		ix := a.index()
 		ix.mu.Lock()
 		entry, found := ix.entries[job.ID]
 		ix.mu.Unlock()
-		if !found || entry.State != "running" {
+		if found && (entry.State == "cancelled" || entry.State == "failed") {
 			return bad("JOB_CANCELLED", "整理准备已取消")
 		}
 		return nil

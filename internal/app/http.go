@@ -780,9 +780,13 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		var in struct {
 			PlanID  string   `json:"plan_id"`
 			FileIDs []string `json:"file_ids"`
+			Force   bool     `json:"force"`
 		}
 		e = decodeBody(w, r, &in)
 		if e == nil {
+			if in.Force {
+				ctx = context.WithValue(ctx, importForceKey{}, true)
+			}
 			out, e = a.executeImport(ctx, in.PlanID, in.FileIDs)
 		}
 	case p == "import/plans" && method == "GET":

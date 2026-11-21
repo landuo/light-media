@@ -337,7 +337,7 @@ func (a *App) worker(ctx context.Context) {
 	// import stayed "queued" for many minutes while a subscription ran. Several
 	// workers share the same index; claiming is guarded by the index lock, so a
 	// task is still handed out exactly once.
-	const workers = 4
+	const workers = 1
 	for i := 0; i < workers; i++ {
 		go a.jobWorker(ctx, allJobs)
 	}
@@ -538,12 +538,15 @@ func (a *App) jobCancelled(ctx context.Context, j Job) error {
 		return &APIError{"AUTOMATION_PAUSED", "自动化已暂停，将在恢复后继续", 409}
 	}
 	if j.Ephemeral {
-		// Memory-only tasks have no row to read: the index is the record.
+		// A memory-only task has no row, and the index entry can be gone for
+		// reasons other than cancellation (the worker's claim, a refresh, a
+		// re-register). Only an explicit terminal state means cancelled; an absent
+		// entry must not turn every rowless task into a no-op.
 		ix := a.index()
 		ix.mu.Lock()
 		entry, ok := ix.entries[j.ID]
 		ix.mu.Unlock()
-		if !ok || entry.State != "running" {
+		if ok && (entry.State == "cancelled" || entry.State == "failed") {
 			return bad("JOB_CANCELLED", "任务已取消")
 		}
 		return nil

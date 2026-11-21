@@ -150,7 +150,24 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		}
 		prior, selectionErr := selectImportFiles(plan, payload.FileIDs)
 		if selectionErr == nil && sameImportSelection(prior, selected) {
-			return existing, tx.Commit()
+			// Only reuse it if it is actually dispatchable. A row written by an
+			// earlier build can survive with no task behind it; returning it made
+			// execute answer "queued" while nothing was ever going to run.
+			if a.jobIndexHas(existing.ID) {
+				return existing, tx.Commit()
+			}
+			if err = a.requeueExistingJobTx(ctx, tx, &existing); err != nil {
+				return Job{}, err
+			}
+			if err = tx.Commit(); err != nil {
+				return Job{}, err
+			}
+			a.indexEnqueue(existing)
+			select {
+			case a.jobWake <- struct{}{}:
+			default:
+			}
+			return existing, nil
 		}
 	} else if !errors.Is(findErr, sql.ErrNoRows) {
 		return Job{}, findErr
@@ -206,7 +223,7 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		if len(fileIDs) == 0 && len(selected) == 1 {
 			fileIDs = []string{plan.Files[selected[0]].ID}
 		}
-		job, err = promoteOrganizeFileTx(ctx, tx, work, plan.ID, fileIDs, "queued", "", "")
+		job, err = a.promoteOrganizeFileTx(ctx, tx, work, plan.ID, fileIDs, "queued", "", "")
 	} else {
 		job, err = a.enqueueTx(ctx, tx, "import", map[string]any{"id": plan.ID, "file_ids": fileIDs, "original_scrape_batch": batchID}, plan.WorkflowID)
 	}
@@ -317,7 +334,16 @@ func (a *App) importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, fi
 					}
 				}
 				if !reusable {
-					return bad("IMPORT_CONFLICT", "影片或季集被其他任务占用")
+					if ctx.Value(importForceKey{}) != true {
+						return bad("IMPORT_CONFLICT", "影片或季集被其他任务占用")
+					}
+					// An operator asked for this organize explicitly: take the slot
+					// over instead of refusing, and release the previous owner.
+					if _, err := tx.ExecContext(ctx, `UPDATE reservations SET intent_id=? WHERE media_key=? AND season=? AND episode=?`,
+						owner, mediaKey(plan.Media), slot.Season, slot.Episode); err != nil {
+						return err
+					}
+					continue
 				}
 				if _, err := tx.ExecContext(ctx, `UPDATE reservations SET intent_id=? WHERE media_key=? AND season=? AND episode=? AND intent_id=?`,
 					owner, mediaKey(plan.Media), slot.Season, slot.Episode, current); err != nil {
@@ -1393,3 +1419,7 @@ func unlinkImportStage(parent *os.File, receipt importReceipt) error {
 	}
 	return parent.Sync()
 }
+
+// importForceKey marks an organize the operator requested explicitly, which is
+// allowed to take a slot another (stale) task still holds.
+type importForceKey struct{}

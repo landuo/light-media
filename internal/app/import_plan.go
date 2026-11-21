@@ -540,6 +540,15 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		}
 		class := originalImportFileClass(requested)
 		video, _ := classifier.Media(class)
+		if !video && request.Manual {
+			// An HTTP request carries no module file item, so the classifier has
+			// nothing to inspect. Fall back to the extension: a video file the
+			// operator picked explicitly must not be marked "not a video".
+			switch strings.ToLower(filepath.Ext(file.Source)) {
+			case ".mkv", ".mp4", ".avi", ".m4v", ".ts", ".mov", ".m2ts", ".wmv", ".flv", ".rmvb":
+				video = true
+			}
+		}
 		if request.Manual && !video {
 			if classifier.Subtitle(class) {
 				file.MaterialKind = "subtitle"
