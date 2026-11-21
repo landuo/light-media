@@ -1010,8 +1010,21 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	}
 	if s.Media.MediaType == "tv" {
 		today := time.Now().In(shanghai()).Format("2006-01-02")
+		// MoviePilot derives the wanted range from the subscription itself
+		// (`for episode := start; episode <= total; episode++`), never from the
+		// season's episode list. A provider that answers with a short season would
+		// otherwise shrink the range and the wanted episodes would never be asked
+		// for. Air dates are still read from the season, because "not aired yet" is
+		// a fact about the episode, not about the range.
+		start := subscriptionStartEpisode(episodeScope)
+		total := episodeScope.TotalEpisodes
+		if total <= 0 {
+			total = len(season.Episodes)
+		}
+		for ep := start; ep <= total; ep++ {
+			known = append(known, ep)
+		}
 		for _, ep := range season.Episodes {
-			known = append(known, ep.EpisodeNumber)
 			if ep.EpisodeNumber < subscriptionStartEpisode(episodeScope) || episodeScope.TotalEpisodes > 0 && ep.EpisodeNumber > episodeScope.TotalEpisodes {
 				continue
 			}
