@@ -223,3 +223,35 @@ MP：`transfer` 任务每 5 分钟调 `Transfer.CheckCompleted()`：
 ---
 
 （待补：MP 的 `Transfer.CheckCompleted` 细节、媒体服务器刷新、订阅完成判定）
+
+---
+
+## 八、本轮已落地的对齐（代码位置）
+
+| 项 | MP 行为 | 光影实现 | 位置 |
+|---|---|---|---|
+搜索名字上限 | `MAX_SEARCH_NAME_LIMIT` 默认 3 | `subscriptionSearchNameLimit()` 默认 3，环境变量可调 | `subscription_scope.go` |
+订阅刷新间隔 | 随机 20–40 分钟，仅 07–23 点 | `subscriptionCheckJitter()`，窗口外等次日 07:00 | `schedule_runtime.go` |
+新建订阅快线 | `new_subscribe_search` 每 5 分钟 | `LastCheck` 为空且创建 <5 分钟即入队 | `jobs.go:scheduleSubscriptions` |
+元数据刷新 | `subscribe_tmdb` 每 6 小时 | `refreshSubscriptionMetadata()` 每 6 小时 | `jobs.go:scheduler` |
+缺集范围 | `start..total` 递减，不读季集 | `known` 由 `subscriptionStartEpisode..TotalEpisodes` 生成 | `subscription_runtime.go` |
+整理触发 | `CheckCompleted` 每 5 分钟 | `pollDirectoryFiles` 每 30 秒（更频繁） | `jobs.go:scheduler` |
+整理身份 | hash 关联下载历史 | `directoryDownloadFiles` 用下载器任务映射 owner | `directory_filesystem.go` |
+文件选择 | paused → skip 非目标 → start | `SourceSelectEpisodeDownload` + `SelectedEpisodes` | `download/source_post_add.go` |
+英文名搜索 | `en_title` 来自 translations | `catalog.englishName` 读 `translations` | `catalog/identities.go` |
+`S01 E43` 格式 | 识别器支持 | `media.Parse` 宽松回退 | `media/parse.go` |
+
+### 队列可靠性（这条是前提，不属于 MP 对照）
+
+三个 bug 让"任务创建了却不执行"：
+
+1. `enqueueTx` 之后直接 `tx.Commit()`（9 处）→ 无表任务在提交时丢失；改 `commitWithJobs`。
+2. `claimJob` 对 import 通道直接查表 → 无表 import 永远 claim 不到；改为索引优先。
+3. 单 worker 被长任务（订阅检查 10 分钟预算）阻塞 → 改为 4 个并发 worker。
+
+### 仍待完成
+
+- 整理阶段"用 hash 关联历史身份"只在有活跃下载记录时生效；下载记录被删后只剩文件名识别
+  （MP 同样如此，但 MP 的历史记录更持久）。
+- 前端未暴露 `MAX_SEARCH_NAME_LIMIT` 设置项。
+- 完整回归未重跑（上一次基线 364 失败，本轮改动后需重新比对）。
