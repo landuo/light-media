@@ -872,7 +872,10 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 			if !mainSucceeded {
 				file.Status, file.Reason = "error", a.clean(mainFailure.Error())
 			}
-			if _, sourced := meta.OriginalTransfer[file.ID]; !sourced {
+			// A manual organize always writes its own history row: an earlier
+			// attempt for the same source leaves a failed row behind, and skipping
+			// the write kept showing that failure after a successful re-organize.
+			if _, sourced := meta.OriginalTransfer[file.ID]; !sourced || plan.Manual {
 				message := ""
 				if !mainSucceeded {
 					message = a.clean(mainFailure.Error())
