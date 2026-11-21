@@ -147,6 +147,10 @@ func OpenStore(dir string) (*Store, error) {
 		db.Close()
 		return fail(fmt.Errorf("subscription alias backfill: %w", err))
 	}
+	// Best effort: a slot backfill must never keep the service from starting.
+	if err = backfillAssetSlots(context.Background(), db); err != nil {
+		fmt.Fprintf(os.Stderr, "{\"level\":\"WARN\",\"event\":\"asset_slot_backfill_failed\",\"reason\":%q}\n", err.Error())
+	}
 	if err = migrateTransferHistoryMP(context.Background(), db); err != nil {
 		db.Close()
 		return fail(err)
