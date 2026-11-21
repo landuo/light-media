@@ -252,6 +252,12 @@ func (a *App) guardHistoryDownloaderSource(ctx context.Context, item transferHis
 		for _, task := range tasks {
 			directory, err := mapDownloaderPath(a.Settings(), configured, task.DownloadDir)
 			if err != nil || !importPath(directory) {
+				// An unmappable directory only matters when it could be this file's
+				// directory. Judging every task by its own path kept the whole delete
+				// refused because of an unrelated task (a brush task, typically).
+				if _, overlap := sharedDirectoryPath(task.DownloadDir, path); !overlap {
+					continue
+				}
 				return bad("FILE_DOWNLOADER_UNVERIFIED", "下载器返回了无法核对的任务目录，已停止删除源文件")
 			}
 			if _, overlap := sharedDirectoryPath(directory, path); overlap {
