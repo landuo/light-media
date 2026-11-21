@@ -243,15 +243,17 @@ func (a *App) claim(ctx context.Context) (Job, error) {
 }
 
 func (a *App) claimJob(ctx context.Context, lane jobLane) (Job, error) {
-	if lane == importJobs {
-		return a.claimImportJob(ctx)
-	}
 	// Dispatch reads the in-memory index; the row is only confirmed, never
-	// searched. That removes the per-tick claim query entirely.
+	// searched. This must come first for every lane: the import lane used to query
+	// the table directly, and an import task is rowless, so the import worker could
+	// never claim one — a queued import sat there forever.
 	if j, err := a.claimFromIndex(ctx, lane); err == nil {
 		return j, nil
 	} else if !errors.Is(err, sql.ErrNoRows) {
 		return Job{}, err
+	}
+	if lane == importJobs {
+		return a.claimImportJob(ctx)
 	}
 	// Fallback: the index could be empty because loading failed or because a
 	// row was written by another path. One table lookup re-admits whatever it
@@ -329,7 +331,15 @@ func (a *App) claimJobByQuery(ctx context.Context, lane jobLane) (Job, error) {
 	return j, tx.Commit()
 }
 func (a *App) worker(ctx context.Context) {
-	a.jobWorker(ctx, allJobs)
+	// A single worker is a single queue: one subscription check (ten minute budget,
+	// sites plus metadata) starves every other task behind it, which is how an
+	// import stayed "queued" for many minutes while a subscription ran. Several
+	// workers share the same index; claiming is guarded by the index lock, so a
+	// task is still handed out exactly once.
+	const workers = 4
+	for i := 0; i < workers; i++ {
+		go a.jobWorker(ctx, allJobs)
+	}
 }
 
 // jobWorker claims until the queue is empty, then sleeps for exactly as long as
