@@ -1009,12 +1009,11 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	if e != nil {
 		return e
 	}
-	missing := []int{}
-	for _, ep := range coverage.Missing {
-		if s.Media.MediaType == "movie" || available[ep] {
-			missing = append(missing, ep)
-		}
-	}
+	// MoviePilot treats every episode in start..total that is not downloaded or in
+	// flight as wanted; it never filters by air date. Filtering here meant an
+	// episode TMDB lists without a date (a special, or a provider that dropped the
+	// date) was wanted forever but never searched.
+	missing := append([]int(nil), coverage.Missing...)
 	if len(missing) == 0 {
 		if len(coverage.Missing) == 0 && (len(coverage.Library) > 0 || len(coverage.Reserved) > 0) {
 			return a.requestOrdinarySubscriptionCompletion(ctx, j, s)
