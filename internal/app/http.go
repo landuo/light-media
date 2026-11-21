@@ -754,6 +754,15 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		var in ImportRequest
 		e = decodeBody(w, r, &in)
 		if e == nil {
+			// A request that names the media and its TMDB id is a manual organize:
+			// the operator picked the identity, so it must outrank name recognition
+			// instead of falling back to it.
+			if in.TMDBID > 0 && (in.MediaType == "tv" || in.MediaType == "movie") {
+				// Marking the request manual is enough: previewImport already loads
+				// the identity by that id. Fetching it here made the request wait on
+				// a metadata call before any work started.
+				in.Manual = true
+			}
 			out, e = a.previewImport(ctx, in)
 		}
 	case p == "import/repair" && method == "POST":
