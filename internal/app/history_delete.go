@@ -260,7 +260,7 @@ func (a *App) guardHistoryDownloaderSource(ctx context.Context, item transferHis
 				}
 				return bad("FILE_DOWNLOADER_UNVERIFIED", "下载器返回了无法核对的任务目录，已停止删除源文件")
 			}
-			if _, overlap := sharedDirectoryPath(directory, path); overlap {
+			if fileInTaskDirectory(directory, path) {
 				authorized, checkErr := a.historyDownloadTaskAuthorized(ctx, item, configured, task)
 				if checkErr != nil {
 					return checkErr
@@ -363,4 +363,15 @@ func (a *App) removeHistorySource(ctx context.Context, item transferHistoryItem,
 	receipt.State = "completed"
 	receipt.File.Deleted = true
 	return a.Store.Put(ctx, "history_source_removal", item.executionFileID(), receipt)
+}
+
+// fileInTaskDirectory reports whether the file sits directly in a task's own
+// directory. A task rooted at a parent directory (the download root itself, or a
+// whole-category task) does not own every file below it, and treating it as if it
+// did blocked every history delete on the machine.
+func fileInTaskDirectory(directory, path string) bool {
+	if directory == "" || path == "" {
+		return false
+	}
+	return filepath.Dir(path) == filepath.Clean(directory)
 }
