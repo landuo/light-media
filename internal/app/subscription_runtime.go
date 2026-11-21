@@ -843,6 +843,15 @@ func (a *App) subscriptionList(ctx context.Context) (any, error) {
 }
 
 func (a *App) recordSubscriptionCheck(ctx context.Context, s Subscription, reason string, metadataDates []string) error {
+	return a.recordSubscriptionCheckLack(ctx, s, reason, metadataDates, -1)
+}
+
+// recordSubscriptionCheckLack records the check result and, when lack is known,
+// refreshes lack_episode. MoviePilot recomputes it from the library's actual
+// missing list on every check (compute_lack_episode); writing it only once when
+// the subscription was created left the number frozen — an episode imported later
+// never moved it.
+func (a *App) recordSubscriptionCheckLack(ctx context.Context, s Subscription, reason string, metadataDates []string, lack int) error {
 	a.subMu.Lock()
 	defer a.subMu.Unlock()
 	var current Subscription
@@ -850,6 +859,19 @@ func (a *App) recordSubscriptionCheck(ctx context.Context, s Subscription, reaso
 		return nil
 	} else if e != nil {
 		return e
+	}
+	if lack >= 0 {
+		previous := -1
+		if current.LackEpisode != nil {
+			previous = *current.LackEpisode
+		}
+		if previous != lack {
+			value := lack
+			current.LackEpisode = &value
+			if e := a.Store.Put(ctx, "subscription", s.ID, current); e != nil {
+				return e
+			}
+		}
 	}
 	if current.Revision != s.Revision || !a.subscriptionSearchState(ctx, current) {
 		return nil
@@ -1025,7 +1047,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		if len(coverage.Reserved) > 0 {
 			reason = "缺集已有在途下载，保留占位并等待完成"
 		}
-		return a.recordSubscriptionCheck(ctx, s, reason, metadataDates)
+		return a.recordSubscriptionCheckLack(ctx, s, reason, metadataDates, len(coverage.Missing))
 	}
 	if s.Media.MediaType == "movie" && releaseDate > time.Now().In(shanghai()).Format("2006-01-02") {
 		return a.recordSubscriptionCheck(ctx, s, "电影尚未到上映日期，保持订阅", metadataDates)
@@ -1282,7 +1304,10 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 			}
 		}
 	}
-	if err := a.recordSubscriptionCheck(ctx, s, reason, metadataDates); err != nil {
+	// Refresh the wanted count from what the library actually lacks, the way
+	// compute_lack_episode does; in-flight episodes are still wanted, so the
+	// coverage list is the right measure here.
+	if err := a.recordSubscriptionCheckLack(ctx, s, reason, metadataDates, len(coverage.Missing)); err != nil {
 		return err
 	}
 	if ownedOrdinary && created > 0 && len(missing) == len(coverage.Missing) && !slices.ContainsFunc(missing, func(ep int) bool { return !scheduled[ep] && s.Media.MediaType != "movie" }) {
