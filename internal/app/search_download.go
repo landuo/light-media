@@ -1965,8 +1965,8 @@ func (a *App) pollDownloads(ctx context.Context) error {
 				continue
 			}
 			a.submitMemoryJob("download", map[string]string{"id": in.ID}, in.WorkflowID, id("job_"))
-			_, _ = a.Store.DB.ExecContext(ctx, `INSERT INTO events(time,workflow_id,job_id,level,module,event,message) VALUES(?,?,?,?,?,?,?)`,
-				now(), in.WorkflowID, "", "INFO", "downloads", "planned_intent_resubmitted", "计划中的下载意图重新提交")
+			// Log only: writing the event table here would contend for the same
+			// database connection the poll transaction holds.
 			a.log("INFO", "downloads", "planned_intent_resubmitted", "计划中的下载意图重新提交", in.WorkflowID, "")
 		}
 		d, e := a.downloader(instance)

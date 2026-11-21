@@ -337,7 +337,7 @@ func (a *App) worker(ctx context.Context) {
 	// import stayed "queued" for many minutes while a subscription ran. Several
 	// workers share the same index; claiming is guarded by the index lock, so a
 	// task is still handed out exactly once.
-	const workers = 4
+	const workers = 1
 	for i := 0; i < workers; i++ {
 		go a.jobWorker(ctx, allJobs)
 	}
