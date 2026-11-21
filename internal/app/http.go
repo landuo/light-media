@@ -214,7 +214,7 @@ func (a *App) handler() http.Handler {
 		}
 		// Recent download-module events: the submission path logs there, and a
 		// failed submit is otherwise invisible without file access.
-		if rows, err := a.Store.DB.QueryContext(r.Context(), `SELECT time,level,event,substr(message,1,200) FROM events WHERE module='subscriptions' ORDER BY seq DESC LIMIT 10`); err == nil {
+		if rows, err := a.Store.DB.QueryContext(r.Context(), `SELECT time,level,event,substr(message,1,200) FROM events WHERE module IN ('subscriptions','imports') ORDER BY seq DESC LIMIT 12`); err == nil {
 			ev := []map[string]any{}
 			for rows.Next() {
 				var t, lv, name, msg string

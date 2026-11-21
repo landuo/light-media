@@ -480,7 +480,14 @@ func (a *App) safeRun(ctx context.Context, j Job) (err error) {
 	case "download":
 		return a.runDownload(ctx, j, p.ID)
 	case "import":
-		return a.runImport(ctx, j, p.ID, p.FileIDs)
+		err := a.runImport(ctx, j, p.ID, p.FileIDs)
+		if err != nil {
+			// The failing reason for an import is the only thing that explains a
+			// file that stayed in the download directory; record it where the UI and
+			// /healthz can show it.
+			a.event(ctx, j, "ERROR", "imports", "import_failed", a.clean(err.Error()))
+		}
+		return err
 	case "organize_prepare":
 		return a.runOrganizePreparation(ctx, j)
 	case "organize_file":

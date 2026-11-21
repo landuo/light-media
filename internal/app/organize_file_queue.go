@@ -126,7 +126,7 @@ func (a *App) enqueueOrganizeFiles(ctx context.Context, parent Job, files []impo
 		}
 		queued++
 	}
-	if err = tx.Commit(); err != nil {
+	if err = a.commitWithJobs(tx); err != nil {
 		return out, err
 	}
 	out.Submitted += queued

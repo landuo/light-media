@@ -214,7 +214,9 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		return Job{}, err
 	}
 	phase("commit")
-	if err = tx.Commit(); err != nil {
+	// Must release the tasks the transaction queued: an import is rowless, so a
+	// plain Commit drops it and the work never runs.
+	if err = a.commitWithJobs(tx); err != nil {
 		return Job{}, err
 	}
 	select {

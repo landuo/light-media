@@ -307,7 +307,7 @@ func (a *App) prepareSubscriptionCompletion(ctx context.Context, j Job, key stri
 	}{"subscribe.completion.check", subscriptionCompletionCheckEvent{source.Subscribe, source.MediaInfo, source.Meta}, check}); e != nil {
 		return e
 	}
-	return tx.Commit()
+	return a.commitWithJobs(tx)
 }
 
 func subscriptionSourceHistory(subscribe json.RawMessage, id string) (json.RawMessage, error) {

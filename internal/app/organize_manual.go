@@ -733,7 +733,8 @@ func (a *App) recordManualOrganizeFailurePlan(ctx context.Context, path, wf stri
 	if e = writeTransferHistoryMPTx(ctx, tx, transferHistoryMPInput{Plan: plan, File: plan.Files[0], Job: job, Success: false, Message: reason}); e != nil {
 		return Job{}, e
 	}
-	if e = tx.Commit(); e != nil {
+	// Rowless tasks are released by commitWithJobs; a plain Commit drops them.
+	if e = a.commitWithJobs(tx); e != nil {
 		return Job{}, e
 	}
 	job.State, job.ErrorCode, job.ErrorMessage = "failed", code, a.clean(cause.Error())

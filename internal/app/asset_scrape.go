@@ -347,7 +347,7 @@ func (a *App) finishAssetScrape(ctx context.Context, job Job, asset *Asset) erro
 			}
 		}
 	}
-	if err = tx.Commit(); err != nil {
+	if err = a.commitWithJobs(tx); err != nil {
 		return err
 	}
 	a.event(ctx, job, "INFO", "scrape", "metadata_published", "元数据刮削处理完成")
