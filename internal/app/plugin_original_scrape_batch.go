@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -244,8 +245,9 @@ func (a *App) flushOriginalScrapeBatchTx(ctx context.Context, tx *sql.Tx, key st
 		batch.Closed = true
 	}
 	var pending int
-	if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind IN ('import','organize_file','reorganize_cleanup','quality_cleanup') AND json_extract(payload,'$.original_scrape_batch')=? AND state NOT IN ('succeeded','failed','cancelled','needs_review')`, key).Scan(&pending); err != nil {
-		return nil, err
+	const pendingBatchSQL = `SELECT COUNT(*) FROM jobs WHERE kind IN ('import','organize_file','reorganize_cleanup','quality_cleanup') AND json_extract(payload,'$.original_scrape_batch')=? AND state NOT IN ('succeeded','failed','cancelled','needs_review')`
+	if err = tx.QueryRowContext(ctx, pendingBatchSQL, key).Scan(&pending); err != nil {
+		return nil, fmt.Errorf("%w [sql: %s]", err, pendingBatchSQL)
 	}
 	var events []json.RawMessage
 	if batch.Closed && pending == 0 {

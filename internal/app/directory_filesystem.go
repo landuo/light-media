@@ -291,7 +291,16 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		// whether the file itself changed. The download's media identity can
 		// arrive after the first attempt; requiring an unchanged file here made
 		// that correction unreachable and left the record terminal forever.
-		retryIdentity := !fresh && !changed && (f.State == "needs_review" || f.State == "error") && f.EvidenceFingerprint != evidence
+		// Recognition depends on remote metadata and on the download record, both of
+		// which can arrive later, so a failure is retried after a cooldown as well
+		// as when its own evidence changes.
+		identityCooldown := !fresh && (f.State == "needs_review" || f.State == "error") &&
+			f.LastSeen != "" && func() bool {
+			last, err := time.Parse(time.RFC3339, f.LastSeen)
+			return err != nil || time.Since(last) >= 10*time.Minute
+		}()
+		retryIdentity := !fresh && !changed && (f.State == "needs_review" || f.State == "error") &&
+			(f.EvidenceFingerprint != evidence || identityCooldown)
 		if fresh || changed || retryIdentity {
 			f = DirectoryObservedFile{ID: key, DirectoryID: rule.ID, Path: file.Path, State: "observing", Reason: "等待文件至少60秒保持稳定", Snapshot: stamp, StableSince: time.Now().UnixNano(), RuleFingerprint: fingerprint, EvidenceFingerprint: evidence}
 			if fresh && initial && !rule.IncludeExisting {
@@ -862,11 +871,20 @@ func (a *App) directoryTitleMatches(ctx context.Context, kind string, year int, 
 			if number == 1 {
 				totalPages, totalResults = page.TotalPages, page.TotalResults
 			}
+			// A site names a release after the show's English title while TMDB
+			// answers with the localized one, so an exact comparison can never match.
+			// A single unambiguous result for the parsed title and year is accepted;
+			// ambiguity still requires the operator to choose.
+			unique := page.TotalResults == 1 && len(page.Results) == 1 && page.TotalPages == 1
 			for _, m := range page.Results {
 				if m.MediaType != kind || year > 0 && year != m.Year {
 					continue
 				}
 				if titles[directoryTitle(m.Title)] || titles[directoryTitle(m.OriginalTitle)] {
+					matches[m.ID] = m
+					continue
+				}
+				if unique {
 					matches[m.ID] = m
 				}
 			}

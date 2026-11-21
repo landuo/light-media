@@ -107,7 +107,8 @@ func registerOrganizeQueueTx(ctx context.Context, tx *sql.Tx, job Job) error {
 	for _, member := range members {
 		key := tokenHash(job.ID + "\x00" + member.Source)
 		var raw []byte
-		err := tx.QueryRowContext(ctx, `SELECT payload FROM organize_queue_member WHERE id=?`, key).Scan(&raw)
+		const selectMemberSQL = `SELECT payload FROM organize_queue_member WHERE id=?`
+		err := tx.QueryRowContext(ctx, selectMemberSQL, key).Scan(&raw)
 		if err == nil {
 			var previous organizeQueueMember
 			if err := json.Unmarshal(raw, &previous); err != nil {
