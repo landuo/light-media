@@ -1310,7 +1310,7 @@ func (a *App) media(ctx context.Context, kind string, tmdb int64) (catalog.Media
 	if !validMedia(kind, tmdb) {
 		return m, bad("INVALID_MEDIA", "请选择明确的电影或剧集身份")
 	}
-	_, e := a.cached(ctx, "media:v2:"+kind+":"+strconv.FormatInt(tmdb, 10), 24*time.Hour, &m, func() (any, error) { return a.catalog().Detail(ctx, kind, tmdb) })
+	_, e := a.cached(ctx, "media:"+kind+":"+strconv.FormatInt(tmdb, 10), 24*time.Hour, &m, func() (any, error) { return a.catalog().Detail(ctx, kind, tmdb) })
 	return m, e
 }
 

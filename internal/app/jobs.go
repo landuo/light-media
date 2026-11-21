@@ -771,6 +771,9 @@ func (a *App) refreshSubscriptionMetadata(ctx context.Context) {
 		if ctx.Err() != nil {
 			return
 		}
+		// Drop the cached detail first: the point of the six-hour pass is to pick up
+		// names and episode counts TMDB gained since the last read.
+		_ = a.Store.Delete(ctx, "cache", "media:"+s.Media.MediaType+":"+strconv.FormatInt(s.Media.ID, 10))
 		fresh, err := a.media(ctx, s.Media.MediaType, s.Media.ID)
 		if err != nil {
 			continue
