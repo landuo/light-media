@@ -70,20 +70,19 @@ func main() {
 		fatal("invalid_data_directory")
 	}
 	startDebugListener(debugAddress(absolute))
-	// GOMEMLIMIT is a heap target, and the runtime meets it by keeping a reserve of
-	// free spans: at the previous 128MiB the process held ~116 MB of heap_idle
-	// while its live objects measured 6.6 MB in a full heap sample. A long-lived
-	// service should not pay for a reserve it never uses, so the target is capped
-	// here — an environment setting may ask for less, never for more.
-	heapTarget := int64(64 << 20)
-	if raw := strings.TrimSpace(os.Getenv("GOMEMLIMIT")); raw != "" {
-		if configured, err := strconv.ParseInt(strings.TrimSuffix(strings.TrimSuffix(raw, "MiB"), "MB"), 10, 64); err == nil && configured > 0 {
-			if limit := configured << 20; limit < heapTarget {
-				heapTarget = limit
-			}
-		}
+	// Two knobs pull in opposite directions: a tight GOMEMLIMIT keeps the reserve
+	// small but makes the collector run constantly (measured 0.65 GC/s at 64MiB),
+	// while a loose one stops the churn but lets the reserve grow. The service
+	// holds under 7 MB of live objects, so the collector is told to run rarely and
+	// the space is reclaimed by the periodic debug.FreeOSMemory in the scheduler
+	// instead of by GC pressure. Peaks are allowed; a permanently high resident
+	// set is not.
+	if strings.TrimSpace(os.Getenv("GOGC")) == "" {
+		debug.SetGCPercent(200)
 	}
-	debug.SetMemoryLimit(heapTarget)
+	if strings.TrimSpace(os.Getenv("GOMEMLIMIT")) == "" {
+		debug.SetMemoryLimit(256 << 20)
+	}
 	if bootstrap {
 		if e = app.Bootstrap(absolute, os.Stdin); e != nil {
 			fatal(e.Error())
