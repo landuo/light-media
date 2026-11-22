@@ -90,7 +90,12 @@ func OpenStore(dir string) (*Store, error) {
 	if st, e := os.Lstat(dbPath); e == nil && !st.Mode().IsRegular() {
 		return fail(errors.New("database must be a regular file"))
 	}
-	db, err := sql.Open("sqlite", dbPath)
+	// mmap_size(0) keeps the 600 MB database file off the process address space.
+	// A mapped file counts toward RSS as its pages are touched, which made a
+	// long-running process look far heavier than its live heap (heap_alloc stayed
+	// near 20 MB while RSS climbed past 180 MB). Python's sqlite3 — what MoviePilot
+	// uses — does not map by default either.
+	db, err := sql.Open("sqlite", dbPath+"?_pragma=mmap_size(0)&_pragma=busy_timeout(5000)")
 	if err != nil {
 		return fail(err)
 	}

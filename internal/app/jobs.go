@@ -539,11 +539,21 @@ func (a *App) scheduler(ctx context.Context) {
 	defer ticker.Stop()
 	lastPoll := time.Time{}
 	lastMaterialCleanup := time.Time{}
+	lastHeapRelease := time.Time{}
+	// Go keeps freed heap as an address-space reserve and only scavenges lazily, so
+	// a long-lived process reports an RSS far above its live set (heap_alloc stays
+	// at its steady value while RSS climbs). Returning the idle pages on a slow
+	// timer keeps the footprint close to what the process actually uses.
+	const heapReleaseInterval = 5 * time.Minute
 	for {
 		select {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
+		}
+		if time.Since(lastHeapRelease) >= heapReleaseInterval {
+			lastHeapRelease = time.Now()
+			debug.FreeOSMemory()
 		}
 		if time.Since(lastMaterialCleanup) >= time.Hour {
 			if e := a.cleanupMaterialOrphans(ctx); e != nil {
