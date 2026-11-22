@@ -96,6 +96,16 @@ func (a *App) loadSubscriptionDisplay(ctx context.Context) (*subscriptionDisplay
 		if kind == "library" {
 			data.library[ep] = true
 		} else {
+			// A reservation whose intent is gone or terminal no longer means an
+			// in-flight acquisition; counting it kept the subscribe at "目标已满足"
+			// while nothing was downloading.
+			// MoviePilot decides a wanted episode from the library, never from an
+			// in-flight download: a finished-but-unorganized download (downloaded)
+			// still leaves the episode wanted. Only an actually moving transfer
+			// (planned/accepted/downloading) holds the slot.
+			if state != "planned" && state != "accepted" && state != "downloading" && state != "reconcile_pending" {
+				continue
+			}
 			data.reserved[ep] = true
 			data.pending[ep] = state == "downloaded"
 		}

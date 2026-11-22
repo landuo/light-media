@@ -156,6 +156,11 @@ func OpenStore(dir string) (*Store, error) {
 	} else if dropped > 0 {
 		fmt.Fprintf(os.Stderr, "{\"level\":\"INFO\",\"event\":\"bluray_observations_dropped\",\"count\":%d}\n", dropped)
 	}
+	if dropped, dropErr := dropDeadReservations(context.Background(), db); dropErr != nil {
+		fmt.Fprintf(os.Stderr, "{\"level\":\"WARN\",\"event\":\"dead_reservation_drop_failed\",\"reason\":%q}\n", dropErr.Error())
+	} else if dropped > 0 {
+		fmt.Fprintf(os.Stderr, "{\"level\":\"INFO\",\"event\":\"dead_reservations_dropped\",\"count\":%d}\n", dropped)
+	}
 	if err = migrateTransferHistoryMP(context.Background(), db); err != nil {
 		db.Close()
 		return fail(err)

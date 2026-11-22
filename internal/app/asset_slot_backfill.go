@@ -103,3 +103,19 @@ func dropBlurayStreamObservations(ctx context.Context, db *sql.DB) (int, error) 
 	}
 	return dropped, tx.Commit()
 }
+
+// dropDeadReservations removes reservations whose intent is gone or has reached
+// a terminal state. A reservation only expresses "this slot is being fetched
+// right now"; once that download is cancelled or failed the row described nothing
+// and kept the subscribe at 目标已满足 without ever searching again.
+func dropDeadReservations(ctx context.Context, db *sql.DB) (int, error) {
+	res, err := db.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id=''
+ OR NOT EXISTS(SELECT 1 FROM downloadhistory i WHERE i.uid=reservations.intent_id)
+ OR EXISTS(SELECT 1 FROM downloadhistory i WHERE i.uid=reservations.intent_id
+    AND json_extract(i.payload,'$.state') IN ('cancelled','failed'))`)
+	if err != nil {
+		return 0, err
+	}
+	n, _ := res.RowsAffected()
+	return int(n), nil
+}

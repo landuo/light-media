@@ -713,6 +713,17 @@ func (a *App) subscriptionCoverageLoadedAt(ctx context.Context, s Subscription, 
 				rows.Close()
 				return out, e
 			}
+			// A reservation whose intent is gone or terminal no longer describes an
+			// in-flight acquisition. Counting it kept a subscribe at "目标已满足"
+			// forever: the episode was wanted, reserved by a dead download, and
+			// therefore never searched.
+			// MoviePilot decides a wanted episode from the library, never from an
+			// in-flight download: a finished-but-unorganized download (downloaded)
+			// still leaves the episode wanted. Only an actually moving transfer
+			// (planned/accepted/downloading) holds the slot.
+			if state != "planned" && state != "accepted" && state != "downloading" && state != "reconcile_pending" {
+				continue
+			}
 			reservedSet[ep] = true
 			pendingImport[ep] = state == "downloaded"
 		}
@@ -1245,7 +1256,10 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 						}
 						failures.active[fingerprint] = true
 					}
-					a.event(ctx, j, "WARN", "subscriptions", "candidate_rejected", candidate.Resource.Title+" | "+e.Error())
+					// A rejected candidate is routine decision detail: a whole-season pack
+					// is rejected once per episode it could cover, so WARN here wrote
+					// thousands of rows per check. MoviePilot logs this at debug.
+					a.event(ctx, j, "DEBUG", "subscriptions", "candidate_rejected", candidate.Resource.Title+" | "+e.Error())
 					if pack {
 						reason = "整季包包含起始集、在库或未知范围，需要人工核对；继续寻找符合条件的资源"
 					}
