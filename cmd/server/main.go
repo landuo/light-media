@@ -77,9 +77,12 @@ func main() {
 	// the space is reclaimed by the periodic debug.FreeOSMemory in the scheduler
 	// instead of by GC pressure. Peaks are allowed; a permanently high resident
 	// set is not.
-	if strings.TrimSpace(os.Getenv("GOGC")) == "" {
-		debug.SetGCPercent(200)
-	}
+	// The container carries GOGC=50 from an earlier tuning pass. At 26 MB of live
+	// objects that made the collector run every 1.3 s (0.75 GC/s). MoviePilot runs
+	// the Go default of 100, so the value is pinned here instead of inherited: a
+	// stale container setting must not make collection frequency depend on
+	// deployment history.
+	debug.SetGCPercent(100)
 	if strings.TrimSpace(os.Getenv("GOMEMLIMIT")) == "" {
 		debug.SetMemoryLimit(256 << 20)
 	}
