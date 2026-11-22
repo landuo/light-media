@@ -4,6 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"path/filepath"
+
+	"light-media/internal/media"
 )
 
 // backfillAssetSlots gives every asset that already describes its episodes the
@@ -38,6 +41,17 @@ func backfillAssetSlots(ctx context.Context, db *sql.DB) error {
 		var asset Asset
 		if json.Unmarshal(raw, &asset) != nil || asset.ID == "" {
 			continue
+		}
+		// Assets imported before the episode fields were persisted carry no
+		// number, so their slots could never be derived. Read it from the file
+		// name the way the scanner does.
+		if len(asset.Episodes) == 0 && len(asset.EpisodeScopes) == 0 && asset.Path != "" {
+			if parsed := media.Parse(filepath.Base(asset.Path)); parsed.Original != nil && len(parsed.Original.Episodes) > 0 {
+				asset.Episodes = append([]int(nil), parsed.Original.Episodes...)
+				if parsed.Original.Season != nil && *parsed.Original.Season > 0 {
+					asset.Season = *parsed.Original.Season
+				}
+			}
 		}
 		for _, slot := range asset.inventorySlots() {
 			if _, err = tx.ExecContext(ctx, `INSERT OR IGNORE INTO asset_slots VALUES(?,?,?,?)`,
