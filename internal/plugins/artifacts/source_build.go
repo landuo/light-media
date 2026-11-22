@@ -123,19 +123,21 @@ func prepareSourceBuild(ctx context.Context, req Request, release Release, sourc
 	archiveClient.CheckRedirect = func(_ *http.Request, _ []*http.Request) error {
 		return http.ErrUseLastResponse
 	}
-	archive, err := download(ctx, &archiveClient, address, MaxArtifactBytes)
-	if err != nil {
-		return Artifact{}, err
-	}
-	// Docker's /tmp is bounded separately. Keep disposable files and reusable Go
-	// caches beneath the app-owned package root instead.
+	// Stream the archive to disk instead of holding it in memory. A source build
+	// used to keep the whole zip (measured 20.8 MB) alive for the duration of the
+	// build, and several concurrent builds multiplied that.
 	parent := filepath.Dir(stage)
 	work, err := os.MkdirTemp(parent, ".build-")
 	if err != nil {
 		return Artifact{}, err
 	}
 	defer os.RemoveAll(work)
-	checkout, err := unpackSourceBuild(archive, work, repo, source.Commit)
+	archivePath, _, _, err := downloadToFile(ctx, &archiveClient, address, MaxArtifactBytes)
+	if err != nil {
+		return Artifact{}, err
+	}
+	defer os.Remove(archivePath)
+	checkout, err := unpackSourceBuildFile(archivePath, work, repo, source.Commit)
 	if err != nil {
 		return Artifact{}, err
 	}
@@ -340,4 +342,23 @@ func (out *sourceGoOutput) Write(data []byte) (int, error) {
 		_, _ = out.buffer.Write(data[:min(available, len(data))])
 	}
 	return len(data), nil
+}
+
+// unpackSourceBuildFile is unpackSourceBuild for an archive already on disk.
+func unpackSourceBuildFile(archivePath, work, repo, commit string) (string, error) {
+	root := filepath.Join(work, "source")
+	if err := os.Mkdir(root, 0700); err != nil {
+		return "", err
+	}
+	if err := unpackFile(archivePath, "zip", root, ""); err != nil {
+		return "", err
+	}
+	children, err := os.ReadDir(root)
+	if err != nil {
+		return "", err
+	}
+	if len(children) != 1 || !children[0].IsDir() || !strings.EqualFold(children[0].Name(), repo+"-"+commit) {
+		return "", errors.New("GitHub source archive root does not match repository and commit")
+	}
+	return filepath.Join(root, children[0].Name()), nil
 }

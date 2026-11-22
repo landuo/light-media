@@ -64,13 +64,13 @@ func (a *App) syncOriginalPlugins(ctx context.Context) ([]string, error) {
 	if len(pending) == 0 {
 		return synced, nil
 	}
-	// The original limits installation work to five workers. The existing Go
-	// artifact publisher additionally serializes owned-code publication against
-	// invocation; no artifact safety lock is bypassed for network parallelism.
+	// Each worker downloads a whole source archive in memory (measured 20.8 MB per
+	// in-flight build), so five workers meant a ~104 MB peak on every sync. Two is
+	// enough to overlap the network wait without holding that much at once.
 	jobs := make(chan artifacts.Discovery)
 	var wg sync.WaitGroup
 	var results sync.Mutex
-	for i := 0; i < min(5, len(pending)); i++ {
+	for i := 0; i < min(2, len(pending)); i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
