@@ -172,6 +172,20 @@ func (a *App) ordinaryCompletionBasisWithExistence(ctx context.Context, q qualit
 	if len(confirmed) > 0 {
 		basis.Version, basis.Existence = 3, existence
 	}
+	// MoviePilot finishes a movie subscribe as soon as a download is arranged
+	// (finish_subscribe_or_not: `len(downloads) > 0 and type == movie`); it does not
+	// wait for the transfer to complete or for the file to enter the library. A live
+	// intent for this media is that "download arranged" evidence.
+	if s.Media.MediaType == "movie" {
+		var live int
+		if e := q.QueryRowContext(ctx, `SELECT COUNT(*) FROM reservations r LEFT JOIN downloadhistory i ON i.uid=r.intent_id
+			WHERE r.media_key=? AND COALESCE(json_extract(i.payload,'$.state'),'') IN ('planned','accepted','downloading','downloaded')`, mediaKey(s.Media)).Scan(&live); e != nil {
+			return nil, false, e
+		}
+		if live > 0 {
+			return basis, true, nil
+		}
+	}
 	seen := map[string]int{}
 	for _, ep := range targets {
 		if slices.Contains(downloaded, ep) || slices.Contains(confirmed, ep) {
