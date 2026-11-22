@@ -201,6 +201,19 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 		guard.DownloaderSnapshot = downloaderSnapshot(d)
 	}
+	// An observation keyed by a BDMV/STREAM member is stale by construction:
+	// MoviePilot promotes the event to the disc root before dispatching, and this
+	// scanner does the same below. Drop the old rows so the disc is scanned as a
+	// unit instead of replaying an m2ts fragment that can never be identified.
+	for path, observed := range allObserved {
+		if !strings.Contains(strings.ToLower(filepath.ToSlash(path)), "/bdmv/stream/") {
+			continue
+		}
+		if err := a.Store.Delete(ctx, "directory_file", observed.ID); err == nil {
+			a.log("INFO", "directories", "bluray_stream_observation_dropped", "光盘成员观测已清理，改为按光盘根扫描："+path, "", "")
+		}
+		delete(allObserved, path)
+	}
 	for _, file := range files {
 		// A Blu-ray is organized as one unit: promote a STREAM member to the disc
 		// root so it is recognized by the disc's name instead of an m2ts fragment.

@@ -151,6 +151,11 @@ func OpenStore(dir string) (*Store, error) {
 	if err = backfillAssetSlots(context.Background(), db); err != nil {
 		fmt.Fprintf(os.Stderr, "{\"level\":\"WARN\",\"event\":\"asset_slot_backfill_failed\",\"reason\":%q}\n", err.Error())
 	}
+	if dropped, dropErr := dropBlurayStreamObservations(context.Background(), db); dropErr != nil {
+		fmt.Fprintf(os.Stderr, "{\"level\":\"WARN\",\"event\":\"bluray_observation_drop_failed\",\"reason\":%q}\n", dropErr.Error())
+	} else if dropped > 0 {
+		fmt.Fprintf(os.Stderr, "{\"level\":\"INFO\",\"event\":\"bluray_observations_dropped\",\"count\":%d}\n", dropped)
+	}
 	if err = migrateTransferHistoryMP(context.Background(), db); err != nil {
 		db.Close()
 		return fail(err)
