@@ -911,16 +911,22 @@ func (a *App) directoryTitleMatches(ctx context.Context, kind string, year int, 
 			// answers with the localized one, so an exact comparison can never match.
 			// A single unambiguous result for the parsed title and year is accepted;
 			// ambiguity still requires the operator to choose.
-			unique := page.TotalResults == 1 && len(page.Results) == 1 && page.TotalPages == 1
+			// MoviePilot narrows the search by media type and year, then accepts the
+			// single survivor (__choose_media_infos). Requiring the API itself to
+			// return one row rejected names that a year filter already disambiguates.
+			var survivors []catalog.Media
 			for _, m := range page.Results {
 				if m.MediaType != kind || year > 0 && year != m.Year {
 					continue
 				}
+				survivors = append(survivors, m)
+			}
+			if len(survivors) == 1 {
+				matches[survivors[0].ID] = survivors[0]
+				continue
+			}
+			for _, m := range survivors {
 				if titles[directoryTitle(m.Title)] || titles[directoryTitle(m.OriginalTitle)] {
-					matches[m.ID] = m
-					continue
-				}
-				if unique {
 					matches[m.ID] = m
 				}
 			}

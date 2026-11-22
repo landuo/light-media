@@ -541,6 +541,21 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		}
 		class := originalImportFileClass(requested)
 		video, _ := classifier.Media(class)
+		if !video && request.Manual {
+			// An HTTP organize carries no module file item, so the classifier has
+			// nothing to inspect. Judge by what the operator actually picked: a video
+			// extension, or the disc layout when the target is a Blu-ray directory
+			// (MoviePilot organizes a disc as a directory, not as one m2ts).
+			switch strings.ToLower(filepath.Ext(file.Source)) {
+			case ".mkv", ".mp4", ".avi", ".m4v", ".ts", ".mov", ".m2ts", ".wmv", ".flv", ".rmvb":
+				video = true
+			}
+			if !video {
+				if info, statErr := os.Stat(filepath.Join(file.Source, "BDMV")); statErr == nil && info.IsDir() {
+					video = true
+				}
+			}
+		}
 		if request.Manual && !video {
 			if classifier.Subtitle(class) {
 				file.MaterialKind = "subtitle"
