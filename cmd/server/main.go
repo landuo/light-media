@@ -70,14 +70,20 @@ func main() {
 		fatal("invalid_data_directory")
 	}
 	startDebugListener(debugAddress(absolute))
-	// GOMEMLIMIT is a heap target, and the runtime satisfies it by keeping a
-	// reserve of free spans: with the previous 128MiB the process held ~120 MB of
-	// heap_idle while its live objects were 25-33 MB. 80MiB stays above the
-	// observed peak (76 MB during a 7 GB organize plus subscription checks) and
-	// halves that reserve. An explicit GOMEMLIMIT from the environment wins.
-	if strings.TrimSpace(os.Getenv("GOMEMLIMIT")) == "" {
-		debug.SetMemoryLimit(80 << 20)
+	// GOMEMLIMIT is a heap target, and the runtime meets it by keeping a reserve of
+	// free spans: at the previous 128MiB the process held ~116 MB of heap_idle
+	// while its live objects measured 6.6 MB in a full heap sample. A long-lived
+	// service should not pay for a reserve it never uses, so the target is capped
+	// here — an environment setting may ask for less, never for more.
+	heapTarget := int64(64 << 20)
+	if raw := strings.TrimSpace(os.Getenv("GOMEMLIMIT")); raw != "" {
+		if configured, err := strconv.ParseInt(strings.TrimSuffix(strings.TrimSuffix(raw, "MiB"), "MB"), 10, 64); err == nil && configured > 0 {
+			if limit := configured << 20; limit < heapTarget {
+				heapTarget = limit
+			}
+		}
 	}
+	debug.SetMemoryLimit(heapTarget)
 	if bootstrap {
 		if e = app.Bootstrap(absolute, os.Stdin); e != nil {
 			fatal(e.Error())
