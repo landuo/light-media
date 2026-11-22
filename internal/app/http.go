@@ -137,6 +137,9 @@ func (a *App) handler() http.Handler {
 		// apart and GOMEMLIMIT is a heap target, not an RSS cap.
 		var mem runtime.MemStats
 		runtime.ReadMemStats(&mem)
+		if kernel := processMemory(); kernel != nil {
+			payload["process_memory"] = kernel
+		}
 		payload["memory"] = map[string]any{
 			"heap_alloc":    mem.HeapAlloc,
 			"heap_inuse":    mem.HeapInuse,

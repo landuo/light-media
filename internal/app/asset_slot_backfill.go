@@ -4,7 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"os"
 	"path/filepath"
+	"strconv"
+	"strings"
 
 	"light-media/internal/media"
 )
@@ -118,4 +121,36 @@ func dropDeadReservations(ctx context.Context, db *sql.DB) (int, error) {
 	}
 	n, _ := res.RowsAffected()
 	return int(n), nil
+}
+
+// processMemory reads the kernel's own view of this process. cgroup counters
+// (what `docker stats` shows) include page cache, so they climb with file reads
+// and never distinguish a growing process from a warm cache.
+func processMemory() map[string]any {
+	raw, err := os.ReadFile("/proc/self/status")
+	if err != nil {
+		return nil
+	}
+	want := map[string]string{
+		"VmRSS": "VmRSS", "VmSize": "VmSize",
+		"RssAnon": "RssAnon", "RssFile": "RssFile", "RssShmem": "RssShmem",
+	}
+	out := map[string]any{}
+	for _, line := range strings.Split(string(raw), "\n") {
+		fields := strings.Fields(line)
+		if len(fields) < 2 {
+			continue
+		}
+		key, ok := want[strings.TrimSuffix(fields[0], ":")]
+		if !ok {
+			continue
+		}
+		if value, err := strconv.ParseInt(fields[1], 10, 64); err == nil {
+			out[key] = value * 1024
+		}
+	}
+	if len(out) == 0 {
+		return nil
+	}
+	return out
 }
