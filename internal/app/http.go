@@ -534,12 +534,23 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	case p == "debug/heap" && method == "GET":
 		// The container maps no port for the standalone pprof listener, so expose
 		// one read-only heap snapshot through the authenticated API instead: a
-		// growth question cannot be answered from MemStats alone.
+		// growth question cannot be answered from MemStats alone. ?rate=1 samples
+		// every allocation, which is the only way to see objects below the 512 KB
+		// default; it is expensive and meant for a single diagnostic request.
+		previous := runtime.MemProfileRate
+		if raw := r.URL.Query().Get("rate"); raw != "" {
+			if rate, err := strconv.Atoi(raw); err == nil && rate > 0 {
+				runtime.MemProfileRate = rate
+				runtime.GC()
+				time.Sleep(200 * time.Millisecond)
+				defer func() { runtime.MemProfileRate = previous }()
+			}
+		}
 		var buf bytes.Buffer
 		if profile := pprof.Lookup("heap"); profile != nil {
 			_ = profile.WriteTo(&buf, 1)
 		}
-		out = map[string]any{"heap": buf.String()}
+		out = map[string]any{"heap": buf.String(), "mem_profile_rate": runtime.MemProfileRate}
 	case p == "search/resources" && method == "POST":
 		if strings.Contains(r.Header.Get("Accept"), "text/event-stream") {
 			a.streamSearch(w, r)
