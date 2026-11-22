@@ -1,0 +1,66 @@
+--- Craft Anything 0.4.0: a run started 2026-11-06 16:54:23 UTC ---
+16:54:23 stage Getting the builder ready…
+16:55:15 note  Build progress couldn't be checked (Can't check build progress: /Users/accidia/projects/light-media contains more than 100000 files and folders.). Continuing without the unchanged-turn limit for this run.
+16:55:15 stage Building the first version…
+16:55:15 note  Asking Codex…
+16:55:17 out   2026-11-06T16:55:17.037052Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by ---
+16:55:17 out   2026-11-06T16:55:17.089159Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (http://192.168.8.129:5230/mcp)")))
+16:55:17 out   2026-11-06T16:55:17.341501Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (http://192.168.8.129:5230/mcp)")))
+16:55:18 out   2026-11-06T16:55:18.343282Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (http://192.168.8.129:5230/mcp)")))
+16:55:21 ERROR Codex: {"type":"error","status":400,"error":{"type":"invalid_request_error","message":"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.","code":"model_not_found"}}
+16:55:21 ERROR Codex: {"type":"error","status":400,"error":{"type":"invalid_request_error","message":"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.","code":"model_not_found"}}
+16:55:22 ERROR Codex stopped with exit code 1: 2026-11-06T16:55:18.343282Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (http://192.168.8.129:5230/mcp)")))
+16:55:22 ERROR What Codex printed last: 2026-11-06T16:55:17.037052Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by --- 2026-11-06T16:55:17.089159Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (http://192.168.8.129:5230/mcp)"))) 2026-11-06T16:55:17.341501Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: e…
+16:55:22 ERROR Details: /Users/accidia/Library/Application Support/craft-anything/logs/agent-2026-11-06-165521-91546-0.log
+16:55:22 note  The builder's turn ended (0 tokens in, 0 out)
+16:55:22 stage The builder stopped (Codex stopped with exit code 1: 2026-11-06T16:55:18.343282Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpReq). Picking up where it left off…
+16:55:52 note  Asking Codex…
+16:55:52 out   2026-11-06T16:55:52.463446Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by ---
+16:55:57 ERROR Codex: {"type":"error","status":400,"error":{"type":"invalid_request_error","message":"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.","code":"model_not_found"}}
+16:55:57 ERROR Codex: {"type":"error","status":400,"error":{"type":"invalid_request_error","message":"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.","code":"model_not_found"}}
+16:55:57 ERROR Codex stopped with exit code 1: 2026-11-06T16:55:52.463446Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by ---
+16:55:57 ERROR What Codex printed last: 2026-11-06T16:55:52.463446Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by --- To try it yourself, run: codex exec --json --skip-git-repo-check --sandbox workspace-write -c 'mcp_servers.craft-anything.command="/Applications/Craft Anything.app/Contents/MacOS/craft-anything-cli"' -c <372 characters left out> -c 'mcp_servers.craft-anything.tools.rebuild_start.approval_mode="approve"' -
+16:55:57 ERROR Details: /Users/accidia/Library/Application Support/craft-anything/logs/agent-2026-11-06-165557-91546-1.log
+16:55:57 note  The builder's turn ended (0 tokens in, 0 out)
+16:55:57 stage The builder stopped (Codex stopped with exit code 1: 2026-11-06T16:55:52.463446Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.). Picking up where it left off…
+16:56:57 note  Asking Codex…
+16:56:59 out   2026-11-06T16:56:59.010046Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by ---
+16:57:04 ERROR Codex: {"type":"error","status":400,"error":{"type":"invalid_request_error","message":"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.","code":"model_not_found"}}
+16:57:04 ERROR Codex: {"type":"error","status":400,"error":{"type":"invalid_request_error","message":"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.","code":"model_not_found"}}
+16:57:04 ERROR Codex stopped with exit code 1: 2026-11-06T16:56:59.010046Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by ---
+16:57:04 ERROR What Codex printed last: 2026-11-06T16:56:59.010046Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by --- To try it yourself, run: codex exec --json --skip-git-repo-check --sandbox workspace-write -c 'mcp_servers.craft-anything.command="/Applications/Craft Anything.app/Contents/MacOS/craft-anything-cli"' -c <372 characters left out> -c 'mcp_servers.craft-anything.tools.rebuild_start.approval_mode="approve"' -
+16:57:04 ERROR Details: /Users/accidia/Library/Application Support/craft-anything/logs/agent-2026-11-06-165704-91546-2.log
+16:57:04 note  The builder's turn ended (0 tokens in, 0 out)
+16:57:04 stage The builder stopped (Codex stopped with exit code 1: 2026-11-06T16:56:59.010046Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.). Picking up where it left off…
+16:58:35 note  Asking Codex…
+16:58:35 out   2026-11-06T16:58:35.312352Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by ---
+16:58:39 ERROR Codex: {"type":"error","status":400,"error":{"type":"invalid_request_error","message":"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.","code":"model_not_found"}}
+16:58:39 ERROR Codex: {"type":"error","status":400,"error":{"type":"invalid_request_error","message":"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.","code":"model_not_found"}}
+16:58:40 ERROR Codex stopped with exit code 1: 2026-11-06T16:58:35.312352Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by ---
+16:58:40 ERROR What Codex printed last: 2026-11-06T16:58:35.312352Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by --- To try it yourself, run: codex exec --json --skip-git-repo-check --sandbox workspace-write -c 'mcp_servers.craft-anything.command="/Applications/Craft Anything.app/Contents/MacOS/craft-anything-cli"' -c <372 characters left out> -c 'mcp_servers.craft-anything.tools.rebuild_start.approval_mode="approve"' -
+16:58:40 ERROR Details: /Users/accidia/Library/Application Support/craft-anything/logs/agent-2026-11-06-165840-91546-3.log
+16:58:40 note  The builder's turn ended (0 tokens in, 0 out)
+16:58:40 ERROR Codex stopped with exit code 1: 2026-11-06T16:58:35.312352Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by ---. What Codex printed last: 2026-11-06T16:58:35.312352Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by --- To try it yourself, run: codex exec --json --skip-git-repo-check --sandbox workspace-write -c 'mcp_servers.craft-anything.command="/Applications/Craft Anything.app/Contents/MacOS/craft-anything-…
+--- Craft Anything 0.4.0: a run started 2026-11-06 16:59:26 UTC ---
+16:59:26 stage Getting the builder ready…
+17:00:17 note  Build progress couldn't be checked (Can't check build progress: /Users/accidia/projects/light-media contains more than 100000 files and folders.). Continuing without the unchanged-turn limit for this run.
+17:00:17 stage Carrying on with the build…
+17:00:17 note  Asking Codex…
+17:00:18 out   2026-11-06T17:00:18.623445Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by ---
+17:00:23 ERROR Codex: {"type":"error","status":400,"error":{"type":"invalid_request_error","message":"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.","code":"model_not_found"}}
+17:00:23 ERROR Codex: {"type":"error","status":400,"error":{"type":"invalid_request_error","message":"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.","code":"model_not_found"}}
+17:00:24 ERROR Codex stopped with exit code 1: 2026-11-06T17:00:18.623445Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by ---
+17:00:24 ERROR What Codex printed last: 2026-11-06T17:00:18.623445Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by --- To try it yourself, run: codex exec --json --skip-git-repo-check --sandbox workspace-write -c 'mcp_servers.craft-anything.command="/Applications/Craft Anything.app/Contents/MacOS/craft-anything-cli"' -c <372 characters left out> -c 'mcp_servers.craft-anything.tools.rebuild_start.approval_mode="approve"' -
+17:00:24 ERROR Details: /Users/accidia/Library/Application Support/craft-anything/logs/agent-2026-11-06-170024-91546-4.log
+17:00:24 note  The builder's turn ended (0 tokens in, 0 out)
+17:00:24 stage The builder stopped (Codex stopped with exit code 1: 2026-11-06T17:00:18.623445Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.). Picking up where it left off…
+17:00:55 note  Asking Codex…
+17:00:55 out   2026-11-06T17:00:55.227393Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by ---
+17:00:59 ERROR Codex: {"type":"error","status":400,"error":{"type":"invalid_request_error","message":"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.","code":"model_not_found"}}
+17:00:59 ERROR Codex: {"type":"error","status":400,"error":{"type":"invalid_request_error","message":"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.","code":"model_not_found"}}
+17:00:59 ERROR Codex stopped with exit code 1: 2026-11-06T17:00:55.227393Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by ---
+17:00:59 ERROR What Codex printed last: 2026-11-06T17:00:55.227393Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.md: missing YAML frontmatter delimited by --- To try it yourself, run: codex exec --json --skip-git-repo-check --sandbox workspace-write -c 'mcp_servers.craft-anything.command="/Applications/Craft Anything.app/Contents/MacOS/craft-anything-cli"' -c <372 characters left out> -c 'mcp_servers.craft-anything.tools.rebuild_start.approval_mode="approve"' -
+17:00:59 ERROR Details: /Users/accidia/Library/Application Support/craft-anything/logs/agent-2026-11-06-170059-91546-5.log
+17:00:59 note  The builder's turn ended (0 tokens in, 0 out)
+17:00:59 stage The builder stopped (Codex stopped with exit code 1: 2026-11-06T17:00:55.227393Z ERROR codex_core::session::session: failed to load skill /Users/accidia/.codex/skills/mx-moni/SKILL.). Picking up where it left off…
+17:01:35 stage Paused.

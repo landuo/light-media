@@ -16,6 +16,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"runtime"
+	"runtime/debug"
 	"strconv"
 	"strings"
 	"syscall"
@@ -69,6 +70,14 @@ func main() {
 		fatal("invalid_data_directory")
 	}
 	startDebugListener(debugAddress(absolute))
+	// GOMEMLIMIT is a heap target, and the runtime satisfies it by keeping a
+	// reserve of free spans: with the previous 128MiB the process held ~120 MB of
+	// heap_idle while its live objects were 25-33 MB. 80MiB stays above the
+	// observed peak (76 MB during a 7 GB organize plus subscription checks) and
+	// halves that reserve. An explicit GOMEMLIMIT from the environment wins.
+	if strings.TrimSpace(os.Getenv("GOMEMLIMIT")) == "" {
+		debug.SetMemoryLimit(80 << 20)
+	}
 	if bootstrap {
 		if e = app.Bootstrap(absolute, os.Stdin); e != nil {
 			fatal(e.Error())
