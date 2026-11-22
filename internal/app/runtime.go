@@ -186,7 +186,7 @@ type Options struct {
 
 // appVersion is a var so a release build can stamp the deployed version without
 // editing the tree.
-var appVersion = "0.46.0"
+var appVersion = "0.46.1"
 
 // buildID identifies the exact build so a deployment can be verified without
 // trusting file size. Release builds stamp it with the commit hash.

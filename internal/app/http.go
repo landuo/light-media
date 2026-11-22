@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -131,6 +132,21 @@ func (a *App) handler() http.Handler {
 			return
 		}
 		payload := map[string]any{"status": "ok", "version": appVersion, "build": buildID}
+		// Heap numbers separate "the process is holding memory" from "the Go
+		// runtime has not returned it to the OS yet": RSS alone cannot tell them
+		// apart and GOMEMLIMIT is a heap target, not an RSS cap.
+		var mem runtime.MemStats
+		runtime.ReadMemStats(&mem)
+		payload["memory"] = map[string]any{
+			"heap_alloc":    mem.HeapAlloc,
+			"heap_inuse":    mem.HeapInuse,
+			"heap_idle":     mem.HeapIdle,
+			"heap_released": mem.HeapReleased,
+			"stack_inuse":   mem.StackInuse,
+			"sys":           mem.Sys,
+			"num_gc":        mem.NumGC,
+			"goroutines":    runtime.NumGoroutine(),
+		}
 		if failure := a.pluginLoadFailure.Load(); failure != nil {
 			payload["plugin_load_failure"] = *failure
 		}
