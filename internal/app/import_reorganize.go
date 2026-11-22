@@ -42,6 +42,14 @@ func (a *App) importSourceAllowed(path string, manual bool) bool {
 	if !manual || !importPath(path) || browserInternal(path) {
 		return false
 	}
+	// MoviePilot organizes a Blu-ray as the disc directory (monitorTransferSrcPath
+	// appends "/" for a Blu-ray folder), so a disc under a download root is a valid
+	// source even though it is not inside a library root.
+	if info, statErr := os.Stat(path); statErr == nil && info.IsDir() {
+		if bdmv, bdmvErr := os.Stat(filepath.Join(path, "BDMV")); bdmvErr == nil && bdmv.IsDir() {
+			return true
+		}
+	}
 	for _, root := range a.Settings().Roots {
 		if within(root.Path, path) {
 			return true
