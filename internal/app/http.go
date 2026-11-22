@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bytes"
 	"context"
 	"database/sql"
 	"encoding/json"
@@ -13,6 +14,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"runtime/pprof"
 	"strconv"
 	"strings"
 	"time"
@@ -529,6 +531,15 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		} else {
 			out, e = a.catalogAPI(r, strings.TrimPrefix(p, "catalog/"))
 		}
+	case p == "debug/heap" && method == "GET":
+		// The container maps no port for the standalone pprof listener, so expose
+		// one read-only heap snapshot through the authenticated API instead: a
+		// growth question cannot be answered from MemStats alone.
+		var buf bytes.Buffer
+		if profile := pprof.Lookup("heap"); profile != nil {
+			_ = profile.WriteTo(&buf, 1)
+		}
+		out = map[string]any{"heap": buf.String()}
 	case p == "search/resources" && method == "POST":
 		if strings.Contains(r.Header.Get("Accept"), "text/event-stream") {
 			a.streamSearch(w, r)

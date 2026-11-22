@@ -1,6 +1,8 @@
 package artifacts
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -156,7 +158,10 @@ func verifyPackageTree(root string, files []PackageFile, hasReceipt bool) error 
 		if !ok {
 			return errors.New("package contains unlisted file")
 		}
-		if _, err := readPackageFile(root, f); err != nil {
+		// Hash the file as a stream. Reading it into memory first allocated the
+		// whole member (33 MB for a frontend bundle) on every verification pass,
+		// which pushed the heap to 70 MB and kept RSS high long after the pass.
+		if err := verifyPackageFile(root, f); err != nil {
 			return err
 		}
 		seen++
@@ -326,4 +331,23 @@ func frontendContentType(name string) string {
 	default:
 		return ""
 	}
+}
+
+// verifyPackageFile checks a member's size and digest without holding it in
+// memory: the package may be tens of megabytes and this runs on every access.
+func verifyPackageFile(root string, f PackageFile) error {
+	in, err := openPackageFile(root, f)
+	if err != nil {
+		return err
+	}
+	h := sha256.New()
+	n, copyErr := io.Copy(h, io.LimitReader(in, f.Size+1))
+	closeErr := in.Close()
+	if err = errors.Join(copyErr, closeErr); err != nil {
+		return err
+	}
+	if n != f.Size || hex.EncodeToString(h.Sum(nil)) != f.SHA256 {
+		return errors.New("package member digest or size mismatch")
+	}
+	return nil
 }
