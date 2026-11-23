@@ -552,6 +552,13 @@ func download(ctx context.Context, client *http.Client, raw string, limit int64)
 // downloadToFile streams an artifact into a temporary file so a large package
 // never lives in the Go heap. The caller removes the returned path.
 func downloadToFile(ctx context.Context, client *http.Client, raw string, limit int64) (string, int64, string, error) {
+	return downloadToFileIn(ctx, client, raw, limit, "")
+}
+
+// downloadToFileIn stages the download in dir. The release container mounts /tmp
+// as a 32 MB tmpfs while a source archive can approach that, so the source-build
+// path passes its own work directory.
+func downloadToFileIn(ctx context.Context, client *http.Client, raw string, limit int64, dir string) (string, int64, string, error) {
 	if _, err := httpURL(raw); err != nil {
 		return "", 0, "", err
 	}
@@ -590,7 +597,10 @@ func downloadToFile(ctx context.Context, client *http.Client, raw string, limit 
 	if resp.ContentLength > limit {
 		return "", 0, "", errors.New("download exceeds size bound")
 	}
-	file, err := os.CreateTemp("", "light-media-artifact-*")
+	// The release container mounts /tmp as a 32 MB tmpfs, and a source archive can
+	// approach that, so scratch files go beside the caller's data directory when one
+	// is provided.
+	file, err := os.CreateTemp(dir, "light-media-artifact-*")
 	if err != nil {
 		return "", 0, "", err
 	}

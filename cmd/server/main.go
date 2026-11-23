@@ -77,15 +77,19 @@ func main() {
 	// the space is reclaimed by the periodic debug.FreeOSMemory in the scheduler
 	// instead of by GC pressure. Peaks are allowed; a permanently high resident
 	// set is not.
-	// The container carries GOGC=50 from an earlier tuning pass. At 26 MB of live
-	// objects that made the collector run every 1.3 s (0.75 GC/s). MoviePilot runs
-	// the Go default of 100, so the value is pinned here instead of inherited: a
-	// stale container setting must not make collection frequency depend on
-	// deployment history.
-	debug.SetGCPercent(100)
-	if strings.TrimSpace(os.Getenv("GOMEMLIMIT")) == "" {
-		debug.SetMemoryLimit(256 << 20)
-	}
+	// The brush plugin polls sites continuously, so the process allocates on the
+	// order of 13 MB/s even though its live set stays near 25 MB. At GOGC=100 that
+	// means a collection every ~2 s, which is the churn the operator objected to.
+	// A 2x live-set target absorbs the transient allocation instead of collecting
+	// it: peaks stay near the accepted 150 MB envelope and the collector settles
+	// to ~0.25 GC/s. Pinned rather than inherited, so a stale container GOGC cannot
+	// reintroduce the churn.
+	debug.SetGCPercent(200)
+	// A 128MiB ceiling is what made the collector run every ~1.2 s once the live
+	// set grew past 80 MB: the runtime throttles allocation long before GOGC would
+	// trigger. The peaking behaviour is acceptable, the constant collection is not,
+	// so the ceiling is raised here as well.
+	debug.SetMemoryLimit(256 << 20)
 	if bootstrap {
 		if e = app.Bootstrap(absolute, os.Stdin); e != nil {
 			fatal(e.Error())

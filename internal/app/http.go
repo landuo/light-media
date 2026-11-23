@@ -165,6 +165,10 @@ func (a *App) handler() http.Handler {
 		loaded := len(a.pluginOriginalRunningOrder)
 		a.pluginOriginalRunningMu.Unlock()
 		payload["plugins_loaded"] = loaded
+		// The scheduled jobs are the only place a plugin's real cadence is visible:
+		// a declaration can say ten minutes while the dispatch loop runs it every
+		// fifteen seconds, and nothing else in the probe would show that.
+		payload["plugin_jobs"] = a.pluginJobSnapshot()
 		if stats := a.startupReconcileSnapshot(); stats != nil {
 			payload["startup_reconcile"] = stats
 		}

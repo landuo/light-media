@@ -455,3 +455,32 @@ func (a *App) drainOriginalPluginScheduler() {
 	}
 	state.serviceLifetimes.Wait()
 }
+
+// pluginJobSnapshot exposes the scheduler's own view: what each registered job
+// declares, when it is next due, and when it last ran. Without this the only
+// way to tell a slow cadence from a fast one is to grep plugin logs.
+func (a *App) pluginJobSnapshot() []map[string]any {
+	state := &a.pluginOriginalDirectJobs
+	state.mu.Lock()
+	defer state.mu.Unlock()
+	now := time.Now()
+	out := make([]map[string]any, 0, len(state.jobs))
+	for key, job := range state.jobs {
+		if job == nil || job.definition.ID == "" {
+			continue
+		}
+		entry := map[string]any{
+			"instance":    key.instance,
+			"id":          job.definition.ID,
+			"handler":     job.definition.Handler,
+			"kind":        job.definition.Trigger.Kind,
+			"interval_ms": job.definition.Trigger.IntervalMS,
+		}
+		if !job.due.IsZero() {
+			entry["due"] = job.due.Format(time.RFC3339)
+			entry["due_in_ms"] = job.due.Sub(now).Milliseconds()
+		}
+		out = append(out, entry)
+	}
+	return out
+}

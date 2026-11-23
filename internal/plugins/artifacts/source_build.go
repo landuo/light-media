@@ -132,7 +132,7 @@ func prepareSourceBuild(ctx context.Context, req Request, release Release, sourc
 		return Artifact{}, err
 	}
 	defer os.RemoveAll(work)
-	archivePath, _, _, err := downloadToFile(ctx, &archiveClient, address, MaxArtifactBytes)
+	archivePath, _, _, err := downloadToFileIn(ctx, &archiveClient, address, MaxArtifactBytes, work)
 	if err != nil {
 		return Artifact{}, err
 	}
