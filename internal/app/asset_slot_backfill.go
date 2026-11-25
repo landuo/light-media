@@ -80,40 +80,12 @@ func backfillAssetSlots(ctx context.Context, db *sql.DB) error {
 // is dispatched (monitorBlurayDiscRoot), so an observation keyed by the m2ts file
 // is stale by construction: rescanning now records the disc instead.
 func dropBlurayStreamObservations(ctx context.Context, db *sql.DB) (int, error) {
-	rows, err := db.QueryContext(ctx, `SELECT uid FROM directory_file WHERE record_kind='directory_file' AND lower(path) LIKE '%/bdmv/stream/%'`)
+	result, err := db.ExecContext(ctx, `DELETE FROM directory_file WHERE record_kind='directory_file' AND lower(path) LIKE '%/bdmv/stream/%'`)
 	if err != nil {
 		return 0, err
 	}
-	var ids []string
-	for rows.Next() {
-		var id string
-		if err = rows.Scan(&id); err != nil {
-			rows.Close()
-			return 0, err
-		}
-		ids = append(ids, id)
-	}
-	err = rows.Err()
-	rows.Close()
-	if err != nil || len(ids) == 0 {
-		return 0, err
-	}
-	tx, err := db.BeginTx(ctx, nil)
-	if err != nil {
-		return 0, err
-	}
-	defer tx.Rollback()
-	dropped := 0
-	for _, id := range ids {
-		res, execErr := tx.ExecContext(ctx, `DELETE FROM directory_file WHERE uid=? AND record_kind='directory_file'`, id)
-		if execErr != nil {
-			return dropped, execErr
-		}
-		if n, _ := res.RowsAffected(); n > 0 {
-			dropped++
-		}
-	}
-	return dropped, tx.Commit()
+	count, err := result.RowsAffected()
+	return int(count), err
 }
 
 // dropDeadReservations removes reservations whose intent is gone or has reached
