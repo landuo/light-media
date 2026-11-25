@@ -79,18 +79,22 @@ func TestBlurayDiscPreviewRecognizesReleaseWithoutExplicitIdentity(t *testing.T)
 		t.Fatalf("preview created an additional destination: %v, %v", entries, err)
 	}
 
-	observed, accepted, err := a.automaticDiscCandidate(ctx, disc, nil)
-	if err != nil || !accepted {
+	classifier, err := a.transferMediaClassifier(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	observed, accepted, err := a.automaticDiscCandidate(ctx, disc, classifier, nil)
+	if err != nil || !accepted || observed == nil {
 		t.Fatalf("automatic monitor did not group the disc: %t, %v", accepted, err)
 	}
-	request, err := a.directoryFileIdentity(ctx, DirectoryRule{MediaType: "mixed"}, observed)
+	request, err := a.directoryFileIdentity(ctx, DirectoryRule{MediaType: "mixed"}, *observed)
 	if err != nil || request.TMDBID != movie.ID || request.MediaType != movie.MediaType {
 		t.Fatalf("automatic monitor lost the disc identity: %+v, %v", request, err)
 	}
 	ambiguous := movie
 	ambiguous.ID = 9999
 	importCache(t, a, "directory-identify:movie:Spider Man 2", catalog.Page{Page: 1, TotalPages: 1, TotalResults: 2, Results: []catalog.Media{movie, ambiguous}})
-	request, err = a.directoryFileIdentity(ctx, DirectoryRule{MediaType: "mixed"}, observed)
+	request, err = a.directoryFileIdentity(ctx, DirectoryRule{MediaType: "mixed"}, *observed)
 	if err == nil || request.TMDBID != 0 {
 		t.Fatalf("ambiguous disc matched automatically: %+v, %v", request, err)
 	}

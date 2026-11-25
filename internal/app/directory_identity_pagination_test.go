@@ -156,3 +156,33 @@ func TestDirectoryFileIdentityPostEpisodeYear(t *testing.T) {
 		}
 	}
 }
+
+func TestDirectoryTVExactTitleUsesMoviePilotFirstAirDateOrder(t *testing.T) {
+	a, source, _ := importTestApp(t)
+	older := catalog.Media{ID: 32366, MediaType: "tv", Title: "Fallout", OriginalTitle: "Fallout", Year: 2006, ReleaseDate: "2006-04-23"}
+	newer := catalog.Media{ID: 106379, MediaType: "tv", Title: "辐射", OriginalTitle: "Fallout", Year: 2024, ReleaseDate: "2024-04-10"}
+	related := catalog.Media{ID: 311379, MediaType: "tv", Title: "Fallout Shelter: The Experiment", Year: 2027, ReleaseDate: "2027-01-01"}
+	// The older exact match is ranked higher by the search API in this replay.
+	// A more recent partial match is also present. No next page is cached.
+	items := []catalog.Media{older, related, newer}
+	importCache(t, a, "directory-identify:tv:Fallout", catalog.Page{Page: 1, TotalPages: 2, TotalResults: 25, Results: items})
+	for episode := 1; episode <= 7; episode++ {
+		name := fmt.Sprintf("Fallout.S02E%02d.2160p.BluRay.DoVi.x265.10bit.Atmos.TrueHD7.1-WiKi.mkv", episode)
+		got, err := a.directoryFileIdentity(t.Context(), DirectoryRule{MediaType: "tv"}, importScanFile{Path: filepath.Join(source, name), Parsed: media.Parse(name)})
+		if err != nil || got.TMDBID != newer.ID || got.Files[0].Season != 2 || len(got.Files[0].Episodes) != 1 || got.Files[0].Episodes[0] != episode {
+			t.Fatalf("%s: %+v, %v", name, got, err)
+		}
+	}
+	if found := directoryFirstTVTitle(items, "Fallout", 2006); found == nil || found.ID != older.ID {
+		t.Fatalf("explicit premiere year lost: %+v", found)
+	}
+	sameYear := older
+	sameYear.Year, sameYear.ReleaseDate = newer.Year, "2024-04-11"
+	if found := directoryFirstTVTitle([]catalog.Media{newer, sameYear}, "Fallout", 2024); found == nil || found.ID != sameYear.ID {
+		t.Fatalf("expected later premiere within the same year, got %+v", found)
+	}
+	sameYear.ReleaseDate = newer.ReleaseDate
+	if found := directoryFirstTVTitle([]catalog.Media{newer, sameYear}, "Fallout", 2024); found == nil || found.ID != newer.ID {
+		t.Fatalf("same-date source order lost: %+v", found)
+	}
+}

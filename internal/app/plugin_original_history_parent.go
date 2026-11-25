@@ -114,6 +114,17 @@ func (a *App) historyDeleteExtensions(ctx context.Context) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+	temporary, err := a.downloadTemporaryExtensions()
+	if err != nil {
+		return nil, err
+	}
+	out := snapshot.Values(fileextensions.MediaKey)
+	out = append(out, temporary...)
+	out = append(out, snapshot.Values(fileextensions.SubtitleKey)...)
+	return append(out, snapshot.Values(fileextensions.AudioKey)...), nil
+}
+
+func (a *App) downloadTemporaryExtensions() ([]string, error) {
 	// Reuse Settings' exact list conversion, with the pinned DOWNLOAD_TMPEXT
 	// default. It is independent from TransferChain's three cached lists.
 	raw := json.RawMessage(`[".!qb",".part"]`)
@@ -123,14 +134,7 @@ func (a *App) historyDeleteExtensions(ctx context.Context) ([]string, error) {
 	if value, present := os.LookupEnv("DOWNLOAD_TMPEXT"); present {
 		raw = json.RawMessage(value)
 	}
-	temporary, err := fileextensions.ResolveSettingsList(raw, json.RawMessage(`[".!qb",".part"]`))
-	if err != nil {
-		return nil, err
-	}
-	out := snapshot.Values(fileextensions.MediaKey)
-	out = append(out, temporary...)
-	out = append(out, snapshot.Values(fileextensions.SubtitleKey)...)
-	return append(out, snapshot.Values(fileextensions.AudioKey)...), nil
+	return fileextensions.ResolveSettingsList(raw, json.RawMessage(`[".!qb",".part"]`))
 }
 
 // FileManager.any_files calls its concrete storage list recursively. It does

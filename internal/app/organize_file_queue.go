@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"os"
 	"path/filepath"
 
 	"light-media/internal/plugins"
@@ -237,6 +238,12 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 		known.Mode, known.RootID = item.Directory.Rule.Mode, item.Directory.Rule.RootID
 	}
 	fail := func(cause error) error {
+		if item.Directory != nil && a.sourceAllowed(file.Path) {
+			// Recognition can outlast the local file it was started for.
+			if _, statErr := os.Lstat(file.Path); errors.Is(statErr, os.ErrNotExist) {
+				return bad("DIRECTORY_SOURCE_GONE", "自动整理的源文件已移除，已跳过")
+			}
+		}
 		_, err := a.recordManualOrganizeFailurePlan(ctx, file.Path, job.WorkflowID, cause, item.HistorySource, known)
 		return err
 	}
@@ -253,6 +260,11 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 		return fail(bad("REVIEW_SOURCE_CHANGED", "源文件不在允许目录内"))
 	}
 	stamp, err := snapshotTransferPath(file.Path)
+	if item.Directory != nil && (errors.Is(err, os.ErrNotExist) || err == nil && stamp != item.Snapshot) {
+		// This automatic event no longer describes a file to organize. The
+		// monitor will observe the replacement separately, if one exists.
+		return bad("DIRECTORY_SOURCE_GONE", "自动整理的源文件已移除或更换，已跳过")
+	}
 	if err != nil || stamp != item.Snapshot {
 		return fail(bad("REVIEW_SOURCE_CHANGED", "源文件已移除、发生变化或不在允许目录内"))
 	}

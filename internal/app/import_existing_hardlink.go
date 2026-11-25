@@ -91,7 +91,7 @@ func checkExistingImportHardlink(ctx context.Context, q qualityReader, receipt i
 	}
 	var owned bool
 	if err := q.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM managed_file WHERE id=?)
-	 OR EXISTS(SELECT 1 FROM library_asset WHERE json_extract(payload,'$.path')=? AND json_extract(payload,'$.state') NOT IN ('removed','superseded'))`,
+	 OR EXISTS(SELECT 1 FROM library_asset WHERE path=? AND state NOT IN ('removed','superseded'))`,
 		tokenHash(receipt.Target), receipt.Target).Scan(&owned); err != nil {
 		return err
 	}

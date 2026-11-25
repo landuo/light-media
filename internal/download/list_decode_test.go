@@ -134,3 +134,28 @@ func BenchmarkListDecodeProtocolReplay(b *testing.B) {
 		})
 	}
 }
+
+func TestListTransferReadyForSelectedFiles(t *testing.T) {
+	const hash = "0123456789012345678901234567890123456789"
+	for _, tc := range []struct {
+		state     string
+		remaining int
+		ready     bool
+	}{
+		{"stalledUP", 0, true}, {"pausedUP", 0, true}, {"queuedUP", 0, true},
+		{"queuedDL", 0, false}, {"checkingUP", 0, false}, {"stalledUP", 1, false},
+	} {
+		row := fmt.Sprintf(`[{"hash":"%s","state":"%s","progress":1,"completed":20,"size":20,"total_size":100,"amount_left":%d}]`, hash, tc.state, tc.remaining)
+		tasks, err := replayListClient(t, "qb", row).List(t.Context())
+		if err != nil || len(tasks) != 1 || tasks[0].TransferReady != tc.ready {
+			t.Errorf("qb %s, remaining=%d: tasks=%+v err=%v", tc.state, tc.remaining, tasks, err)
+		}
+	}
+	for _, status := range []int{0, 1, 2, 3, 4, 5, 6} {
+		row := fmt.Sprintf(`{"jsonrpc":"2.0","id":1,"result":{"torrents":[{"hash_string":"%s","status":%d,"percent_done":1,"left_until_done":0,"total_size":100}]}}`, hash, status)
+		tasks, err := replayListClient(t, "jsonrpc", row).List(t.Context())
+		if err != nil || len(tasks) != 1 || tasks[0].TransferReady != (status == 5 || status == 6) {
+			t.Errorf("tr status=%d: tasks=%+v err=%v", status, tasks, err)
+		}
+	}
+}

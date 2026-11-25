@@ -562,7 +562,7 @@ func (a *App) reconcileAssetSidecar(ctx context.Context, asset Asset, target, ki
 	if err != nil {
 		return err
 	}
-	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM import_receipt WHERE json_extract(payload,'$.target')=? AND json_extract(payload,'$.state') IN ('staged','published') LIMIT 20`, target)
+	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload`+importReceiptsAtTarget+` AND state IN ('staged','published') LIMIT 20`, target)
 	if err != nil {
 		return err
 	}

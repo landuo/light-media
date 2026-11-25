@@ -108,11 +108,11 @@ func (a *App) transitionOriginalTransferTargetAt(ctx context.Context, job Job, p
 		if !errors.Is(err, sql.ErrNoRows) {
 			return err
 		}
-		var count int
-		if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM library_asset WHERE json_extract(payload,'$.path')=? AND json_extract(payload,'$.state') IN ('present','external')`, receipt.Target).Scan(&count); err != nil {
+		var targetOwned bool
+		if err = tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM library_asset WHERE path=? AND state IN ('present','external'))`, receipt.Target).Scan(&targetOwned); err != nil {
 			return err
 		}
-		if count != 0 {
+		if targetOwned {
 			return bad("REVIEW_PLUGIN_TRANSFER_TARGET", "插件返回的目标已属于其他资产")
 		}
 	}

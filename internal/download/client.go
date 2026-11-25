@@ -59,6 +59,8 @@ type Task struct {
 	DownloadSpeed int64    `json:"download_speed"`
 	UploadSpeed   int64    `json:"upload_speed"`
 	Tags          []string `json:"tags"`
+	// TransferReady follows the native downloader completion state for the selected files.
+	TransferReady bool `json:"-"`
 	// SourceTorrent is the ordinary plugin module's DownloaderTorrent model.
 	// Native protocol tasks keep their existing numeric projection unchanged.
 	SourceTorrent json.RawMessage `json:"source_torrent,omitempty"`

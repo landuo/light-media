@@ -15,7 +15,7 @@ func verifyIndependentExtraOwnerTx(ctx context.Context, tx *sql.Tx, owner manage
 	if !auxiliaryMaterialKind(owner.Kind) || owner.AssetID == "" || !within(rootPath, owner.Path) {
 		return invalid()
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT payload FROM import_receipt WHERE json_extract(payload,'$.target')=? AND json_extract(payload,'$.state')='published'`, owner.Path)
+	rows, err := tx.QueryContext(ctx, `SELECT payload`+importReceiptsAtTarget+` AND state='published'`, owner.Path)
 	if err != nil {
 		return err
 	}

@@ -240,7 +240,8 @@ func (c *Client) trListQuery(ctx context.Context, hash string, downloadingOnly b
 		if tags == nil {
 			tags = []string{}
 		}
-		out = append(out, Task{ID: c.config.ID + ":" + h, Hash: h, Name: v.Name, InstanceID: c.config.ID, Status: status, DownloadDir: v.DownloadDir, Progress: v.Progress, TotalSize: v.TotalSize, Completed: v.TotalSize - v.Left, Ratio: v.Ratio, ETA: v.ETA, AddedAt: v.Added, DownloadSpeed: v.DLSpeed, UploadSpeed: v.UPSpeed, Tags: tags})
+		ready := v.Error == 0 && (v.Status == 5 || v.Status == 6) && v.Progress >= 1 && v.Left == 0
+		out = append(out, Task{ID: c.config.ID + ":" + h, Hash: h, Name: v.Name, InstanceID: c.config.ID, Status: status, TransferReady: ready, DownloadDir: v.DownloadDir, Progress: v.Progress, TotalSize: v.TotalSize, Completed: v.TotalSize - v.Left, Ratio: v.Ratio, ETA: v.ETA, AddedAt: v.Added, DownloadSpeed: v.DLSpeed, UploadSpeed: v.UPSpeed, Tags: tags})
 	}
 	return out, nil
 }

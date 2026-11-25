@@ -14,6 +14,10 @@ import (
 	"golang.org/x/sys/unix"
 )
 
+// The state index can cover most of the library. File-specific receipt reads
+// use the target column so unrelated JSON payloads are never opened.
+const importReceiptsAtTarget = ` FROM import_receipt INDEXED BY import_receipt_target WHERE target=?`
+
 type importReceipt struct {
 	StoragePublication        *importStoragePublicationState       `json:"storage_publication,omitempty"`
 	Softlink                  *importSoftlinkProof                 `json:"softlink,omitempty"`

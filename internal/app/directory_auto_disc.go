@@ -8,22 +8,49 @@ import (
 
 	"light-media/internal/media"
 	"light-media/internal/releasemeta"
+	"light-media/internal/transferextensions"
 )
 
 // Only the automatic monitor opts into disc-root grouping. Its ordinary scanner
-// and browser callers keep their existing file selection behavior.
-func (a *App) automaticDiscCandidate(ctx context.Context, path string, unchanged func(string, importSnapshot) bool) (importScanFile, bool, error) {
+// and browser callers keep their existing file selection behavior. A recognized
+// disc with an unfinished member or no media stream is skipped as a whole.
+func (a *App) automaticDiscCandidate(ctx context.Context, path string, classifier transferextensions.Classifier, unchanged func(string, importSnapshot) bool) (*importScanFile, bool, error) {
 	disc, err := a.originalTransferIsBluray(ctx, map[string]any{"storage": "local", "type": "dir", "path": path})
 	if err != nil || !disc {
-		return importScanFile{}, false, err
+		return nil, false, err
 	}
-	stamp, _, err := snapshotOriginalDirectory(path)
+	stamp, entries, err := snapshotOriginalDirectory(path)
 	if err != nil {
-		return importScanFile{}, true, err
+		return nil, true, err
+	}
+	temporary, err := a.downloadTemporaryExtensions()
+	if err != nil {
+		return nil, true, err
+	}
+	hasStream := false
+	for _, entry := range entries {
+		if entry.Directory {
+			continue
+		}
+		ext := filepath.Ext(entry.Path)
+		for _, suffix := range temporary {
+			if strings.EqualFold(ext, suffix) {
+				return nil, true, nil
+			}
+		}
+		if !hasStream && strings.HasPrefix(strings.ToLower(filepath.ToSlash(entry.Path)), "bdmv/stream/") {
+			hasStream, err = classifier.Media(transferextensions.PathFile(entry.Path))
+			if err != nil {
+				return nil, true, err
+			}
+		}
+	}
+	if !hasStream {
+		return nil, true, nil
 	}
 	item, err := originalLocalFileItem(path)
 	if err != nil {
-		return importScanFile{}, true, err
+		return nil, true, err
 	}
 	file := importScanFile{Path: path, Size: stamp.Size, Snapshot: &stamp, originalDirectoryPlanned: true, originalItem: item, originalMetadataPath: path}
 	if unchanged != nil && unchanged(path, stamp) {
@@ -35,7 +62,7 @@ func (a *App) automaticDiscCandidate(ctx context.Context, path string, unchanged
 			file.IdentitySource = "nfo"
 		}
 	}
-	return file, true, nil
+	return &file, true, nil
 }
 
 // importNFOEvidence derives a basename NFO then movie.nfo from this anchor;

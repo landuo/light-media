@@ -345,7 +345,7 @@ func (a *App) runClaimedJob(ctx context.Context, j Job) {
 		// Two cases ask for their own delay; everything else fails outright and
 		// waits for the next scheduled cycle, which is what a periodic schedule
 		// already provides. No attempt counter, no exponential backoff.
-		if code == "DIRECTORY_HISTORY_DELETED" {
+		if code == "DIRECTORY_HISTORY_DELETED" || code == "DIRECTORY_SOURCE_GONE" {
 			state = "cancelled"
 		} else if code == "PLUGIN_REFRESH_PENDING" {
 			state = "queued"

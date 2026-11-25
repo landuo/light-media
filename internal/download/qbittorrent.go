@@ -89,20 +89,21 @@ func (c *Client) qb(ctx context.Context, method, endpoint, data, contentType str
 }
 
 type qbTask struct {
-	Hash      string  `json:"hash"`
-	Name      string  `json:"name"`
-	State     string  `json:"state"`
-	SavePath  string  `json:"save_path"`
-	Size      int64   `json:"size"`
-	TotalSize int64   `json:"total_size"`
-	Completed int64   `json:"completed"`
-	Progress  float64 `json:"progress"`
-	Ratio     float64 `json:"ratio"`
-	ETA       int64   `json:"eta"`
-	AddedOn   int64   `json:"added_on"`
-	DLSpeed   int64   `json:"dlspeed"`
-	UPSpeed   int64   `json:"upspeed"`
-	Tags      string  `json:"tags"`
+	Hash       string  `json:"hash"`
+	Name       string  `json:"name"`
+	State      string  `json:"state"`
+	SavePath   string  `json:"save_path"`
+	Size       int64   `json:"size"`
+	TotalSize  int64   `json:"total_size"`
+	Completed  int64   `json:"completed"`
+	AmountLeft int64   `json:"amount_left"`
+	Progress   float64 `json:"progress"`
+	Ratio      float64 `json:"ratio"`
+	ETA        int64   `json:"eta"`
+	AddedOn    int64   `json:"added_on"`
+	DLSpeed    int64   `json:"dlspeed"`
+	UPSpeed    int64   `json:"upspeed"`
+	Tags       string  `json:"tags"`
 }
 
 func (c *Client) qbList(ctx context.Context, hash string) ([]Task, error) {
@@ -161,7 +162,9 @@ func (c *Client) qbListQuery(ctx context.Context, hash, filter string) ([]Task, 
 				tags = append(tags, strings.TrimSpace(t))
 			}
 		}
-		out = append(out, Task{ID: c.config.ID + ":" + h, Hash: h, Name: v.Name, InstanceID: c.config.ID, Progress: v.Progress, Status: qbStatus(v.State), DownloadDir: v.SavePath, TotalSize: total, Completed: v.Completed, Ratio: v.Ratio, ETA: v.ETA, AddedAt: v.AddedOn, DownloadSpeed: v.DLSpeed, UploadSpeed: v.UPSpeed, Tags: tags})
+		status := qbStatus(v.State)
+		ready := v.Progress >= 1 && v.AmountLeft <= 0 && (status == "seeding" || status == "paused" || v.State == "queuedUP")
+		out = append(out, Task{ID: c.config.ID + ":" + h, Hash: h, Name: v.Name, InstanceID: c.config.ID, Progress: v.Progress, TransferReady: ready, Status: status, DownloadDir: v.SavePath, TotalSize: total, Completed: v.Completed, Ratio: v.Ratio, ETA: v.ETA, AddedAt: v.AddedOn, DownloadSpeed: v.DLSpeed, UploadSpeed: v.UPSpeed, Tags: tags})
 	}
 	return out, nil
 }

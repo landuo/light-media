@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -41,6 +42,7 @@ type DirectoryObservedFile struct {
 	RuleFingerprint     string         `json:"rule_fingerprint"`
 	EvidenceFingerprint string         `json:"evidence_fingerprint"`
 	OwnerHash           string         `json:"owner_hash,omitempty"`
+	OwnerSize           int64          `json:"owner_size,omitempty"`
 }
 type directoryBaseline struct {
 	Fingerprint string            `json:"fingerprint"`
@@ -153,6 +155,11 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 	fingerprint := directoryFingerprint(rule)
 	var inspectionError error
 	inspectFailed := func(path string, cause error) error {
+		// A file can move between enumeration and stat. MP drops that event;
+		// other files in the same directory still belong to this scan.
+		if errors.Is(cause, fs.ErrNotExist) {
+			return nil
+		}
 		if inspectionError == nil {
 			inspectionError = fmt.Errorf("未能核对源文件 %s: %w", filepath.Base(path), cause)
 		}
@@ -277,8 +284,7 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 		stamp, e := snapshotTransferPath(file.Path)
 		if e != nil {
-			// A path just observed by this same scan may be moving. Report the
-			// failed inspection once; a later complete scan removes true orphans.
+			// A path may move between enumeration and inspection.
 			if e = inspectFailed(file.Path, e); e != nil {
 				return e
 			}
@@ -305,20 +311,10 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}{file.InferredMedia, file.Numbering, file.IdentityReason})
 		evidenceSum := sha256.Sum256(evidenceJSON)
 		evidence := hex.EncodeToString(evidenceSum[:])
-		// Retry an identity failure whenever the evidence changed, independent of
-		// whether the file itself changed. The download's media identity can
-		// arrive after the first attempt; requiring an unchanged file here made
-		// that correction unreachable and left the record terminal forever.
-		// Recognition depends on remote metadata and on the download record, both of
-		// which can arrive later, so a failure is retried after a cooldown as well
-		// as when its own evidence changes.
-		identityCooldown := !fresh && (f.State == "needs_review" || f.State == "error") &&
-			f.LastSeen != "" && func() bool {
-			last, err := time.Parse(time.RFC3339, f.LastSeen)
-			return err != nil || time.Since(last) >= 10*time.Minute
-		}()
+		// An NFO or download identity can change while the media file stays still.
+		// A quiet directory does not generate another recognition event.
 		retryIdentity := !fresh && !changed && (f.State == "needs_review" || f.State == "error") &&
-			(f.EvidenceFingerprint != evidence || identityCooldown)
+			f.EvidenceFingerprint != evidence
 		if fresh || changed || retryIdentity {
 			f = DirectoryObservedFile{ID: key, DirectoryID: rule.ID, Path: file.Path, State: "observing", Reason: "等待文件至少60秒保持稳定", Snapshot: stamp, StableSince: time.Now().UnixNano(), RuleFingerprint: fingerprint, EvidenceFingerprint: evidence}
 			if fresh && initial && !rule.IncludeExisting {
@@ -380,8 +376,10 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 			// file that sits complete in a monitored directory is organized no
 			// matter which client produced it. The download record only adds the
 			// media identity used for recognition, and the ownership hash.
-			_, hasOwner := downloads[file.Path]
-			if !hasOwner && rule.MonitorType == "downloader" {
+			owner, hasOwner := downloads[file.Path]
+			if hasOwner && (!owner.Complete || owner.Size != stamp.Size) {
+				f.State, f.Reason = "downloading", "等待下载器确认文件已完整下载"
+			} else if !hasOwner && rule.MonitorType == "downloader" {
 				// A downloader-mode rule watches a client's queue rather than the
 				// directory, so it still needs the client to confirm the task.
 				f.State = "observing"
@@ -434,9 +432,9 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 			}
 		}
 		if owner, ok := downloads[file.Path]; ok {
-			f.OwnerHash = owner.OwnerHash
+			f.OwnerHash, f.OwnerSize = owner.OwnerHash, owner.Size
 		} else {
-			f.OwnerHash = ""
+			f.OwnerHash, f.OwnerSize = "", 0
 		}
 		if !reflect.DeepEqual(before, f) {
 			// The pass reads every observation up front, so a row can change
@@ -618,7 +616,7 @@ func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, so
 	}
 	next := map[string]string{}
 	for _, d := range configs {
-		files, updated, err := a.directoryFilesForDownloader(ctx, d, source, fingerprints, stored)
+		files, updated, err := a.directoryFilesForDownloader(ctx, d, source, rule.MonitorType == "downloader", fingerprints, stored)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -657,11 +655,11 @@ func (a *App) directoryObservations(ctx context.Context, ruleID string) (map[str
 		all[f.Path] = f
 		// A disc observation is an aggregate, not a downloader file row. Its
 		// readiness must be rebuilt from the actual per-leaf torrent inventory.
-		if f.OwnerHash != "" && f.Snapshot.Directory == "" {
+		if f.OwnerHash != "" && f.OwnerSize > 0 && f.Snapshot.Directory == "" {
 			if stored[f.OwnerHash] == nil {
 				stored[f.OwnerHash] = map[string]directoryDownloadFile{}
 			}
-			stored[f.OwnerHash][f.Path] = directoryDownloadFile{Size: f.Snapshot.Size, OwnerHash: f.OwnerHash}
+			stored[f.OwnerHash][f.Path] = directoryDownloadFile{Size: f.OwnerSize, OwnerHash: f.OwnerHash}
 		}
 	}
 	return all, stored, rows.Err()
@@ -725,7 +723,7 @@ func (a *App) directoryDownloadTaskState(ctx context.Context, downloaderID strin
 }
 
 func directoryTaskFingerprint(t download.Task) string {
-	return fmt.Sprintf("%s|%.6f|%d|%d|%s", t.Status, t.Progress, t.Completed, t.TotalSize, t.Name)
+	return fmt.Sprintf("%s|%.6f|%d|%d|%t|%s", t.Status, t.Progress, t.Completed, t.TotalSize, t.TransferReady, t.Name)
 }
 
 // directoryDownloadHint prefers the recorded native media, then the identity the
@@ -753,7 +751,7 @@ func directoryNativeHint(native NativeDownload) *importInferredMedia {
 // observations already carry the ownership mapping, so no per-task file
 // listing is needed. Only tasks seen and verified on this pass contribute a
 // fingerprint. A removed or relocated task must not grow the baseline forever.
-func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfig, source string, fingerprints map[string]string, stored map[string]map[string]directoryDownloadFile) (map[string]directoryDownloadFile, map[string]string, error) {
+func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfig, source string, transferPoll bool, fingerprints map[string]string, stored map[string]map[string]directoryDownloadFile) (map[string]directoryDownloadFile, map[string]string, error) {
 	settings := a.Settings()
 	out := map[string]directoryDownloadFile{}
 	next := map[string]string{}
@@ -768,6 +766,9 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 	var states map[string]directoryTaskState
 	var natives map[string]NativeDownload
 	for _, t := range tasks {
+		if transferPoll && (!t.TransferReady || slices.Contains(t.Tags, "已整理")) {
+			continue
+		}
 		sharedPath := ""
 		if d.SharedPaths {
 			path := cleanDirectoryInput(t.DownloadDir)
@@ -820,6 +821,8 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 		}
 		fingerprint := directoryTaskFingerprint(t) + "|" + strconv.Itoa(count)
 		hint := directoryDownloadHint(native, state)
+		cacheable := true
+		ready := t.TransferReady || (!transferPoll && t.Status == "paused" && directoryTaskComplete(t))
 		if fingerprints[hash] != fingerprint || entries == nil {
 			files, err := client.Files(ctx, t.Hash)
 			if err != nil {
@@ -830,7 +833,6 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 				continue
 			}
 			entries = map[string]directoryDownloadFile{}
-			ready := directoryTaskComplete(t)
 			for _, f := range files {
 				if !filepath.IsLocal(filepath.FromSlash(f.Path)) {
 					return nil, nil, bad("DIRECTORY_UNSAFE_DOWNLOADER_PATH", "下载器返回异常文件路径")
@@ -852,6 +854,11 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 				}
 				entry := directoryDownloadFile{Complete: ready && f.Size > 0 && f.Completed >= f.Size && f.Progress >= 1, Managed: state.Files > 0, Imported: state.Imported > 0, Size: f.Size, OwnerHash: hash}
 				entry.Hint = hint
+				// A torrent may be complete while a skipped file still lacks
+				// bytes. A cached task total cannot certify that file later.
+				if ready && !entry.Complete {
+					cacheable = false
+				}
 				if old, ok := entries[path]; ok {
 					entry = mergeDirectoryDownloadFile(entry, old)
 				}
@@ -859,7 +866,6 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 			}
 			fingerprint = directoryTaskFingerprint(t) + "|" + strconv.Itoa(len(entries))
 		} else {
-			ready := directoryTaskComplete(t)
 			for path, entry := range entries {
 				entry.Managed = state.Files > 0
 				entry.Imported = state.Imported > 0
@@ -868,7 +874,9 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 				entries[path] = entry
 			}
 		}
-		next[hash] = fingerprint
+		if cacheable {
+			next[hash] = fingerprint
+		}
 		for path, entry := range entries {
 			if old, ok := out[path]; ok {
 				entry = mergeDirectoryDownloadFile(entry, old)
@@ -885,7 +893,27 @@ func directoryTitle(s string) string {
 
 var directoryTVReleaseYear = regexp.MustCompile(`^(.+) ((?:19|20)[0-9]{2})$`)
 
-func (a *App) directoryTitleMatches(ctx context.Context, kind string, year int, names []string) (map[int64]catalog.Media, error) {
+// TmdbApi.__search_tv_by_name sorts by descending first_air_date and takes the
+// first exact title/original_name match. Equal dates retain TMDB response order.
+func directoryFirstTVTitle(results []catalog.Media, query string, year int) *catalog.Media {
+	var best *catalog.Media
+	for i := range results {
+		m := &results[i]
+		if m.MediaType != "tv" || m.ID <= 0 || year > 0 && m.Year != year {
+			continue
+		}
+		if !originalHostMediaCompareNames(query, m.Title) && !originalHostMediaCompareNames(query, m.OriginalTitle) {
+			continue
+		}
+		// Older compact rows can carry only the year.
+		if best == nil || m.Year > best.Year || m.Year == best.Year && m.ReleaseDate > best.ReleaseDate {
+			best = m
+		}
+	}
+	return best
+}
+
+func (a *App) directoryTitleMatches(ctx context.Context, kind string, year int, names []string, preferTVPremiere bool) (map[int64]catalog.Media, error) {
 	matches := map[int64]catalog.Media{}
 	titles := map[string]bool{}
 	queries := []string{}
@@ -906,6 +934,11 @@ func (a *App) directoryTitleMatches(ctx context.Context, kind string, year int, 
 			at, err := a.cached(ctx, key, 24*time.Hour, &page, func() (any, error) { return a.catalog().Search(ctx, query, kind, number) })
 			if err != nil {
 				return nil, err
+			}
+			if preferTVPremiere && number == 1 && page.Page == 1 && page.TotalPages >= 1 && time.Since(at) < 24*time.Hour {
+				if m := directoryFirstTVTitle(page.Results, query, year); m != nil {
+					return map[int64]catalog.Media{m.ID: *m}, nil
+				}
 			}
 			// Stale search fallback is useful for browsing, but cannot prove
 			// uniqueness when recognition requires the complete result set.
@@ -957,7 +990,7 @@ func (a *App) directoryTVReleaseMatches(ctx context.Context, p media.ParseResult
 		names, year = []string{release[1]}, release[2]
 	}
 	// A release may use the season's year instead of the show's premiere.
-	matches, err := a.directoryTitleMatches(ctx, "tv", 0, names)
+	matches, err := a.directoryTitleMatches(ctx, "tv", 0, names, false)
 	if err != nil || p.Year == 0 && len(matches) <= 1 {
 		return matches, err
 	}
@@ -1020,7 +1053,7 @@ func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, fil
 		if source := a.effectiveRecognitionSource(); source != "themoviedb" {
 			return a.directoryProviderIdentity(ctx, request, file, source)
 		}
-		matches, err := a.directoryTitleMatches(ctx, kind, p.Year, append([]string{p.Title}, p.AlternateTitles...))
+		matches, err := a.directoryTitleMatches(ctx, kind, p.Year, append([]string{p.Title}, p.AlternateTitles...), kind == "tv")
 		if err != nil {
 			return request, err
 		}

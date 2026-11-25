@@ -288,7 +288,7 @@ func (a *App) reuseOwnedInPlaceSoftlink(ctx context.Context, key string, file Pl
 		return receipt, bad("REVIEW_RECEIPT", "原位软链接收据与计划不同")
 	}
 	if owned.Softlink.Directory != nil {
-		rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM import_receipt WHERE json_extract(payload,'$.target')=? AND json_extract(payload,'$.state')='published'`, owned.Path)
+		rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload`+importReceiptsAtTarget+` AND state='published'`, owned.Path)
 		if e != nil {
 			return receipt, e
 		}

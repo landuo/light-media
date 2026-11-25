@@ -179,7 +179,7 @@ func (a *App) scanImportFiles(ctx context.Context, directory string, recursive b
 			return nil
 		}
 		if len(automaticDiscs) > 0 && automaticDiscs[0] {
-			file, disc, e := a.automaticDiscCandidate(ctx, dir, unchanged)
+			file, disc, e := a.automaticDiscCandidate(ctx, dir, classifier, unchanged)
 			if e != nil {
 				if inspectFailed != nil {
 					return inspectFailed(dir, e)
@@ -187,16 +187,22 @@ func (a *App) scanImportFiles(ctx context.Context, directory string, recursive b
 				return e
 			}
 			if disc {
+				if file == nil {
+					return nil
+				}
 				if len(files) >= 2000 {
 					truncated = true
 					return nil
 				}
-				files = append(files, file)
+				files = append(files, *file)
 				return nil
 			}
 		}
 		opened, err := importDir(dir, false)
 		if err != nil {
+			if depth > 0 && inspectFailed != nil && errors.Is(err, fs.ErrNotExist) {
+				return inspectFailed(dir, err)
+			}
 			return err
 		}
 		defer opened.Close()
@@ -1122,11 +1128,13 @@ func scanImportSidecars(file PlanFile, existing func(string) error) ([]importSid
 	return result, nil
 }
 
+const importAssetAtPathSQL = `SELECT payload FROM library_asset INDEXED BY asset_path WHERE path=? AND state NOT IN ('removed','superseded') LIMIT 1`
+
 func (a *App) assetAtPath(ctx context.Context, path string, dst *Asset) error {
 	phase := a.performanceStages(ctx, "asset_lookup", "read_by_path")
 	defer phase("")
 	var raw []byte
-	err := a.Store.reader().QueryRowContext(ctx, `SELECT payload FROM library_asset INDEXED BY asset_path WHERE json_extract(payload,'$.path')=? AND json_extract(payload,'$.state') NOT IN ('removed','superseded') LIMIT 1`, path).Scan(&raw)
+	err := a.Store.reader().QueryRowContext(ctx, importAssetAtPathSQL, path).Scan(&raw)
 	if err != nil {
 		return err
 	}

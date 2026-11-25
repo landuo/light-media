@@ -251,7 +251,7 @@ func (a *App) finishOriginalMetadataDirectory(ctx context.Context, directory *or
 	if json.Unmarshal(raw, &current) != nil || !sameManagedFile(current, directory.Owned) {
 		return bad("REVIEW_METADATA_CONTEXT", "刮削提交时目录归属发生变化")
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT id,payload FROM import_receipt WHERE json_extract(payload,'$.target')=? AND json_extract(payload,'$.state')='published'`, current.Path)
+	rows, err := tx.QueryContext(ctx, `SELECT id,payload`+importReceiptsAtTarget+` AND state='published'`, current.Path)
 	if err != nil {
 		return err
 	}

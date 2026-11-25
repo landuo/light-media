@@ -68,7 +68,7 @@ func BenchmarkDirectoryFilesForDownloaderHistory1024(b *testing.B) {
 			prior := map[string]string{lazyTaskHash: "previous"}
 			b.ReportAllocs()
 			for b.Loop() {
-				out, next, err := a.directoryFilesForDownloader(ctx, d, source, prior, nil)
+				out, next, err := a.directoryFilesForDownloader(ctx, d, source, false, prior, nil)
 				if err != nil || len(out) != 0 || len(next) != 0 {
 					b.Fatalf("files=%v next=%v err=%v", out, next, err)
 				}
@@ -89,7 +89,7 @@ func TestDirectoryDownloaderHistoryReadBoundary(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			d := lazyDirectoryDownloader(t, tc.path, nil)
 			prior := map[string]string{lazyTaskHash: "previous"}
-			out, next, err := a.directoryFilesForDownloader(t.Context(), d, source, prior, nil)
+			out, next, err := a.directoryFilesForDownloader(t.Context(), d, source, false, prior, nil)
 			switch tc.name {
 			case "relevant":
 				if err == nil || !strings.Contains(err.Error(), "no such table: downloadhistory") || out != nil || next != nil {
@@ -127,8 +127,8 @@ func TestDirectoryDownloaderRelevantFingerprintAndIdentity(t *testing.T) {
 		t.Fatal(err)
 	}
 	prior := map[string]string{lazyTaskHash: "stale", "other": "keep"}
-	out, next, err := a.directoryFilesForDownloader(ctx, d, source, prior, nil)
-	want := map[string]string{lazyTaskHash: "seeding|1.000000|1024|1024|test|1"}
+	out, next, err := a.directoryFilesForDownloader(ctx, d, source, false, prior, nil)
+	want := map[string]string{lazyTaskHash: "seeding|1.000000|1024|1024|true|test|1"}
 	entry := out[filepath.Join(source, "film.mkv")]
 	if err != nil || listings.Load() != 1 || len(out) != 1 || !entry.Managed || !entry.Imported || !entry.Complete || entry.OwnerHash != lazyTaskHash || entry.Hint == nil || entry.Hint.ID != 123 || entry.Hint.MediaType != "movie" || !maps.Equal(next, want) || prior[lazyTaskHash] != "stale" {
 		t.Fatalf("fresh listing: entry=%+v next=%v prior=%v calls=%d err=%v", entry, next, prior, listings.Load(), err)
@@ -139,7 +139,7 @@ func TestDirectoryDownloaderRelevantFingerprintAndIdentity(t *testing.T) {
 	if err := a.Store.Put(ctx, "native_download", row.ID, row); err != nil {
 		t.Fatal(err)
 	}
-	out, next, err = a.directoryFilesForDownloader(ctx, d, source, next, map[string]map[string]directoryDownloadFile{lazyTaskHash: out})
+	out, next, err = a.directoryFilesForDownloader(ctx, d, source, false, next, map[string]map[string]directoryDownloadFile{lazyTaskHash: out})
 	entry = out[filepath.Join(source, "film.mkv")]
 	if err != nil || listings.Load() != 1 || len(out) != 1 || entry.Managed || entry.Imported || !entry.Complete || entry.OwnerHash != lazyTaskHash || entry.Hint != nil || !maps.Equal(next, want) {
 		t.Fatalf("cached listing: entry=%+v next=%v calls=%d err=%v", entry, next, listings.Load(), err)

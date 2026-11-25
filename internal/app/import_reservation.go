@@ -40,7 +40,21 @@ func (a *App) startImportRun(ctx context.Context, job Job, plan *ImportPlan, sel
 			if err != nil {
 				return err
 			}
+			var skip error
 			if consumed {
+				skip = bad("DIRECTORY_HISTORY_DELETED", "整理记录已删除，未变化的源文件已跳过")
+			} else if info, statErr := os.Lstat(file.Source); errors.Is(statErr, os.ErrNotExist) || (statErr == nil && file.DirectoryDigest == "" && !planSnapshot(file).matches(info)) {
+				// A published move can legitimately have no source. Preserve
+				// recovery for any operation which already has a receipt.
+				var started bool
+				if err := tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM import_receipt WHERE id=?)`, plan.ID+"/"+file.ID).Scan(&started); err != nil {
+					return err
+				}
+				if !started {
+					skip = bad("DIRECTORY_SOURCE_GONE", "自动整理的源文件已移除或更换，已跳过")
+				}
+			}
+			if skip != nil {
 				plan.State = "cancelled"
 				if _, err = tx.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id=?`, plan.ID); err != nil {
 					return err
@@ -51,7 +65,7 @@ func (a *App) startImportRun(ctx context.Context, job Job, plan *ImportPlan, sel
 				if err = tx.Commit(); err != nil {
 					return err
 				}
-				return bad("DIRECTORY_HISTORY_DELETED", "整理记录已删除，未变化的源文件已跳过")
+				return skip
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package app
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 )
@@ -38,4 +39,32 @@ func TestAutomaticDiscRequiresAllReportedLeavesAndOneTask(t *testing.T) {
 	if err != nil || !known || owner.Complete || !owner.IdentityConflict {
 		t.Fatal("mixed torrent disc admitted", owner, known, err)
 	}
+}
+
+// A running qB download may create the disc folders, then finish streams one at
+// a time. The monitor must not fall through to submitting individual streams.
+func TestAutomaticDiscScanWaitsForCompletedMembers(t *testing.T) {
+	a, source, _ := importTestApp(t)
+	disc := filepath.Join(source, "Fallout.S01.BluRay", "Disc 2")
+	stream := filepath.Join(disc, "BDMV", "STREAM")
+	pending := filepath.Join(stream, "00054.m2ts.!qB")
+	importWrite(t, pending, []byte("part one"))
+	check := func(want int) {
+		t.Helper()
+		out, err := a.scanImportFiles(t.Context(), source, true, nil, nil, true)
+		if err != nil {
+			t.Fatal(err)
+		}
+		files := out.(map[string]any)["files"].([]importScanFile)
+		if len(files) != want || (want > 0 && files[0].Path != disc) {
+			t.Fatalf("expected %d eligible discs, got %+v", want, files)
+		}
+	}
+	check(0)
+	importWrite(t, filepath.Join(stream, "00056.m2ts"), []byte("complete stream"))
+	check(0)
+	if err := os.Rename(pending, filepath.Join(stream, "00054.m2ts")); err != nil {
+		t.Fatal(err)
+	}
+	check(1)
 }

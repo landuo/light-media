@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"net/http"
@@ -271,6 +272,7 @@ func TestDirectoryFileIncompleteDownloaderNeverImports(t *testing.T) {
 	rule.DownloaderID = d.ID
 	rule.DownloadPath = "/downloads"
 	a.config.Directories[0] = rule
+	a.invalidateSettings()
 	directoryPoll(t, a, rule)
 	directoryAge(t, a, rule, p)
 	directoryPoll(t, a, rule)
@@ -289,6 +291,7 @@ func TestDirectoryFileIncompleteDownloaderNeverImports(t *testing.T) {
 	rule.DownloaderID = ""
 	rule.DownloadPath = ""
 	a.config.Directories[0] = rule
+	a.invalidateSettings()
 	directoryPoll(t, a, rule)
 	directoryAge(t, a, rule, p)
 	directoryPoll(t, a, rule)
@@ -365,9 +368,7 @@ func TestDirectoryMonitorKeepsCompletedPacksMovingWhenOneFileDisappears(t *testi
 		directoryAge(t, a, rule, filepath.Join(source, name))
 	}
 	disappear.Store(true)
-	if err := a.pollDirectoryFileRule(ctx, rule); !errors.Is(err, os.ErrNotExist) {
-		t.Fatalf("missing episode inspection result: %v", err)
-	}
+	directoryPoll(t, a, rule)
 	verifyHardlink := func(name string) {
 		t.Helper()
 		path := filepath.Join(source, name)
@@ -392,12 +393,13 @@ func TestDirectoryMonitorKeepsCompletedPacksMovingWhenOneFileDisappears(t *testi
 	for _, name := range files[1:] {
 		verifyHardlink(name)
 	}
-	if f := directoryObservation(t, a, rule, missing); f.State != "inspect_pending" || f.Reason == "" || f.PlanID != "" {
-		t.Fatalf("missing episode not recorded as pending inspection: %+v", f)
+	var gone DirectoryObservedFile
+	if err := a.Store.Get(ctx, "directory_file", directoryFileID(rule.ID, missing), &gone); !errors.Is(err, sql.ErrNoRows) {
+		t.Fatalf("missing episode retained a directory observation: %+v %v", gone, err)
 	}
 	var status managedConnection
-	if err := a.Store.Get(ctx, "directory_status", rule.ID, &status); err != nil || status.Status != "error" || status.Error == "" {
-		t.Fatalf("directory inspection issue hidden: %+v %v", status, err)
+	if err := a.Store.Get(ctx, "directory_status", rule.ID, &status); err != nil || status.Status != "ok" || status.Error != "" {
+		t.Fatalf("disappearing episode incorrectly marked the rule unhealthy: %+v %v", status, err)
 	}
 	if err := os.Rename(missing+".moving", missing); err != nil {
 		t.Fatal(err)
@@ -406,4 +408,172 @@ func TestDirectoryMonitorKeepsCompletedPacksMovingWhenOneFileDisappears(t *testi
 	directoryAge(t, a, rule, missing)
 	directoryPoll(t, a, rule)
 	verifyHardlink(files[0])
+}
+
+func TestDirectoryFileScanContinuesWhenSiblingDirectoryMoves(t *testing.T) {
+	a, source, _ := importTestApp(t)
+	left, right := filepath.Join(source, "left"), filepath.Join(source, "right")
+	for _, dir := range []string{left, right} {
+		importWrite(t, filepath.Join(dir, "episode.mkv"), []byte("complete episode"))
+	}
+	var removed, skipped string
+	onFile := func(path string, _ importSnapshot) bool {
+		removed = left
+		if filepath.Dir(path) == left {
+			removed = right
+		}
+		if err := os.Rename(removed, filepath.Join(source, ".moved")); err != nil {
+			t.Fatal(err)
+		}
+		return true
+	}
+	onError := func(path string, err error) error {
+		if !errors.Is(err, os.ErrNotExist) {
+			return err
+		}
+		skipped = path
+		return nil
+	}
+	result, err := a.scanImportFiles(t.Context(), source, true, onError, onFile, true)
+	if err != nil || removed == "" || skipped != removed {
+		t.Fatalf("removed %q, skipped %q, scan error %v", removed, skipped, err)
+	}
+	if files := result.(map[string]any)["files"].([]importScanFile); len(files) != 1 {
+		t.Fatalf("expected the remaining episode, got %v", files)
+	}
+}
+
+func TestDirectoryMissingSourceDoesNotCreateFailureHistory(t *testing.T) {
+	for _, phase := range []string{"organize_file", "import"} {
+		t.Run(phase, func(t *testing.T) {
+			a, rule, source := directoryFileFixture(t, true)
+			p := directoryMovieFile(t, source)
+			directoryPoll(t, a, rule)
+			directoryAge(t, a, rule, p)
+			directoryPoll(t, a, rule)
+			f := directoryObservation(t, a, rule, p)
+			if phase == "import" {
+				f = directoryRecognize(t, a, rule, p)
+			}
+			if err := os.Remove(p); err != nil {
+				t.Fatal(err)
+			}
+			job, err := scanJob(a.Store.DB.QueryRow(`UPDATE jobs SET state='running',generation=generation+1 WHERE id=? AND kind=? AND state='queued' RETURNING `+jobColumns, f.JobID, phase))
+			if err != nil {
+				t.Fatal(err)
+			}
+			a.runClaimedJob(t.Context(), job)
+			var state, code string
+			if err := a.Store.DB.QueryRow(`SELECT state,coalesce(error_code,'') FROM jobs WHERE id=?`, job.ID).Scan(&state, &code); err != nil || state != "cancelled" || code != "DIRECTORY_SOURCE_GONE" {
+				t.Fatalf("%s job: state=%s code=%s err=%v", phase, state, code, err)
+			}
+			directoryPoll(t, a, rule)
+			var histories, observations, reservations int
+			err = a.Store.DB.QueryRow(`SELECT (SELECT count(*) FROM transferhistory WHERE src=?),(SELECT count(*) FROM directory_file WHERE path=?),(SELECT count(*) FROM reservations WHERE intent_id=?)`, p, p, f.PlanID).Scan(&histories, &observations, &reservations)
+			if err != nil || histories != 0 || observations != 0 || reservations != 0 {
+				t.Fatalf("gone source: %d histories, %d observations, %d reservations, err=%v", histories, observations, reservations, err)
+			}
+		})
+	}
+}
+
+func TestDirectoryDownloaderRequiresUnorganizedCompleteFile(t *testing.T) {
+	a, rule, source := directoryFileFixture(t, true)
+	p := directoryMovieFile(t, source)
+	info, err := os.Stat(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fileSize := info.Size()
+	var stage atomic.Int64
+	qb := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		n := stage.Load()
+		switch r.URL.Path {
+		case "/api/v2/torrents/info":
+			task := workflowTask(strings.Repeat("b", 40), 1)
+			task["state"] = "stalledUP"
+			// Only this episode was selected in a larger season torrent.
+			task["completed"] = fileSize + 1
+			task["total_size"] = 2 * (fileSize + 1)
+			if n == 0 {
+				task["tags"] = "已整理"
+			}
+			workflowJSON(w, []any{task})
+		case "/api/v2/torrents/files":
+			progress := 1.
+			size := fileSize
+			if n == 1 {
+				progress = .5
+			}
+			if n >= 2 {
+				size++
+			}
+			workflowJSON(w, []any{map[string]any{"index": 0, "name": filepath.Base(p), "size": size, "progress": progress}})
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	defer qb.Close()
+	d := DownloaderConfig{Config: download.Config{ID: "qb", Kind: "qb", BaseURL: qb.URL}, DownloadPath: "/downloads", Mappings: []PathMapping{{From: "/downloads", To: source}}}
+	a.config.Downloaders = []DownloaderConfig{d}
+	rule.MonitorType, rule.DownloaderID, rule.DownloadPath = "downloader", d.ID, "/downloads"
+	a.config.Directories = []DirectoryRule{rule}
+	a.invalidateSettings()
+	directoryPoll(t, a, rule)
+	directoryAge(t, a, rule, p)
+	for i, want := range []string{"observing", "downloading", "downloading"} {
+		stage.Store(int64(i))
+		for range 2 {
+			directoryPoll(t, a, rule)
+			if f := directoryObservation(t, a, rule, p); f.State != want || f.JobID != "" {
+				t.Fatalf("stage %d prematurely ready: %+v", i, f)
+			}
+		}
+	}
+	// The same seeding task becomes eligible when the local file catches up
+	// with the downloader's already cached expected size.
+	stage.Store(3)
+	f, err := os.OpenFile(p, os.O_APPEND|os.O_WRONLY, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, writeErr := f.Write([]byte{1})
+	closeErr := f.Close()
+	if writeErr != nil || closeErr != nil {
+		t.Fatalf("complete local file: write=%v close=%v", writeErr, closeErr)
+	}
+	directoryPoll(t, a, rule)
+	directoryAge(t, a, rule, p)
+	directoryPoll(t, a, rule)
+	if f := directoryObservation(t, a, rule, p); f.State != "queued" || f.JobID == "" {
+		t.Fatalf("complete seed excluded: %+v", f)
+	}
+}
+
+func TestDirectoryUnchangedRecognitionFailureWaitsForEvidence(t *testing.T) {
+	a, rule, source := directoryFileFixture(t, true)
+	path := directoryMovieFile(t, source)
+	directoryPoll(t, a, rule)
+	f := directoryObservation(t, a, rule, path)
+	f.State = "needs_review"
+	f.LastSeen = time.Now().Add(-time.Hour).Format(time.RFC3339)
+	f.StableSince = time.Now().Add(-time.Hour).UnixNano()
+	if err := a.Store.Put(t.Context(), "directory_file", f.ID, f); err != nil {
+		t.Fatal(err)
+	}
+	for range 2 {
+		directoryPoll(t, a, rule)
+		current := directoryObservation(t, a, rule, path)
+		if current.State != "needs_review" || current.JobID != "" {
+			t.Fatalf("unchanged source retried recognition: %+v", current)
+		}
+	}
+	nfo := strings.TrimSuffix(path, ".mkv") + ".nfo"
+	importWrite(t, nfo, []byte(`<movie><title>Corrected Film</title><uniqueid type="tmdb" default="true">456</uniqueid></movie>`))
+	directoryPoll(t, a, rule)
+	directoryAge(t, a, rule, path)
+	directoryPoll(t, a, rule)
+	if current := directoryObservation(t, a, rule, path); current.State != "queued" || current.JobID == "" {
+		t.Fatalf("corrected NFO did not trigger recognition: %+v", current)
+	}
 }
