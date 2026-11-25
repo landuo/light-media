@@ -18,10 +18,11 @@ const stubStatus = "Active connections: 12\nserver accepts handled requests\n100
 type gatedNetwork struct {
 	entered, release chan struct{}
 	once             sync.Once
-	dns, tls         atomic.Int32
+	status, dns, tls atomic.Int32
 }
 
 func (n *gatedNetwork) Status(ctx context.Context, _ string, _ time.Duration) (*Response, error) {
+	n.status.Add(1)
 	n.once.Do(func() { close(n.entered) })
 	select {
 	case <-ctx.Done():
@@ -102,18 +103,25 @@ func TestPersistentInitNoopStopAndInflightCaches(t *testing.T) {
 	if got := string(call("get_page", `null`)); !strings.Contains(got, "插件未启用") {
 		t.Fatal(got)
 	}
-	// Source dashboard does not share the page's enable gate, and it skips
-	// DNS/TLS. Stop is a literal no-op and does not clear the new sample.
-	call("get_dashboard", `null`)
-	if n.dns.Load() != 1 || n.tls.Load() != 1 || p.machine.last() == nil {
-		t.Fatal("dashboard/stop policy changed")
-	}
 	before := p.machine.last()
+	if got := string(call("get_dashboard", `null`)); got != "[]" {
+		t.Fatalf("disabled dashboard returned %s", got)
+	}
+	if n.status.Load() != 1 || n.dns.Load() != 1 || n.tls.Load() != 1 || p.machine.last() != before {
+		t.Fatal("disabled dashboard probed the network or replaced the cached sample")
+	}
 	if _, e := p.Handle(context.Background(), "init", json.RawMessage(`[1]`), host); e == nil {
 		t.Fatal("source nonmapping accepted")
 	}
 	if p.machine.last() != before {
 		t.Fatal("failed source init mutated caches")
+	}
+	call("init", `{"enable":true}`)
+	if got := string(call("get_dashboard", `null`)); !strings.Contains(got, "活跃连接") {
+		t.Fatalf("enabled dashboard returned %s", got)
+	}
+	if n.status.Load() != 2 || n.dns.Load() != 1 || n.tls.Load() != 1 {
+		t.Fatal("enabled dashboard should probe status only")
 	}
 	if e := Manifest().Validate(); e != nil {
 		t.Fatal(e)

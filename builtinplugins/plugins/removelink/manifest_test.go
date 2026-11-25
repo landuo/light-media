@@ -14,7 +14,10 @@ func TestManifestHasOriginalSurfacesWithoutCleanupDelegate(t *testing.T) {
 	if e := m.Validate(); e != nil {
 		t.Fatal(e)
 	}
-	if len(m.APIs) != 0 || len(m.BroadcastHandlers) != 0 || m.HasPage || m.Frontend == nil || m.Version != "2.18" {
+	if m.Version != "1.0.0" {
+		t.Fatalf("Light Media RemoveLink version = %q, want 1.0.0", m.Version)
+	}
+	if len(m.APIs) != 0 || len(m.BroadcastHandlers) != 0 || m.HasPage || m.Frontend == nil {
 		t.Fatal("invented source surface", m)
 	}
 	for _, c := range m.Capabilities {
