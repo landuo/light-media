@@ -148,6 +148,7 @@ type App struct {
 	pluginOriginalAuth              originalAuthRuntime
 	authAttempts                    map[string][]time.Time
 	jobWake                         chan struct{}
+	importWake                      chan struct{}
 	wg                              sync.WaitGroup
 	importMu                        sync.RWMutex
 	importTargetProbe               importTargetProbe
@@ -216,7 +217,7 @@ func New(opts Options) (*App, error) {
 	if e != nil {
 		return nil, e
 	}
-	a := &App{pluginDeveloperMode: opts.PluginDeveloperMode, bigMemoryMode: opts.BigMemoryMode, safeMode: opts.SafeMode, RestartRequested: make(chan struct{}, 1), Store: s, Dir: opts.DataDir, web: opts.Web, control: "running", authAttempts: map[string][]time.Time{}, jobWake: make(chan struct{}, 1), materials: map[string][]byte{}}
+	a := &App{pluginDeveloperMode: opts.PluginDeveloperMode, bigMemoryMode: opts.BigMemoryMode, safeMode: opts.SafeMode, RestartRequested: make(chan struct{}, 1), Store: s, Dir: opts.DataDir, web: opts.Web, control: "running", authAttempts: map[string][]time.Time{}, jobWake: make(chan struct{}, 1), importWake: make(chan struct{}, importWorkerCount), materials: map[string][]byte{}}
 	a.frontendVersion = opts.FrontendVersion
 	a.originalHostDouban.searchStamp = time.Now().Format("20060102")
 	a.originalHostOCRHost = originalHostOCRStartupHost(os.LookupEnv)
@@ -396,7 +397,7 @@ func (a *App) Start(parent context.Context) {
 		a.wg.Add(1)
 		go func() { defer a.wg.Done(); a.jobWorker(ctx, generalJobs) }()
 	}
-	for i := 0; i < 2; i++ {
+	for i := 0; i < importWorkerCount; i++ {
 		a.wg.Add(1)
 		go func() { defer a.wg.Done(); a.jobWorker(ctx, importJobs) }()
 	}

@@ -100,12 +100,22 @@ func (a *App) enqueue(ctx context.Context, kind string, payload any, wf string) 
 	if e = tx.Commit(); e != nil {
 		return Job{}, e
 	}
-	select {
-	case a.jobWake <- struct{}{}:
-	default:
-	}
+	a.wakeQueuedJob(j.Kind)
 	return j, nil
 }
+
+// Signal after commit so an idle worker can see the new row when it wakes.
+func (a *App) wakeQueuedJob(kind string) {
+	wake := a.jobWake
+	if kind == "import" {
+		wake = a.importWake
+	}
+	select {
+	case wake <- struct{}{}:
+	default:
+	}
+}
+
 func scanJob(row interface{ Scan(...any) error }) (Job, error) {
 	j, e := scanJobRow(row)
 	if e == nil {
@@ -161,6 +171,8 @@ func (a *App) queryJobs(ctx context.Context, query string, args ...any) ([]Job, 
 	}
 	return out, rows.Err()
 }
+
+const importWorkerCount = 2
 
 type jobLane uint8
 
@@ -271,7 +283,9 @@ func (a *App) worker(ctx context.Context) {
 // instead of a query every tick.
 func (a *App) jobWorker(ctx context.Context, lane jobLane) {
 	wake := (<-chan struct{})(a.jobWake)
-	if lane == subscriptionJobs || lane == importJobs {
+	if lane == importJobs {
+		wake = a.importWake
+	} else if lane == subscriptionJobs {
 		wake = nil // Leave general job wakeups for the workers that can claim them.
 	}
 	for {

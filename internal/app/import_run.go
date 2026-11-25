@@ -228,10 +228,7 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 	if err = tx.Commit(); err != nil {
 		return Job{}, err
 	}
-	select {
-	case a.jobWake <- struct{}{}:
-	default:
-	}
+	a.wakeQueuedJob(job.Kind)
 	return job, nil
 }
 

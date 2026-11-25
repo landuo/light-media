@@ -477,9 +477,6 @@ func (a *App) confirmDownloadReview(ctx context.Context, key, planID string, con
 		return Job{}, err
 	}
 	a.log("INFO", "imports", "download_review_confirmed", "已确认关联下载的人工纠错；源文件及下载器任务保留", in.WorkflowID, job.ID)
-	select {
-	case a.jobWake <- struct{}{}:
-	default:
-	}
+	a.wakeQueuedJob(job.Kind)
 	return job, nil
 }
