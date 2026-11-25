@@ -1027,19 +1027,26 @@ func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, fil
 	if file.IdentityReason != "" {
 		return request, bad("DIRECTORY_IDENTITY_REVIEW", "NFO身份存在疑问，请在“手动整理”中选择电影或电视剧类型，并查询或填写TheMovieDb编号")
 	}
-	if hint := file.InferredMedia; hint != nil {
+	hint := file.InferredMedia
+	if file.isOriginalDisc() && (hint == nil || hint.Type == "tv" && file.Numbering == nil) {
+		parsed, err := a.discReleaseIdentity(ctx, file.Path, file.originalResolvedMeta)
+		if err != nil {
+			return request, err
+		}
+		file.Parsed = parsed
+		if file.Numbering == nil {
+			file.Numbering = parsed.Original
+		}
+	}
+	if hint != nil {
 		request.MediaType = hint.Type
 		request.TMDBID = hint.ID
 		numbering = file.Numbering
 	} else {
-		if file.originalItem != nil && originalImportFileClass(ImportFileRequest{originalItem: file.originalItem}).Bluray {
-			parsed, err := a.discReleaseIdentity(ctx, file.Path, file.originalResolvedMeta)
-			if err != nil {
-				return request, err
-			}
-			file.Parsed = parsed
-		}
 		p := file.Parsed
+		if file.isOriginalDisc() && (p.Title == "" || p.Type == "movie" && p.Year == 0) {
+			return request, bad("DIRECTORY_IDENTITY_REVIEW", "无法从蓝光原盘目录名确定影视身份，请在“手动整理”中选择影视类型并填写对应的 TMDB 编号。电视剧还需指定季号，集号可留空")
+		}
 		if p.Status != media.Parsed || p.Title == "" {
 			return request, bad("DIRECTORY_IDENTITY_REVIEW", "文件名缺少明确影视身份，请在“手动整理”中选择电影或电视剧类型，并查询或填写TheMovieDb编号")
 		}
@@ -1076,8 +1083,8 @@ func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, fil
 		return request, bad("DIRECTORY_MEDIA_TYPE", "影视类型与目录规则不符")
 	}
 	if request.MediaType == "tv" {
-		if numbering == nil || numbering.Season == nil || *numbering.Season < 0 || len(numbering.Episodes) == 0 {
-			return request, bad("DIRECTORY_NUMBERING_REVIEW", "剧集需要明确季号和单集编号，请在“手动整理”中选择电视剧类型并设置季、集，必要时查询或填写TheMovieDb编号")
+		if err := file.validateImportNumbering(numbering); err != nil {
+			return request, err
 		}
 		request.Files[0].Season = *numbering.Season
 		request.Files[0].SeasonExplicit = true

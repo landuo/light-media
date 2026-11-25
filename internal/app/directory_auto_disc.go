@@ -97,11 +97,30 @@ func (a *App) discReleaseIdentity(ctx context.Context, path string, meta *releas
 		if err != nil {
 			return media.ParseResult{}, err
 		}
-		if len(seasons) == 1 && len(episodes) > 0 {
-			p.Original = &media.Numbering{Season: &seasons[0], Episodes: episodes, Form: "season_episode"}
+		if len(seasons) == 1 && (len(episodes) > 0 || meta.Number("begin_season") != nil) {
+			n := &media.Numbering{Season: &seasons[0], Episodes: episodes}
+			if len(episodes) > 0 {
+				n.Form = "season_episode"
+			}
+			p.Original = n
 		}
 	}
 	return p, nil
+}
+
+func (file importScanFile) isOriginalDisc() bool {
+	return file.originalItem != nil && originalImportFileClass(ImportFileRequest{originalItem: file.originalItem}).Bluray
+}
+
+func (file importScanFile) validateImportNumbering(n *media.Numbering) error {
+	if file.isOriginalDisc() {
+		if n == nil || n.Season == nil || *n.Season < 0 {
+			return bad("DIRECTORY_NUMBERING_REVIEW", "电视剧蓝光原盘缺少明确季号，请在“手动整理”中选择电视剧并指定季号，集号可留空")
+		}
+	} else if n == nil || n.Season == nil || *n.Season < 0 || len(n.Episodes) == 0 {
+		return bad("DIRECTORY_NUMBERING_REVIEW", "剧集需要明确季号和单集编号，请在“手动整理”中选择电视剧类型并设置季、集，必要时查询或填写TheMovieDb编号")
+	}
+	return nil
 }
 
 // A known torrent anywhere inside a disc prevents treating that disc as an

@@ -68,8 +68,8 @@ func (a *App) directoryProviderIdentity(ctx context.Context, request ImportReque
 	request.originalDirectoryProvider = true
 	if kind == "tv" {
 		numbering := p.Original
-		if numbering == nil || numbering.Season == nil || *numbering.Season < 0 || len(numbering.Episodes) == 0 {
-			return request, bad("DIRECTORY_NUMBERING_REVIEW", "剧集需要明确季号和单集编号，请在“手动整理”中设置季、集")
+		if err := file.validateImportNumbering(numbering); err != nil {
+			return request, err
 		}
 		request.Files[0].Season = *numbering.Season
 		request.Files[0].SeasonExplicit = true
