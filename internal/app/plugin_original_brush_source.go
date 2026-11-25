@@ -23,6 +23,7 @@ type originalBrushSourceCandidate struct {
 }
 
 type originalBrushSourceCall struct {
+	taskID     string
 	mu         sync.Mutex
 	candidates map[string]originalBrushSourceCandidate
 }
@@ -38,6 +39,45 @@ func originalBrushSourceCapability(method string) bool {
 func originalBrushSourceScope(ctx context.Context, scope originalBaseCallScope) bool {
 	return scope.object != nil && scope.object.installation.PluginID == "BrushFlowLanduo" &&
 		scope.object.originalSubmittedScopeAllowed(ctx)
+}
+
+// The check methods can release their own task tag once the plugin has
+// verified that no torrent on that downloader still uses it.
+func (a *App) originalBrushTagCleanupAllowed(ctx context.Context, scope originalBaseCallScope, request plugins.DownloaderDeleteTagsRequestV1) error {
+	deny := bad("PLUGIN_CAPABILITY_DENIED", "刷流标签清理不在当前任务范围内")
+	if !originalBrushSourceScope(ctx, scope) {
+		return deny
+	}
+	switch scope.phase {
+	case "cleanup_tags", "cleanup_task_tag":
+		for _, tag := range request.Tags {
+			if !strings.HasPrefix(tag, "刷流-") {
+				return deny
+			}
+		}
+		return nil
+	case "check", "promotion_expiry":
+		if scope.brush == nil || scope.brush.taskID == "" || len(request.Tags) != 1 || request.Tags[0] != originalBrushTaskTag(scope.brush.taskID) {
+			return deny
+		}
+		downloader, err := a.configuredDownloader(request.DownloaderID)
+		if err != nil {
+			return err
+		}
+		stored, err := a.pluginStore.Config(ctx, scope.installation.InstanceID)
+		if err != nil {
+			return err
+		}
+		var config originalBrushStoredConfig
+		if json.Unmarshal(stored.Value, &config) == nil && config.Enabled {
+			for _, task := range config.Tasks {
+				if task.Enabled && task.ID == scope.brush.taskID && task.Downloader == downloader.Name {
+					return nil
+				}
+			}
+		}
+	}
+	return deny
 }
 
 func (a *App) originalBrushSourceResource(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (json.RawMessage, error) {

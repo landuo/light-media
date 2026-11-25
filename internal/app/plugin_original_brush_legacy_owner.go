@@ -10,6 +10,7 @@ import (
 
 	"light-media/internal/download"
 	"light-media/internal/plugins"
+	native "light-media/internal/plugins/iyuuautoseed/native"
 )
 
 func originalBrushTorrentLocation(task plugins.DownloaderTaskV1) (string, []string) {
@@ -72,12 +73,35 @@ func originalBrushDaemonAddress(configured DownloaderConfig) string {
 	return kind + "\x00" + originalOCROrigin(address) + strings.TrimRight(address.EscapedPath(), "/")
 }
 
+// The daemon performs these exact hash operations. Verify the live selection
+// and its ownership without opening or mapping the torrent's files on the host.
+func (a *App) originalBrushVerifySelected(ctx context.Context, scope originalBaseCallScope, downloader DownloaderConfig, client *native.IYUUClient, kind string, hashes []string) error {
+	raw, err := client.Torrents(ctx, hashes, false)
+	if err != nil {
+		return err
+	}
+	tasks, err := originalDownloaderTaskProjection(kind, hashes, raw)
+	if err != nil {
+		return err
+	}
+	if len(tasks) != len(hashes) {
+		return bad("DOWNLOAD_NOT_FOUND", "所选刷流任务已变化，请重新读取")
+	}
+	for _, task := range tasks {
+		directory, tags := originalBrushTorrentLocation(task)
+		if err := a.originalBrushOwnedTorrent(ctx, scope, downloader, task.Hash, directory, tags); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // An imported worker record is not a downloader receipt. Require the exact
-// same live daemon hash, local root and source-generated task marker before
+// same live daemon hash, directory identity and source-generated task marker before
 // adopting it. The global Brush tag alone can cause the original worker to
 // manufacture a record during a check and is therefore insufficient proof.
 // Callers serialize downloader effects with downloadMu.
-func (a *App) originalBrushOwnedTorrent(ctx context.Context, scope originalBaseCallScope, downloader DownloaderConfig, hash, directory string, tags []string, allowAdopt bool) error {
+func (a *App) originalBrushOwnedTorrent(ctx context.Context, scope originalBaseCallScope, downloader DownloaderConfig, hash, directory string, tags []string) error {
 	deny := bad("DOWNLOAD_NOT_MANAGED", "此种子缺少当前刷流实例的可靠归属")
 	owner, stale, err := a.originalBrushReadOwner(ctx, scope, downloader, hash)
 	if err != nil {
@@ -86,15 +110,15 @@ func (a *App) originalBrushOwnedTorrent(ctx context.Context, scope originalBaseC
 	if owner.TaskID != "" && owner.AdoptedPath == "" {
 		return nil // A confirmed new Add retains its existing stronger receipt.
 	}
-	if owner.TaskID == "" && !allowAdopt || owner.AdoptedPath != "" && owner.AdoptedPath != directory {
+	if owner.AdoptedPath != "" && owner.AdoptedPath != directory {
 		return deny
 	}
 	marker := originalBrushLegacyMarker(tags)
 	if marker == "" || owner.TaskID != "" && marker != originalBrushTaskTag(owner.TaskID) {
 		return deny
 	}
-	if err := a.originalBrushDestinationAllowed(directory); err != nil {
-		return err
+	if !importPath(directory) || browserInternal(directory) {
+		return bad("FILE_ROOT_REJECTED", "下载器返回的刷流保存目录无效")
 	}
 	address := originalBrushDaemonAddress(downloader)
 	if address == "" {

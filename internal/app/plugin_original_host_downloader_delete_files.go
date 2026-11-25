@@ -3,8 +3,6 @@ package app
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"os"
 	"path/filepath"
 	"reflect"
 
@@ -36,20 +34,20 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 	if request.BrushOwnership != brush || brush && (!originalBrushSourceScope(ctx, scope) || scope.phase != "brush" && scope.phase != "check" && scope.phase != "promotion_expiry") {
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "刷流删除不在当前调用范围内")
 	}
-	pathAllowed := a.sourceAllowed
-	if brush {
-		pathAllowed = a.brushSourceAllowed
-	}
 	hashes, _ := (plugins.DownloaderTasksRequestV1{DownloaderID: request.DownloaderID, Hashes: request.Hashes}).CanonicalSelection()
 	phase := a.performanceStages(ctx, "plugin_delete_files", "download_lock")
 	defer phase("")
 	a.downloadMu.Lock()
 	defer a.downloadMu.Unlock()
+	if brush {
+		phase("brush_validate_and_delete")
+		return a.originalBrushDeleteFiles(ctx, scope, request, hashes)
+	}
 	phase("import_lock")
 	a.importMu.Lock()
 	defer a.importMu.Unlock()
 	phase("validate_and_delete")
-	reader, kind, baseGuard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, request.BrushOwnership && a.originalBrushQBSourceLogin(scope, request.DownloaderID))
+	reader, kind, baseGuard, err := a.originalHostDownloaderBoundClient(ctx, scope, request.DownloaderID, true)
 	if err != nil {
 		return nil, err
 	}
@@ -57,29 +55,6 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 	configured, err := a.configuredDownloader(request.DownloaderID)
 	if err != nil {
 		return nil, err
-	}
-	readOwnership := func() (downloaderTaskOwnership, error) {
-		if request.BrushOwnership {
-			return nil, nil
-		}
-		return a.downloaderTaskOwnership(ctx, request.DownloaderID)
-	}
-	checkOwnership := func(ctx context.Context, owned downloaderTaskOwnership, hash, directory string, tags []string, allowAdopt bool) error {
-		if request.BrushOwnership {
-			return a.originalBrushOwnedTorrent(ctx, scope, configured, hash, directory, tags, allowAdopt)
-		} else if !owned.contains(download.Task{Hash: hash, Tags: tags}) {
-			return bad("DOWNLOAD_NOT_MANAGED", "此任务不属于当前宿主，禁止删除数据")
-		}
-		return nil
-	}
-	readManifest := func(ctx context.Context, path string) ([]browserStamp, error) {
-		manifest, err := browserManifest(ctx, path)
-		if request.BrushOwnership && errors.Is(err, os.ErrNotExist) {
-			// A paused add can be visible in the daemon before it creates its
-			// first file. Freeze absence and check again before deletion.
-			return nil, nil
-		}
-		return manifest, err
 	}
 	downloaderBindings := func() []download.Config {
 		out := []download.Config{}
@@ -101,7 +76,7 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 		if len(tasks) != len(hashes) {
 			return nil, bad("DOWNLOAD_NOT_FOUND", "所选任务已变化，请重新读取")
 		}
-		owned, err := readOwnership()
+		owned, err := a.downloaderTaskOwnership(ctx, request.DownloaderID)
 		if err != nil {
 			return nil, err
 		}
@@ -120,10 +95,10 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 				return nil, bad("DOWNLOAD_NOT_FOUND", "所选任务已变化，请重新读取")
 			}
 			directory, tags := originalBrushTorrentLocation(task)
-			if err := checkOwnership(ctx, owned, hash, directory, tags, true); err != nil {
-				return nil, err
+			if !owned.contains(download.Task{Hash: hash, Tags: tags}) {
+				return nil, bad("DOWNLOAD_NOT_MANAGED", "此任务不属于当前宿主，禁止删除数据")
 			}
-			if !importPath(directory) || !pathAllowed(directory) || browserInternal(directory) {
+			if !importPath(directory) || !a.sourceAllowed(directory) || browserInternal(directory) {
 				return nil, bad("FILE_ROOT_REJECTED", "任务目录不在当前授权资源目录内")
 			}
 			files, err := reader.PluginHostFiles(ctx, hash)
@@ -136,7 +111,7 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 			fact := originalDownloaderDeleteFact{Hash: hash, Tags: tags, Directory: directory, Files: files, Manifests: map[string][]browserStamp{}}
 			for _, file := range files {
 				path := filepath.Join(directory, file.Path)
-				if !importPath(path) || !within(directory, path) || path == directory || !pathAllowed(path) || browserInternal(path) {
+				if !importPath(path) || !within(directory, path) || path == directory || !a.sourceAllowed(path) || browserInternal(path) {
 					return nil, bad("FILE_ROOT_REJECTED", "任务文件超出授权资源目录")
 				}
 				if reason := a.browserStaticProtection(path); reason != "" {
@@ -145,11 +120,11 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 				if err := checkReferences(path); err != nil {
 					return nil, err
 				}
-				manifest, err := readManifest(ctx, path)
+				manifest, err := browserManifest(ctx, path)
 				if err != nil {
 					return nil, err
 				}
-				if len(manifest) != 1 && !(request.BrushOwnership && manifest == nil) {
+				if len(manifest) != 1 {
 					return nil, bad("INVALID_FILE", "下载器文件必须是普通文件")
 				}
 				fact.Manifests[path] = manifest
@@ -182,7 +157,7 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 		if !reflect.DeepEqual(frozenBindings, downloaderBindings()) {
 			return bad("DOWNLOADER_CHANGED", "下载器引用已变化，未执行删除")
 		}
-		owned, err := readOwnership()
+		owned, err := a.downloaderTaskOwnership(ctx, request.DownloaderID)
 		if err != nil {
 			return err
 		}
@@ -193,14 +168,14 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 		for _, fact := range frozen {
 			// Preserve the original task's ownership snapshot, including its tag;
 			// durable ownership may be revoked while this call is in progress.
-			if err := checkOwnership(ctx, owned, fact.Hash, fact.Directory, fact.Tags, false); err != nil {
-				return err
+			if !owned.contains(download.Task{Hash: fact.Hash, Tags: fact.Tags}) {
+				return bad("DOWNLOAD_NOT_MANAGED", "此任务不属于当前宿主，禁止删除数据")
 			}
-			if !pathAllowed(fact.Directory) || browserInternal(fact.Directory) {
+			if !a.sourceAllowed(fact.Directory) || browserInternal(fact.Directory) {
 				return bad("FILE_ROOT_REJECTED", "资源目录授权已变化")
 			}
 			for path, manifest := range fact.Manifests {
-				if !pathAllowed(path) {
+				if !a.sourceAllowed(path) {
 					return bad("FILE_ROOT_REJECTED", "资源目录授权已变化")
 				}
 				if reason := a.browserStaticProtection(path); reason != "" {
@@ -209,7 +184,7 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 				if err := checkReferences(path); err != nil {
 					return err
 				}
-				actual, err := readManifest(ctx, path)
+				actual, err := browserManifest(ctx, path)
 				if err != nil {
 					return err
 				}
@@ -228,6 +203,28 @@ func (a *App) originalHostDownloaderDeleteFiles(ctx context.Context, scope origi
 		return nil, err
 	}
 	defer client.Close()
+	return a.originalHostRemoveSelectedFiles(ctx, scope, request, hashes, client, baseGuard)
+}
+
+// BrushFlow deletes one selection on one daemon. Read that selection to verify
+// the live hashes and their instance ownership, then let the daemon remove its data.
+func (a *App) originalBrushDeleteFiles(ctx context.Context, scope originalBaseCallScope, request plugins.DownloaderDeleteFilesRequestV1, hashes []string) (json.RawMessage, error) {
+	client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, a.originalBrushQBSourceLogin(scope, request.DownloaderID))
+	if err != nil {
+		return nil, err
+	}
+	defer client.Close()
+	downloader, err := a.configuredDownloader(request.DownloaderID)
+	if err != nil {
+		return nil, err
+	}
+	if err := a.originalBrushVerifySelected(ctx, scope, downloader, client, kind, hashes); err != nil {
+		return nil, err
+	}
+	return a.originalHostRemoveSelectedFiles(ctx, scope, request, hashes, client, guard)
+}
+
+func (a *App) originalHostRemoveSelectedFiles(ctx context.Context, scope originalBaseCallScope, request plugins.DownloaderDeleteFilesRequestV1, hashes []string, client *native.IYUUClient, baseGuard func(context.Context) error) (json.RawMessage, error) {
 	receipt, err := client.PluginHostRemoveOwnedFiles(ctx, hashes)
 	out := plugins.DownloaderDeleteFilesV1{SchemaVersion: 1, DownloaderID: request.DownloaderID, Accepted: receipt.Accepted, Outcome: receipt.Outcome, DaemonApplied: receipt.Accepted && receipt.Outcome == "confirmed"}
 	if err != nil {

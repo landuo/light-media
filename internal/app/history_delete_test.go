@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"net/http"
@@ -11,6 +12,80 @@ import (
 
 	"light-media/internal/download"
 )
+
+func TestHistoryTargetDeletionFinishesWithUnmappedDownloaderDirectory(t *testing.T) {
+	a, item := historyRemovalFixture(t)
+	ctx := t.Context()
+	// The fixture completes its import directly in SQLite. In production
+	// the worker also removes the finished job from the dispatch index.
+	a.indexRemove(item.JobID)
+	// The selected library entry is a hardlink; qB also manages a directory
+	// with a different mount layout. Only the library entry was selected.
+	sourceBefore, err := os.Stat(item.Source)
+	if err != nil {
+		t.Fatal(err)
+	}
+	qb := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/api/v2/auth/login":
+			_, _ = w.Write([]byte("Ok."))
+		case "/api/v2/torrents/info":
+			_ = json.NewEncoder(w).Encode([]any{map[string]any{"hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "name": "unrelated", "save_path": "/unmapped/downloader", "progress": 1, "state": "uploading"}})
+		default:
+			t.Errorf("unexpected qB request: %s", r.URL.Path)
+			w.WriteHeader(http.StatusBadRequest)
+		}
+	}))
+	defer qb.Close()
+	a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "qb", Kind: "qbittorrent", BaseURL: qb.URL}, DownloadPath: a.config.Roots[0].Path}}
+	a.invalidateSettings()
+	season := filepath.Dir(item.Target)
+	if season == a.config.Roots[0].Path {
+		t.Fatal("fixture needs a library subdirectory")
+	}
+	if err := a.guardBrowserDownloaderSources(ctx, []string{season}); fileCode(err) != "FILE_DOWNLOADER_MAPPING_UNVERIFIED" {
+		t.Fatalf("expected unmapped downloader in fixture: %v", err)
+	}
+	sidecar := filepath.Join(season, "season.nfo")
+	importWrite(t, sidecar, []byte("season metadata"))
+	// Resume the exact production sequence: the first request removed the
+	// library entry, then stopped during parent cleanup before hiding the row.
+	if err := a.removeHistoricalTarget(ctx, item); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(item.Target); !os.IsNotExist(err) {
+		t.Fatalf("expected completed target removal: %v", err)
+	}
+	payload, err := json.Marshal(historyDeleteRequest{Confirm: true, DeleteTarget: true, FileID: item.executionFileID()})
+	if err != nil {
+		t.Fatal(err)
+	}
+	req := httptest.NewRequest(http.MethodDelete, "/", bytes.NewReader(payload))
+	if _, err = a.transferHistoryAPI(req, "transfers/"+item.ID); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(item.Target); !os.IsNotExist(err) {
+		t.Fatalf("library entry still present: %v", err)
+	}
+	sourceAfter, err := os.Stat(item.Source)
+	if err != nil || !os.SameFile(sourceBefore, sourceAfter) {
+		t.Fatalf("download source changed: %v", err)
+	}
+	if _, err := os.Stat(sidecar); err != nil {
+		t.Fatalf("unchecked parent was pruned: %v", err)
+	}
+	if _, err := a.transferHistoryItem(ctx, item.ID); err == nil {
+		t.Fatal("deleted record is still visible")
+	}
+	var state historyParentCleanup
+	var encoded []byte
+	if err := a.Store.Get(ctx, "history_parent_cleanup", item.executionFileID()+"/target", &encoded); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.Store.Unseal(encoded, &state); err != nil || !state.Completed || state.Operation != nil {
+		t.Fatalf("expected terminal cleanup receipt without a directory deletion: %v", err)
+	}
+}
 
 func historyRemovalFixture(t *testing.T) (*App, transferHistoryItem) {
 	t.Helper()

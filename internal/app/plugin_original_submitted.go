@@ -302,7 +302,7 @@ func (a *App) originalSubmitResource(ctx context.Context, scope originalBaseCall
 	if call := originalLiveInitialization(ctx, p); call != nil {
 		childCtx = context.WithValue(childCtx, originalInitializingObjectKey{}, call)
 	}
-	callback, revoke := p.originalBaseSessionHost(childCtx, input.Method, nil)
+	callback, revoke := p.originalBaseSessionHostBound(childCtx, input.Method, nil, nil, input.Payload)
 	pending, err := client.StartCallWithAdmission(ctx, childCtx, input.Method, input.Payload, callback, plugins.CallOptions{CallerDeadlineOnly: true})
 	if err != nil {
 		revoke()

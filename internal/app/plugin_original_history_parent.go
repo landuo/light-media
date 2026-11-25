@@ -273,7 +273,17 @@ func (a *App) originalHistoryCleanupParents(ctx context.Context, key, original s
 				continue
 			}
 			if err := a.guardBrowserDownloaderSources(ctx, []string{path}); err != nil {
-				return err
+				if ctx.Err() != nil {
+					return ctx.Err()
+				}
+				// The selected file already has a deletion receipt. Pruning
+				// its parent is optional, and an unverified directory stays put.
+				state.Completed = true
+				if err := save(); err != nil {
+					return err
+				}
+				a.log("INFO", "history", "parent_retained", "已保留父目录："+err.Error(), "", "")
+				return nil
 			}
 			manifest, err := browserManifest(ctx, path)
 			if err != nil {

@@ -445,23 +445,7 @@ func (a *App) originalBrushControlAllowed(ctx context.Context, scope originalBas
 		}
 	}
 	if len(legacy) != 0 {
-		raw, err := client.Torrents(ctx, legacy, false)
-		if err != nil {
-			return err
-		}
-		tasks, err := originalDownloaderTaskProjection(kind, legacy, raw)
-		if err != nil {
-			return err
-		}
-		if len(tasks) != len(legacy) {
-			return bad("DOWNLOAD_NOT_FOUND", "所选刷流任务已变化，请重新读取")
-		}
-		for _, task := range tasks {
-			directory, tags := originalBrushTorrentLocation(task)
-			if err := a.originalBrushOwnedTorrent(ctx, scope, downloader, task.Hash, directory, tags, true); err != nil {
-				return err
-			}
-		}
+		return a.originalBrushVerifySelected(ctx, scope, downloader, client, kind, legacy)
 	}
 	return nil
 }

@@ -63,6 +63,10 @@ func (p *Core) CreateTask(ctx context.Context, raw Row) (Response, error) {
 	return Response{Success: true, Data: v}, e
 }
 func (p *Core) UpdateTask(ctx context.Context, id string, raw Row) (Response, error) {
+	r, e := ValidateTaskPayload(raw)
+	if e != nil {
+		return Response{}, e
+	}
 	p.configMu.Lock()
 	defer p.configMu.Unlock()
 	if _, ok := p.task(id); !ok {
@@ -73,10 +77,6 @@ func (p *Core) UpdateTask(ctx context.Context, id string, raw Row) (Response, er
 		return Response{Message: "任务正在执行，请稍后再修改"}, nil
 	}
 	defer unlock()
-	r, e := ValidateTaskPayload(raw)
-	if e != nil {
-		return Response{}, e
-	}
 	r["id"] = id
 	t := NormalizeTask(r, p.h.NewID)
 	valid, e := p.validateReference(ctx, t, true)

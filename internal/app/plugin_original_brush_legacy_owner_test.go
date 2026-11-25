@@ -24,14 +24,25 @@ func TestBrushFlowLegacyOwnershipThroughHostDaemon(t *testing.T) {
 		t.Fatal(err)
 	}
 	const taskID = "legacy-task-owned"
+	const unusedTaskID = "unused-task-owned"
 	valid, globalOnly, duplicate := strings.Repeat("a", 40), strings.Repeat("b", 40), strings.Repeat("c", 40)
 	wrongMarker := strings.Repeat("d", 40)
+	second, disconnected := strings.Repeat("e", 40), strings.Repeat("f", 40)
+	const remote = "/__brush_daemon_fixture__/downloads"
 	var mu sync.Mutex
+	directories := map[string]string{second: remote}
+	changeDirectory := func(hash, dir string) {
+		mu.Lock()
+		defer mu.Unlock()
+		directories[hash] = dir
+	}
 	active := map[string]string{
-		valid:       "已整理, 刷流, " + originalBrushTaskTag(taskID),
-		globalOnly:  "已整理, 刷流",
-		duplicate:   "已整理, 刷流, " + originalBrushTaskTag(taskID),
-		wrongMarker: "已整理, 刷流, 刷流-foreign",
+		valid:        "已整理, 刷流, " + originalBrushTaskTag(taskID),
+		second:       "已整理, 刷流, " + originalBrushTaskTag(taskID),
+		disconnected: "已整理, 刷流, " + originalBrushTaskTag(taskID),
+		globalOnly:   "已整理, 刷流",
+		duplicate:    "已整理, 刷流, " + originalBrushTaskTag(taskID),
+		wrongMarker:  "已整理, 刷流, 刷流-foreign",
 	}
 	fileName := func(hash string) string { return hash[:1] + ".mkv" }
 	for hash := range active {
@@ -39,18 +50,28 @@ func TestBrushFlowLegacyOwnershipThroughHostDaemon(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	var reannounced, deleted []string
+	var reannounced, paused, deleted, reads, deletedTags []string
 	peer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		mu.Lock()
 		defer mu.Unlock()
 		selected := r.FormValue("hashes")
+		if r.URL.Path != "/api/v2/auth/login" {
+			if cookie, err := r.Cookie("QBT_SID_19080"); err != nil || cookie.Value != "fixture-only" {
+				http.Error(w, "Forbidden", http.StatusForbidden)
+				return
+			}
+		}
 		switch r.URL.Path {
 		case "/api/v2/auth/login":
-			http.SetCookie(w, &http.Cookie{Name: "SID", Value: "fixture-only", Path: "/"})
-			_, _ = io.WriteString(w, "Ok.")
+			http.SetCookie(w, &http.Cookie{Name: "QBT_SID_19080", Value: "fixture-only", Path: "/"})
+			w.WriteHeader(http.StatusNoContent)
 		case "/api/v2/app/version":
 			_, _ = io.WriteString(w, "v5.0.5")
 		case "/api/v2/torrents/info":
+			if selected == "" {
+				t.Error("brush ownership read enumerated the daemon")
+			}
+			reads = append(reads, selected)
 			rows := []map[string]any{}
 			for hash, tags := range active {
 				if selected != "" && !strings.Contains(selected, hash) {
@@ -58,39 +79,68 @@ func TestBrushFlowLegacyOwnershipThroughHostDaemon(t *testing.T) {
 				}
 				row := workflowTask(hash, 1)
 				row["save_path"], row["tags"] = root, tags
+				if dir, ok := directories[hash]; ok {
+					row["save_path"] = dir
+				}
 				rows = append(rows, row)
 			}
 			workflowJSON(w, rows)
-		case "/api/v2/torrents/files":
-			hash := r.FormValue("hash")
-			if _, ok := active[hash]; !ok {
-				http.NotFound(w, r)
-				return
-			}
-			workflowJSON(w, []map[string]any{{"name": fileName(hash), "size": 5, "progress": 1}})
+		case "/api/v2/app/webapiVersion":
+			_, _ = io.WriteString(w, "2.11.0")
+		case "/api/v2/torrents/stop":
+			paused = append(paused, selected)
+		case "/api/v2/torrents/deleteTags":
+			deletedTags = append(deletedTags, r.FormValue("tags"))
 		case "/api/v2/torrents/reannounce":
 			reannounced = append(reannounced, selected)
 			_, _ = io.WriteString(w, "Ok.")
 		case "/api/v2/torrents/delete":
 			deleted = append(deleted, selected)
-			if selected != valid || r.FormValue("deleteFiles") != "true" {
+			if (selected != valid+"|"+second && selected != disconnected) || r.FormValue("deleteFiles") != "true" {
 				t.Error("host dispatched an unproven deletion")
 				http.Error(w, "owned scope rejected", http.StatusForbidden)
 				return
 			}
-			if err := os.Remove(filepath.Join(root, fileName(selected))); err != nil {
-				t.Error(err)
+			for _, hash := range strings.Split(selected, "|") {
+				if err := os.Remove(filepath.Join(root, fileName(hash))); err != nil {
+					t.Error(err)
+				}
+				delete(active, hash)
 			}
-			delete(active, selected)
+			if selected == disconnected {
+				conn, _, err := w.(http.Hijacker).Hijack()
+				if err != nil {
+					t.Error(err)
+					return
+				}
+				conn.Close()
+				return
+			}
 			_, _ = io.WriteString(w, "Ok.")
 		default:
+			t.Errorf("unexpected daemon request %s", r.URL.Path)
 			http.NotFound(w, r)
 		}
 	}))
 	t.Cleanup(peer.Close)
 	settings := a.Settings()
-	downloader := DownloaderConfig{Config: download.Config{ID: "owned-legacy-brush", Kind: "qbittorrent", BaseURL: peer.URL}, Name: "Owned legacy qB"}
-	settings.Downloaders = []DownloaderConfig{downloader}
+	downloader := DownloaderConfig{Config: download.Config{ID: "owned-legacy-brush", Kind: "qbittorrent", BaseURL: peer.URL, Username: "fixture", Password: "fixture"}, Name: "Owned legacy qB"}
+	var otherReads int
+	other := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mu.Lock()
+		defer mu.Unlock()
+		if r.URL.Path == "/api/v2/torrents/info" && r.FormValue("hashes") == second {
+			otherReads++
+			row := workflowTask(second, 1)
+			row["save_path"], row["tags"] = remote, "已整理, 刷流, "+originalBrushTaskTag(taskID)
+			workflowJSON(w, []any{row})
+			return
+		}
+		t.Error("brush called an unrelated downloader", r.URL.Path)
+		http.Error(w, "offline fixture", http.StatusServiceUnavailable)
+	}))
+	t.Cleanup(other.Close)
+	settings.Downloaders = []DownloaderConfig{downloader, {Config: download.Config{ID: "other", Kind: "qbittorrent", BaseURL: other.URL}, Name: "Other qB"}}
 	settings.AllowedRoots = []string{root}
 	if err := a.saveSettings(ctx, settings); err != nil {
 		t.Fatal(err)
@@ -105,7 +155,10 @@ func TestBrushFlowLegacyOwnershipThroughHostDaemon(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		cfg := originalBrushStoredConfig{Enabled: true, Tasks: []originalBrushAddTask{{ID: taskID, SiteID: 301, Downloader: downloader.Name, Enabled: true}}}
+		cfg := originalBrushStoredConfig{Enabled: true, Tasks: []originalBrushAddTask{
+			{ID: taskID, SiteID: 301, Downloader: downloader.Name, Enabled: true},
+			{ID: unusedTaskID, SiteID: 301, Downloader: downloader.Name, Enabled: true},
+		}}
 		if _, err := a.pluginStore.saveOriginalPluginConfiguration(ctx, meta, mustCleanSeedJSON(cfg)); err != nil {
 			t.Fatal(err)
 		}
@@ -118,10 +171,10 @@ func TestBrushFlowLegacyOwnershipThroughHostDaemon(t *testing.T) {
 		}
 		return meta
 	}
-	meta := install("BrushFlowLanduo", valid, globalOnly, duplicate, wrongMarker)
+	meta := install("BrushFlowLanduo", valid, globalOnly, duplicate, wrongMarker, second, disconnected)
 	install("BrushFlowLanduoCopy", duplicate)
 	object := &originalPluginInstance{app: a, installation: meta, hostContract: pluginResourcesSDKContract,
-		manifest: plugins.Manifest{Capabilities: []string{plugins.DownloaderDeleteFilesCapability, plugins.DownloaderSourceControlCapability}}}
+		manifest: plugins.Manifest{Capabilities: []string{plugins.DownloaderDeleteFilesCapability, plugins.DownloaderSourceControlCapability, plugins.DownloaderDeleteTagsCapability}}}
 	lease, callCtx, err := object.reserveOriginalSubmission()
 	if err != nil {
 		t.Fatal(err)
@@ -130,13 +183,13 @@ func TestBrushFlowLegacyOwnershipThroughHostDaemon(t *testing.T) {
 	host, closeScope := object.originalBaseSessionHost(callCtx, "check", nil)
 	t.Cleanup(closeScope)
 	identity := plugins.Identity{PluginID: meta.PluginID, InstanceID: meta.InstanceID, Version: meta.Version}
-	deleteOne := func(hash string) (json.RawMessage, error) {
+	deleteHashes := func(hashes ...string) (json.RawMessage, error) {
 		return host(callCtx, identity, plugins.DownloaderDeleteFilesCapability, mustCleanSeedJSON(plugins.DownloaderDeleteFilesRequestV1{
-			DownloaderID: downloader.ID, Hashes: []string{hash}, BrushOwnership: true,
+			DownloaderID: downloader.ID, Hashes: hashes, BrushOwnership: true,
 		}))
 	}
 	for _, hash := range []string{globalOnly, wrongMarker, duplicate} {
-		if _, err := deleteOne(hash); pluginErrorCode(err) != "DOWNLOAD_NOT_MANAGED" {
+		if _, err := deleteHashes(valid, hash); pluginErrorCode(err) != "DOWNLOAD_NOT_MANAGED" {
 			t.Fatalf("unproven source selection was not rejected: %v", err)
 		}
 		if _, err := os.Stat(filepath.Join(root, fileName(hash))); err != nil {
@@ -161,7 +214,45 @@ func TestBrushFlowLegacyOwnershipThroughHostDaemon(t *testing.T) {
 	if pluginErrorCode(err) != "DOWNLOAD_NOT_MANAGED" {
 		t.Fatal("imported legacy record was allowed to start a torrent", err)
 	}
-	raw, err = deleteOne(valid)
+	// Only the intended daemon can own a migrated record, even if another
+	// daemon has precisely the same hash, save path and brush task marker.
+	_, err = host(callCtx, identity, plugins.DownloaderDeleteFilesCapability, mustCleanSeedJSON(plugins.DownloaderDeleteFilesRequestV1{
+		DownloaderID: "other", Hashes: []string{second}, BrushOwnership: true,
+	}))
+	if pluginErrorCode(err) != "DOWNLOAD_NOT_MANAGED" {
+		t.Fatal("a different downloader claimed the same source record", err)
+	}
+	if _, err := deleteHashes(second, globalOnly); pluginErrorCode(err) != "DOWNLOAD_NOT_MANAGED" {
+		t.Fatal("a mixed batch reached removal", err)
+	}
+	owner, _, err = a.originalBrushReadOwner(ctx, scope, downloader, second)
+	if err != nil || owner.TaskID != taskID || owner.AdoptedPath != remote {
+		t.Fatal("the daemon-only path did not bind the proven legacy identity", owner, err)
+	}
+	changeDirectory(second, remote+"/moved")
+	if _, err := deleteHashes(second); pluginErrorCode(err) != "DOWNLOAD_NOT_MANAGED" {
+		t.Fatal("a changed daemon directory did not invalidate the adopted identity", err)
+	}
+	changeDirectory(second, remote)
+	for _, action := range []string{"pause", "reannounce"} {
+		control.Action, control.Hashes = action, []string{second, wrongMarker}
+		if _, err := host(callCtx, identity, plugins.DownloaderSourceControlCapability, mustCleanSeedJSON(control)); pluginErrorCode(err) != "DOWNLOAD_NOT_MANAGED" {
+			t.Fatalf("an unproven hash reached %s: %v", action, err)
+		}
+		control.Hashes = []string{second}
+		raw, err := host(callCtx, identity, plugins.DownloaderSourceControlCapability, mustCleanSeedJSON(control))
+		var result plugins.DownloaderSourceMutationResultV1
+		if err != nil || json.Unmarshal(raw, &result) != nil || !result.Accepted {
+			t.Fatalf("remote legacy task %s: %s, %v", action, raw, err)
+		}
+	}
+	changeDirectory(disconnected, remote+"/../untrusted")
+	if _, err := deleteHashes(disconnected); pluginErrorCode(err) != "FILE_ROOT_REJECTED" {
+		t.Fatal("a noncanonical directory was used as a legacy identity", err)
+	}
+	changeDirectory(disconnected, root)
+	batch := valid + "|" + second
+	raw, err = deleteHashes(valid, second, strings.ToUpper(valid))
 	var result plugins.DownloaderDeleteFilesV1
 	if err != nil || json.Unmarshal(raw, &result) != nil || !result.DaemonApplied || !result.BookkeepingCompleted {
 		t.Fatal("proven legacy task did not reach protected daemon deletion", err)
@@ -173,9 +264,49 @@ func TestBrushFlowLegacyOwnershipThroughHostDaemon(t *testing.T) {
 	if err != nil || owner.TaskID != "" {
 		t.Fatal("confirmed deletion did not retire the adopted ownership", err)
 	}
+	raw, err = deleteHashes(disconnected)
+	result = plugins.DownloaderDeleteFilesV1{}
+	if err != nil || json.Unmarshal(raw, &result) != nil || result.Outcome != "unknown" || result.FailureCode != "DOWNLOADER_OUTCOME_UNKNOWN" || result.BookkeepingCompleted || result.DaemonApplied {
+		t.Fatal("lost acknowledgement must preserve uncertainty", result, err)
+	}
+	owner, _, err = a.originalBrushReadOwner(ctx, scope, downloader, disconnected)
+	if err != nil || owner.TaskID == "" {
+		t.Fatal("an unknown outcome must preserve the ownership receipt", err)
+	}
+	if _, err := deleteHashes(disconnected); pluginErrorCode(err) != "DOWNLOAD_NOT_FOUND" {
+		t.Fatal("a subsequent read of the missing task reached another deletion", err)
+	}
+	for _, phase := range []string{"check", "promotion_expiry"} {
+		tagHost, closeTags := object.originalBaseSessionHostBound(callCtx, phase, nil, nil, mustCleanSeedJSON(map[string]string{"task_id": unusedTaskID}))
+		for _, tc := range []struct {
+			downloaderID, tag string
+			allowed           bool
+		}{
+			{downloader.ID, originalBrushTaskTag(unusedTaskID), true},
+			{downloader.ID, "刷流-foreign", false},
+			{"other", originalBrushTaskTag(unusedTaskID), false},
+			{downloader.ID, "刷流", false},
+		} {
+			raw, err := tagHost(callCtx, identity, plugins.DownloaderDeleteTagsCapability, mustCleanSeedJSON(plugins.DownloaderDeleteTagsRequestV1{DownloaderID: tc.downloaderID, Tags: []string{tc.tag}}))
+			var result plugins.DownloaderMutationV1
+			if tc.allowed && (err != nil || json.Unmarshal(raw, &result) != nil || !result.Accepted) || !tc.allowed && pluginErrorCode(err) != "PLUGIN_CAPABILITY_DENIED" {
+				t.Fatalf("%s tag %q downloader %q: receipt=%s err=%v", phase, tc.tag, tc.downloaderID, raw, err)
+			}
+		}
+		closeTags()
+	}
 	mu.Lock()
 	defer mu.Unlock()
-	if !slices.Equal(reannounced, []string{valid}) || !slices.Equal(deleted, []string{valid}) {
+	if !slices.Equal(reads, []string{valid + "|" + globalOnly, valid + "|" + wrongMarker, valid + "|" + duplicate, valid, second + "|" + globalOnly, second, second + "|" + wrongMarker, second, second + "|" + wrongMarker, second, disconnected, batch, disconnected, disconnected}) {
+		t.Fatal("expected one exact ownership read per selection", reads)
+	}
+	if otherReads != 1 {
+		t.Fatal("unexpected reads on the other downloader", otherReads)
+	}
+	if !slices.Equal(deletedTags, []string{originalBrushTaskTag(unusedTaskID), originalBrushTaskTag(unusedTaskID)}) {
+		t.Fatal("unexpected tag mutations", deletedTags)
+	}
+	if !slices.Equal(reannounced, []string{valid, second}) || !slices.Equal(paused, []string{second}) || !slices.Equal(deleted, []string{batch, disconnected}) {
 		t.Fatal("isolated daemon observed unexpected effects", len(reannounced), len(deleted))
 	}
 }

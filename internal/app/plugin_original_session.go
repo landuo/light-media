@@ -51,7 +51,7 @@ func (p *originalPluginInstance) callSessionBound(ctx context.Context, runner pl
 		}
 		ctx = context.WithoutCancel(ctx)
 	}
-	callback, closePhase := p.originalBaseSessionHostBound(ctx, method, host, initialization)
+	callback, closePhase := p.originalBaseSessionHostBound(ctx, method, host, initialization, payload)
 	defer closePhase()
 	options := plugins.CallOptions{Timeout: runner.Timeout, ExcludeHostTime: runner.ExcludeHostTime}
 	if client.SupportsConcurrent() {

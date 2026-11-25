@@ -7,7 +7,6 @@ import (
 	"errors"
 	"io"
 	"slices"
-	"strconv"
 	"time"
 
 	sdk "light-media/builtinplugins/internal/sdk"
@@ -182,9 +181,6 @@ func standardResponse(status int, value any) (json.RawMessage, error) {
 	}
 	return json.Marshal(sdk.HTTPResponse{Status: status, Body: body, Headers: map[string]string{"Content-Type": "application/json"}})
 }
-func standardValidation(scope, field string) (json.RawMessage, error) {
-	return standardResponse(422, Row{"detail": []any{Row{"loc": []string{scope, field}, "msg": "Invalid value", "type": "value_error"}}})
-}
 func (p *Standard) http(ctx context.Context, raw json.RawMessage) (json.RawMessage, error) {
 	var request sdk.HTTPRequest
 	if err := json.Unmarshal(raw, &request); err != nil {
@@ -213,16 +209,19 @@ func (p *Standard) http(ctx context.Context, raw json.RawMessage) (json.RawMessa
 		if values := request.Query["state"]; len(values) > 0 {
 			state = values[len(values)-1]
 		}
+		problems := &ValidationError{scope: "query"}
 		if !slices.Contains([]string{"active", "deleted", "all"}, state) {
-			return standardValidation("query", "state")
+			const pattern = "^(active|deleted|all)$"
+			problems.add("state", "string_pattern_mismatch", "String should match pattern '"+pattern+"'", state, Row{"pattern": pattern})
 		}
-		for name, target := range map[string]*int{"page": &page, "page_size": &size} {
-			if values := request.Query[name]; len(values) > 0 {
-				*target, err = strconv.Atoi(values[len(values)-1])
-				if err != nil || name == "page" && *target < 1 || name == "page_size" && (*target < 10 || *target > 200) {
-					return standardValidation("query", name)
-				}
-			}
+		if values := request.Query["page"]; len(values) > 0 {
+			page = problems.integer("page", values[len(values)-1], 1, 0)
+		}
+		if values := request.Query["page_size"]; len(values) > 0 {
+			size = problems.integer("page_size", values[len(values)-1], 10, 200)
+		}
+		if len(problems.details) > 0 {
+			return problems.response()
 		}
 		if _, ok := p.core.task(id); !ok {
 			response.Message = "刷流任务不存在"
@@ -233,7 +232,15 @@ func (p *Standard) http(ctx context.Context, raw json.RawMessage) (json.RawMessa
 	case "settings", "create", "update", "state":
 		body, decodeErr := standardObject(request.Body)
 		if decodeErr != nil {
-			return standardValidation("body", "body")
+			var input any
+			_ = json.Unmarshal(request.Body, &input)
+			problems := &ValidationError{scope: "body"}
+			if input == nil {
+				problems.add("", "missing", "Field required", nil, nil)
+			} else {
+				problems.add("", "model_attributes_type", "Input should be a valid dictionary or object to extract fields from", input, nil)
+			}
+			return problems.response()
 		}
 		switch request.Key {
 		case "settings":
@@ -261,7 +268,13 @@ func (p *Standard) http(ctx context.Context, raw json.RawMessage) (json.RawMessa
 	if err != nil {
 		var validation *ValidationError
 		if errors.As(err, &validation) {
-			return standardValidation("body", validation.Field)
+			if validation.uncaughtRegexError {
+				return json.Marshal(sdk.HTTPResponse{
+					Status: 500, Body: []byte("Internal Server Error"),
+					Headers: map[string]string{"Content-Type": "text/plain; charset=utf-8"},
+				})
+			}
+			return validation.response()
 		}
 		return nil, err
 	}

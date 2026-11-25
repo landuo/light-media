@@ -243,13 +243,8 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 			return nil, bad("INVALID_PLUGIN_VALUE", "必须指定要删除的标签定义")
 		}
 		if scope.object != nil && scope.object.installation.PluginID == "BrushFlowLanduo" {
-			if !originalBrushSourceScope(ctx, scope) || scope.phase != "cleanup_tags" && scope.phase != "cleanup_task_tag" {
-				return nil, bad("PLUGIN_CAPABILITY_DENIED", "刷流标签清理不在当前任务范围内")
-			}
-			for _, tag := range request.Tags {
-				if !strings.HasPrefix(tag, "刷流-") {
-					return nil, bad("PLUGIN_CAPABILITY_DENIED", "只允许清理刷流任务标签")
-				}
+			if err := a.originalBrushTagCleanupAllowed(ctx, scope, request); err != nil {
+				return nil, err
 			}
 		}
 		client, kind, guard, err := a.originalHostDownloaderBoundSourceClient(ctx, scope, request.DownloaderID, true, a.originalBrushQBSourceLogin(scope, request.DownloaderID))

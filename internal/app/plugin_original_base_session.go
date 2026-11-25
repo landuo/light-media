@@ -21,10 +21,10 @@ type originalBaseStopCall struct {
 // Each SDK exchange gets a new authority closure. Neither a plugin's stored
 // callback nor a replacement object can borrow this phase after it closes.
 func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context, phase string, fallback plugins.HostHandler) (plugins.HostHandler, func()) {
-	return p.originalBaseSessionHostBound(callCtx, phase, fallback, nil)
+	return p.originalBaseSessionHostBound(callCtx, phase, fallback, nil, nil)
 }
 
-func (p *originalPluginInstance) originalBaseSessionHostBound(callCtx context.Context, phase string, fallback plugins.HostHandler, initialization *originalInitializationCall) (plugins.HostHandler, func()) {
+func (p *originalPluginInstance) originalBaseSessionHostBound(callCtx context.Context, phase string, fallback plugins.HostHandler, initialization *originalInitializationCall, payload json.RawMessage) (plugins.HostHandler, func()) {
 	if p.hostContract != pluginBaseSDKContract && p.hostContract != pluginResourcesSDKContract {
 		return fallback, func() {}
 	}
@@ -37,8 +37,18 @@ func (p *originalPluginInstance) originalBaseSessionHostBound(callCtx context.Co
 	if p.installation.PluginID == "AutoBackup" {
 		localBackup = new(atomic.Bool)
 	}
-	if p.installation.PluginID == "BrushFlowLanduo" && phase == "brush" {
-		brush = &originalBrushSourceCall{}
+	if p.installation.PluginID == "BrushFlowLanduo" {
+		switch phase {
+		case "brush":
+			brush = &originalBrushSourceCall{}
+		case "check", "promotion_expiry":
+			var input struct {
+				TaskID string `json:"task_id"`
+			}
+			if json.Unmarshal(payload, &input) == nil && input.TaskID != "" {
+				brush = &originalBrushSourceCall{taskID: input.TaskID}
+			}
+		}
 	}
 	cleanSeed := p.originalCleanSeedCallFor(callCtx, phase)
 	seedRescue := p.originalSeedRescueCallFor(callCtx, phase)

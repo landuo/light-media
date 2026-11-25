@@ -92,7 +92,11 @@ if err != nil {
 return json.Marshal(result)
 ```
 
-`Completed`省略Hash查询已完成任务，显式空数组查询零项；原`Tasks`仍要求明确的Hash数组，不能用null扩成全部任务。控制操作逐个选择准确Hash，`remove_task`始终保留下载文件。未知写入结果必须先核对下载器实际状态，不能自动重发添加/删除。`DeleteFiles`是独立入口，要求非空准确Hash、宿主认领及本地授权目录，保护其他任务引用、硬链接和符号链接；检查`Outcome`、`DaemonApplied`和`BookkeepingCompleted`，外部删除成功而本地记录失败时也不能重发删除。
+`Completed` 省略 Hash 时查询已完成任务，传空数组时返回零项。`Tasks` 要求显式传入 Hash 数组。`remove_task` 保留下载文件。
+
+内置刷流助手调用 `DeleteFiles` 时，宿主在所选下载器上按 Hash 核对整批任务的归属。全部核对通过后，宿主向该下载器发送一次“删除种子和数据”。目录可以只挂载在下载器中。其他种子引用相同数据时，下载器仍会收到删除指令。其他插件使用通用删除入口时，宿主另外检查本地目录授权、文件及其他任务的引用。
+
+调用方通过 `Outcome`、`DaemonApplied` 和 `BookkeepingCompleted` 区分下载器确认、结果未知和本地记录清理失败。结果未知时应重新查询下载器。下一轮刷流检查可按下载器当时仍有的任务重新判断删除条件。
 
 | SDK对象 | 当前有限入口 | 用法边界 |
 | --- | --- | --- |

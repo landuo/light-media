@@ -50,7 +50,7 @@ func TestCustomHostsReleaseAdmission(t *testing.T) {
 			request := json.RawMessage(`{"mode":"replace","lines":["192.0.2.1 example.invalid"]}`)
 			assertDenied := func(phase string, payload json.RawMessage) {
 				t.Helper()
-				host, revoke := p.originalBaseSessionHostBound(initCtx, phase, nil, initialization)
+				host, revoke := p.originalBaseSessionHostBound(initCtx, phase, nil, initialization, nil)
 				defer revoke()
 				_, err := host(initCtx, identity, originalCustomHostsCapability, payload)
 				var denied *APIError
@@ -61,7 +61,7 @@ func TestCustomHostsReleaseAdmission(t *testing.T) {
 			assertDenied("get_form", request)
 			assertDenied("init", json.RawMessage(`{"mode":"replace","lines":["192.0.2.2 example.invalid"]}`))
 			if tc.allowed {
-				host, revoke := p.originalBaseSessionHostBound(initCtx, "init", nil, initialization)
+				host, revoke := p.originalBaseSessionHostBound(initCtx, "init", nil, initialization, nil)
 				defer revoke()
 				raw, err := host(initCtx, identity, originalCustomHostsCapability, request)
 				if err != nil || string(raw) != `{"write_failed":false,"err_hosts":[]}` {

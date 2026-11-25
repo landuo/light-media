@@ -44,9 +44,8 @@ func (t Task) Tag() string {
 }
 
 type Config struct {
-	Settings   Row
-	Tasks      []Task
-	LegacyOnce bool
+	Settings Row
+	Tasks    []Task
 }
 
 func (c Config) Enabled() bool { return truth(c.Settings["enabled"]) }

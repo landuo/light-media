@@ -64,18 +64,6 @@ func (p *Core) Init(ctx context.Context, raw Row) error {
 			p.h.Log(ctx, "warning", "提交刷流标签清理任务失败："+e.Error())
 		}
 	}
-	if c.LegacyOnce {
-		for _, t := range c.Tasks {
-			if t.B("enabled") {
-				if e = p.h.Queue(ctx, t, "brush"); e != nil {
-					return e
-				}
-				if e = p.h.Queue(ctx, t, "check"); e != nil {
-					return e
-				}
-			}
-		}
-	}
 	return nil
 }
 

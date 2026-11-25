@@ -12,9 +12,8 @@ func (c *IYUUClient) PluginHostFiles(ctx context.Context, hash string) ([]File, 
 	return c.client.Files(ctx, hash)
 }
 
-// PluginHostRemoveOwnedFiles is called only after the trusted App has frozen
-// exact owned tasks and their authorized local file manifests. There is no
-// worker-provided delete-data boolean or arbitrary native RPC entry point.
+// PluginHostRemoveOwnedFiles removes the exact hashes whose ownership the
+// App verified on this daemon. The caller applies its own file policy.
 func (c *IYUUClient) PluginHostRemoveOwnedFiles(ctx context.Context, hashes []string) (out IYUUReceipt, err error) {
 	ctx, phase := beginMutation(ctx)
 	defer func() { err = phase.finish(err, &out.Outcome) }()

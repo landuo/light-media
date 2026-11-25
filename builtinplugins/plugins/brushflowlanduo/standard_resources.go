@@ -276,8 +276,11 @@ func (*standardHost) Completed(ctx context.Context, name string, hashes []string
 		return nil, err
 	}
 	result, err := (sdk.Downloaders{Host: brushCaller(ctx)}).SourceCompleted(ctx, sdk.DownloaderCompletedRequestV1{DownloaderID: d.ID, Hashes: hashes})
-	if err != nil || result.NativeError {
+	if err != nil {
 		return nil, err
+	}
+	if result.NativeError {
+		return nil, errors.New("下载器读取已完成种子列表失败")
 	}
 	return brushTaskRows(result.DownloaderTasksV1)
 }
@@ -362,14 +365,8 @@ func (*standardHost) Download(ctx context.Context, task Task, candidate, _ Row, 
 		path := text(value)
 		request.SavePath = &path
 	}
-	if value := task.N("up_speed"); value != 0 {
-		bytes := int64(value) * 1024
-		request.UploadLimitBytes = &bytes
-	}
-	if value := task.N("dl_speed"); value != 0 {
-		bytes := int64(value) * 1024
-		request.DownloadLimitBytes = &bytes
-	}
+	request.UploadLimitBytes = brushSpeedLimitBytes(d.Kind, task.N("up_speed"))
+	request.DownloadLimitBytes = brushSpeedLimitBytes(d.Kind, task.N("dl_speed"))
 	result, err := (sdk.BrushSource{Host: brushCaller(ctx)}).Add(ctx, sdk.BrushAddRequestV1{SiteID: site.ID,
 		MaterialID: text(candidate["brush_material_id"]), TaskID: task.ID(),
 		DownloaderSourceAddRequestV1: sdk.DownloaderSourceAddRequestV1{DownloaderAddRequestV1: request}})
@@ -380,6 +377,16 @@ func (*standardHost) Download(ctx context.Context, task Task, candidate, _ Row, 
 		return "", err
 	}
 	return result.Hash, nil
+}
+
+func brushSpeedLimitBytes(kind string, speed float64) *int64 {
+	kib := int64(speed)
+	// The source qB add omits a truncated zero. Transmission explicitly applies it.
+	if speed == 0 || kind == "qbittorrent" && kib == 0 {
+		return nil
+	}
+	bytes := kib * 1024
+	return &bytes
 }
 
 type uncertainBrushEffect struct{}

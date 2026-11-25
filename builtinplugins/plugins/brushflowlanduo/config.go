@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"regexp"
+	"slices"
 	"strings"
 
 	pyre "light-media/builtinplugins/plugins/brushflowlanduo/compat/pythonre"
@@ -98,7 +99,7 @@ func NormalizeConfig(ctx context.Context, raw Row, h Host) (Config, error) {
 		if e != nil {
 			return c, e
 		}
-		c.LegacyOnce = truth(raw["onlyonce"]) && c.Enabled()
+		// Migrated one-shot flags are historical. Manual runs use Submit.
 	}
 	sites, e := h.Sites(ctx)
 	if e != nil {
@@ -209,10 +210,6 @@ func migrateLegacyConfig(ctx context.Context, raw Row, h Host) ([]any, error) {
 	return out, nil
 }
 
-type ValidationError struct{ Field, Message string }
-
-func (e *ValidationError) Error() string { return e.Field + ": " + e.Message }
-func invalid(k, m string) error          { return &ValidationError{k, m} }
 func pydanticBool(v any) (bool, bool) {
 	switch x := v.(type) {
 	case bool:
@@ -224,7 +221,7 @@ func pydanticBool(v any) (bool, bool) {
 		case "false", "0", "no", "off", "n", "f":
 			return false, true
 		}
-	case float64, int, json.Number:
+	case float64, float32, int, int64, json.Number:
 		n := number(x)
 		if n == 0 || n == 1 {
 			return n == 1, true
@@ -246,168 +243,125 @@ var numericRange sourceNumericRange
 func ValidateTaskPayload(raw Row) (Row, error) {
 	defaults := Row{"enabled": true, "notify": true, "brush_interval": 10, "check_interval": 5, "site_ratio_control": false, "freeleech": "free", "hr": "yes", "timezone_offset": 0, "except_subscribe": true, "proxy_delete": false, "del_no_free": false, "site_hr_active": false, "site_skip_tips": false, "rss_support": false}
 	r := Row{}
-	for _, k := range taskFields {
-		r[k] = nil
-	}
-	for k, v := range defaults {
-		r[k] = v
-	}
-	r["id"] = nil
-	for _, k := range append(append([]string{}, taskFields...), "id", "name") {
-		if v, ok := raw[k]; ok {
-			r[k] = v
-		}
-	}
-	for _, k := range []string{"name", "downloader"} {
-		s, ok := r[k].(string)
-		if !ok {
-			return nil, invalid(k, "Input should be a valid string")
-		}
-		if len([]rune(s)) < 1 || len([]rune(s)) > 80 {
-			return nil, invalid(k, "String length should be between 1 and 80")
-		}
-		s = strings.TrimSpace(s)
-		if s == "" {
-			return nil, invalid(k, "字段不能为空")
-		}
-		r[k] = s
-	}
-	for _, k := range []string{"enabled", "notify", "site_ratio_control", "except_subscribe", "proxy_delete", "del_no_free", "site_hr_active", "site_skip_tips", "rss_support"} {
-		v, ok := pydanticBool(r[k])
-		if !ok {
-			return nil, invalid(k, "Input should be a valid boolean")
-		}
-		r[k] = v
-	}
-	siteID, ok := parseSiteID(r["site_id"], true)
-	if !ok {
-		return nil, invalid("site_id", "Input should be a valid integer")
-	}
-	if siteID <= 0 {
-		return nil, invalid("site_id", "Input should be greater than 0")
-	}
-	r["site_id"] = siteID
-	for _, k := range append([]string{"brush_interval", "check_interval"}, numericTaskFields...) {
-		v := r[k]
-		if k != "timezone_offset" && k != "brush_interval" && k != "check_interval" && (v == nil || v == "" || parseNumber(v) != nil && number(v) == 0) {
-			r[k] = nil
-			continue
-		}
-		n := parseNumber(v)
-		if n == nil || math.IsInf(number(n), 0) || math.IsNaN(number(n)) {
-			return nil, invalid(k, "Input should be a valid number")
-		}
-		f := number(n)
-		if k != "timezone_offset" && f <= 0 {
-			return nil, invalid(k, "Input should be greater than 0")
-		}
-		if k == "brush_interval" || k == "check_interval" || k == "maxdlcount" {
-			if f != math.Trunc(f) {
-				return nil, invalid(k, "Input should be a valid integer")
+	problems := &ValidationError{scope: "body"}
+	for _, k := range append([]string{"id", "name"}, taskFields...) {
+		input, supplied := raw[k]
+		if !supplied {
+			if k == "name" || k == "site_id" || k == "downloader" {
+				problems.add(k, "missing", "Field required", raw, nil)
+				continue
 			}
-			if (k == "brush_interval" || k == "check_interval") && (f < 1 || f > 1440) {
-				return nil, invalid(k, "Input should be between 1 and 1440")
+			input = defaults[k]
+		}
+		r[k] = input
+		switch k {
+		case "id":
+			if _, ok := input.(string); input != nil && !ok {
+				problems.add(k, "string_type", "Input should be a valid string", input, nil)
 			}
-			r[k] = int(f)
-		} else {
-			r[k] = f
-		}
-	}
-	for _, k := range textTaskFields {
-		r[k] = clean(r[k])
-	}
-	for _, k := range []string{"size", "seeder", "pubtime", "delete_size_range"} {
-		if truth(r[k]) && !numericRange.MatchString(text(r[k])) {
-			return nil, invalid(k, "请输入数字或数字范围，例如 10 或 10-80")
-		}
-	}
-	if truth(r["active_time_range"]) && !validTimeRange(text(r["active_time_range"])) {
-		return nil, invalid("active_time_range", "开启时间段格式应为 HH:MM-HH:MM")
-	}
-	for _, k := range []string{"include", "exclude"} {
-		if truth(r[k]) {
-			if _, e := pyre.Compile(text(r[k])); e != nil {
-				return nil, invalid(k, e.Error())
+		case "name", "downloader":
+			r[k] = problems.requiredText(k, input)
+		case "enabled", "notify", "site_ratio_control", "except_subscribe", "proxy_delete", "del_no_free", "site_hr_active", "site_skip_tips", "rss_support":
+			r[k] = problems.boolean(k, input)
+		case "site_id":
+			r[k] = problems.integer(k, input, 0, 0)
+		case "freeleech", "hr":
+			var allowed string
+			if k == "freeleech" {
+				if input == "" || input == "free" || input == "2xfree" {
+					continue
+				}
+				allowed = "'', 'free' or '2xfree'"
+			} else {
+				if input == "yes" || input == "no" {
+					continue
+				}
+				allowed = "'yes' or 'no'"
+			}
+			problems.add(k, "literal_error", "Input should be "+allowed, input, Row{"expected": allowed})
+		default:
+			if !slices.Contains(textTaskFields, k) {
+				r[k] = problems.number(k, input)
+				continue
+			}
+			r[k] = clean(input)
+			s := text(r[k])
+			if s == "" {
+				continue
+			}
+			switch k {
+			case "size", "seeder", "pubtime", "delete_size_range":
+				if !numericRange.MatchString(s) {
+					problems.value(k, "请输入数字或数字范围，例如 10 或 10-80", input)
+				}
+			case "active_time_range":
+				if !validTimeRange(s) {
+					problems.value(k, timeRangeError(s), input)
+				}
+			case "include", "exclude":
+				if _, err := pyre.Compile(s); err != nil {
+					problems.value(k, err.Error(), input)
+					// Pydantic catches ValueError and its subclasses, but re.error escapes model validation.
+					switch pyre.ErrorClass(err) {
+					case "ValueError", "UnicodeError":
+					default:
+						problems.uncaughtRegexError = true
+					}
+				}
 			}
 		}
 	}
-	if r["freeleech"] != "" && r["freeleech"] != "free" && r["freeleech"] != "2xfree" {
-		return nil, invalid("freeleech", "Input should be '', 'free' or '2xfree'")
+	if len(problems.details) == 0 && truth(r["site_ratio_control"]) && r["site_ratio_target"] == nil {
+		problems.value("", "启用站点分享率控制时必须设置目标分享率", raw)
 	}
-	if r["hr"] != "yes" && r["hr"] != "no" {
-		return nil, invalid("hr", "Input should be 'yes' or 'no'")
-	}
-	if truth(r["site_ratio_control"]) && r["site_ratio_target"] == nil {
-		return nil, invalid("site_ratio_target", "启用站点分享率控制时必须设置目标分享率")
+	if len(problems.details) > 0 {
+		return nil, problems
 	}
 	return r, nil
 }
+
 func ValidateSettings(raw Row) (Row, error) {
-	r := Row{"enabled": true, "show_sidebar_nav": true, "global_proxy_delete": false, "global_delete_size_range": nil}
+	r := Row{}
+	problems := &ValidationError{scope: "body"}
+	for _, k := range []string{"enabled", "show_sidebar_nav"} {
+		r[k] = problems.boolean(k, value(raw, k, true))
+	}
 	for _, k := range globalLimitFields {
-		r[k] = nil
+		r[k] = problems.number(k, raw[k])
 	}
-	for k := range r {
-		if v, ok := raw[k]; ok {
-			r[k] = v
-		}
-	}
-	// This is the source before-validator exact disabled set, before Pydantic bool.
-	switch v := r["global_proxy_delete"].(type) {
+	proxy := value(raw, "global_proxy_delete", false)
+	r["global_proxy_delete"] = problems.boolean("global_proxy_delete", proxy)
+	input := raw["global_delete_size_range"]
+	// The model's before-validator discards the hidden field for these exact values.
+	switch b := proxy.(type) {
 	case nil:
-		r["global_delete_size_range"] = nil
+		input = nil
 	case bool:
-		if !v {
-			r["global_delete_size_range"] = nil
+		if !b {
+			input = nil
 		}
-	case int, float64:
-		if number(v) == 0 {
-			r["global_delete_size_range"] = nil
+	case int, int64, float32, float64, json.Number:
+		if number(b) == 0 {
+			input = nil
 		}
 	case string:
-		if v == "" || v == "0" || v == "false" || v == "False" {
-			r["global_delete_size_range"] = nil
+		if b == "" || b == "0" || b == "false" || b == "False" {
+			input = nil
 		}
 	}
-	for _, k := range []string{"enabled", "show_sidebar_nav", "global_proxy_delete"} {
-		v, ok := pydanticBool(r[k])
-		if !ok {
-			return nil, invalid(k, "Input should be a valid boolean")
-		}
-		r[k] = v
-	}
-	for _, k := range globalLimitFields {
-		v := r[k]
-		if v == nil || v == "" || parseNumber(v) != nil && number(v) == 0 {
-			r[k] = nil
-			continue
-		}
-		n := parseNumber(v)
-		if n == nil || number(n) <= 0 || math.IsNaN(number(n)) || math.IsInf(number(n), 0) {
-			return nil, invalid(k, "Input should be greater than 0")
-		}
-		if k == "global_maxdlcount" {
-			if number(n) != math.Trunc(number(n)) {
-				return nil, invalid(k, "Input should be a valid integer")
-			}
-			r[k] = int(number(n))
-		} else {
-			r[k] = n
-		}
-	}
-	r["global_delete_size_range"] = clean(r["global_delete_size_range"])
-	if truth(r["global_delete_size_range"]) {
-		s := text(r["global_delete_size_range"])
+	r["global_delete_size_range"] = clean(input)
+	if s := text(r["global_delete_size_range"]); s != "" {
 		if !numericRange.MatchString(s) {
-			return nil, invalid("global_delete_size_range", "请输入数字或数字范围，例如 100 或 50-100")
-		}
-		v := ranges(s, 1)
-		if v[0] <= 0 || len(v) > 1 && (v[1] <= 0 || v[0] >= v[1]) {
-			return nil, invalid("global_delete_size_range", "动态删种区间下限必须小于上限")
+			problems.value("global_delete_size_range", "请输入数字或数字范围，例如 100 或 50-100", input)
+		} else if bounds := ranges(s, 1); bounds[0] <= 0 || len(bounds) > 1 && bounds[0] >= bounds[1] {
+			problems.value("global_delete_size_range", "动态删种区间下限必须小于上限", input)
 		}
 	}
-	if truth(r["global_proxy_delete"]) && !truth(r["global_delete_size_range"]) {
-		return nil, invalid("global_delete_size_range", "启用全局动态删种时必须设置动态删种阈值")
+	if len(problems.details) == 0 && truth(r["global_proxy_delete"]) && !truth(r["global_delete_size_range"]) {
+		problems.value("", "启用全局动态删种时必须设置动态删种阈值", raw)
+	}
+	if len(problems.details) > 0 {
+		return nil, problems
 	}
 	return r, nil
 }
@@ -460,13 +414,15 @@ func LoadApplied(raw Row) (Config, error) {
 }
 
 func ValidateTaskState(raw Row) (bool, error) {
-	v, ok := raw["enabled"]
-	if !ok {
-		return false, invalid("enabled", "Field required")
+	p := &ValidationError{scope: "body"}
+	input, present := raw["enabled"]
+	if !present {
+		p.add("enabled", "missing", "Field required", raw, nil)
+		return false, p
 	}
-	b, ok := pydanticBool(v)
-	if !ok {
-		return false, invalid("enabled", "Input should be a valid boolean")
+	enabled := p.boolean("enabled", input)
+	if len(p.details) > 0 {
+		return false, p
 	}
-	return b, nil
+	return enabled, nil
 }
