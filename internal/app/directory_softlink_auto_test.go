@@ -9,8 +9,6 @@ import (
 	"strings"
 	"sync/atomic"
 	"testing"
-
-	"light-media/internal/download"
 )
 
 func saveSoftlinkDirectoryAPI(t *testing.T, a *App, cookie *http.Cookie, source, target, monitor string, enabled bool) DirectoryRule {
@@ -61,6 +59,7 @@ func TestDirectorySoftlinkActualSaveAndAutomaticPublication(t *testing.T) {
 				t.Fatal(err)
 			}
 			var complete atomic.Bool
+			var listReads atomic.Int64
 			{
 				const hash = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 				qb := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -71,6 +70,7 @@ func TestDirectorySoftlinkActualSaveAndAutomaticPublication(t *testing.T) {
 					}
 					switch r.URL.Path {
 					case "/api/v2/torrents/info":
+						listReads.Add(1)
 						progress := 0.5
 						state := "downloading"
 						if complete.Load() {
@@ -101,7 +101,14 @@ func TestDirectorySoftlinkActualSaveAndAutomaticPublication(t *testing.T) {
 					}
 				}))
 				defer qb.Close()
-				a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "actual-qb", Kind: "qb", BaseURL: qb.URL}, SharedPaths: true}}
+				config, err := json.Marshal(map[string]any{"id": "actual-qb", "kind": "qbittorrent", "name": "Actual qB", "base_url": qb.URL, "enabled": true})
+				if err != nil {
+					t.Fatal(err)
+				}
+				response := callTest(t, a.Handler(), "POST", "/api/downloaders/manage", string(config), cookie, "")
+				if response.Code != http.StatusOK {
+					t.Fatalf("save downloader: %d %s", response.Code, response.Body.String())
+				}
 			}
 			rule := saveSoftlinkDirectoryAPI(t, a, cookie, source, target, monitor, true)
 			directoryPoll(t, a, rule)
@@ -109,8 +116,17 @@ func TestDirectorySoftlinkActualSaveAndAutomaticPublication(t *testing.T) {
 			{
 				directoryPoll(t, a, rule)
 				observed := directoryObservation(t, a, rule, path)
-				if observed.JobID != "" || observed.State != "downloading" {
-					t.Fatal("incomplete real downloader file entered queue", observed)
+				var jobs int
+				if err := a.Store.DB.QueryRowContext(t.Context(), `SELECT count(*) FROM jobs WHERE kind IN ('organize_file','import')`).Scan(&jobs); err != nil {
+					t.Fatal(err)
+				}
+				waitState := "downloading"
+				if monitor == "downloader" {
+					// The transfer poll considers only finished, untagged torrents.
+					waitState = "observing"
+				}
+				if listReads.Load() == 0 || jobs != 0 || observed.JobID != "" || observed.State != waitState {
+					t.Fatalf("incomplete source: list reads=%d jobs=%d observation=%+v", listReads.Load(), jobs, observed)
 				}
 				complete.Store(true)
 				directoryAge(t, a, rule, path)
