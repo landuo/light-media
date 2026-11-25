@@ -1,0 +1,268 @@
+{
+  "classification": "actual Python3.12 immutable333 image; fixed plugin+actual manager stop/delete/getlocal/Base.update_config/SystemConfigOper/Scheduler selected exact AST, synthetic SQL/jobs/FS/plugin callback boundaries; no app imports/liveconfig/DB/real deletion/network",
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "source_sha256": {
+    "plugin": "2210e9dea47eeccdc46208d515e45ce1222dcadf50dbfc63cbeb41f94e470487",
+    "manager": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+    "base": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+    "scheduler": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+    "systemconfig": "87bff2e7c63d2ba98c72d92d6aed2018548730215de017330019bb54478634a2",
+    "schema": "d57a96c4ab5ec4525ce56e40dccffa93da719626449ed9bf7be80f47809e0f1a",
+    "types": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1"
+  },
+  "cases": [
+    {
+      "name": "nonempty-installed-update-DB-failure",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta",
+          "Gamma"
+        ],
+        "selection": [
+          "Alpha",
+          "Beta"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": "db:UserInstalledPlugins",
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": {
+        "type": "RuntimeError",
+        "message": "synthetic DB failure UserInstalledPlugins"
+      },
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "scheduler.remove_job",
+          "b|3"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Bdefault"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Beta..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Beta"
+        ],
+        [
+          "plugin.stop",
+          "Beta"
+        ],
+        [
+          "modules.clear",
+          "Beta"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/beta"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/beta",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Beta 已卸载"
+        ],
+        [
+          "db.update",
+          "UserInstalledPlugins",
+          [
+            "Gamma"
+          ]
+        ]
+      ],
+      "classes": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta",
+          "Gamma"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Gamma"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    }
+  ],
+  "excluded_boundaries": [
+    "Official authentication helper syntheticTrue as user excludes official levels/RSA",
+    "AI cache invalidation external stop dependency synthetic no-op, no AI system implemented",
+    "Actual filesystem semantics evaluated separately if needed; fs calls here recorder only"
+  ]
+}

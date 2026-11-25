@@ -1,0 +1,682 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "join_sha256": "19783aa7173578a59a7a8186ca6bc23130a60bfc726f36a723e80e9e4a813014",
+    "ifttt_sha256": "3d4b2f6a97d702b79663228a4c08c314b1cfd4eb3dbeef553873dc30a1d59da0"
+  },
+  "cases": [
+    {
+      "name": "join-default-all-and-icon",
+      "url": "join://0123456789Abcdef0123456789Abcdef",
+      "title": "  标题 ",
+      "body": "body  ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=0&title=%E6%A0%87%E9%A2%98&text=body&deviceId=group.all&icon=https%3A%2F%2Fgithub.com%2Fcaronc%2Fapprise%2Fraw%2Fmaster%2Fapprise%2Fassets%2Fthemes%2Fdefault%2Fapprise-info-72x72.png",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "join-target-order-prefix-and-device",
+      "url": "join://0123456789Abcdef0123456789Abcdef@phoneCase/Group.Android/ffffffffffffffffffffffffffffffff?to=owned%20PC%2Call&image=no&priority=emergency&verify=no&cto=2.5&rto=8",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200,
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=2&title=t&text=b&deviceId=group.android",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": false,
+          "timeout": [
+            2.5,
+            8.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=2&title=t&text=b&deviceId=group.pc",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": false,
+          "timeout": [
+            2.5,
+            8.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=2&title=t&text=b&deviceId=group.all",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": false,
+          "timeout": [
+            2.5,
+            8.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=2&title=t&text=b&deviceId=ffffffffffffffffffffffffffffffff",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": false,
+          "timeout": [
+            2.5,
+            8.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=2&title=t&text=b&deviceNames=owned",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": false,
+          "timeout": [
+            2.5,
+            8.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=2&title=t&text=b&deviceId=group.phone",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": false,
+          "timeout": [
+            2.5,
+            8.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        5.5,
+        5.5,
+        5.5,
+        5.5,
+        5.5
+      ]
+    },
+    {
+      "name": "join-repeat-normalized-group",
+      "url": "join://0123456789Abcdef0123456789Abcdef/all/group.all?priority=-2",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200,
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=-2&title=t&text=b&deviceId=group.all&icon=https%3A%2F%2Fgithub.com%2Fcaronc%2Fapprise%2Fraw%2Fmaster%2Fapprise%2Fassets%2Fthemes%2Fdefault%2Fapprise-info-72x72.png",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=-2&title=t&text=b&deviceId=group.all&icon=https%3A%2F%2Fgithub.com%2Fcaronc%2Fapprise%2Fraw%2Fmaster%2Fapprise%2Fassets%2Fthemes%2Fdefault%2Fapprise-info-72x72.png",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        5.5
+      ]
+    },
+    {
+      "name": "join-http-status-and-transport-continuation",
+      "url": "join://0123456789Abcdef0123456789Abcdef/A/B/C?image=no",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        503,
+        0,
+        200
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=0&title=t&text=b&deviceNames=A",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=0&title=t&text=b&deviceNames=B",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=0&title=t&text=b&deviceNames=C",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        5.5,
+        5.5
+      ]
+    },
+    {
+      "name": "join-truncate-1000",
+      "url": "join://0123456789Abcdef0123456789Abcdef?overflow=truncate&image=no",
+      "title": "t",
+      "body": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtail",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=0&title=t&text=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&deviceId=group.all",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "join-split-1000",
+      "url": "join://0123456789Abcdef0123456789Abcdef?overflow=split&image=no",
+      "title": "t",
+      "body": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtail",
+      "attach": null,
+      "statuses": [
+        200,
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=0&title=t+%5B1%2F2%5D&text=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&deviceId=group.all",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=0&title=t+%5B2%2F2%5D&text=xxxtail&deviceId=group.all",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        5.5
+      ]
+    },
+    {
+      "name": "join-invalid-key",
+      "url": "join://badkey",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "join-attachment-ignored",
+      "url": "join://0123456789Abcdef0123456789Abcdef?image=no",
+      "title": "t",
+      "body": "b",
+      "attach": "https://owned-image.invalid/ignored.png",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=0123456789Abcdef0123456789Abcdef&priority=0&title=t&text=b&deviceId=group.all",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "ifttt-default-event",
+      "url": "ifttt://ownedToken/event",
+      "title": " 标题 ",
+      "body": "body  ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/event/with/key/ownedToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"\\u6807\\u9898\", \"value2\": \"body\", \"value3\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "ifttt-sorted-events-custom-keys",
+      "url": "ifttt://Owned%252BToken@beta/alpha?to=gamma%252Calpha&+Value1=upper&+value1=replace&+Custom=A%252BB&-value3=x&-Value1=no&verify=no&cto=2.5&rto=8",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200,
+        200,
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/alpha/with/key/Owned%2BToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"t\", \"value2\": \"b\", \"value3\": \"info\"}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            8.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/beta/with/key/Owned%2BToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"t\", \"value2\": \"b\", \"value3\": \"info\"}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            8.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/gamma/with/key/Owned%2BToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"t\", \"value2\": \"b\", \"value3\": \"info\"}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            8.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        5.5,
+        5.5
+      ]
+    },
+    {
+      "name": "ifttt-native-multiple",
+      "url": "https://maker.ifttt.com/use/Owned-Key/Zeta/Alpha?+Custom=owned",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200,
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/Alpha/with/key/Owned-Key",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"t\", \"value2\": \"b\", \"value3\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/Zeta/with/key/Owned-Key",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"t\", \"value2\": \"b\", \"value3\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        5.5
+      ]
+    },
+    {
+      "name": "ifttt-url-escaping",
+      "url": "ifttt://owned%2BToken/%E8%A7%A6%E5%8F%91%252Ftail",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/%E8%A7%A6%E5%8F%91%2Ftail/with/key/owned+Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"t\", \"value2\": \"b\", \"value3\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "ifttt-status-and-transport-continuation",
+      "url": "ifttt://ownedToken/a/b/c",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        204,
+        0,
+        200
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/a/with/key/ownedToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"t\", \"value2\": \"b\", \"value3\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/b/with/key/ownedToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"t\", \"value2\": \"b\", \"value3\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/c/with/key/ownedToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"t\", \"value2\": \"b\", \"value3\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        5.5,
+        5.5
+      ]
+    },
+    {
+      "name": "ifttt-no-events",
+      "url": "ifttt://ownedToken",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "ifttt-disabled-store",
+      "url": "ifttt://ownedToken/event?store=no",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "ifttt-attachment-ignored",
+      "url": "ifttt://ownedToken/event",
+      "title": "t",
+      "body": "b",
+      "attach": "https://owned-image.invalid/ignored.png",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/event/with/key/ownedToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"t\", \"value2\": \"b\", \"value3\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    }
+  ]
+}

@@ -1,0 +1,226 @@
+{
+  "mako": "1.4.1",
+  "markupsafe": "3.0.3",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "source_sha256": {
+    "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+    "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+    "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+    "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+    "mako/ast.py": "f0248c12c8827349ea6d1b7d88dcf325743c589d04d50fcde63e982a5e44395b",
+    "mako/pyparser.py": "6c0319ab7a64674b58c3be700396c4ad5f0a9df91f6e679b0264a0642df3db66",
+    "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d"
+  },
+  "cases": [
+    {
+      "name": "ordinary-caller-is-false",
+      "template": "<%def name=\"f()\">${bool(caller)}</%def>${bool(caller)}|${f()}|${bool(caller)}",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "False|False|False",
+      "source_error": false
+    },
+    {
+      "name": "body-and-capture",
+      "template": "<%def name=\"wrap()\">[${capture(caller.body)}][${caller.body()}]</%def><%call expr=\"wrap()\">${title}</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "[Owned <text>][Owned <text>]",
+      "source_error": false
+    },
+    {
+      "name": "passed-body-args",
+      "template": "<%def name=\"wrap(a)\">${caller.body(a, extra=4)}</%def><%call expr=\"wrap(count)\" args=\"value, extra=2\">${value}:${extra}</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "7:4",
+      "source_error": false
+    },
+    {
+      "name": "body-defaults-at-tag",
+      "template": "<% base = 11 %><%def name=\"wrap()\">${caller.body()}</%def><%call expr=\"wrap()\" args=\"value=base\">${value}</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "11",
+      "source_error": false
+    },
+    {
+      "name": "body-star-keyword-only",
+      "template": "<%def name=\"wrap()\">${caller.body(1, 2, 3, label=4)}</%def><%call expr=\"wrap()\" args=\"first, *rest, label\">${first}|${rest}|${label}</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "1|(2, 3)|4",
+      "source_error": false
+    },
+    {
+      "name": "body-keyword-catchall",
+      "template": "<%def name=\"wrap()\">${caller.body(1, z=2, a=3)}</%def><%call expr=\"wrap()\" args=\"first, **rest\">${first}|${rest}</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "1|{'z': 2, 'a': 3}",
+      "source_error": false
+    },
+    {
+      "name": "body-bare-keyword-marker",
+      "template": "<%def name=\"wrap()\">${caller.body(1, 2)}</%def><%call expr=\"wrap()\" args=\"first, *, second\">${first}|${second}</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "1|2",
+      "source_error": false
+    },
+    {
+      "name": "self-closing",
+      "template": "<%def name=\"wrap()\">${bool(caller)}:[${caller.body()}]</%def><%call expr=\"wrap()\"/>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "True:[]",
+      "source_error": false
+    },
+    {
+      "name": "expression-result-with-page-filter",
+      "template": "<%page expression_filter=\"h\"/><%call expr=\"title\"/>|<%call expr=\"count\"/>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "Owned &lt;text&gt;|7",
+      "source_error": false
+    },
+    {
+      "name": "buffered-def-return",
+      "template": "<%def name=\"wrap()\" buffered=\"True\">[\n${caller.body()}\n]</%def><%call expr=\"wrap()\">${title}</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "[\nOwned <text>\n]",
+      "source_error": false
+    },
+    {
+      "name": "caller-exports-named-def-and-block",
+      "template": "<%def name=\"wrap()\">[${caller.part(count)}|${caller.section()}|${caller.body()}]</%def><%call expr=\"wrap()\"><%def name=\"part(v)\">P${v}</%def><%block name=\"section\">S</%block>B</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "<%def name=\"wrap()\">[${caller.part(count)}|${caller.section()}|${caller.body()}]</%def><%call expr=\"wrap()\"><%def name=\"part(v)\">P${v}</%def><%block name=\"section\">S</%block>B</%call>",
+      "source_error": true
+    },
+    {
+      "name": "export-default-keeps-call-site-scope",
+      "template": "<% v = 8 %><%def name=\"wrap()\">${caller.part()}</%def><%call expr=\"wrap()\"><%def name=\"part(x=v)\">${x}</%def></%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "8",
+      "source_error": false
+    },
+    {
+      "name": "nested-body-keeps-outer-caller",
+      "template": "<%def name=\"outer()\">O[${caller.piece()}|${caller.body()}]</%def><%def name=\"inner()\">I[${caller.body()}]</%def><%call expr=\"outer()\"><%def name=\"piece()\">P</%def><%call expr=\"inner()\">${bool(caller)}|${bool(context.get(\"caller\"))}</%call></%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "O[P|I[False|True]]",
+      "source_error": false
+    },
+    {
+      "name": "nested-def-reads-own-frame",
+      "template": "<%def name=\"outer()\">O[${caller.body()}]</%def><%def name=\"inner()\">I[${caller.body()}]</%def><%def name=\"middle()\">M[${bool(caller)}|<%call expr=\"inner()\">${caller.mark()}</%call>]</%def><%call expr=\"outer()\"><%def name=\"mark()\">Q</%def><%call expr=\"middle()\"><%def name=\"mark()\">P</%def></%call></%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "O[M[True|I[P]]]",
+      "source_error": false
+    },
+    {
+      "name": "arguments-also-see-pending-frame",
+      "template": "<%def name=\"argument()\" buffered=\"True\">${bool(caller)}</%def><%def name=\"wrap(v)\">${v}:${caller.body()}</%def><%call expr=\"wrap(argument())\">B</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "True:B",
+      "source_error": false
+    },
+    {
+      "name": "frame-restored-after-handled-error",
+      "template": "<%def name=\"bad()\">${1/0}</%def><%def name=\"wrap()\">[\n% try:\n<%call expr=\"bad()\">lost</%call>\n% except ZeroDivisionError:\n${caller.body()}\n% endtry\n]</%def><%call expr=\"wrap()\">kept</%call>|${bool(caller)}",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "[\nkept\n]|False",
+      "source_error": false
+    },
+    {
+      "name": "body-can-be-used-as-plain-callable",
+      "template": "<%def name=\"wrap()\">${capture(caller.body, count)}</%def><%call expr=\"wrap()\" args=\"n\">${n}</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "7",
+      "source_error": false
+    },
+    {
+      "name": "body-argument-error-fallback",
+      "template": "<%def name=\"wrap()\">${caller.body()}</%def><%call expr=\"wrap()\" args=\"required\">${required}</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "<%def name=\"wrap()\">${caller.body()}</%def><%call expr=\"wrap()\" args=\"required\">${required}</%call>",
+      "source_error": true
+    },
+    {
+      "name": "missing-expr-fallback",
+      "template": "<%call>body</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "<%call>body</%call>",
+      "source_error": true
+    },
+    {
+      "name": "namespace-shorthand",
+      "template": "<%def name=\"wrap(a, b)\">${a}:${b}:[${caller.body(a)}]</%def><%self:wrap a=\"${count}\" b=\"prefix-${title}\" args=\"v\">${v}</%self:wrap>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "7:prefix-Owned <text>:[7]",
+      "source_error": false
+    },
+    {
+      "name": "namespace-self-closing",
+      "template": "<%def name=\"wrap(a)\">${a}:[${caller.body()}]</%def><%local:wrap a=\"owned\"/>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "owned:[]",
+      "source_error": false
+    }
+  ]
+}

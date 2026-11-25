@@ -1,0 +1,1824 @@
+{
+  "source_hashes": {
+    "HTTP": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "BROWSER": "cb455ffadc75b32fa0fe151242b7c4162233e525d35257ac3a71e1dda1316f29",
+    "DB": "6da490f32d0de67839249b4e318fecbf4c877ec5acde4eef08634738c4cfafc9",
+    "MODEL": "56c948af28f482b39e0d599b6889fd803c375aff50ecdde2d5b4583dca581164",
+    "OPER": "87bff2e7c63d2ba98c72d92d6aed2018548730215de017330019bb54478634a2",
+    "PLUGINBASE": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+    "BASE": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d",
+    "ASI": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+    "CLOUDFLARE": "1543472ddccb90704d30f74fb420fe87f9e613a66daf2fbf4402f1ebccecd7a1",
+    "SITE": "c278d537bdea0394c4dc083c27726316a815ae26a2e64ddc2f3d42e2921fcf40",
+    "STRING": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+    "RESULT": "7a2a49fd8aafe084c6a9a482ca6883cbee8505f443ae5e9741af25161bb458b2",
+    "PTER": "3cd559c4ef3510180da4f57db19595de2de75dcd85519430a9aa1ee4dadfd3d3"
+  },
+  "rows": [
+    {
+      "category": "response",
+      "name": "null",
+      "input": {
+        "type": "NoneType",
+        "value": null
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        }
+      ],
+      "seconds": 0.0032465390395373106,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "null",
+      "input": {
+        "type": "NoneType",
+        "value": null
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        }
+      ],
+      "seconds": 0.003066520905122161,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "null",
+      "input": {
+        "type": "NoneType",
+        "value": null
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "error",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        }
+      ],
+      "seconds": 0.004111534915864468,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "false",
+      "input": {
+        "type": "bool",
+        "value": false
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        }
+      ],
+      "seconds": 0.0029924260452389717,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "false",
+      "input": {
+        "type": "bool",
+        "value": false
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        }
+      ],
+      "seconds": 0.003058425849303603,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "false",
+      "input": {
+        "type": "bool",
+        "value": false
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "error",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        }
+      ],
+      "seconds": 0.002533070044592023,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "zero",
+      "input": {
+        "type": "int",
+        "value": 0
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        }
+      ],
+      "seconds": 0.0025361059233546257,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "zero",
+      "input": {
+        "type": "int",
+        "value": 0
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        }
+      ],
+      "seconds": 0.002888894872739911,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "zero",
+      "input": {
+        "type": "int",
+        "value": 0
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "error",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        }
+      ],
+      "seconds": 0.0025921319611370564,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "zero-float",
+      "input": {
+        "type": "float",
+        "value": 0.0
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        }
+      ],
+      "seconds": 0.00361917307600379,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "zero-float",
+      "input": {
+        "type": "float",
+        "value": 0.0
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        }
+      ],
+      "seconds": 0.0036417869850993156,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "zero-float",
+      "input": {
+        "type": "float",
+        "value": 0.0
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "error",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        }
+      ],
+      "seconds": 0.0024695899337530136,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "true",
+      "input": {
+        "type": "bool",
+        "value": true
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff1aTrue\uff01",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff1aTrue"
+        }
+      ],
+      "seconds": 0.049975387984886765,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "true",
+      "input": {
+        "type": "bool",
+        "value": true
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1aTrue\uff01"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1aTrue"
+        }
+      ],
+      "seconds": 0.0048025380820035934,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "true",
+      "input": {
+        "type": "bool",
+        "value": true
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "NoneType",
+        "value": null
+      },
+      "error": {
+        "class": "TypeError",
+        "message": "argument of type 'bool' is not iterable"
+      },
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [],
+      "seconds": 0.005005914950743318,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "one",
+      "input": {
+        "type": "int",
+        "value": 1
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff1a1\uff01",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff1a1"
+        }
+      ],
+      "seconds": 0.007331811124458909,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "one",
+      "input": {
+        "type": "int",
+        "value": 1
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1a1\uff01"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1a1"
+        }
+      ],
+      "seconds": 0.005683524999767542,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "one",
+      "input": {
+        "type": "int",
+        "value": 1
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "NoneType",
+        "value": null
+      },
+      "error": {
+        "class": "TypeError",
+        "message": "argument of type 'int' is not iterable"
+      },
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [],
+      "seconds": 0.0041111011523753405,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "fraction",
+      "input": {
+        "type": "float",
+        "value": 0.5
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff1a0.5\uff01",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff1a0.5"
+        }
+      ],
+      "seconds": 0.005403836024925113,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "fraction",
+      "input": {
+        "type": "float",
+        "value": 0.5
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1a0.5\uff01"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1a0.5"
+        }
+      ],
+      "seconds": 0.005231996066868305,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "fraction",
+      "input": {
+        "type": "float",
+        "value": 0.5
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "NoneType",
+        "value": null
+      },
+      "error": {
+        "class": "TypeError",
+        "message": "argument of type 'float' is not iterable"
+      },
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [],
+      "seconds": 0.0035797511227428913,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "empty-list",
+      "input": {
+        "type": "list",
+        "value": []
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        }
+      ],
+      "seconds": 0.004087579902261496,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "empty-list",
+      "input": {
+        "type": "list",
+        "value": []
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        }
+      ],
+      "seconds": 0.00429577985778451,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "empty-list",
+      "input": {
+        "type": "list",
+        "value": []
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "error",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        }
+      ],
+      "seconds": 0.0035449510905891657,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "list",
+      "input": {
+        "type": "list",
+        "value": [
+          "owned"
+        ]
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff1a'str' object has no attribute 'xpath'\uff01",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff1a'str' object has no attribute 'xpath'"
+        }
+      ],
+      "seconds": 0.008516880916431546,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "list",
+      "input": {
+        "type": "list",
+        "value": [
+          "owned"
+        ]
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1a'str' object has no attribute 'xpath'\uff01"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1a'str' object has no attribute 'xpath'"
+        }
+      ],
+      "seconds": 0.010973949916660786,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "list",
+      "input": {
+        "type": "list",
+        "value": [
+          "owned"
+        ]
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u63a5\u53e3\u8fd4\u56de\u6570\u636e\u5f02\u5e38"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "error",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u63a5\u53e3\u8fd4\u56de\u6570\u636e\u5f02\u5e38\uff0c\u9519\u8bef\u4fe1\u606f\uff1athe JSON object must be str, bytes or bytearray, not list"
+        }
+      ],
+      "seconds": 0.004834108054637909,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "empty-map",
+      "input": {
+        "type": "dict",
+        "value": {}
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        }
+      ],
+      "seconds": 0.003475126111879945,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "empty-map",
+      "input": {
+        "type": "dict",
+        "value": {}
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        }
+      ],
+      "seconds": 0.014806309016421437,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "empty-map",
+      "input": {
+        "type": "dict",
+        "value": {}
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "error",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        }
+      ],
+      "seconds": 0.0041799519676715136,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "map",
+      "input": {
+        "type": "dict",
+        "value": {
+          "x": "owned"
+        }
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff1a{'x': 'owned'}\uff01",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff1a{'x': 'owned'}"
+        }
+      ],
+      "seconds": 0.00506462506018579,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "map",
+      "input": {
+        "type": "dict",
+        "value": {
+          "x": "owned"
+        }
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1a{'x': 'owned'}\uff01"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1a{'x': 'owned'}"
+        }
+      ],
+      "seconds": 0.005518047837540507,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "map",
+      "input": {
+        "type": "dict",
+        "value": {
+          "x": "owned"
+        }
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u63a5\u53e3\u8fd4\u56de\u6570\u636e\u5f02\u5e38"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "error",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u63a5\u53e3\u8fd4\u56de\u6570\u636e\u5f02\u5e38\uff0c\u9519\u8bef\u4fe1\u606f\uff1athe JSON object must be str, bytes or bytearray, not dict"
+        }
+      ],
+      "seconds": 0.003737376071512699,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "login-list",
+      "input": {
+        "type": "list",
+        "value": [
+          "login.php"
+        ]
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff1a'str' object has no attribute 'xpath'\uff01",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff1a'str' object has no attribute 'xpath'"
+        }
+      ],
+      "seconds": 0.004401650978252292,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "login-list",
+      "input": {
+        "type": "list",
+        "value": [
+          "login.php"
+        ]
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1a'str' object has no attribute 'xpath'\uff01"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1a'str' object has no attribute 'xpath'"
+        }
+      ],
+      "seconds": 0.005216731922701001,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "login-list",
+      "input": {
+        "type": "list",
+        "value": [
+          "login.php"
+        ]
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u7b7e\u5230\u5931\u8d25\uff0cCookie\u5df2\u5931\u6548"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "error",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff0cCookie\u5df2\u5931\u6548"
+        }
+      ],
+      "seconds": 0.0026325280778110027,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "login-map",
+      "input": {
+        "type": "dict",
+        "value": {
+          "login.php": 1
+        }
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff1a{'login.php': 1}\uff01",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff1a{'login.php': 1}"
+        }
+      ],
+      "seconds": 0.003545318031683564,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "login-map",
+      "input": {
+        "type": "dict",
+        "value": {
+          "login.php": 1
+        }
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1a{'login.php': 1}\uff01"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        },
+        {
+          "level": "warn",
+          "message": "Owned \u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1a{'login.php': 1}"
+        }
+      ],
+      "seconds": 0.003431202843785286,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "login-map",
+      "input": {
+        "type": "dict",
+        "value": {
+          "login.php": 1
+        }
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u7b7e\u5230\u5931\u8d25\uff0cCookie\u5df2\u5931\u6548"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "error",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff0cCookie\u5df2\u5931\u6548"
+        }
+      ],
+      "seconds": 0.0026231887750327587,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "empty-string",
+      "input": {
+        "type": "str",
+        "value": ""
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        }
+      ],
+      "seconds": 0.0027471540961414576,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "empty-string",
+      "input": {
+        "type": "str",
+        "value": ""
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u7ad9\u70b9\u8fd4\u56de\u7a7a\u9875\u9762"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        }
+      ],
+      "seconds": 0.0023382059298455715,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "empty-string",
+      "input": {
+        "type": "str",
+        "value": ""
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "error",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7ad9\u70b9\u8fde\u901a\u6027"
+        }
+      ],
+      "seconds": 0.0034507799427956343,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "string",
+      "input": {
+        "type": "str",
+        "value": "owned string"
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u672a\u8bc6\u522b\u5230\u767b\u5f55\u72b6\u6001",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        },
+        {
+          "level": "debug",
+          "message": "under_challenge page_title="
+        }
+      ],
+      "seconds": 0.006599266082048416,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "string",
+      "input": {
+        "type": "str",
+        "value": "owned string"
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u672a\u8bc6\u522b\u5230\u767b\u5f55\u72b6\u6001"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        },
+        {
+          "level": "debug",
+          "message": "under_challenge page_title="
+        }
+      ],
+      "seconds": 0.005049852887168527,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "string",
+      "input": {
+        "type": "str",
+        "value": "owned string"
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u63a5\u53e3\u8fd4\u56de\u6570\u636e\u5f02\u5e38"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "error",
+          "message": "Owned \u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u63a5\u53e3\u8fd4\u56de\u6570\u636e\u5f02\u5e38\uff0c\u9519\u8bef\u4fe1\u606f\uff1aExpecting value: line 1 column 1 (char 0)"
+        }
+      ],
+      "seconds": 0.0024719329085201025,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "json-string",
+      "input": {
+        "type": "str",
+        "value": "{\"status\":\"1\"}"
+      },
+      "caller": "core-signin",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "Owned",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u672a\u8bc6\u522b\u5230\u767b\u5f55\u72b6\u6001",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/attendance.php..."
+        },
+        {
+          "level": "debug",
+          "message": "under_challenge page_title="
+        }
+      ],
+      "seconds": 0.0043444710317999125,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "json-string",
+      "input": {
+        "type": "str",
+        "value": "{\"status\":\"1\"}"
+      },
+      "caller": "core-login",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u672a\u8bc6\u522b\u5230\u767b\u5f55\u72b6\u6001"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:46879/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwned\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:46879/..."
+        },
+        {
+          "level": "debug",
+          "message": "under_challenge page_title="
+        }
+      ],
+      "seconds": 0.004506774945184588,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    },
+    {
+      "category": "response",
+      "name": "json-string",
+      "input": {
+        "type": "str",
+        "value": "{\"status\":\"1\"}"
+      },
+      "caller": "pter-selected-leaf",
+      "result": {
+        "type": "tuple",
+        "value": [
+          true,
+          "\u7b7e\u5230\u6210\u529f"
+        ]
+      },
+      "error": null,
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://pterclub.com/attendance-ajax.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "message": "Owned \u7b7e\u5230\u6210\u529f"
+        }
+      ],
+      "seconds": 0.0031449829693883657,
+      "qualification": "actual original helper+selected original caller. PTer leaf selected explicitly, not auto dispatch acceptance. Fake FS realHTTP; owned GET only on helper/base fallback."
+    }
+  ],
+  "runtime": {
+    "uid": 1000,
+    "interfaces": [
+      [
+        1,
+        "lo"
+      ]
+    ],
+    "route": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n",
+    "requests": "2.34.2"
+  },
+  "qualification": "actual fixed Page/FS+SiteBase and original selected core signin/login/PTer leaf with actual evidence dependencies; fake FS realHTTP and owned native fallback; no target code/API or original app import/config/service"
+}

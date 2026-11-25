@@ -1,0 +1,277 @@
+{
+  "mako": "1.4.1",
+  "markupsafe": "3.0.4",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "has_beaker": false,
+  "source_sha256": {
+    "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+    "mako/ast.py": "f0248c12c8827349ea6d1b7d88dcf325743c589d04d50fcde63e982a5e44395b",
+    "mako/pyparser.py": "6c0319ab7a64674b58c3be700396c4ad5f0a9df91f6e679b0264a0642df3db66",
+    "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+    "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+    "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+    "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d"
+  },
+  "cases": [
+    {
+      "name": "include-reached-no-lookup",
+      "template": "before<%include file=\"owned-child.mako\"/>after",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "before<%include file=\"owned-child.mako\"/>after",
+      "source_error": true
+    },
+    {
+      "name": "include-in-inactive-branch",
+      "template": "% if False:\n<%include file=\"owned-child.mako\"/>\n% endif\n${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned",
+      "source_error": false
+    },
+    {
+      "name": "include-invalid-tag-even-inactive",
+      "template": "% if False:\n<%include args=\"title=1\"/>\n% endif\n${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "% if False:\n<%include args=\"title=1\"/>\n% endif\n${title}",
+      "source_error": true
+    },
+    {
+      "name": "include-lookup-error-catchable",
+      "template": "% try:\n<%include file=\"owned-child.mako\"/>\n% except Exception:\ncaught-lookup\n% endtry\n${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "caught-lookup\nOwned",
+      "source_error": false
+    },
+    {
+      "name": "include-evaluates-file-before-lookup",
+      "template": "% try:\n<%include file=\"owned${None}\"/>\n% except TypeError:\ncaught-file-type\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "caught-file-type\n",
+      "source_error": false
+    },
+    {
+      "name": "include-evaluates-arguments-before-lookup",
+      "template": "% try:\n<%include file=\"owned-child.mako\" args=\"title=1/0\"/>\n% except ZeroDivisionError:\ncaught-argument\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "caught-argument\n",
+      "source_error": false
+    },
+    {
+      "name": "include-rejects-extra-positional",
+      "template": "% try:\n<%include file=\"owned-child.mako\" args=\"1\"/>\n% except TypeError:\ncaught-positional\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "caught-positional\n",
+      "source_error": false
+    },
+    {
+      "name": "inherit-before-body-despite-inactive-branch",
+      "template": "% if False:\n<%inherit file=\"owned-parent.mako\"/>\n% endif\n${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "% if False:\n<%inherit file=\"owned-parent.mako\"/>\n% endif\n${title}",
+      "source_error": true
+    },
+    {
+      "name": "inherit-before-body-even-in-unused-def",
+      "template": "<%def name=\"unused()\"><%inherit file=\"owned-parent.mako\"/></%def>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%def name=\"unused()\"><%inherit file=\"owned-parent.mako\"/></%def>${title}",
+      "source_error": true
+    },
+    {
+      "name": "inherit-null-skips-lookup",
+      "template": "<%inherit file=\"${None}\"/>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned",
+      "source_error": false
+    },
+    {
+      "name": "inherit-last-tag-null-wins",
+      "template": "<%inherit file=\"owned-parent.mako\"/><%inherit file=\"${None}\"/>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned",
+      "source_error": false
+    },
+    {
+      "name": "inherit-last-tag-with-uri-wins",
+      "template": "<%inherit file=\"${None}\"/><%inherit file=\"owned-parent.mako\"/>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%inherit file=\"${None}\"/><%inherit file=\"owned-parent.mako\"/>${title}",
+      "source_error": true
+    },
+    {
+      "name": "inherit-file-expression-can-read-context",
+      "template": "<%inherit file=\"${context.get('missing')}\"/>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned",
+      "source_error": false
+    },
+    {
+      "name": "inherit-file-expression-reads-module",
+      "template": "<%! parent_uri = None %><%inherit file=\"${parent_uri}\"/>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned",
+      "source_error": false
+    },
+    {
+      "name": "namespace-untouched-when-unused",
+      "template": "<%namespace name=\"ownedns\" file=\"owned-lib.mako\"/>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned",
+      "source_error": false
+    },
+    {
+      "name": "namespace-looked-up-before-dead-reference",
+      "template": "% if False:\n${ownedns}\n% endif\n<%namespace name=\"ownedns\" file=\"owned-lib.mako\"/>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "% if False:\n${ownedns}\n% endif\n<%namespace name=\"ownedns\" file=\"owned-lib.mako\"/>${title}",
+      "source_error": true
+    },
+    {
+      "name": "namespace-import-eager-before-body",
+      "template": "% if False:\n<%namespace file=\"owned-lib.mako\" import=\"*\"/>\n% endif\n${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "% if False:\n<%namespace file=\"owned-lib.mako\" import=\"*\"/>\n% endif\n${title}",
+      "source_error": true
+    },
+    {
+      "name": "namespace-import-triggered-by-null-inherit",
+      "template": "<%namespace name=\"ownedns\" file=\"owned-lib.mako\"/><%inherit file=\"${None}\"/>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%namespace name=\"ownedns\" file=\"owned-lib.mako\"/><%inherit file=\"${None}\"/>${title}",
+      "source_error": true
+    },
+    {
+      "name": "namespace-reference-inside-unused-def",
+      "template": "<%namespace name=\"ownedns\" file=\"owned-lib.mako\"/><%def name=\"unused()\">${ownedns}</%def>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned",
+      "source_error": false
+    },
+    {
+      "name": "namespace-shadowed-by-module",
+      "template": "<%! ownedns = 'module' %><%namespace name=\"ownedns\" file=\"owned-lib.mako\"/>${ownedns}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "module",
+      "source_error": false
+    },
+    {
+      "name": "namespace-shadowed-by-page-param",
+      "template": "<%page args=\"ownedns=7\"/><%namespace name=\"ownedns\" file=\"owned-lib.mako\"/>${ownedns}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "7",
+      "source_error": false
+    },
+    {
+      "name": "namespace-null-uri-raises-type-error",
+      "template": "<%namespace name=\"ownedns\" file=\"${None}\"/><%def name=\"call_ns()\">${ownedns}</%def>\n% try:\n${call_ns()}\n% except TypeError:\ncaught-null-uri\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\ncaught-null-uri\n",
+      "source_error": false
+    },
+    {
+      "name": "root-def-takes-precedence-over-external-namespace",
+      "template": "<%namespace name=\"ownedns\" file=\"owned-lib.mako\"/><%def name=\"ownedns()\">defined</%def>${ownedns()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "defined",
+      "source_error": false
+    },
+    {
+      "name": "unused-file-namespace-with-inline-def",
+      "template": "<%namespace name=\"ownedns\" file=\"owned-lib.mako\"><%def name=\"helper(a=1/0)\">${a}</%def></%namespace>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned",
+      "source_error": false
+    },
+    {
+      "name": "file-namespace-def-default-precedes-lookup",
+      "template": "<%namespace name=\"ownedns\" file=\"owned-lib.mako\"><%def name=\"helper(a=1/0)\">${a}</%def></%namespace><%def name=\"call_ns()\">${ownedns}</%def>\n% try:\n${call_ns()}\n% except ZeroDivisionError:\ncaught-default\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\ncaught-default\n",
+      "source_error": false
+    },
+    {
+      "name": "file-namespace-anonymous-block-rejected",
+      "template": "<%namespace name=\"ownedns\" file=\"owned-lib.mako\"><%block>hidden</%block></%namespace>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%namespace name=\"ownedns\" file=\"owned-lib.mako\"><%block>hidden</%block></%namespace>${title}",
+      "source_error": true
+    }
+  ]
+}

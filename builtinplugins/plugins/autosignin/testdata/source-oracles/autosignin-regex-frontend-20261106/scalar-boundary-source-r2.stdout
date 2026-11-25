@@ -1,0 +1,2013 @@
+{
+  "classification": "source-only actual333/Python3.12.13 full _parser AST/state/width plus real re.compile/search captures and exact exceptions/warnings; no target-generated expected/app/network",
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "MAXREPEAT": 4294967295,
+  "MAXGROUPS": 1073741823,
+  "MAXWIDTH": 18446744073709551616,
+  "MAXCODE": 4294967295,
+  "runtime_source_sha256": {
+    "_parser.py": "a51a85b37cf3f44ba7ff25754da5f31306e4ccfa6eb3c017f9d37bdf4e770840",
+    "_compiler.py": "c75620761098a70ed75b9accef63ef2881d8abb6d4e5cbfd10074bd165eefe4d",
+    "_constants.py": "fa4fdb200f238f9e7817b63892b0d69833d8165134801e775e10cc113348a375"
+  },
+  "text_codepoints": [
+    [],
+    [
+      0
+    ],
+    [
+      55295
+    ],
+    [
+      55296
+    ],
+    [
+      57343
+    ],
+    [
+      57344
+    ],
+    [
+      65535
+    ],
+    [
+      65536
+    ],
+    [
+      128512
+    ],
+    [
+      1114111
+    ],
+    [
+      65533
+    ],
+    [
+      55296,
+      55296
+    ],
+    [
+      55357,
+      56832
+    ],
+    [
+      97,
+      98,
+      98
+    ],
+    [
+      97,
+      98,
+      97
+    ],
+    [
+      97,
+      98,
+      99,
+      98
+    ],
+    [
+      98,
+      97,
+      99,
+      97
+    ],
+    [
+      97
+    ],
+    [
+      65533,
+      98
+    ],
+    [
+      65533,
+      97
+    ],
+    [
+      55296,
+      97
+    ],
+    [
+      55296,
+      98
+    ],
+    [
+      55296,
+      55299
+    ],
+    [
+      65533,
+      65533
+    ],
+    [
+      97,
+      98
+    ]
+  ],
+  "cases": [
+    {
+      "pattern": "\\U7fffffff",
+      "pattern_codepoints": [
+        92,
+        85,
+        55,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102
+      ],
+      "pattern_json": "\"\\\\U7fffffff\"",
+      "flags": 0,
+      "parser": null,
+      "parse_error": {
+        "class": "error",
+        "message": "bad escape \\U7fffffff at position 0",
+        "msg": "bad escape \\U7fffffff",
+        "pos": 0,
+        "lineno": 1,
+        "colno": 1
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "bad escape \\U7fffffff at position 0",
+        "msg": "bad escape \\U7fffffff",
+        "pos": 0,
+        "lineno": 1,
+        "colno": 1
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\U7fffffff",
+      "pattern_codepoints": [
+        92,
+        85,
+        55,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102
+      ],
+      "pattern_json": "\"\\\\U7fffffff\"",
+      "flags": 2,
+      "parser": null,
+      "parse_error": {
+        "class": "error",
+        "message": "bad escape \\U7fffffff at position 0",
+        "msg": "bad escape \\U7fffffff",
+        "pos": 0,
+        "lineno": 1,
+        "colno": 1
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "bad escape \\U7fffffff at position 0",
+        "msg": "bad escape \\U7fffffff",
+        "pos": 0,
+        "lineno": 1,
+        "colno": 1
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\U80000000",
+      "pattern_codepoints": [
+        92,
+        85,
+        56,
+        48,
+        48,
+        48,
+        48,
+        48,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\U80000000\"",
+      "flags": 0,
+      "parser": null,
+      "parse_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\U80000000",
+      "pattern_codepoints": [
+        92,
+        85,
+        56,
+        48,
+        48,
+        48,
+        48,
+        48,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\U80000000\"",
+      "flags": 2,
+      "parser": null,
+      "parse_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\Uffffffff",
+      "pattern_codepoints": [
+        92,
+        85,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102
+      ],
+      "pattern_json": "\"\\\\Uffffffff\"",
+      "flags": 0,
+      "parser": null,
+      "parse_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\Uffffffff",
+      "pattern_codepoints": [
+        92,
+        85,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102
+      ],
+      "pattern_json": "\"\\\\Uffffffff\"",
+      "flags": 2,
+      "parser": null,
+      "parse_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "[\\U7fffffff]",
+      "pattern_codepoints": [
+        91,
+        92,
+        85,
+        55,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        93
+      ],
+      "pattern_json": "\"[\\\\U7fffffff]\"",
+      "flags": 0,
+      "parser": null,
+      "parse_error": {
+        "class": "error",
+        "message": "bad escape \\U7fffffff at position 1",
+        "msg": "bad escape \\U7fffffff",
+        "pos": 1,
+        "lineno": 1,
+        "colno": 2
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "bad escape \\U7fffffff at position 1",
+        "msg": "bad escape \\U7fffffff",
+        "pos": 1,
+        "lineno": 1,
+        "colno": 2
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "[\\U7fffffff]",
+      "pattern_codepoints": [
+        91,
+        92,
+        85,
+        55,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        93
+      ],
+      "pattern_json": "\"[\\\\U7fffffff]\"",
+      "flags": 2,
+      "parser": null,
+      "parse_error": {
+        "class": "error",
+        "message": "bad escape \\U7fffffff at position 1",
+        "msg": "bad escape \\U7fffffff",
+        "pos": 1,
+        "lineno": 1,
+        "colno": 2
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "bad escape \\U7fffffff at position 1",
+        "msg": "bad escape \\U7fffffff",
+        "pos": 1,
+        "lineno": 1,
+        "colno": 2
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "[\\U80000000]",
+      "pattern_codepoints": [
+        91,
+        92,
+        85,
+        56,
+        48,
+        48,
+        48,
+        48,
+        48,
+        48,
+        48,
+        93
+      ],
+      "pattern_json": "\"[\\\\U80000000]\"",
+      "flags": 0,
+      "parser": null,
+      "parse_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "[\\U80000000]",
+      "pattern_codepoints": [
+        91,
+        92,
+        85,
+        56,
+        48,
+        48,
+        48,
+        48,
+        48,
+        48,
+        48,
+        93
+      ],
+      "pattern_json": "\"[\\\\U80000000]\"",
+      "flags": 2,
+      "parser": null,
+      "parse_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?i)(?:[\\ud800-\\ud802]a|[\\ufffd-\\ufffd]b)",
+      "pattern_codepoints": [
+        40,
+        63,
+        105,
+        41,
+        40,
+        63,
+        58,
+        91,
+        92,
+        117,
+        100,
+        56,
+        48,
+        48,
+        45,
+        92,
+        117,
+        100,
+        56,
+        48,
+        50,
+        93,
+        97,
+        124,
+        91,
+        92,
+        117,
+        102,
+        102,
+        102,
+        100,
+        45,
+        92,
+        117,
+        102,
+        102,
+        102,
+        100,
+        93,
+        98,
+        41
+      ],
+      "pattern_json": "\"(?i)(?:[\\\\ud800-\\\\ud802]a|[\\\\ufffd-\\\\ufffd]b)\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "BRANCH",
+            [
+              null,
+              [
+                [
+                  [
+                    "IN",
+                    [
+                      [
+                        "RANGE",
+                        [
+                          55296,
+                          55298
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "LITERAL",
+                    97
+                  ]
+                ],
+                [
+                  [
+                    "IN",
+                    [
+                      [
+                        "RANGE",
+                        [
+                          65533,
+                          65533
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "LITERAL",
+                    98
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?i)(?:[\\ud800-\\ud802]a|[\\ufffd-\\ufffd]b)",
+      "pattern_codepoints": [
+        40,
+        63,
+        105,
+        41,
+        40,
+        63,
+        58,
+        91,
+        92,
+        117,
+        100,
+        56,
+        48,
+        48,
+        45,
+        92,
+        117,
+        100,
+        56,
+        48,
+        50,
+        93,
+        97,
+        124,
+        91,
+        92,
+        117,
+        102,
+        102,
+        102,
+        100,
+        45,
+        92,
+        117,
+        102,
+        102,
+        102,
+        100,
+        93,
+        98,
+        41
+      ],
+      "pattern_json": "\"(?i)(?:[\\\\ud800-\\\\ud802]a|[\\\\ufffd-\\\\ufffd]b)\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "BRANCH",
+            [
+              null,
+              [
+                [
+                  [
+                    "IN",
+                    [
+                      [
+                        "RANGE",
+                        [
+                          55296,
+                          55298
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "LITERAL",
+                    97
+                  ]
+                ],
+                [
+                  [
+                    "IN",
+                    [
+                      [
+                        "RANGE",
+                        [
+                          65533,
+                          65533
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "LITERAL",
+                    98
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?i)(?:[\\ud800]a|[\\ufffd]b)",
+      "pattern_codepoints": [
+        40,
+        63,
+        105,
+        41,
+        40,
+        63,
+        58,
+        91,
+        92,
+        117,
+        100,
+        56,
+        48,
+        48,
+        93,
+        97,
+        124,
+        91,
+        92,
+        117,
+        102,
+        102,
+        102,
+        100,
+        93,
+        98,
+        41
+      ],
+      "pattern_json": "\"(?i)(?:[\\\\ud800]a|[\\\\ufffd]b)\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "BRANCH",
+            [
+              null,
+              [
+                [
+                  [
+                    "LITERAL",
+                    55296
+                  ],
+                  [
+                    "LITERAL",
+                    97
+                  ]
+                ],
+                [
+                  [
+                    "LITERAL",
+                    65533
+                  ],
+                  [
+                    "LITERAL",
+                    98
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?i)(?:[\\ud800]a|[\\ufffd]b)",
+      "pattern_codepoints": [
+        40,
+        63,
+        105,
+        41,
+        40,
+        63,
+        58,
+        91,
+        92,
+        117,
+        100,
+        56,
+        48,
+        48,
+        93,
+        97,
+        124,
+        91,
+        92,
+        117,
+        102,
+        102,
+        102,
+        100,
+        93,
+        98,
+        41
+      ],
+      "pattern_json": "\"(?i)(?:[\\\\ud800]a|[\\\\ufffd]b)\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "BRANCH",
+            [
+              null,
+              [
+                [
+                  [
+                    "LITERAL",
+                    55296
+                  ],
+                  [
+                    "LITERAL",
+                    97
+                  ]
+                ],
+                [
+                  [
+                    "LITERAL",
+                    65533
+                  ],
+                  [
+                    "LITERAL",
+                    98
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?i)[\\ud83d\\ude00]",
+      "pattern_codepoints": [
+        40,
+        63,
+        105,
+        41,
+        91,
+        92,
+        117,
+        100,
+        56,
+        51,
+        100,
+        92,
+        117,
+        100,
+        101,
+        48,
+        48,
+        93
+      ],
+      "pattern_json": "\"(?i)[\\\\ud83d\\\\ude00]\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "IN",
+            [
+              [
+                "LITERAL",
+                55357
+              ],
+              [
+                "LITERAL",
+                56832
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?i)[\\ud83d\\ude00]",
+      "pattern_codepoints": [
+        40,
+        63,
+        105,
+        41,
+        91,
+        92,
+        117,
+        100,
+        56,
+        51,
+        100,
+        92,
+        117,
+        100,
+        101,
+        48,
+        48,
+        93
+      ],
+      "pattern_json": "\"(?i)[\\\\ud83d\\\\ude00]\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "IN",
+            [
+              [
+                "LITERAL",
+                55357
+              ],
+              [
+                "LITERAL",
+                56832
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?i)([^\\ud800-\\ud802])([^\\ufffd-\\ufffd])",
+      "pattern_codepoints": [
+        40,
+        63,
+        105,
+        41,
+        40,
+        91,
+        94,
+        92,
+        117,
+        100,
+        56,
+        48,
+        48,
+        45,
+        92,
+        117,
+        100,
+        56,
+        48,
+        50,
+        93,
+        41,
+        40,
+        91,
+        94,
+        92,
+        117,
+        102,
+        102,
+        102,
+        100,
+        45,
+        92,
+        117,
+        102,
+        102,
+        102,
+        100,
+        93,
+        41
+      ],
+      "pattern_json": "\"(?i)([^\\\\ud800-\\\\ud802])([^\\\\ufffd-\\\\ufffd])\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "SUBPATTERN",
+            [
+              1,
+              0,
+              0,
+              [
+                [
+                  "IN",
+                  [
+                    [
+                      "NEGATE",
+                      null
+                    ],
+                    [
+                      "RANGE",
+                      [
+                        55296,
+                        55298
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "SUBPATTERN",
+            [
+              2,
+              0,
+              0,
+              [
+                [
+                  "IN",
+                  [
+                    [
+                      "NEGATE",
+                      null
+                    ],
+                    [
+                      "RANGE",
+                      [
+                        65533,
+                        65533
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 3,
+        "groupdict": {},
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 2,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              55357
+            ],
+            [
+              56832
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              97
+            ],
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              97
+            ],
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              97
+            ],
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              98
+            ],
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              65533
+            ],
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              65533
+            ],
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              97
+            ],
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        }
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?i)([^\\ud800-\\ud802])([^\\ufffd-\\ufffd])",
+      "pattern_codepoints": [
+        40,
+        63,
+        105,
+        41,
+        40,
+        91,
+        94,
+        92,
+        117,
+        100,
+        56,
+        48,
+        48,
+        45,
+        92,
+        117,
+        100,
+        56,
+        48,
+        50,
+        93,
+        41,
+        40,
+        91,
+        94,
+        92,
+        117,
+        102,
+        102,
+        102,
+        100,
+        45,
+        92,
+        117,
+        102,
+        102,
+        102,
+        100,
+        93,
+        41
+      ],
+      "pattern_json": "\"(?i)([^\\\\ud800-\\\\ud802])([^\\\\ufffd-\\\\ufffd])\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "SUBPATTERN",
+            [
+              1,
+              0,
+              0,
+              [
+                [
+                  "IN",
+                  [
+                    [
+                      "NEGATE",
+                      null
+                    ],
+                    [
+                      "RANGE",
+                      [
+                        55296,
+                        55298
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "SUBPATTERN",
+            [
+              2,
+              0,
+              0,
+              [
+                [
+                  "IN",
+                  [
+                    [
+                      "NEGATE",
+                      null
+                    ],
+                    [
+                      "RANGE",
+                      [
+                        65533,
+                        65533
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 3,
+        "groupdict": {},
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 2,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              55357
+            ],
+            [
+              56832
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              97
+            ],
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              97
+            ],
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              97
+            ],
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              98
+            ],
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              65533
+            ],
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              65533
+            ],
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              97
+            ],
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        }
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?i)[\\ud800-\\ud802][\\ud803-\\ud804]",
+      "pattern_codepoints": [
+        40,
+        63,
+        105,
+        41,
+        91,
+        92,
+        117,
+        100,
+        56,
+        48,
+        48,
+        45,
+        92,
+        117,
+        100,
+        56,
+        48,
+        50,
+        93,
+        91,
+        92,
+        117,
+        100,
+        56,
+        48,
+        51,
+        45,
+        92,
+        117,
+        100,
+        56,
+        48,
+        52,
+        93
+      ],
+      "pattern_json": "\"(?i)[\\\\ud800-\\\\ud802][\\\\ud803-\\\\ud804]\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "IN",
+            [
+              [
+                "RANGE",
+                [
+                  55296,
+                  55298
+                ]
+              ]
+            ]
+          ],
+          [
+            "IN",
+            [
+              [
+                "RANGE",
+                [
+                  55299,
+                  55300
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?i)[\\ud800-\\ud802][\\ud803-\\ud804]",
+      "pattern_codepoints": [
+        40,
+        63,
+        105,
+        41,
+        91,
+        92,
+        117,
+        100,
+        56,
+        48,
+        48,
+        45,
+        92,
+        117,
+        100,
+        56,
+        48,
+        50,
+        93,
+        91,
+        92,
+        117,
+        100,
+        56,
+        48,
+        51,
+        45,
+        92,
+        117,
+        100,
+        56,
+        48,
+        52,
+        93
+      ],
+      "pattern_json": "\"(?i)[\\\\ud800-\\\\ud802][\\\\ud803-\\\\ud804]\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "IN",
+            [
+              [
+                "RANGE",
+                [
+                  55296,
+                  55298
+                ]
+              ]
+            ]
+          ],
+          [
+            "IN",
+            [
+              [
+                "RANGE",
+                [
+                  55299,
+                  55300
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null
+      ],
+      "compile_warnings": []
+    }
+  ]
+}

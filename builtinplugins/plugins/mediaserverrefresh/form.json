@@ -1,0 +1,73 @@
+[
+  {
+    "component": "VForm",
+    "content": [
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 6
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "enabled",
+                  "label": "启用插件"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "multiple": true,
+                  "chips": true,
+                  "clearable": true,
+                  "model": "mediaservers",
+                  "label": "媒体服务器",
+                  "items": []
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12
+            },
+            "content": [
+              {
+                "component": "VTextField",
+                "props": {
+                  "model": "delay",
+                  "label": "延迟时间（秒）",
+                  "placeholder": "0"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

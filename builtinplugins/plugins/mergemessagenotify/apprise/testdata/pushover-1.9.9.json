@@ -1,0 +1,947 @@
+{
+  "source": {
+    "version": "1.9.9",
+    "pushover_sha256": "75d8164357e714a4d27209ee9bb7ace132c4db9d363a4178b5bfac302aedea8c",
+    "conversion_sha256": "3be3e3a6bb47d6c30dd73f7fb23e80317b0077d8ef6e4bbc86f45da1287f1a08",
+    "python": "3.14.4",
+    "requests": "2.34.2",
+    "markdown": "3.11.2 for both Markdown-converting cases; 3.11.3 imported but unused for all other cases",
+    "network": "forbidden; original request capture with synthetic replies and fixed time; synchronous source executor for the split case only"
+  },
+  "boundary": "owned-fixed-boundary",
+  "cases": [
+    {
+      "name": "broadcast-with-default-title-and-sound",
+      "url": "pover://ownedUser@ownedToken",
+      "title": " ",
+      "body": " 消息 ",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"status\":0,\"receipt\":\"fixture\"}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "token=ownedToken&user=ownedUser&priority=0&title=Apprise+Notifications&message=+%E6%B6%88%E6%81%AF&device=ALL_DEVICES&sound=pushover",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "recipient-emergency-form-options",
+      "url": "pover://old:oldpass@owned%2BToken/zeta/a/invalid%21?to=zeta%2Cbeta%2Ca&user=owned%2BUser&priority=Emergency&retry=3_0&expire=0&sound=OWNED%252BSound&url=https%253A%252F%252Fowned.invalid%252Fpath%253Fid%253D1&url_title=Click%2520Here&verify=no&cto=2.5&rto=7",
+      "title": "Title",
+      "body": "message",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "invalid JSON"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic b3duZWQrVG9rZW46"
+          },
+          "body": "token=owned%2BToken&user=owned%2BUser&priority=2&title=Title&message=message&device=a%2Cbeta%2Czeta&sound=owned%2Bsound&url=https%3A%2F%2Fowned.invalid%2Fpath%3Fid%3D1&url_title=Click%2520Here&retry=30&expire=0",
+          "verify": false,
+          "timeout": [
+            2.5,
+            7.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "emergency-default-timers",
+      "url": "pover://ownedUser@ownedToken?priority=2nd&retry=bad",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": ""
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "token=ownedToken&user=ownedUser&priority=2&title=title&message=body&device=ALL_DEVICES&sound=pushover&retry=900&expire=3600",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "retry-below-limit-rejected",
+      "url": "pover://ownedUser@ownedToken?priority=2&retry=29",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "replies": [],
+      "added": false,
+      "result": false,
+      "waits": [],
+      "requests": []
+    },
+    {
+      "name": "expire-above-limit-rejected",
+      "url": "pover://ownedUser@ownedToken?priority=emergency&expire=10801",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "replies": [],
+      "added": false,
+      "result": false,
+      "waits": [],
+      "requests": []
+    },
+    {
+      "name": "nonemergency-ignores-timers",
+      "url": "pover://ownedUser@ownedToken?priority=-2foo&retry=10&expire=20000",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "token=ownedToken&user=ownedUser&priority=-2&title=title&message=body&device=ALL_DEVICES&sound=pushover",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "all-targets-invalid-no-send",
+      "url": "pover://ownedUser@ownedToken/invalid%21",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://attach.invalid/image.png"
+      ],
+      "replies": [],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": []
+    },
+    {
+      "name": "no-user-rejected",
+      "url": "pover://ownedToken",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "replies": [],
+      "added": false,
+      "result": false,
+      "waits": [],
+      "requests": []
+    },
+    {
+      "name": "store-disabled-rejected",
+      "url": "pover://ownedUser@ownedToken?store=no",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "replies": [],
+      "added": false,
+      "result": false,
+      "waits": [],
+      "requests": []
+    },
+    {
+      "name": "markdown-heading-newlines-table",
+      "url": "pover://ownedUser@ownedToken?format=markdown",
+      "title": "plain title",
+      "body": "# Title\n\n**Bold** and *italic*\nsecond [link](https://owned.invalid)\n\nleft | right\n:--- | ---:\nA | B",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "token=ownedToken&user=ownedUser&priority=0&title=plain+title&message=%3Ch1%3ETitle%3C%2Fh1%3E%0A%3Cp%3E%3Cstrong%3EBold%3C%2Fstrong%3E+and+%3Cem%3Eitalic%3C%2Fem%3E%3Cbr+%2F%3E%0Asecond+%3Ca+href%3D%22https%3A%2F%2Fowned.invalid%22%3Elink%3C%2Fa%3E%3C%2Fp%3E%0A%3Ctable%3E%0A%3Cthead%3E%0A%3Ctr%3E%0A%3Cth+style%3D%22text-align%3A+left%3B%22%3Eleft%3C%2Fth%3E%0A%3Cth+style%3D%22text-align%3A+right%3B%22%3Eright%3C%2Fth%3E%0A%3C%2Ftr%3E%0A%3C%2Fthead%3E%0A%3Ctbody%3E%0A%3Ctr%3E%0A%3Ctd+style%3D%22text-align%3A+left%3B%22%3EA%3C%2Ftd%3E%0A%3Ctd+style%3D%22text-align%3A+right%3B%22%3EB%3C%2Ftd%3E%0A%3C%2Ftr%3E%0A%3C%2Ftbody%3E%0A%3C%2Ftable%3E&device=ALL_DEVICES&sound=pushover&html=1",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "markdown-inline-html-and-unenabled-fence",
+      "url": "pover://ownedUser@ownedToken?format=markdown",
+      "title": "title",
+      "body": "<span>raw</span>\n\n```go\nfmt.Println(\"hi\")\n```",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "token=ownedToken&user=ownedUser&priority=0&title=title&message=%3Cp%3E%3Cspan%3Eraw%3C%2Fspan%3E%3C%2Fp%3E%0A%3Cp%3E%3Ccode%3Ego%0Afmt.Println%28%22hi%22%29%3C%2Fcode%3E%3C%2Fp%3E&device=ALL_DEVICES&sound=pushover&html=1",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "html-passes-through",
+      "url": "pover://ownedUser@ownedToken?format=html",
+      "title": "title",
+      "body": "<b>owned</b>\n<i>body</i>",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "token=ownedToken&user=ownedUser&priority=0&title=title&message=%3Cb%3Eowned%3C%2Fb%3E%0A%3Ci%3Ebody%3C%2Fi%3E&device=ALL_DEVICES&sound=pushover&html=1",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "truncate-limits-and-first-attachment",
+      "url": "pover://ownedUser@ownedToken?overflow=truncate",
+      "title": "标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标标",
+      "body": "词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词词",
+      "attachments": [
+        "https://attach.invalid/image.png",
+        "https://attach.invalid/readme.txt"
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/image.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-fixed-boundary",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "token",
+                "filename": null,
+                "content_type": null,
+                "base64": "b3duZWRUb2tlbg=="
+              },
+              {
+                "field": "user",
+                "filename": null,
+                "content_type": null,
+                "base64": "b3duZWRVc2Vy"
+              },
+              {
+                "field": "priority",
+                "filename": null,
+                "content_type": null,
+                "base64": "MA=="
+              },
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH5qCH"
+              },
+              {
+                "field": "message",
+                "filename": null,
+                "content_type": null,
+                "base64": "6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N6K+N"
+              },
+              {
+                "field": "device",
+                "filename": null,
+                "content_type": null,
+                "base64": "QUxMX0RFVklDRVM="
+              },
+              {
+                "field": "sound",
+                "filename": null,
+                "content_type": null,
+                "base64": "cHVzaG92ZXI="
+              },
+              {
+                "field": "attachment",
+                "filename": "image.png",
+                "content_type": null,
+                "base64": "b3duZWQtaW1hZ2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "split-1024-and-titles",
+      "url": "pover://ownedUser@ownedToken?overflow=split",
+      "title": "title",
+      "body": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxend",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [
+        5.5
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "token=ownedToken&user=ownedUser&priority=0&title=title+%5B1%2F2%5D&message=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&device=ALL_DEVICES&sound=pushover",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "token=ownedToken&user=ownedUser&priority=0&title=title+%5B2%2F2%5D&message=end&device=ALL_DEVICES&sound=pushover",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "first-image-followed-by-unsupported-text",
+      "url": "pover://ownedUser@ownedToken?sound=magic&priority=2",
+      "title": "title",
+      "body": "message",
+      "attachments": [
+        "https://attach.invalid/image.png",
+        "https://attach.invalid/readme.txt"
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [
+        5.5
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/image.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-fixed-boundary",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "token",
+                "filename": null,
+                "content_type": null,
+                "base64": "b3duZWRUb2tlbg=="
+              },
+              {
+                "field": "user",
+                "filename": null,
+                "content_type": null,
+                "base64": "b3duZWRVc2Vy"
+              },
+              {
+                "field": "priority",
+                "filename": null,
+                "content_type": null,
+                "base64": "Mg=="
+              },
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "dGl0bGU="
+              },
+              {
+                "field": "message",
+                "filename": null,
+                "content_type": null,
+                "base64": "bWVzc2FnZQ=="
+              },
+              {
+                "field": "device",
+                "filename": null,
+                "content_type": null,
+                "base64": "QUxMX0RFVklDRVM="
+              },
+              {
+                "field": "sound",
+                "filename": null,
+                "content_type": null,
+                "base64": "bWFnaWM="
+              },
+              {
+                "field": "retry",
+                "filename": null,
+                "content_type": null,
+                "base64": "OTAw"
+              },
+              {
+                "field": "expire",
+                "filename": null,
+                "content_type": null,
+                "base64": "MzYwMA=="
+              },
+              {
+                "field": "attachment",
+                "filename": "image.png",
+                "content_type": null,
+                "base64": "b3duZWQtaW1hZ2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/readme.txt",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "token=ownedToken&user=ownedUser&priority=2&title=&message=readme.txt&device=ALL_DEVICES&sound=none&retry=900&expire=3600",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "attachment-only-uses-name",
+      "url": "pover://ownedUser@ownedToken",
+      "title": "",
+      "body": "",
+      "attachments": [
+        "https://attach.invalid/image.png"
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/image.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-fixed-boundary",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "token",
+                "filename": null,
+                "content_type": null,
+                "base64": "b3duZWRUb2tlbg=="
+              },
+              {
+                "field": "user",
+                "filename": null,
+                "content_type": null,
+                "base64": "b3duZWRVc2Vy"
+              },
+              {
+                "field": "priority",
+                "filename": null,
+                "content_type": null,
+                "base64": "MA=="
+              },
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "QXBwcmlzZSBOb3RpZmljYXRpb25z"
+              },
+              {
+                "field": "message",
+                "filename": null,
+                "content_type": null,
+                "base64": "aW1hZ2UucG5n"
+              },
+              {
+                "field": "device",
+                "filename": null,
+                "content_type": null,
+                "base64": "QUxMX0RFVklDRVM="
+              },
+              {
+                "field": "sound",
+                "filename": null,
+                "content_type": null,
+                "base64": "cHVzaG92ZXI="
+              },
+              {
+                "field": "attachment",
+                "filename": "image.png",
+                "content_type": null,
+                "base64": "b3duZWQtaW1hZ2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "missing-attachment-aborts",
+      "url": "pover://ownedUser@ownedToken",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://attach.invalid/missing.jpg",
+        "https://attach.invalid/image.png"
+      ],
+      "replies": [],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/missing.jpg",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        }
+      ]
+    },
+    {
+      "name": "empty-image-aborts",
+      "url": "pover://ownedUser@ownedToken",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://attach.invalid/empty.png"
+      ],
+      "replies": [],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/empty.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        }
+      ]
+    },
+    {
+      "name": "oversized-image-aborts",
+      "url": "pover://ownedUser@ownedToken",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://attach.invalid/oversized.png"
+      ],
+      "replies": [],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/oversized.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        }
+      ]
+    },
+    {
+      "name": "failed-first-post-aborts-attachments",
+      "url": "pover://ownedUser@ownedToken",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://attach.invalid/image.png",
+        "https://attach.invalid/readme.txt"
+      ],
+      "replies": [
+        {
+          "status": 401,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/image.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-fixed-boundary",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "token",
+                "filename": null,
+                "content_type": null,
+                "base64": "b3duZWRUb2tlbg=="
+              },
+              {
+                "field": "user",
+                "filename": null,
+                "content_type": null,
+                "base64": "b3duZWRVc2Vy"
+              },
+              {
+                "field": "priority",
+                "filename": null,
+                "content_type": null,
+                "base64": "MA=="
+              },
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "dGl0bGU="
+              },
+              {
+                "field": "message",
+                "filename": null,
+                "content_type": null,
+                "base64": "Ym9keQ=="
+              },
+              {
+                "field": "device",
+                "filename": null,
+                "content_type": null,
+                "base64": "QUxMX0RFVklDRVM="
+              },
+              {
+                "field": "sound",
+                "filename": null,
+                "content_type": null,
+                "base64": "cHVzaG92ZXI="
+              },
+              {
+                "field": "attachment",
+                "filename": "image.png",
+                "content_type": null,
+                "base64": "b3duZWQtaW1hZ2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "status-204-not-success",
+      "url": "pover://ownedUser@ownedToken",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 204,
+          "body": ""
+        }
+      ],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushover.net/1/messages.json",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "token=ownedToken&user=ownedUser&priority=0&title=title&message=body&device=ALL_DEVICES&sound=pushover",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    }
+  ]
+}

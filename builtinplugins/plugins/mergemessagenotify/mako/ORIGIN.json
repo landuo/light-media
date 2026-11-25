@@ -1,0 +1,323 @@
+{
+  "host_commit": "30bf6ae87f431cdc83a34cfd75a62d1cc666897b",
+  "source_plugin_version": "1.20.1",
+  "files": {
+    "NOTICE": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/NOTICE",
+      "host_sha256": "6ae27f8a55b79728684224ad050b2ed23165435062d9435812893bb8198a86b1"
+    },
+    "builtins.go": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/builtins.go",
+      "host_sha256": "2115442f682cd1510a834de66bcbb6fcef38c5144e230c126df81785ed61ddd6"
+    },
+    "context.go": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/context.go",
+      "host_sha256": "e75d5af1d6de47cb972143db980ce152b46015e67b433fade56cfaddfc8f8544"
+    },
+    "entities.go": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/entities.go",
+      "host_sha256": "6b3c2d83c4f87b19eba1fce0bf61fbb6321aece46e67b45748feb5441cda4c40"
+    },
+    "exceptions.go": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/exceptions.go",
+      "host_sha256": "823c7726c226217057f25ab666ebc823116ebff5fb2adf8a14ac22a308690421"
+    },
+    "expression.go": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/expression.go",
+      "host_sha256": "9a546923f5a72f9ab0746b918fca7fabea88b37c420e416a476a18614d4600ab"
+    },
+    "html4-entities.json": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/html4-entities.json",
+      "host_sha256": "a3cd9ca92d689ea99dc48f654c2a1f6e20361087333a42301f6325d8d25d17b3"
+    },
+    "json.go": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/json.go",
+      "host_sha256": "6d8c669b3f9725539510dbb09878d2dd5d9d754bcb4a59276bee6a49b276ede7"
+    },
+    "licenses/CPython-PSF.txt": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/licenses/CPython-PSF.txt",
+      "host_sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+    },
+    "licenses/Mako-MIT.txt": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/licenses/Mako-MIT.txt",
+      "host_sha256": "8c1d171bc5d341ad9cd33d5e2c39b96a82c7bd49b3ae89a470c37e5822232054"
+    },
+    "licenses/MarkupSafe-BSD.txt": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/licenses/MarkupSafe-BSD.txt",
+      "host_sha256": "489a8e1108509ed98a37bb983e11e0f7e1d31f0bd8f99a79c8448e7ff37d07ea"
+    },
+    "parser.go": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/parser.go",
+      "host_sha256": "ceb430d80b3c0eb035a19cbfd72f628795cfc0965738276a7bb6638bbd83154d"
+    },
+    "template.go": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/template.go",
+      "host_sha256": "944a0283d1fc6f324ceddc179b2bba47e4706266bdf3c78abb33541fe46b3d43"
+    },
+    "testdata/provenance.json": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/testdata/provenance.json",
+      "host_sha256": "a969fb085396ed4d15acd3afb09cede58e6d6c35c71c559f7a8c74c059f0b24a"
+    },
+    "unicode-cpython312.json.gz": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/unicode-cpython312.json.gz",
+      "host_sha256": "06be309f2a4520e2897e5fc1574cb9f7990268c59774033b071611d44957625d"
+    },
+    "unicode.go": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/unicode.go",
+      "host_sha256": "5a763a6eedab55e02ca324cae3ba2e9e7d8ee9ab52e93f1239c0dfb4e33c7dcb"
+    },
+    "value.go": {
+      "host_path": "internal/plugins/mergemessagenotify/mako/value.go",
+      "host_sha256": "f79c253f88b1e90933b2a26bc088cab63b17e07b87b64de5df29abd434c55a86"
+    }
+  },
+  "selection": "Go runtime and required embedded data, license and provenance files. Historical tests and their data remain in the host reference.",
+  "adaptations": [
+    {
+      "installed_plugin_version": "1.20.3",
+      "reason": "Implement anonymous block buffering/filtering and page expression filters from fixed Mako 1.4.1. The expression n marker skips page/default filters; a page n marker skips only default string conversion.",
+      "target_files": [
+        "parser.go",
+        "template.go",
+        "value.go"
+      ],
+      "source_sha256": {
+        "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+        "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+        "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+        "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d"
+      },
+      "source_observations": "testdata/source-filters-1.4.1.json",
+      "source_observations_sha256": "1f94ef9bf6f2588cb6294887b047f549b8e4499f159616ef8069e3e3bc3ea762",
+      "scope": "Ten original TemplateUtil cases. Cached/decorated blocks, call tags and other unported constructs remain outside this proof."
+    },
+    {
+      "installed_plugin_version": "1.20.3",
+      "reason": "Port Mako 1.4.1 call tags and namespace shorthand, including inline caller exports, shared call frames, lexical body scope and ordered callback arguments.",
+      "target_files": [
+        "call.go",
+        "parser.go",
+        "template.go",
+        "context.go",
+        "builtins.go",
+        "expression.go",
+        "value.go"
+      ],
+      "source_sha256": {
+        "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+        "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+        "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+        "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+        "mako/ast.py": "f0248c12c8827349ea6d1b7d88dcf325743c589d04d50fcde63e982a5e44395b",
+        "mako/pyparser.py": "6c0319ab7a64674b58c3be700396c4ad5f0a9df91f6e679b0264a0642df3db66",
+        "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d"
+      },
+      "source_observations": "testdata/source-calls-1.4.1.json",
+      "source_observations_sha256": "ddee478ac84c454c613d4af0aaa93e8fa06d8a2bba825518d20a92e8fa58af27",
+      "scope": "Twenty-one original TemplateUtil cases. Python positional-only argument omissions, caller stack internals, cross-template namespace lookup, and unported Python or Mako constructs are outside this proof."
+    },
+    {
+      "installed_plugin_version": "1.20.3",
+      "reason": "Preserve recursive caller exports through tags and control lines, including repeated default evaluation. Expose the caller namespace Context and core metadata. Evaluate positional/star arguments before keyword arguments and both groups before the invocation type check.",
+      "target_files": [
+        "call.go",
+        "parser.go",
+        "template.go",
+        "expression.go",
+        "value.go"
+      ],
+      "source_sha256": {
+        "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+        "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+        "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+        "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+        "mako/ast.py": "f0248c12c8827349ea6d1b7d88dcf325743c589d04d50fcde63e982a5e44395b",
+        "mako/pyparser.py": "6c0319ab7a64674b58c3be700396c4ad5f0a9df91f6e679b0264a0642df3db66",
+        "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d"
+      },
+      "source_observations": "testdata/source-call-boundaries-1.4.1.json",
+      "source_observations_sha256": "f4bfaceec86a7fb4b1ff0df6d520dbbf6bab5ef6dcebe2ca2608115bef0b6804",
+      "scope": "Nine new source-derived cases. Direct raw Namespace member maps and lookup/cache methods, Context copied locals in nested definitions, and other previously unported internals remain outside this proof."
+    },
+    {
+      "installed_plugin_version": "1.20.3",
+      "reason": "Preserve Mako top-level and inline decorator binding, closure argument forwarding, Context visibility, and the installed default Beaker backend failure for cached defs, blocks and pages.",
+      "target_files": [
+        "cache.go",
+        "call.go",
+        "expression.go",
+        "function.go",
+        "parser.go",
+        "template.go",
+        "value.go"
+      ],
+      "source_sha256": {
+        "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+        "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+        "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+        "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+        "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d",
+        "mako/cache.py": "0e7a30b905b44dc9c06b9bb9b4d37b0ffaaf5a3a9f3ca72c4c80a202a7038e83",
+        "mako/ext/beaker_cache.py": "4ca18af1570ca3eb29c257039f004dfc6ea6856a93b12c0e9916e18c3315d93e"
+      },
+      "source_observations": "testdata/source-decorator-cache-1.4.1.json",
+      "source_observations_sha256": "0c09a8f59f7def31c49e05772f9ccf16bf82ecaef91570168dc67d063068c4d9",
+      "scope": "Twenty-nine fixed original TemplateUtil cases. Original Mako is 1.4.1 on Python 3.12 with local MarkupSafe 3.0.4; no case exercises MarkupSafe-specific filtering. Beaker is absent in both the isolated oracle and installed MoviePilot metadata. No persistent backend is created. Callable metadata, independent module/forwarding default evaluation, exact namespace forwarding, arbitrary Python suites/imports and other unported template forms are outside this proof."
+    },
+    {
+      "installed_plugin_version": "1.20.3",
+      "reason": "Separate module render, cache wrapper and lexical forwarding defaults for fixed Mako. A template namespace partial invokes the module render callable. Expose the original and wrapped names of rendered and Python callables and caller exports.",
+      "target_files": [
+        "definitions.go",
+        "template.go",
+        "parser.go",
+        "expression.go",
+        "value.go",
+        "context.go",
+        "call.go",
+        "builtins.go"
+      ],
+      "source_sha256": {
+        "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+        "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+        "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+        "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+        "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d",
+        "mako/cache.py": "0e7a30b905b44dc9c06b9bb9b4d37b0ffaaf5a3a9f3ca72c4c80a202a7038e83",
+        "mako/ext/beaker_cache.py": "4ca18af1570ca3eb29c257039f004dfc6ea6856a93b12c0e9916e18c3315d93e"
+      },
+      "source_observations": "testdata/source-defaults-and-names-1.4.1.json",
+      "source_observations_sha256": "4f5a0ee869df83613a00cbbd9b2a5044ebcc40314d85f86e54b6f53955b4b18e",
+      "scope": "Eighteen original TemplateUtil cases with pinned Mako 1.4.1, Python 3.12 and no Beaker. Covers module initialization, per-scope root forwarding including untaken controls, namespace bypass, cached and inline default evaluation, page parameters, callable names, and named caller exports. Root identifier analysis follows the parsed subset. Ordering between multiple independently forwarded names uses source declaration order; original Mako iterates a Python set. Advanced Python declaration analysis, bound namespace metadata beyond __name__, namespace lookup and unsupported template constructs remain outside this proof."
+    },
+    {
+      "installed_plugin_version": "1.20.3",
+      "reason": "Use the original template Context for namespace partials and named block rendering. Propagate page arguments and Python-assigned locals through lexical forwarding and preserve the selected Context in decorated originals. Reject a root named block collision with another root block or definition.",
+      "target_files": [
+        "definitions.go",
+        "template.go",
+        "context.go",
+        "value.go"
+      ],
+      "source_sha256": {
+        "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+        "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+        "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+        "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+        "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d",
+        "mako/cache.py": "0e7a30b905b44dc9c06b9bb9b4d37b0ffaaf5a3a9f3ca72c4c80a202a7038e83",
+        "mako/ext/beaker_cache.py": "4ca18af1570ca3eb29c257039f004dfc6ea6856a93b12c0e9916e18c3315d93e"
+      },
+      "source_observations": "testdata/source-definition-context-1.4.1.json",
+      "source_observations_sha256": "4644e049d5ce0b4100582aac62bab7d1ed60176f3e386ef3820b3324f3c80b31",
+      "scope": "Five additional original TemplateUtil cases for lexical page context, root-to-root context forwarding, decorator Context, direct named block and mixed def/block compile failure. Advanced Python declaration analysis and other template context copying paths remain outside this proof."
+    },
+    {
+      "installed_plugin_version": "1.20.3",
+      "reason": "Port named block signatures, generated namespace arguments and page keywords, lexical forwarding, original and cached default declarations, and the default evaluation inside a named block body.",
+      "target_files": [
+        "block.go",
+        "parser.go",
+        "definitions.go",
+        "template.go",
+        "call.go"
+      ],
+      "source_sha256": {
+        "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+        "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+        "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+        "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+        "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d",
+        "mako/cache.py": "0e7a30b905b44dc9c06b9bb9b4d37b0ffaaf5a3a9f3ca72c4c80a202a7038e83",
+        "mako/ext/beaker_cache.py": "4ca18af1570ca3eb29c257039f004dfc6ea6856a93b12c0e9916e18c3315d93e",
+        "mako/ast.py": "f0248c12c8827349ea6d1b7d88dcf325743c589d04d50fcde63e982a5e44395b",
+        "mako/pyparser.py": "6c0319ab7a64674b58c3be700396c4ad5f0a9df91f6e679b0264a0642df3db66"
+      },
+      "source_observations": "testdata/source-named-block-1.4.1.json",
+      "source_observations_sha256": "ce9ba81dfb106aa9571a26b2ce6794deac0288626f5b50e859fcabb79554f096",
+      "scope": "Eighteen original TemplateUtil cases with Mako 1.4.1, CPython 3.12.13, MarkupSafe 3.0.4 and no Beaker. Covers named and nested block rendering, implicit page keywords, namespace versus lexical calls, default timing, uncaught source fallback, cached binding before the missing backend, positional-only omission, and bare-star lowering. The Go Render API receives a map, so the generated page-keyword dictionary uses sorted keys. External template inheritance and its parent-block override guard, explicit variadic page declarations, positional-only lowering in other tag kinds and advanced Python declaration syntax remain outside this proof."
+    },
+    {
+      "installed_plugin_version": "1.20.3",
+      "reason": "Port the generated Python signature collision with implicit pageargs and the lexical priority of named blocks over module variables. Route invalid block declaration names through the original raw-text fallback.",
+      "target_files": ["definitions.go", "parser.go"],
+      "source_sha256": {
+        "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+        "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1"
+      },
+      "source_observations": "testdata/source-named-block-edges-1.4.1.json",
+      "source_observations_sha256": "c6823109da589069c0422dace396c39a5c1946df51eb16a533c3893538a06610",
+      "scope": "Ten original TemplateUtil cases with Mako 1.4.1, CPython 3.12.13, MarkupSafe 3.0.4 and no Beaker. Covers ordinary explicit pageargs collisions, named block versus module and page-local bindings, and hard, soft and case-sensitive block names. The source keyword insertion order cannot be recovered from the Go Render API's input map. Explicit variadic page signatures remain outside this proof."
+    },
+    {
+      "installed_plugin_version": "1.20.3",
+      "reason": "Use the final page tag for the generated signature, filter and cache options. Preserve stale declaration lookups, context locals and the installed loop default.",
+      "target_files": [
+        "parser.go",
+        "template.go",
+        "definitions.go",
+        "value.go",
+        "expression.go"
+      ],
+      "source_sha256": {
+        "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+        "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+        "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+        "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+        "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d",
+        "mako/cache.py": "0e7a30b905b44dc9c06b9bb9b4d37b0ffaaf5a3a9f3ca72c4c80a202a7038e83",
+        "mako/ext/beaker_cache.py": "4ca18af1570ca3eb29c257039f004dfc6ea6856a93b12c0e9916e18c3315d93e"
+      },
+      "source_observations": "testdata/source-multiple-pages-1.4.1.json",
+      "source_observations_sha256": "ef84c50d7afea95781a5b181cff62dfacbd5f80cfa06cb034071774e917ef4d7",
+      "scope": "Twenty-four original TemplateUtil cases. Covers old-only names and fallback, module values, nested signature lookup, cache options, loop defaults and scope forwarding. Explicit variadic signatures, advanced Python declaration forms and external template inheritance remain outside this proof."
+    },
+    {
+      "installed_plugin_version": "1.20.3",
+      "reason": "Bind the generated page signature from the original keyword arguments, preserve explicit and implicit variadics, lower positional-only and bare-star syntax, and keep root Context data separate from generated page locals.",
+      "target_files": [
+        "block.go",
+        "parser.go",
+        "template.go",
+        "definitions.go",
+        "value.go"
+      ],
+      "source_sha256": {
+        "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+        "mako/ast.py": "f0248c12c8827349ea6d1b7d88dcf325743c589d04d50fcde63e982a5e44395b",
+        "mako/pyparser.py": "6c0319ab7a64674b58c3be700396c4ad5f0a9df91f6e679b0264a0642df3db66",
+        "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+        "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+        "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+        "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d"
+      },
+      "source_observations": "testdata/source-page-variadic-1.4.1.json",
+      "source_observations_sha256": "2ce1c3f5f933d7802bb55c8d0c2cfb812c4a6d93281a74837eaa2c069abebf4c",
+      "scope": "Thirty-three original TemplateUtil cases. Covers explicit and implicit kwargs, empty variadic positional tuple, required keyword-only arguments, bare-star and positional-only lowering, annotations, named-block forwarding, reserved names and top-level Context data. Arbitrary Python declaration expressions, nested Context extensions, external inheritance and the original input keyword insertion order remain open."
+    },
+    {
+      "installed_plugin_version": "1.20.3",
+      "reason": "Preserve no-TemplateLookup behavior at the actual installed Template(text=...) entry, including reached includes, pre-render inheritance and lazy/eager namespace generation. Evaluate original expressions and declaration defaults at their source boundaries.",
+      "target_files": [
+        "external.go",
+        "parser.go",
+        "template.go",
+        "definitions.go",
+        "builtins.go",
+        "value.go"
+      ],
+      "source_sha256": {
+        "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+        "mako/ast.py": "f0248c12c8827349ea6d1b7d88dcf325743c589d04d50fcde63e982a5e44395b",
+        "mako/pyparser.py": "6c0319ab7a64674b58c3be700396c4ad5f0a9df91f6e679b0264a0642df3db66",
+        "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+        "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+        "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+        "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d"
+      },
+      "source_observations": "testdata/source-external-template-1.4.1.json",
+      "source_observations_sha256": "3bfef2c629b8b63c355a9483d6d3c22035f99d8657024b87ae75970fc2dcaf78",
+      "scope": "Twenty-six original TemplateUtil cases. Installed entry creates no filesystem lookup. Includes expression and call binding, inheritance selection and nil behavior, named file namespace generation, inline declarations and root def precedence. Inline namespaces without a file, module namespaces, additional paired tag syntax and advanced scope behavior remain open."
+    }
+  ]
+}

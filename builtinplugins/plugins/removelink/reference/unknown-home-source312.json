@@ -1,0 +1,813 @@
+{
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+  "classification": "actual installed full local flow AST + real Python pathlib/pwd, synthetic application deps + owned tmpfs hardlinks; absent synthetic username verified; no app/config/DB/network",
+  "cases": [
+    {
+      "input": {
+        "name": "unknown-home-0",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "exclude_dirs": "~__lm_review_no_such_user_20261106__"
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 1,
+        "logs": [
+          [
+            "info",
+            "\u521d\u59cb\u5316\u5a92\u4f53\u6587\u4ef6\u6e05\u7406\u63d2\u4ef6"
+          ],
+          [
+            "debug",
+            "\u5f00\u59cb\u505c\u6b62\u670d\u52a1"
+          ],
+          [
+            "debug",
+            "\u6587\u4ef6\u76d1\u63a7\u5df2\u505c\u6b62"
+          ],
+          [
+            "debug",
+            "\u670d\u52a1\u505c\u6b62\u5b8c\u6210"
+          ],
+          [
+            "info",
+            "\u5ef6\u8fdf\u5220\u9664\u529f\u80fd\u5df2\u7981\u7528\uff0c\u5c06\u4f7f\u7528\u7acb\u5373\u5220\u9664\u6a21\u5f0f"
+          ],
+          [
+            "info",
+            "STRM \u6587\u4ef6\u5220\u9664\u76d1\u63a7\u529f\u80fd\u5df2\u7981\u7528"
+          ],
+          [
+            "info",
+            "\u786c\u94fe\u63a5\u76d1\u63a7\u76ee\u5f55\uff1a['/fixture/m']"
+          ],
+          [
+            "info",
+            "/fixture/m \u7684\u786c\u94fe\u63a5\u76d1\u63a7\u670d\u52a1\u542f\u52a8"
+          ],
+          [
+            "info",
+            "\u66f4\u65b0\u6587\u4ef6\u5217\u8868\u5b8c\u6210\uff0c\u5171\u8ba1 3 \u4e2a\u6587\u4ef6\uff0c\u8017\u65f6 0.00 \u79d2"
+          ],
+          [
+            "debug",
+            "\u76d1\u63a7\u96c6\u5408\u66f4\u65b0\u5b8c\u6210"
+          ],
+          [
+            "info",
+            "\u76d1\u6d4b\u5230\u5220\u9664\u6587\u4ef6\uff1a/fixture/m/a.mkv"
+          ],
+          [
+            "debug",
+            "\u5904\u7406\u5220\u9664\u4e8b\u4ef6: /fixture/m/a.mkv"
+          ],
+          [
+            "error",
+            "\u5220\u9664\u786c\u94fe\u63a5\u6587\u4ef6\u53d1\u751f\u9519\u8bef\uff1aCould not determine home directory. - Traceback (most recent call last):\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1550, in handle_deleted\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1258, in _unlink_tracked_file\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1099, in __is_excluded\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1087, in _is_same_or_child_path\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1079, in _normalize_config_path\n  File \"/usr/local/lib/python3.12/pathlib.py\", line 1406, in expanduser\n    raise RuntimeError(\"Could not determine home directory.\")\nRuntimeError: Could not determine home directory.\n"
+          ]
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "unknown-home-1",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "exclude_dirs": "~__lm_review_no_such_user_20261106__/"
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 1,
+        "logs": [
+          [
+            "info",
+            "\u521d\u59cb\u5316\u5a92\u4f53\u6587\u4ef6\u6e05\u7406\u63d2\u4ef6"
+          ],
+          [
+            "debug",
+            "\u5f00\u59cb\u505c\u6b62\u670d\u52a1"
+          ],
+          [
+            "debug",
+            "\u6587\u4ef6\u76d1\u63a7\u5df2\u505c\u6b62"
+          ],
+          [
+            "debug",
+            "\u670d\u52a1\u505c\u6b62\u5b8c\u6210"
+          ],
+          [
+            "info",
+            "\u5ef6\u8fdf\u5220\u9664\u529f\u80fd\u5df2\u7981\u7528\uff0c\u5c06\u4f7f\u7528\u7acb\u5373\u5220\u9664\u6a21\u5f0f"
+          ],
+          [
+            "info",
+            "STRM \u6587\u4ef6\u5220\u9664\u76d1\u63a7\u529f\u80fd\u5df2\u7981\u7528"
+          ],
+          [
+            "info",
+            "\u786c\u94fe\u63a5\u76d1\u63a7\u76ee\u5f55\uff1a['/fixture/m']"
+          ],
+          [
+            "info",
+            "/fixture/m \u7684\u786c\u94fe\u63a5\u76d1\u63a7\u670d\u52a1\u542f\u52a8"
+          ],
+          [
+            "info",
+            "\u66f4\u65b0\u6587\u4ef6\u5217\u8868\u5b8c\u6210\uff0c\u5171\u8ba1 3 \u4e2a\u6587\u4ef6\uff0c\u8017\u65f6 0.00 \u79d2"
+          ],
+          [
+            "debug",
+            "\u76d1\u63a7\u96c6\u5408\u66f4\u65b0\u5b8c\u6210"
+          ],
+          [
+            "info",
+            "\u76d1\u6d4b\u5230\u5220\u9664\u6587\u4ef6\uff1a/fixture/m/a.mkv"
+          ],
+          [
+            "debug",
+            "\u5904\u7406\u5220\u9664\u4e8b\u4ef6: /fixture/m/a.mkv"
+          ],
+          [
+            "error",
+            "\u5220\u9664\u786c\u94fe\u63a5\u6587\u4ef6\u53d1\u751f\u9519\u8bef\uff1aCould not determine home directory. - Traceback (most recent call last):\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1550, in handle_deleted\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1258, in _unlink_tracked_file\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1099, in __is_excluded\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1087, in _is_same_or_child_path\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1079, in _normalize_config_path\n  File \"/usr/local/lib/python3.12/pathlib.py\", line 1406, in expanduser\n    raise RuntimeError(\"Could not determine home directory.\")\nRuntimeError: Could not determine home directory.\n"
+          ]
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "unknown-home-2",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "exclude_dirs": "~__lm_review_no_such_user_20261106__/protected"
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 1,
+        "logs": [
+          [
+            "info",
+            "\u521d\u59cb\u5316\u5a92\u4f53\u6587\u4ef6\u6e05\u7406\u63d2\u4ef6"
+          ],
+          [
+            "debug",
+            "\u5f00\u59cb\u505c\u6b62\u670d\u52a1"
+          ],
+          [
+            "debug",
+            "\u6587\u4ef6\u76d1\u63a7\u5df2\u505c\u6b62"
+          ],
+          [
+            "debug",
+            "\u670d\u52a1\u505c\u6b62\u5b8c\u6210"
+          ],
+          [
+            "info",
+            "\u5ef6\u8fdf\u5220\u9664\u529f\u80fd\u5df2\u7981\u7528\uff0c\u5c06\u4f7f\u7528\u7acb\u5373\u5220\u9664\u6a21\u5f0f"
+          ],
+          [
+            "info",
+            "STRM \u6587\u4ef6\u5220\u9664\u76d1\u63a7\u529f\u80fd\u5df2\u7981\u7528"
+          ],
+          [
+            "info",
+            "\u786c\u94fe\u63a5\u76d1\u63a7\u76ee\u5f55\uff1a['/fixture/m']"
+          ],
+          [
+            "info",
+            "/fixture/m \u7684\u786c\u94fe\u63a5\u76d1\u63a7\u670d\u52a1\u542f\u52a8"
+          ],
+          [
+            "info",
+            "\u66f4\u65b0\u6587\u4ef6\u5217\u8868\u5b8c\u6210\uff0c\u5171\u8ba1 3 \u4e2a\u6587\u4ef6\uff0c\u8017\u65f6 0.00 \u79d2"
+          ],
+          [
+            "debug",
+            "\u76d1\u63a7\u96c6\u5408\u66f4\u65b0\u5b8c\u6210"
+          ],
+          [
+            "info",
+            "\u76d1\u6d4b\u5230\u5220\u9664\u6587\u4ef6\uff1a/fixture/m/a.mkv"
+          ],
+          [
+            "debug",
+            "\u5904\u7406\u5220\u9664\u4e8b\u4ef6: /fixture/m/a.mkv"
+          ],
+          [
+            "error",
+            "\u5220\u9664\u786c\u94fe\u63a5\u6587\u4ef6\u53d1\u751f\u9519\u8bef\uff1aCould not determine home directory. - Traceback (most recent call last):\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1550, in handle_deleted\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1258, in _unlink_tracked_file\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1099, in __is_excluded\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1087, in _is_same_or_child_path\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1079, in _normalize_config_path\n  File \"/usr/local/lib/python3.12/pathlib.py\", line 1406, in expanduser\n    raise RuntimeError(\"Could not determine home directory.\")\nRuntimeError: Could not determine home directory.\n"
+          ]
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "unknown-home-immediate-scrap",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "exclude_dirs": "~__lm_review_no_such_user_20261106__/protected",
+          "delete_scrap_infos": true,
+          "delay_seconds": 30
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": "RuntimeError:Could not determine home directory.",
+        "logged_errors": 0,
+        "logs": [
+          [
+            "info",
+            "\u521d\u59cb\u5316\u5a92\u4f53\u6587\u4ef6\u6e05\u7406\u63d2\u4ef6"
+          ],
+          [
+            "debug",
+            "\u5f00\u59cb\u505c\u6b62\u670d\u52a1"
+          ],
+          [
+            "debug",
+            "\u6587\u4ef6\u76d1\u63a7\u5df2\u505c\u6b62"
+          ],
+          [
+            "debug",
+            "\u670d\u52a1\u505c\u6b62\u5b8c\u6210"
+          ],
+          [
+            "info",
+            "\u5ef6\u8fdf\u5220\u9664\u529f\u80fd\u5df2\u7981\u7528\uff0c\u5c06\u4f7f\u7528\u7acb\u5373\u5220\u9664\u6a21\u5f0f"
+          ],
+          [
+            "info",
+            "STRM \u6587\u4ef6\u5220\u9664\u76d1\u63a7\u529f\u80fd\u5df2\u7981\u7528"
+          ],
+          [
+            "info",
+            "\u786c\u94fe\u63a5\u76d1\u63a7\u76ee\u5f55\uff1a['/fixture/m']"
+          ],
+          [
+            "info",
+            "/fixture/m \u7684\u786c\u94fe\u63a5\u76d1\u63a7\u670d\u52a1\u542f\u52a8"
+          ],
+          [
+            "info",
+            "\u66f4\u65b0\u6587\u4ef6\u5217\u8868\u5b8c\u6210\uff0c\u5171\u8ba1 3 \u4e2a\u6587\u4ef6\uff0c\u8017\u65f6 0.00 \u79d2"
+          ],
+          [
+            "debug",
+            "\u76d1\u63a7\u96c6\u5408\u66f4\u65b0\u5b8c\u6210"
+          ],
+          [
+            "info",
+            "\u76d1\u6d4b\u5230\u5220\u9664\u6587\u4ef6\uff1a/fixture/m/a.mkv"
+          ],
+          [
+            "debug",
+            "\u5904\u7406\u5220\u9664\u4e8b\u4ef6: /fixture/m/a.mkv"
+          ]
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "unknown-home-delayed-scrap",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "exclude_dirs": "~__lm_review_no_such_user_20261106__/protected",
+          "delete_scrap_infos": true,
+          "delay_seconds": 30
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 131
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 1,
+        "logs": [
+          [
+            "info",
+            "\u521d\u59cb\u5316\u5a92\u4f53\u6587\u4ef6\u6e05\u7406\u63d2\u4ef6"
+          ],
+          [
+            "debug",
+            "\u5f00\u59cb\u505c\u6b62\u670d\u52a1"
+          ],
+          [
+            "debug",
+            "\u6587\u4ef6\u76d1\u63a7\u5df2\u505c\u6b62"
+          ],
+          [
+            "debug",
+            "\u670d\u52a1\u505c\u6b62\u5b8c\u6210"
+          ],
+          [
+            "info",
+            "\u5ef6\u8fdf\u5220\u9664\u529f\u80fd\u5df2\u542f\u7528\uff0c\u5ef6\u8fdf\u65f6\u95f4: 30 \u79d2"
+          ],
+          [
+            "info",
+            "STRM \u6587\u4ef6\u5220\u9664\u76d1\u63a7\u529f\u80fd\u5df2\u7981\u7528"
+          ],
+          [
+            "info",
+            "\u786c\u94fe\u63a5\u76d1\u63a7\u76ee\u5f55\uff1a['/fixture/m']"
+          ],
+          [
+            "info",
+            "/fixture/m \u7684\u786c\u94fe\u63a5\u76d1\u63a7\u670d\u52a1\u542f\u52a8"
+          ],
+          [
+            "info",
+            "\u66f4\u65b0\u6587\u4ef6\u5217\u8868\u5b8c\u6210\uff0c\u5171\u8ba1 3 \u4e2a\u6587\u4ef6\uff0c\u8017\u65f6 0.00 \u79d2"
+          ],
+          [
+            "debug",
+            "\u76d1\u63a7\u96c6\u5408\u66f4\u65b0\u5b8c\u6210"
+          ],
+          [
+            "info",
+            "\u76d1\u6d4b\u5230\u5220\u9664\u6587\u4ef6\uff1a/fixture/m/a.mkv"
+          ],
+          [
+            "debug",
+            "\u5904\u7406\u5220\u9664\u4e8b\u4ef6: /fixture/m/a.mkv"
+          ],
+          [
+            "info",
+            "\u6587\u4ef6 a.mkv \u52a0\u5165\u5ef6\u8fdf\u5220\u9664\u961f\u5217\uff0c\u5ef6\u8fdf 30 \u79d2"
+          ],
+          [
+            "debug",
+            "\u542f\u52a8\u5ef6\u8fdf\u5220\u9664\u5b9a\u65f6\u5668"
+          ],
+          [
+            "debug",
+            "\u5904\u7406\u5ef6\u8fdf\u5220\u9664\u961f\u5217\uff0c\u5f85\u5904\u7406\u4efb\u52a1\u6570: 1"
+          ],
+          [
+            "debug",
+            "\u5f00\u59cb\u6267\u884c\u5ef6\u8fdf\u5220\u9664\u4efb\u52a1: /fixture/m/a.mkv"
+          ],
+          [
+            "debug",
+            "\u6587\u4ef6 /fixture/m/a.mkv \u786e\u8ba4\u88ab\u5220\u9664\u4e14\u65e0\u91cd\u65b0\u786c\u94fe\u63a5\uff0c\u5f00\u59cb\u6267\u884c\u5ef6\u8fdf\u5220\u9664\u64cd\u4f5c"
+          ],
+          [
+            "error",
+            "\u6267\u884c\u5ef6\u8fdf\u5220\u9664\u4efb\u52a1\u5931\u8d25\uff1aCould not determine home directory. - Traceback (most recent call last):\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1337, in _execute_delayed_deletion\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1181, in delete_scrap_infos\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1205, in delete_empty_folders\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1099, in __is_excluded\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1087, in _is_same_or_child_path\n  File \"/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/removelink/__init__.py\", line 1079, in _normalize_config_path\n  File \"/usr/local/lib/python3.12/pathlib.py\", line 1406, in expanduser\n    raise RuntimeError(\"Could not determine home directory.\")\nRuntimeError: Could not determine home directory.\n"
+          ],
+          [
+            "debug",
+            "\u6e05\u7406\u4e86 1 \u4e2a\u5df2\u5904\u7406\u7684\u4efb\u52a1"
+          ],
+          [
+            "debug",
+            "\u5ef6\u8fdf\u5220\u9664\u961f\u5217\u5df2\u6e05\u7a7a\uff0c\u5b9a\u65f6\u5668\u505c\u6b62"
+          ]
+        ]
+      }
+    }
+  ],
+  "additional_classification": "actual installed source AST full local flow; only synthetic app dependencies and real owned tmpfs hardlinks; original catch/finally observed; no application import/config/DB/network",
+  "normalize": {
+    "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+    "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+    "classification": "actual installed normalization AST+realPath/pwd; process-only synthetic HOME; no app/config/DB/files/network",
+    "cases": [
+      {
+        "path": "./~__lm_review_no_such_user_20261106__",
+        "HOME": null,
+        "value": null,
+        "error": {
+          "class": "RuntimeError",
+          "message": "Could not determine home directory."
+        }
+      },
+      {
+        "path": "foo/../~__lm_review_no_such_user_20261106__",
+        "HOME": null,
+        "value": "~__lm_review_no_such_user_20261106__",
+        "error": null
+      },
+      {
+        "path": "~",
+        "HOME": "~__lm_review_no_such_user_20261106__",
+        "value": null,
+        "error": {
+          "class": "RuntimeError",
+          "message": "Could not determine home directory."
+        }
+      },
+      {
+        "path": "~",
+        "HOME": "",
+        "value": "/",
+        "error": null
+      },
+      {
+        "path": "~/m/file",
+        "HOME": "",
+        "value": "/m/file",
+        "error": null
+      },
+      {
+        "path": "~",
+        "HOME": "owned-relative",
+        "value": "owned-relative",
+        "error": null
+      },
+      {
+        "path": "~/m/file",
+        "HOME": "owned-relative",
+        "value": "owned-relative/m/file",
+        "error": null
+      },
+      {
+        "path": "~",
+        "HOME": "//owned",
+        "value": "//owned",
+        "error": null
+      },
+      {
+        "path": "~/child",
+        "HOME": "//owned",
+        "value": "//owned/child",
+        "error": null
+      },
+      {
+        "path": "~",
+        "HOME": "/",
+        "value": "/",
+        "error": null
+      },
+      {
+        "path": "~/child",
+        "HOME": "/",
+        "value": "/child",
+        "error": null
+      },
+      {
+        "path": "~",
+        "HOME": "//",
+        "value": "/",
+        "error": null
+      },
+      {
+        "path": "~/child",
+        "HOME": "//",
+        "value": "/child",
+        "error": null
+      },
+      {
+        "path": "~",
+        "HOME": "////",
+        "value": "/",
+        "error": null
+      },
+      {
+        "path": "~/child",
+        "HOME": "////",
+        "value": "/child",
+        "error": null
+      },
+      {
+        "path": "~",
+        "HOME": "//owned///",
+        "value": "//owned",
+        "error": null
+      },
+      {
+        "path": "~/child",
+        "HOME": "//owned///",
+        "value": "//owned/child",
+        "error": null
+      }
+    ],
+    "comparisons": [
+      {
+        "path": "/owned/child/file",
+        "base": "~/child",
+        "result": false
+      },
+      {
+        "path": "//owned/child/file",
+        "base": "~/child",
+        "result": false
+      }
+    ]
+  },
+  "posixpath_reference": {
+    "posixpath": {
+      "path": "/usr/local/lib/python3.12/posixpath.py",
+      "file_sha256": "03825681086638649a43480954f7f6a16b4da3bd41ece956864ae96e4f795cd9",
+      "expanduser_source": "def expanduser(path):\n    \"\"\"Expand ~ and ~user constructions.  If user or $HOME is unknown,\n    do nothing.\"\"\"\n    path = os.fspath(path)\n    if isinstance(path, bytes):\n        tilde = b'~'\n    else:\n        tilde = '~'\n    if not path.startswith(tilde):\n        return path\n    sep = _get_sep(path)\n    i = path.find(sep, 1)\n    if i < 0:\n        i = len(path)\n    if i == 1:\n        if 'HOME' not in os.environ:\n            try:\n                import pwd\n            except ImportError:\n                # pwd module unavailable, return path unchanged\n                return path\n            try:\n                userhome = pwd.getpwuid(os.getuid()).pw_dir\n            except KeyError:\n                # bpo-10496: if the current user identifier doesn't exist in the\n                # password database, return the path unchanged\n                return path\n        else:\n            userhome = os.environ['HOME']\n    else:\n        try:\n            import pwd\n        except ImportError:\n            # pwd module unavailable, return path unchanged\n            return path\n        name = path[1:i]\n        if isinstance(name, bytes):\n            name = os.fsdecode(name)\n        try:\n            pwent = pwd.getpwnam(name)\n        except KeyError:\n            # bpo-10496: if the user name from the path doesn't exist in the\n            # password database, return the path unchanged\n            return path\n        userhome = pwent.pw_dir\n    # if no user home, return the path unchanged on VxWorks\n    if userhome is None and sys.platform == \"vxworks\":\n        return path\n    if isinstance(path, bytes):\n        userhome = os.fsencode(userhome)\n        root = b'/'\n    else:\n        root = '/'\n    userhome = userhome.rstrip(root)\n    return (userhome + path[i:]) or root",
+      "lines": [
+        256,
+        310
+      ]
+    },
+    "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+    "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+    "classification": "actual installed normalization AST+realPath/pwd; process-only synthetic HOME; no app/config/DB/files/network"
+  },
+  "constructor": [
+    {
+      "mode": "present-empty",
+      "uid": 65533,
+      "pwd_mapped": false,
+      "HOME_present": true,
+      "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+      "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+      "cases": [
+        {
+          "path": "~",
+          "value": "/",
+          "error": null
+        },
+        {
+          "path": "~/child",
+          "value": "/child",
+          "error": null
+        },
+        {
+          "path": "/absolute/owned",
+          "value": "/absolute/owned",
+          "error": null
+        }
+      ],
+      "classification": "actual installed normalize AST and real Path/pwd in fixed333; HOME controlled only in disposable process; no app/config/db/network"
+    },
+    {
+      "mode": "present-value",
+      "uid": 65533,
+      "pwd_mapped": false,
+      "HOME_present": true,
+      "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+      "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+      "cases": [
+        {
+          "path": "~",
+          "value": "/owned/home",
+          "error": null
+        },
+        {
+          "path": "~/child",
+          "value": "/owned/home/child",
+          "error": null
+        },
+        {
+          "path": "/absolute/owned",
+          "value": "/absolute/owned",
+          "error": null
+        }
+      ],
+      "classification": "actual installed normalize AST and real Path/pwd in fixed333; HOME controlled only in disposable process; no app/config/db/network"
+    },
+    {
+      "mode": "absent-found",
+      "uid": 65534,
+      "pwd_mapped": true,
+      "HOME_present": false,
+      "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+      "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+      "cases": [
+        {
+          "path": "~",
+          "value": "/nonexistent",
+          "error": null
+        },
+        {
+          "path": "~/child",
+          "value": "/nonexistent/child",
+          "error": null
+        },
+        {
+          "path": "/absolute/owned",
+          "value": "/absolute/owned",
+          "error": null
+        }
+      ],
+      "classification": "actual installed normalize AST and real Path/pwd in fixed333; HOME controlled only in disposable process; no app/config/db/network"
+    },
+    {
+      "mode": "absent-unmapped",
+      "uid": 65533,
+      "pwd_mapped": false,
+      "HOME_present": false,
+      "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+      "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+      "cases": [
+        {
+          "path": "~",
+          "value": null,
+          "error": {
+            "class": "RuntimeError",
+            "message": "Could not determine home directory."
+          }
+        },
+        {
+          "path": "~/child",
+          "value": null,
+          "error": {
+            "class": "RuntimeError",
+            "message": "Could not determine home directory."
+          }
+        },
+        {
+          "path": "/absolute/owned",
+          "value": "/absolute/owned",
+          "error": null
+        }
+      ],
+      "classification": "actual installed normalize AST and real Path/pwd in fixed333; HOME controlled only in disposable process; no app/config/db/network"
+    }
+  ]
+}

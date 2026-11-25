@@ -1,0 +1,142 @@
+[
+  [
+    {
+      "component": "VForm",
+      "content": [
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "enabled",
+                    "label": "启用插件"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "notify",
+                    "label": "开启通知"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "onlyonce",
+                    "label": "立即运行一次"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VCronField",
+                  "props": {
+                    "model": "cron",
+                    "label": "备份周期"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VTextField",
+                  "props": {
+                    "model": "cnt",
+                    "label": "最大保留备份数"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VTextField",
+                  "props": {
+                    "model": "back_path",
+                    "label": "备份保存路径"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12
+              },
+              "content": [
+                {
+                  "component": "VAlert",
+                  "props": {
+                    "type": "info",
+                    "variant": "tonal",
+                    "text": "备份文件路径默认为当前插件实例的私有备份目录。"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  {
+    "enabled": false,
+    "request_method": "POST",
+    "webhook_url": "",
+    "back_path": ""
+  }
+]

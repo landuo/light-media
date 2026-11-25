@@ -1,0 +1,38 @@
+Native Go proxy routing helper for MPServerStatus1.4 public status monitoring.
+
+Reference: requests 2.34.2 (Apache 2.0; licenses/Requests-Apache-2.0.txt;
+original copyright notice licenses/Requests-NOTICE)
+and the original NAS CPython 3.12.13 urllib.request environment functions
+(PSF; licenses/CPython-PSF.txt). The original source hashes and read-only Linux
+capture are retained with the source comparison evidence.
+
+The existing Resolve explicit MoviePilot PROXY mapping remains separate.
+The native environment resolver covers the tested Linux trust-env path;
+it does not read macOS SystemConfiguration or Windows registry proxy settings.
+The original NAS is Linux. Python is used only for offline source comparison;
+the Go product and its tests do not invoke Python or the original plugins.
+
+HTTP and SOCKS wire tests use owned local listeners only. Request context is
+explicitly retained through proxy handshakes, preserving caller TLS settings.
+Errors do not print proxy credential values. Callers retain authorization of
+target origins, redirects and credentials; this package is only transport.
+
+SOCKS4/4a reference additionally reviewed against the original installed
+PySocks 1.7.1 source; its BSD license is retained (licenses/PySocks-BSD.txt).
+Legacy numeric IPv4 is encoded as an address, and other SOCKS4a destinations
+are sent as remote names, including the source IPv6-name branch.
+
+This worker's original RequestUtils(proxies=None) uses only the private
+Requests trust-env snapshot for the fixed public monitoring request. No
+notification, original application, generic executor or Python runtime is
+provided by this helper. The Go module pins are golang.org/x/net v0.61.0
+(proxy/SOCKS support) and github.com/andybalholm/brotli v1.2.6 (status body
+decoding in the caller); their root notices are in third_party/.
+
+Approved credential boundary adaptation: requests_transport.go independently
+verifies the HTTPS proxy TLS connection before CONNECT or Proxy-Authorization.
+The credential-free public destination retains its source verify=False
+policy in its separate caller transport. Per-client test roots can add trust
+but cannot disable proxy verification. HTTP/SOCKS credentials remain confined
+to the current canonical private snapshot and never become destination
+Authorization. No global transport, certificate roots or TLS settings change.

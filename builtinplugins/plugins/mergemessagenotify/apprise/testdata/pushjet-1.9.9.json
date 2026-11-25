@@ -1,0 +1,276 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "pushjet_sha256": "b520f92f29872bc12e5eb5a2c58042ddee62773dc1457db2cec629aceb206365"
+  },
+  "cases": [
+    {
+      "name": "pushjet-http-first-path-token",
+      "url": "pjet://owned.invalid:8080/first%2Btoken/ignored",
+      "title": " title ",
+      "body": "body ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid:8080/message/?secret=first%2Btoken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "{\"message\": \"body\", \"title\": \"title\", \"link\": null, \"level\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "pushjet-https-basic-secret-override",
+      "url": "pjets://alice:pass%252B@owned.invalid:9443/path?secret=owned%252Bsecret&verify=no&cto=1.5&rto=9",
+      "title": "标题",
+      "body": "正文",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid:9443/message/?secret=owned%2Bsecret",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Basic YWxpY2U6cGFzcyUyQg=="
+          },
+          "body": "{\"message\": \"\\u6b63\\u6587\", \"title\": \"\\u6807\\u9898\", \"link\": null, \"level\": null}",
+          "verify": false,
+          "timeout": [
+            1.5,
+            9.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "pushjet-username-only",
+      "url": "pjet://alice@owned.invalid/owned",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/message/?secret=owned",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Basic YWxpY2U6Tm9uZQ=="
+          },
+          "body": "{\"message\": \"b\", \"title\": \"t\", \"link\": null, \"level\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "pushjet-query-secret-without-path",
+      "url": "pjets://owned.invalid?secret=owned",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/message/?secret=owned",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "{\"message\": \"b\", \"title\": \"t\", \"link\": null, \"level\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "pushjet-http-204-fails",
+      "url": "pjet://owned.invalid/secret",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        204
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/message/?secret=secret",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "{\"message\": \"b\", \"title\": \"t\", \"link\": null, \"level\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "pushjet-connection-failure",
+      "url": "pjet://owned.invalid/secret",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        0
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/message/?secret=secret",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "{\"message\": \"b\", \"title\": \"t\", \"link\": null, \"level\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "pushjet-invalid-host",
+      "url": "pjet://bad!host/secret",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "pushjet-no-secret",
+      "url": "pjet://owned.invalid",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "pushjet-no-attachment",
+      "url": "pjet://owned.invalid/secret",
+      "title": "t",
+      "body": "b",
+      "attach": "https://owned-image.invalid/ignored.png",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/message/?secret=secret",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "{\"message\": \"b\", \"title\": \"t\", \"link\": null, \"level\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "pushjet-ipv6-host",
+      "url": "pjets://[::1]:9443/secret",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://[::1]:9443/message/?secret=secret",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "{\"message\": \"b\", \"title\": \"t\", \"link\": null, \"level\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    }
+  ]
+}

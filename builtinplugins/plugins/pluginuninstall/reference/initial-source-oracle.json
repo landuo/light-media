@@ -1,0 +1,2651 @@
+{
+  "source": "Installed original PluginUnInstall 2.2 init/get_form and actual PluginManager stop/remove/delete AST; synthetic in-memory state and newly owned temporary package files only",
+  "installed_source_sha256": "2210e9dea47eeccdc46208d515e45ce1222dcadf50dbfc63cbeb41f94e470487",
+  "manager_source_sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+  "private_class_metadata_omitted": true,
+  "source_snapshot_sha256": "28e5ee362fcb72a869bef91e87a50e5d905094c54afddf4a92fd18ff98b30918",
+  "cases": [
+    {
+      "name": "null",
+      "config": null,
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [],
+        "error": "",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": null,
+        "removed": [],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha",
+          "beta"
+        ],
+        "class_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "empty_object",
+      "config": {},
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [],
+        "error": "",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": {},
+        "removed": [],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha",
+          "beta"
+        ],
+        "class_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "empty_array",
+      "config": [],
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [],
+        "error": "",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": [],
+        "removed": [],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha",
+          "beta"
+        ],
+        "class_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "false",
+      "config": false,
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [],
+        "error": "",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": false,
+        "removed": [],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha",
+          "beta"
+        ],
+        "class_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "zero",
+      "config": 0,
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [],
+        "error": "",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": 0,
+        "removed": [],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha",
+          "beta"
+        ],
+        "class_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "empty_string",
+      "config": "",
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [],
+        "error": "",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": "",
+        "removed": [],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha",
+          "beta"
+        ],
+        "class_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "missing_selection",
+      "config": {
+        "clear_config": true
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [],
+        "error": "",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": {
+          "clear_config": true
+        },
+        "removed": [],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha",
+          "beta"
+        ],
+        "class_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "null_selection",
+      "config": {
+        "plugin_ids": null
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [],
+        "error": "",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": {
+          "plugin_ids": null
+        },
+        "removed": [],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha",
+          "beta"
+        ],
+        "class_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "empty_selection",
+      "config": {
+        "plugin_ids": []
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [],
+        "error": "",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": {
+          "plugin_ids": []
+        },
+        "removed": [],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha",
+          "beta"
+        ],
+        "class_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "false_selection",
+      "config": {
+        "plugin_ids": false
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [],
+        "error": "",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": {
+          "plugin_ids": false
+        },
+        "removed": [],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha",
+          "beta"
+        ],
+        "class_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "flags-False-False",
+      "config": {
+        "plugin_ids": [
+          "Beta"
+        ],
+        "clear_config": false,
+        "clear_data": false,
+        "unknown": "discard after run"
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Beta"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Beta"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "beta"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "beta"
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Alpha"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": false,
+              "clear_data": false
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [
+          "Alpha"
+        ],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": false,
+          "clear_data": false
+        },
+        "removed": [
+          "Beta"
+        ],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha"
+        ],
+        "class_ids": [
+          "Alpha"
+        ]
+      }
+    },
+    {
+      "name": "flags-False-True",
+      "config": {
+        "plugin_ids": [
+          "Beta"
+        ],
+        "clear_config": false,
+        "clear_data": true,
+        "unknown": "discard after run"
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Beta"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Beta"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "beta"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "beta"
+          },
+          {
+            "kind": "delete_data",
+            "id": "Beta",
+            "force": false
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Alpha"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": false,
+              "clear_data": true
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [
+          "Alpha"
+        ],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": false,
+          "clear_data": true
+        },
+        "removed": [
+          "Beta"
+        ],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha"
+        ],
+        "class_ids": [
+          "Alpha"
+        ]
+      }
+    },
+    {
+      "name": "flags-True-False",
+      "config": {
+        "plugin_ids": [
+          "Beta"
+        ],
+        "clear_config": true,
+        "clear_data": false,
+        "unknown": "discard after run"
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Beta"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Beta"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "beta"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "beta"
+          },
+          {
+            "kind": "delete_config",
+            "id": "Beta",
+            "force": false
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Alpha"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": true,
+              "clear_data": false
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [
+          "Alpha"
+        ],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": false
+        },
+        "removed": [
+          "Beta"
+        ],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha"
+        ],
+        "class_ids": [
+          "Alpha"
+        ]
+      }
+    },
+    {
+      "name": "flags-True-True",
+      "config": {
+        "plugin_ids": [
+          "Beta"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "unknown": "discard after run"
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Beta"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Beta"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "beta"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "beta"
+          },
+          {
+            "kind": "delete_config",
+            "id": "Beta",
+            "force": false
+          },
+          {
+            "kind": "delete_data",
+            "id": "Beta",
+            "force": false
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Alpha"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": true,
+              "clear_data": true
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [
+          "Alpha"
+        ],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "removed": [
+          "Beta"
+        ],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha"
+        ],
+        "class_ids": [
+          "Alpha"
+        ]
+      }
+    },
+    {
+      "name": "missing_flags_reset_null",
+      "config": {
+        "plugin_ids": [
+          "Alpha"
+        ]
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Alpha"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Alpha"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "alpha"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "alpha"
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Beta"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": null,
+              "clear_data": null
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [
+          "Beta"
+        ],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": null,
+          "clear_data": null
+        },
+        "removed": [
+          "Alpha"
+        ],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "beta"
+        ],
+        "class_ids": [
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "unknown_target_still_resets",
+      "config": {
+        "plugin_ids": [
+          "Unknown"
+        ],
+        "clear_config": null,
+        "clear_data": null
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Alpha",
+              "Beta"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": null,
+              "clear_data": null
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": null,
+          "clear_data": null
+        },
+        "removed": [],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha",
+          "beta"
+        ],
+        "class_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "selected_duplicates_do_not_repeat",
+      "config": {
+        "plugin_ids": [
+          "Alpha",
+          "Alpha"
+        ]
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Alpha"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Alpha"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "alpha"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "alpha"
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Beta"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": null,
+              "clear_data": null
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [
+          "Beta"
+        ],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": null,
+          "clear_data": null
+        },
+        "removed": [
+          "Alpha"
+        ],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "beta"
+        ],
+        "class_ids": [
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "installed_duplicates_do_repeat",
+      "config": {
+        "plugin_ids": [
+          "Alpha"
+        ],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "installed": [
+        "Alpha",
+        "Beta",
+        "Alpha"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta",
+        "Alpha"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Alpha"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Alpha"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "alpha"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "alpha"
+          },
+          {
+            "kind": "delete_config",
+            "id": "Alpha",
+            "force": false
+          },
+          {
+            "kind": "delete_data",
+            "id": "Alpha",
+            "force": false
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Alpha"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Alpha"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "alpha"
+          },
+          {
+            "kind": "delete_config",
+            "id": "Alpha",
+            "force": false
+          },
+          {
+            "kind": "delete_data",
+            "id": "Alpha",
+            "force": false
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Beta"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": true,
+              "clear_data": true
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [
+          "Beta"
+        ],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "removed": [
+          "Alpha",
+          "Alpha"
+        ],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "beta"
+        ],
+        "class_ids": [
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "installed_order_not_selection_order",
+      "config": {
+        "plugin_ids": [
+          "Beta",
+          "Alpha"
+        ]
+      },
+      "installed": [
+        "Alpha",
+        "Beta",
+        "Gamma"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta",
+        "Gamma"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Alpha"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Alpha"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "alpha"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "alpha"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Beta"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Beta"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "beta"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "beta"
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Gamma"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": null,
+              "clear_data": null
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [
+          "Gamma"
+        ],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": null,
+          "clear_data": null
+        },
+        "removed": [
+          "Alpha",
+          "Beta"
+        ],
+        "config_ids": [
+          "Alpha",
+          "Beta",
+          "Gamma"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta",
+          "Gamma"
+        ],
+        "package_directories": [
+          "gamma"
+        ],
+        "class_ids": [
+          "Gamma"
+        ]
+      }
+    },
+    {
+      "name": "case_sensitive_ids",
+      "config": {
+        "plugin_ids": [
+          "alpha"
+        ]
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Alpha",
+              "Beta"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": null,
+              "clear_data": null
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": null,
+          "clear_data": null
+        },
+        "removed": [],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha",
+          "beta"
+        ],
+        "class_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "substring_container",
+      "config": {
+        "plugin_ids": "PrefixAlphaSuffix"
+      },
+      "installed": [
+        "Alpha",
+        "Al",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Al",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Alpha"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Alpha"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "alpha"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "alpha"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Al"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Al"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "al"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "al"
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Beta"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": null,
+              "clear_data": null
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [
+          "Beta"
+        ],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": null,
+          "clear_data": null
+        },
+        "removed": [
+          "Alpha",
+          "Al"
+        ],
+        "config_ids": [
+          "Al",
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Al",
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "beta"
+        ],
+        "class_ids": [
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "mapping_membership_keys",
+      "config": {
+        "plugin_ids": {
+          "Beta": false
+        }
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Beta"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Beta"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "beta"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "beta"
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Alpha"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": null,
+              "clear_data": null
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [
+          "Alpha"
+        ],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": null,
+          "clear_data": null
+        },
+        "removed": [
+          "Beta"
+        ],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha"
+        ],
+        "class_ids": [
+          "Alpha"
+        ]
+      }
+    },
+    {
+      "name": "truthy_scalar_errors_at_membership",
+      "config": {
+        "plugin_ids": true
+      },
+      "installed": [
+        "Alpha"
+      ],
+      "package_ids": [
+        "Alpha"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          }
+        ],
+        "error": "TypeError",
+        "remaining": [
+          "Alpha"
+        ],
+        "own_config": {
+          "plugin_ids": true
+        },
+        "removed": [],
+        "config_ids": [
+          "Alpha"
+        ],
+        "data_ids": [
+          "Alpha"
+        ],
+        "package_directories": [
+          "alpha"
+        ],
+        "class_ids": [
+          "Alpha"
+        ]
+      }
+    },
+    {
+      "name": "truthy_scalar_empty_installed_resets",
+      "config": {
+        "plugin_ids": true
+      },
+      "installed": [],
+      "package_ids": [],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "save_installed",
+            "value": []
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": null,
+              "clear_data": null
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": null,
+          "clear_data": null
+        },
+        "removed": [],
+        "config_ids": [],
+        "data_ids": [],
+        "package_directories": [],
+        "class_ids": []
+      }
+    },
+    {
+      "name": "truthy_nonboolean_flags",
+      "config": {
+        "plugin_ids": [
+          "Alpha"
+        ],
+        "clear_config": "False",
+        "clear_data": [
+          false
+        ]
+      },
+      "installed": [
+        "Alpha"
+      ],
+      "package_ids": [
+        "Alpha"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Alpha"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Alpha"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "alpha"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "alpha"
+          },
+          {
+            "kind": "delete_config",
+            "id": "Alpha",
+            "force": false
+          },
+          {
+            "kind": "delete_data",
+            "id": "Alpha",
+            "force": false
+          },
+          {
+            "kind": "save_installed",
+            "value": []
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": "False",
+              "clear_data": [
+                false
+              ]
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": "False",
+          "clear_data": [
+            false
+          ]
+        },
+        "removed": [
+          "Alpha"
+        ],
+        "config_ids": [
+          "Alpha"
+        ],
+        "data_ids": [
+          "Alpha"
+        ],
+        "package_directories": [],
+        "class_ids": []
+      }
+    },
+    {
+      "name": "missing_package_still_requests_clears",
+      "config": {
+        "plugin_ids": [
+          "Alpha"
+        ],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "installed": [
+        "Alpha"
+      ],
+      "package_ids": [],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Alpha"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Alpha"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "alpha"
+          },
+          {
+            "kind": "delete_config",
+            "id": "Alpha",
+            "force": false
+          },
+          {
+            "kind": "delete_data",
+            "id": "Alpha",
+            "force": false
+          },
+          {
+            "kind": "save_installed",
+            "value": []
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": true,
+              "clear_data": true
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "removed": [
+          "Alpha"
+        ],
+        "config_ids": [
+          "Alpha"
+        ],
+        "data_ids": [
+          "Alpha"
+        ],
+        "package_directories": [],
+        "class_ids": []
+      }
+    },
+    {
+      "name": "ignored_package_error",
+      "config": {
+        "plugin_ids": [
+          "Alpha"
+        ],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "installed": [
+        "Alpha"
+      ],
+      "package_ids": [
+        "Alpha"
+      ],
+      "fail": "",
+      "failed_package_ids": [
+        "Alpha"
+      ],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Alpha"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Alpha"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "alpha"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "alpha"
+          },
+          {
+            "kind": "delete_config",
+            "id": "Alpha",
+            "force": false
+          },
+          {
+            "kind": "delete_data",
+            "id": "Alpha",
+            "force": false
+          },
+          {
+            "kind": "save_installed",
+            "value": []
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": true,
+              "clear_data": true
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "removed": [
+          "Alpha"
+        ],
+        "config_ids": [
+          "Alpha"
+        ],
+        "data_ids": [
+          "Alpha"
+        ],
+        "package_directories": [
+          "alpha"
+        ],
+        "class_ids": []
+      }
+    },
+    {
+      "name": "self_uninstall_preserves_and_resets_own_config",
+      "config": {
+        "plugin_ids": [
+          "PluginUnInstall"
+        ],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "installed": [
+        "Alpha",
+        "PluginUnInstall"
+      ],
+      "package_ids": [
+        "Alpha",
+        "PluginUnInstall"
+      ],
+      "fail": "",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "PluginUnInstall"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "PluginUnInstall"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "pluginuninstall"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "pluginuninstall"
+          },
+          {
+            "kind": "delete_config",
+            "id": "PluginUnInstall",
+            "force": false
+          },
+          {
+            "kind": "delete_data",
+            "id": "PluginUnInstall",
+            "force": false
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Alpha"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": true,
+              "clear_data": true
+            }
+          }
+        ],
+        "error": "",
+        "remaining": [
+          "Alpha"
+        ],
+        "own_config": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "removed": [
+          "PluginUnInstall"
+        ],
+        "config_ids": [
+          "Alpha",
+          "PluginUnInstall"
+        ],
+        "data_ids": [
+          "Alpha",
+          "PluginUnInstall"
+        ],
+        "package_directories": [
+          "alpha"
+        ],
+        "class_ids": [
+          "Alpha"
+        ]
+      }
+    },
+    {
+      "name": "remove_jobs_failure_stops_before_class",
+      "config": {
+        "plugin_ids": [
+          "Alpha"
+        ]
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "remove_jobs",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Alpha"
+          }
+        ],
+        "error": "SyntheticFailure",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": {
+          "plugin_ids": [
+            "Alpha"
+          ]
+        },
+        "removed": [],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "alpha",
+          "beta"
+        ],
+        "class_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "save_installed_failure_no_own_reset",
+      "config": {
+        "plugin_ids": [
+          "Alpha"
+        ]
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "save_installed",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Alpha"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Alpha"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "alpha"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "alpha"
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Beta"
+            ]
+          }
+        ],
+        "error": "SyntheticFailure",
+        "remaining": [
+          "Alpha",
+          "Beta"
+        ],
+        "own_config": {
+          "plugin_ids": [
+            "Alpha"
+          ]
+        },
+        "removed": [
+          "Alpha"
+        ],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "beta"
+        ],
+        "class_ids": [
+          "Beta"
+        ]
+      }
+    },
+    {
+      "name": "save_own_config_failure",
+      "config": {
+        "plugin_ids": [
+          "Alpha"
+        ]
+      },
+      "installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "package_ids": [
+        "Alpha",
+        "Beta"
+      ],
+      "fail": "save_own_config",
+      "failed_package_ids": [],
+      "expected": {
+        "trace": [
+          {
+            "kind": "installed"
+          },
+          {
+            "kind": "remove_jobs",
+            "id": "Alpha"
+          },
+          {
+            "kind": "remove_plugin",
+            "id": "Alpha"
+          },
+          {
+            "kind": "package_exists",
+            "directory": "alpha"
+          },
+          {
+            "kind": "remove_package",
+            "directory": "alpha"
+          },
+          {
+            "kind": "save_installed",
+            "value": [
+              "Beta"
+            ]
+          },
+          {
+            "kind": "save_own_config",
+            "value": {
+              "plugin_ids": [],
+              "clear_config": null,
+              "clear_data": null
+            }
+          }
+        ],
+        "error": "SyntheticFailure",
+        "remaining": [
+          "Beta"
+        ],
+        "own_config": {
+          "plugin_ids": [
+            "Alpha"
+          ]
+        },
+        "removed": [
+          "Alpha"
+        ],
+        "config_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "data_ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "package_directories": [
+          "beta"
+        ],
+        "class_ids": [
+          "Beta"
+        ]
+      }
+    }
+  ],
+  "form_cases": [
+    {
+      "name": "empty",
+      "local_plugins": [],
+      "options": [],
+      "form": [
+        {
+          "component": "VForm",
+          "content": [
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "clear_config",
+                        "label": "清除配置(配置信息)"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "clear_data",
+                        "label": "清除数据(运行数据)"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 6
+                  },
+                  "content": [
+                    {
+                      "component": "VSelect",
+                      "props": {
+                        "multiple": true,
+                        "chips": true,
+                        "model": "plugin_ids",
+                        "label": "卸载插件",
+                        "items": []
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12
+                  },
+                  "content": [
+                    {
+                      "component": "VAlert",
+                      "props": {
+                        "type": "info",
+                        "variant": "tonal",
+                        "text": "删除数据库中已安装插件记录、清理插件文件。"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "model": {
+        "plugin_ids": [],
+        "clear_config": false,
+        "clear_data": false
+      },
+      "error": ""
+    },
+    {
+      "name": "stable_installed_sort_and_self",
+      "local_plugins": [
+        {
+          "id": "Late",
+          "installed": true,
+          "plugin_order": 1000,
+          "plugin_name": "晚",
+          "plugin_version": "1"
+        },
+        {
+          "id": "Uninstalled",
+          "installed": false,
+          "plugin_order": 0
+        },
+        {
+          "id": "SameFirst",
+          "installed": true,
+          "plugin_order": 10,
+          "plugin_name": "首",
+          "plugin_version": "2"
+        },
+        {
+          "id": "SameSecond",
+          "installed": true,
+          "plugin_order": 10,
+          "plugin_name": "次",
+          "plugin_version": "3"
+        },
+        {
+          "id": "PluginUnInstall",
+          "installed": true,
+          "plugin_order": 98,
+          "plugin_name": "插件彻底卸载",
+          "plugin_version": "2.2"
+        }
+      ],
+      "options": [
+        {
+          "title": "首 v2",
+          "value": "SameFirst"
+        },
+        {
+          "title": "次 v3",
+          "value": "SameSecond"
+        },
+        {
+          "title": "插件彻底卸载 v2.2",
+          "value": "PluginUnInstall"
+        },
+        {
+          "title": "晚 v1",
+          "value": "Late"
+        }
+      ],
+      "form": [
+        {
+          "component": "VForm",
+          "content": [
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "clear_config",
+                        "label": "清除配置(配置信息)"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "clear_data",
+                        "label": "清除数据(运行数据)"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 6
+                  },
+                  "content": [
+                    {
+                      "component": "VSelect",
+                      "props": {
+                        "multiple": true,
+                        "chips": true,
+                        "model": "plugin_ids",
+                        "label": "卸载插件",
+                        "items": [
+                          {
+                            "title": "首 v2",
+                            "value": "SameFirst"
+                          },
+                          {
+                            "title": "次 v3",
+                            "value": "SameSecond"
+                          },
+                          {
+                            "title": "插件彻底卸载 v2.2",
+                            "value": "PluginUnInstall"
+                          },
+                          {
+                            "title": "晚 v1",
+                            "value": "Late"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12
+                  },
+                  "content": [
+                    {
+                      "component": "VAlert",
+                      "props": {
+                        "type": "info",
+                        "variant": "tonal",
+                        "text": "删除数据库中已安装插件记录、清理插件文件。"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "model": {
+        "plugin_ids": [],
+        "clear_config": false,
+        "clear_data": false
+      },
+      "error": ""
+    },
+    {
+      "name": "defaults_and_falsey_ids",
+      "local_plugins": [
+        {
+          "installed": true,
+          "plugin_order": 1
+        },
+        {
+          "id": "",
+          "installed": true,
+          "plugin_order": 2
+        },
+        {
+          "id": "Fallback",
+          "installed": true
+        },
+        {
+          "id": "Nulls",
+          "installed": true,
+          "plugin_name": null,
+          "plugin_version": null
+        }
+      ],
+      "options": [
+        {
+          "title": "Fallback vN/A",
+          "value": "Fallback"
+        },
+        {
+          "title": "None vNone",
+          "value": "Nulls"
+        }
+      ],
+      "form": [
+        {
+          "component": "VForm",
+          "content": [
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "clear_config",
+                        "label": "清除配置(配置信息)"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "clear_data",
+                        "label": "清除数据(运行数据)"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 6
+                  },
+                  "content": [
+                    {
+                      "component": "VSelect",
+                      "props": {
+                        "multiple": true,
+                        "chips": true,
+                        "model": "plugin_ids",
+                        "label": "卸载插件",
+                        "items": [
+                          {
+                            "title": "Fallback vN/A",
+                            "value": "Fallback"
+                          },
+                          {
+                            "title": "None vNone",
+                            "value": "Nulls"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12
+                  },
+                  "content": [
+                    {
+                      "component": "VAlert",
+                      "props": {
+                        "type": "info",
+                        "variant": "tonal",
+                        "text": "删除数据库中已安装插件记录、清理插件文件。"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "model": {
+        "plugin_ids": [],
+        "clear_config": false,
+        "clear_data": false
+      },
+      "error": ""
+    },
+    {
+      "name": "truthy_installed_and_string_order",
+      "local_plugins": [
+        {
+          "id": "B",
+          "installed": 1,
+          "plugin_order": "b"
+        },
+        {
+          "id": "A",
+          "installed": "yes",
+          "plugin_order": "a"
+        }
+      ],
+      "options": [
+        {
+          "title": "A vN/A",
+          "value": "A"
+        },
+        {
+          "title": "B vN/A",
+          "value": "B"
+        }
+      ],
+      "form": [
+        {
+          "component": "VForm",
+          "content": [
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "clear_config",
+                        "label": "清除配置(配置信息)"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "clear_data",
+                        "label": "清除数据(运行数据)"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 6
+                  },
+                  "content": [
+                    {
+                      "component": "VSelect",
+                      "props": {
+                        "multiple": true,
+                        "chips": true,
+                        "model": "plugin_ids",
+                        "label": "卸载插件",
+                        "items": [
+                          {
+                            "title": "A vN/A",
+                            "value": "A"
+                          },
+                          {
+                            "title": "B vN/A",
+                            "value": "B"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12
+                  },
+                  "content": [
+                    {
+                      "component": "VAlert",
+                      "props": {
+                        "type": "info",
+                        "variant": "tonal",
+                        "text": "删除数据库中已安装插件记录、清理插件文件。"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "model": {
+        "plugin_ids": [],
+        "clear_config": false,
+        "clear_data": false
+      },
+      "error": ""
+    },
+    {
+      "name": "mixed_order_error",
+      "local_plugins": [
+        {
+          "id": "A",
+          "installed": true,
+          "plugin_order": 1
+        },
+        {
+          "id": "B",
+          "installed": true,
+          "plugin_order": null
+        }
+      ],
+      "options": null,
+      "form": null,
+      "model": null,
+      "error": "TypeError"
+    }
+  ]
+}

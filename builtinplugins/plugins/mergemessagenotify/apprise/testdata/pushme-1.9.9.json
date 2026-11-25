@@ -1,0 +1,370 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "file_sha256": {
+      "pushme": "85f9cafbd0d0ce0ac2707b43c6e6318c8ecdd7f660b50a595a750492311a23f1"
+    }
+  },
+  "cases": [
+    {
+      "name": "default-status-and-unicode",
+      "url": "pushme://OwnedToken",
+      "title": " 你好 & + ",
+      "body": " 正文 ~ ! ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://push.i-i.me/?push_key=OwnedToken&title=%5Bi%5D+%E4%BD%A0%E5%A5%BD+%26+%2B&content=+%E6%AD%A3%E6%96%87+~+%21&type=text",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "status-disabled",
+      "url": "pushme://OwnedToken?status=no",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://push.i-i.me/?push_key=OwnedToken&title=t&content=b&type=text",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "unknown-status-disabled",
+      "url": "pushme://OwnedToken?status=unknown",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://push.i-i.me/?push_key=OwnedToken&title=t&content=b&type=text",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "titleless-status-prefix",
+      "url": "pushme://OwnedToken?status=enabled",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://push.i-i.me/?push_key=OwnedToken&title=%5Bi%5D+&content=b&type=text",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "token-precedes-push-key",
+      "url": "pushme://ignored?token=Owned%252BToken&push_key=ignored&verify=no&cto=2.5&rto=7",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://push.i-i.me/?push_key=Owned%2BToken&title=%5Bi%5D+t&content=b&type=text",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": false,
+          "timeout": [
+            2.5,
+            7.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "push-key-fallback",
+      "url": "pushme://ignored?token=&push_key=Owned%2520Key",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://push.i-i.me/?push_key=Owned+Key&title=%5Bi%5D+t&content=b&type=text",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "encoded-leading-space-rejected",
+      "url": "pushme://%20OwnedToken",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "encoded-trailing-space-trimmed",
+      "url": "pushme://OwnedToken%20",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://push.i-i.me/?push_key=OwnedToken&title=%5Bi%5D+t&content=b&type=text",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "markdown-format",
+      "url": "pushme://OwnedToken?format=markdown&status=no",
+      "title": "**t**",
+      "body": "**b**",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://push.i-i.me/?push_key=OwnedToken&title=%2A%2At%2A%2A&content=%2A%2Ab%2A%2A&type=markdown",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "html-uses-text-type",
+      "url": "pushme://OwnedToken?format=html&status=no",
+      "title": "<b>t</b>",
+      "body": "<p>b</p>",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://push.i-i.me/?push_key=OwnedToken&title=%3Cb%3Et%3C%2Fb%3E&content=%3Cp%3Eb%3C%2Fp%3E&type=text",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "attachment-ignored",
+      "url": "pushme://OwnedToken",
+      "title": "t",
+      "body": "b",
+      "attach": "https://owned-image.invalid/ignored.png",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://push.i-i.me/?push_key=OwnedToken&title=%5Bi%5D+t&content=b&type=text",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "http-201-failure",
+      "url": "pushme://OwnedToken",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        201
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://push.i-i.me/?push_key=OwnedToken&title=%5Bi%5D+t&content=b&type=text",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "connection-failure",
+      "url": "pushme://OwnedToken",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        0
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://push.i-i.me/?push_key=OwnedToken&title=%5Bi%5D+t&content=b&type=text",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "disabled-store",
+      "url": "pushme://OwnedToken?store=no",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    }
+  ]
+}

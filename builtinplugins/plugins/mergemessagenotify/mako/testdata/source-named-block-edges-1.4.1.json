@@ -1,0 +1,117 @@
+{
+  "mako": "1.4.1",
+  "markupsafe": "3.0.4",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "has_beaker": false,
+  "source_sha256": {
+    "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+    "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+    "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+    "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+    "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d",
+    "mako/cache.py": "0e7a30b905b44dc9c06b9bb9b4d37b0ffaaf5a3a9f3ca72c4c80a202a7038e83",
+    "mako/ext/beaker_cache.py": "4ca18af1570ca3eb29c257039f004dfc6ea6856a93b12c0e9916e18c3315d93e"
+  },
+  "cases": [
+    {
+      "name": "explicit-pageargs-required-collision",
+      "template": "before<%page args=\"pageargs\"/>after",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "before<%page args=\"pageargs\"/>after",
+      "source_error": true
+    },
+    {
+      "name": "explicit-pageargs-default-collision",
+      "template": "before<%page args=\"title, pageargs=None\"/>after",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "before<%page args=\"title, pageargs=None\"/>after",
+      "source_error": true
+    },
+    {
+      "name": "named-block-over-module-value",
+      "template": "<%! box='module' %><%page args=\"title\"/><%block name=\"box\" args=\"title\">${title}</%block>|${capture(box,'X')}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned|X",
+      "source_error": false
+    },
+    {
+      "name": "named-block-owner-over-module-value",
+      "template": "<%! box='module' %><%block name=\"box\">${box.__name__}</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "box",
+      "source_error": false
+    },
+    {
+      "name": "unrelated-def-uses-module-value",
+      "template": "<%! box='module' %><%block name=\"box\">block</%block><%def name=\"who()\" buffered=\"True\">${box}</%def>|${who()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "block|module",
+      "source_error": false
+    },
+    {
+      "name": "page-parameter-keeps-lexical-precedence",
+      "template": "<%! title='module' %><%page args=\"title\"/><%block name=\"title\">block</%block>|${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "block|Owned",
+      "source_error": false
+    },
+    {
+      "name": "named-block-hard-keywords-fall-back",
+      "template": "<%block name=\"class\">before</%block><%block name=\"async\">after</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%block name=\"class\">before</%block><%block name=\"async\">after</%block>",
+      "source_error": true
+    },
+    {
+      "name": "named-block-constant-keyword-falls-back",
+      "template": "<%block name=\"None\">before</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%block name=\"None\">before</%block>",
+      "source_error": true
+    },
+    {
+      "name": "named-block-debug-name-falls-back",
+      "template": "<%block name=\"__debug__\">before</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%block name=\"__debug__\">before</%block>",
+      "source_error": true
+    },
+    {
+      "name": "named-block-soft-and-case-sensitive-names",
+      "template": "<%block name=\"match\">one</%block><%block name=\"case\">two</%block><%block name=\"type\">three</%block><%block name=\"_\">four</%block><%block name=\"Class\">five</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "onetwothreefourfive",
+      "source_error": false
+    }
+  ]
+}

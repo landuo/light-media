@@ -1,0 +1,743 @@
+{
+  "source": {
+    "apprise_version": "1.9.9",
+    "pushsafer_sha256": "43d1ca62da6a09a8ee85b963899cd9d357a1a3dfd8534bca51e9444d45b03b31",
+    "python": "3.14.4",
+    "requests": "2.34.2",
+    "network": "blocked, actual pinned provider with synthetic Requests responses and fixed clock"
+  },
+  "cases": [
+    {
+      "name": "default-http",
+      "url": "psafer://OwnedKey",
+      "title": " 标题 ",
+      "body": "  owned + / \n",
+      "attachments": [],
+      "replies": [
+        [
+          200,
+          "{\"status\":1}"
+        ]
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=%E6%A0%87%E9%A2%98&m=++owned+%2B+%2F&i=25&c=%233AA3E3&d=a&k=OwnedKey",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "secure-sorted-dedup-and-options",
+      "url": "psafers://ignored:owned@Own%65dKey:1234/20/5/z%40example.invalid?to=5%2C7&priority=lo&sound=dopen&vibration=0&verify=no&cto=2.25&rto=11&format=HTML&overflow=unused",
+      "title": " title ",
+      "body": "<b>owned</b>\n",
+      "attachments": [],
+      "replies": [
+        [
+          200,
+          "{\"status\":1}"
+        ],
+        [
+          200,
+          "{\"status\":1}"
+        ],
+        [
+          200,
+          "{\"status\":1}"
+        ],
+        [
+          200,
+          "{\"status\":1}"
+        ]
+      ],
+      "waits": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=title&m=%3Cb%3Eowned%3C%2Fb%3E&i=25&c=%233AA3E3&d=20&s=55&v=0&k=OwnedKey",
+          "verify": false,
+          "timeout": [
+            2.25,
+            11.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=title&m=%3Cb%3Eowned%3C%2Fb%3E&i=25&c=%233AA3E3&d=5&s=55&v=0&k=OwnedKey",
+          "verify": false,
+          "timeout": [
+            2.25,
+            11.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=title&m=%3Cb%3Eowned%3C%2Fb%3E&i=25&c=%233AA3E3&d=7&s=55&v=0&k=OwnedKey",
+          "verify": false,
+          "timeout": [
+            2.25,
+            11.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=title&m=%3Cb%3Eowned%3C%2Fb%3E&i=25&c=%233AA3E3&d=z%40example.invalid&s=55&v=0&k=OwnedKey",
+          "verify": false,
+          "timeout": [
+            2.25,
+            11.0
+          ]
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "medium-priority-numeric-sound",
+      "url": "psafer://Key%2B%24?priority=med&sound=60&vibration=3",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "replies": [
+        [
+          204,
+          "{\"status\":true}"
+        ]
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=title&m=body&i=25&c=%233AA3E3&d=a&s=60&v=3&k=Key%2B%24",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "status-201-fails",
+      "url": "psafers://OwnedKey",
+      "title": "",
+      "body": "owned",
+      "attachments": [],
+      "replies": [
+        [
+          201,
+          "{\"status\":1}"
+        ]
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=&m=owned&i=25&c=%233AA3E3&d=a&k=OwnedKey",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ],
+      "added": true,
+      "result": false
+    },
+    {
+      "name": "status-string-fails",
+      "url": "psafers://OwnedKey",
+      "title": "",
+      "body": "owned",
+      "attachments": [],
+      "replies": [
+        [
+          200,
+          "{\"status\":\"1\"}"
+        ]
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=&m=owned&i=25&c=%233AA3E3&d=a&k=OwnedKey",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ],
+      "added": true,
+      "result": false
+    },
+    {
+      "name": "invalid-json-fails",
+      "url": "psafers://OwnedKey",
+      "title": "",
+      "body": "owned",
+      "attachments": [],
+      "replies": [
+        [
+          200,
+          "unparseable"
+        ]
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=&m=owned&i=25&c=%233AA3E3&d=a&k=OwnedKey",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ],
+      "added": true,
+      "result": false
+    },
+    {
+      "name": "transport-failure-continues-targets",
+      "url": "psafers://OwnedKey/2/1",
+      "title": "",
+      "body": "owned",
+      "attachments": [],
+      "replies": [
+        [
+          0,
+          ""
+        ],
+        [
+          200,
+          "{\"status\":1}"
+        ]
+      ],
+      "waits": [
+        1.2
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=&m=owned&i=25&c=%233AA3E3&d=1&k=OwnedKey",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=&m=owned&i=25&c=%233AA3E3&d=2&k=OwnedKey",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ],
+      "added": true,
+      "result": false
+    },
+    {
+      "name": "invalid-priority",
+      "url": "psafers://OwnedKey?priority=3",
+      "title": "",
+      "body": "owned",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": false,
+      "result": false
+    },
+    {
+      "name": "invalid-sound",
+      "url": "psafers://OwnedKey?sound=not-a-sound",
+      "title": "",
+      "body": "owned",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": false,
+      "result": false
+    },
+    {
+      "name": "invalid-vibration",
+      "url": "psafers://OwnedKey?vibration=-1",
+      "title": "",
+      "body": "owned",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": false,
+      "result": false
+    },
+    {
+      "name": "store-disabled-rejects",
+      "url": "psafers://OwnedKey?store=no",
+      "title": "",
+      "body": "owned",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": false,
+      "result": false
+    },
+    {
+      "name": "invalid-key-with-leading-space",
+      "url": "psafers://%20OwnedKey",
+      "title": "",
+      "body": "owned",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": false,
+      "result": false
+    },
+    {
+      "name": "successful-image-batches-reset-title",
+      "url": "psafers://OwnedKey",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://assets.invalid/a.png",
+        "https://assets.invalid/owned.txt",
+        "https://assets.invalid/b.jpg",
+        "https://assets.invalid/c.gif",
+        "https://assets.invalid/d.png"
+      ],
+      "replies": [
+        [
+          200,
+          "{\"status\":1}"
+        ],
+        [
+          200,
+          "{\"status\":1}"
+        ]
+      ],
+      "waits": [
+        1.2
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": "",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/owned.txt",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": "",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/b.jpg",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": "",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/c.gif",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": "",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/d.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": "",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=title&m=body&i=25&c=%233AA3E3&d=a&p=data%3Aimage%2Fpng%3Bbase64%2Cb3duZWQgcG5n&p2=data%3Aimage%2Fjpeg%3Bbase64%2Cb3duZWQganBn&p3=data%3Aimage%2Fgif%3Bbase64%2Cb3duZWQgZ2lm&k=OwnedKey",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=&m=...&i=25&c=%233AA3E3&d=a&p=data%3Aimage%2Fpng%3Bbase64%2Cb3duZWQgZm91cg%3D%3D&k=OwnedKey",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "failed-image-batch-preserves-payload",
+      "url": "psafers://OwnedKey",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://assets.invalid/a.png",
+        "https://assets.invalid/b.jpg",
+        "https://assets.invalid/c.gif",
+        "https://assets.invalid/d.png"
+      ],
+      "replies": [
+        [
+          200,
+          "{\"status\":0,\"error\":\"owned failure\"}"
+        ],
+        [
+          200,
+          "{\"status\":1}"
+        ]
+      ],
+      "waits": [
+        1.2
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": "",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/b.jpg",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": "",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/c.gif",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": "",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/d.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": "",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=title&m=body&i=25&c=%233AA3E3&d=a&p=data%3Aimage%2Fpng%3Bbase64%2Cb3duZWQgcG5n&p2=data%3Aimage%2Fjpeg%3Bbase64%2Cb3duZWQganBn&p3=data%3Aimage%2Fgif%3Bbase64%2Cb3duZWQgZ2lm&k=OwnedKey",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=title&m=body&i=25&c=%233AA3E3&d=a&p=data%3Aimage%2Fpng%3Bbase64%2Cb3duZWQgZm91cg%3D%3D&p2=data%3Aimage%2Fjpeg%3Bbase64%2Cb3duZWQganBn&p3=data%3Aimage%2Fgif%3Bbase64%2Cb3duZWQgZ2lm&k=OwnedKey",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ],
+      "added": true,
+      "result": false
+    },
+    {
+      "name": "non-image-only-still-sends",
+      "url": "psafers://OwnedKey",
+      "title": "title",
+      "body": "",
+      "attachments": [
+        "https://assets.invalid/owned.txt"
+      ],
+      "replies": [
+        [
+          200,
+          "{\"status\":1}"
+        ]
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/owned.txt",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": "",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=title&m=&i=25&c=%233AA3E3&d=a&k=OwnedKey",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "missing-file-prevents-all-sends",
+      "url": "psafers://OwnedKey",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://assets.invalid/a.png",
+        "https://assets.invalid/missing.png",
+        "https://assets.invalid/d.png"
+      ],
+      "replies": [],
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": "",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/missing.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": "",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ],
+      "added": true,
+      "result": false
+    },
+    {
+      "name": "truncate-keeps-only-first-file",
+      "url": "psafers://OwnedKey?overflow=truncate",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://assets.invalid/a.png",
+        "https://assets.invalid/missing.png"
+      ],
+      "replies": [
+        [
+          200,
+          "{\"status\":1}"
+        ]
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": "",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://www.pushsafer.com/api",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "t=title&m=body&i=25&c=%233AA3E3&d=a&p=data%3Aimage%2Fpng%3Bbase64%2Cb3duZWQgcG5n&k=OwnedKey",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ],
+      "added": true,
+      "result": true
+    }
+  ]
+}

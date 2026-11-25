@@ -1,0 +1,94 @@
+{
+  "module": "codeberg.org/rabenauge/picsetgo",
+  "version": "v0.5.6",
+  "license": "MIT",
+  "source_files": [
+    {
+      "upstream": "formats/dds/dxt.go",
+      "sha256": "60e45437412e0bca26a6fc829c6a567e5b18957c21d629cd8dc105a86dc3b72c",
+      "local": "dds/dxt.go"
+    },
+    {
+      "upstream": "internal/dib/decoder.go",
+      "sha256": "6d147f9886ed396fa8457fb22d09c3998b5206306eb82e682036124a0bd2d0c9",
+      "local": "dib/decoder.go"
+    },
+    {
+      "upstream": "internal/dib/rle.go",
+      "sha256": "ba4c79b3f82f47124dfd5f3eabcc64ffa0ddf4a831ab14140b4edba09550d131",
+      "local": "dib/rle.go"
+    },
+    {
+      "upstream": "internal/imagelimit/imagelimit.go",
+      "sha256": "e76e2c6896fb87a412c827ced508fe139fb6ce7d2e49cd0fc27c9aea45b92ba3",
+      "local": "internal/imagelimit/imagelimit.go"
+    }
+  ],
+  "adaptations": [
+    "Only DXT blocks and DIB decoding leaves; no registry, CLI, metadata model or upstream module dependency.",
+    "DDS function exported for this internal leaf; import paths relocated.",
+    "Upstream 100M pixel/512MiB quotas removed: parent checkImageSize retains fixed Pillow bomb warning/error before decoded allocation; integer overflow checks retained.",
+    "DDS RGB565 endpoint expansion follows fixed Pillow bit replication; BC4/5/6/7 translated from its CC0 BcnDecode.c. OS2 DIB header64 accepted. Fixed Pillow depth1 TGA RLE is recognized but reports truncation because its byte-per-pixel count is zero; do not invent successful decoding."
+  ],
+  "pillow_source": "https://github.com/python-pillow/Pillow/tree/12.2.0/src/PIL",
+  "scope": "Candidate decoder leaves; actual fixed333 source samples and differences are tested in parent imagehash package.",
+  "pillow_bcn": {
+    "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/libImaging/BcnDecode.c",
+    "sha256": "cbdf2bae1d8022a75545591d099e367e92e21c253646014920fb5e68d898aa73",
+    "license": "CC0 (public-domain dedication in original file header)",
+    "scope": "BC4/BC5/BC6H/BC7 block decoder/table Go translation; no native dependency"
+  },
+  "pillow_reading_leaves": [
+    {
+      "path": "PpmImagePlugin.py",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/PIL/PpmImagePlugin.py",
+      "sha256": "bdbe523f422340fcc344313c8d23ed709bfd2b7461d4b733025b743e0dba8bdd"
+    },
+    {
+      "path": "PcxImagePlugin.py",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/PIL/PcxImagePlugin.py",
+      "sha256": "fa96552bb1f1d24490b671a2cba50e177aa2e507a331841b70c5a579bb11d71e"
+    },
+    {
+      "path": "TgaImagePlugin.py",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/PIL/TgaImagePlugin.py",
+      "sha256": "715aad0ca358697d2ff728d4c62e91d6e2da16bac93d934d3e2da390f8a09203"
+    },
+    {
+      "path": "SgiImagePlugin.py",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/PIL/SgiImagePlugin.py",
+      "sha256": "dd097cf6cf2fc9c3568dcc49c0cc36f2292c57d623db15a828143a7390c75c18"
+    },
+    {
+      "path": "DdsImagePlugin.py",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/PIL/DdsImagePlugin.py",
+      "sha256": "25184318584a5efa250220ff5f8fe7610dc3011a20bb686613602166e19cd364"
+    },
+    {
+      "path": "IcoImagePlugin.py",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/PIL/IcoImagePlugin.py",
+      "sha256": "506cc80e5434d9907e54912ca3223b616993c76e99881d841c9675aaf076f094"
+    },
+    {
+      "path": "BmpImagePlugin.py",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/PIL/BmpImagePlugin.py",
+      "sha256": "b8390d9fd1e08b610ea49ea76ed447d479aeb4546868bb2c1293c346e797d7fd"
+    },
+    {
+      "path": "BcnDecode.c",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/libImaging/BcnDecode.c",
+      "sha256": "cbdf2bae1d8022a75545591d099e367e92e21c253646014920fb5e68d898aa73"
+    },
+    {
+      "path": "TgaRleDecode.c",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/libImaging/TgaRleDecode.c",
+      "sha256": "2be1e2a9ce70ca94476d2eb2ba122791e2fa3998002e932b7f3f165d73affaa1"
+    },
+    {
+      "path": "decode.c",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/decode.c",
+      "sha256": "d9d96888c2ca64788acc3f8376567290aa6c8e5beb76779da0498447fd3f08ce"
+    }
+  ],
+  "validation_scope": "18 original format save/load/hash positives, 18 pre-pixel dimension rejection controls, plus 73 actual333 BCn/bitmap conditions (69 positives/4 original depth1-RLE truncation errors); not a proof for every possible malformed container or every registered Pillow input."
+}

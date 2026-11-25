@@ -1,0 +1,72 @@
+{
+  "mako": "1.4.1",
+  "markupsafe": "3.0.4",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "has_beaker": false,
+  "source_sha256": {
+    "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+    "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+    "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+    "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+    "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d",
+    "mako/cache.py": "0e7a30b905b44dc9c06b9bb9b4d37b0ffaaf5a3a9f3ca72c4c80a202a7038e83",
+    "mako/ext/beaker_cache.py": "4ca18af1570ca3eb29c257039f004dfc6ea6856a93b12c0e9916e18c3315d93e"
+  },
+  "cases": [
+    {
+      "name": "lexical-context-and-direct-namespace",
+      "template": "<% x='page' %><%def name=\"f()\" buffered=\"True\">${x}</%def>${f()}|${self.f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7,
+        "x": "root"
+      },
+      "expected": "page|root",
+      "source_error": false
+    },
+    {
+      "name": "root-definition-forwards-current-context",
+      "template": "<% x='page' %><%def name=\"f()\" buffered=\"True\">${x}</%def><%def name=\"g()\" buffered=\"True\">${f()}</%def>${g()}|${self.g()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7,
+        "x": "root"
+      },
+      "expected": "page|root",
+      "source_error": false
+    },
+    {
+      "name": "top-level-decorator-context-selection",
+      "template": "<%! decorate=lambda fn: lambda ctx: ctx.get('x') + ':' + fn() %><% x='page' %><%def name=\"f()\" buffered=\"True\" decorator=\"decorate\">${x}</%def>${f()}|${self.f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7,
+        "x": "root"
+      },
+      "expected": "page:page|root:root",
+      "source_error": false
+    },
+    {
+      "name": "named-block-uses-direct-namespace",
+      "template": "<% x='page' %><%block name=\"block\">${x}</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7,
+        "x": "root"
+      },
+      "expected": "root",
+      "source_error": false
+    },
+    {
+      "name": "mixed-definition-and-named-block-collision",
+      "template": "<%def name=\"thing()\">definition</%def><%block name=\"thing\">block</%block>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7,
+        "x": "root"
+      },
+      "expected": "<%def name=\"thing()\">definition</%def><%block name=\"thing\">block</%block>${title}",
+      "source_error": true
+    }
+  ]
+}

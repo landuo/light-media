@@ -1,0 +1,58 @@
+{
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "source": "Requests2.34.2 Request.prepare, no network",
+  "cases": [
+    {
+      "raw": "null",
+      "body": ""
+    },
+    {
+      "raw": "true",
+      "body": "imagestring=True"
+    },
+    {
+      "raw": "false",
+      "body": "imagestring=False"
+    },
+    {
+      "raw": "0",
+      "body": "imagestring=0"
+    },
+    {
+      "raw": "1.0",
+      "body": "imagestring=1.0"
+    },
+    {
+      "raw": "9007199254740993",
+      "body": "imagestring=9007199254740993"
+    },
+    {
+      "raw": "\"a b\"",
+      "body": "imagestring=a+b"
+    },
+    {
+      "raw": "[\"a\",null,true,0]",
+      "body": "imagestring=a&imagestring=True&imagestring=0"
+    },
+    {
+      "raw": "{\"z\":1,\"a\":2}",
+      "body": "imagestring=z&imagestring=a"
+    },
+    {
+      "raw": "[[1,2],[3,null]]",
+      "body": "imagestring=1&imagestring=2&imagestring=3&imagestring=None"
+    },
+    {
+      "raw": "[{\"z\":1,\"a\":2}]",
+      "body": "imagestring=z&imagestring=a"
+    },
+    {
+      "raw": "[[[1,2]],null]",
+      "body": "imagestring=%5B1%2C+2%5D"
+    },
+    {
+      "raw": "[[],{},null]",
+      "body": ""
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+
+                .autosignin-page {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                }
+                .autosignin-summary {
+                    display: grid;
+                    grid-template-columns: repeat(4, minmax(0, 1fr));
+                    gap: 8px;
+                }
+                .autosignin-stat {
+                    min-width: 0;
+                    padding: 10px 12px;
+                }
+                .autosignin-stat__head {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    min-width: 0;
+                    color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
+                    font-size: .75rem;
+                    font-weight: 600;
+                    line-height: 1.25;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+                .autosignin-stat__head .v-icon {
+                    color: rgb(var(--app-card-accent-rgb));
+                }
+                .autosignin-stat__value {
+                    margin-top: 8px;
+                    font-size: 1.25rem;
+                    font-weight: 700;
+                    line-height: 1;
+                    letter-spacing: 0;
+                }
+                .autosignin-stat__meta {
+                    margin-top: 4px;
+                    color: rgba(var(--v-theme-on-surface), .56);
+                    font-size: .72rem;
+                    line-height: 1.25;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .autosignin-section {
+                    min-width: 0;
+                }
+                .autosignin-section-head {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    min-height: 30px;
+                    margin-bottom: 6px;
+                }
+                .autosignin-section-title {
+                    font-size: .95rem;
+                    font-weight: 700;
+                    letter-spacing: 0;
+                }
+                .autosignin-table-wrap {
+                    overflow-x: auto;
+                    border: 1px solid rgba(var(--v-theme-on-surface), .08);
+                    border-radius: 8px;
+                }
+                .autosignin-table {
+                    min-width: 620px;
+                }
+                html[data-theme="transparent"] .autosignin-table-wrap,
+                .v-theme--transparent .autosignin-table-wrap {
+                    backdrop-filter: blur(var(--transparent-blur, 10px));
+                    background-color: rgba(var(--v-theme-surface), 0) !important;
+                }
+                html[data-theme="transparent"] .autosignin-table,
+                html[data-theme="transparent"] .autosignin-table .v-table__wrapper,
+                html[data-theme="transparent"] .autosignin-table table,
+                html[data-theme="transparent"] .autosignin-table tbody tr,
+                .v-theme--transparent .autosignin-table,
+                .v-theme--transparent .autosignin-table .v-table__wrapper,
+                .v-theme--transparent .autosignin-table table,
+                .v-theme--transparent .autosignin-table tbody tr {
+                    background-color: transparent !important;
+                }
+                .autosignin-table th {
+                    height: 34px !important;
+                    padding: 0 8px !important;
+                    color: rgba(var(--v-theme-on-surface), .62);
+                    font-size: .75rem;
+                    font-weight: 600 !important;
+                    white-space: nowrap;
+                }
+                .autosignin-table td {
+                    height: 38px !important;
+                    padding: 0 8px !important;
+                    vertical-align: middle;
+                }
+                .autosignin-table tbody tr:last-child td {
+                    border-bottom: 0 !important;
+                }
+                .autosignin-site-name {
+                    max-width: 160px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    font-weight: 600;
+                    line-height: 1.2;
+                }
+                .autosignin-site-meta {
+                    margin-top: 2px;
+                    color: rgba(var(--v-theme-on-surface), .52);
+                    font-size: .68rem;
+                    line-height: 1.1;
+                }
+                .autosignin-status-cell {
+                    min-width: 92px;
+                }
+                .autosignin-dot-cell {
+                    width: 40px;
+                    text-align: center;
+                }
+                .autosignin-dot {
+                    width: 22px;
+                    height: 22px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 999px;
+                    border: 1px solid transparent;
+                    font-weight: 700;
+                }
+                .autosignin-dot .v-icon {
+                    opacity: 1;
+                }
+                .autosignin-dot--success {
+                    color: rgb(var(--v-theme-success));
+                    background: rgba(var(--v-theme-success), .24);
+                    border-color: rgba(var(--v-theme-success), .38);
+                }
+                .autosignin-dot--warning {
+                    color: rgb(var(--v-theme-warning));
+                    background: rgba(var(--v-theme-warning), .30);
+                    border-color: rgba(var(--v-theme-warning), .48);
+                }
+                .autosignin-dot--error {
+                    color: rgb(var(--v-theme-error));
+                    background: rgba(var(--v-theme-error), .26);
+                    border-color: rgba(var(--v-theme-error), .42);
+                }
+                .autosignin-dot--none {
+                    color: rgba(var(--v-theme-on-surface), .68);
+                    background: rgba(var(--v-theme-on-surface), .14);
+                    border-color: rgba(var(--v-theme-on-surface), .22);
+                }
+                @media (max-width: 720px) {
+                    .autosignin-page {
+                        gap: 10px;
+                    }
+                    .autosignin-summary {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+                    .autosignin-stat {
+                        padding: 8px 10px;
+                    }
+                    .autosignin-stat__value {
+                        font-size: 1.08rem;
+                    }
+                    .autosignin-table {
+                        min-width: 560px;
+                    }
+                    .autosignin-table th,
+                    .autosignin-table td {
+                        padding-left: 6px !important;
+                        padding-right: 6px !important;
+                    }
+                    .autosignin-site-name {
+                        max-width: 126px;
+                    }
+                    .autosignin-dot-cell {
+                        width: 34px;
+                    }
+                }
+                

@@ -1,0 +1,380 @@
+{
+  "classification": "actual originalRousiPro fullclass AST/auth/string normalization withRequests.Response objects and constructor/method recorder; no HTTPwire claim/no app/config/socket/process",
+  "source_sha256": "5d5fb642d99651df42caf36cd465f6992d9bcfd7d893d35f5be531860b68e0b0",
+  "requests": "2.34.2",
+  "rows": [
+    {
+      "name": "apikey-login",
+      "site": {
+        "id": 7,
+        "name": "Owned",
+        "url": "https://rousi.pro/",
+        "ua": "owned-UA",
+        "cookie": "owned-cookie",
+        "proxy": false,
+        "timeout": 1.25,
+        "apikey": "synthetic-key",
+        "token": ""
+      },
+      "login": true,
+      "result": [
+        true,
+        "\u6a21\u62df\u767b\u5f55\u6210\u529f"
+      ],
+      "error": null,
+      "calls": [
+        {
+          "method": "GET",
+          "url": "https://rousi.pro/api/v1/profile",
+          "constructor": {
+            "headers": {
+              "User-Agent": "owned-UA",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "Bearer synthetic-key"
+            },
+            "timeout": 1.25,
+            "proxies": null
+          },
+          "arguments": {}
+        }
+      ],
+      "logs": [
+        [
+          "info",
+          "Owned \u6a21\u62df\u767b\u5f55\u6210\u529f"
+        ]
+      ]
+    },
+    {
+      "name": "trim-apikey-login",
+      "site": {
+        "id": 7,
+        "name": "Owned",
+        "url": "https://rousi.pro/",
+        "ua": "owned-UA",
+        "cookie": "owned-cookie",
+        "proxy": false,
+        "timeout": 1.25,
+        "apikey": " \tsynthetic-key\n ",
+        "token": ""
+      },
+      "login": true,
+      "result": [
+        true,
+        "\u6a21\u62df\u767b\u5f55\u6210\u529f"
+      ],
+      "error": null,
+      "calls": [
+        {
+          "method": "GET",
+          "url": "https://rousi.pro/api/v1/profile",
+          "constructor": {
+            "headers": {
+              "User-Agent": "owned-UA",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "Bearer synthetic-key"
+            },
+            "timeout": 1.25,
+            "proxies": null
+          },
+          "arguments": {}
+        }
+      ],
+      "logs": [
+        [
+          "info",
+          "Owned \u6a21\u62df\u767b\u5f55\u6210\u529f"
+        ]
+      ]
+    },
+    {
+      "name": "apikey-with-token-login",
+      "site": {
+        "id": 7,
+        "name": "Owned",
+        "url": "https://rousi.pro/",
+        "ua": "owned-UA",
+        "cookie": "owned-cookie",
+        "proxy": false,
+        "timeout": 1.25,
+        "apikey": "synthetic-key",
+        "token": "synthetic-token"
+      },
+      "login": true,
+      "result": [
+        true,
+        "\u6a21\u62df\u767b\u5f55\u6210\u529f"
+      ],
+      "error": null,
+      "calls": [
+        {
+          "method": "GET",
+          "url": "https://rousi.pro/api/v1/profile",
+          "constructor": {
+            "headers": {
+              "User-Agent": "owned-UA",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "Bearer synthetic-key"
+            },
+            "timeout": 1.25,
+            "proxies": null
+          },
+          "arguments": {}
+        }
+      ],
+      "logs": [
+        [
+          "info",
+          "Owned \u6a21\u62df\u767b\u5f55\u6210\u529f"
+        ]
+      ]
+    },
+    {
+      "name": "trim-token-login",
+      "site": {
+        "id": 7,
+        "name": "Owned",
+        "url": "https://rousi.pro/",
+        "ua": "owned-UA",
+        "cookie": "owned-cookie",
+        "proxy": false,
+        "timeout": 1.25,
+        "apikey": "",
+        "token": " \tsynthetic-token\n "
+      },
+      "login": true,
+      "result": [
+        true,
+        "\u6a21\u62df\u767b\u5f55\u6210\u529f"
+      ],
+      "error": null,
+      "calls": [
+        {
+          "method": "GET",
+          "url": "https://rousi.pro/api/points/attendance/stats",
+          "constructor": {
+            "headers": {
+              "User-Agent": "owned-UA",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "Bearer synthetic-token"
+            },
+            "timeout": 1.25,
+            "proxies": null
+          },
+          "arguments": {}
+        }
+      ],
+      "logs": [
+        [
+          "info",
+          "Owned \u6a21\u62df\u767b\u5f55\u6210\u529f"
+        ]
+      ]
+    },
+    {
+      "name": "trim-apikey-signin",
+      "site": {
+        "id": 7,
+        "name": "Owned",
+        "url": "https://rousi.pro/",
+        "ua": "owned-UA",
+        "cookie": "owned-cookie",
+        "proxy": false,
+        "timeout": 1.25,
+        "apikey": " \tsynthetic-key\n ",
+        "token": ""
+      },
+      "login": false,
+      "result": [
+        true,
+        "\u7b7e\u5230\u6210\u529f"
+      ],
+      "error": null,
+      "calls": [
+        {
+          "method": "POST",
+          "url": "https://rousi.pro/api/points/attendance",
+          "constructor": {
+            "headers": {
+              "Content-Type": "application/json",
+              "User-Agent": "owned-UA",
+              "Accept": "application/json, text/plain, */*",
+              "api-token": "synthetic-key"
+            },
+            "timeout": 1.25,
+            "proxies": null
+          },
+          "arguments": {
+            "json": {
+              "mode": "fixed"
+            }
+          }
+        }
+      ],
+      "logs": [
+        [
+          "info",
+          "Owned \u7b7e\u5230\u6210\u529f"
+        ]
+      ]
+    },
+    {
+      "name": "trim-token-signin",
+      "site": {
+        "id": 7,
+        "name": "Owned",
+        "url": "https://rousi.pro/",
+        "ua": "owned-UA",
+        "cookie": "owned-cookie",
+        "proxy": false,
+        "timeout": 1.25,
+        "apikey": "",
+        "token": " \tsynthetic-token\n "
+      },
+      "login": false,
+      "result": [
+        true,
+        "\u7b7e\u5230\u6210\u529f"
+      ],
+      "error": null,
+      "calls": [
+        {
+          "method": "POST",
+          "url": "https://rousi.pro/api/points/attendance",
+          "constructor": {
+            "headers": {
+              "Content-Type": "application/json",
+              "User-Agent": "owned-UA",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "Bearer synthetic-token"
+            },
+            "timeout": 1.25,
+            "proxies": null
+          },
+          "arguments": {
+            "json": {
+              "mode": "fixed"
+            }
+          }
+        }
+      ],
+      "logs": [
+        [
+          "info",
+          "Owned \u7b7e\u5230\u6210\u529f"
+        ]
+      ]
+    },
+    {
+      "name": "both-missing",
+      "site": {
+        "id": 7,
+        "name": "Owned",
+        "url": "https://rousi.pro/",
+        "ua": "owned-UA",
+        "cookie": "owned-cookie",
+        "proxy": false,
+        "timeout": 1.25,
+        "apikey": "",
+        "token": ""
+      },
+      "login": true,
+      "result": [
+        false,
+        "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u7f3a\u5c11\u4e2a\u4eba API Key \u6216\u517c\u5bb9 Authorization \u4fe1\u606f"
+      ],
+      "error": null,
+      "calls": [],
+      "logs": [
+        [
+          "error",
+          "Owned \u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u7f3a\u5c11\u4e2a\u4eba API Key \u6216\u517c\u5bb9 Authorization \u4fe1\u606f"
+        ]
+      ]
+    },
+    {
+      "name": "already-bearer-key",
+      "site": {
+        "id": 7,
+        "name": "Owned",
+        "url": "https://rousi.pro/",
+        "ua": "owned-UA",
+        "cookie": "owned-cookie",
+        "proxy": false,
+        "timeout": 1.25,
+        "apikey": "bEaReR synthetic-key",
+        "token": ""
+      },
+      "login": true,
+      "result": [
+        true,
+        "\u6a21\u62df\u767b\u5f55\u6210\u529f"
+      ],
+      "error": null,
+      "calls": [
+        {
+          "method": "GET",
+          "url": "https://rousi.pro/api/v1/profile",
+          "constructor": {
+            "headers": {
+              "User-Agent": "owned-UA",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "bEaReR synthetic-key"
+            },
+            "timeout": 1.25,
+            "proxies": null
+          },
+          "arguments": {}
+        }
+      ],
+      "logs": [
+        [
+          "info",
+          "Owned \u6a21\u62df\u767b\u5f55\u6210\u529f"
+        ]
+      ]
+    },
+    {
+      "name": "numeric-key-login",
+      "site": {
+        "id": 7,
+        "name": "Owned",
+        "url": "https://rousi.pro/",
+        "ua": "owned-UA",
+        "cookie": "owned-cookie",
+        "proxy": false,
+        "timeout": 1.25,
+        "apikey": 1,
+        "token": ""
+      },
+      "login": true,
+      "result": [
+        true,
+        "\u6a21\u62df\u767b\u5f55\u6210\u529f"
+      ],
+      "error": null,
+      "calls": [
+        {
+          "method": "GET",
+          "url": "https://rousi.pro/api/v1/profile",
+          "constructor": {
+            "headers": {
+              "User-Agent": "owned-UA",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "Bearer 1"
+            },
+            "timeout": 1.25,
+            "proxies": null
+          },
+          "arguments": {}
+        }
+      ],
+      "logs": [
+        [
+          "info",
+          "Owned \u6a21\u62df\u767b\u5f55\u6210\u529f"
+        ]
+      ]
+    }
+  ]
+}

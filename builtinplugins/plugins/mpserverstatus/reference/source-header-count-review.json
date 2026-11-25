@@ -1,0 +1,42 @@
+{
+  "classification": "actual installed RequestUtils exact selected AST plus actual333/Python3.12 Requests2.34.2 and urllib3, owned container loopback rawHTTP only; no app imports or external requests",
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "requests_version": "2.34.2",
+  "source_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "cases": [
+    {
+      "header_lines_excluding_blank": 98,
+      "response_is_None": false,
+      "status": 200,
+      "logs": []
+    },
+    {
+      "header_lines_excluding_blank": 99,
+      "response_is_None": false,
+      "status": 200,
+      "logs": []
+    },
+    {
+      "header_lines_excluding_blank": 100,
+      "response_is_None": true,
+      "status": null,
+      "logs": [
+        [
+          "debug",
+          "\u540c\u6b65\u8bf7\u6c42\u5931\u8d25(\u4e0d\u91cd\u8bd5): ('Connection aborted.', HTTPException('got more than 100 headers'))"
+        ]
+      ]
+    },
+    {
+      "header_lines_excluding_blank": 101,
+      "response_is_None": true,
+      "status": null,
+      "logs": [
+        [
+          "debug",
+          "\u540c\u6b65\u8bf7\u6c42\u5931\u8d25(\u4e0d\u91cd\u8bd5): ('Connection aborted.', HTTPException('got more than 100 headers'))"
+        ]
+      ]
+    }
+  ]
+}

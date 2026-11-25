@@ -1,0 +1,149 @@
+{
+  "dependency": "fast-bencode1.1.8",
+  "oracle_only": true,
+  "isolation": "each dependency input separate child; core disabled,CPU2s; no product Python",
+  "initial_unisolated_generator_exit": 139,
+  "cases": [
+    {
+      "name": "0",
+      "raw_b64": "",
+      "exception": "BTFailure",
+      "message": "not a valid bencoded string"
+    },
+    {
+      "name": "1",
+      "raw_b64": "Z2FyYmFnZQ==",
+      "exception": "BTFailure",
+      "message": "not a valid bencoded string"
+    },
+    {
+      "name": "2",
+      "raw_b64": "aTBl",
+      "roundtrip_b64": "aTBl"
+    },
+    {
+      "name": "3",
+      "raw_b64": "aS0xZQ==",
+      "roundtrip_b64": "aS0xZQ=="
+    },
+    {
+      "name": "4",
+      "raw_b64": "aTAzZQ==",
+      "exception": "BTFailure",
+      "message": "not a valid bencoded string"
+    },
+    {
+      "name": "5",
+      "raw_b64": "aS0wZQ==",
+      "exception": "BTFailure",
+      "message": "not a valid bencoded string"
+    },
+    {
+      "name": "6",
+      "raw_b64": "aSsyZQ==",
+      "roundtrip_b64": "aTJl"
+    },
+    {
+      "name": "7",
+      "raw_b64": "aTI=",
+      "exception": "BTFailure",
+      "message": "invalid bencoded value (data after valid prefix)"
+    },
+    {
+      "name": "8",
+      "raw_b64": "MDo=",
+      "roundtrip_b64": "MDo="
+    },
+    {
+      "name": "9",
+      "raw_b64": "MDE6YQ==",
+      "exception": "BTFailure",
+      "message": "not a valid bencoded string"
+    },
+    {
+      "name": "10",
+      "raw_b64": "Mjph",
+      "exception": "BTFailure",
+      "message": "invalid bencoded value (data after valid prefix)"
+    },
+    {
+      "name": "11",
+      "raw_b64": "MTphYQ==",
+      "exception": "BTFailure",
+      "message": "invalid bencoded value (data after valid prefix)"
+    },
+    {
+      "name": "12",
+      "raw_b64": "ZDE6YWkxZTE6YWkyZWU=",
+      "roundtrip_b64": "ZDE6YWkyZWU="
+    },
+    {
+      "name": "13",
+      "raw_b64": "ZDE6YmkxZTE6YWkyZWU=",
+      "roundtrip_b64": "ZDE6YWkyZTE6YmkxZWU="
+    },
+    {
+      "name": "14",
+      "raw_b64": "ZGkxZWkyZWU=",
+      "source_process_exit": -11,
+      "source_native_crash": true,
+      "stderr": ""
+    },
+    {
+      "name": "15",
+      "raw_b64": "ZDE6YWU=",
+      "exception": "BTFailure",
+      "message": "not a valid bencoded string"
+    },
+    {
+      "name": "16",
+      "raw_b64": "ZGU=",
+      "roundtrip_b64": "ZGU="
+    },
+    {
+      "name": "17",
+      "raw_b64": "bGU=",
+      "roundtrip_b64": "bGU="
+    },
+    {
+      "name": "18",
+      "raw_b64": "bGxlZQ==",
+      "roundtrip_b64": "bGxlZQ=="
+    },
+    {
+      "name": "19",
+      "raw_b64": "ZDQ6aW5mb2Q0Om5hbWUxOng2OnBpZWNlczI6//5lZQ==",
+      "roundtrip_b64": "ZDQ6aW5mb2Q0Om5hbWUxOng2OnBpZWNlczI6//5lZQ=="
+    },
+    {
+      "name": "20",
+      "raw_b64": "bDI6//4yOsOpZQ==",
+      "roundtrip_b64": "bDI6//4yOsOpZQ=="
+    },
+    {
+      "name": "21",
+      "raw_b64": "OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OmE=",
+      "exception": "MemoryError",
+      "message": ""
+    },
+    {
+      "name": "22",
+      "raw_b64": "aWU=",
+      "roundtrip_b64": "aTFl",
+      "source_native_undefined": true,
+      "undefined_reason": "_bencode.pyx ignores CM_Atoi failure/uninitialized or int64 overflow; deterministic safe rejection, not C undefined behavior emulation"
+    },
+    {
+      "name": "23",
+      "raw_b64": "aTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OWU=",
+      "roundtrip_b64": "aS02NjQwMDI1NDg2OTI5OTUyNwAAAA==",
+      "source_native_undefined": true,
+      "undefined_reason": "_bencode.pyx ignores CM_Atoi failure/uninitialized or int64 overflow; deterministic safe rejection, not C undefined behavior emulation"
+    },
+    {
+      "name": "24",
+      "raw_b64": "bGkxZWktMWUwOmU=",
+      "roundtrip_b64": "bGkxZWktMWUwOmU="
+    }
+  ]
+}

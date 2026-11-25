@@ -1,0 +1,1632 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "markdown": "3.11.2",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "matrix_sha256": "02aeca506dfd2533ceca741207f1a7e9a8f81a8fdf4ac0dbef3c31fad2317dab"
+  },
+  "cases": [
+    {
+      "name": "matrix-webhook-plain",
+      "url": "matrix://alice:hook@owned.invalid:8765?mode=matrix&verify=no&cto=2.5&rto=7",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": [
+        "fake.txt"
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "not json"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid:8765/api/v1/matrix/hook/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"displayName\": \"alice\", \"format\": \"plain\", \"text\": \"owned title\\r\\nowned body\"}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            7.0
+          ],
+          "stream": false,
+          "at": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "matrix-webhook-html",
+      "url": "matrixs://hook@owned.invalid?mode=matrix&format=html",
+      "title": "owned <&> \"title\"",
+      "body": "<p>x</p>",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 201,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/api/v1/matrix/hook/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"displayName\": \"Apprise\", \"format\": \"html\", \"text\": \"<h1>owned&nbsp;&lt;&amp;&gt;&nbsp;&quot;title&quot;</h1><p>x</p>\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "matrix-webhook-markdown",
+      "url": "matrixs://alice:hook@owned.invalid?mode=matrix&format=markdown",
+      "title": " owned title ",
+      "body": "**bold**\nline",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": ""
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/api/v1/matrix/hook/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"displayName\": \"alice\", \"format\": \"html\", \"text\": \"<h1>owned&nbsp;title</h1><p><strong>bold</strong>\\nline</p>\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "matrix-slack-webhook",
+      "url": "matrix://alice:hook@owned.invalid?mode=slack&format=markdown",
+      "title": " a&b ",
+      "body": "a<b>\nnext",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": ""
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/matrix/hook/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"username\": \"alice\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"a&amp;b\", \"text\": \"a&lt;b&gt;\\nnext\", \"color\": \"#3AA3E3\", \"ts\": 1234.5, \"footer\": \"Apprise\"}]}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "matrix-t2bot-native",
+      "url": "https://webhooks.t2bot.io/api/v9/matrix/hook/abababababababababababababababababababababababababababababababab/?image=yes",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "not json"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://webhooks.t2bot.io/api/v1/matrix/hook/abababababababababababababababababababababababababababababababab",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"displayName\": \"Apprise\", \"format\": \"plain\", \"text\": \"owned title\\r\\nowned body\", \"avatarUrl\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-32x32.png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "matrix-invalid-mode",
+      "url": "matrix://alice:hook@owned.invalid?mode=unknown",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "matrix-invalid-version",
+      "url": "matrix://alice:hook@owned.invalid?mode=off&version=1",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "matrix-borrowed-room-id-no-homeserver",
+      "url": "matrix://borrowed@owned.invalid/%21room?mode=off&hsreq=no&msgtype=notice",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/join/%21room",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21room/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"msgtype\": \"m.notice\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.5
+        }
+      ],
+      "waits": [
+        0.5
+      ]
+    },
+    {
+      "name": "matrix-v3-password-joined-room-cache-logout",
+      "url": "matrix://user:secret@owned.invalid?mode=off",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"access_token\": \"acquired\", \"home_server\": \"home.invalid\", \"user_id\": \"@user:home.invalid\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"joined_rooms\": [\"!first:home.invalid\"]}"
+        },
+        {
+          "status": 200,
+          "body": "{\"room_id\": \"!second:home.invalid\"}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 401,
+          "body": "{\"errcode\": \"M_UNKNOWN_TOKEN\"}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true,
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"type\": \"m.login.password\", \"identifier\": {\"type\": \"m.id.user\", \"user\": \"user\"}, \"password\": \"secret\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        },
+        {
+          "method": "GET",
+          "url": "http://owned.invalid/_matrix/client/v3/joined_rooms",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer acquired"
+          },
+          "body": "null",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.5
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/join/%21first%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer acquired"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.0
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21second%3Ahome.invalid/send/m.room.message/0",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer acquired"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.5
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21second%3Ahome.invalid/send/m.room.message/1",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer acquired"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 2.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer acquired"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 2.5
+        }
+      ],
+      "waits": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "matrix-v2-register-alias-conflict-and-image",
+      "url": "matrix://user:secret@owned.invalid/owned?version=2&image=yes",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 403,
+          "body": "{\"errcode\": \"M_FORBIDDEN\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"access_token\": \"acquired\", \"home_server\": \"home.invalid\"}"
+        },
+        {
+          "status": 404,
+          "body": "{\"errcode\": \"M_NOT_FOUND\"}"
+        },
+        {
+          "status": 400,
+          "body": "{\"errcode\": \"M_ROOM_IN_USE\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"room_id\": \"!created:home.invalid\"}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/r0/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"type\": \"m.login.password\", \"user\": \"user\", \"password\": \"secret\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/r0/register?kind=user",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"kind\": \"user\", \"auth\": {\"type\": \"m.login.dummy\"}, \"username\": \"user\", \"password\": \"secret\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.5
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/r0/join/%23owned%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer acquired"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/r0/createRoom",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer acquired"
+          },
+          "body": "{\"room_alias_name\": \"owned\", \"name\": \"#owned - Apprise Notifications\", \"visibility\": \"private\", \"preset\": \"trusted_private_chat\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.5
+        },
+        {
+          "method": "GET",
+          "url": "http://owned.invalid/_matrix/client/r0/directory/room/%23owned%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer acquired"
+          },
+          "body": "null",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 2.0
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/r0/rooms/%21created%3Ahome.invalid/send/m.room.message/0",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer acquired"
+          },
+          "body": "{\"msgtype\": \"m.image\", \"url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-32x32.png\", \"body\": \"owned title\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 2.5
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/r0/rooms/%21created%3Ahome.invalid/send/m.room.message/1",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer acquired"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 3.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/r0/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer acquired"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 3.5
+        }
+      ],
+      "waits": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "matrix-alias-forbidden-no-create-continue",
+      "url": "matrix://borrowed@owned.invalid/%23fail:home.invalid/%21room:home.invalid",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 403,
+          "body": "{\"errcode\": \"M_FORBIDDEN\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"room_id\": \"!real:home.invalid\"}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/join/%21room%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/join/%23fail%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.5
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21real%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.0
+        }
+      ],
+      "waits": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "matrix-alias-create-and-cache",
+      "url": "matrix://borrowed@owned.invalid/%23new:home.invalid",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 404,
+          "body": "{\"errcode\": \"M_NOT_FOUND\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"room_alias\": \"#new:home.invalid\", \"room_id\": \"!real:home.invalid\"}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true,
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/join/%23new%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/createRoom",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"room_alias_name\": \"new\", \"name\": \"#new - Apprise Notifications\", \"visibility\": \"private\", \"preset\": \"trusted_private_chat\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.5
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21real%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.0
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21real%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.5
+        }
+      ],
+      "waits": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "matrix-delegated-and-identity-verify",
+      "url": "matrixs://borrowed@owned.invalid/%21room:home.invalid",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"m.homeserver\": {\"base_url\": \"https://delegated.invalid/api/\"}, \"m.identity_server\": {\"base_url\": \"https://identity.invalid/\"}}"
+        },
+        {
+          "status": 200,
+          "body": "{\"versions\": [\"v1.1\"]}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{\"room_id\": \"!real:home.invalid\"}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.invalid/.well-known/matrix/client",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "null",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        },
+        {
+          "method": "GET",
+          "url": "https://delegated.invalid/api/_matrix/client/versions",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "null",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.5
+        },
+        {
+          "method": "GET",
+          "url": "https://identity.invalid/_matrix/identity/v2",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "null",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.0
+        },
+        {
+          "method": "POST",
+          "url": "https://delegated.invalid/api/_matrix/client/v3/join/%21room%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.5
+        },
+        {
+          "method": "PUT",
+          "url": "https://delegated.invalid/api/_matrix/client/v3/rooms/%21real%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 2.0
+        }
+      ],
+      "waits": [
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "matrix-discovery-404-fallback",
+      "url": "matrixs://borrowed@owned.invalid/%21room:home.invalid",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 404,
+          "body": "not json"
+        },
+        {
+          "status": 200,
+          "body": "{\"room_id\": \"!real:home.invalid\"}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.invalid/.well-known/matrix/client",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "null",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/_matrix/client/v3/join/%21room%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.5
+        },
+        {
+          "method": "PUT",
+          "url": "https://owned.invalid/_matrix/client/v3/rooms/%21real%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.0
+        }
+      ],
+      "waits": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "matrix-discovery-invalid-delegate",
+      "url": "matrixs://borrowed@owned.invalid/%21room:home.invalid",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"m.homeserver\": {\"base_url\": \"not-an-absolute-uri\"}}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.invalid/.well-known/matrix/client",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "null",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        }
+      ],
+      "waits": [
+        0.5
+      ]
+    },
+    {
+      "name": "matrix-v3-uploads-file-and-image",
+      "url": "matrix://borrowed@owned.invalid/%21room:home.invalid?format=markdown",
+      "title": "a<&> b",
+      "body": "**bold**",
+      "attachments": [
+        "owned.txt",
+        "owned.png"
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"content_uri\": \"mxc://home.invalid/owned-file\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"content_uri\": \"mxc://home.invalid/owned-image\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"room_id\": \"!real:home.invalid\"}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/media/v3/upload?filename=owned.txt",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "text/plain",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "owned text",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/media/v3/upload?filename=owned.png",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "image/png",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "owned picture",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.5
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/join/%21room%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.0
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21real%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"body\": \"owned.txt\", \"info\": {\"mimetype\": \"text/plain\", \"size\": 10}, \"msgtype\": \"m.file\", \"url\": \"mxc://home.invalid/owned-file\", \"filename\": \"owned.txt\", \"room_id\": \"!real:home.invalid\", \"type\": \"m.room.message\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.5
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21real%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"body\": \"owned.png\", \"info\": {\"mimetype\": \"image/png\", \"size\": 13}, \"msgtype\": \"m.image\", \"url\": \"mxc://home.invalid/owned-image\", \"room_id\": \"!real:home.invalid\", \"type\": \"m.room.message\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 2.0
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21real%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# a<&> b\\r\\n**bold**\", \"format\": \"org.matrix.custom.html\", \"formatted_body\": \"<h1>a&lt;&amp;&gt; b</h1><p><strong>bold</strong></p>\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 2.5
+        }
+      ],
+      "waits": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "matrix-v2-skips-unsupported-file",
+      "url": "matrix://borrowed@owned.invalid/%21room:home.invalid?v=2",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": [
+        "owned.txt",
+        "owned.png"
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"content_uri\": \"mxc://home.invalid/owned-image\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"room_id\": \"!real:home.invalid\"}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/media/r0/upload?filename=owned.png",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "image/png",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "owned picture",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/r0/join/%21room%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.5
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/r0/rooms/%21real%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"info\": {\"mimetype\": \"image/png\"}, \"msgtype\": \"m.image\", \"body\": \"tta.webp\", \"url\": \"mxc://home.invalid/owned-image\", \"room_id\": \"!real:home.invalid\", \"type\": \"m.room.message\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.0
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/r0/rooms/%21real%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.5
+        }
+      ],
+      "waits": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "matrix-two-retry-paths",
+      "url": "matrix://borrowed@owned.invalid/%21room:home.invalid",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 429,
+          "body": "{\"retry_after_ms\": 2}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 429,
+          "body": "{\"error\": {\"retry_after_ms\": 3}}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/join/%21room%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/join/%21room%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.002
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21room%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.502
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21room%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.505
+        }
+      ],
+      "waits": [
+        0.002,
+        0.5,
+        0.003
+      ]
+    },
+    {
+      "name": "matrix-terminal-429",
+      "url": "matrix://borrowed@owned.invalid/%21room:home.invalid",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 429,
+          "body": "{\"retry_after_ms\": 1}"
+        },
+        {
+          "status": 429,
+          "body": "{\"retry_after_ms\": 2}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/join/%21room%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21room%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.5
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21room%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.501
+        }
+      ],
+      "waits": [
+        0.5,
+        0.001,
+        0.002
+      ]
+    },
+    {
+      "name": "matrix-alias-forbidden-no-create",
+      "url": "matrix://borrowed@owned.invalid/%23fail:home.invalid/%21room:home.invalid",
+      "title": " owned title ",
+      "body": "owned body ",
+      "attachments": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"room_id\": \"!real:home.invalid\"}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 403,
+          "body": "{\"errcode\": \"M_FORBIDDEN\"}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/join/%21room%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.0
+        },
+        {
+          "method": "PUT",
+          "url": "http://owned.invalid/_matrix/client/v3/rooms/%21real%3Ahome.invalid/send/m.room.message/<uuid>",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{\"msgtype\": \"m.text\", \"body\": \"# owned title\\r\\nowned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 0.5
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/_matrix/client/v3/join/%23fail%3Ahome.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer borrowed"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "at": 1.0
+        }
+      ],
+      "waits": [
+        0.5,
+        0.5
+      ]
+    }
+  ]
+}

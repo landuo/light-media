@@ -1,0 +1,197 @@
+{
+  "mako": "1.4.1",
+  "markupsafe": "3.0.4",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "has_beaker": false,
+  "source_sha256": {
+    "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+    "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+    "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+    "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+    "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d",
+    "mako/cache.py": "0e7a30b905b44dc9c06b9bb9b4d37b0ffaaf5a3a9f3ca72c4c80a202a7038e83",
+    "mako/ext/beaker_cache.py": "4ca18af1570ca3eb29c257039f004dfc6ea6856a93b12c0e9916e18c3315d93e"
+  },
+  "cases": [
+    {
+      "name": "named-args-forward-page",
+      "template": "<%page args=\"title,count\"/><%block name=\"box\" args=\"title,count\">${title}:${count}</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned:7",
+      "source_error": false
+    },
+    {
+      "name": "named-no-page-arguments-fallback",
+      "template": "before<%block name=\"box\" args=\"title='default'\">${title}</%block>after",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "before<%block name=\"box\" args=\"title='default'\">${title}</%block>after",
+      "source_error": true
+    },
+    {
+      "name": "named-untaken-still-requires-page-arguments",
+      "template": "before\n% if False:\n<%block name=\"box\" args=\"title='default'\">${title}</%block>\n% endif\nafter",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "before\n% if False:\n<%block name=\"box\" args=\"title='default'\">${title}</%block>\n% endif\nafter",
+      "source_error": true
+    },
+    {
+      "name": "named-page-assignment-after-entry-is-too-late",
+      "template": "<% title='assigned' %><%block name=\"box\" args=\"title\">${title}</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<% title='assigned' %><%block name=\"box\" args=\"title\">${title}</%block>",
+      "source_error": true
+    },
+    {
+      "name": "named-page-default-and-original-default",
+      "template": "<%!\nevents = ''\ndef step(marker):\n    global events\n    events += marker\n    return events\ndef trace():\n    return events\n%><%page args=\"title=step('P')\"/><%block name=\"box\" args=\"title=step('B')\">${title}:${trace()}</%block>|${capture(self.box)}|${capture(box)}|${trace()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned:PBBB|PB:PBBBB|PBB:PBBBBB|PBBBBB",
+      "source_error": false
+    },
+    {
+      "name": "named-page-keyword-rest",
+      "template": "<%page args=\"title\"/><%block name=\"box\" args=\"title\">${title}:${pageargs.get('count','none')}</%block>|${capture(self.box,'direct',count=9)}|${capture(box,'lexical')}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned:7|direct:9|lexical:none",
+      "source_error": false
+    },
+    {
+      "name": "named-no-args-receive-pageargs",
+      "template": "<%block name=\"box\">${pageargs['title']}:${pageargs['count']}</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned:7",
+      "source_error": false
+    },
+    {
+      "name": "named-block-pageargs-context",
+      "template": "<%page args=\"title\"/><% title='local' %><%block name=\"box\" args=\"title\">${title}:${context.get('title')}</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "local:Owned",
+      "source_error": false
+    },
+    {
+      "name": "named-buffered-return-not-automatically-written",
+      "template": "<%page args=\"title\"/><%block name=\"box\" args=\"title\" buffered=\"True\">${title}</%block>|${self.box('direct')}|${box('lexical')}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "|direct|lexical",
+      "source_error": false
+    },
+    {
+      "name": "named-cached-fails-after-defaults-and-binding",
+      "template": "<%!\nevents = ''\ndef step(marker):\n    global events\n    events += marker\n    return events\ndef trace():\n    return events\n%><%page args=\"title\"/>${trace()}\n% try:\n<%block name=\"box\" args=\"title=step('B')\" cached=\"True\">${title}</%block>\n% except Exception:\nfailed:${trace()}\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "BBB\nfailed:BBB\n",
+      "source_error": false
+    },
+    {
+      "name": "named-cached-direct-binding-before-cache",
+      "template": "<%page args=\"title\"/>\n% if False:\n<%block name=\"box\" args=\"title\" cached=\"True\">${title}</%block>\n% endif\n% try:\n${self.box()}\n% except TypeError:\nbinding\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\nbinding\n",
+      "source_error": false
+    },
+    {
+      "name": "named-star-binder-and-extra-pageargs",
+      "template": "<%page args=\"title, count\"/><%block name=\"box\" args=\"*title,count\">${title}:${count}:${pageargs.get('other','none')}</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "('O', 'w', 'n', 'e', 'd'):7:none",
+      "source_error": false
+    },
+    {
+      "name": "named-bare-star-generator-quirk",
+      "template": "<%page args=\"title,count\"/><%block name=\"box\" args=\"title, *, count\">${title}:${count}</%block>|${capture(self.box,'direct',9)}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned:7|direct:9",
+      "source_error": false
+    },
+    {
+      "name": "named-keyword-rest-duplicate-compile-fallback",
+      "template": "<%block name=\"box\" args=\"**extras\">${extras}</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%block name=\"box\" args=\"**extras\">${extras}</%block>",
+      "source_error": true
+    },
+    {
+      "name": "named-positional-only-omission",
+      "template": "<%page args=\"count\"/><%block name=\"box\" args=\"title, /, count\">${title}:${count}</%block>|${capture(self.box,9)}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned:7|Owned:9",
+      "source_error": false
+    },
+    {
+      "name": "named-positional-only-default-shifts",
+      "template": "<%page args=\"count\"/><%block name=\"box\" args=\"omitted='first', /, count='second'\">${count}</%block>|${capture(self.box)}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "7|second",
+      "source_error": false
+    },
+    {
+      "name": "named-nested-args",
+      "template": "<%page args=\"title\"/><%block name=\"outer\" args=\"title\">out:${title}:<%block name=\"inner\" args=\"title\">in:${title}</%block></%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "out:Owned:in:Owned",
+      "source_error": false
+    },
+    {
+      "name": "named-def-cannot-contain-block",
+      "template": "<%def name=\"x()\"><%block name=\"box\">body</%block></%def>fallback",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%def name=\"x()\"><%block name=\"box\">body</%block></%def>fallback",
+      "source_error": true
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "mako": "1.4.1",
+  "markupsafe": "3.0.4",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "has_beaker": false,
+  "source_sha256": {
+    "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+    "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+    "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+    "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+    "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d",
+    "mako/cache.py": "0e7a30b905b44dc9c06b9bb9b4d37b0ffaaf5a3a9f3ca72c4c80a202a7038e83",
+    "mako/ext/beaker_cache.py": "4ca18af1570ca3eb29c257039f004dfc6ea6856a93b12c0e9916e18c3315d93e"
+  },
+  "cases": [
+    {
+      "name": "module-default-without-stub",
+      "template": "<%!\nevents = ''\ndef step(marker):\n    global events\n    events += marker\n    return events\ndef trace():\n    return events\n%><%def name=\"f(x=step('F'))\" buffered=\"True\">${x}</%def>${trace()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "F",
+      "source_error": false
+    },
+    {
+      "name": "root-lexical-and-namespace-defaults",
+      "template": "<%!\nevents = ''\ndef step(marker):\n    global events\n    events += marker\n    return events\ndef trace():\n    return events\n%><%def name=\"f(x=step('F'))\" buffered=\"True\">${x}</%def>${trace()}|${f()}|${self.f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "FF|FF|F",
+      "source_error": false
+    },
+    {
+      "name": "root-namespace-without-lexical-stub",
+      "template": "<%!\nevents = ''\ndef step(marker):\n    global events\n    events += marker\n    return events\ndef trace():\n    return events\n%><%def name=\"f(x=step('F'))\" buffered=\"True\">${x}</%def>${trace()}|${self.f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "F|F",
+      "source_error": false
+    },
+    {
+      "name": "root-stub-before-untaken-branch",
+      "template": "<%!\nevents = ''\ndef step(marker):\n    global events\n    events += marker\n    return events\ndef trace():\n    return events\n%><%def name=\"f(x=step('F'))\" buffered=\"True\">${x}</%def>\n% if False:\n${f()}\n% endif\n${trace()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\nFF",
+      "source_error": false
+    },
+    {
+      "name": "root-defaults-in-untaken-definition-control",
+      "template": "<%!\nevents = ''\ndef step(marker):\n    global events\n    events += marker\n    return events\ndef trace():\n    return events\n%>\n% if False:\n<%def name=\"f(x=step('F'))\" buffered=\"True\">${x}</%def>\n% endif\n${trace()}|${self.f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\nF|F",
+      "source_error": false
+    },
+    {
+      "name": "root-stub-inside-another-definition",
+      "template": "<%!\nevents = ''\ndef step(marker):\n    global events\n    events += marker\n    return events\ndef trace():\n    return events\n%><%def name=\"f(x=step('F'))\" buffered=\"True\">${x}</%def><%def name=\"g()\" buffered=\"True\">${f()}</%def>${trace()}|${g()}|${g()}|${trace()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "F|FF|FFF|FFF",
+      "source_error": false
+    },
+    {
+      "name": "root-cache-module-and-stub",
+      "template": "<%!\nevents = ''\ndef step(marker):\n    global events\n    events += marker\n    return events\ndef trace():\n    return events\n%><%def name=\"f(x=step('F'))\" cached=\"True\">Hidden</%def>\n${trace()}\n% try:\n${f()}\n% except Exception:\n${trace()}\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\nFFF\nFFF\n",
+      "source_error": false
+    },
+    {
+      "name": "root-cache-module-without-stub",
+      "template": "<%!\nevents = ''\ndef step(marker):\n    global events\n    events += marker\n    return events\ndef trace():\n    return events\n%><%def name=\"f(x=step('F'))\" cached=\"True\">Hidden</%def>\n${trace()}\n% try:\n${self.f()}\n% except Exception:\n${trace()}\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\nFF\nFF\n",
+      "source_error": false
+    },
+    {
+      "name": "page-module-before-definition-and-stub",
+      "template": "<%!\nevents = ''\ndef step(marker):\n    global events\n    events += marker\n    return events\ndef trace():\n    return events\n%><%page args=\"x=step('P')\"/><%def name=\"f(y=step('F'))\" buffered=\"True\">${y}</%def>${x}|${trace()}|${f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "P|PFF|PFF",
+      "source_error": false
+    },
+    {
+      "name": "forwarding-uses-page-argument-shadow",
+      "template": "<%! x='module' %><%page args=\"x='page'\"/><%def name=\"f(value=x)\" buffered=\"True\">${value}</%def>${f()}|${self.f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "page|module",
+      "source_error": false
+    },
+    {
+      "name": "inline-uses-enclosing-argument",
+      "template": "<%def name=\"outer(value)\" buffered=\"True\"><%def name=\"inner(x=value)\" buffered=\"True\">${x}</%def>${inner()}</%def>${outer('enclosing')}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "enclosing",
+      "source_error": false
+    },
+    {
+      "name": "inline-cached-wrapper-default",
+      "template": "<%!\nevents = ''\ndef step(marker):\n    global events\n    events += marker\n    return events\ndef trace():\n    return events\n%><%def name=\"outer()\" buffered=\"True\"><%def name=\"inner(x=step('I'))\" cached=\"True\">Hidden</%def>\n% try:\n${inner()}\n% except Exception:\n${trace()}\n% endtry\n</%def>${outer()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\nII\n",
+      "source_error": false
+    },
+    {
+      "name": "top-level-decorator-original-name",
+      "template": "<%! identify = lambda fn: lambda ctx: fn.__name__ + ':' + fn() %><%def name=\"root()\" decorator=\"identify\" buffered=\"True\">body</%def>${root.__name__}|${root()}|${self.root()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "root|root:body|root:body",
+      "source_error": false
+    },
+    {
+      "name": "inline-decorator-original-and-wrapper-names",
+      "template": "<%! identify = lambda fn: lambda ctx: fn.__name__ + ':' + fn() %><%def name=\"outer()\" buffered=\"True\"><%def name=\"inner()\" decorator=\"identify\" buffered=\"True\">body</%def>${inner.__name__}|${inner()}</%def>${outer()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "go|inner:body",
+      "source_error": false
+    },
+    {
+      "name": "anonymous-decorator-original-name",
+      "template": "<%! identify = lambda fn: lambda ctx: ctx.write(fn.__name__) or fn() %>\n<%block decorator=\"identify\">body</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\n__M_anon_2body",
+      "source_error": false
+    },
+    {
+      "name": "nested-python-closure-and-lambda-names",
+      "template": "<%!\ndef factory():\n    def hidden():\n        return 'body'\n    return hidden\n%><% fn = factory(); ln = lambda: 'lambda' %>${factory.__name__}|${fn.__name__}:${fn()}|${ln.__name__}:${ln()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "factory|hidden:body|<lambda>:lambda",
+      "source_error": false
+    },
+    {
+      "name": "partial-namespace-has-no-name",
+      "template": "<%def name=\"root()\">body</%def>\n% try:\n${self.root.__name__}\n% except AttributeError:\npartial\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\npartial\n",
+      "source_error": false
+    },
+    {
+      "name": "call-export-name-from-inline-wrapper",
+      "template": "<%! wrap = lambda fn: lambda ctx: fn() %><%def name=\"outer()\"><%call expr=\"use()\"><%def name=\"member()\" decorator=\"wrap\" buffered=\"True\">body</%def></%call></%def><%def name=\"use()\">${caller.go.__name__}:${caller.go()}</%def>${outer()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "go:body",
+      "source_error": false
+    }
+  ]
+}

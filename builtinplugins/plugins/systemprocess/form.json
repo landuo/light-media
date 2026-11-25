@@ -1,0 +1,103 @@
+[
+  {
+    "component": "VForm",
+    "content": [
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 4,
+              "xl": 4,
+              "lg": 4,
+              "md": 4,
+              "sm": 6,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "enable",
+                  "label": "启用插件",
+                  "hint": "插件总开关"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 4,
+              "xl": 4,
+              "lg": 4,
+              "md": 4,
+              "sm": 6,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "dashboard_widget_size",
+                  "label": "仪表板尺寸",
+                  "items": [
+                    {
+                      "title": "100%",
+                      "value": 12
+                    },
+                    {
+                      "title": "2/3",
+                      "value": 8
+                    },
+                    {
+                      "title": "50%",
+                      "value": 6
+                    },
+                    {
+                      "title": "1/3",
+                      "value": 4
+                    }
+                  ],
+                  "hint": "选择仪表板系统进程组件尺寸。"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 4,
+              "xl": 4,
+              "lg": 4,
+              "md": 4,
+              "sm": 6,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VTextField",
+                "props": {
+                  "model": "dashboard_widget_refresh",
+                  "label": "仪表板刷新间隔(秒)",
+                  "placeholder": "5",
+                  "type": "number",
+                  "hint": "仪表板组件刷新时间间隔，单位为秒，缺省时不刷新。"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,423 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "file_sha256": {
+      "pushplus": "8870129d7710d7176b7fc3a9cf4340d03271b0e4a5548ad49faba09e5a6eb6d6",
+      "feishu": "92a3e38adc2651fd9c6badaefcd2ad89117c155150fb3c9e26406b8df6b88d84",
+      "dingtalk": "85dd8b1c10da3c0cb6e35f8d5edbe0ae6a5e82fa4f3c42a4116ac56bce327d97"
+    }
+  },
+  "fixed_time_ms": 1794039555125,
+  "cases": [
+    {
+      "name": "pushplus-basic",
+      "url": "pushplus://0123456789Abcdef0123456789Abcdef",
+      "title": " 标题 ",
+      "body": "正文 ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.pushplus.plus/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"token\": \"0123456789Abcdef0123456789Abcdef\", \"title\": \"\\u6807\\u9898\", \"content\": \"\\u6b63\\u6587\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "pushplus-native-fallback-title",
+      "url": "https://www.pushplus.plus/send?token=0123456789Abcdef0123456789Abcdef",
+      "title": "",
+      "body": "owned body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.pushplus.plus/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"token\": \"0123456789Abcdef0123456789Abcdef\", \"title\": \"owned body\", \"content\": \"owned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "pushplus-query-token-override",
+      "url": "pushplus://bad?token=0123456789Abcdef0123456789Abcdef&verify=no&cto=2.5&rto=7",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.pushplus.plus/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"token\": \"0123456789Abcdef0123456789Abcdef\", \"title\": \"t\", \"content\": \"b\"}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            7.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "pushplus-status-201",
+      "url": "pushplus://0123456789Abcdef0123456789Abcdef",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        201
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://www.pushplus.plus/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"token\": \"0123456789Abcdef0123456789Abcdef\", \"title\": \"t\", \"content\": \"b\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "pushplus-invalid-key",
+      "url": "pushplus://short",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "feishu-text-titleless",
+      "url": "feishu://Owned-Token",
+      "title": " 标题 ",
+      "body": "body ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://open.feishu.cn/open-apis/bot/v2/hook/Owned-Token/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"msg_type\": \"text\", \"content\": {\"text\": \"\\u6807\\u9898\\r\\nbody\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "feishu-html-and-override",
+      "url": "feishu://ignored?token=Owned-Token&format=html&verify=no&cto=2.5&rto=7",
+      "title": "title",
+      "body": "<i>owned</i>",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://open.feishu.cn/open-apis/bot/v2/hook/Owned-Token/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"msg_type\": \"text\", \"content\": {\"text\": \"<b>title</b><br />\\r\\n<i>owned</i>\"}}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            7.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "feishu-status-204",
+      "url": "feishu://Owned-Token",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        204
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://open.feishu.cn/open-apis/bot/v2/hook/Owned-Token/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"msg_type\": \"text\", \"content\": {\"text\": \"t\\r\\nb\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "feishu-invalid-key",
+      "url": "feishu://bad!",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "feishu-attachment-ignored",
+      "url": "feishu://Owned-Token",
+      "title": "t",
+      "body": "b",
+      "attach": "https://owned-image.invalid/ignore.png",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://open.feishu.cn/open-apis/bot/v2/hook/Owned-Token/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"msg_type\": \"text\", \"content\": {\"text\": \"t\\r\\nb\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "dingtalk-text-titleless",
+      "url": "dingtalk://OwnedToken",
+      "title": "title",
+      "body": "body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://oapi.dingtalk.com/robot/send?access_token=OwnedToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"msgtype\": \"text\", \"at\": {\"atMobiles\": [], \"isAtAll\": false}, \"text\": {\"content\": \"title\\r\\nbody\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "dingtalk-markdown-and-phones",
+      "url": "dingtalk://OwnedToken/%2B8613800138000/(138)00138000?to=13800138000%2Cinvalid%2C0123456789&format=markdown",
+      "title": " title ",
+      "body": "**body** ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://oapi.dingtalk.com/robot/send?access_token=OwnedToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"msgtype\": \"text\", \"at\": {\"atMobiles\": [\"13800138000\", \"8613800138000\", \"13800138000\"], \"isAtAll\": false}, \"markdown\": {\"title\": \"title\", \"text\": \"**body**\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "dingtalk-signature-double-encoded",
+      "url": "dingtalk://OwnedSecret@ignored?token=OwnedToken&secret=OverrideSecret&verify=no&cto=3&rto=7",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://oapi.dingtalk.com/robot/send?access_token=OwnedToken&timestamp=1794039555125&sign=gfKT5EogcgaAbJ4bPoAVOaUTqWGI6QCD3FlY5ID1308%253D",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"msgtype\": \"text\", \"at\": {\"atMobiles\": [], \"isAtAll\": false}, \"text\": {\"content\": \"t\\r\\nb\"}}",
+          "verify": false,
+          "timeout": [
+            3.0,
+            7.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "dingtalk-invalid-secret",
+      "url": "dingtalk://bad-secret@OwnedToken",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "dingtalk-transport-failure",
+      "url": "dingtalk://OwnedToken",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        0
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://oapi.dingtalk.com/robot/send?access_token=OwnedToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"msgtype\": \"text\", \"at\": {\"atMobiles\": [], \"isAtAll\": false}, \"text\": {\"content\": \"t\\r\\nb\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "dingtalk-encoded-userinfo-secret",
+      "url": "dingtalk://%4FwnedSecret@OwnedToken",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    }
+  ]
+}

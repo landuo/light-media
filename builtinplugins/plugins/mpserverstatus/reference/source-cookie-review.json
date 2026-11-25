@@ -1,0 +1,44 @@
+{
+  "classification": "actual333/Python3.12 Requests default cookiejar extraction+redirect Cookie header generation; no HTTP/app/config or network",
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "requests": "2.34.2",
+  "origin": "https://movie-pilot.org/status",
+  "target": "https://movie-pilot.org/after",
+  "cases": [
+    {
+      "domain": "org",
+      "set_cookie": "owned=test; Path=/; Domain=org",
+      "cookie_header": null
+    },
+    {
+      "domain": ".org",
+      "set_cookie": "owned=test; Path=/; Domain=.org",
+      "cookie_header": null
+    },
+    {
+      "domain": "movie-pilot.org",
+      "set_cookie": "owned=test; Path=/; Domain=movie-pilot.org",
+      "cookie_header": "owned=test"
+    },
+    {
+      "domain": ".movie-pilot.org",
+      "set_cookie": "owned=test; Path=/; Domain=.movie-pilot.org",
+      "cookie_header": "owned=test"
+    },
+    {
+      "domain": "pilot.org",
+      "set_cookie": "owned=test; Path=/; Domain=pilot.org",
+      "cookie_header": null
+    },
+    {
+      "domain": "",
+      "set_cookie": "owned=test; Path=/",
+      "cookie_header": "owned=test"
+    },
+    {
+      "domain": "ORG",
+      "set_cookie": "owned=test; Path=/; Domain=ORG",
+      "cookie_header": null
+    }
+  ]
+}

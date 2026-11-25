@@ -1,0 +1,115 @@
+{
+  "python": "3.12.13",
+  "source_sha256": "ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0",
+  "classification": "original Tjupt write helper AST; legal synthetic cache JSON -> owned temp file; no app/network/production config",
+  "rows": [
+    {
+      "input": "{\"old\":1e2}",
+      "bytes_b64": "ewogICAgIm9sZCI6IDEwMC4wLAogICAgIm5ldy1oYXNoIjogIm93bmVkLWFuc3dlciIKfQ==",
+      "text": "{\n    \"old\": 100.0,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":-0}",
+      "bytes_b64": "ewogICAgIm9sZCI6IDAsCiAgICAibmV3LWhhc2giOiAib3duZWQtYW5zd2VyIgp9",
+      "text": "{\n    \"old\": 0,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":-0.0}",
+      "bytes_b64": "ewogICAgIm9sZCI6IC0wLjAsCiAgICAibmV3LWhhc2giOiAib3duZWQtYW5zd2VyIgp9",
+      "text": "{\n    \"old\": -0.0,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":1e-400}",
+      "bytes_b64": "ewogICAgIm9sZCI6IDAuMCwKICAgICJuZXctaGFzaCI6ICJvd25lZC1hbnN3ZXIiCn0=",
+      "text": "{\n    \"old\": 0.0,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":1e400}",
+      "bytes_b64": "ewogICAgIm9sZCI6IEluZmluaXR5LAogICAgIm5ldy1oYXNoIjogIm93bmVkLWFuc3dlciIKfQ==",
+      "text": "{\n    \"old\": Infinity,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":-1e400}",
+      "bytes_b64": "ewogICAgIm9sZCI6IC1JbmZpbml0eSwKICAgICJuZXctaGFzaCI6ICJvd25lZC1hbnN3ZXIiCn0=",
+      "text": "{\n    \"old\": -Infinity,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":1.2345678901234567}",
+      "bytes_b64": "ewogICAgIm9sZCI6IDEuMjM0NTY3ODkwMTIzNDU2NywKICAgICJuZXctaGFzaCI6ICJvd25lZC1hbnN3ZXIiCn0=",
+      "text": "{\n    \"old\": 1.2345678901234567,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":1e-5}",
+      "bytes_b64": "ewogICAgIm9sZCI6IDFlLTA1LAogICAgIm5ldy1oYXNoIjogIm93bmVkLWFuc3dlciIKfQ==",
+      "text": "{\n    \"old\": 1e-05,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":1e-4}",
+      "bytes_b64": "ewogICAgIm9sZCI6IDAuMDAwMSwKICAgICJuZXctaGFzaCI6ICJvd25lZC1hbnN3ZXIiCn0=",
+      "text": "{\n    \"old\": 0.0001,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":10000000000000000000000}",
+      "bytes_b64": "ewogICAgIm9sZCI6IDEwMDAwMDAwMDAwMDAwMDAwMDAwMDAwLAogICAgIm5ldy1oYXNoIjogIm93bmVkLWFuc3dlciIKfQ==",
+      "text": "{\n    \"old\": 10000000000000000000000,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":\"\u4e2d\u6587/\u00e9\ud83d\ude00\"}",
+      "bytes_b64": "ewogICAgIm9sZCI6ICJcdTRlMmRcdTY1ODcvXHUwMGU5XHVkODNkXHVkZTAwIiwKICAgICJuZXctaGFzaCI6ICJvd25lZC1hbnN3ZXIiCn0=",
+      "text": "{\n    \"old\": \"\\u4e2d\\u6587/\\u00e9\\ud83d\\ude00\",\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"z\":1,\"a\":2,\"z\":3}",
+      "bytes_b64": "ewogICAgInoiOiAzLAogICAgImEiOiAyLAogICAgIm5ldy1oYXNoIjogIm93bmVkLWFuc3dlciIKfQ==",
+      "text": "{\n    \"z\": 3,\n    \"a\": 2,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":{\"z\":1,\"a\":2,\"z\":3}}",
+      "bytes_b64": "ewogICAgIm9sZCI6IHsKICAgICAgICAieiI6IDMsCiAgICAgICAgImEiOiAyCiAgICB9LAogICAgIm5ldy1oYXNoIjogIm93bmVkLWFuc3dlciIKfQ==",
+      "text": "{\n    \"old\": {\n        \"z\": 3,\n        \"a\": 2\n    },\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":\"\\b\\f\\n\\r\\t\\u0001/\\\\\\\"\"}",
+      "bytes_b64": "ewogICAgIm9sZCI6ICJcYlxmXG5cclx0XHUwMDAxL1xcXCIiLAogICAgIm5ldy1oYXNoIjogIm93bmVkLWFuc3dlciIKfQ==",
+      "text": "{\n    \"old\": \"\\b\\f\\n\\r\\t\\u0001/\\\\\\\"\",\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":[true,false,null]}",
+      "bytes_b64": "ewogICAgIm9sZCI6IFsKICAgICAgICB0cnVlLAogICAgICAgIGZhbHNlLAogICAgICAgIG51bGwKICAgIF0sCiAgICAibmV3LWhhc2giOiAib3duZWQtYW5zd2VyIgp9",
+      "text": "{\n    \"old\": [\n        true,\n        false,\n        null\n    ],\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":NaN}",
+      "bytes_b64": "ewogICAgIm9sZCI6IE5hTiwKICAgICJuZXctaGFzaCI6ICJvd25lZC1hbnN3ZXIiCn0=",
+      "text": "{\n    \"old\": NaN,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":Infinity}",
+      "bytes_b64": "ewogICAgIm9sZCI6IEluZmluaXR5LAogICAgIm5ldy1oYXNoIjogIm93bmVkLWFuc3dlciIKfQ==",
+      "text": "{\n    \"old\": Infinity,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    },
+    {
+      "input": "{\"old\":-Infinity}",
+      "bytes_b64": "ewogICAgIm9sZCI6IC1JbmZpbml0eSwKICAgICJuZXctaGFzaCI6ICJvd25lZC1hbnN3ZXIiCn0=",
+      "text": "{\n    \"old\": -Infinity,\n    \"new-hash\": \"owned-answer\"\n}",
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,1681 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "twist_sha256": "44cef94d16e2a0df4f3c6be4298e74df5201d6e4014d5693320c849a30779993"
+  },
+  "cases": [
+    {
+      "name": "default-channel",
+      "url": "twist://secret:owner@owned.invalid/",
+      "title": " Title ",
+      "body": "body ",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "[{\"id\": 111, \"name\": \"General\"}, {\"id\": 222, \"name\": \"TeamNews\"}]"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/channels/get",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "workspace_id=42",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=111&title=Title&content=body",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.6
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "password-in-path-numeric-workspace-target",
+      "url": "twist://owner@owned.invalid/secret%252B/42%3A00123",
+      "title": "标题",
+      "body": "body",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret%252B",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=123&title=%E6%A0%87%E9%A2%98&content=body",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "reversed-credentials-and-options",
+      "url": "twist://pw%252B:owner%2Blabel@owned.invalid/123?verify=no&cto=3&rto=8&format=text",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%2Blabel%40owned.invalid&password=pw%252B",
+          "verify": false,
+          "timeout": [
+            3.0,
+            8.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=123&title=t&content=b",
+          "verify": false,
+          "timeout": [
+            3.0,
+            8.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": false,
+          "timeout": [
+            3.0,
+            8.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "named-workspace-uses-default-cache",
+      "url": "twist://secret:owner@owned.invalid/?to=Primary%3ATeamNews",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "[{\"id\": 111, \"name\": \"General\"}, {\"id\": 222, \"name\": \"TeamNews\"}]"
+        },
+        {
+          "status": 200,
+          "body": "[{\"id\": 42, \"name\": \"Primary\"}, {\"id\": 84, \"name\": \"Other\"}]"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/channels/get",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "workspace_id=42",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/workspaces/get",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=222&title=t&content=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.6
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.8
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "different-workspace-not-loaded",
+      "url": "twist://secret:owner@owned.invalid/?to=Other%3AGeneral",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "[{\"id\": 111, \"name\": \"General\"}, {\"id\": 222, \"name\": \"TeamNews\"}]"
+        },
+        {
+          "status": 200,
+          "body": "[{\"id\": 42, \"name\": \"Primary\"}, {\"id\": 84, \"name\": \"Other\"}]"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/channels/get",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "workspace_id=42",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/workspaces/get",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.6
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "missing-named-target-keeps-explicit-id",
+      "url": "twist://secret:owner@owned.invalid/%23absent/99",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "[{\"id\": 111, \"name\": \"General\"}, {\"id\": 222, \"name\": \"TeamNews\"}]"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/channels/get",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "workspace_id=42",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=99&title=t&content=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.6
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "empty-channel-list",
+      "url": "twist://secret:owner@owned.invalid",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "[]"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/channels/get",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "workspace_id=42",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "no-default-workspace",
+      "url": "twist://secret:owner@owned.invalid/",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\"}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        }
+      ],
+      "waits": [
+        0.2
+      ]
+    },
+    {
+      "name": "failed-login-no-retry-or-logout",
+      "url": "twist://secret:owner@owned.invalid/123",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 401,
+          "body": "{\"error_code\": 200}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "transport-failed-login",
+      "url": "twist://secret:owner@owned.invalid/123",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 0,
+          "body": ""
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "missing-token-still-posts",
+      "url": "twist://secret:owner@owned.invalid/123",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "channel_id=123&title=t&content=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        }
+      ],
+      "waits": [
+        0.2
+      ]
+    },
+    {
+      "name": "auth-retry-uses-original-bearer",
+      "url": "twist://secret:owner@owned.invalid/123",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 401,
+          "body": "{\"error_code\": 200}"
+        },
+        {
+          "status": 200,
+          "body": "{\"token\": \"renewed-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=123&title=t&content=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=123&title=t&content=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer renewed-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.6
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "retry-failure-no-third-attempt",
+      "url": "twist://secret:owner@owned.invalid/123",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 403,
+          "body": "{\"error_code\": 120}"
+        },
+        {
+          "status": 200,
+          "body": "{\"token\": \"renewed-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 401,
+          "body": "{\"error_code\": 200}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=123&title=t&content=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=123&title=t&content=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer renewed-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.6
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "logout-failure-is-ignored",
+      "url": "twist://secret:owner@owned.invalid/123",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 500,
+          "body": "broken"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=123&title=t&content=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "logout-renews-and-retries",
+      "url": "twist://secret:owner@owned.invalid/123",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 401,
+          "body": "{\"error_code\": 200}"
+        },
+        {
+          "status": 200,
+          "body": "{\"token\": \"renewed-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=123&title=t&content=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.6
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.6
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "multiple-targets-continue-after-failure",
+      "url": "twist://secret:owner@owned.invalid/11/22",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 503,
+          "body": "broken"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=11&title=t&content=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=22&title=t&content=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.6
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "reuses-auth-and-migrated-id",
+      "url": "twist://secret:owner@owned.invalid/",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "[{\"id\": 111, \"name\": \"General\"}, {\"id\": 222, \"name\": \"TeamNews\"}]"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true,
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/channels/get",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "workspace_id=42",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=111&title=t&content=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=111&title=t&content=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.6
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.8
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "invalid-email",
+      "url": "twist://secret:owner@owned/123",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "missing-password",
+      "url": "twist://owner@owned.invalid",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "disabled-store",
+      "url": "twist://secret:owner@owned.invalid/123?store=no",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "attachment-ignored-and-title-body-overflow",
+      "url": "twist://secret:owner@owned.invalid/123?overflow=truncate",
+      "title": "T",
+      "body": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "attach": "https://owned-image.invalid/ignore.png",
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"token\": \"owned-token\", \"default_workspace\": 42}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/login",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+          "body": "email=owner%40owned.invalid&password=secret",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/threads/add",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": "channel_id=123&title=T&content=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.2
+        },
+        {
+          "method": "POST",
+          "url": "https://api.twist.com/api/v3/users/logout",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Bearer owned-token"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.4
+        }
+      ],
+      "waits": [
+        0.2,
+        0.2
+      ]
+    }
+  ]
+}

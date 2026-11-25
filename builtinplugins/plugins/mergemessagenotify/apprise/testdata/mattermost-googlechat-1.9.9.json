@@ -1,0 +1,730 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "mattermost_sha256": "1d2959a51bfb7c34717fe64898fd89871eea456568c44e147f6d1ba344765bca",
+    "google_chat_sha256": "2c923514b1d645c5f7823b299c5df1542aae5adeced15dc9483b7421c7cb8cf5"
+  },
+  "cases": [
+    {
+      "name": "mattermost-webhook-default",
+      "url": "mmost://owned.invalid/ownedHook",
+      "title": " title ",
+      "body": "body ",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "not json"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/hooks/ownedHook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"title\\r\\nbody\", \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"username\": \"Apprise\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "mattermost-native-port-dropped",
+      "url": "https://mattermost.owned.invalid:9443/hooks/ownedHook?image=no",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://mattermost.owned.invalid/hooks/ownedHook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"t\\r\\nb\", \"username\": \"Apprise\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "mattermost-webhook-custom-users-targets",
+      "url": "mmosts://raw@owned.invalid:9443/prefix/ownedHook?to=%23Bravo%2Cbad!&channel=Alpha&channels=%2BZeta%2CAlpha&botname=owned%2520bot&icon_url=https%253A%252F%252Fimage.invalid%252Fa.png&verify=no&cto=3&rto=8",
+      "title": "title",
+      "body": "body",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid:9443/prefix/hooks/ownedHook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"title\\r\\nbody\", \"icon_url\": \"https://image.invalid/a.png\", \"username\": \"owned bot\", \"channel\": \"Bravo\"}",
+          "verify": false,
+          "timeout": [
+            3.0,
+            8.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://owned.invalid:9443/prefix/hooks/ownedHook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"title\\r\\nbody\", \"icon_url\": \"https://image.invalid/a.png\", \"username\": \"owned bot\", \"channel\": \"Zeta\"}",
+          "verify": false,
+          "timeout": [
+            3.0,
+            8.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://owned.invalid:9443/prefix/hooks/ownedHook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"title\\r\\nbody\", \"icon_url\": \"https://image.invalid/a.png\", \"username\": \"owned bot\", \"channel\": \"Alpha\"}",
+          "verify": false,
+          "timeout": [
+            3.0,
+            8.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        0.02,
+        0.02
+      ]
+    },
+    {
+      "name": "mattermost-webhook-html-attachment-ignored",
+      "url": "mmost://owned.invalid/ownedHook?format=html&image=no",
+      "title": "bold",
+      "body": "<p>owned</p>",
+      "attach": "https://owned-image.invalid/ignore.png",
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/hooks/ownedHook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"<b>bold</b><br />\\r\\n<p>owned</p>\", \"username\": \"Apprise\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "mattermost-webhook-http-201-fails",
+      "url": "mmost://owned.invalid/ownedHook?image=no",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 201,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/hooks/ownedHook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"t\\r\\nb\", \"username\": \"Apprise\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "mattermost-bot-direct-id-no-team",
+      "url": "mmosts://owned.invalid/prefix/OwnedBot?mode=b&to=%2BDirect%2C%23unresolvable",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 201,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/prefix/api/v4/posts",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedBot"
+          },
+          "body": "{\"channel_id\": \"Direct\", \"message\": \"t\\r\\nb\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "mattermost-bot-lookup-caches-in-client",
+      "url": "mmosts://owned.invalid/prefix/OwnedBot?team=Owned%2520Team&to=%23owned",
+      "title": "标题",
+      "body": "正文",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"id\": \"id-owned\"}"
+        },
+        {
+          "status": 201,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true,
+        true
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.invalid/prefix/api/v4/teams/name/Owned%20Team/channels/name/owned",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Authorization": "Bearer OwnedBot"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/prefix/api/v4/posts",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedBot"
+          },
+          "body": "{\"channel_id\": \"id-owned\", \"message\": \"\\u6807\\u9898\\r\\n\\u6b63\\u6587\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/prefix/api/v4/posts",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedBot"
+          },
+          "body": "{\"channel_id\": \"id-owned\", \"message\": \"\\u6807\\u9898\\r\\n\\u6b63\\u6587\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        0.02,
+        0.02
+      ]
+    },
+    {
+      "name": "mattermost-bot-lookup-error-and-continuation",
+      "url": "mmost://owned.invalid/OwnedBot?team=team&to=%23gone%2C%23malformed%2C%2Bdirect%2Cplain",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 404,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "broken"
+        },
+        {
+          "status": 0,
+          "body": ""
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://owned.invalid/api/v4/teams/name/team/channels/name/gone",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Authorization": "Bearer OwnedBot"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "http://owned.invalid/api/v4/teams/name/team/channels/name/malformed",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Authorization": "Bearer OwnedBot"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v4/posts",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedBot"
+          },
+          "body": "{\"channel_id\": \"direct\", \"message\": \"t\\r\\nb\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v4/posts",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedBot"
+          },
+          "body": "{\"channel_id\": \"plain\", \"message\": \"t\\r\\nb\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        0.02,
+        0.02,
+        0.02
+      ]
+    },
+    {
+      "name": "mattermost-bot-no-valid-target",
+      "url": "mmost://owned.invalid/OwnedBot?mode=bot&to=%23owned",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "mattermost-webhook-truncate-titleless",
+      "url": "mmost://owned.invalid/ownedHook?overflow=truncate&image=no",
+      "title": "T",
+      "body": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/hooks/ownedHook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"T\\r\\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\", \"username\": \"Apprise\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "mattermost-invalid-mode",
+      "url": "mmost://owned.invalid/ownedHook?mode=unknown",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "gchat-default-title-and-text",
+      "url": "gchat://ownedSpace/key/token",
+      "title": " 标题 ",
+      "body": "body  ",
+      "attach": null,
+      "replies": [
+        {
+          "status": 204,
+          "body": ""
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://chat.googleapis.com/v1/spaces/ownedSpace/messages?token=token&key=key",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"text\": \"\\u6807\\u9898\\r\\nbody\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "gchat-thread-and-query-precedence",
+      "url": "gchat://space/key/token/pathThread?workspace=newSpace&key=owned%252Bkey&token=owned%252Ftoken&threadKey=owned%2520thread&verify=no&cto=1.5&rto=9&format=html",
+      "title": "title",
+      "body": "<i>b</i>",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "not json"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://chat.googleapis.com/v1/spaces/newSpace/messages?token=owned%2Ftoken&key=owned%2Bkey&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"text\": \"<b>title</b><br />\\r\\n<i>b</i>\", \"thread\": {\"thread_key\": \"owned thread\"}}",
+          "verify": false,
+          "timeout": [
+            1.5,
+            9.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "gchat-native-thread-alias",
+      "url": "https://chat.googleapis.com/v1/spaces/OwnedSpace/messages?key=OwnedKey&token=OwnedToken&threadKey=OwnedThread",
+      "title": "T",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://chat.googleapis.com/v1/spaces/OwnedSpace/messages?token=OwnedToken&key=OwnedKey&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"text\": \"T\\r\\nb\", \"thread\": {\"thread_key\": \"OwnedThread\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "gchat-empty-thread-override",
+      "url": "gchat://space/key/token/pathThread?thread=&threadKey=ignored&format=text",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://chat.googleapis.com/v1/spaces/space/messages?token=token&key=key",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"text\": \"t\\r\\nb\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "gchat-transport-failure",
+      "url": "gchat://space/key/token",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 0,
+          "body": ""
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://chat.googleapis.com/v1/spaces/space/messages?token=token&key=key",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"text\": \"t\\r\\nb\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "gchat-no-key",
+      "url": "gchat://space/key?key=&token=owned",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "gchat-ignore-attachment",
+      "url": "gchat://space/key/token",
+      "title": "t",
+      "body": "b",
+      "attach": "https://owned-image.invalid/ignore.png",
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://chat.googleapis.com/v1/spaces/space/messages?token=token&key=key",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"text\": \"t\\r\\nb\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    }
+  ]
+}

@@ -1,0 +1,557 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "file_sha256": "b046ed321f98cb10b234d3e32e98983e9578c02b9dcc93aa628941cd2987e2c6",
+    "scheduling": "The split case uses the original sequential mode to observe deterministic request order and throttle. Other cases use the installed default."
+  },
+  "cases": [
+    {
+      "name": "wxteams-default-markdown",
+      "url": "wxteams://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+      "title": " # 标题 ",
+      "body": "  **内容**  ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"markdown\": \"# \\u6807\\u9898\\r\\n  **\\u5185\\u5bb9**\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "webex-text-204",
+      "url": "webex://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789?format=TeXt",
+      "title": "Title",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        204
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"Title\\r\\nBody\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "html-merged-title",
+      "url": "webex://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789?format=html",
+      "title": "<Title>",
+      "body": "<i>Body</i>",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"<b><Title></b><br />\\r\\n<i>Body</i>\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "unknown-format-uses-markdown",
+      "url": "webex://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789?format=owned",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"markdown\": \"Body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "query-token-override",
+      "url": "wxteams://ignored!/?token=%2541econdarySecondarySecondarySecondarySecondarySecondarySecondarySecondarySecondarySecondary&verify=no&cto=2.5&rto=7",
+      "title": "Title",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//AecondarySecondarySecondarySecondarySecondarySecondarySecondarySecondarySecondarySecondary",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"markdown\": \"Title\\r\\nBody\"}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            7.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "empty-query-token-keeps-authority",
+      "url": "wxteams://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789/?token=",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"markdown\": \"Body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "native-ciscospark-http",
+      "url": "http://api.ciscospark.com/v2/webhooks/incoming/OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789/?format=text",
+      "title": "Title",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        204
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"Title\\r\\nBody\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "native-webexapis-key-override",
+      "url": "HTTPS://WEBEXAPIS.COM/v42/webhooks/incoming/invalid_key/?token=SecondarySecondarySecondarySecondarySecondarySecondarySecondarySecondarySecondarySecondary&format=html&verify=no",
+      "title": "Title",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//SecondarySecondarySecondarySecondarySecondarySecondarySecondarySecondarySecondarySecondary",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"<b>Title</b><br />\\r\\nBody\"}",
+          "verify": false,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "native-unicode-i-and-token",
+      "url": "https://webexapıs.com/v1/webhooks/İncomıng/İıſKdToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//%C4%B0%C4%B1%C5%BF%E2%84%AAdToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"markdown\": \"Body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "maximum-token-length",
+      "url": "webex://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"markdown\": \"Body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "short-token-rejected",
+      "url": "wxteams://wnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "long-token-rejected",
+      "url": "webex://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789X",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "native-punctuation-rejected",
+      "url": "https://webexapis.com/v1/webhooks/incoming/owned_token",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "status-201-is-failure",
+      "url": "webex://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        201
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"markdown\": \"Body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "status-429-is-failure",
+      "url": "webex://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        429
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"markdown\": \"Body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "body-with-ignored-attachment",
+      "url": "webex://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+      "title": "",
+      "body": "Body",
+      "attach": "https://owned-image.invalid/image.png",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"markdown\": \"Body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "connection-failure",
+      "url": "webex://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+      "title": "Title",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        0
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"markdown\": \"Title\\r\\nBody\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "title-only-skip",
+      "url": "webex://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+      "title": "Title only",
+      "body": "",
+      "attach": null,
+      "statuses": [],
+      "added": true,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "truncation-counts-codepoints-after-title-merge",
+      "url": "webex://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789?overflow=truncate",
+      "title": "Title",
+      "body": "界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"markdown\": \"Title\\r\\n\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\\u754c\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "sequential-split-keeps-source-interval",
+      "url": "webex://OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789?overflow=split&format=text",
+      "title": "",
+      "body": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "attach": null,
+      "statuses": [
+        200,
+        204
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.ciscospark.com/v1/webhooks/incoming//OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789OwnedToken0123456789",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"AAAAAAAAAAA\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        5.5
+      ]
+    }
+  ]
+}

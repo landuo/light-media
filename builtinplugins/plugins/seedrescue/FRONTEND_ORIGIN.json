@@ -1,0 +1,113 @@
+{
+  "installed_version": "1.6.3",
+  "installed_author": "landuo",
+  "source_repository": "landuo/MoviePilot-Plugins",
+  "source_commit": "3795f1045958fc3e81ecefdf181ad49d8d9e6d7d",
+  "source_path": "plugins.v2/seedrescue",
+  "source_frontend": "@originjs/vite-plugin-federation",
+  "source_tree": "3bdeb628843013c2927d86dd703e8d78dbdd2b14",
+  "upstream_license": {
+    "path": "LICENSE",
+    "text": "GNU General Public License v3",
+    "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+  },
+  "entry": "dist/assets/remoteEntry.js",
+  "exposes": [
+    "Config",
+    "Page",
+    "Dashboard",
+    "AppPage"
+  ],
+  "shared": [
+    "vue"
+  ],
+  "files": [
+    {
+      "source": "dist/assets/SeedRescueWorkbench-C0MKqaDa.css",
+      "target": "frontend/SeedRescueWorkbench-C0MKqaDa.css",
+      "bytes": 1483,
+      "sha256": "ac13c4e31d703147f0bb7d4d41b8e8c1b061f97111ef47eaa8d35a2e992538d6",
+      "public_blob_sha1": "d1006a37cb9383c4e1981db4d923d09b6e7c3cc8",
+      "public_bytes_equal": true
+    },
+    {
+      "source": "dist/assets/SeedRescueWorkbench-C7qM2njz.js",
+      "target": "frontend/SeedRescueWorkbench-C7qM2njz.js",
+      "bytes": 63722,
+      "sha256": "e3063b8753255b7886c5629d459b628e736dcf58322e1450884a9f517fb4c6c2",
+      "public_blob_sha1": "0999f95aa66fddd99b8cb33e50f7ae7b7b92d511",
+      "public_bytes_equal": true
+    },
+    {
+      "source": "dist/assets/__federation_expose_AppPage-t5uu8UeP.js",
+      "target": "frontend/__federation_expose_AppPage-t5uu8UeP.js",
+      "bytes": 816,
+      "sha256": "c870ce546f444a6bd06fcefb55f5cb8d41a05446eb1fd89caca9f36d3c4d2b1c",
+      "public_blob_sha1": "c4b1f140ba6b0653b9529b99c515c444160622b6",
+      "public_bytes_equal": true
+    },
+    {
+      "source": "dist/assets/__federation_expose_Config-CjwiiaeH.js",
+      "target": "frontend/__federation_expose_Config-CjwiiaeH.js",
+      "bytes": 14080,
+      "sha256": "ff426a25fa45ac2158ec4a83917cfa778642ba0c53b028a0d41141b39187ca58",
+      "public_blob_sha1": "bd0f373ed4040160940a4882677715845e10d956",
+      "public_bytes_equal": true
+    },
+    {
+      "source": "dist/assets/__federation_expose_Dashboard-l3LPbQrq.js",
+      "target": "frontend/__federation_expose_Dashboard-l3LPbQrq.js",
+      "bytes": 1287,
+      "sha256": "fbc4bd556023bd18048eb0e37f27ad835d0e09b1996ede0cb13c9641aa3c105f",
+      "public_blob_sha1": "04111988b3a1d416cd9b118612d40d8e0d10a33f",
+      "public_bytes_equal": true
+    },
+    {
+      "source": "dist/assets/__federation_expose_Page-CWBKd09E.js",
+      "target": "frontend/__federation_expose_Page-CWBKd09E.js",
+      "bytes": 777,
+      "sha256": "8e6865be438d440a7ebf04f034fb74349d8f77fc92b6da7d213122cf6858a178",
+      "public_blob_sha1": "3dfc587df4bdf26385899c96b200add5d07f10ec",
+      "public_bytes_equal": true
+    },
+    {
+      "source": "dist/assets/__federation_fn_import-JrT3xvdd.js",
+      "target": "frontend/__federation_fn_import-JrT3xvdd.js",
+      "bytes": 13711,
+      "sha256": "4776b5a84c2055e4a6907ebf7377f6abd86f26b7d520d685a13b40d5aa8538aa",
+      "public_blob_sha1": "ed562f5accecec4c756c7974018b42abe80517a6",
+      "public_bytes_equal": true
+    },
+    {
+      "source": "dist/assets/remoteEntry.js",
+      "target": "frontend/remoteEntry.js",
+      "bytes": 4211,
+      "sha256": "a8ca57dce7b005b047047cc6649ada4d7aeba2d196481f912af336c1ac978d75",
+      "public_blob_sha1": "aeff050e002599f4ffe2a35d5309473e8d3b0795",
+      "public_bytes_equal": false
+    }
+  ],
+  "excluded_standalone_and_historical": "dist/index.html and all other dist/assets files are unreachable from the installed remoteEntry.js graph.",
+  "notes": [
+    "All eight packaged assets are byte-identical to the fixed installation capture and the existing light-media graph.",
+    "Public Git differs from the installed remoteEntry.js only in the spaces on one otherwise blank line. Packaging uses the installed bytes.",
+    "The fixed Vite source config declares optional Vuetify shares with generate:false. Only Vue is imported through the emitted share helper, which has no local module fallback. The host supplies globally registered Vuetify components and styles.",
+    "Config uses the original fixed class path plugin/SeedRescue/status. Page and AppPage render the same workbench, use the injected pluginId and load its scoped stylesheet. Dashboard remains a separately exported component.",
+    "The pinned upstream src tree, package.json and vite.config.js are the corresponding authored frontend inputs. The fixed upstream plugin has no lockfile. Packaging therefore preserves the installed emitted bytes."
+  ],
+  "source_clone_limitation": {
+    "source": "MoviePilot@8a83efeacd3e26b82be495e17d50146e31c96a60:app/core/plugin.py:2154-2172,2211-2233",
+    "target": "light-media:internal/plugins/artifacts/clone_frontend.go",
+    "assets": [
+      "SeedRescueWorkbench-C7qM2njz.js",
+      "SeedRescueWorkbench-C0MKqaDa.css"
+    ],
+    "behavior": "The original and target rewrite Pascal-case class references inside JavaScript but only replace lowercase spellings in generated filenames. As a result, clone Page and AppPage can reference a missing workbench chunk and stylesheet. Default-instance assets preserve the original reachable paths."
+  },
+  "prior_browser_evidence": {
+    "reference": "light-media:docs/plugin-seed-rescue-verification.json#ui",
+    "classification": "prior actual browser run on the earlier in-host SeedRescue package and the same asset bytes",
+    "observed": "Config save, Page dialog, AppPage sidebar mount and all four imports",
+    "remaining": "the external worker installation and actual dashboard layout were not covered by the prior browser run"
+  }
+}

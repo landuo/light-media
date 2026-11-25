@@ -1,0 +1,211 @@
+{
+  "source": {
+    "apprise_version": "1.9.9",
+    "apprise_api_sha256": "14f12b4f55089599e22eaa53e3dab23571b2560b3b9494ed796a99cd6b4ffad9",
+    "python": "3.14.4",
+    "requests": "2.34.2"
+  },
+  "cases": [
+    {
+      "name": "form-default",
+      "url": "apprise://gateway.invalid/Token",
+      "title": "  标题 ",
+      "body": " body  \n",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://gateway.invalid/notify/Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "X-Apprise-ID": "{uuid4}",
+            "X-Apprise-Recursion-Count": "1",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "title=%E6%A0%87%E9%A2%98&body=+body&type=info&format=text",
+          "verify": true,
+          "timeout": [
+            4.0,
+            30.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "secure-json-auth-format",
+      "url": "apprises://owner:p%40ss@gateway.invalid:9443/base/path/Token/?method=JSON&cto=3.25&rto=16&verify=no&format=html&+X-Test=A%252BB&+Accept=ignored&+X-Apprise-ID=ignored&+X-Apprise-Recursion-Count=99",
+      "title": " title ",
+      "body": " & <x> \"' \r\nnext",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://gateway.invalid:9443/base/path/notify/Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "X-Test": "A+B",
+            "Accept": "application/json",
+            "X-Apprise-ID": "{uuid4}",
+            "X-Apprise-Recursion-Count": "1",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZXI6cEBzcw=="
+          },
+          "body": "{\"title\": \"title\", \"body\": \" & <x> \\\"' \\r\\nnext\", \"type\": \"info\", \"format\": \"html\"}",
+          "verify": false,
+          "timeout": [
+            3.25,
+            16.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "form-tags-token-override",
+      "url": "apprise://gateway.invalid/base/old/?to=other&tags=z%20a%3Bz%2Cq&+User-Agent=owned",
+      "title": "title",
+      "body": "body",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://gateway.invalid/base/old/notify/other",
+          "headers": {
+            "User-Agent": "owned",
+            "Accept": "application/json",
+            "X-Apprise-ID": "{uuid4}",
+            "X-Apprise-Recursion-Count": "1",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "title=title&body=body&type=info&format=text&tag=a&tag=q&tag=z",
+          "verify": true,
+          "timeout": [
+            4.0,
+            30.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "form-prefix-unquote",
+      "url": "apprise://gateway.invalid/base%2520space/Token?+X-Test=hello",
+      "title": "title",
+      "body": "body",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://gateway.invalid/base%20space/notify/Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "X-Test": "hello",
+            "Accept": "application/json",
+            "X-Apprise-ID": "{uuid4}",
+            "X-Apprise-Recursion-Count": "1",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "title=title&body=body&type=info&format=text",
+          "verify": true,
+          "timeout": [
+            4.0,
+            30.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "json-tags-source-rejection",
+      "url": "apprise://gateway.invalid/Token?method=json&tags=a",
+      "title": "title",
+      "body": "body",
+      "status": 200,
+      "added": true,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "http-201-is-failure",
+      "url": "apprise://gateway.invalid/Token",
+      "title": "title",
+      "body": "body",
+      "status": 201,
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://gateway.invalid/notify/Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "X-Apprise-ID": "{uuid4}",
+            "X-Apprise-Recursion-Count": "1",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "title=title&body=body&type=info&format=text",
+          "verify": true,
+          "timeout": [
+            4.0,
+            30.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "invalid-token",
+      "url": "apprise://gateway.invalid/invalid.token",
+      "title": "title",
+      "body": "body",
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "invalid-method",
+      "url": "apprise://gateway.invalid/Token?method=GET",
+      "title": "title",
+      "body": "body",
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "native-url",
+      "url": "https://gateway.invalid:9443/base/notify/Token?method=json",
+      "title": "title",
+      "body": "body",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://gateway.invalid:9443/base/notify/Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "X-Apprise-ID": "{uuid4}",
+            "X-Apprise-Recursion-Count": "1",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "title=title&body=body&type=info&format=text",
+          "verify": true,
+          "timeout": [
+            4.0,
+            30.0
+          ]
+        }
+      ]
+    }
+  ]
+}

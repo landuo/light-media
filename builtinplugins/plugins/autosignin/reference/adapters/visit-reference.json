@@ -1,0 +1,2999 @@
+{
+  "provenance": {
+    "source_sha256": {
+      "utils/string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+      "utils/site.py": "c278d537bdea0394c4dc083c27726316a815ae26a2e64ddc2f3d42e2921fcf40",
+      "plugins/autosignin/result.py": "7a2a49fd8aafe084c6a9a482ca6883cbee8505f443ae5e9741af25161bb458b2",
+      "helper/cloudflare.py": "1543472ddccb90704d30f74fb420fe87f9e613a66daf2fbf4402f1ebccecd7a1",
+      "plugins/autosignin/sites/__init__.py": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d",
+      "plugins/autosignin/__init__.py": "04044049166caa06659249b167539f96f1b3505d57da3fbf379ba4472a84008d",
+      "plugins/autosignin/sites/ptzone.py": "fc2eb9921e388dfaeaee789e94524865be24f0a58d74c1af1d3c7651d269dc90"
+    },
+    "execution": "actual installed main/result/PTZone evidence AST and lxml/PyQuery; request/browser/statistics/indexer/clock/notification are synthetic recording stubs; no app import/network/config/credential/notification"
+  },
+  "cases": [
+    {
+      "name": "generic-signin-0",
+      "kind": "generic-signin",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，无法打开网站！",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-1",
+      "kind": "generic-signin",
+      "input": {
+        "responses": [
+          {
+            "status": 401,
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，状态码：401！",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-2",
+      "kind": "generic-signin",
+      "input": {
+        "responses": [
+          {
+            "status": 503,
+            "text": "<title>Just a moment...</title>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，站点被Cloudflare防护，请打开站点浏览器仿真",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-3",
+      "kind": "generic-signin",
+      "input": {
+        "responses": [
+          {
+            "status": 200,
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，站点返回空页面",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-4",
+      "kind": "generic-signin",
+      "input": {
+        "responses": [
+          {
+            "text": "plain"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，未识别到登录状态",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-5",
+      "kind": "generic-signin",
+      "input": {
+        "responses": [
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，未识别到登录状态",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-6",
+      "kind": "generic-signin",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "登录成功，签到未确认",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-7",
+      "kind": "generic-signin",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到成功",
+          "success": true,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-8",
+      "kind": "generic-signin",
+      "input": {
+        "responses": [
+          {
+            "text": "<template><a href=\"logout.php\">Logout</a><div>签到成功</div></template>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，未识别到登录状态",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-9",
+      "kind": "generic-signin",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><button>签到</button><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "登录成功，签到未确认",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-10",
+      "kind": "generic-signin",
+      "input": {
+        "responses": [
+          {
+            "text": "<!--签到成功-->"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败：Document is empty！",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-11",
+      "kind": "generic-signin",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic controlled exception"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败：synthetic controlled exception！",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-missing",
+      "kind": "generic-signin",
+      "input": {
+        "site": {}
+      },
+      "expected": {
+        "result": {
+          "site_name": "",
+          "message": "签到失败，缺少站点信息",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-missingcookie",
+      "kind": "generic-signin",
+      "input": {
+        "site": {
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/"
+        }
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，未配置站点地址或Cookie",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-render-0",
+      "kind": "generic-signin",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/library/",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent",
+          "render": true,
+          "timeout": 0,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到成功",
+          "success": true,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "BROWSER",
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": "synthetic-proxy",
+            "timeout": 60
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-render-1",
+      "kind": "generic-signin",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/library/",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent",
+          "render": true,
+          "timeout": 0,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": "<title>Just a moment...</title>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，无法通过Cloudflare！",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "BROWSER",
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": "synthetic-proxy",
+            "timeout": 60
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-render-2",
+      "kind": "generic-signin",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/library/",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent",
+          "render": true,
+          "timeout": 0,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，站点返回空页面",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "BROWSER",
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": "synthetic-proxy",
+            "timeout": 60
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-render-3",
+      "kind": "generic-signin",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/library/",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent",
+          "render": true,
+          "timeout": 0,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "error": "synthetic browser exception"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败：synthetic browser exception！",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "BROWSER",
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": "synthetic-proxy",
+            "timeout": 60
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-url-18",
+      "kind": "generic-signin",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/attendance.php?x=1",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent"
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到成功",
+          "success": true,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/attendance.php?x=1"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-signin-url-19",
+      "kind": "generic-signin",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/subdir/index.php?attendance.php=1",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent"
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到成功",
+          "success": true,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/subdir/index.php?attendance.php=1"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-0",
+      "kind": "generic-login",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，无法打开网站！"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-1",
+      "kind": "generic-login",
+      "input": {
+        "responses": [
+          {
+            "status": 401,
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，状态码：401！"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-2",
+      "kind": "generic-login",
+      "input": {
+        "responses": [
+          {
+            "status": 503,
+            "text": "<title>Just a moment...</title>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，站点被Cloudflare防护，请打开站点浏览器仿真"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-3",
+      "kind": "generic-login",
+      "input": {
+        "responses": [
+          {
+            "status": 200,
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，站点返回空页面"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-4",
+      "kind": "generic-login",
+      "input": {
+        "responses": [
+          {
+            "text": "plain"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，未识别到登录状态"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-5",
+      "kind": "generic-login",
+      "input": {
+        "responses": [
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，Cookie已失效"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-6",
+      "kind": "generic-login",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-7",
+      "kind": "generic-login",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-8",
+      "kind": "generic-login",
+      "input": {
+        "responses": [
+          {
+            "text": "<template><a href=\"logout.php\">Logout</a><div>签到成功</div></template>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，未识别到登录状态"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-9",
+      "kind": "generic-login",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><button>签到</button><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-10",
+      "kind": "generic-login",
+      "input": {
+        "responses": [
+          {
+            "text": "<!--签到成功-->"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败：Document is empty！"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-11",
+      "kind": "generic-login",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic controlled exception"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败：synthetic controlled exception！"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-missing",
+      "kind": "generic-login",
+      "input": {
+        "site": {}
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，缺少站点信息"
+        ],
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-missingcookie",
+      "kind": "generic-login",
+      "input": {
+        "site": {
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/"
+        }
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，未配置站点地址或Cookie"
+        ],
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-render-0",
+      "kind": "generic-login",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/library/",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent",
+          "render": true,
+          "timeout": 0,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "method": "BROWSER",
+            "url": "https://synthetic.invalid/library/",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": "synthetic-proxy",
+            "timeout": 60
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-render-1",
+      "kind": "generic-login",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/library/",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent",
+          "render": true,
+          "timeout": 0,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": "<title>Just a moment...</title>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，无法通过Cloudflare！"
+        ],
+        "calls": [
+          {
+            "method": "BROWSER",
+            "url": "https://synthetic.invalid/library/",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": "synthetic-proxy",
+            "timeout": 60
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-render-2",
+      "kind": "generic-login",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/library/",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent",
+          "render": true,
+          "timeout": 0,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，站点返回空页面"
+        ],
+        "calls": [
+          {
+            "method": "BROWSER",
+            "url": "https://synthetic.invalid/library/",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": "synthetic-proxy",
+            "timeout": 60
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-render-3",
+      "kind": "generic-login",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/library/",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent",
+          "render": true,
+          "timeout": 0,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "error": "synthetic browser exception"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败：synthetic browser exception！"
+        ],
+        "calls": [
+          {
+            "method": "BROWSER",
+            "url": "https://synthetic.invalid/library/",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": "synthetic-proxy",
+            "timeout": 60
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-url-38",
+      "kind": "generic-login",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/attendance.php?x=1",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent"
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "generic-login-url-39",
+      "kind": "generic-login",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/subdir/index.php?attendance.php=1",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent"
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/subdir/"
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-0",
+      "kind": "ptzone",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，无法打开网站"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-1",
+      "kind": "ptzone",
+      "input": {
+        "responses": [
+          {
+            "status": 401,
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，状态码：401"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-2",
+      "kind": "ptzone",
+      "input": {
+        "responses": [
+          {
+            "status": 503,
+            "text": "<title>Just a moment...</title>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，站点被Cloudflare防护"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-3",
+      "kind": "ptzone",
+      "input": {
+        "responses": [
+          {
+            "status": 200,
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，站点返回空页面"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-4",
+      "kind": "ptzone",
+      "input": {
+        "responses": [
+          {
+            "text": "plain"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，未识别到登录状态"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-5",
+      "kind": "ptzone",
+      "input": {
+        "responses": [
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，Cookie已失效"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-6",
+      "kind": "ptzone",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，未确认签到结果"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-7",
+      "kind": "ptzone",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-8",
+      "kind": "ptzone",
+      "input": {
+        "responses": [
+          {
+            "text": "<template><a href=\"logout.php\">Logout</a><div>签到成功</div></template>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，未识别到登录状态"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-9",
+      "kind": "ptzone",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><button>签到</button><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，未确认签到结果"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-10",
+      "kind": "ptzone",
+      "input": {
+        "responses": [
+          {
+            "text": "<!--签到成功-->"
+          }
+        ]
+      },
+      "error": {
+        "class": "ParserError",
+        "message": "Document is empty"
+      },
+      "partial": {
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-11",
+      "kind": "ptzone",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic controlled exception"
+          }
+        ]
+      },
+      "error": {
+        "class": "ValueError",
+        "message": "synthetic controlled exception"
+      },
+      "partial": {
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-missing",
+      "kind": "ptzone",
+      "input": {
+        "site": {}
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，未配置站点地址或Cookie"
+        ],
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-missingcookie",
+      "kind": "ptzone",
+      "input": {
+        "site": {
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/"
+        }
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，未配置站点地址或Cookie"
+        ],
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-render-0",
+      "kind": "ptzone",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/library/",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent",
+          "render": true,
+          "timeout": 0,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": {
+              "https": "synthetic-proxy"
+            },
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-render-1",
+      "kind": "ptzone",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/library/",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent",
+          "render": true,
+          "timeout": 0,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": "<title>Just a moment...</title>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，站点被Cloudflare防护"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": {
+              "https": "synthetic-proxy"
+            },
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-render-2",
+      "kind": "ptzone",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/library/",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent",
+          "render": true,
+          "timeout": 0,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，站点返回空页面"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": {
+              "https": "synthetic-proxy"
+            },
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-render-3",
+      "kind": "ptzone",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/library/",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent",
+          "render": true,
+          "timeout": 0,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "error": "synthetic browser exception"
+          }
+        ]
+      },
+      "error": {
+        "class": "ValueError",
+        "message": "synthetic browser exception"
+      },
+      "partial": {
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/library/attendance.php",
+            "proxies": {
+              "https": "synthetic-proxy"
+            },
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-url-58",
+      "kind": "ptzone",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/attendance.php?x=1",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent"
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "ptzone-url-59",
+      "kind": "ptzone",
+      "input": {
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://synthetic.invalid/subdir/index.php?attendance.php=1",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent"
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://synthetic.invalid/subdir/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/subdir/attendance.php",
+            "data": {}
+          }
+        ],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "signin-fallback-0",
+      "kind": "signin",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown"
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "登录成功，签到未确认",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "synthetic.invalid",
+            "seconds": 3
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "signin-fallback-1",
+      "kind": "signin",
+      "input": {
+        "responses": [
+          null,
+          null
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，无法打开网站！；模拟登录失败，无法打开网站！",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "synthetic.invalid"
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "signin-fallback-2",
+      "kind": "signin",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到成功",
+          "success": true,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "synthetic.invalid",
+            "seconds": 3
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "signin-fallback-3",
+      "kind": "signin",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "登录成功，签到未确认",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "synthetic.invalid",
+            "seconds": 3
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "signin-fallback-4",
+      "kind": "signin",
+      "input": {
+        "responses": [
+          {
+            "text": "<input type=\"password\">"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，未识别到登录状态；模拟登录失败，Cookie已失效",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "synthetic.invalid"
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "wrapper-schema-0",
+      "kind": "signin",
+      "input": {
+        "schema": {
+          "signin": {
+            "state": false,
+            "message": "签到失败，need login"
+          },
+          "login": {
+            "state": true,
+            "message": "模拟登录成功"
+          }
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "登录成功，签到未确认",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [],
+        "stats": [
+          {
+            "success": true,
+            "domain": "synthetic.invalid",
+            "seconds": 3
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "wrapper-schema-1",
+      "kind": "signin",
+      "input": {
+        "schema": {
+          "signin": {
+            "state": true,
+            "message": "登录成功"
+          }
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "登录成功（未执行签到）",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [],
+        "stats": [
+          {
+            "success": true,
+            "domain": "synthetic.invalid",
+            "seconds": 3
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "wrapper-schema-2",
+      "kind": "signin",
+      "input": {
+        "schema": {
+          "signin": {
+            "state": false,
+            "message": "签到失败，bad"
+          },
+          "signin_is_login": true
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，bad",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [],
+        "stats": [
+          {
+            "success": false,
+            "domain": "synthetic.invalid"
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "wrapper-schema-3",
+      "kind": "signin",
+      "input": {
+        "schema": {
+          "signin": {
+            "error": "synthetic sign error"
+          },
+          "login": {
+            "error": "synthetic login error"
+          }
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败：synthetic sign error；模拟登录失败：synthetic login error",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [],
+        "stats": [
+          {
+            "success": false,
+            "domain": "synthetic.invalid"
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "wrapper-schema-4",
+      "kind": "signin",
+      "input": {
+        "schema": {
+          "signin": {
+            "state": 1,
+            "message": "签到成功"
+          },
+          "login": {
+            "state": 1,
+            "message": "模拟登录成功"
+          }
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败：签到成功；模拟登录失败：模拟登录成功",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [],
+        "stats": [
+          {
+            "success": false,
+            "domain": "synthetic.invalid"
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "wrapper-ptzone-fallback",
+      "kind": "signin",
+      "input": {
+        "ptzone": true,
+        "site": {
+          "id": 1,
+          "name": "Synthetic",
+          "url": "https://ptzone.xyz/",
+          "cookie": "synthetic-cookie=not-a-credential",
+          "ua": "synthetic-agent"
+        },
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "登录成功，签到未确认",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "referer": "https://ptzone.xyz/attendance.php",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://ptzone.xyz/attendance.php",
+            "data": {}
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://ptzone.xyz/"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "ptzone.xyz",
+            "seconds": 3
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "wrapper-stat-elapsed-mod-day",
+      "kind": "signin",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          }
+        ],
+        "clock": [
+          "2026-01-02T12:00:00",
+          "2026-01-03T12:00:07.900000"
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到成功",
+          "success": true,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "synthetic.invalid",
+            "seconds": 7
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "wrapper-stat-negative-elapsed",
+      "kind": "login",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ],
+        "clock": [
+          "2026-01-02T12:00:03.100000",
+          "2026-01-02T12:00:00"
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录成功",
+          "success": true,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "synthetic.invalid",
+            "seconds": 86396
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "api-key-reject",
+      "kind": "api",
+      "input": {
+        "apikey": "wrong"
+      },
+      "expected": {
+        "result": {
+          "success": false,
+          "message": "API密钥错误"
+        },
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "api-site-missing",
+      "kind": "api",
+      "input": {},
+      "expected": {
+        "result": {
+          "success": false,
+          "message": "站点【https://synthetic.invalid/】不存在"
+        },
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "api-signed",
+      "kind": "api",
+      "input": {
+        "indexers": [
+          {
+            "id": 1,
+            "name": "Synthetic",
+            "url": "https://synthetic.invalid/library/",
+            "cookie": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "domain": "synthetic.invalid"
+          }
+        ],
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><div>签到成功</div>"
+          },
+          {
+            "text": "unknown"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "success": true,
+          "message": "站点【Synthetic】签到成功",
+          "data": {
+            "signin_success": true,
+            "login_success": true
+          }
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "synthetic.invalid",
+            "seconds": 3
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "api-login",
+      "kind": "api",
+      "input": {
+        "indexers": [
+          {
+            "id": 1,
+            "name": "Synthetic",
+            "url": "https://synthetic.invalid/library/",
+            "cookie": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "domain": "synthetic.invalid"
+          }
+        ],
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          },
+          {
+            "text": "unknown"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "success": false,
+          "message": "站点【Synthetic】登录成功，签到未确认",
+          "data": {
+            "signin_success": false,
+            "login_success": true
+          }
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "synthetic.invalid",
+            "seconds": 3
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "api-failed",
+      "kind": "api",
+      "input": {
+        "indexers": [
+          {
+            "id": 1,
+            "name": "Synthetic",
+            "url": "https://synthetic.invalid/library/",
+            "cookie": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "domain": "synthetic.invalid"
+          }
+        ],
+        "responses": [
+          {
+            "text": "unknown"
+          },
+          {
+            "text": "unknown"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "success": false,
+          "message": "站点【Synthetic】签到失败，未识别到登录状态；模拟登录失败，未识别到登录状态",
+          "data": {
+            "signin_success": false,
+            "login_success": false
+          }
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/attendance.php"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://synthetic.invalid/library/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "synthetic.invalid"
+          }
+        ],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "event-0",
+      "kind": "event",
+      "input": {},
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "event-1",
+      "kind": "event",
+      "input": {
+        "sign_sites": [
+          1
+        ],
+        "login_sites": [
+          2
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": [
+          {
+            "today": "2026-01-02T12:00:00",
+            "type_str": "签到",
+            "do_sites": [
+              1
+            ],
+            "event": null
+          },
+          {
+            "today": "2026-01-02T12:00:00",
+            "type_str": "登录",
+            "do_sites": [
+              2
+            ],
+            "event": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "event-2",
+      "kind": "event",
+      "input": {
+        "event": {
+          "action": "other"
+        },
+        "sign_sites": [
+          1
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "event-3",
+      "kind": "event",
+      "input": {
+        "event": {},
+        "sign_sites": [
+          1
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "event-4",
+      "kind": "event",
+      "input": {
+        "event": {
+          "action": "site_signin",
+          "channel": "synthetic",
+          "user": "test"
+        },
+        "sign_sites": [
+          1
+        ],
+        "login_sites": [
+          2
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "messages": [
+          {
+            "channel": "synthetic",
+            "title": "开始站点签到 ...",
+            "userid": "test"
+          }
+        ],
+        "do": [
+          {
+            "today": "2026-01-02T12:00:00",
+            "type_str": "签到",
+            "do_sites": [
+              1
+            ],
+            "event": {
+              "action": "site_signin",
+              "channel": "synthetic",
+              "user": "test"
+            }
+          },
+          {
+            "today": "2026-01-02T12:00:00",
+            "type_str": "登录",
+            "do_sites": [
+              2
+            ],
+            "event": {
+              "action": "site_signin",
+              "channel": "synthetic",
+              "user": "test"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "event-5",
+      "kind": "event",
+      "input": {
+        "start": 9,
+        "end": 18,
+        "sign_sites": [
+          1
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": [
+          {
+            "today": "2026-01-02T12:00:00",
+            "type_str": "签到",
+            "do_sites": [
+              1
+            ],
+            "event": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "event-6",
+      "kind": "event",
+      "input": {
+        "start": 13,
+        "end": 18,
+        "sign_sites": [
+          1
+        ],
+        "event": {
+          "action": "site_signin"
+        }
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    },
+    {
+      "name": "event-7",
+      "kind": "event",
+      "input": {
+        "start": 0,
+        "end": 1,
+        "sign_sites": [
+          1
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": [
+          {
+            "today": "2026-01-02T12:00:00",
+            "type_str": "签到",
+            "do_sites": [
+              1
+            ],
+            "event": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "event-8",
+      "kind": "event",
+      "input": {
+        "start": 23,
+        "end": 0,
+        "sign_sites": [
+          1
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": [
+          {
+            "today": "2026-01-02T12:00:00",
+            "type_str": "签到",
+            "do_sites": [
+              1
+            ],
+            "event": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "event-9",
+      "kind": "event",
+      "input": {
+        "start": "9",
+        "end": 18,
+        "sign_sites": [
+          1
+        ]
+      },
+      "error": {
+        "class": "TypeError",
+        "message": "'<' not supported between instances of 'int' and 'str'"
+      },
+      "partial": {
+        "calls": [],
+        "stats": [],
+        "messages": [],
+        "do": []
+      }
+    }
+  ]
+}

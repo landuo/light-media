@@ -1,0 +1,151 @@
+[
+  [
+    {
+      "component": "VForm",
+      "content": [
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 2
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "enable",
+                    "label": "启用插件"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 2
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "flitter",
+                    "label": "过滤空白行"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 3
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "onlyonce",
+                    "label": "立即运行一次"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VTextField",
+                  "props": {
+                    "model": "cron",
+                    "label": "定时任务周期",
+                    "placeholder": "30 4 * * *"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 12
+              },
+              "content": [
+                {
+                  "component": "VTextarea",
+                  "props": {
+                    "model": "file_urls",
+                    "rows": 6,
+                    "label": "远程文件地址（一行一个）",
+                    "placeholder": "如果是Github文件地址请注意填写包含raw的! 这个才是文件地址，其他的是这个文件的页面地址"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12
+              },
+              "content": [
+                {
+                  "component": "VAlert",
+                  "props": {
+                    "type": "success",
+                    "variant": "tonal",
+                    "text": "可自己创建分享地址（支持Github及Etherpad），Github需要raw的源文件地址，文件格式与系统中配置格式一致即可。"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12
+              },
+              "content": [
+                {
+                  "component": "VAlert",
+                  "props": {
+                    "type": "info",
+                    "variant": "tonal",
+                    "text": "以下共享识别词由第三方审核维护，推荐使用：https://raw.githubusercontent.com/Putarku/MoviePilot-Help/main/Words/TV.txt、https://raw.githubusercontent.com/Putarku/MoviePilot-Help/main/Words/anime.txt"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  {
+    "enable": false,
+    "onlyonce": false,
+    "flitter": true,
+    "cron": "30 4 * * *",
+    "file_urls": "https://raw.githubusercontent.com/Putarku/MoviePilot-Help/main/Words/TV.txt\nhttps://raw.githubusercontent.com/Putarku/MoviePilot-Help/main/Words/anime.txt"
+  }
+]

@@ -1,0 +1,53 @@
+{
+  "host_commit": "30bf6ae87f431cdc83a34cfd75a62d1cc666897b",
+  "source_plugin_version": "1.20.1",
+  "files": {
+    "LICENSE-GPL-3.0.txt": {
+      "host_path": "internal/plugins/mergemessagenotify/smtp/LICENSE-GPL-3.0.txt",
+      "host_sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    "NOTICE": {
+      "host_path": "internal/plugins/mergemessagenotify/smtp/NOTICE",
+      "host_sha256": "a5a9f937b67521fdb3a2c3e23e494c894001f6eafbd87ead975ee8e3521d7bb6"
+    },
+    "address.go": {
+      "host_path": "internal/plugins/mergemessagenotify/smtp/address.go",
+      "host_sha256": "6c39af0855c04842b458830a864248adc1f8e632afa95974744a983d6d709be3"
+    },
+    "binding.go": {
+      "host_path": "internal/plugins/mergemessagenotify/smtp/binding.go",
+      "host_sha256": "60319e45c30a7c9045658594c4ba186060ae180585fea6d174c0c32c1cb9b756"
+    },
+    "client.go": {
+      "host_path": "internal/plugins/mergemessagenotify/smtp/client.go",
+      "host_sha256": "e19f04e14b6544c54605ed7ec02f07212aacada6bc58f8493eb97ece117c3e9a"
+    },
+    "mime.go": {
+      "host_path": "internal/plugins/mergemessagenotify/smtp/mime.go",
+      "host_sha256": "2f7420c182b5f63ba403e99f526bf06262199ae096f5b1e0c0f1a2f4875716cd"
+    },
+    "reference/PYTHON-LICENSE.txt": {
+      "host_path": "testdata/plugins/merge-message-notify-1.20.1/input/_merge_message_smtp_port/reference/PYTHON-LICENSE.txt",
+      "host_sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+    }
+  },
+  "selection": "Go runtime and required embedded data, license and provenance files. Historical tests and their data remain in the host reference.",
+  "adaptations": [
+    "Relocated parent MergeMessageNotify import to the plugin repository.",
+    "Preserved legacyanime.Strip whitespace semantics in a local CPython whitespace helper, avoiding the host release-parser dependency."
+  ],
+  "reference_inventory": {
+    "host_path": "testdata/plugins/merge-message-notify-1.20.1/input/_merge_message_smtp_port/source-checksums.json",
+    "sha256": "ccf25925927b767ceda84e79a20687006700b7e901fd25469fdbb57761977f86"
+  },
+  "whitespace_source": [
+    {
+      "host_path": "internal/releasemeta/legacyanime/casing.go",
+      "sha256": "1ef17d4d45419a2322cfc4fca049526db32a67082992840f1846117967c5515a"
+    },
+    {
+      "host_path": "internal/releasemeta/legacyanime/tokenizer.go",
+      "sha256": "17d5cea9ae1e3867a78f021a9f60c05fb91dc495aeebf152ef1c6747f9ab0eb7"
+    }
+  ]
+}

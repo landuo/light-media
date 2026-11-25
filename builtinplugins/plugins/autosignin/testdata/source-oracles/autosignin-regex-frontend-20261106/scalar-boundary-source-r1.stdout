@@ -1,0 +1,5543 @@
+{
+  "classification": "source-only actual333/Python3.12.13 full _parser AST/state/width plus real re.compile/search captures and exact exceptions/warnings; no target-generated expected/app/network",
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "MAXREPEAT": 4294967295,
+  "MAXGROUPS": 1073741823,
+  "MAXWIDTH": 18446744073709551616,
+  "MAXCODE": 4294967295,
+  "runtime_source_sha256": {
+    "_parser.py": "a51a85b37cf3f44ba7ff25754da5f31306e4ccfa6eb3c017f9d37bdf4e770840",
+    "_compiler.py": "c75620761098a70ed75b9accef63ef2881d8abb6d4e5cbfd10074bd165eefe4d",
+    "_constants.py": "fa4fdb200f238f9e7817b63892b0d69833d8165134801e775e10cc113348a375"
+  },
+  "text_codepoints": [
+    [],
+    [
+      0
+    ],
+    [
+      55295
+    ],
+    [
+      55296
+    ],
+    [
+      57343
+    ],
+    [
+      57344
+    ],
+    [
+      65535
+    ],
+    [
+      65536
+    ],
+    [
+      128512
+    ],
+    [
+      1114111
+    ],
+    [
+      65533
+    ],
+    [
+      55296,
+      55296
+    ],
+    [
+      55357,
+      56832
+    ],
+    [
+      97,
+      98,
+      98
+    ],
+    [
+      97,
+      98,
+      97
+    ],
+    [
+      97,
+      98,
+      99,
+      98
+    ],
+    [
+      98,
+      97,
+      99,
+      97
+    ],
+    [
+      97
+    ]
+  ],
+  "cases": [
+    {
+      "pattern": "\\x00",
+      "pattern_codepoints": [
+        92,
+        120,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\x00\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            0
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\x00",
+      "pattern_codepoints": [
+        92,
+        120,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\x00\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            0
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\uD7FF",
+      "pattern_codepoints": [
+        92,
+        117,
+        68,
+        55,
+        70,
+        70
+      ],
+      "pattern_json": "\"\\\\uD7FF\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            55295
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\uD7FF",
+      "pattern_codepoints": [
+        92,
+        117,
+        68,
+        55,
+        70,
+        70
+      ],
+      "pattern_json": "\"\\\\uD7FF\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            55295
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\ud800",
+      "pattern_codepoints": [
+        92,
+        117,
+        100,
+        56,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\ud800\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            55296
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\ud800",
+      "pattern_codepoints": [
+        92,
+        117,
+        100,
+        56,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\ud800\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            55296
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "[\\ud800-\\udfff]",
+      "pattern_codepoints": [
+        91,
+        92,
+        117,
+        100,
+        56,
+        48,
+        48,
+        45,
+        92,
+        117,
+        100,
+        102,
+        102,
+        102,
+        93
+      ],
+      "pattern_json": "\"[\\\\ud800-\\\\udfff]\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "IN",
+            [
+              [
+                "RANGE",
+                [
+                  55296,
+                  57343
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "[\\ud800-\\udfff]",
+      "pattern_codepoints": [
+        91,
+        92,
+        117,
+        100,
+        56,
+        48,
+        48,
+        45,
+        92,
+        117,
+        100,
+        102,
+        102,
+        102,
+        93
+      ],
+      "pattern_json": "\"[\\\\ud800-\\\\udfff]\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "IN",
+            [
+              [
+                "RANGE",
+                [
+                  55296,
+                  57343
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\uDFFF",
+      "pattern_codepoints": [
+        92,
+        117,
+        68,
+        70,
+        70,
+        70
+      ],
+      "pattern_json": "\"\\\\uDFFF\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            57343
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\uDFFF",
+      "pattern_codepoints": [
+        92,
+        117,
+        68,
+        70,
+        70,
+        70
+      ],
+      "pattern_json": "\"\\\\uDFFF\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            57343
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\uE000",
+      "pattern_codepoints": [
+        92,
+        117,
+        69,
+        48,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\uE000\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            57344
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\uE000",
+      "pattern_codepoints": [
+        92,
+        117,
+        69,
+        48,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\uE000\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            57344
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\uFFFF",
+      "pattern_codepoints": [
+        92,
+        117,
+        70,
+        70,
+        70,
+        70
+      ],
+      "pattern_json": "\"\\\\uFFFF\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            65535
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\uFFFF",
+      "pattern_codepoints": [
+        92,
+        117,
+        70,
+        70,
+        70,
+        70
+      ],
+      "pattern_json": "\"\\\\uFFFF\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            65535
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\U00010000",
+      "pattern_codepoints": [
+        92,
+        85,
+        48,
+        48,
+        48,
+        49,
+        48,
+        48,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\U00010000\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            65536
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\U00010000",
+      "pattern_codepoints": [
+        92,
+        85,
+        48,
+        48,
+        48,
+        49,
+        48,
+        48,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\U00010000\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            65536
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\U0001F600",
+      "pattern_codepoints": [
+        92,
+        85,
+        48,
+        48,
+        48,
+        49,
+        70,
+        54,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\U0001F600\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            128512
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\U0001F600",
+      "pattern_codepoints": [
+        92,
+        85,
+        48,
+        48,
+        48,
+        49,
+        70,
+        54,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\U0001F600\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            128512
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\U0010FFFF",
+      "pattern_codepoints": [
+        92,
+        85,
+        48,
+        48,
+        49,
+        48,
+        70,
+        70,
+        70,
+        70
+      ],
+      "pattern_json": "\"\\\\U0010FFFF\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            1114111
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\U0010FFFF",
+      "pattern_codepoints": [
+        92,
+        85,
+        48,
+        48,
+        49,
+        48,
+        70,
+        70,
+        70,
+        70
+      ],
+      "pattern_json": "\"\\\\U0010FFFF\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            1114111
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\U00110000",
+      "pattern_codepoints": [
+        92,
+        85,
+        48,
+        48,
+        49,
+        49,
+        48,
+        48,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\U00110000\"",
+      "flags": 0,
+      "parser": null,
+      "parse_error": {
+        "class": "error",
+        "message": "bad escape \\U00110000 at position 0",
+        "msg": "bad escape \\U00110000",
+        "pos": 0,
+        "lineno": 1,
+        "colno": 1
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "bad escape \\U00110000 at position 0",
+        "msg": "bad escape \\U00110000",
+        "pos": 0,
+        "lineno": 1,
+        "colno": 1
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\U00110000",
+      "pattern_codepoints": [
+        92,
+        85,
+        48,
+        48,
+        49,
+        49,
+        48,
+        48,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\U00110000\"",
+      "flags": 2,
+      "parser": null,
+      "parse_error": {
+        "class": "error",
+        "message": "bad escape \\U00110000 at position 0",
+        "msg": "bad escape \\U00110000",
+        "pos": 0,
+        "lineno": 1,
+        "colno": 1
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "bad escape \\U00110000 at position 0",
+        "msg": "bad escape \\U00110000",
+        "pos": 0,
+        "lineno": 1,
+        "colno": 1
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\Uffffffff",
+      "pattern_codepoints": [
+        92,
+        85,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102
+      ],
+      "pattern_json": "\"\\\\Uffffffff\"",
+      "flags": 0,
+      "parser": null,
+      "parse_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\Uffffffff",
+      "pattern_codepoints": [
+        92,
+        85,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102,
+        102
+      ],
+      "pattern_json": "\"\\\\Uffffffff\"",
+      "flags": 2,
+      "parser": null,
+      "parse_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "OverflowError",
+        "message": "Python int too large to convert to C int",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?P<x>\\ud800)(?P=x)",
+      "pattern_codepoints": [
+        40,
+        63,
+        80,
+        60,
+        120,
+        62,
+        92,
+        117,
+        100,
+        56,
+        48,
+        48,
+        41,
+        40,
+        63,
+        80,
+        61,
+        120,
+        41
+      ],
+      "pattern_json": "\"(?P<x>\\\\ud800)(?P=x)\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "SUBPATTERN",
+            [
+              1,
+              0,
+              0,
+              [
+                [
+                  "LITERAL",
+                  55296
+                ]
+              ]
+            ]
+          ],
+          [
+            "GROUPREF",
+            1
+          ]
+        ],
+        "flags": 32,
+        "groups": 2,
+        "groupdict": {
+          "x": 1
+        },
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 1,
+      "groupindex": {
+        "x": 1
+      },
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              55296
+            ]
+          ],
+          "groupdict": {
+            "x": [
+              55296
+            ]
+          }
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?P<x>\\ud800)(?P=x)",
+      "pattern_codepoints": [
+        40,
+        63,
+        80,
+        60,
+        120,
+        62,
+        92,
+        117,
+        100,
+        56,
+        48,
+        48,
+        41,
+        40,
+        63,
+        80,
+        61,
+        120,
+        41
+      ],
+      "pattern_json": "\"(?P<x>\\\\ud800)(?P=x)\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "SUBPATTERN",
+            [
+              1,
+              0,
+              0,
+              [
+                [
+                  "LITERAL",
+                  55296
+                ]
+              ]
+            ]
+          ],
+          [
+            "GROUPREF",
+            1
+          ]
+        ],
+        "flags": 34,
+        "groups": 2,
+        "groupdict": {
+          "x": 1
+        },
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 1,
+      "groupindex": {
+        "x": 1
+      },
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [
+            [
+              55296
+            ]
+          ],
+          "groupdict": {
+            "x": [
+              55296
+            ]
+          }
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\ud83d\\ude00",
+      "pattern_codepoints": [
+        92,
+        117,
+        100,
+        56,
+        51,
+        100,
+        92,
+        117,
+        100,
+        101,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\ud83d\\\\ude00\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            55357
+          ],
+          [
+            "LITERAL",
+            56832
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\\ud83d\\ude00",
+      "pattern_codepoints": [
+        92,
+        117,
+        100,
+        56,
+        51,
+        100,
+        92,
+        117,
+        100,
+        101,
+        48,
+        48
+      ],
+      "pattern_json": "\"\\\\ud83d\\\\ude00\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            55357
+          ],
+          [
+            "LITERAL",
+            56832
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            2
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\ud800",
+      "pattern_codepoints": [
+        55296
+      ],
+      "pattern_json": "\"\\ud800\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            55296
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\ud800",
+      "pattern_codepoints": [
+        55296
+      ],
+      "pattern_json": "\"\\ud800\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            55296
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "[\ud800-\\d]",
+      "pattern_codepoints": [
+        91,
+        55296,
+        45,
+        92,
+        100,
+        93
+      ],
+      "pattern_json": "\"[\\ud800-\\\\d]\"",
+      "flags": 0,
+      "parser": null,
+      "parse_error": {
+        "class": "error",
+        "message": "bad character range \ud800-\\d at position 1",
+        "msg": "bad character range \ud800-\\d",
+        "pos": 1,
+        "lineno": 1,
+        "colno": 2
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "bad character range \ud800-\\d at position 1",
+        "msg": "bad character range \ud800-\\d",
+        "pos": 1,
+        "lineno": 1,
+        "colno": 2
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "[\ud800-\\d]",
+      "pattern_codepoints": [
+        91,
+        55296,
+        45,
+        92,
+        100,
+        93
+      ],
+      "pattern_json": "\"[\\ud800-\\\\d]\"",
+      "flags": 2,
+      "parser": null,
+      "parse_error": {
+        "class": "error",
+        "message": "bad character range \ud800-\\d at position 1",
+        "msg": "bad character range \ud800-\\d",
+        "pos": 1,
+        "lineno": 1,
+        "colno": 2
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "bad character range \ud800-\\d at position 1",
+        "msg": "bad character range \ud800-\\d",
+        "pos": 1,
+        "lineno": 1,
+        "colno": 2
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\ud83d\ude00",
+      "pattern_codepoints": [
+        128512
+      ],
+      "pattern_json": "\"\\ud83d\\ude00\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            128512
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\ud83d\ude00",
+      "pattern_codepoints": [
+        128512
+      ],
+      "pattern_json": "\"\\ud83d\\ude00\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            128512
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\udbff\udfff",
+      "pattern_codepoints": [
+        1114111
+      ],
+      "pattern_json": "\"\\udbff\\udfff\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            1114111
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "\udbff\udfff",
+      "pattern_codepoints": [
+        1114111
+      ],
+      "pattern_json": "\"\\udbff\\udfff\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "LITERAL",
+            1114111
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(a){4294967294}",
+      "pattern_codepoints": [
+        40,
+        97,
+        41,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125
+      ],
+      "pattern_json": "\"(a){4294967294}\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "MAX_REPEAT",
+            [
+              4294967294,
+              4294967294,
+              [
+                [
+                  "SUBPATTERN",
+                  [
+                    1,
+                    0,
+                    0,
+                    [
+                      [
+                        "LITERAL",
+                        97
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 32,
+        "groups": 2,
+        "groupdict": {},
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          4294967294,
+          4294967294
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 1,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(a){4294967294}",
+      "pattern_codepoints": [
+        40,
+        97,
+        41,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125
+      ],
+      "pattern_json": "\"(a){4294967294}\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "MAX_REPEAT",
+            [
+              4294967294,
+              4294967294,
+              [
+                [
+                  "SUBPATTERN",
+                  [
+                    1,
+                    0,
+                    0,
+                    [
+                      [
+                        "LITERAL",
+                        97
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 2,
+        "groupdict": {},
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          4294967294,
+          4294967294
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 1,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(a){4294967295}",
+      "pattern_codepoints": [
+        40,
+        97,
+        41,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        53,
+        125
+      ],
+      "pattern_json": "\"(a){4294967295}\"",
+      "flags": 0,
+      "parser": null,
+      "parse_error": {
+        "class": "OverflowError",
+        "message": "the repetition number is too large",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "OverflowError",
+        "message": "the repetition number is too large",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(a){4294967295}",
+      "pattern_codepoints": [
+        40,
+        97,
+        41,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        53,
+        125
+      ],
+      "pattern_json": "\"(a){4294967295}\"",
+      "flags": 2,
+      "parser": null,
+      "parse_error": {
+        "class": "OverflowError",
+        "message": "the repetition number is too large",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "OverflowError",
+        "message": "the repetition number is too large",
+        "msg": null,
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "a{0,4294967294}",
+      "pattern_codepoints": [
+        97,
+        123,
+        48,
+        44,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125
+      ],
+      "pattern_json": "\"a{0,4294967294}\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "MAX_REPEAT",
+            [
+              0,
+              4294967294,
+              [
+                [
+                  "LITERAL",
+                  97
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          0,
+          4294967294
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        }
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "a{0,4294967294}",
+      "pattern_codepoints": [
+        97,
+        123,
+        48,
+        44,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125
+      ],
+      "pattern_json": "\"a{0,4294967294}\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "MAX_REPEAT",
+            [
+              0,
+              4294967294,
+              [
+                [
+                  "LITERAL",
+                  97
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          0,
+          4294967294
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [],
+          "groupdict": {}
+        }
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "a{0,4294967294}?",
+      "pattern_codepoints": [
+        97,
+        123,
+        48,
+        44,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        63
+      ],
+      "pattern_json": "\"a{0,4294967294}?\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "MIN_REPEAT",
+            [
+              0,
+              4294967294,
+              [
+                [
+                  "LITERAL",
+                  97
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          0,
+          4294967294
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        }
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "a{0,4294967294}?",
+      "pattern_codepoints": [
+        97,
+        123,
+        48,
+        44,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        63
+      ],
+      "pattern_json": "\"a{0,4294967294}?\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "MIN_REPEAT",
+            [
+              0,
+              4294967294,
+              [
+                [
+                  "LITERAL",
+                  97
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          0,
+          4294967294
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            0
+          ],
+          "groups": [],
+          "groupdict": {}
+        }
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?:a{4294967294}){4294967294}",
+      "pattern_codepoints": [
+        40,
+        63,
+        58,
+        97,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        41,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125
+      ],
+      "pattern_json": "\"(?:a{4294967294}){4294967294}\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "MAX_REPEAT",
+            [
+              4294967294,
+              4294967294,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    4294967294,
+                    4294967294,
+                    [
+                      [
+                        "LITERAL",
+                        97
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          18446744056529682436,
+          18446744056529682436
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?:a{4294967294}){4294967294}",
+      "pattern_codepoints": [
+        40,
+        63,
+        58,
+        97,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        41,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125
+      ],
+      "pattern_json": "\"(?:a{4294967294}){4294967294}\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "MAX_REPEAT",
+            [
+              4294967294,
+              4294967294,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    4294967294,
+                    4294967294,
+                    [
+                      [
+                        "LITERAL",
+                        97
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          18446744056529682436,
+          18446744056529682436
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?:(?:a{4294967294}){4294967294}){4294967294}",
+      "pattern_codepoints": [
+        40,
+        63,
+        58,
+        40,
+        63,
+        58,
+        97,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        41,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        41,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125
+      ],
+      "pattern_json": "\"(?:(?:a{4294967294}){4294967294}){4294967294}\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "MAX_REPEAT",
+            [
+              4294967294,
+              4294967294,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    4294967294,
+                    4294967294,
+                    [
+                      [
+                        "MAX_REPEAT",
+                        [
+                          4294967294,
+                          4294967294,
+                          [
+                            [
+                              "LITERAL",
+                              97
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          18446744073709551616,
+          18446744073709551616
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?:(?:a{4294967294}){4294967294}){4294967294}",
+      "pattern_codepoints": [
+        40,
+        63,
+        58,
+        40,
+        63,
+        58,
+        97,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        41,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        41,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125
+      ],
+      "pattern_json": "\"(?:(?:a{4294967294}){4294967294}){4294967294}\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "MAX_REPEAT",
+            [
+              4294967294,
+              4294967294,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    4294967294,
+                    4294967294,
+                    [
+                      [
+                        "MAX_REPEAT",
+                        [
+                          4294967294,
+                          4294967294,
+                          [
+                            [
+                              "LITERAL",
+                              97
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          18446744073709551616,
+          18446744073709551616
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 0,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<=a{4294967294}aa)b",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        61,
+        97,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        97,
+        97,
+        41,
+        98
+      ],
+      "pattern_json": "\"(?<=a{4294967294}aa)b\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "ASSERT",
+            [
+              -1,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    4294967294,
+                    4294967294,
+                    [
+                      [
+                        "LITERAL",
+                        97
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  "LITERAL",
+                  97
+                ],
+                [
+                  "LITERAL",
+                  97
+                ]
+              ]
+            ]
+          ],
+          [
+            "LITERAL",
+            98
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "looks too much behind",
+        "msg": "looks too much behind",
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<=a{4294967294}aa)b",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        61,
+        97,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        97,
+        97,
+        41,
+        98
+      ],
+      "pattern_json": "\"(?<=a{4294967294}aa)b\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "ASSERT",
+            [
+              -1,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    4294967294,
+                    4294967294,
+                    [
+                      [
+                        "LITERAL",
+                        97
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  "LITERAL",
+                  97
+                ],
+                [
+                  "LITERAL",
+                  97
+                ]
+              ]
+            ]
+          ],
+          [
+            "LITERAL",
+            98
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "looks too much behind",
+        "msg": "looks too much behind",
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<=(?:a{4294967294}){4294967294})b",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        61,
+        40,
+        63,
+        58,
+        97,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        41,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        41,
+        98
+      ],
+      "pattern_json": "\"(?<=(?:a{4294967294}){4294967294})b\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "ASSERT",
+            [
+              -1,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    4294967294,
+                    4294967294,
+                    [
+                      [
+                        "MAX_REPEAT",
+                        [
+                          4294967294,
+                          4294967294,
+                          [
+                            [
+                              "LITERAL",
+                              97
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "LITERAL",
+            98
+          ]
+        ],
+        "flags": 32,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "looks too much behind",
+        "msg": "looks too much behind",
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<=(?:a{4294967294}){4294967294})b",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        61,
+        40,
+        63,
+        58,
+        97,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        41,
+        123,
+        52,
+        50,
+        57,
+        52,
+        57,
+        54,
+        55,
+        50,
+        57,
+        52,
+        125,
+        41,
+        98
+      ],
+      "pattern_json": "\"(?<=(?:a{4294967294}){4294967294})b\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "ASSERT",
+            [
+              -1,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    4294967294,
+                    4294967294,
+                    [
+                      [
+                        "MAX_REPEAT",
+                        [
+                          4294967294,
+                          4294967294,
+                          [
+                            [
+                              "LITERAL",
+                              97
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "LITERAL",
+            98
+          ]
+        ],
+        "flags": 34,
+        "groups": 1,
+        "groupdict": {},
+        "groupwidths": [
+          null
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "looks too much behind",
+        "msg": "looks too much behind",
+        "pos": null,
+        "lineno": null,
+        "colno": null
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<=([ab]){2})\\1",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        61,
+        40,
+        91,
+        97,
+        98,
+        93,
+        41,
+        123,
+        50,
+        125,
+        41,
+        92,
+        49
+      ],
+      "pattern_json": "\"(?<=([ab]){2})\\\\1\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "ASSERT",
+            [
+              -1,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    2,
+                    2,
+                    [
+                      [
+                        "SUBPATTERN",
+                        [
+                          1,
+                          0,
+                          0,
+                          [
+                            [
+                              "IN",
+                              [
+                                [
+                                  "LITERAL",
+                                  97
+                                ],
+                                [
+                                  "LITERAL",
+                                  98
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "GROUPREF",
+            1
+          ]
+        ],
+        "flags": 32,
+        "groups": 2,
+        "groupdict": {},
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 1,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            2,
+            3
+          ],
+          "groups": [
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<=([ab]){2})\\1",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        61,
+        40,
+        91,
+        97,
+        98,
+        93,
+        41,
+        123,
+        50,
+        125,
+        41,
+        92,
+        49
+      ],
+      "pattern_json": "\"(?<=([ab]){2})\\\\1\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "ASSERT",
+            [
+              -1,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    2,
+                    2,
+                    [
+                      [
+                        "SUBPATTERN",
+                        [
+                          1,
+                          0,
+                          0,
+                          [
+                            [
+                              "IN",
+                              [
+                                [
+                                  "LITERAL",
+                                  97
+                                ],
+                                [
+                                  "LITERAL",
+                                  98
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "GROUPREF",
+            1
+          ]
+        ],
+        "flags": 34,
+        "groups": 2,
+        "groupdict": {},
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 1,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            2,
+            3
+          ],
+          "groups": [
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<=([ab]){2})c\\1",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        61,
+        40,
+        91,
+        97,
+        98,
+        93,
+        41,
+        123,
+        50,
+        125,
+        41,
+        99,
+        92,
+        49
+      ],
+      "pattern_json": "\"(?<=([ab]){2})c\\\\1\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "ASSERT",
+            [
+              -1,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    2,
+                    2,
+                    [
+                      [
+                        "SUBPATTERN",
+                        [
+                          1,
+                          0,
+                          0,
+                          [
+                            [
+                              "IN",
+                              [
+                                [
+                                  "LITERAL",
+                                  97
+                                ],
+                                [
+                                  "LITERAL",
+                                  98
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "LITERAL",
+            99
+          ],
+          [
+            "GROUPREF",
+            1
+          ]
+        ],
+        "flags": 32,
+        "groups": 2,
+        "groupdict": {},
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 1,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            2,
+            4
+          ],
+          "groups": [
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            2,
+            4
+          ],
+          "groups": [
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<=([ab]){2})c\\1",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        61,
+        40,
+        91,
+        97,
+        98,
+        93,
+        41,
+        123,
+        50,
+        125,
+        41,
+        99,
+        92,
+        49
+      ],
+      "pattern_json": "\"(?<=([ab]){2})c\\\\1\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "ASSERT",
+            [
+              -1,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    2,
+                    2,
+                    [
+                      [
+                        "SUBPATTERN",
+                        [
+                          1,
+                          0,
+                          0,
+                          [
+                            [
+                              "IN",
+                              [
+                                [
+                                  "LITERAL",
+                                  97
+                                ],
+                                [
+                                  "LITERAL",
+                                  98
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "LITERAL",
+            99
+          ],
+          [
+            "GROUPREF",
+            1
+          ]
+        ],
+        "flags": 34,
+        "groups": 2,
+        "groupdict": {},
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 1,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            2,
+            4
+          ],
+          "groups": [
+            [
+              98
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            2,
+            4
+          ],
+          "groups": [
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<!([ab]){2})c\\1",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        33,
+        40,
+        91,
+        97,
+        98,
+        93,
+        41,
+        123,
+        50,
+        125,
+        41,
+        99,
+        92,
+        49
+      ],
+      "pattern_json": "\"(?<!([ab]){2})c\\\\1\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "ASSERT_NOT",
+            [
+              -1,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    2,
+                    2,
+                    [
+                      [
+                        "SUBPATTERN",
+                        [
+                          1,
+                          0,
+                          0,
+                          [
+                            [
+                              "IN",
+                              [
+                                [
+                                  "LITERAL",
+                                  97
+                                ],
+                                [
+                                  "LITERAL",
+                                  98
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "LITERAL",
+            99
+          ],
+          [
+            "GROUPREF",
+            1
+          ]
+        ],
+        "flags": 32,
+        "groups": 2,
+        "groupdict": {},
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 1,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<!([ab]){2})c\\1",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        33,
+        40,
+        91,
+        97,
+        98,
+        93,
+        41,
+        123,
+        50,
+        125,
+        41,
+        99,
+        92,
+        49
+      ],
+      "pattern_json": "\"(?<!([ab]){2})c\\\\1\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "ASSERT_NOT",
+            [
+              -1,
+              [
+                [
+                  "MAX_REPEAT",
+                  [
+                    2,
+                    2,
+                    [
+                      [
+                        "SUBPATTERN",
+                        [
+                          1,
+                          0,
+                          0,
+                          [
+                            [
+                              "IN",
+                              [
+                                [
+                                  "LITERAL",
+                                  97
+                                ],
+                                [
+                                  "LITERAL",
+                                  98
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "LITERAL",
+            99
+          ],
+          [
+            "GROUPREF",
+            1
+          ]
+        ],
+        "flags": 34,
+        "groups": 2,
+        "groupdict": {},
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          2,
+          2
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 1,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<=(?=(a)))\\1",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        61,
+        40,
+        63,
+        61,
+        40,
+        97,
+        41,
+        41,
+        41,
+        92,
+        49
+      ],
+      "pattern_json": "\"(?<=(?=(a)))\\\\1\"",
+      "flags": 0,
+      "parser": {
+        "ast": [
+          [
+            "ASSERT",
+            [
+              -1,
+              [
+                [
+                  "ASSERT",
+                  [
+                    1,
+                    [
+                      [
+                        "SUBPATTERN",
+                        [
+                          1,
+                          0,
+                          0,
+                          [
+                            [
+                              "LITERAL",
+                              97
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "GROUPREF",
+            1
+          ]
+        ],
+        "flags": 32,
+        "groups": 2,
+        "groupdict": {},
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 1,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            1,
+            2
+          ],
+          "groups": [
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        }
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<=(?=(a)))\\1",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        61,
+        40,
+        63,
+        61,
+        40,
+        97,
+        41,
+        41,
+        41,
+        92,
+        49
+      ],
+      "pattern_json": "\"(?<=(?=(a)))\\\\1\"",
+      "flags": 2,
+      "parser": {
+        "ast": [
+          [
+            "ASSERT",
+            [
+              -1,
+              [
+                [
+                  "ASSERT",
+                  [
+                    1,
+                    [
+                      [
+                        "SUBPATTERN",
+                        [
+                          1,
+                          0,
+                          0,
+                          [
+                            [
+                              "LITERAL",
+                              97
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "GROUPREF",
+            1
+          ]
+        ],
+        "flags": 34,
+        "groups": 2,
+        "groupdict": {},
+        "groupwidths": [
+          null,
+          [
+            1,
+            1
+          ]
+        ],
+        "width": [
+          1,
+          1
+        ],
+        "lookbehindgroups": null,
+        "grouprefpos": {}
+      },
+      "parse_error": null,
+      "parse_warnings": [],
+      "compile_error": null,
+      "groups": 1,
+      "groupindex": {},
+      "matches": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            1,
+            2
+          ],
+          "groups": [
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        },
+        {
+          "span": [
+            0,
+            1
+          ],
+          "groups": [
+            [
+              97
+            ]
+          ],
+          "groupdict": {}
+        }
+      ],
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<=(a)\\1)b",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        61,
+        40,
+        97,
+        41,
+        92,
+        49,
+        41,
+        98
+      ],
+      "pattern_json": "\"(?<=(a)\\\\1)b\"",
+      "flags": 0,
+      "parser": null,
+      "parse_error": {
+        "class": "error",
+        "message": "cannot refer to group defined in the same lookbehind subpattern at position 9",
+        "msg": "cannot refer to group defined in the same lookbehind subpattern",
+        "pos": 9,
+        "lineno": 1,
+        "colno": 10
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "cannot refer to group defined in the same lookbehind subpattern at position 9",
+        "msg": "cannot refer to group defined in the same lookbehind subpattern",
+        "pos": 9,
+        "lineno": 1,
+        "colno": 10
+      },
+      "matches": null,
+      "compile_warnings": []
+    },
+    {
+      "pattern": "(?<=(a)\\1)b",
+      "pattern_codepoints": [
+        40,
+        63,
+        60,
+        61,
+        40,
+        97,
+        41,
+        92,
+        49,
+        41,
+        98
+      ],
+      "pattern_json": "\"(?<=(a)\\\\1)b\"",
+      "flags": 2,
+      "parser": null,
+      "parse_error": {
+        "class": "error",
+        "message": "cannot refer to group defined in the same lookbehind subpattern at position 9",
+        "msg": "cannot refer to group defined in the same lookbehind subpattern",
+        "pos": 9,
+        "lineno": 1,
+        "colno": 10
+      },
+      "parse_warnings": [],
+      "compile_error": {
+        "class": "error",
+        "message": "cannot refer to group defined in the same lookbehind subpattern at position 9",
+        "msg": "cannot refer to group defined in the same lookbehind subpattern",
+        "pos": 9,
+        "lineno": 1,
+        "colno": 10
+      },
+      "matches": null,
+      "compile_warnings": []
+    }
+  ]
+}

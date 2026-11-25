@@ -1,6 +1,6 @@
 # light-media
 
-独立的 Go 影视自动化应用，当前交付范围见[当前需求](docs/requirements-current.md)，原始设计保留于 `docs/design-v1.4.txt`。Vue 页面嵌入 Go 服务；运行时使用 Go + SQLite，无 Python、Node、Redis 或独立数据库依赖。完整插件平台及原版已装 23 个插件正在逐个用 Go 移植，尚未完成交付；实际进展与差异见[插件技术方案](docs/plugin-runtime-architecture.md)和[迁移清单](docs/plugin-installed-migration-baseline.md)。
+独立的 Go 影视自动化应用，当前交付范围见[当前需求](docs/requirements-current.md)，原始设计保留于 `docs/design-v1.4.txt`。Vue 页面嵌入 Go 服务，运行时使用 Go 和 SQLite。光影在主进程运行 22 类内置插件，分身复用对应插件实现。历史迁移范围与差异见[迁移清单](docs/plugin-installed-migration-baseline.md)。
 
 ## 本次 NAS 使用入口
 
@@ -17,7 +17,7 @@ make build
 
 打开 `http://127.0.0.1:3120`，首次创建管理员。构建前端需要 Node；已构建程序启动时无需 Node。Docker 构建及挂载示例见 `Dockerfile` 和 `compose.yaml`，运行用户需具备配置盘与媒体目录的权限。
 
-插件市场优先读取 GitHub 仓库的 `go-plugins.v2.json`。该清单为每个版本声明固定源码提交、Go 入口及随包资源。点击安装或更新时，光影在 Linux amd64 或 arm64 上编译对应插件，成功后再替换旧代码。支持源码安装的 Docker 镜像自带 Go，直接运行二进制时须在 `PATH` 中提供满足插件 `go.mod` 的 Go 工具链。首次编译会从 Go 模块代理获取依赖，编译缓存保存在配置盘。旧仓库仍可通过 `go-plugins.v1.json` 安装其原有制品。
+内置插件随光影一起编译和升级。只需检出本仓库，在根目录执行 `make build` 即可构建前端、主程序和全部内置插件。业务源码位于 `builtinplugins/plugins/`，共享 SDK 位于 `builtinplugins/internal/sdk/`，两者使用根目录的 `go.mod`。修改插件后可运行 `go test ./builtinplugins/...`，主程序和插件一起提交到本仓库。
 
 首次配置入口：
 

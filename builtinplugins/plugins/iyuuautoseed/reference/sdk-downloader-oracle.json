@@ -1,0 +1,365 @@
+{
+  "source_sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+  "moviepilot_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "moviepilot_helper_sha256": "fa1c4bd99c5196bb2d8170a0fd942f4386e12c5f7e230e43cb0778c22193d6b9",
+  "configs": [
+    {
+      "id": "oldqb",
+      "name": "dual",
+      "kind": "qbittorrent",
+      "enabled": true
+    },
+    {
+      "id": "skip",
+      "name": "unselected",
+      "kind": "qbittorrent",
+      "enabled": true
+    },
+    {
+      "id": "single",
+      "name": "X",
+      "kind": "qbittorrent",
+      "enabled": true
+    },
+    {
+      "id": "newqb",
+      "name": "dual",
+      "kind": "qbittorrent",
+      "enabled": true
+    },
+    {
+      "id": "another",
+      "name": "qb-second",
+      "kind": "qbittorrent",
+      "enabled": true
+    },
+    {
+      "id": "trdual",
+      "name": "dual",
+      "kind": "transmission",
+      "enabled": true
+    },
+    {
+      "id": "trfirst",
+      "name": "tr-first",
+      "kind": "transmission",
+      "enabled": true
+    },
+    {
+      "id": "disabled",
+      "name": "dual",
+      "kind": "qbittorrent",
+      "enabled": false
+    }
+  ],
+  "inactive_ids": [
+    "newqb"
+  ],
+  "inventory": [
+    {
+      "name": "last wrapper first name slot",
+      "mode": "services",
+      "selection": [
+        "tr-first",
+        "qb-second",
+        "dual"
+      ],
+      "expected": [
+        {
+          "ref": "trdual",
+          "name": "dual",
+          "kind": "transmission",
+          "runtime_kind": "transmission",
+          "inactive": false
+        },
+        {
+          "ref": "another",
+          "name": "qb-second",
+          "kind": "qbittorrent",
+          "runtime_kind": "qbittorrent",
+          "inactive": false
+        },
+        {
+          "ref": "trfirst",
+          "name": "tr-first",
+          "kind": "transmission",
+          "runtime_kind": "transmission",
+          "inactive": false
+        }
+      ],
+      "active": [
+        {
+          "ref": "trdual",
+          "name": "dual",
+          "kind": "transmission",
+          "runtime_kind": "transmission",
+          "inactive": false
+        },
+        {
+          "ref": "another",
+          "name": "qb-second",
+          "kind": "qbittorrent",
+          "runtime_kind": "qbittorrent",
+          "inactive": false
+        },
+        {
+          "ref": "trfirst",
+          "name": "tr-first",
+          "kind": "transmission",
+          "runtime_kind": "transmission",
+          "inactive": false
+        }
+      ],
+      "error": ""
+    },
+    {
+      "name": "first inactive wrapper wins",
+      "mode": "auto",
+      "selection": "dual",
+      "expected": [
+        {
+          "ref": "newqb",
+          "name": "dual",
+          "kind": "transmission",
+          "runtime_kind": "qbittorrent",
+          "inactive": true
+        }
+      ],
+      "active": [],
+      "error": ""
+    },
+    {
+      "name": "string filter is characters",
+      "mode": "services",
+      "selection": "dualX",
+      "expected": [
+        {
+          "ref": "single",
+          "name": "X",
+          "kind": "qbittorrent",
+          "runtime_kind": "qbittorrent",
+          "inactive": false
+        }
+      ],
+      "active": [
+        {
+          "ref": "single",
+          "name": "X",
+          "kind": "qbittorrent",
+          "runtime_kind": "qbittorrent",
+          "inactive": false
+        }
+      ],
+      "error": ""
+    },
+    {
+      "name": "mapping filter is keys",
+      "mode": "services",
+      "selection": {
+        "dual": false
+      },
+      "expected": [
+        {
+          "ref": "trdual",
+          "name": "dual",
+          "kind": "transmission",
+          "runtime_kind": "transmission",
+          "inactive": false
+        }
+      ],
+      "active": [
+        {
+          "ref": "trdual",
+          "name": "dual",
+          "kind": "transmission",
+          "runtime_kind": "transmission",
+          "inactive": false
+        }
+      ],
+      "error": ""
+    },
+    {
+      "name": "unhashable filter rejected",
+      "mode": "services",
+      "selection": [
+        [
+          "dual"
+        ]
+      ],
+      "expected": [],
+      "active": [],
+      "error": "TypeError"
+    }
+  ],
+  "mutations": [
+    {
+      "name": "rejected qB tuple still seeks marker",
+      "metadata": "qbittorrent",
+      "runtime": "qbittorrent",
+      "reuse": true,
+      "skip": {
+        "z": false,
+        "a": [
+          "x",
+          3
+        ]
+      },
+      "accepted": false,
+      "save": "/owned",
+      "bound_add": {
+        "download_dir": "/owned",
+        "is_paused": true,
+        "tag": [
+          " A ",
+          "",
+          "B ",
+          "test-site",
+          "TestMarker"
+        ],
+        "category": null,
+        "is_skip_checking": {
+          "z": false,
+          "a": [
+            "x",
+            3
+          ]
+        },
+        "ignore_category_check": false
+      },
+      "native_called": true,
+      "skip_wire": "{'z': False, 'a': ['x', 3]}",
+      "auto_management": false,
+      "wrapper_truthy": true,
+      "followup": [
+        [
+          "find",
+          "TestMarker"
+        ],
+        [
+          "category",
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "owned-category"
+        ]
+      ],
+      "result": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "error": ""
+    },
+    {
+      "name": "qB keeps category and passes string skip",
+      "metadata": "qbittorrent",
+      "runtime": "qbittorrent",
+      "reuse": false,
+      "skip": "false",
+      "accepted": true,
+      "save": null,
+      "bound_add": {
+        "download_dir": null,
+        "is_paused": true,
+        "tag": [
+          " A ",
+          "",
+          "B ",
+          "test-site",
+          "TestMarker"
+        ],
+        "category": "owned-category",
+        "is_skip_checking": "false",
+        "ignore_category_check": true
+      },
+      "native_called": true,
+      "skip_wire": "false",
+      "auto_management": true,
+      "wrapper_truthy": true,
+      "followup": [
+        [
+          "find",
+          "TestMarker"
+        ]
+      ],
+      "result": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "error": ""
+    },
+    {
+      "name": "TR object uses labels only",
+      "metadata": "transmission",
+      "runtime": "transmission",
+      "reuse": true,
+      "skip": true,
+      "accepted": true,
+      "save": "",
+      "bound_add": {
+        "download_dir": "",
+        "is_paused": true,
+        "labels": [
+          " A ",
+          "",
+          "B ",
+          "test-site"
+        ]
+      },
+      "native_called": true,
+      "skip_wire": null,
+      "auto_management": null,
+      "wrapper_truthy": true,
+      "followup": [],
+      "result": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "error": ""
+    },
+    {
+      "name": "TR metadata qB wrapper rejects hash attribute after addition",
+      "metadata": "transmission",
+      "runtime": "qbittorrent",
+      "reuse": true,
+      "skip": null,
+      "accepted": true,
+      "save": "/owned",
+      "bound_add": {
+        "download_dir": "/owned",
+        "is_paused": true,
+        "labels": [
+          " A ",
+          "",
+          "B ",
+          "test-site"
+        ]
+      },
+      "native_called": true,
+      "skip_wire": null,
+      "auto_management": true,
+      "wrapper_truthy": true,
+      "followup": [],
+      "result": null,
+      "error": "AttributeError"
+    },
+    {
+      "name": "qB metadata TR wrapper rejects keyword before addition",
+      "metadata": "qbittorrent",
+      "runtime": "transmission",
+      "reuse": true,
+      "skip": true,
+      "accepted": true,
+      "save": "/owned",
+      "bound_add": {
+        "download_dir": "/owned",
+        "is_paused": true,
+        "tag": [
+          " A ",
+          "",
+          "B ",
+          "test-site",
+          "TestMarker"
+        ],
+        "category": null,
+        "is_skip_checking": true,
+        "ignore_category_check": false
+      },
+      "native_called": false,
+      "skip_wire": null,
+      "auto_management": null,
+      "wrapper_truthy": false,
+      "followup": [],
+      "result": null,
+      "error": "TypeError"
+    }
+  ]
+}

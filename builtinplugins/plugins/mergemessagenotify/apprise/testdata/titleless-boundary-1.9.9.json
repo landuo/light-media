@@ -1,0 +1,175 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "mattermost_sha256": "1d2959a51bfb7c34717fe64898fd89871eea456568c44e147f6d1ba344765bca",
+    "google_chat_sha256": "2c923514b1d645c5f7823b299c5df1542aae5adeced15dc9483b7421c7cb8cf5"
+  },
+  "cases": [
+    {
+      "name": "mattermost-title-only-whitespace",
+      "url": "mmost://owned.invalid/hook?image=no",
+      "title": "title",
+      "body": " ",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/hooks/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"title\\r\\n\", \"username\": \"Apprise\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "gchat-title-only-html-whitespace",
+      "url": "gchat://space/key/token?format=html",
+      "title": "title",
+      "body": " ",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://chat.googleapis.com/v1/spaces/space/messages?token=token&key=key",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"text\": \"<b>title</b><br />\\r\\n\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "mattermost-case-sensitive-channel-id",
+      "url": "mmost://owned.invalid/bot?team=team&to=%23owned%2Cdirect",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"ID\": \"must-not-match\"}"
+        },
+        {
+          "status": 201,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://owned.invalid/api/v4/teams/name/team/channels/name/owned",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Authorization": "Bearer bot"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v4/posts",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer bot"
+          },
+          "body": "{\"channel_id\": \"direct\", \"message\": \"t\\r\\nb\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        0.02
+      ]
+    },
+    {
+      "name": "mattermost-nonobject-lookup-aborts-send",
+      "url": "mmost://owned.invalid/bot?team=team&to=%23owned%2Cdirect",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "[]"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://owned.invalid/api/v4/teams/name/team/channels/name/owned",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Authorization": "Bearer bot"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    }
+  ]
+}

@@ -1,0 +1,556 @@
+{
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "sqlalchemy": "2.0.51",
+  "sqlite": "3.40.1",
+  "source_files": {
+    "main": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+    "result": "7a2a49fd8aafe084c6a9a482ca6883cbee8505f443ae5e9741af25161bb458b2",
+    "yema": "bafababa5790f9ed3b2d6a581b472fbcd2f202ff78854acf2c463eed0e65307b",
+    "model": "ae52a13e2e2ec13ed10a632c601e0bacf173df430c6d273866bda4c783926622",
+    "dbbase": "6da490f32d0de67839249b4e318fecbf4c877ec5acde4eef08634738c4cfafc9",
+    "dboper": "31043788d1ced9a311a0034074b71d34e97f78f644583ed02522602feffa01ec",
+    "pluginbase": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+    "log": "f79dd36510403966a3989fbbfcc315eedde943bee6665693d4f7bd1c5a4c8ad6"
+  },
+  "classification": "actual original Yema/signin_site/do/PluginBase/Oper/model/Base AST + actual owned SQLite memory + original logging classes; synthetic Request response/site catalog/stats/config tail/settings; no app import or real HTTP/service/DB/config",
+  "rows": [
+    {
+      "text": "{\"success\":false,\"errorMessage\":\"\\ud800\"}",
+      "do_error": null,
+      "effects": [
+        "indexers",
+        "HTTP",
+        "HTTP",
+        "stats.fail",
+        "update_config"
+      ],
+      "message_points": [
+        [
+          31614,
+          21040,
+          22833,
+          36133,
+          65292,
+          31614,
+          21040,
+          32467,
+          26524,
+          65306,
+          55296,
+          65307,
+          27169,
+          25311,
+          30331,
+          24405,
+          22833,
+          36133,
+          65292,
+          29366,
+          24577,
+          30721,
+          65306,
+          50,
+          48,
+          48
+        ]
+      ],
+      "db_rows": [
+        {
+          "key": "11\u67086\u65e5",
+          "storage_text": "[{\"site\": \"Owned\", \"status\": \"\\u7b7e\\u5230\\u5931\\u8d25\\uff0c\\u7b7e\\u5230\\u7ed3\\u679c\\uff1a\\ud800\\uff1b\\u6a21\\u62df\\u767b\\u5f55\\u5931\\u8d25\\uff0c\\u72b6\\u6001\\u7801\\uff1a200\", \"site_id\": 1, \"type\": \"\\u7b7e\\u5230\", \"success\": false, \"logged_in\": false}]",
+          "value": [
+            {
+              "site": "Owned",
+              "status": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1a\ud800\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+              "site_id": 1,
+              "type": "\u7b7e\u5230",
+              "success": false,
+              "logged_in": false
+            }
+          ]
+        },
+        {
+          "key": "\u7b7e\u5230-2026-11-06",
+          "storage_text": "{\"do\": [1], \"retry\": [1], \"results\": {\"1\": {\"success\": false, \"message\": \"\\u7b7e\\u5230\\u5931\\u8d25\\uff0c\\u7b7e\\u5230\\u7ed3\\u679c\\uff1a\\ud800\\uff1b\\u6a21\\u62df\\u767b\\u5f55\\u5931\\u8d25\\uff0c\\u72b6\\u6001\\u7801\\uff1a200\", \"logged_in\": false}}}",
+          "value": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1a\ud800\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+                "logged_in": false
+              }
+            }
+          }
+        }
+      ],
+      "do_stderr": "",
+      "logger_direct": {
+        "error": null,
+        "file_delta": 0,
+        "stderr": "--- Logging error ---\nTraceback (most recent call last):\n  File \"/usr/local/lib/python3.12/logging/__init__.py\", line 1163, in emit\n    stream.write(msg + self.terminator)\nUnicodeEncodeError: 'utf-8' codec can't encode character '\\ud800' in position 42: surrogates not allowed\nCall stack:\n  File \"<stdin>\", line 83, in <module>\n  File \"actual-log-AST\", line 535, in info\n  File \"actual-log-AST\", line 517, in logger\n  File \"actual-log-AST\", line 193, in write_log\n  File \"actual-log-AST\", line 229, in _write_sync\nMessage: '<stdin> - \\ud800'\nArguments: ()\n"
+      }
+    },
+    {
+      "text": "{\"success\":false,\"errorMessage\":\"\\udfff\"}",
+      "do_error": null,
+      "effects": [
+        "indexers",
+        "HTTP",
+        "HTTP",
+        "stats.fail",
+        "update_config"
+      ],
+      "message_points": [
+        [
+          31614,
+          21040,
+          22833,
+          36133,
+          65292,
+          31614,
+          21040,
+          32467,
+          26524,
+          65306,
+          57343,
+          65307,
+          27169,
+          25311,
+          30331,
+          24405,
+          22833,
+          36133,
+          65292,
+          29366,
+          24577,
+          30721,
+          65306,
+          50,
+          48,
+          48
+        ]
+      ],
+      "db_rows": [
+        {
+          "key": "11\u67086\u65e5",
+          "storage_text": "[{\"site\": \"Owned\", \"status\": \"\\u7b7e\\u5230\\u5931\\u8d25\\uff0c\\u7b7e\\u5230\\u7ed3\\u679c\\uff1a\\udfff\\uff1b\\u6a21\\u62df\\u767b\\u5f55\\u5931\\u8d25\\uff0c\\u72b6\\u6001\\u7801\\uff1a200\", \"site_id\": 1, \"type\": \"\\u7b7e\\u5230\", \"success\": false, \"logged_in\": false}]",
+          "value": [
+            {
+              "site": "Owned",
+              "status": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1a\udfff\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+              "site_id": 1,
+              "type": "\u7b7e\u5230",
+              "success": false,
+              "logged_in": false
+            }
+          ]
+        },
+        {
+          "key": "\u7b7e\u5230-2026-11-06",
+          "storage_text": "{\"do\": [1], \"retry\": [1], \"results\": {\"1\": {\"success\": false, \"message\": \"\\u7b7e\\u5230\\u5931\\u8d25\\uff0c\\u7b7e\\u5230\\u7ed3\\u679c\\uff1a\\udfff\\uff1b\\u6a21\\u62df\\u767b\\u5f55\\u5931\\u8d25\\uff0c\\u72b6\\u6001\\u7801\\uff1a200\", \"logged_in\": false}}}",
+          "value": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1a\udfff\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+                "logged_in": false
+              }
+            }
+          }
+        }
+      ],
+      "do_stderr": "",
+      "logger_direct": {
+        "error": null,
+        "file_delta": 0,
+        "stderr": "--- Logging error ---\nTraceback (most recent call last):\n  File \"/usr/local/lib/python3.12/logging/__init__.py\", line 1163, in emit\n    stream.write(msg + self.terminator)\nUnicodeEncodeError: 'utf-8' codec can't encode character '\\udfff' in position 42: surrogates not allowed\nCall stack:\n  File \"<stdin>\", line 83, in <module>\n  File \"actual-log-AST\", line 535, in info\n  File \"actual-log-AST\", line 517, in logger\n  File \"actual-log-AST\", line 193, in write_log\n  File \"actual-log-AST\", line 229, in _write_sync\nMessage: '<stdin> - \\udfff'\nArguments: ()\n"
+      }
+    },
+    {
+      "text": "{\"success\":false,\"errorMessage\":\"\\ufffd\"}",
+      "do_error": null,
+      "effects": [
+        "indexers",
+        "HTTP",
+        "HTTP",
+        "stats.fail",
+        "update_config"
+      ],
+      "message_points": [
+        [
+          31614,
+          21040,
+          22833,
+          36133,
+          65292,
+          31614,
+          21040,
+          32467,
+          26524,
+          65306,
+          65533,
+          65307,
+          27169,
+          25311,
+          30331,
+          24405,
+          22833,
+          36133,
+          65292,
+          29366,
+          24577,
+          30721,
+          65306,
+          50,
+          48,
+          48
+        ]
+      ],
+      "db_rows": [
+        {
+          "key": "11\u67086\u65e5",
+          "storage_text": "[{\"site\": \"Owned\", \"status\": \"\\u7b7e\\u5230\\u5931\\u8d25\\uff0c\\u7b7e\\u5230\\u7ed3\\u679c\\uff1a\\ufffd\\uff1b\\u6a21\\u62df\\u767b\\u5f55\\u5931\\u8d25\\uff0c\\u72b6\\u6001\\u7801\\uff1a200\", \"site_id\": 1, \"type\": \"\\u7b7e\\u5230\", \"success\": false, \"logged_in\": false}]",
+          "value": [
+            {
+              "site": "Owned",
+              "status": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1a\ufffd\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+              "site_id": 1,
+              "type": "\u7b7e\u5230",
+              "success": false,
+              "logged_in": false
+            }
+          ]
+        },
+        {
+          "key": "\u7b7e\u5230-2026-11-06",
+          "storage_text": "{\"do\": [1], \"retry\": [1], \"results\": {\"1\": {\"success\": false, \"message\": \"\\u7b7e\\u5230\\u5931\\u8d25\\uff0c\\u7b7e\\u5230\\u7ed3\\u679c\\uff1a\\ufffd\\uff1b\\u6a21\\u62df\\u767b\\u5f55\\u5931\\u8d25\\uff0c\\u72b6\\u6001\\u7801\\uff1a200\", \"logged_in\": false}}}",
+          "value": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1a\ufffd\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+                "logged_in": false
+              }
+            }
+          }
+        }
+      ],
+      "do_stderr": "",
+      "logger_direct": {
+        "error": null,
+        "file_delta": 50,
+        "stderr": ""
+      }
+    },
+    {
+      "text": "{\"success\":false,\"errorMessage\":\"\\ud800\\udc00\"}",
+      "do_error": null,
+      "effects": [
+        "indexers",
+        "HTTP",
+        "HTTP",
+        "stats.fail",
+        "update_config"
+      ],
+      "message_points": [
+        [
+          31614,
+          21040,
+          22833,
+          36133,
+          65292,
+          31614,
+          21040,
+          32467,
+          26524,
+          65306,
+          65536,
+          65307,
+          27169,
+          25311,
+          30331,
+          24405,
+          22833,
+          36133,
+          65292,
+          29366,
+          24577,
+          30721,
+          65306,
+          50,
+          48,
+          48
+        ]
+      ],
+      "db_rows": [
+        {
+          "key": "11\u67086\u65e5",
+          "storage_text": "[{\"site\": \"Owned\", \"status\": \"\\u7b7e\\u5230\\u5931\\u8d25\\uff0c\\u7b7e\\u5230\\u7ed3\\u679c\\uff1a\\ud800\\udc00\\uff1b\\u6a21\\u62df\\u767b\\u5f55\\u5931\\u8d25\\uff0c\\u72b6\\u6001\\u7801\\uff1a200\", \"site_id\": 1, \"type\": \"\\u7b7e\\u5230\", \"success\": false, \"logged_in\": false}]",
+          "value": [
+            {
+              "site": "Owned",
+              "status": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1a\ud800\udc00\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+              "site_id": 1,
+              "type": "\u7b7e\u5230",
+              "success": false,
+              "logged_in": false
+            }
+          ]
+        },
+        {
+          "key": "\u7b7e\u5230-2026-11-06",
+          "storage_text": "{\"do\": [1], \"retry\": [1], \"results\": {\"1\": {\"success\": false, \"message\": \"\\u7b7e\\u5230\\u5931\\u8d25\\uff0c\\u7b7e\\u5230\\u7ed3\\u679c\\uff1a\\ud800\\udc00\\uff1b\\u6a21\\u62df\\u767b\\u5f55\\u5931\\u8d25\\uff0c\\u72b6\\u6001\\u7801\\uff1a200\", \"logged_in\": false}}}",
+          "value": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1a\ud800\udc00\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+                "logged_in": false
+              }
+            }
+          }
+        }
+      ],
+      "do_stderr": "",
+      "logger_direct": {
+        "error": null,
+        "file_delta": 51,
+        "stderr": ""
+      }
+    },
+    {
+      "text": "{\"success\":false,\"errorMessage\":{\"z\":NaN,\"a\":[Infinity,-Infinity]}}",
+      "do_error": null,
+      "effects": [
+        "indexers",
+        "HTTP",
+        "HTTP",
+        "stats.fail",
+        "update_config"
+      ],
+      "message_points": [
+        [
+          31614,
+          21040,
+          22833,
+          36133,
+          65292,
+          31614,
+          21040,
+          32467,
+          26524,
+          65306,
+          123,
+          39,
+          122,
+          39,
+          58,
+          32,
+          110,
+          97,
+          110,
+          44,
+          32,
+          39,
+          97,
+          39,
+          58,
+          32,
+          91,
+          105,
+          110,
+          102,
+          44,
+          32,
+          45,
+          105,
+          110,
+          102,
+          93,
+          125,
+          65307,
+          27169,
+          25311,
+          30331,
+          24405,
+          22833,
+          36133,
+          65292,
+          29366,
+          24577,
+          30721,
+          65306,
+          50,
+          48,
+          48
+        ]
+      ],
+      "db_rows": [
+        {
+          "key": "11\u67086\u65e5",
+          "storage_text": "[{\"site\": \"Owned\", \"status\": \"\\u7b7e\\u5230\\u5931\\u8d25\\uff0c\\u7b7e\\u5230\\u7ed3\\u679c\\uff1a{'z': nan, 'a': [inf, -inf]}\\uff1b\\u6a21\\u62df\\u767b\\u5f55\\u5931\\u8d25\\uff0c\\u72b6\\u6001\\u7801\\uff1a200\", \"site_id\": 1, \"type\": \"\\u7b7e\\u5230\", \"success\": false, \"logged_in\": false}]",
+          "value": [
+            {
+              "site": "Owned",
+              "status": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1a{'z': nan, 'a': [inf, -inf]}\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+              "site_id": 1,
+              "type": "\u7b7e\u5230",
+              "success": false,
+              "logged_in": false
+            }
+          ]
+        },
+        {
+          "key": "\u7b7e\u5230-2026-11-06",
+          "storage_text": "{\"do\": [1], \"retry\": [1], \"results\": {\"1\": {\"success\": false, \"message\": \"\\u7b7e\\u5230\\u5931\\u8d25\\uff0c\\u7b7e\\u5230\\u7ed3\\u679c\\uff1a{'z': nan, 'a': [inf, -inf]}\\uff1b\\u6a21\\u62df\\u767b\\u5f55\\u5931\\u8d25\\uff0c\\u72b6\\u6001\\u7801\\uff1a200\", \"logged_in\": false}}}",
+          "value": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1a{'z': nan, 'a': [inf, -inf]}\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+                "logged_in": false
+              }
+            }
+          }
+        }
+      ],
+      "do_stderr": "",
+      "logger_direct": {
+        "error": null,
+        "file_delta": 75,
+        "stderr": ""
+      }
+    },
+    {
+      "text": "{\"success\":false,\"errorMessage\":{\"z\":1,\"a\":2,\"z\":3}}",
+      "do_error": null,
+      "effects": [
+        "indexers",
+        "HTTP",
+        "HTTP",
+        "stats.fail",
+        "update_config"
+      ],
+      "message_points": [
+        [
+          31614,
+          21040,
+          22833,
+          36133,
+          65292,
+          31614,
+          21040,
+          32467,
+          26524,
+          65306,
+          123,
+          39,
+          122,
+          39,
+          58,
+          32,
+          51,
+          44,
+          32,
+          39,
+          97,
+          39,
+          58,
+          32,
+          50,
+          125,
+          65307,
+          27169,
+          25311,
+          30331,
+          24405,
+          22833,
+          36133,
+          65292,
+          29366,
+          24577,
+          30721,
+          65306,
+          50,
+          48,
+          48
+        ]
+      ],
+      "db_rows": [
+        {
+          "key": "11\u67086\u65e5",
+          "storage_text": "[{\"site\": \"Owned\", \"status\": \"\\u7b7e\\u5230\\u5931\\u8d25\\uff0c\\u7b7e\\u5230\\u7ed3\\u679c\\uff1a{'z': 3, 'a': 2}\\uff1b\\u6a21\\u62df\\u767b\\u5f55\\u5931\\u8d25\\uff0c\\u72b6\\u6001\\u7801\\uff1a200\", \"site_id\": 1, \"type\": \"\\u7b7e\\u5230\", \"success\": false, \"logged_in\": false}]",
+          "value": [
+            {
+              "site": "Owned",
+              "status": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1a{'z': 3, 'a': 2}\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+              "site_id": 1,
+              "type": "\u7b7e\u5230",
+              "success": false,
+              "logged_in": false
+            }
+          ]
+        },
+        {
+          "key": "\u7b7e\u5230-2026-11-06",
+          "storage_text": "{\"do\": [1], \"retry\": [1], \"results\": {\"1\": {\"success\": false, \"message\": \"\\u7b7e\\u5230\\u5931\\u8d25\\uff0c\\u7b7e\\u5230\\u7ed3\\u679c\\uff1a{'z': 3, 'a': 2}\\uff1b\\u6a21\\u62df\\u767b\\u5f55\\u5931\\u8d25\\uff0c\\u72b6\\u6001\\u7801\\uff1a200\", \"logged_in\": false}}}",
+          "value": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1a{'z': 3, 'a': 2}\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+                "logged_in": false
+              }
+            }
+          }
+        }
+      ],
+      "do_stderr": "",
+      "logger_direct": {
+        "error": null,
+        "file_delta": 63,
+        "stderr": ""
+      }
+    }
+  ],
+  "cleanup": {
+    "owned_logs_removed": true,
+    "logger_thread_alive": false
+  }
+}

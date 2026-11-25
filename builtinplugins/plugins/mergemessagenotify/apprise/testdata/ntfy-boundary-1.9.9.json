@@ -1,0 +1,124 @@
+{
+  "source": {
+    "apprise_version": "1.9.9",
+    "ntfy_sha256": "9db4fe5c7985f0f198a833317618c5681fcd7f6077257644772df679a1fd3f4c",
+    "python": "3.14.4",
+    "requests": "2.34.2",
+    "network": "blocked; actual pinned Python provider with synthetic Requests responses, fixed clock and memory attachment UUID"
+  },
+  "cases": [
+    {
+      "name": "store-no-rejected",
+      "url": "ntfy://owned?store=no",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "waits": [],
+      "requests": []
+    },
+    {
+      "name": "encoded-uppercase-cloud-no-implicit-topic",
+      "url": "ntfy://owned?mode=%2543loud",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": []
+    },
+    {
+      "name": "encoded-uppercase-cloud-explicit-topic",
+      "url": "ntfy://ignored/topic?mode=%2543loud",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://ntfy.sh/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "X-Icon": "https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png"
+          },
+          "body_sha256": "b5f9d03c4588e9f58e1b408eba85ef5d3b7a641546bbf5a4425fabfb32096779",
+          "body_size": 55,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body_json": "{\"topic\": \"topic\", \"title\": \"title\", \"message\": \"body\"}"
+        }
+      ]
+    },
+    {
+      "name": "encoded-uppercase-token-does-not-infer",
+      "url": "ntfy://tk_owned@private.invalid/topic?auth=%2554oken",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": []
+    },
+    {
+      "name": "encoded-uppercase-token-explicit-token",
+      "url": "ntfy://private.invalid/topic?auth=%2554oken&token=tk_owned",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://private.invalid/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Authorization": "Bearer tk_owned",
+            "Content-Type": "application/json",
+            "X-Icon": "https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png"
+          },
+          "body_sha256": "b5f9d03c4588e9f58e1b408eba85ef5d3b7a641546bbf5a4425fabfb32096779",
+          "body_size": 55,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body_json": "{\"topic\": \"topic\", \"title\": \"title\", \"message\": \"body\"}"
+        }
+      ]
+    },
+    {
+      "name": "empty-malformed-url",
+      "url": "ntfy://",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": []
+    }
+  ]
+}

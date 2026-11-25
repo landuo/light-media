@@ -1,0 +1,783 @@
+{
+  "source": {
+    "apprise_version": "1.9.9",
+    "ntfy_sha256": "9db4fe5c7985f0f198a833317618c5681fcd7f6077257644772df679a1fd3f4c",
+    "python": "3.14.4",
+    "requests": "2.34.2",
+    "network": "blocked; actual pinned Python provider with synthetic Requests responses, fixed clock and memory attachment UUID"
+  },
+  "cases": [
+    {
+      "name": "cloud-shorthand",
+      "url": "ntfy://-owned",
+      "title": " Title ",
+      "body": "  body\n",
+      "attachments": [],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://ntfy.sh/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "X-Icon": "https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png"
+          },
+          "body_sha256": "89956398ead4fe50db93530524753509a06c732a1d2be11d04dda6a2c82c6f7c",
+          "body_size": 58,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body_json": "{\"topic\": \"-owned\", \"title\": \"Title\", \"message\": \"  body\"}"
+        }
+      ]
+    },
+    {
+      "name": "native-http-cloud",
+      "url": "http://ntfy.sh/alpha/beta?mode=private&token=tk_ignored&image=no",
+      "title": "",
+      "body": "body",
+      "attachments": [],
+      "statuses": [
+        503,
+        200
+      ],
+      "added": true,
+      "result": false,
+      "waits": [
+        5.5
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://ntfy.sh/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body_sha256": "52f8a23fa7ec7a11fd82f8cc3a1f9a8f7c5bfb53f765ac8418fd65e9fc73ad50",
+          "body_size": 36,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body_json": "{\"topic\": \"beta\", \"message\": \"body\"}"
+        },
+        {
+          "method": "POST",
+          "url": "https://ntfy.sh/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body_sha256": "dbe448613e5b7951f27cab8f0475e1660e3d7cea76a616cc70f5adfdd57963b1",
+          "body_size": 37,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body_json": "{\"topic\": \"alpha\", \"message\": \"body\"}"
+        }
+      ]
+    },
+    {
+      "name": "direct-scheme-cloud-host-is-private",
+      "url": "ntfys://ntfy.sh/alpha?token=tk_owned&image=garbage",
+      "title": "",
+      "body": "body",
+      "attachments": [],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://ntfy.sh/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Authorization": "Bearer tk_owned",
+            "Content-Type": "application/json"
+          },
+          "body_sha256": "dbe448613e5b7951f27cab8f0475e1660e3d7cea76a616cc70f5adfdd57963b1",
+          "body_size": 37,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body_json": "{\"topic\": \"alpha\", \"message\": \"body\"}"
+        }
+      ]
+    },
+    {
+      "name": "private-options-and-remote-attach",
+      "url": "ntfys://alice:pa%252Bss@ntfy.invalid:9443/Zeta/alpha?to=beta%252Cbad!%2Calpha&attach=https%253A%252F%252Fasset.invalid%252Fpicture.png&filename=%2Fowned%2Fcustom.png&priority=moderate&tags=warning%2Czap%2Cwarning&actions=view%2C%20Open%2C%20https%3A%2F%2Fasset.invalid&format=markdown&avatar_url=https%3A%2F%2Fasset.invalid%2Fcustom.png&delay=30m&email=owner%40example.invalid&click=https%3A%2F%2Fasset.invalid%2F%E8%B5%84%E6%BA%90%3Fa%3D1%2B2%23ok&verify=no&cto=2.5&rto=11",
+      "title": " 标题 ",
+      "body": "# owned markdown",
+      "attachments": [],
+      "statuses": [
+        200,
+        200,
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [
+        5.5,
+        5.5
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://ntfy.invalid:9443/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "X-Icon": "https://asset.invalid/custom.png",
+            "X-Markdown": "yes",
+            "X-Priority": "low",
+            "X-Delay": "30m",
+            "X-Click": "https://asset.invalid/%25E8%25B5%2584%25E6%25BA%2590?a=1%252B2%2523ok",
+            "X-Email": "owner@example.invalid",
+            "X-Tags": "warning,zap",
+            "X-Actions": "view, Open, https://asset.invalid",
+            "Authorization": "Basic YWxpY2U6cGElMkJzcw=="
+          },
+          "body_sha256": "23e7ef7776d3897b843289ab635070216089c09ccf02628f56d405f9cdbc7974",
+          "body_size": 146,
+          "verify": false,
+          "timeout": [
+            2.5,
+            11.0
+          ],
+          "body_json": "{\"topic\": \"beta\", \"attach\": \"https://asset.invalid/picture.png\", \"filename\": \"custom.png\", \"title\": \"\\u6807\\u9898\", \"message\": \"# owned markdown\"}"
+        },
+        {
+          "method": "POST",
+          "url": "https://ntfy.invalid:9443/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "X-Icon": "https://asset.invalid/custom.png",
+            "X-Markdown": "yes",
+            "X-Priority": "low",
+            "X-Delay": "30m",
+            "X-Click": "https://asset.invalid/%25E8%25B5%2584%25E6%25BA%2590?a=1%252B2%2523ok",
+            "X-Email": "owner@example.invalid",
+            "X-Tags": "warning,zap",
+            "X-Actions": "view, Open, https://asset.invalid",
+            "Authorization": "Basic YWxpY2U6cGElMkJzcw=="
+          },
+          "body_sha256": "3014b3f6245798a9643e4a7450ee5fc3db760fc7e4c1db0c54b05e2437f94142",
+          "body_size": 147,
+          "verify": false,
+          "timeout": [
+            2.5,
+            11.0
+          ],
+          "body_json": "{\"topic\": \"alpha\", \"attach\": \"https://asset.invalid/picture.png\", \"filename\": \"custom.png\", \"title\": \"\\u6807\\u9898\", \"message\": \"# owned markdown\"}"
+        },
+        {
+          "method": "POST",
+          "url": "https://ntfy.invalid:9443/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "X-Icon": "https://asset.invalid/custom.png",
+            "X-Markdown": "yes",
+            "X-Priority": "low",
+            "X-Delay": "30m",
+            "X-Click": "https://asset.invalid/%25E8%25B5%2584%25E6%25BA%2590?a=1%252B2%2523ok",
+            "X-Email": "owner@example.invalid",
+            "X-Tags": "warning,zap",
+            "X-Actions": "view, Open, https://asset.invalid",
+            "Authorization": "Basic YWxpY2U6cGElMkJzcw=="
+          },
+          "body_sha256": "16499a40e79fda105abbd358c2579242a9bbd94b8a390681abc5cc8bd64c5687",
+          "body_size": 146,
+          "verify": false,
+          "timeout": [
+            2.5,
+            11.0
+          ],
+          "body_json": "{\"topic\": \"Zeta\", \"attach\": \"https://asset.invalid/picture.png\", \"filename\": \"custom.png\", \"title\": \"\\u6807\\u9898\", \"message\": \"# owned markdown\"}"
+        }
+      ]
+    },
+    {
+      "name": "token-autodetect",
+      "url": "ntfy://tk_owned%2B@private.invalid/topic?priority=5",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://private.invalid/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Authorization": "Bearer tk_owned+",
+            "Content-Type": "application/json",
+            "X-Icon": "https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png",
+            "X-Priority": "max"
+          },
+          "body_sha256": "b5f9d03c4588e9f58e1b408eba85ef5d3b7a641546bbf5a4425fabfb32096779",
+          "body_size": 55,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body_json": "{\"topic\": \"topic\", \"title\": \"title\", \"message\": \"body\"}"
+        }
+      ]
+    },
+    {
+      "name": "private-basic-username-only",
+      "url": "ntfy://owner@private.invalid/topic",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://private.invalid/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "X-Icon": "https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png",
+            "Authorization": "Basic b3duZXI6Tm9uZQ=="
+          },
+          "body_sha256": "b5f9d03c4588e9f58e1b408eba85ef5d3b7a641546bbf5a4425fabfb32096779",
+          "body_size": 55,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body_json": "{\"topic\": \"topic\", \"title\": \"title\", \"message\": \"body\"}"
+        }
+      ]
+    },
+    {
+      "name": "private-token-password-override",
+      "url": "ntfy://owner:p%252B@private.invalid/topic?auth=token&port=0",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [
+        201
+      ],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://private.invalid/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Authorization": "Bearer p%2B",
+            "Content-Type": "application/json",
+            "X-Icon": "https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png"
+          },
+          "body_sha256": "b5f9d03c4588e9f58e1b408eba85ef5d3b7a641546bbf5a4425fabfb32096779",
+          "body_size": 55,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body_json": "{\"topic\": \"topic\", \"title\": \"title\", \"message\": \"body\"}"
+        }
+      ]
+    },
+    {
+      "name": "private-missing-token",
+      "url": "ntfy://private.invalid/topic?auth=token",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": []
+    },
+    {
+      "name": "cloud-allows-malformed-private-port",
+      "url": "ntfy://private.invalid:bad/topic",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://ntfy.sh/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "X-Icon": "https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png"
+          },
+          "body_sha256": "b5f9d03c4588e9f58e1b408eba85ef5d3b7a641546bbf5a4425fabfb32096779",
+          "body_size": 55,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body_json": "{\"topic\": \"topic\", \"title\": \"title\", \"message\": \"body\"}"
+        }
+      ]
+    },
+    {
+      "name": "invalid-mode",
+      "url": "ntfy://private.invalid/topic?mode=unknown",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "waits": [],
+      "requests": []
+    },
+    {
+      "name": "invalid-auth",
+      "url": "ntfy://private.invalid/topic?auth=unknown",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "waits": [],
+      "requests": []
+    },
+    {
+      "name": "no-valid-topics",
+      "url": "ntfy://private.invalid/bad!",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "statuses": [],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": []
+    },
+    {
+      "name": "attachment-per-topic-sequential",
+      "url": "ntfys://tk_owned@private.invalid/alpha/beta?image=no",
+      "title": " title ",
+      "body": "owned body ",
+      "attachments": [
+        "https://attach.invalid/a.png",
+        "https://attach.invalid/b.txt"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [
+        5.5,
+        5.5,
+        5.5
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "body_size": 0,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://private.invalid/beta?filename=a.png&title=title&message=owned+body",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Authorization": "Bearer tk_owned"
+          },
+          "body_sha256": "bcbea859ce98e78f4285d046a249e32f1cb83f70bba849efcefd91c25d14ffe2",
+          "body_size": 19,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/b.txt",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "body_size": 0,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://private.invalid/beta?filename=b.txt",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Authorization": "Bearer tk_owned"
+          },
+          "body_sha256": "4a27cca924c37ee0929a54e1683589f21a0629881d390ec98bc7534190279078",
+          "body_size": 10,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://private.invalid/alpha?filename=a.png&title=title&message=owned+body",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Authorization": "Bearer tk_owned"
+          },
+          "body_sha256": "bcbea859ce98e78f4285d046a249e32f1cb83f70bba849efcefd91c25d14ffe2",
+          "body_size": 19,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://private.invalid/alpha?filename=b.txt",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Authorization": "Bearer tk_owned"
+          },
+          "body_sha256": "4a27cca924c37ee0929a54e1683589f21a0629881d390ec98bc7534190279078",
+          "body_size": 10,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "attachment-post-failure-aborts-next",
+      "url": "ntfy://private.invalid/alpha/beta?image=no",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://attach.invalid/a.png",
+        "https://attach.invalid/b.txt"
+      ],
+      "statuses": [
+        503
+      ],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "body_size": 0,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "http://private.invalid/beta?filename=a.png&title=title&message=body",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body_sha256": "bcbea859ce98e78f4285d046a249e32f1cb83f70bba849efcefd91c25d14ffe2",
+          "body_size": 19,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "attachment-resolution-failure-keeps-first",
+      "url": "ntfy://private.invalid/alpha/beta?image=no",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://attach.invalid/a.png",
+        "https://attach.invalid/missing.jpg"
+      ],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "body_size": 0,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "http://private.invalid/beta?filename=a.png&title=title&message=body",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body_sha256": "bcbea859ce98e78f4285d046a249e32f1cb83f70bba849efcefd91c25d14ffe2",
+          "body_size": 19,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/missing.jpg",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "body_size": 0,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "truncate-keeps-first-attachment",
+      "url": "ntfy://topic?overflow=truncate&image=no",
+      "title": "",
+      "body": "",
+      "attachments": [
+        "https://attach.invalid/a.png",
+        "https://attach.invalid/b.txt"
+      ],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "body_size": 0,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://ntfy.sh/topic?filename=a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body_sha256": "bcbea859ce98e78f4285d046a249e32f1cb83f70bba849efcefd91c25d14ffe2",
+          "body_size": 19,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "oversize-json-becomes-text-attachment",
+      "url": "ntfy://topic?format=html&image=no",
+      "title": "title",
+      "body": {
+        "repeat": "汉",
+        "count": 1400
+      },
+      "attachments": [],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://ntfy.sh/topic?filename={uuid4}.txt",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body_sha256": "4b4dd982e16ead13a7d5c8cf987d376e78a5879dbe38f181a25e6d4f02fb7038",
+          "body_size": 4206,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "truncate-amalgamated-title-body",
+      "url": "ntfy://topic?overflow=truncate&image=no",
+      "title": "title",
+      "body": {
+        "repeat": "x",
+        "count": 8000
+      },
+      "attachments": [],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://ntfy.sh/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body_sha256": "fe5de3c8a3242c9b05e398b3c27b72a1c3c4b9737ebdebe3e9a870b040e37759",
+          "body_size": 7834,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "split-amalgamated-title-body",
+      "url": "ntfy://topic?overflow=split&image=no",
+      "title": "title",
+      "body": {
+        "repeat": "x",
+        "count": 7800,
+        "suffix": "tail"
+      },
+      "attachments": [],
+      "statuses": [
+        200,
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [
+        5.5
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://ntfy.sh/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body_sha256": "cbc161f23753e7bf798dfbac20856e108d824e35fd9e800d6737620ae798e3f8",
+          "body_size": 7840,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "https://ntfy.sh/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body_sha256": "02769cac0f1fbdce871919f600c0a7d32d39106fee8fdb3e598ed56f04d6c27e",
+          "body_size": 78,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body_json": "{\"topic\": \"topic\", \"title\": \"title [2/2]\", \"message\": \"xxxxxxxxxxxxxxxxxtail\"}"
+        }
+      ]
+    }
+  ]
+}

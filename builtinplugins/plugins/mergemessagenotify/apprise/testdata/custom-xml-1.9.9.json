@@ -1,0 +1,537 @@
+{
+  "source": {
+    "apprise_version": "1.9.9",
+    "requests_version": "2.34.2",
+    "python_version": "3.14.4",
+    "sha256_by_path": {
+      "plugins/custom_xml.py": "395a8226c6aae9608deb25ce9df5471647647aa74bea09f435d6c16f5325863c",
+      "plugins/base.py": "ddee0ee98b4a73f827ba597d069efb9e74c71089be6bff954b6ed09e5629d0fe",
+      "url.py": "3524bd3f059b8f679dc4f096167159bdcf259e5384d1d03e622fdce32b32aa16",
+      "attachment/base.py": "a0007805d7e87fbb44806b4952a3ed151f483443c67ef58ec2e5dfe2c01137fb"
+    },
+    "note": "Exact prepared requests captured using owned inputs; socket connections, DNS, and actual Requests transport forbidden."
+  },
+  "owned_file_base64": "b3duZWQgbG9jYWwgWE1MIGJ5dGVzAP8=",
+  "fixture_http_body_base64": "iVBORw0KGgp4bWwtb3duZWQtaW1hZ2UA",
+  "cases": [
+    {
+      "name": "default-soap-root",
+      "url": "xml://notify.invalid",
+      "title": "  标题 & \" > ",
+      "body": " body <node> '\t\n{{CORE}}  \r\n",
+      "attachment": null,
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://notify.invalid/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/xml"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification xmlns:xsi=\"https://raw.githubusercontent.com/caronc/apprise/master/apprise/assets/NotifyXML-1.1.xsd\">\n            <Version>1.1</Version><Subject>标题 &amp; &quot; &gt;</Subject><Message> body &lt;node&gt; &apos;\t\n{{CORE}}</Message><MessageType>info</MessageType>\n            \n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "secure-get-auth-query-and-headers",
+      "url": "xmls://owner:p%40ss@notify.invalid:9443/base%2520path?method=get&verify=no&cto=2.5&rto=11&+content-type=application%2Fsoap%2Bxml&+X-Owned=A%252BB&-dropped=A%26B",
+      "title": "Owned",
+      "body": "消息",
+      "attachment": null,
+      "status": 206,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://notify.invalid:9443/base%2520path",
+          "headers": {
+            "User-Agent": "Apprise",
+            "content-type": "application/soap+xml",
+            "X-Owned": "A+B",
+            "Authorization": "Basic b3duZXI6cEBzcw=="
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification xmlns:xsi=\"https://raw.githubusercontent.com/caronc/apprise/master/apprise/assets/NotifyXML-1.1.xsd\">\n            <Version>1.1</Version><Subject>Owned</Subject><Message>消息</Message><MessageType>info</MessageType>\n            \n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": false,
+          "timeout": [
+            2.5,
+            11.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "payload-remap-delete-and-extras",
+      "url": "xml://notify.invalid/notify?:Subject=Heading&:Message=&:MessageType=Heading&:Meta%20Data=%3Ca%3E%26%27&:Heading=extra&:After={{ATTACHMENTS}}",
+      "title": "Title",
+      "body": "Deleted message",
+      "attachment": null,
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://notify.invalid/notify",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/xml"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification>\n            <Version>1.1</Version><Heading>extra</Heading><MetaData>&lt;a&gt;&amp;&apos;</MetaData><After>{{ATTACHMENTS}}</After>\n            \n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "invalid-extra-name-retains-schema",
+      "url": "xml://notify.invalid/notify?:%21%2B=ignored",
+      "title": "Owned",
+      "body": "body",
+      "attachment": null,
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://notify.invalid/notify",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/xml"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification xmlns:xsi=\"https://raw.githubusercontent.com/caronc/apprise/master/apprise/assets/NotifyXML-1.1.xsd\">\n            <Version>1.1</Version><Subject>Owned</Subject><Message>body</Message><MessageType>info</MessageType>\n            \n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "sanitized-extra-collision-and-order",
+      "url": "xml://notify.invalid/notify?:My%20Field=first&:Following=two&:MyField=last&:Version=ver",
+      "title": "",
+      "body": "body",
+      "attachment": null,
+      "status": 204,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://notify.invalid/notify",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/xml"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification>\n            <ver>1.1</ver><Subject></Subject><Message>body</Message><MessageType>info</MessageType><MyField>last</MyField><Following>two</Following>\n            \n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "header-overrides-case-insensitive",
+      "url": "xmls://notify.invalid/notify?+X-Case=first&+x-case=last&+User-Agent=Owned-Agent",
+      "title": "Owned",
+      "body": "body",
+      "attachment": null,
+      "status": 201,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://notify.invalid/notify",
+          "headers": {
+            "User-Agent": "Owned-Agent",
+            "Content-Type": "application/xml",
+            "x-case": "last"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification xmlns:xsi=\"https://raw.githubusercontent.com/caronc/apprise/master/apprise/assets/NotifyXML-1.1.xsd\">\n            <Version>1.1</Version><Subject>Owned</Subject><Message>body</Message><MessageType>info</MessageType>\n            \n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "url-user-without-password",
+      "url": "xml://user@notify.invalid/notify?method=delete",
+      "title": "Owned",
+      "body": "body",
+      "attachment": null,
+      "status": 202,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "DELETE",
+          "url": "http://notify.invalid/notify",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/xml",
+            "Authorization": "Basic dXNlcjpOb25l"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification xmlns:xsi=\"https://raw.githubusercontent.com/caronc/apprise/master/apprise/assets/NotifyXML-1.1.xsd\">\n            <Version>1.1</Version><Subject>Owned</Subject><Message>body</Message><MessageType>info</MessageType>\n            \n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "case-insensitive-method-and-raw-format",
+      "url": "xml://notify.invalid/notify?method=OpTiOnS&format=html",
+      "title": "A <b>",
+      "body": "<b>owned</b> &",
+      "attachment": null,
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "OPTIONS",
+          "url": "http://notify.invalid/notify",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/xml"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification xmlns:xsi=\"https://raw.githubusercontent.com/caronc/apprise/master/apprise/assets/NotifyXML-1.1.xsd\">\n            <Version>1.1</Version><Subject>A &lt;b&gt;</Subject><Message>&lt;b&gt;owned&lt;/b&gt; &amp;</Message><MessageType>info</MessageType>\n            \n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "http-299-is-success",
+      "url": "xml://notify.invalid/notify",
+      "title": "",
+      "body": "body",
+      "attachment": null,
+      "status": 299,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://notify.invalid/notify",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/xml"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification xmlns:xsi=\"https://raw.githubusercontent.com/caronc/apprise/master/apprise/assets/NotifyXML-1.1.xsd\">\n            <Version>1.1</Version><Subject></Subject><Message>body</Message><MessageType>info</MessageType>\n            \n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "http-300-is-failure",
+      "url": "xml://notify.invalid/notify",
+      "title": "",
+      "body": "body",
+      "attachment": null,
+      "status": 300,
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://notify.invalid/notify",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/xml"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification xmlns:xsi=\"https://raw.githubusercontent.com/caronc/apprise/master/apprise/assets/NotifyXML-1.1.xsd\">\n            <Version>1.1</Version><Subject></Subject><Message>body</Message><MessageType>info</MessageType>\n            \n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "transport-failure",
+      "url": "xml://notify.invalid/notify",
+      "title": "Owned",
+      "body": "body",
+      "attachment": null,
+      "status": 0,
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://notify.invalid/notify",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/xml"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification xmlns:xsi=\"https://raw.githubusercontent.com/caronc/apprise/master/apprise/assets/NotifyXML-1.1.xsd\">\n            <Version>1.1</Version><Subject>Owned</Subject><Message>body</Message><MessageType>info</MessageType>\n            \n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "bad-method",
+      "url": "xml://notify.invalid/notify?method=TRACE",
+      "title": "Owned",
+      "body": "body",
+      "attachment": null,
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "bad-timezone",
+      "url": "xml://notify.invalid/notify?tz=Owned/Unknown",
+      "title": "",
+      "body": "body",
+      "attachment": null,
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "store-disabled-source-rejection",
+      "url": "xml://notify.invalid/notify?store=no",
+      "title": "Owned",
+      "body": "body",
+      "attachment": null,
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "owned-http-and-local-attachments",
+      "url": "xml://notify.invalid/notify",
+      "title": "Owned",
+      "body": "body",
+      "attachment": [
+        "https://image.invalid/art.png",
+        "{owned_file}"
+      ],
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://image.invalid/art.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "http://notify.invalid/notify",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/xml"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification xmlns:xsi=\"https://raw.githubusercontent.com/caronc/apprise/master/apprise/assets/NotifyXML-1.1.xsd\">\n            <Version>1.1</Version><Subject>Owned</Subject><Message>body</Message><MessageType>info</MessageType>\n            <Attachments format=\"base64\"><Attachment filename=\"art &amp; owned.png\" mimetype=\"image/png\">iVBORw0KGgp4bWwtb3duZWQtaW1hZ2UA</Attachment><Attachment filename=\"Local &amp; Art.PNG\" mimetype=\"image/png\">b3duZWQgbG9jYWwgWE1MIGJ5dGVzAP8=</Attachment></Attachments>\n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "attachment-only",
+      "url": "xmls://notify.invalid/notify?method=PUT",
+      "title": "",
+      "body": "",
+      "attachment": "https://image.invalid/art.png",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://image.invalid/art.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "PUT",
+          "url": "https://notify.invalid/notify",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/xml"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification xmlns:xsi=\"https://raw.githubusercontent.com/caronc/apprise/master/apprise/assets/NotifyXML-1.1.xsd\">\n            <Version>1.1</Version><Subject></Subject><Message></Message><MessageType>info</MessageType>\n            <Attachments format=\"base64\"><Attachment filename=\"art &amp; owned.png\" mimetype=\"image/png\">iVBORw0KGgp4bWwtb3duZWQtaW1hZ2UA</Attachment></Attachments>\n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "missing-attachment-stops-send",
+      "url": "xml://notify.invalid/notify",
+      "title": "Owned",
+      "body": "body",
+      "attachment": [
+        "https://image.invalid/art.png",
+        "http://image.invalid/missing.jpg"
+      ],
+      "status": 200,
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://image.invalid/art.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "GET",
+          "url": "http://image.invalid/missing.jpg",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        }
+      ]
+    },
+    {
+      "name": "truncate-keeps-first-attachment",
+      "url": "xml://notify.invalid/notify?overflow=truncate",
+      "title": "Owned",
+      "body": "body",
+      "attachment": [
+        "{owned_file}",
+        "http://image.invalid/missing.jpg"
+      ],
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://notify.invalid/notify",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/xml"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification xmlns:xsi=\"https://raw.githubusercontent.com/caronc/apprise/master/apprise/assets/NotifyXML-1.1.xsd\">\n            <Version>1.1</Version><Subject>Owned</Subject><Message>body</Message><MessageType>info</MessageType>\n            <Attachments format=\"base64\"><Attachment filename=\"Local &amp; Art.PNG\" mimetype=\"image/png\">b3duZWQgbG9jYWwgWE1MIGJ5dGVzAP8=</Attachment></Attachments>\n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "prepared-url-normalizes-host-and-dot-segments",
+      "url": "xmls://NOTIFY.invalid/base/discard/%2E%2E/keep/.",
+      "title": "Owned",
+      "body": "body",
+      "attachment": null,
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://notify.invalid/base/keep/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/xml"
+          },
+          "body": "<?xml version='1.0' encoding='utf-8'?>\n<soapenv:Envelope\n    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n    xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <soapenv:Body>\n        <Notification xmlns:xsi=\"https://raw.githubusercontent.com/caronc/apprise/master/apprise/assets/NotifyXML-1.1.xsd\">\n            <Version>1.1</Version><Subject>Owned</Subject><Message>body</Message><MessageType>info</MessageType>\n            \n       </Notification>\n    </soapenv:Body>\n</soapenv:Envelope>",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    }
+  ]
+}

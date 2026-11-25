@@ -1,0 +1,48 @@
+{
+  "classification": "actual333/Python3.12 Requests default CookieJar Max-Age normalization and first-attribute handling; no HTTP/app/config/network",
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "origin": "https://movie-pilot.org/status",
+  "target": "https://movie-pilot.org/after",
+  "cases": [
+    {
+      "domain": "Max-Age=garbage",
+      "set_cookie": "owned=test; Path=/; Max-Age=garbage",
+      "cookie_header": null
+    },
+    {
+      "domain": "Max-Age=0_0",
+      "set_cookie": "owned=test; Path=/; Max-Age=0_0",
+      "cookie_header": null
+    },
+    {
+      "domain": "Max-Age=00",
+      "set_cookie": "owned=test; Path=/; Max-Age=00",
+      "cookie_header": null
+    },
+    {
+      "domain": "Max-Age=+0",
+      "set_cookie": "owned=test; Path=/; Max-Age=+0",
+      "cookie_header": null
+    },
+    {
+      "domain": "Max-Age=1; Max-Age=0",
+      "set_cookie": "owned=test; Path=/; Max-Age=1; Max-Age=0",
+      "cookie_header": null
+    },
+    {
+      "domain": "Max-Age=0; Max-Age=1",
+      "set_cookie": "owned=test; Path=/; Max-Age=0; Max-Age=1",
+      "cookie_header": "owned=test"
+    },
+    {
+      "domain": "Max-Age=0",
+      "set_cookie": "owned=test; Path=/; Max-Age=0",
+      "cookie_header": null
+    },
+    {
+      "domain": "Max-Age=1",
+      "set_cookie": "owned=test; Path=/; Max-Age=1",
+      "cookie_header": "owned=test"
+    }
+  ]
+}

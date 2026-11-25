@@ -1,0 +1,35 @@
+MSP RLE format description and reader attribution
+
+The Go MSP RLE reader in decode_additional.go follows the installed Pillow
+12.2.0 MspImagePlugin.MspDecoder and the format description it cites.
+
+Pillow source notices:
+Copyright (c) Secret Labs AB 1997.
+Copyright (c) Fredrik Lundh 1995-97.
+Copyright (c) Eric Soroos 2017.
+Pillow's permission and warranty terms are retained in PILLOW-LICENSE.txt.
+
+The installed Pillow source identifies its RLE algorithm reference as:
+https://www.fileformat.info/format/mspaint/egff.htm
+It attributes the description to Encyclopedia of Graphics File Formats,
+James D. Murray and William vanRyper, 2nd edition, O'Reilly & Associates,1996,
+ISBN 1-56592-161-5, under Creative Commons/Attribution.
+Book/mirror attribution pages:
+https://www.fileformat.info/resource/book/1565921615/index.htm
+https://www.fileformat.info/mirror/egff/
+
+The mirror's supplied notice reads:
+"This page is taken from the Encyclopedia of Graphics File Formats and is
+licensed by O'Reilly under the Creative Common/Attribution license."
+
+Neither the installed Pillow header nor the inspected book/mirror notice
+specifies a Creative Commons license version or links a versioned legal code.
+This notice preserves that attribution; it does not assign a new license,
+select a version on the upstream author's behalf, or claim a specific CC
+legal text has been supplied by upstream.
+
+Changes: the default-image reader was translated into Go, uses a bounded
+byte-slice cursor instead of Python file reads, retains blank-white MSP RLE
+scanlines, and normalizes packed monochrome pixels to the existing Raster
+representation before the original resize/hash pipeline. No publisher or
+upstream author endorsement is implied.

@@ -1,0 +1,567 @@
+{
+  "kind": "captured-installed-vendor-AST + captured-installed-wrapper-AST + byte-matched Requests.prepare serialization methods",
+  "scope": "No host/package import, no network send, no daemon, only synthetic bytes/paths/response",
+  "vendor_version": "2026.6.0",
+  "requests_version": "2.34.2",
+  "urllib3_version": "2.7.0",
+  "source_hashes": {
+    "host-reference/app/modules/qbittorrent/qbittorrent.py": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+    "qbittorrent-vendor/torrents.py": "d087e5ef72ee748a8af160fd7f4fdbf119d41df6b1fdf2fe1d50509a3a0c2e26",
+    "qbittorrent-vendor/request.py": "dcf8371d17e5623ca81d95be2a8a6a8ade747f23d2aac5a79a629dc961dc206e"
+  },
+  "serializer_comparison": [
+    {
+      "module": "requests.models",
+      "local_sha256": "d1bc0d990abf5d5ebee05f890911b4363fadf2d5264b686a963df47c529b6ace",
+      "installed_sha256": "d1bc0d990abf5d5ebee05f890911b4363fadf2d5264b686a963df47c529b6ace",
+      "same_bytes": true
+    },
+    {
+      "module": "urllib3.filepost",
+      "local_sha256": "53c78d67e9a928a1e1ae56c7104893c7180ad7a21e8e111aeeecf8db2a80fdd2",
+      "installed_sha256": "53c78d67e9a928a1e1ae56c7104893c7180ad7a21e8e111aeeecf8db2a80fdd2",
+      "same_bytes": true
+    },
+    {
+      "module": "urllib3.fields",
+      "local_sha256": "6862c5015669554f856c996596f7b8021834fa91fd659050d88cfb95fa648e43",
+      "installed_sha256": "6862c5015669554f856c996596f7b8021834fa91fd659050d88cfb95fa648e43",
+      "same_bytes": true
+    }
+  ],
+  "limitations": [
+    "Serialization critical files byte-match installed image; execution interpreter here is local Python3.14, installed interpreter3.12.13",
+    "No assertion about daemon acceptance or skip behavior beyond actual constructed wire field",
+    "Synthetic Ok response proves wrapper parse path only; source tuple remains truthy on ordinary False result too"
+  ],
+  "cases": [
+    {
+      "input": null,
+      "input_repr": "None",
+      "input_json": "null",
+      "input_type": "NoneType",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [],
+      "multipart": true
+    },
+    {
+      "input": false,
+      "input_repr": "False",
+      "input_json": "false",
+      "input_type": "bool",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "False"
+      ],
+      "multipart": true
+    },
+    {
+      "input": true,
+      "input_repr": "True",
+      "input_json": "true",
+      "input_type": "bool",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "True"
+      ],
+      "multipart": true
+    },
+    {
+      "input": "false",
+      "input_repr": "'false'",
+      "input_json": "\"false\"",
+      "input_type": "str",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "false"
+      ],
+      "multipart": true
+    },
+    {
+      "input": "true",
+      "input_repr": "'true'",
+      "input_json": "\"true\"",
+      "input_type": "str",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "true"
+      ],
+      "multipart": true
+    },
+    {
+      "input": "0",
+      "input_repr": "'0'",
+      "input_json": "\"0\"",
+      "input_type": "str",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "0"
+      ],
+      "multipart": true
+    },
+    {
+      "input": "1",
+      "input_repr": "'1'",
+      "input_json": "\"1\"",
+      "input_type": "str",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "1"
+      ],
+      "multipart": true
+    },
+    {
+      "input": "other",
+      "input_repr": "'other'",
+      "input_json": "\"other\"",
+      "input_type": "str",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "other"
+      ],
+      "multipart": true
+    },
+    {
+      "input": "",
+      "input_repr": "''",
+      "input_json": "\"\"",
+      "input_type": "str",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        ""
+      ],
+      "multipart": true
+    },
+    {
+      "input": 0,
+      "input_repr": "0",
+      "input_json": "0",
+      "input_type": "int",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "0"
+      ],
+      "multipart": true
+    },
+    {
+      "input": 1,
+      "input_repr": "1",
+      "input_json": "1",
+      "input_type": "int",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "1"
+      ],
+      "multipart": true
+    },
+    {
+      "input": 2,
+      "input_repr": "2",
+      "input_json": "2",
+      "input_type": "int",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "2"
+      ],
+      "multipart": true
+    },
+    {
+      "input": [],
+      "input_repr": "[]",
+      "input_json": "[]",
+      "input_type": "list",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "[]"
+      ],
+      "multipart": true
+    },
+    {
+      "input": [
+        1
+      ],
+      "input_repr": "[1]",
+      "input_json": "[1]",
+      "input_type": "list",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "[1]"
+      ],
+      "multipart": true
+    },
+    {
+      "input": [
+        "false",
+        "true"
+      ],
+      "input_repr": "['false', 'true']",
+      "input_json": "[\"false\", \"true\"]",
+      "input_type": "list",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "['false', 'true']"
+      ],
+      "multipart": true
+    },
+    {
+      "input": {},
+      "input_repr": "{}",
+      "input_json": "{}",
+      "input_type": "dict",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "{}"
+      ],
+      "multipart": true
+    },
+    {
+      "input": {
+        "x": 1
+      },
+      "input_repr": "{'x': 1}",
+      "input_json": "{\"x\": 1}",
+      "input_type": "dict",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "{'x': 1}"
+      ],
+      "multipart": true
+    },
+    {
+      "input": 1.0,
+      "input_repr": "1.0",
+      "input_json": "1.0",
+      "input_type": "float",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "1.0"
+      ],
+      "multipart": true
+    },
+    {
+      "input": 2.5,
+      "input_repr": "2.5",
+      "input_json": "2.5",
+      "input_type": "float",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "2.5"
+      ],
+      "multipart": true
+    },
+    {
+      "input": -0.0,
+      "input_repr": "-0.0",
+      "input_json": "-0.0",
+      "input_type": "float",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "-0.0"
+      ],
+      "multipart": true
+    },
+    {
+      "input": 1e+20,
+      "input_repr": "1e+20",
+      "input_json": "1e+20",
+      "input_type": "float",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "1e+20"
+      ],
+      "multipart": true
+    },
+    {
+      "input": 1e-07,
+      "input_repr": "1e-07",
+      "input_json": "1e-07",
+      "input_type": "float",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "1e-07"
+      ],
+      "multipart": true
+    },
+    {
+      "input": 0.0001,
+      "input_repr": "0.0001",
+      "input_json": "0.0001",
+      "input_type": "float",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "0.0001"
+      ],
+      "multipart": true
+    },
+    {
+      "input": 1.2345678901234568e+16,
+      "input_repr": "1.2345678901234568e+16",
+      "input_json": "1.2345678901234568e+16",
+      "input_type": "float",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "1.2345678901234568e+16"
+      ],
+      "multipart": true
+    },
+    {
+      "input": 1267650600228229401496703205376,
+      "input_repr": "1267650600228229401496703205376",
+      "input_json": "1267650600228229401496703205376",
+      "input_type": "int",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "1267650600228229401496703205376"
+      ],
+      "multipart": true
+    },
+    {
+      "input": -1267650600228229401496703205376,
+      "input_repr": "-1267650600228229401496703205376",
+      "input_json": "-1267650600228229401496703205376",
+      "input_type": "int",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "-1267650600228229401496703205376"
+      ],
+      "multipart": true
+    },
+    {
+      "input": "quote'\"\\\n\r\t中文😀\u001b",
+      "input_repr": "'quote\\'\"\\\\\\n\\r\\t中文😀\\x1b'",
+      "input_json": "\"quote'\\\"\\\\\\n\\r\\t中文😀\\u001b\"",
+      "input_type": "str",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "quote'\"\\\n\r\t中文😀\u001b"
+      ],
+      "multipart": true
+    },
+    {
+      "input": [
+        "a'b",
+        "a\"b",
+        "a'b\"c",
+        "\\\n\r\t"
+      ],
+      "input_repr": "[\"a'b\", 'a\"b', 'a\\'b\"c', '\\\\\\n\\r\\t']",
+      "input_json": "[\"a'b\", \"a\\\"b\", \"a'b\\\"c\", \"\\\\\\n\\r\\t\"]",
+      "input_type": "list",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "[\"a'b\", 'a\"b', 'a\\'b\"c', '\\\\\\n\\r\\t']"
+      ],
+      "multipart": true
+    },
+    {
+      "input": [
+        true,
+        false,
+        null,
+        [
+          1.0,
+          1267650600228229401496703205376
+        ],
+        {
+          "z": 1,
+          "a": 2
+        }
+      ],
+      "input_repr": "[True, False, None, [1.0, 1267650600228229401496703205376], {'z': 1, 'a': 2}]",
+      "input_json": "[true, false, null, [1.0, 1267650600228229401496703205376], {\"z\": 1, \"a\": 2}]",
+      "input_type": "list",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "[True, False, None, [1.0, 1267650600228229401496703205376], {'z': 1, 'a': 2}]"
+      ],
+      "multipart": true
+    },
+    {
+      "input": {
+        "z": 1,
+        "a": 2,
+        "m": {
+          "b": [],
+          "a": null
+        },
+        "quote's": "中文😀\\\n"
+      },
+      "input_repr": "{'z': 1, 'a': 2, 'm': {'b': [], 'a': None}, \"quote's\": '中文😀\\\\\\n'}",
+      "input_json": "{\"z\": 1, \"a\": 2, \"m\": {\"b\": [], \"a\": null}, \"quote's\": \"中文😀\\\\\\n\"}",
+      "input_type": "dict",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "{'z': 1, 'a': 2, 'm': {'b': [], 'a': None}, \"quote's\": '中文😀\\\\\\n'}"
+      ],
+      "multipart": true
+    },
+    {
+      "input": {
+        "a": 2,
+        "z": 1
+      },
+      "input_repr": "{'a': 2, 'z': 1}",
+      "input_json": "{\"a\": 2, \"z\": 1}",
+      "input_type": "dict",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "{'a': 2, 'z': 1}"
+      ],
+      "multipart": true
+    },
+    {
+      "input": null,
+      "input_repr": "inf",
+      "input_json": "1e309",
+      "input_type": "float",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "inf"
+      ],
+      "multipart": true
+    },
+    {
+      "input": null,
+      "input_repr": "-inf",
+      "input_json": "-1e309",
+      "input_type": "float",
+      "source_wrapper_result": [
+        true,
+        []
+      ],
+      "wrapper_tuple_truthy": true,
+      "wire_values": [
+        "-inf"
+      ],
+      "multipart": true
+    }
+  ]
+}

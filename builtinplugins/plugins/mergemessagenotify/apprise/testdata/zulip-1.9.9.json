@@ -1,0 +1,244 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "zulip_sha256": "a6cc435d7f25ba8a2d1ea88495256dbcc445610f3f5d92cca464b90987bed830"
+  },
+  "cases": [
+    {
+      "name": "zulip-cloud-default",
+      "url": "zulip://owned-bot@org/0123456789Abcdef0123456789Abcdef",
+      "title": " title ",
+      "body": "body ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://org.zulipchat.com/api/v1/messages",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Basic b3duZWQtYm90QG9yZy56dWxpcGNoYXQuY29tOjAxMjM0NTY3ODlBYmNkZWYwMTIzNDU2Nzg5QWJjZGVm"
+          },
+          "body": "subject=title&content=body&type=stream&to=general",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "zulip-private-and-stream-failure-continues",
+      "url": "zulip://Owned-BOT@org.owned.invalid:8443/0123456789Abcdef0123456789Abcdef/Zeta/person%40example.invalid?to=%23Beta%2Calpha%23Zeta&verify=no&cto=2.5&rto=9",
+      "title": "标题",
+      "body": "body",
+      "attach": null,
+      "statuses": [
+        503,
+        0,
+        200,
+        200
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://org.owned.invalid/api/v1/messages",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Basic T3duZWQtQk9ULWJvdEBvcmcub3duZWQuaW52YWxpZDowMTIzNDU2Nzg5QWJjZGVmMDEyMzQ1Njc4OUFiY2RlZg=="
+          },
+          "body": "subject=%E6%A0%87%E9%A2%98&content=body&type=stream&to=Beta",
+          "verify": false,
+          "timeout": [
+            2.5,
+            9.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://org.owned.invalid/api/v1/messages",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Basic T3duZWQtQk9ULWJvdEBvcmcub3duZWQuaW52YWxpZDowMTIzNDU2Nzg5QWJjZGVmMDEyMzQ1Njc4OUFiY2RlZg=="
+          },
+          "body": "subject=%E6%A0%87%E9%A2%98&content=body&type=stream&to=Zeta",
+          "verify": false,
+          "timeout": [
+            2.5,
+            9.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://org.owned.invalid/api/v1/messages",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Basic T3duZWQtQk9ULWJvdEBvcmcub3duZWQuaW52YWxpZDowMTIzNDU2Nzg5QWJjZGVmMDEyMzQ1Njc4OUFiY2RlZg=="
+          },
+          "body": "subject=%E6%A0%87%E9%A2%98&content=body&type=stream&to=alpha",
+          "verify": false,
+          "timeout": [
+            2.5,
+            9.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://org.owned.invalid/api/v1/messages",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Basic T3duZWQtQk9ULWJvdEBvcmcub3duZWQuaW52YWxpZDowMTIzNDU2Nzg5QWJjZGVmMDEyMzQ1Njc4OUFiY2RlZg=="
+          },
+          "body": "subject=%E6%A0%87%E9%A2%98&content=body&type=private&to=person%40example.invalid",
+          "verify": false,
+          "timeout": [
+            2.5,
+            9.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        5.5,
+        5.5,
+        5.5
+      ]
+    },
+    {
+      "name": "zulip-query-token-overrides-path",
+      "url": "zulip://owned@org/owned-stream?token=0123456789Abcdef0123456789Abcdef",
+      "title": "title",
+      "body": "body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://org.zulipchat.com/api/v1/messages",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Basic b3duZWQtYm90QG9yZy56dWxpcGNoYXQuY29tOjAxMjM0NTY3ODlBYmNkZWYwMTIzNDU2Nzg5QWJjZGVm"
+          },
+          "body": "subject=title&content=body&type=stream&to=owned-stream",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "zulip-60-character-title-truncation",
+      "url": "zulip://owned@org/0123456789Abcdef0123456789Abcdef?overflow=truncate",
+      "title": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "body": "body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://org.zulipchat.com/api/v1/messages",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Basic b3duZWQtYm90QG9yZy56dWxpcGNoYXQuY29tOjAxMjM0NTY3ODlBYmNkZWYwMTIzNDU2Nzg5QWJjZGVm"
+          },
+          "body": "subject=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&content=body&type=stream&to=general",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "zulip-invalid-token",
+      "url": "zulip://owned@org/short",
+      "title": "title",
+      "body": "body",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "zulip-no-botname",
+      "url": "zulip://org/0123456789Abcdef0123456789Abcdef",
+      "title": "title",
+      "body": "body",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "zulip-attachment-ignored-and-204-rejected",
+      "url": "zulip://owned@org/0123456789Abcdef0123456789Abcdef",
+      "title": "title",
+      "body": "body",
+      "attach": "https://owned-image.invalid/ignore.png",
+      "statuses": [
+        204
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://org.zulipchat.com/api/v1/messages",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Authorization": "Basic b3duZWQtYm90QG9yZy56dWxpcGNoYXQuY29tOjAxMjM0NTY3ODlBYmNkZWYwMTIzNDU2Nzg5QWJjZGVm"
+          },
+          "body": "subject=title&content=body&type=stream&to=general",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    }
+  ]
+}

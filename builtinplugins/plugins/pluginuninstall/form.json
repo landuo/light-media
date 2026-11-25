@@ -1,0 +1,91 @@
+{
+  "conf": [
+    {
+      "component": "VForm",
+      "content": [
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 3
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "clear_config",
+                    "label": "清除配置(配置信息)"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 3
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "clear_data",
+                    "label": "清除数据(运行数据)"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 6
+              },
+              "content": [
+                {
+                  "component": "VSelect",
+                  "props": {
+                    "multiple": true,
+                    "chips": true,
+                    "model": "plugin_ids",
+                    "label": "卸载插件",
+                    "items": []
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12
+              },
+              "content": [
+                {
+                  "component": "VAlert",
+                  "props": {
+                    "type": "info",
+                    "variant": "tonal",
+                    "text": "删除数据库中已安装插件记录、清理插件文件。"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "model": {
+    "plugin_ids": [],
+    "clear_config": false,
+    "clear_data": false
+  }
+}

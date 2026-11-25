@@ -1,0 +1,331 @@
+{
+  "kind": "actual installed tzlocal5.4.4 + APScheduler3.11.3 astimezone + Settings converter functions; owned roots/synthetic ENV",
+  "source_sha256": {
+    "python-timezone-reference/tzlocal/unix.py": "68e936f6076c4dac8c9e8a4a76fb6a7cec73f38294ee7dd92d493d03f15bd876",
+    "python-timezone-reference/tzlocal/utils.py": "a2ff1f3f03e3caf5d1a96f56cf1fec9004ec8e207d800ccad42107276508f756",
+    "python-timezone-reference/apscheduler/util.py": "f97dea0b2f5da9d6ffcbbc18ebfa7c00dcf6f6a45c03fffeeb42ac4bb6813c9a",
+    "host-reference/app/core/config.py": "f19111073a7ef25ecd0b7e9d53dab343d76fe64ff3ad821f4ff39a790c104033"
+  },
+  "limitations": [
+    "Local interpreter Python3.14; actual functions are captured installed source",
+    "ZoneInfo database is local system for named zones and owned copied binaries",
+    "windows_tz membership stub contains only fixture names; no arbitrary mapping completeness claim",
+    "No original plugin/host import, live settings or production file writes"
+  ],
+  "cases": [
+    {
+      "case": "unset",
+      "TZ": null,
+      "files": {
+        "etc/timezone": "Etc/UTC"
+      },
+      "localtime": null,
+      "public": {
+        "zone": "Etc/UTC",
+        "offset_2026_01_01": 0
+      },
+      "warnings": [],
+      "private": {
+        "zone": "Asia/Shanghai"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "empty",
+      "TZ": "",
+      "files": {
+        "etc/timezone": "Etc/UTC"
+      },
+      "localtime": null,
+      "public": {
+        "zone": "Etc/UTC",
+        "offset_2026_01_01": 0
+      },
+      "warnings": [],
+      "private": {
+        "raises": "ValueError"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "explicit-UTC",
+      "TZ": "UTC",
+      "files": {
+        "etc/timezone": "Asia/Shanghai"
+      },
+      "localtime": null,
+      "public": {
+        "zone": "UTC",
+        "offset_2026_01_01": 0
+      },
+      "warnings": [],
+      "private": {
+        "zone": "UTC"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "explicit-Shanghai",
+      "TZ": "Asia/Shanghai",
+      "files": {},
+      "localtime": null,
+      "public": {
+        "zone": "Asia/Shanghai",
+        "offset_2026_01_01": 28800
+      },
+      "warnings": [],
+      "private": {
+        "zone": "Asia/Shanghai"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "colon-UTC",
+      "TZ": ":UTC",
+      "files": {},
+      "localtime": null,
+      "public": {
+        "zone": "UTC",
+        "offset_2026_01_01": 0
+      },
+      "warnings": [],
+      "private": {
+        "raises": "ZoneInfoNotFoundError"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "whitespace-env",
+      "TZ": " Asia/Shanghai ",
+      "files": {
+        "etc/timezone": "Etc/UTC"
+      },
+      "localtime": null,
+      "public": {
+        "raises": "ZoneInfoNotFoundError"
+      },
+      "warnings": [],
+      "private": {
+        "zone": "Asia/Shanghai"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "invalid-env",
+      "TZ": "No/Such_Zone",
+      "files": {
+        "etc/timezone": "Etc/UTC"
+      },
+      "localtime": null,
+      "public": {
+        "raises": "ZoneInfoNotFoundError"
+      },
+      "warnings": [],
+      "private": {
+        "raises": "ZoneInfoNotFoundError"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "discard-stale-etc-timezone",
+      "TZ": null,
+      "files": {
+        "etc/timezone": "Asia/Shanghai"
+      },
+      "localtime": "Etc/UTC",
+      "public": {
+        "zone": "Etc/UTC",
+        "offset_2026_01_01": 0
+      },
+      "warnings": [],
+      "private": {
+        "zone": "Asia/Shanghai"
+      },
+      "log_warnings": [
+        "/etc/timezone is deprecated in some distros, and no longer reliable. tzlocal is ignoring it, and you can likely delete it."
+      ]
+    },
+    {
+      "case": "nondeprecated-config-conflict",
+      "TZ": null,
+      "files": {
+        "var/db/zoneinfo": "Asia/Shanghai",
+        "etc/sysconfig/clock": "ZONE=\"Europe/London\"\n"
+      },
+      "localtime": null,
+      "public": {
+        "raises": "ZoneInfoNotFoundError"
+      },
+      "warnings": [],
+      "private": {
+        "zone": "Asia/Shanghai"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "equivalent-zone-aliases",
+      "TZ": null,
+      "files": {
+        "var/db/zoneinfo": "UTC",
+        "etc/sysconfig/clock": "ZONE=\"Etc/UTC\"\n"
+      },
+      "localtime": null,
+      "public": {
+        "zone": "UTC",
+        "offset_2026_01_01": 0
+      },
+      "warnings": [],
+      "private": {
+        "zone": "Asia/Shanghai"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "invalid-config-zone",
+      "TZ": null,
+      "files": {
+        "etc/timezone": "No/Such_Zone"
+      },
+      "localtime": null,
+      "public": {
+        "raises": "ZoneInfoNotFoundError"
+      },
+      "warnings": [],
+      "private": {
+        "zone": "Asia/Shanghai"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "unnamed-localtime-binary",
+      "TZ": null,
+      "files": {},
+      "localtime": "BINARY",
+      "public": {
+        "zone": "local",
+        "offset_2026_01_01": 28800
+      },
+      "warnings": [],
+      "private": {
+        "zone": "Asia/Shanghai"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "no-zone-or-localtime-files",
+      "TZ": null,
+      "files": {},
+      "localtime": null,
+      "public": {
+        "zone": "Etc/UTC",
+        "offset_2026_01_01": 0
+      },
+      "warnings": [
+        "Can not find any timezone configuration, defaulting to UTC."
+      ],
+      "private": {
+        "zone": "Asia/Shanghai"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "explicit-unnamed-binary",
+      "TZ": "<owned absolute file>",
+      "files": {},
+      "localtime": null,
+      "public": {
+        "zone": "custom-zone",
+        "offset_2026_01_01": 28800
+      },
+      "warnings": [],
+      "private": {
+        "raises": "ValueError"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "unicode-whitespace-clock",
+      "TZ": null,
+      "files": {
+        "etc/sysconfig/clock": " ZONE=\"Asia/Shanghai\"\n"
+      },
+      "localtime": null,
+      "public": {
+        "zone": "Asia/Shanghai",
+        "offset_2026_01_01": 28800
+      },
+      "warnings": [],
+      "private": {
+        "zone": "Asia/Shanghai"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "invalid-utf8-clock",
+      "TZ": null,
+      "files": {
+        "etc/sysconfig/clock": "HEX:ff0a5a4f4e453d22417369612f5368616e67686169220a"
+      },
+      "localtime": null,
+      "public": {
+        "zone": "Etc/UTC",
+        "offset_2026_01_01": 0
+      },
+      "warnings": [
+        "Can not find any timezone configuration, defaulting to UTC."
+      ],
+      "private": {
+        "zone": "Asia/Shanghai"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "malformed-clock-line",
+      "TZ": null,
+      "files": {
+        "etc/sysconfig/clock": "ZONE=\"\nTIMEZONE=\"Asia/Shanghai\"\n"
+      },
+      "localtime": null,
+      "public": {
+        "zone": "Asia/Shanghai",
+        "offset_2026_01_01": 28800
+      },
+      "warnings": [
+        "Syntax error in <owned root>/etc/sysconfig/clock. Ignoring line: ZONE=\"\n"
+      ],
+      "private": {
+        "zone": "Asia/Shanghai"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "bad-localtime-binary",
+      "TZ": null,
+      "files": {},
+      "localtime": "BAD",
+      "public": {
+        "raises": "ValueError"
+      },
+      "warnings": [],
+      "private": {
+        "zone": "Asia/Shanghai"
+      },
+      "log_warnings": []
+    },
+    {
+      "case": "empty-env-localtime-binary",
+      "TZ": "",
+      "files": {},
+      "localtime": "BINARY",
+      "public": {
+        "zone": "local",
+        "offset_2026_01_01": 28800
+      },
+      "warnings": [],
+      "private": {
+        "raises": "ValueError"
+      },
+      "log_warnings": []
+    }
+  ]
+}

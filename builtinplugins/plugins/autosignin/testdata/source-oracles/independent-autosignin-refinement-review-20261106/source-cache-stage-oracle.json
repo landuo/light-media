@@ -1,0 +1,68 @@
+{
+  "python": "3.12.13",
+  "source_sha256": "ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0",
+  "classification": "exact original __signin/write methods AST in original class mangle; synthetic successful/failed POST, real owned file; no app/config/network",
+  "rows": [
+    {
+      "name": "empty-cache",
+      "signed": true,
+      "input_cache_repr": "{}",
+      "hash": "new-hash",
+      "result": [
+        true,
+        "\u7b7e\u5230\u6210\u529f"
+      ],
+      "events": [
+        "POST"
+      ],
+      "error": null,
+      "file_b64": null
+    },
+    {
+      "name": "empty-hash",
+      "signed": true,
+      "input_cache_repr": "{'old': nan}",
+      "hash": "",
+      "result": [
+        true,
+        "\u7b7e\u5230\u6210\u529f"
+      ],
+      "events": [
+        "POST"
+      ],
+      "error": null,
+      "file_b64": null
+    },
+    {
+      "name": "not-signed",
+      "signed": false,
+      "input_cache_repr": "{'old': '\\ud800'}",
+      "hash": "new-hash",
+      "result": [
+        false,
+        "\u7b7e\u5230\u5931\u8d25\uff0c\u8bf7\u5230\u9875\u9762\u67e5\u770b"
+      ],
+      "events": [
+        "POST"
+      ],
+      "error": null,
+      "file_b64": null
+    },
+    {
+      "name": "nonempty-signed",
+      "signed": true,
+      "input_cache_repr": "{'old': 'keep', 'new-hash': 'owned-answer'}",
+      "hash": "new-hash",
+      "result": [
+        true,
+        "\u7b7e\u5230\u6210\u529f"
+      ],
+      "events": [
+        "POST",
+        "WRITE"
+      ],
+      "error": null,
+      "file_b64": "ewogICAgIm9sZCI6ICJrZWVwIiwKICAgICJuZXctaGFzaCI6ICJvd25lZC1hbnN3ZXIiCn0="
+    }
+  ]
+}

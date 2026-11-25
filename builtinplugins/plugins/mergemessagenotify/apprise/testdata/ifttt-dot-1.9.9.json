@@ -1,0 +1,101 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "join_sha256": "19783aa7173578a59a7a8186ca6bc23130a60bfc726f36a723e80e9e4a813014",
+    "ifttt_sha256": "3d4b2f6a97d702b79663228a4c08c314b1cfd4eb3dbeef553873dc30a1d59da0"
+  },
+  "cases": [
+    {
+      "name": "ifttt-dot-segment",
+      "url": "ifttt://ownedToken?to=one%252F..%252Ftwo",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/two/with/key/ownedToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"t\", \"value2\": \"b\", \"value3\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "ifttt-dot-segment-keeps-empty-path-element",
+      "url": "ifttt://ownedToken?to=one%252F%252F.%252Ftwo",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/one//two/with/key/ownedToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"t\", \"value2\": \"b\", \"value3\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "ifttt-encoded-dot-remains-through-parse",
+      "url": "ifttt://ownedToken?to=one%252F%25252E%252Ftwo",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://maker.ifttt.com/trigger/one/./two/with/key/ownedToken",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"value1\": \"t\", \"value2\": \"b\", \"value3\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    }
+  ]
+}

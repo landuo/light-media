@@ -1,0 +1,39 @@
+AutoSignIn Tjupt image helper
+
+Pillow mode conversion/resampling algorithms are translated from Pillow12.2.0;
+PILLOW-LICENSE.txt retains its license. Exact source pins and adaptations are
+in ORIGIN.json. The jpegport subpackage retains the Go JPEG decoder and
+libjpeg-compatible algorithm notices/licenses in that directory.
+
+The pure Go BMP/WebP codecs and CCITT primitives use golang.org/x/image
+v0.24.0. XIMAGE-LICENSE and XIMAGE-PATENTS are retained. JPEG2000 Part1 privately relocates decoder-only source from
+github.com/mububoki/jpeg2000 v1.0.0 with OpenJPEG2.5.4 binary32 arithmetic;
+jpeg2000port/LICENSE and OPENJPEG-COPYRIGHT.txt retain MIT/BSD notices.
+TIFF decoder-only files are privately relocated from github.com/hhrutter/tiff
+v1.0.7, with Pillow sample/polarity/JPEG adaptations. tiffport/LICENSE and
+ORIGIN.json retain the upstream BSD license and exact source inventory.
+The old JPEG decoder behavior follows LibTIFF 4.7.1 tif_ojpeg.c,
+copyright Joris Van Damme and AWare Systems. The YCbCr conversion and
+raster reads follow tif_color.c and tif_getimage.c, copyright 1988–1997
+Sam Leffler and 1991–1997 Silicon Graphics, Inc. The fax mode and polarity
+reference uses tif_fax3.c, copyright 1990–1997 Sam Leffler and 1991–1997
+Silicon Graphics, Inc. tiffport/LIBTIFF-LICENSE.md retains the license.
+
+webp.go translates the limited YUV conversion/fancy upsampling leaf of
+libwebp1.6.0 src/dsp/yuv.h and upsampling.c. Copyright2010-2011 Google Inc.
+LIBWEBP-COPYING, LIBWEBP-PATENTS and LIBWEBP-AUTHORS retain upstream notices.
+No native codec library, CGo or Python runtime is required by the product.
+
+AVIF bitstreams use github.com/gen2brain/gav1d v0.2.6, a pure Go dav1d
+port. GAV1D-COPYING/PATENTS retain its BSD2 notices and AV1 patent text.
+The pinned AVIF container decoder in avifport exposes the native planes
+before color conversion. avifport/ORIGIN.json records the local adaptation.
+The RGB helper translates fixed libyuv YuvPixel and ScaleRowUp2 leaves.
+AVIF coded-plane scaling follows libyuv ScalePlane and its ratio filters.
+LIBYUV-LICENSE/PATENTS/AUTHORS retain upstream notices. The scalar conversion
+and chromaticity calculation follow libavif 1.4.1 reformat.c and colr.c;
+LIBAVIF-LICENSE retains its BSD-2-Clause terms. Other default-image
+format readers retain Pillow source attribution, and four selected MIT
+Picsetgo leaves retain legacycodec/PICSETGO-LICENSE.txt and PROVENANCE.json.
+This is finite source-derived input evidence, not a certification of the full
+generic Pillow Image.open/save/seek/animation API or every codec variant.

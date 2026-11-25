@@ -1,0 +1,75 @@
+{
+  "upstream": "github.com/hhrutter/tiff",
+  "version": "v1.0.7",
+  "module_sum": "h1:Oelnv46vb9gycPsotT0q1IoJ6Ywkzd77I1smgQvkP7g=",
+  "source": "https://github.com/hhrutter/tiff",
+  "files": [
+    {
+      "path": "buffer.go",
+      "upstream_sha256": "513280ac42fe97943c80817e7a4fbd663d3d8f960d9481b82ca27cfc91a5340e"
+    },
+    {
+      "path": "ccitt_rle.go",
+      "upstream_sha256": "0c1e282ecea403d9b9c794de022de92260a077d5cdc921a4fddeb36f7b6dfecd"
+    },
+    {
+      "path": "compress.go",
+      "upstream_sha256": "f98e89a62a957107d3f7f48b53081241357a9829c6a997b98d8823f626d4fc46"
+    },
+    {
+      "path": "consts.go",
+      "upstream_sha256": "90b3681f900773806859d38d4f08bd03a1837abaef12fbcbc0f79928f8ca3bdd"
+    },
+    {
+      "path": "reader.go",
+      "upstream_sha256": "8907a74d559fff74c3462919e9920239dd47c011f7f41ebafe03e711919a85a8"
+    },
+    {
+      "path": "reader_config.go",
+      "upstream_sha256": "5280025917ffe97386501d3574294b41244b0e6d4c7e93bce65266a7022d4a42"
+    },
+    {
+      "path": "reader_ycbcr.go",
+      "upstream_sha256": "b37b47460864c7557bdb2873d03d7d901448e62c9f3f7207cae3e8c4aea52e93"
+    },
+    {
+      "path": "reader_ycbcr_jpeg.go",
+      "upstream_sha256": "0011ba9dddc1ed3652e235ffc056f3ec492b1fd9bfffc1020dc9c7c1d2dd3085"
+    },
+    {
+      "path": "internal/lzw/reader.go",
+      "upstream_sha256": "3f148768901ad4ac3704fd7c1beae15f20472019655e34b7e88e65396004c9ab"
+    },
+    {
+      "path": "LICENSE",
+      "upstream_sha256": "2d36597f7117c38b006835ae7f537487207d8ec407aa9d9980794b2030cbc067"
+    }
+  ],
+  "selection": "Decoder only, no writer/CLI/runtime dependencies. Private relocation keeps existing x/image v0.24.0 unchanged instead of upgrading shared codecs for this single plugin. Local changes add Pillow I/F scalar samples and route JPEG blocks through existing Pillow-compatible JPEG port.",
+  "license": "BSD3, retained LICENSE and original file headers",
+  "libtiff_reference": {
+    "version": "4.7.1",
+    "source": "https://download.osgeo.org/libtiff/tiff-4.7.1.tar.gz",
+    "source_sha256": "f698d94f3103da8ca7438d84e0344e453fe0ba3b7486e04c5bf7a9a3fabe9b69",
+    "files": {
+      "LICENSE.md": "0e27c2382d7b8147972bbb746e04059a1152c8d0fda9d03ef1399d1a433c4ade",
+      "libtiff/tif_ojpeg.c": "6ea97098cc03993866213a01967a3614c526ad7d8a560cbad483c916491c374e",
+      "libtiff/tif_color.c": "f1e2639a70cb143f3ddc27551b9319df29034dfd5dab3dd9495a74c59dab5e3e",
+      "libtiff/tif_getimage.c": "067e430d7144a7c8e01a2f2ebc0bea41d5b9662069c428f0ade948dfa412f066",
+      "libtiff/tif_fax3.c": "f456990ced5ea07a7e4511a3208bde6f649d71faa481ba82788e71e69306613b"
+    },
+    "license": "LIBTIFF-LICENSE.md (upstream license text with trailing spaces removed; file-specific credits in ../NOTICE.txt)"
+  },
+  "local_adaptations": [
+    "I/F scalar decoding and original float/integer predictors",
+    "Pillow/libtiff fax photometric polarity and mixed Group 3 lines. The reference transition search follows golang.org/x/image v0.24.0 ccitt/reader.go.",
+    "JPEG strips use the existing Pillow-compatible JPEG port, including untransformed two-component grayscale-alpha strips.",
+    "Expose native Orientation tag; parent applies ImageOps.exif_transpose semantics",
+    "BigTIFF first-IFD normalization happens in the parent decoder",
+    "Packed grayscale and palette samples follow the Pillow raw unpacker table in https://github.com/python-pillow/Pillow/blob/12.2.0/src/libImaging/Unpack.c",
+    "Separate RGB/RGBA strips and tiles undo the predictor per band and then assemble one pixel block. Raw 16-bit planar TIFF retains the byte-oriented channel reads in TiffImagePlugin._setup.",
+    "Separate grayscale-alpha planes match Pillow 12.2.0 TiffDecode.c _pickUnpackers: compressed planes are read and checked, but the second plane populates the internal green byte rather than the returned alpha. The raw separate layout is rejected by the original unpacker.",
+    "Compression 6 reads a JPEG interchange stream or reconstructs baseline headers from scattered quantization and Huffman tables. Verified continuous strips insert restart markers and an EOI. The YCbCr420 path expands native JPEG chroma and follows libtiff tif_color.c fixed-point conversion.",
+    "Pillow 12.2.0 uses libtiff 4.7.1 tif_ojpeg.c for old JPEG. Follow its split interchange/first-strile header, contiguous and planar restart interval precedence, tiled stack ordering including a frame in the first tile, and single-component scans for 1:1 separate YCbCr. Crop each TIFF edge tile after expanding samples."
+  ]
+}

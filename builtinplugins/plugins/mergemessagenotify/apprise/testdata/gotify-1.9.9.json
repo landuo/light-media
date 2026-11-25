@@ -1,0 +1,196 @@
+{
+  "source": {
+    "apprise_version": "1.9.9",
+    "gotify_sha256": "5e04ccd856654d0c115c3e307ccbd861c22e8cff1d704a983397038678f480de",
+    "python": "3.14.4",
+    "requests": "2.34.2"
+  },
+  "cases": [
+    {
+      "name": "default",
+      "url": "gotify://owned.invalid/ownedToken",
+      "title": "  标题 ",
+      "body": " body  \n",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "X-Gotify-Key": "ownedToken"
+          },
+          "body": "{\"priority\": 5, \"title\": \"\\u6807\\u9898\", \"message\": \" body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "secure-path-markdown",
+      "url": "gotifys://owner:owned@owned.invalid:9443/team%20a/%E9%83%A8%E9%97%A8/ownedToken/?priority=Moderate&format=MARKDOWN&cto=3.25&rto=16&verify=no&+X-Test=ignored&user=test",
+      "title": "title",
+      "body": "A < B\n",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid:9443/team%20a/%E9%83%A8%E9%97%A8/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "X-Gotify-Key": "ownedToken"
+          },
+          "body": "{\"priority\": 3, \"title\": \"title\", \"message\": \"A < B\", \"extras\": {\"client::display\": {\"contentType\": \"text/markdown\"}}}",
+          "verify": false,
+          "timeout": [
+            3.25,
+            16.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "emergency-before-low",
+      "url": "gotify://owned.invalid:0/ownedToken?priority=10-extra",
+      "title": "",
+      "body": "body",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "X-Gotify-Key": "ownedToken"
+          },
+          "body": "{\"priority\": 10, \"title\": \"\", \"message\": \"body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "numeric-high-and-token-space",
+      "url": "gotify://owned.invalid/owned%20token%20?priority=9xxx",
+      "title": "",
+      "body": "body",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "X-Gotify-Key": "owned token"
+          },
+          "body": "{\"priority\": 8, \"title\": \"\", \"message\": \"body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "invalid-priority-truncated-title",
+      "url": "gotify://owned.invalid/ownedToken?priority=???&overflow=truncate",
+      "title": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字",
+      "body": "body",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "X-Gotify-Key": "ownedToken"
+          },
+          "body": "{\"priority\": 5, \"title\": \"\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\\u5b57\", \"message\": \"body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "http-201-is-failure",
+      "url": "gotify://owned.invalid/ownedToken?priority=2",
+      "title": "",
+      "body": "body",
+      "status": 201,
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "X-Gotify-Key": "ownedToken"
+          },
+          "body": "{\"priority\": 0, \"title\": \"\", \"message\": \"body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "missing-token",
+      "url": "gotify://owned.invalid/?token=ignored",
+      "title": "",
+      "body": "body",
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "leading-token-space",
+      "url": "gotify://owned.invalid/%20ownedToken",
+      "title": "",
+      "body": "body",
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "invalid-timezone",
+      "url": "gotify://owned.invalid/ownedToken?tz=Owned%2FMissing",
+      "title": "",
+      "body": "body",
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    }
+  ]
+}

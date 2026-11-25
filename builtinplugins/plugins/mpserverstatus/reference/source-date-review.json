@@ -1,0 +1,87 @@
+{
+  "classification": "exact original method861 AST plus actual333 Python3.12 email stdlib; no app imports/network",
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "source_sha256": "63583e9706aeee31a181b2fefa4e80c793ae4f2b9a76c9efea5956f8b0043d90",
+  "cases": [
+    {
+      "input": "Fri, 01 Nov 2024 12:34:56 GMT",
+      "return": "2024-11-01 12:34:56 UTC"
+    },
+    {
+      "input": "Fri, _1 Nov 2024 12:34:56 GMT",
+      "return": "Fri, _1 Nov 2024 12:34:56 GMT"
+    },
+    {
+      "input": "Fri, 1_ Nov 2024 12:34:56 GMT",
+      "return": "Fri, 1_ Nov 2024 12:34:56 GMT"
+    },
+    {
+      "input": "Fri, 1__1 Nov 2024 12:34:56 GMT",
+      "return": "Fri, 1__1 Nov 2024 12:34:56 GMT"
+    },
+    {
+      "input": "Fri, 01 Nov 2024 _2:34:56 GMT",
+      "return": "Fri, 01 Nov 2024 _2:34:56 GMT"
+    },
+    {
+      "input": "Fri, 01 Nov 2024 12:34_:56 GMT",
+      "return": "Fri, 01 Nov 2024 12:34_:56 GMT"
+    },
+    {
+      "input": "Fri, 01 Nov 2024 12:34:56 +_200",
+      "return": "2024-11-01 12:34:56 "
+    },
+    {
+      "input": "Fri, 01 Nov 2_024 12:34:56 GMT",
+      "return": "2024-11-01 12:34:56 UTC"
+    },
+    {
+      "input": "Fri, 01 Nov 2024 12:34:56 +02__00",
+      "return": "2024-11-01 12:34:56 "
+    },
+    {
+      "input": "Fri, 01 Nov 2024 12:34:56 +999999999999",
+      "return": "Fri, 01 Nov 2024 12:34:56 +999999999999"
+    },
+    {
+      "input": "Fri, 01 Nov 2024 12:34:56 +9223372036854775808",
+      "return": "Fri, 01 Nov 2024 12:34:56 +9223372036854775808"
+    },
+    {
+      "input": "Fri, 01 Nov 2024 12:34:56 -9223372036854775808",
+      "return": "Fri, 01 Nov 2024 12:34:56 -9223372036854775808"
+    },
+    {
+      "input": "Fri, 01 Nov 2024 12:34:56 +99999999999999999999999999999999999",
+      "return": "Fri, 01 Nov 2024 12:34:56 +99999999999999999999999999999999999"
+    },
+    {
+      "input": "Fri, 01 Nov 2024 12:34:56 +9_223_372_036_854_775_808",
+      "return": "Fri, 01 Nov 2024 12:34:56 +9_223_372_036_854_775_808"
+    },
+    {
+      "input": "Fri, 01 Nov 2024 12:34:56 +02_00",
+      "return": "2024-11-01 12:34:56 UTC+02:00"
+    },
+    {
+      "input": "Fri, 01 Nov \u0662\u0660\u0662\u0664 12:34:56 GMT",
+      "return": "2024-11-01 12:34:56 UTC"
+    },
+    {
+      "input": "Fri, 01 Nov \ud835\udfda\uff10\uff12\uff14 12:34:56 GMT",
+      "return": "2024-11-01 12:34:56 UTC"
+    },
+    {
+      "input": "Fri, 01 Nov \u00b224 12:34:56 2024",
+      "return": "Fri, 01 Nov \u00b224 12:34:56 2024"
+    },
+    {
+      "input": "Fri, 01 Nov \u216b24 12:34:56 2024",
+      "return": "2024-11-01 12:34:56 "
+    },
+    {
+      "input": "Fri, 01 Nov \u246024 12:34:56 2024",
+      "return": "Fri, 01 Nov \u246024 12:34:56 2024"
+    }
+  ]
+}

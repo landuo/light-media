@@ -1,0 +1,39 @@
+{
+  "source": "https://github.com/gen2brain/gav1d",
+  "version": "v0.2.6",
+  "module_version_metadata": {
+    "Version": "v0.2.6",
+    "Time": "2026-10-28T12:42:38Z",
+    "Origin": {
+      "VCS": "git",
+      "URL": "https://github.com/gen2brain/gav1d",
+      "Hash": "c8ebd667f23b6ce793135d39b5f086343e665794",
+      "Ref": "refs/tags/v0.2.6"
+    }
+  },
+  "license": "../GAV1D-COPYING (BSD-2-Clause and upstream libgav1 notices in ../NOTICE.txt)",
+  "retained": "AVIF container and decoder sources. AV1 decoding still uses the same pinned upstream module. Encoder files, tests, and fixture binaries are omitted.",
+  "upstream_sha256": {
+    "avif.go": "7a9eb904d6342013d3b45c12cfd9e4b592a6d5455899019f0fdec3ac22eb4754",
+    "color.go": "78b70b47f74c97f4b76abd1ea3165598d07dab8d3057d70687d959fd67843bd6",
+    "color_amd64.go": "e186472f625ee04b02fb7b93fe6b82244021de95ec1782969d678c7498321cb6",
+    "color_amd64.s": "fa72c89bac65e086d7f8a690b76357109a01768a53ac077077968099b23aaee0",
+    "color_arm64.go": "0c65e27efc7a3ec7706d0d547c8b5f54b3dd6755fd4f1438012e983ff5000031",
+    "color_arm64.s": "11a1cd071cb6516d1f8ef9d0161a0edf07867d405e2cc695a66985e89c8d8517",
+    "color_noasm.go": "de98fd5050bb26cc316b4154217c14e1d0dab1a2b36fa0f8b7b24b8a0a40f69b",
+    "color_riscv64.go": "a0aa51f4d3dbb90c0a78ce0ec5a5805905ab80912a415b6b3d0bb33a1af94d05",
+    "color_riscv64.s": "25ef54466e78e117d9821476d9b36887401a89f7c99b1563c8952a94d9ce5e34",
+    "color_row.go": "7893a2b960d2ea2b94e50747336a786f71d694b51837a1bcd3a04b9782d83f7d",
+    "cpu_amd64.go": "193a7991c7f47b0ee0efc2f9c32b9a9d76b5f612d0349ababeee19187cfe5fbb",
+    "cpu_amd64.s": "462ed6010f30c535a8f2c1f5682aff46f1a9fc13ca6ff7303527135458e30165",
+    "exif.go": "e79f81775e68e06a2c3961ff05e562ae0e045c6dbd2a8ead2607ee68dcdc3b97",
+    "gainmap.go": "a009d6a20e0ec0c819dcbfaa35a040a9f0a1b73f94f6b47d8a800eca6762a345",
+    "image.go": "a5e7d54ccf20f0f57264afbe1155da7a73f6d675cdabf826ad99ad091c362d91",
+    "isobmff.go": "ba5084ff0d4a00a1b11d728ab03c605b77ac539c80c72572682fd3d4db21c095",
+    "sequence.go": "83c08d7b24b867c2d71786c00d0b38f6de7a5e3c0dfa8856d6eb3c00f7b4bce9",
+    "tonemap.go": "8d29d978453a57de08008aa3c46e48f245a17e2b57da2bd63aa4e120408fab39",
+    "transform.go": "42e3a3975064a7b8e4fee7988dedbb2e5a9b2d079e83182c1cd3d04030185619"
+  },
+  "local_adaptation": "avif.go and sequence.go select the default image by major brand, read only the first AV1 track sample for the default frame, and offer owned decoded planes and alpha association to the caller before quantization. Item and track color metadata keep both ICC and nclx. Alpha items accept both source URNs. scale.go translates the installed libyuv scaling and normalizes each grid tile before assembly.",
+  "scale_grid_fixture": "AVIF-grid-scaled-color-and-alpha-tiles derives from libavif 1.4.1 tests/data/color_grid_alpha_nogrid.avif. The shared tile ispe was changed from 80x64 to 96x72. Upstream distributes the sample under the libavif BSD-2-Clause license. See ../LIBAVIF-LICENSE and upstream tests/data/README.md."
+}

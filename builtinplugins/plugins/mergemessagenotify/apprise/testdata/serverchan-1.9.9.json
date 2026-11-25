@@ -1,0 +1,349 @@
+{
+  "source": {
+    "apprise_version": "1.9.9",
+    "serverchan_sha256": "556b605bc02020f1ea06d26efd48698ddf1949a3c2924165a1b64fe592cb0e4c",
+    "python": "3.14.4",
+    "requests": "2.34.2"
+  },
+  "cases": [
+    {
+      "name": "form-content",
+      "url": "schan://OwnedToken",
+      "title": "  标题 + &  ",
+      "body": " body ~ + %\n ",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://sctapi.ftqq.com/OwnedToken.send",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body": "title=%E6%A0%87%E9%A2%98+%2B+%26&desp=+body+~+%2B+%25"
+        }
+      ]
+    },
+    {
+      "name": "only-body",
+      "url": "schan://OwnedToken/",
+      "title": "",
+      "body": " body with an empty title ",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://sctapi.ftqq.com/OwnedToken.send",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body": "title=&desp=+body+with+an+empty+title"
+        }
+      ]
+    },
+    {
+      "name": "verify-and-timeouts",
+      "url": "schan://OwnedToken/?verify=no&cto=1.5&rto=8&+Content-Type=ignored&user=owned&pass=not-used",
+      "title": "通知",
+      "body": "::raw::",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://sctapi.ftqq.com/OwnedToken.send",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "verify": false,
+          "timeout": [
+            1.5,
+            8.0
+          ],
+          "body": "title=%E9%80%9A%E7%9F%A5&desp=%3A%3Araw%3A%3A"
+        }
+      ]
+    },
+    {
+      "name": "request-error",
+      "url": "schan://OwnedToken",
+      "title": "notice",
+      "body": "body",
+      "status": 0,
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://sctapi.ftqq.com/OwnedToken.send",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body": "title=notice&desp=body"
+        }
+      ]
+    },
+    {
+      "name": "status-201",
+      "url": "schan://OwnedToken",
+      "title": "notice",
+      "body": "body",
+      "status": 201,
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://sctapi.ftqq.com/OwnedToken.send",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body": "title=notice&desp=body"
+        }
+      ]
+    },
+    {
+      "name": "ignored-image-with-body",
+      "url": "schan://OwnedToken",
+      "title": "notice",
+      "body": "body",
+      "status": 200,
+      "attach": "https://owned.invalid/fixture.png",
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://sctapi.ftqq.com/OwnedToken.send",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body": "title=notice&desp=body"
+        }
+      ]
+    },
+    {
+      "name": "image-only",
+      "url": "schan://OwnedToken",
+      "title": "notice",
+      "body": "",
+      "status": 200,
+      "attach": "https://owned.invalid/fixture.png",
+      "added": true,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "hyphen-without-final-slash",
+      "url": "schan://Owned-Token",
+      "title": "notice",
+      "body": "body",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://sctapi.ftqq.com/Owned.send",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body": "title=notice&desp=body"
+        }
+      ]
+    },
+    {
+      "name": "hyphen-with-final-slash",
+      "url": "schan://Owned-Token/",
+      "title": "notice",
+      "body": "body",
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "encoded-token-prefix",
+      "url": "schan://Owned%54oken",
+      "title": "notice",
+      "body": "body",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://sctapi.ftqq.com/Owned.send",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body": "title=notice&desp=body"
+        }
+      ]
+    },
+    {
+      "name": "uppercase-scheme",
+      "url": "SCHAN://OwnedToken",
+      "title": "notice",
+      "body": "body",
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "trimmed-service-line",
+      "url": "  schan://OwnedToken   ",
+      "title": "notice",
+      "body": "body",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://sctapi.ftqq.com/OwnedToken.send",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body": "title=notice&desp=body"
+        }
+      ]
+    },
+    {
+      "name": "empty-token",
+      "url": "schan://",
+      "title": "notice",
+      "body": "body",
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "disabled-store-property",
+      "url": "schan://OwnedToken?store=no",
+      "title": "notice",
+      "body": "body",
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "invalid-timezone",
+      "url": "schan://OwnedToken?tz=Owned%2FMissing",
+      "title": "notice",
+      "body": "body",
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "invalid-common-options-fallback",
+      "url": "schan://OwnedToken?verify=unrecognized&cto=no&rto=no&format=unknown&overflow=unknown",
+      "title": "notice",
+      "body": "body",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://sctapi.ftqq.com/OwnedToken.send",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "verify": false,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body": "title=notice&desp=body"
+        }
+      ]
+    },
+    {
+      "name": "emoji-overflow",
+      "url": "schan://OwnedToken?emojis=yes&overflow=truncate&format=markdown",
+      "title": "notice :smile:",
+      "body": "x",
+      "repeat": 32773,
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://sctapi.ftqq.com/OwnedToken.send",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "body_sha256": "7da8a1c39c7d326c9ee9bf50cb98bfa9760691279ee6b341c1a7922cc3f2e7b0",
+          "body_size": 32799
+        }
+      ]
+    }
+  ]
+}

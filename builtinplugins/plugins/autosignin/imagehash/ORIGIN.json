@@ -1,0 +1,169 @@
+{
+  "status": "integrated Go codec implementation; whole-plugin acceptance tracked only by migration/ledger.json",
+  "installed_tjupt_sha256": "ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0",
+  "source_image": "sha256:33354456e8e19c65193b9ca471e45450a620c541759cc42e76cf00a03b025881",
+  "runtime_python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "pillow": "12.2.0",
+  "libwebp": "1.6.0",
+  "pillow_source_reference": [
+    {
+      "path": "src/libImaging/Resample.c",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/libImaging/Resample.c",
+      "sha256": "94ad3ea42e7343ad18183e4d4f0d85e34d88e482609953ead01b503b350dcad7"
+    },
+    {
+      "path": "src/libImaging/Convert.c",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/libImaging/Convert.c",
+      "sha256": "a3ef696c48fc5047f61ad657551cfe4f49e32382f79d53964d47ac599d2ea782"
+    },
+    {
+      "path": "src/PIL/Image.py",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/PIL/Image.py",
+      "sha256": "1a3d2ef3dbcbd056fbb4de3415302873348c60e90129a9a107b8829395ea47ea"
+    },
+    {
+      "path": "src/libImaging/Geometry.c",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/libImaging/Geometry.c",
+      "sha256": "5ca2151823ca7b89e6cfd253d969791b276f564b34bad2bf15f1c75ce93486f1"
+    },
+    {
+      "path": "src/PIL/GifImagePlugin.py",
+      "url": "https://raw.githubusercontent.com/python-pillow/Pillow/12.2.0/src/PIL/GifImagePlugin.py",
+      "sha256": "fe956c85ac3a65ba9f01daec1acc3fc58b485dabcf25c90fe9b686039acae361"
+    }
+  ],
+  "libwebp_source_reference": {
+    "src/dsp/upsampling.c": {
+      "url": "https://raw.githubusercontent.com/webmproject/libwebp/v1.6.0/src/dsp/upsampling.c",
+      "sha256": "21b05126aff3fbe902655a7081e3a538f8d1ca6cc9e0907c607e1c4c50ba0a9f"
+    },
+    "src/dsp/yuv.h": {
+      "url": "https://raw.githubusercontent.com/webmproject/libwebp/v1.6.0/src/dsp/yuv.h",
+      "sha256": "5805c01f84a677e50bf0d16cd903b78d25c2a0c46fe17c67ce0e48f11f3d512b"
+    },
+    "COPYING": {
+      "url": "https://raw.githubusercontent.com/webmproject/libwebp/v1.6.0/COPYING",
+      "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf"
+    },
+    "PATENTS": {
+      "url": "https://raw.githubusercontent.com/webmproject/libwebp/v1.6.0/PATENTS",
+      "sha256": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c"
+    },
+    "AUTHORS": {
+      "url": "https://raw.githubusercontent.com/webmproject/libwebp/v1.6.0/AUTHORS",
+      "sha256": "f251be89fd442bd9d701360730aea163cc8e2076ff03528f59267dc2c4f8b60a"
+    }
+  },
+  "pure_go_dependencies": {
+    "classification": "integrated root module, pinned go.mod/go.sum",
+    "module": "golang.org/x/image",
+    "version": "v0.24.0",
+    "go": "1.18",
+    "requires": {
+      "golang.org/x/text": "v0.22.0"
+    },
+    "selected_x_text": "v0.43.0 (already existing root dependency)",
+    "packages": [
+      "bmp",
+      "webp",
+      "ccitt"
+    ],
+    "internal_package_closure": [
+      "riff",
+      "vp8",
+      "vp8l"
+    ],
+    "files": {
+      "go.mod": "b2bdaadc6c6fc54df036c76a0ee438fe171f3b3e24e794f97394a40fb4ce7645",
+      "LICENSE": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+      "PATENTS": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc"
+    },
+    "source_need": "Actual installed Pillow accepts BMP/TIFF/WebP; prior reused Go helper rejects all. Native codec hashes are differential-tested against actual333 original Tjupt AST."
+  },
+  "original_source_expected": {
+    "fixture": "testdata/pillow-source-images-r3.json",
+    "sha256": "71e689cec86b793e68786b95d31df2ab3f2be4190e5c105c4ac85c24b9cc2ffd",
+    "format_cases": 19,
+    "default_bomb_cases": 5
+  },
+  "adaptations": [
+    "Pillow decompression warning category/message goes to worker stderr once per message. Python filename/line and process-global warnings registry are not retained.",
+    "No encoded input, 8192 dimension, 16Mpixel, or 64MiB working-buffer policy is added by this helper. Actual SDK transport/body limits remain host-owned.",
+    "Pure Go BMP/WebP/JP2/J2K/TIFF codecs with Pillow-mode/resize mapping; no CGo or Python product runtime.",
+    "Explicit double-rounding boundaries keep resampler behavior consistent on ARM64 without fused multiply-add.",
+    "Unrecognized/malformed image errors retain Go decoder diagnostics; Python exception class/traceback text is not reproduced.",
+    "JP2 ICC profile remains metadata as in fixed Pillow; bypass the Go decoder automatic matrix/TRC conversion without changing codestream/palette/channel data.",
+    "BigTIFF first IFD is normalized to the same decoder while original strips/tiles remain unchanged. The host body transport is below the classic4GiB address space.",
+    "Root Go minimum rises1.26.0→1.26.4 only because the pure Go AV1 decoder requires that patch. Host SDK105 source and deployed/previous prebuilt workers are unchanged."
+  ],
+  "remaining_unimplemented_or_unverified": [
+    "Registered-only Pillow readers for which no positive default Image.open/load/hash source fixture was obtained remain explicitly outside the finite codec evidence. Do not infer successful decode or approved exclusion from registration or failed writer controls.",
+    "Other compression/depth/CICP variants and malformed diagnostics beyond finite source-positive cases are not exhaustively certified.",
+    "Other native Pillow codec variants/registered-only formats remain finite-scope unverified; do not promote wholeASI from this increment."
+  ],
+  "jpeg2000": {
+    "module": "github.com/mububoki/jpeg2000",
+    "version": "v1.0.0",
+    "commit": "6bfb77fe2e65a591d93918eb336c4dc3b615faaf",
+    "sum": "h1:1ha5mqCg0DMK6zbbBp9bkUjEds4HYwQqmU3ItF3k9qs=",
+    "license": [
+      "jpeg2000port/LICENSE",
+      "jpeg2000port/OPENJPEG-COPYRIGHT.txt"
+    ],
+    "scope": "pure Go Part1 JP2/J2K decode; source lossless/lossy/alpha/grayscale/16bit/tiled fixtures",
+    "delivery": "private decoder-only relocation with source arithmetic corrections, not a shared external module",
+    "origin": "jpeg2000port/ORIGIN.json"
+  },
+  "tiff_decoder": {
+    "origin": "tiffport/ORIGIN.json",
+    "adaptations": [
+      "Preserve signed I/float F samples until Pillow resize and final L conversion.",
+      "CCITT mode1 polarity matches original libtiff for PhotometricInterpretation0/1.",
+      "JPEG strips use the same private libjpeg-compatible JPEG reconstruction.",
+      "Scalar horizontal and floating byte-plane predictors match actual compressed source samples.",
+      "ImageOps.exif_transpose at source load_end is applied to native Raster samples before resize; all8 source orientations checked."
+    ]
+  },
+  "source_extra_expected": {
+    "fixture": "testdata/source-extra-codecs.json",
+    "positive_cases": 86,
+    "rejection_cases": 1,
+    "classification": "Actual immutable333/Pillow 12.2 default-image source controls, including the TIFF layout increment. BLP1 and legacy fixtures are stored separately."
+  },
+  "avif": {
+    "module": "github.com/gen2brain/gav1d",
+    "version": "v0.2.6",
+    "commit": "c8ebd667f23b6ce793135d39b5f086343e665794",
+    "sum": "h1:7TSkrWTdE22k5Ul7vYZML7Nu80gNW6OovV7FSCITSE0=",
+    "go_minimum": "1.26.4",
+    "scope": "pure Go AV1 bitstream/container; no CGo, native library, WASM or subprocess. Existing host prebuilt stays unchanged.",
+    "pillow_pixel_adaptation": "Source 8bit YUV conversion uses rounded libyuv constants and byte-plane bilinear upsampling; default gav1d float conversion caused actual source pixel/hash mismatch.",
+    "license": [
+      "GAV1D-COPYING",
+      "GAV1D-PATENTS"
+    ],
+    "libyuv_origin": {
+      "repository": "https://github.com/lemenkov/libyuv",
+      "commit": "9e8c1ef826ea1f6cc624855555c36c4d38e72818",
+      "files": {
+        "source/row_common.cc": "203f5025bd9e76faf2b6e8f20f3dea16f2c64c17f56007e23c8a2e75dcfe2279",
+        "source/scale_common.cc": "e9111faec0ee83fa0dda65f49e91bb3beecf52717965c1f0a2ffa210f136f49a",
+        "source/scale.cc": "a90c9524df664b77db0810dfaf21ca57a7150eeb3f89f9ff4858e62aedbb7f1a",
+        "source/scale_gcc.cc": "e3edbe9ebf76444b1c2f77d3517d5a220879eb8529f6a13b3d6edc977c38ff0c",
+        "source/convert_argb.cc": "cee4dda07819d3c0002224461bc14f3da47c0bf92a6b33265870b3eefc5bef7f",
+        "LICENSE": "2b2cc1180c7e6988328ad2033b04b80117419db9c4c584918bbb3cfec7e9364f",
+        "PATENTS": "4da84211f947c6f9f7dd8fbce513e1522e01833407ae732b8c9a2bbb75fed495",
+        "AUTHORS": "9bb006eaa8cc06d145c5234ae6b12f8fed6109e0b744d2c530f9b774c607e931"
+      },
+      "scope": "YuvPixel constants, chroma interpolation, and coded AVIF plane scaling. Ratio filters preserve the installed AVX2 rounding and scalar tails. No native runtime."
+    },
+    "original_libavif_version": "1.4.1, actual immutable333 PIL._avif.libavif_version in transform-source/expected.json",
+    "orientation": "Pillow exposes irot/imir as EXIF metadata, without applying them in Image.open/load. AutoRotate false, checked against8 actual source orientation controls."
+  },
+  "extra_readers": {
+    "legacy_origin": "legacycodec/PROVENANCE.json",
+    "additional_source": "decode_additional.go",
+    "BLP1_fixture": "testdata/source-blp1.json",
+    "MSP_license": "MSP-ATTRIBUTION.txt; upstream CC attribution statement does not specify version; not relabelled as CC-BY4.0"
+  }
+}

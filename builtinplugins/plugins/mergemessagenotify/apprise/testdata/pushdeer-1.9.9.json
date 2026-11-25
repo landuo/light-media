@@ -1,0 +1,210 @@
+{
+  "source": {
+    "apprise_version": "1.9.9",
+    "pushdeer_sha256": "029dd1d885637dcc95cd28292c2e6d6329b453848da1a953b5b3a0b35eb298be",
+    "python": "3.14.4",
+    "requests": "2.34.2"
+  },
+  "cases": [
+    {
+      "name": "public-http",
+      "url": "pushdeer://OwnedKey",
+      "title": "  标题 + &  ",
+      "body": " body ~ + %\n ",
+      "attach": "",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://api2.pushdeer.com:80/message/push?pushkey=OwnedKey",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "text=%E6%A0%87%E9%A2%98+%2B+%26&type=text&desp=+body+~+%2B+%25",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "self-hosted-https",
+      "url": "pushdeers://user:password@OwNeD.invalid:9443/skipped/Owned%4Bey?verify=no&cto=3.25&rto=16&+User-Agent=ignored",
+      "title": "",
+      "body": "Body x/y + 👋",
+      "attach": "",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid:9443/message/push?pushkey=OwnedKey",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "text=Body+x%2Fy+%2B+%F0%9F%91%8B&type=text&desp=",
+          "verify": true,
+          "timeout": [
+            3.25,
+            16.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "public-percent-token-with-port",
+      "url": "pushdeers://Ow%6EedKey:0?port=9444",
+      "title": "title",
+      "body": "body",
+      "attach": "",
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "unchecked-host-and-fallback-port",
+      "url": "pushdeers://_owned.invalid:0/OwnedKey?port=numeric-only",
+      "title": "",
+      "body": "body",
+      "attach": "",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://_owned.invalid:443/message/push?pushkey=OwnedKey",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "text=body&type=text&desp=",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "attachment-ignored-with-body",
+      "url": "pushdeer://OwnedKey",
+      "title": "title",
+      "body": "body",
+      "attach": "https://owned.invalid/example.txt",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://api2.pushdeer.com:80/message/push?pushkey=OwnedKey",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "text=title&type=text&desp=body",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "attachment-only",
+      "url": "pushdeer://OwnedKey",
+      "title": "title",
+      "body": "",
+      "attach": "https://owned.invalid/example.txt",
+      "status": 200,
+      "added": true,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "http-201-is-failure",
+      "url": "pushdeer://OwnedKey",
+      "title": "title",
+      "body": "body",
+      "attach": "",
+      "status": 201,
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://api2.pushdeer.com:80/message/push?pushkey=OwnedKey",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "text=title&type=text&desp=body",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "invalid-key",
+      "url": "pushdeer://owned.invalid/owned_key",
+      "title": "",
+      "body": "body",
+      "attach": "",
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "path-key-casefold",
+      "url": "pushdeer://owned.invalid/%E2%84%AAey",
+      "title": "",
+      "body": "body",
+      "attach": "",
+      "status": 200,
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid:80/message/push?pushkey=%E2%84%AAey",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "text=body&type=text&desp=",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "invalid-timezone",
+      "url": "pushdeer://OwnedKey?tz=Owned%2FMissing",
+      "title": "",
+      "body": "body",
+      "attach": "",
+      "status": 200,
+      "added": false,
+      "result": false,
+      "requests": []
+    }
+  ]
+}

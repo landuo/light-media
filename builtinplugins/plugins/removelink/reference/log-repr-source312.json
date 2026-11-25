@@ -1,0 +1,463 @@
+{
+  "source_logs": {
+    "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+    "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+    "classification": "actual installed AST init log with synthetic observer/app dependencies and owned tmpfs only",
+    "cases": [
+      {
+        "input": {
+          "name": "monitor-repr-bell",
+          "config": {
+            "enabled": true,
+            "monitor_dirs": "@ROOT@/m/a\u0007b",
+            "delayed_deletion": false
+          },
+          "files": {
+            "m/a\u0007b/owned.mkv": "owned"
+          },
+          "links": [],
+          "steps": [],
+          "scan_order": [
+            "/fixture/m/a\u0007b/owned.mkv"
+          ]
+        },
+        "expected": {
+          "files": [
+            "m/",
+            "m/a\u0007b/",
+            "m/a\u0007b/owned.mkv"
+          ],
+          "state": [
+            "/fixture/m/a\u0007b/owned.mkv"
+          ],
+          "queue": [],
+          "trace": [],
+          "delay": 30,
+          "enabled": true,
+          "error": null,
+          "logged_errors": 0,
+          "logs": [
+            [
+              "info",
+              "\u521d\u59cb\u5316\u5a92\u4f53\u6587\u4ef6\u6e05\u7406\u63d2\u4ef6"
+            ],
+            [
+              "debug",
+              "\u5f00\u59cb\u505c\u6b62\u670d\u52a1"
+            ],
+            [
+              "debug",
+              "\u6587\u4ef6\u76d1\u63a7\u5df2\u505c\u6b62"
+            ],
+            [
+              "debug",
+              "\u670d\u52a1\u505c\u6b62\u5b8c\u6210"
+            ],
+            [
+              "info",
+              "\u5ef6\u8fdf\u5220\u9664\u529f\u80fd\u5df2\u7981\u7528\uff0c\u5c06\u4f7f\u7528\u7acb\u5373\u5220\u9664\u6a21\u5f0f"
+            ],
+            [
+              "info",
+              "STRM \u6587\u4ef6\u5220\u9664\u76d1\u63a7\u529f\u80fd\u5df2\u7981\u7528"
+            ],
+            [
+              "info",
+              "\u786c\u94fe\u63a5\u76d1\u63a7\u76ee\u5f55\uff1a['/fixture/m/a\\x07b']"
+            ],
+            [
+              "info",
+              "/fixture/m/a\u0007b \u7684\u786c\u94fe\u63a5\u76d1\u63a7\u670d\u52a1\u542f\u52a8"
+            ],
+            [
+              "info",
+              "\u66f4\u65b0\u6587\u4ef6\u5217\u8868\u5b8c\u6210\uff0c\u5171\u8ba1 1 \u4e2a\u6587\u4ef6\uff0c\u8017\u65f6 0.00 \u79d2"
+            ],
+            [
+              "debug",
+              "\u76d1\u63a7\u96c6\u5408\u66f4\u65b0\u5b8c\u6210"
+            ]
+          ]
+        }
+      },
+      {
+        "input": {
+          "name": "monitor-repr-nonascii-nonprint",
+          "config": {
+            "enabled": true,
+            "monitor_dirs": "@ROOT@/m/a\u0085b",
+            "delayed_deletion": false
+          },
+          "files": {
+            "m/a\u0085b/owned.mkv": "owned"
+          },
+          "links": [],
+          "steps": [],
+          "scan_order": [
+            "/fixture/m/a\u0085b/owned.mkv"
+          ]
+        },
+        "expected": {
+          "files": [
+            "m/",
+            "m/a\u0085b/",
+            "m/a\u0085b/owned.mkv"
+          ],
+          "state": [
+            "/fixture/m/a\u0085b/owned.mkv"
+          ],
+          "queue": [],
+          "trace": [],
+          "delay": 30,
+          "enabled": true,
+          "error": null,
+          "logged_errors": 0,
+          "logs": [
+            [
+              "info",
+              "\u521d\u59cb\u5316\u5a92\u4f53\u6587\u4ef6\u6e05\u7406\u63d2\u4ef6"
+            ],
+            [
+              "debug",
+              "\u5f00\u59cb\u505c\u6b62\u670d\u52a1"
+            ],
+            [
+              "debug",
+              "\u6587\u4ef6\u76d1\u63a7\u5df2\u505c\u6b62"
+            ],
+            [
+              "debug",
+              "\u670d\u52a1\u505c\u6b62\u5b8c\u6210"
+            ],
+            [
+              "info",
+              "\u5ef6\u8fdf\u5220\u9664\u529f\u80fd\u5df2\u7981\u7528\uff0c\u5c06\u4f7f\u7528\u7acb\u5373\u5220\u9664\u6a21\u5f0f"
+            ],
+            [
+              "info",
+              "STRM \u6587\u4ef6\u5220\u9664\u76d1\u63a7\u529f\u80fd\u5df2\u7981\u7528"
+            ],
+            [
+              "info",
+              "\u786c\u94fe\u63a5\u76d1\u63a7\u76ee\u5f55\uff1a['/fixture/m/a\\x85b']"
+            ],
+            [
+              "info",
+              "/fixture/m/a\u0085b \u7684\u786c\u94fe\u63a5\u76d1\u63a7\u670d\u52a1\u542f\u52a8"
+            ],
+            [
+              "info",
+              "\u66f4\u65b0\u6587\u4ef6\u5217\u8868\u5b8c\u6210\uff0c\u5171\u8ba1 1 \u4e2a\u6587\u4ef6\uff0c\u8017\u65f6 0.00 \u79d2"
+            ],
+            [
+              "debug",
+              "\u76d1\u63a7\u96c6\u5408\u66f4\u65b0\u5b8c\u6210"
+            ]
+          ]
+        }
+      },
+      {
+        "input": {
+          "name": "monitor-repr-nbsp",
+          "config": {
+            "enabled": true,
+            "monitor_dirs": "@ROOT@/m/a\u00a0b",
+            "delayed_deletion": false
+          },
+          "files": {
+            "m/a\u00a0b/owned.mkv": "owned"
+          },
+          "links": [],
+          "steps": [],
+          "scan_order": [
+            "/fixture/m/a\u00a0b/owned.mkv"
+          ]
+        },
+        "expected": {
+          "files": [
+            "m/",
+            "m/a\u00a0b/",
+            "m/a\u00a0b/owned.mkv"
+          ],
+          "state": [
+            "/fixture/m/a\u00a0b/owned.mkv"
+          ],
+          "queue": [],
+          "trace": [],
+          "delay": 30,
+          "enabled": true,
+          "error": null,
+          "logged_errors": 0,
+          "logs": [
+            [
+              "info",
+              "\u521d\u59cb\u5316\u5a92\u4f53\u6587\u4ef6\u6e05\u7406\u63d2\u4ef6"
+            ],
+            [
+              "debug",
+              "\u5f00\u59cb\u505c\u6b62\u670d\u52a1"
+            ],
+            [
+              "debug",
+              "\u6587\u4ef6\u76d1\u63a7\u5df2\u505c\u6b62"
+            ],
+            [
+              "debug",
+              "\u670d\u52a1\u505c\u6b62\u5b8c\u6210"
+            ],
+            [
+              "info",
+              "\u5ef6\u8fdf\u5220\u9664\u529f\u80fd\u5df2\u7981\u7528\uff0c\u5c06\u4f7f\u7528\u7acb\u5373\u5220\u9664\u6a21\u5f0f"
+            ],
+            [
+              "info",
+              "STRM \u6587\u4ef6\u5220\u9664\u76d1\u63a7\u529f\u80fd\u5df2\u7981\u7528"
+            ],
+            [
+              "info",
+              "\u786c\u94fe\u63a5\u76d1\u63a7\u76ee\u5f55\uff1a['/fixture/m/a\\xa0b']"
+            ],
+            [
+              "info",
+              "/fixture/m/a\u00a0b \u7684\u786c\u94fe\u63a5\u76d1\u63a7\u670d\u52a1\u542f\u52a8"
+            ],
+            [
+              "info",
+              "\u66f4\u65b0\u6587\u4ef6\u5217\u8868\u5b8c\u6210\uff0c\u5171\u8ba1 1 \u4e2a\u6587\u4ef6\uff0c\u8017\u65f6 0.00 \u79d2"
+            ],
+            [
+              "debug",
+              "\u76d1\u63a7\u96c6\u5408\u66f4\u65b0\u5b8c\u6210"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  "builtin": {
+    "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+    "unicode_version": "15.0.0",
+    "classification": "actual fixed installed CPython builtin repr, all Unicode scalar values and four quote contexts; no app or target import/network",
+    "contexts": [
+      "",
+      "'",
+      "\"",
+      "'\"\\"
+    ],
+    "scalar_count": 1112064,
+    "repr_count": 4448256,
+    "repr_sha256": "d1c5a884cd44630b3d0c7a66e761142dc673c83618c15e8706ec916cecfac04c",
+    "cases": [
+      {
+        "value": "",
+        "repr": "''"
+      },
+      {
+        "value": "'",
+        "repr": "\"'\""
+      },
+      {
+        "value": "\"",
+        "repr": "'\"'"
+      },
+      {
+        "value": "'\"",
+        "repr": "'\\'\"'"
+      },
+      {
+        "value": "\\",
+        "repr": "'\\\\'"
+      },
+      {
+        "value": "a'b",
+        "repr": "\"a'b\""
+      },
+      {
+        "value": "a\"b",
+        "repr": "'a\"b'"
+      },
+      {
+        "value": "a'\"b\\",
+        "repr": "'a\\'\"b\\\\'"
+      },
+      {
+        "value": "\u0007\b\t\n\u000b\f\r",
+        "repr": "'\\x07\\x08\\t\\n\\x0b\\x0c\\r'"
+      },
+      {
+        "value": "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f",
+        "repr": "'\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\x0b\\x0c\\r\\x0e\\x0f\\x10\\x11\\x12\\x13\\x14\\x15\\x16\\x17\\x18\\x19\\x1a\\x1b\\x1c\\x1d\\x1e\\x1f'"
+      },
+      {
+        "value": "\u007f",
+        "repr": "'\\x7f'"
+      },
+      {
+        "value": "\u0085",
+        "repr": "'\\x85'"
+      },
+      {
+        "value": "\u00a0",
+        "repr": "'\\xa0'"
+      },
+      {
+        "value": " \u1680\u2000\u200b\u2028\u2029\u202f\u3000",
+        "repr": "' \\u1680\\u2000\\u200b\\u2028\\u2029\\u202f\\u3000'"
+      },
+      {
+        "value": "\u00ad\u061c\u200d\u2060\ufeff",
+        "repr": "'\\xad\\u061c\\u200d\\u2060\\ufeff'"
+      },
+      {
+        "value": "\u0378\ue000\ufffe\uffff",
+        "repr": "'\\u0378\\ue000\\ufffe\\uffff'"
+      },
+      {
+        "value": "\ud83d\ude00\udb40\udc01\udb80\udc00\udbff\udfff",
+        "repr": "'\ud83d\ude00\\U000e0001\\U000f0000\\U0010ffff'"
+      },
+      {
+        "value": "\u4e2d\u6587caf\u00e9\ud834\udd1ee\u0301",
+        "repr": "'\u4e2d\u6587caf\u00e9\ud834\udd1ee\u0301'"
+      }
+    ],
+    "lists": [
+      {
+        "values": [],
+        "repr": "[]"
+      },
+      {
+        "values": [
+          "",
+          "'",
+          "\"",
+          "'\"",
+          "\\",
+          "a'b",
+          "a\"b",
+          "a'\"b\\"
+        ],
+        "repr": "['', \"'\", '\"', '\\'\"', '\\\\', \"a'b\", 'a\"b', 'a\\'\"b\\\\']"
+      },
+      {
+        "values": [
+          "\u0007\b\t\n\u000b\f\r",
+          "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f",
+          "\u007f",
+          "\u0085",
+          "\u00a0",
+          " \u1680\u2000\u200b\u2028\u2029\u202f\u3000",
+          "\u00ad\u061c\u200d\u2060\ufeff",
+          "\u0378\ue000\ufffe\uffff",
+          "\ud83d\ude00\udb40\udc01\udb80\udc00\udbff\udfff",
+          "\u4e2d\u6587caf\u00e9\ud834\udd1ee\u0301"
+        ],
+        "repr": "['\\x07\\x08\\t\\n\\x0b\\x0c\\r', '\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\x0b\\x0c\\r\\x0e\\x0f\\x10\\x11\\x12\\x13\\x14\\x15\\x16\\x17\\x18\\x19\\x1a\\x1b\\x1c\\x1d\\x1e\\x1f', '\\x7f', '\\x85', '\\xa0', ' \\u1680\\u2000\\u200b\\u2028\\u2029\\u202f\\u3000', '\\xad\\u061c\\u200d\\u2060\\ufeff', '\\u0378\\ue000\\ufffe\\uffff', '\ud83d\ude00\\U000e0001\\U000f0000\\U0010ffff', '\u4e2d\u6587caf\u00e9\ud834\udd1ee\u0301']"
+      },
+      {
+        "values": [
+          "first",
+          "second",
+          "third's",
+          "fourth\"s"
+        ],
+        "repr": "['first', 'second', \"third's\", 'fourth\"s']"
+      }
+    ]
+  },
+  "partial_config": {
+    "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+    "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+    "classification": "actual installed init + parse AST; synthetic constructors/logger/stop, no app import/config/database/network/filesystem effects",
+    "cases": [
+      {
+        "name": "positive",
+        "raw_delay_json": "1e400",
+        "custom": ".new",
+        "error": {
+          "class": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        "trace": [
+          [
+            "info",
+            "\u521d\u59cb\u5316\u5a92\u4f53\u6587\u4ef6\u6e05\u7406\u63d2\u4ef6"
+          ],
+          [
+            "TransferHistoryOper"
+          ],
+          [
+            "StorageChain"
+          ]
+        ],
+        "delay": 77,
+        "parsed_extensions": [
+          ".new"
+        ],
+        "raw_custom": ".new",
+        "queue": [
+          "old"
+        ],
+        "enabled": false
+      },
+      {
+        "name": "negative",
+        "raw_delay_json": "-1e400",
+        "custom": ".new",
+        "error": {
+          "class": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        "trace": [
+          [
+            "info",
+            "\u521d\u59cb\u5316\u5a92\u4f53\u6587\u4ef6\u6e05\u7406\u63d2\u4ef6"
+          ],
+          [
+            "TransferHistoryOper"
+          ],
+          [
+            "StorageChain"
+          ]
+        ],
+        "delay": 77,
+        "parsed_extensions": [
+          ".new"
+        ],
+        "raw_custom": ".new",
+        "queue": [
+          "old"
+        ],
+        "enabled": false
+      },
+      {
+        "name": "clear-on-overflow",
+        "raw_delay_json": "1e400",
+        "custom": "",
+        "error": {
+          "class": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        "trace": [
+          [
+            "info",
+            "\u521d\u59cb\u5316\u5a92\u4f53\u6587\u4ef6\u6e05\u7406\u63d2\u4ef6"
+          ],
+          [
+            "TransferHistoryOper"
+          ],
+          [
+            "StorageChain"
+          ]
+        ],
+        "delay": 77,
+        "parsed_extensions": [],
+        "raw_custom": "",
+        "queue": [
+          "old"
+        ],
+        "enabled": false
+      }
+    ]
+  }
+}

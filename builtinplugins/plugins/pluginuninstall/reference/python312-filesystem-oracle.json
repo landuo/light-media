@@ -1,0 +1,86 @@
+{
+  "classification": "actual3.12 Path.exists + shutil.rmtree(ignore_errors=True), disposable networknone/read-only333 image uid65534,tmpfs-owned synthetic files only; no app imports/live paths",
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "uid": 65534,
+  "cases": [
+    {
+      "case": "directory",
+      "trace": [
+        {
+          "op": "rmtree",
+          "ignore_errors": true
+        }
+      ],
+      "error": null,
+      "code_exists": false,
+      "code_symlink": false,
+      "owned_target_untouched": true
+    },
+    {
+      "case": "file",
+      "trace": [
+        {
+          "op": "rmtree",
+          "ignore_errors": true
+        }
+      ],
+      "error": null,
+      "code_exists": true,
+      "code_symlink": false,
+      "owned_target_untouched": true
+    },
+    {
+      "case": "symlink",
+      "trace": [
+        {
+          "op": "rmtree",
+          "ignore_errors": true
+        }
+      ],
+      "error": null,
+      "code_exists": true,
+      "code_symlink": true,
+      "owned_target_untouched": true
+    },
+    {
+      "case": "dangling-symlink",
+      "trace": [],
+      "error": null,
+      "code_exists": false,
+      "code_symlink": true,
+      "owned_target_untouched": true
+    },
+    {
+      "case": "rmtree-permission-denied",
+      "trace": [
+        {
+          "op": "rmtree",
+          "ignore_errors": true
+        }
+      ],
+      "error": null,
+      "code_exists": true,
+      "code_symlink": false,
+      "owned_target_untouched": true
+    },
+    {
+      "case": "exists-permission-denied",
+      "trace": [],
+      "error": {
+        "type": "PermissionError",
+        "errno": 13
+      },
+      "code_exists": true,
+      "code_symlink": false,
+      "owned_target_untouched": true
+    },
+    {
+      "case": "missing",
+      "trace": [],
+      "error": null,
+      "code_exists": false,
+      "code_symlink": false,
+      "owned_target_untouched": true
+    }
+  ]
+}

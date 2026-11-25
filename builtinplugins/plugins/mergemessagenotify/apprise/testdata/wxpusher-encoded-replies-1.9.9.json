@@ -1,0 +1,276 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "file_sha256": {
+      "wxpusher": "623f9b87a7fb231788099ef68c306d4f74222c704bed937995d4a7ba127b5162"
+    }
+  },
+  "cases": [
+    {
+      "name": "utf-16-be-bom",
+      "url": "wxpusher://AT_OwnedToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content_bytes": "/v8AIAAgAHsAIgBjAG8AZABlACIAOgAxADAAMAAwACwAIgBtAHMAZwAiADoAIouwX1UAIgB9"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_OwnedUser\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "utf-16-be-no-bom",
+      "url": "wxpusher://AT_OwnedToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content_bytes": "ACAAIAB7ACIAYwBvAGQAZQAiADoAMQAwADAAMAAsACIAbQBzAGcAIgA6ACKLsF9VACIAfQ=="
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_OwnedUser\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "utf-16-le-bom",
+      "url": "wxpusher://AT_OwnedToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content_bytes": "//4gACAAewAiAGMAbwBkAGUAIgA6ADEAMAAwADAALAAiAG0AcwBnACIAOgAiALCLVV8iAH0A"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_OwnedUser\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "utf-16-le-no-bom",
+      "url": "wxpusher://AT_OwnedToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content_bytes": "IAAgAHsAIgBjAG8AZABlACIAOgAxADAAMAAwACwAIgBtAHMAZwAiADoAIgCwi1VfIgB9AA=="
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_OwnedUser\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "utf-32-be-bom",
+      "url": "wxpusher://AT_OwnedToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content_bytes": "AAD+/wAAACAAAAAgAAAAewAAACIAAABjAAAAbwAAAGQAAABlAAAAIgAAADoAAAAxAAAAMAAAADAAAAAwAAAALAAAACIAAABtAAAAcwAAAGcAAAAiAAAAOgAAACIAAIuwAABfVQAAACIAAAB9"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_OwnedUser\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "utf-32-be-no-bom",
+      "url": "wxpusher://AT_OwnedToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content_bytes": "AAAAIAAAACAAAAB7AAAAIgAAAGMAAABvAAAAZAAAAGUAAAAiAAAAOgAAADEAAAAwAAAAMAAAADAAAAAsAAAAIgAAAG0AAABzAAAAZwAAACIAAAA6AAAAIgAAi7AAAF9VAAAAIgAAAH0="
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_OwnedUser\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "utf-32-le-bom",
+      "url": "wxpusher://AT_OwnedToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content_bytes": "//4AACAAAAAgAAAAewAAACIAAABjAAAAbwAAAGQAAABlAAAAIgAAADoAAAAxAAAAMAAAADAAAAAwAAAALAAAACIAAABtAAAAcwAAAGcAAAAiAAAAOgAAACIAAACwiwAAVV8AACIAAAB9AAAA"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_OwnedUser\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "utf-32-le-no-bom",
+      "url": "wxpusher://AT_OwnedToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content_bytes": "IAAAACAAAAB7AAAAIgAAAGMAAABvAAAAZAAAAGUAAAAiAAAAOgAAADEAAAAwAAAAMAAAADAAAAAsAAAAIgAAAG0AAABzAAAAZwAAACIAAAA6AAAAIgAAALCLAABVXwAAIgAAAH0AAAA="
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_OwnedUser\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    }
+  ]
+}

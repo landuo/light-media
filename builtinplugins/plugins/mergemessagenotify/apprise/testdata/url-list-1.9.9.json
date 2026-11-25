@@ -1,0 +1,191 @@
+{
+  "source": {
+    "version": "1.9.9",
+    "parse_sha256": "416b0d749dfd1b21e9e135d8662524fad28caac605d91a8b2e846a89240f84f0",
+    "core_sha256": "096ad346f8ccad1f14612542a11f492b1e098d4e8727732ffa3c51b2345f317e",
+    "requests": "2.34.2",
+    "network": "forbidden"
+  },
+  "cases": [
+    {
+      "name": "comma-two-services",
+      "line": "pbul://OwnedToken, jsons://collector.invalid/hook",
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic T3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"note\", \"title\": \"owned title\", \"body\": \"owned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://collector.invalid/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"version\": \"1.0\", \"title\": \"owned title\", \"message\": \"owned body\", \"attachments\": [], \"type\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "space-prefixed-service-list",
+      "line": "ignored prose pbul://OwnedToken\tjsons://collector.invalid/hook",
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic T3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"note\", \"title\": \"owned title\", \"body\": \"owned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://collector.invalid/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"version\": \"1.0\", \"title\": \"owned title\", \"message\": \"owned body\", \"attachments\": [], \"type\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "partial-add-keeps-valid",
+      "line": "missingwire://unknown, pbul://OwnedToken, jsons://collector.invalid/hook",
+      "added": false,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic T3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"note\", \"title\": \"owned title\", \"body\": \"owned body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://collector.invalid/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"version\": \"1.0\", \"title\": \"owned title\", \"message\": \"owned body\", \"attachments\": [], \"type\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "embedded-url-is-query-data",
+      "line": "jsons://collector.invalid/hook?+Callback=https://relay.invalid/p?x=1,2",
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://collector.invalid/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Callback": "https://relay.invalid/p?x=1,2"
+          },
+          "body": "{\"version\": \"1.0\", \"title\": \"owned title\", \"message\": \"owned body\", \"attachments\": [], \"type\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "raw-channel-shorthand-before-service",
+      "line": "pbul://OwnedToken/#owned, jsons://collector.invalid/hook",
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic T3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"note\", \"title\": \"owned title\", \"body\": \"owned body\", \"channel_tag\": \"owned\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://collector.invalid/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"version\": \"1.0\", \"title\": \"owned title\", \"message\": \"owned body\", \"attachments\": [], \"type\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    }
+  ]
+}

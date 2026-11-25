@@ -1,0 +1,1632 @@
+{
+  "source": {
+    "snapshot_sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+    "version": "2.22",
+    "network": "blocked",
+    "boundary": "Actual AST class with owned injected host/scheduler calls. CronTrigger records exact crontab input without evaluating dates."
+  },
+  "inventory": {
+    "site_ids": [
+      4,
+      2,
+      "6"
+    ],
+    "sites": [
+      {
+        "id": 4,
+        "name": "Owned first"
+      },
+      {
+        "id": 2,
+        "name": "Owned second"
+      }
+    ],
+    "custom": {
+      "enabled": true,
+      "sites": [
+        {
+          "id": "6",
+          "name": "Owned custom"
+        }
+      ]
+    },
+    "downloaders": [
+      "qb-second",
+      "tr-first"
+    ],
+    "destination_downloaders": [
+      "tr-first"
+    ]
+  },
+  "inits": [
+    {
+      "name": "null-config",
+      "input": null,
+      "reads": [],
+      "writes": [],
+      "jobs": [],
+      "state": false,
+      "services": [],
+      "error": ""
+    },
+    {
+      "name": "empty-config",
+      "input": {},
+      "reads": [],
+      "writes": [],
+      "jobs": [],
+      "state": false,
+      "services": [],
+      "error": ""
+    },
+    {
+      "name": "enabled-mixed-site-types",
+      "input": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "1.5"
+      },
+      "reads": [
+        "managed",
+        "custom"
+      ],
+      "writes": [
+        {
+          "enabled": true,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            4,
+            2,
+            "6"
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 1.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        },
+        {
+          "enabled": true,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            4,
+            2,
+            "6"
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 1.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        }
+      ],
+      "jobs": [
+        {
+          "kind": "interval",
+          "id": "check_recheck",
+          "interval_seconds": 180
+        }
+      ],
+      "state": true,
+      "services": [
+        {
+          "id": "IYUUAutoSeed",
+          "name": "IYUU自动辅种服务",
+          "kind": "cron",
+          "cron": "0 */2 * * *"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "name": "disabled-clear-cache",
+      "input": {
+        "enabled": false,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "1.5",
+        "clearcache": true,
+        "error_caches": [
+          "old"
+        ]
+      },
+      "reads": [
+        "managed",
+        "custom"
+      ],
+      "writes": [
+        {
+          "enabled": false,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": true,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            4,
+            2,
+            "6"
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 1.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        }
+      ],
+      "jobs": [],
+      "state": false,
+      "services": [],
+      "error": ""
+    },
+    {
+      "name": "disabled-once-clear-cache",
+      "input": {
+        "enabled": false,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "1.5",
+        "onlyonce": true,
+        "clearcache": true,
+        "success_caches": [
+          "old"
+        ]
+      },
+      "reads": [
+        "managed",
+        "custom"
+      ],
+      "writes": [
+        {
+          "enabled": false,
+          "skipverify": null,
+          "onlyonce": true,
+          "clearcache": true,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            4,
+            2,
+            "6"
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 1.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        },
+        {
+          "enabled": false,
+          "skipverify": null,
+          "onlyonce": false,
+          "clearcache": false,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            4,
+            2,
+            "6"
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 1.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        }
+      ],
+      "jobs": [
+        {
+          "kind": "date",
+          "id": "auto_seed",
+          "delay_seconds": 3
+        },
+        {
+          "kind": "interval",
+          "id": "check_recheck",
+          "interval_seconds": 180
+        }
+      ],
+      "state": false,
+      "services": [],
+      "error": ""
+    },
+    {
+      "name": "last-cache-occurrence-and-string-cache",
+      "input": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "1.5",
+        "success_caches": [
+          "dup",
+          null,
+          "last",
+          "dup",
+          1.0,
+          true,
+          false
+        ],
+        "error_caches": "甲甲乙"
+      },
+      "reads": [
+        "managed",
+        "custom"
+      ],
+      "writes": [
+        {
+          "enabled": true,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            4,
+            2,
+            "6"
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 1.5,
+          "success_caches": [
+            "last",
+            "dup",
+            true
+          ],
+          "error_caches": [
+            "甲",
+            "乙"
+          ],
+          "permanent_error_caches": []
+        },
+        {
+          "enabled": true,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            4,
+            2,
+            "6"
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 1.5,
+          "success_caches": [
+            "last",
+            "dup",
+            true
+          ],
+          "error_caches": [
+            "甲",
+            "乙"
+          ],
+          "permanent_error_caches": []
+        }
+      ],
+      "jobs": [
+        {
+          "kind": "interval",
+          "id": "check_recheck",
+          "interval_seconds": 180
+        }
+      ],
+      "state": true,
+      "services": [
+        {
+          "id": "IYUUAutoSeed",
+          "name": "IYUU自动辅种服务",
+          "kind": "cron",
+          "cron": "0 */2 * * *"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "name": "invalid-size-before-inventory",
+      "input": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "owned-invalid"
+      },
+      "reads": [],
+      "writes": [],
+      "jobs": [],
+      "state": true,
+      "services": null,
+      "error": "ValueError"
+    },
+    {
+      "name": "hex-size-rejected",
+      "input": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "0x1p3"
+      },
+      "reads": [],
+      "writes": [],
+      "jobs": [],
+      "state": true,
+      "services": null,
+      "error": "ValueError"
+    },
+    {
+      "name": "unicode-decimal-size",
+      "input": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": " １_２.５ "
+      },
+      "reads": [
+        "managed",
+        "custom"
+      ],
+      "writes": [
+        {
+          "enabled": true,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            4,
+            2,
+            "6"
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 12.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        },
+        {
+          "enabled": true,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            4,
+            2,
+            "6"
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 12.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        }
+      ],
+      "jobs": [
+        {
+          "kind": "interval",
+          "id": "check_recheck",
+          "interval_seconds": 180
+        }
+      ],
+      "state": true,
+      "services": [
+        {
+          "id": "IYUUAutoSeed",
+          "name": "IYUU自动辅种服务",
+          "kind": "cron",
+          "cron": "0 */2 * * *"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "name": "unhashable-cache-before-inventory",
+      "input": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "1.5",
+        "permanent_error_caches": [
+          {
+            "owned": "unsupported"
+          }
+        ]
+      },
+      "reads": [],
+      "writes": [],
+      "jobs": [],
+      "state": true,
+      "services": null,
+      "error": "TypeError"
+    },
+    {
+      "name": "mixed-site-type-does-not-coerce",
+      "input": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          "4",
+          2,
+          6
+        ],
+        "size": "1.5"
+      },
+      "reads": [
+        "managed",
+        "custom"
+      ],
+      "writes": [
+        {
+          "enabled": true,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            2
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 1.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        },
+        {
+          "enabled": true,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            2
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 1.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        }
+      ],
+      "jobs": [
+        {
+          "kind": "interval",
+          "id": "check_recheck",
+          "interval_seconds": 180
+        }
+      ],
+      "state": true,
+      "services": [
+        {
+          "id": "IYUUAutoSeed",
+          "name": "IYUU自动辅种服务",
+          "kind": "cron",
+          "cron": "0 */2 * * *"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "name": "bad-container-after-inventory",
+      "input": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": 10,
+        "size": "1.5"
+      },
+      "reads": [
+        "managed",
+        "custom"
+      ],
+      "writes": [],
+      "jobs": [],
+      "state": true,
+      "services": null,
+      "error": "TypeError"
+    },
+    {
+      "name": "reuse-path-explicit-null",
+      "input": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "1.5",
+        "reuse_save_path": null
+      },
+      "reads": [
+        "managed",
+        "custom"
+      ],
+      "writes": [
+        {
+          "enabled": true,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            4,
+            2,
+            "6"
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": null,
+          "size": 1.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        },
+        {
+          "enabled": true,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            4,
+            2,
+            "6"
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": null,
+          "size": 1.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        }
+      ],
+      "jobs": [
+        {
+          "kind": "interval",
+          "id": "check_recheck",
+          "interval_seconds": 180
+        }
+      ],
+      "state": true,
+      "services": [
+        {
+          "id": "IYUUAutoSeed",
+          "name": "IYUU自动辅种服务",
+          "kind": "cron",
+          "cron": "0 */2 * * *"
+        }
+      ],
+      "error": ""
+    }
+  ],
+  "deletions": [
+    {
+      "name": "numeric-site-matches-saved-string",
+      "live": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "1.5"
+      },
+      "saved": {
+        "sites": [
+          4,
+          "4",
+          2
+        ]
+      },
+      "deleted": "4",
+      "reads": [
+        "saved"
+      ],
+      "writes": [
+        {
+          "enabled": true,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            2
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 1.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        }
+      ],
+      "state": true,
+      "error": ""
+    },
+    {
+      "name": "saved-selection-drives-live-update",
+      "live": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "1.5"
+      },
+      "saved": {
+        "enabled": false,
+        "token": "synthetic-saved-token",
+        "sites": [
+          "6",
+          " １_０ "
+        ]
+      },
+      "deleted": "10",
+      "reads": [
+        "saved"
+      ],
+      "writes": [
+        {
+          "enabled": true,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [
+            "6"
+          ],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 1.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        }
+      ],
+      "state": true,
+      "error": ""
+    },
+    {
+      "name": "saved-string-selection-as-one-id",
+      "live": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "1.5"
+      },
+      "saved": {
+        "sites": "4"
+      },
+      "deleted": 4,
+      "reads": [
+        "saved"
+      ],
+      "writes": [
+        {
+          "enabled": false,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 1.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        }
+      ],
+      "state": false,
+      "error": ""
+    },
+    {
+      "name": "missing-id-clears-even-noniterable-selection",
+      "live": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "1.5"
+      },
+      "saved": {
+        "sites": 5
+      },
+      "deleted": null,
+      "reads": [
+        "saved"
+      ],
+      "writes": [
+        {
+          "enabled": false,
+          "skipverify": null,
+          "onlyonce": null,
+          "clearcache": null,
+          "cron": "0 */2 * * *",
+          "token": "synthetic-owned-token",
+          "downloaders": [
+            "qb"
+          ],
+          "auto_downloader": null,
+          "sites": [],
+          "notify": null,
+          "nolabels": null,
+          "nopaths": null,
+          "labelsafterseed": "已整理,辅种",
+          "categoryafterseed": null,
+          "addhosttotag": null,
+          "auto_category": null,
+          "auto_start": null,
+          "reuse_save_path": true,
+          "size": 1.5,
+          "success_caches": [],
+          "error_caches": [],
+          "permanent_error_caches": []
+        }
+      ],
+      "state": false,
+      "error": ""
+    },
+    {
+      "name": "empty-saved-sites-no-write",
+      "live": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "1.5"
+      },
+      "saved": {
+        "sites": []
+      },
+      "deleted": 4,
+      "reads": [
+        "saved"
+      ],
+      "writes": [],
+      "state": true,
+      "error": ""
+    },
+    {
+      "name": "missing-saved-config-no-write",
+      "live": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "1.5"
+      },
+      "saved": null,
+      "deleted": 4,
+      "reads": [
+        "saved"
+      ],
+      "writes": [],
+      "state": true,
+      "error": ""
+    },
+    {
+      "name": "malformed-deletion-id",
+      "live": {
+        "enabled": true,
+        "cron": "0 */2 * * *",
+        "token": "synthetic-owned-token",
+        "downloaders": [
+          "qb"
+        ],
+        "sites": [
+          2,
+          4.0,
+          "6",
+          99
+        ],
+        "size": "1.5"
+      },
+      "saved": {
+        "sites": [
+          4,
+          2
+        ]
+      },
+      "deleted": "owned-invalid",
+      "reads": [
+        "saved"
+      ],
+      "writes": [],
+      "state": true,
+      "error": "ValueError"
+    }
+  ],
+  "forms": [
+    {
+      "name": "mixed-id-form",
+      "reads": [
+        "custom",
+        "managed",
+        "downloader",
+        "downloader"
+      ],
+      "form": [
+        {
+          "component": "VForm",
+          "content": [
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "enabled",
+                        "label": "启用插件"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "notify",
+                        "label": "发送通知"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "clearcache",
+                        "label": "清除缓存后运行"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "onlyonce",
+                        "label": "立即运行一次"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 6
+                  },
+                  "content": [
+                    {
+                      "component": "VTextField",
+                      "props": {
+                        "model": "token",
+                        "label": "IYUU Token"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 6
+                  },
+                  "content": [
+                    {
+                      "component": "VCronField",
+                      "props": {
+                        "model": "cron",
+                        "label": "执行周期",
+                        "placeholder": "0 0 0 ? *"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 4
+                  },
+                  "content": [
+                    {
+                      "component": "VSelect",
+                      "props": {
+                        "chips": true,
+                        "multiple": true,
+                        "clearable": true,
+                        "model": "downloaders",
+                        "label": "下载器",
+                        "items": [
+                          {
+                            "title": "qb-second",
+                            "value": "qb-second"
+                          },
+                          {
+                            "title": "tr-first",
+                            "value": "tr-first"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 4
+                  },
+                  "content": [
+                    {
+                      "component": "VSelect",
+                      "props": {
+                        "chips": true,
+                        "clearable": true,
+                        "model": "auto_downloader",
+                        "label": "主辅分离",
+                        "items": [
+                          {
+                            "title": "tr-first",
+                            "value": "tr-first"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 4
+                  },
+                  "content": [
+                    {
+                      "component": "VTextField",
+                      "props": {
+                        "model": "size",
+                        "label": "辅种体积大于(GB)",
+                        "placeholder": "只有大于该值的才辅种"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12
+                  },
+                  "content": [
+                    {
+                      "component": "VSelect",
+                      "props": {
+                        "chips": true,
+                        "multiple": true,
+                        "model": "sites",
+                        "label": "辅种站点",
+                        "items": [
+                          {
+                            "title": "Owned first",
+                            "value": 4
+                          },
+                          {
+                            "title": "Owned second",
+                            "value": 2
+                          },
+                          {
+                            "title": "Owned custom",
+                            "value": "6"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 4
+                  },
+                  "content": [
+                    {
+                      "component": "VTextField",
+                      "props": {
+                        "model": "nolabels",
+                        "label": "不辅种标签",
+                        "placeholder": "使用,分隔多个标签"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 4
+                  },
+                  "content": [
+                    {
+                      "component": "VTextField",
+                      "props": {
+                        "model": "labelsafterseed",
+                        "label": "辅种后增加标签",
+                        "placeholder": "使用,分隔多个标签,不填写则默认为(已整理,辅种)"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 4
+                  },
+                  "content": [
+                    {
+                      "component": "VTextField",
+                      "props": {
+                        "model": "categoryafterseed",
+                        "label": "辅种后增加分类",
+                        "placeholder": "设置辅种的种子分类"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12
+                  },
+                  "content": [
+                    {
+                      "component": "VTextarea",
+                      "props": {
+                        "model": "nopaths",
+                        "label": "不辅种数据文件目录",
+                        "rows": 3,
+                        "placeholder": "每一行一个目录"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "addhosttotag",
+                        "label": "将站点名添加到标签中"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "skipverify",
+                        "label": "跳过校验(仅QB有效)"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "auto_start",
+                        "label": "自动开始(跳过校验有效)"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "auto_category",
+                        "label": "分类复用(仅QB有效)"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12,
+                    "md": 3
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "reuse_save_path",
+                        "label": "沿用原种路径(仅QB有效)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "component": "VRow",
+              "props": {
+                "style": {
+                  "margin-top": "12px"
+                }
+              },
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12
+                  },
+                  "content": [
+                    {
+                      "component": "VAlert",
+                      "props": {
+                        "type": "error",
+                        "variant": "tonal"
+                      },
+                      "content": [
+                        {
+                          "component": "span",
+                          "text": "注意：详细配置说明和注意事项请参考："
+                        },
+                        {
+                          "component": "a",
+                          "props": {
+                            "href": "https://github.com/jxxghp/MoviePilot-Plugins/tree/main/plugins.v2/iyuuautoseed/README.md",
+                            "target": "_blank"
+                          },
+                          "content": [
+                            {
+                              "component": "u",
+                              "text": "README"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "defaults": {
+        "enabled": false,
+        "skipverify": false,
+        "onlyonce": false,
+        "notify": false,
+        "clearcache": false,
+        "addhosttotag": false,
+        "auto_category": false,
+        "auto_start": false,
+        "reuse_save_path": true,
+        "cron": "",
+        "token": "",
+        "downloaders": [],
+        "auto_downloader": "",
+        "sites": [],
+        "nopaths": "",
+        "nolabels": "",
+        "labelsafterseed": "",
+        "categoryafterseed": "",
+        "size": ""
+      }
+    }
+  ]
+}

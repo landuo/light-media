@@ -1,0 +1,1387 @@
+{
+  "classification": "actual333/Python3.12 installed AST+Requests Response/chardet/lxml; HTTP/config/KV synthetic, no network/app imports; original log expected before Go comparison",
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "platform": "Linux-6.18.18.c1168-trim-x86_64-with-glibc2.36",
+  "inputs": {
+    "main.py": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+    "result.py": "7a2a49fd8aafe084c6a9a482ca6883cbee8505f443ae5e9741af25161bb458b2",
+    "base.py": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d",
+    "site.py": "c278d537bdea0394c4dc083c27726316a815ae26a2e64ddc2f3d42e2921fcf40",
+    "string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+    "cloudflare.py": "1543472ddccb90704d30f74fb420fe87f9e613a66daf2fbf4402f1ebccecd7a1",
+    "52pt.py": "88d1fb315d2272097f8e124eb8245aa952fd1933f7685005118e9c875528d2fb",
+    "btschool.py": "efc63422cc4b2c3e18c35324f358b4d9899a58cffbf8099c4efc533cc5b48bcd",
+    "chdbits.py": "d1f745f0b69b167e0f51038a3f09b495806096f44587889bca585e6782b5eb89",
+    "haidan.py": "d68586c83b5721a495e7af5172e7642cbe6cf74d7c555eab8a3c3153ba281461",
+    "hares.py": "27d5be0a5c313b3cbadb50a029cc4fa627e3f4aa393503e330f5c56be48ad0e2",
+    "hdarea.py": "6046dd7626ad9f071a073dc142b86f204aa491bcfabe9e20cb4197eee4d5e630",
+    "hdchina.py": "dec9063410d6601c885df2de60844feacf2fb143d4aa662eba47fcad27948731",
+    "hdcity.py": "b13a4af9d4df371b1fb5c74323ddb532ff016fe53d36caf7c36bcacdb7148475",
+    "hdsky.py": "a2f272ff66d9ade5106942f3e577fd12a967b7375d516c92dc189b9672fa7a70",
+    "hdupt.py": "eb8e2c96088fdf956a0cb1efb58ac69716d89ebfd4d3240089eb53fa0c0e55f3",
+    "mteam.py": "5bac7c23743fd226ce546e0ddf2794aca2aebaecbe4fa945c4a5e728ae9f4fd4",
+    "nexushd.py": "cbfdac17f522880b502ea9f0546d6c486846c0016280c86b234ad248fba5b2bf",
+    "opencd.py": "30045d631f459d7a04fdd068a1cab48bcd6dcb7cc21ebb0fb8fbac5bf0d32b2b",
+    "pterclub.py": "3cd559c4ef3510180da4f57db19595de2de75dcd85519430a9aa1ee4dadfd3d3",
+    "pttime.py": "e1e8e5a446ed15802774eda142c57b22a8482ddee511d49aff256a5a8089bb7b",
+    "ptzone.py": "fc2eb9921e388dfaeaee789e94524865be24f0a58d74c1af1d3c7651d269dc90",
+    "rousipro.py": "5d5fb642d99651df42caf36cd465f6992d9bcfd7d893d35f5be531860b68e0b0",
+    "tjupt.py": "ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0",
+    "ttg.py": "4cc08e4951e89348e02164990ab66a63ff6917b98d2d86cfbaaf7e21d859d51b",
+    "u2.py": "787e2e2752b8d35029e3fe4066303b23149152f29f40759e16114873f141fdd5",
+    "yema.py": "bafababa5790f9ed3b2d6a581b472fbcd2f202ff78854acf2c463eed0e65307b",
+    "zhuque.py": "69301edf86db5f68d2e3fb720841b03a4d1489e90b37ec3384a0fbbc764a0563"
+  },
+  "cases": [
+    {
+      "name": "HDArea-adapter-0",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://hdarea.club/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "HDArea-adapter-6",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "<span title=\"login\">此次签到您获得10魔力</span>"
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://hdarea.club/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "签到成功"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 签到成功"
+        ]
+      ]
+    },
+    {
+      "name": "NexusHD-adapter-0",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://v6.nexushd.org/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "NexusHD-adapter-6",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "<span title=\"login\">本次签到获得10魔力</span>"
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://v6.nexushd.org/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "签到成功"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 签到成功"
+        ]
+      ]
+    },
+    {
+      "name": "HDCity-adapter-0",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://hdcity.city/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "HDCity-adapter-7",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "本次签到获得魅力10"
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://hdcity.city/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "签到成功"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 签到成功"
+        ]
+      ]
+    },
+    {
+      "name": "Pt52-adapter-none",
+      "adapter": "Pt52",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "timeout": 17
+        }
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://52pt.site/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false,
+        "timeout": 17
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "Pt52-adapter-already",
+      "adapter": "Pt52",
+      "input": {
+        "responses": [
+          {
+            "text": "今天已经签过到了",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://52pt.site/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false,
+        "timeout": 17
+      },
+      "result": [
+        true,
+        "今日已签到"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "今日已签到"
+        ]
+      ]
+    },
+    {
+      "name": "CHDBits-adapter-none",
+      "adapter": "CHDBits",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "timeout": 17
+        }
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://ptchdbits.co/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false,
+        "timeout": 17
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "CHDBits-adapter-already",
+      "adapter": "CHDBits",
+      "input": {
+        "responses": [
+          {
+            "text": "今天已经签过到了",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://ptchdbits.co/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false,
+        "timeout": 17
+      },
+      "result": [
+        true,
+        "今日已签到"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 今日已签到"
+        ]
+      ]
+    },
+    {
+      "name": "U2-adapter-none",
+      "adapter": "U2",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://u2.dmhy.org/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "U2-adapter-already",
+      "adapter": "U2",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a><a href=\"showup.php\">已签到</a>",
+            "status": 200
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://u2.dmhy.org/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "今日已签到"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 今日已签到"
+        ]
+      ]
+    },
+    {
+      "name": "Hares-adapter-none",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://club.hares.top/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "模拟访问失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 模拟访问失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "PTerClub-adapter-none",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://pterclub.com/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "ZhuQue-adapter-none",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://zhuque.in/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "模拟登录失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 模拟登录失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "Hares-adapter-success",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://club.hares.top/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "签到成功"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 签到成功"
+        ]
+      ]
+    },
+    {
+      "name": "PTerClub-adapter-success",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"1\"}",
+            "status": 200
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://pterclub.com/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "签到成功"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 签到成功"
+        ]
+      ]
+    },
+    {
+      "name": "RousiPro-adapter-success",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://rousi.pro/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false,
+        "apikey": "synthetic-personal-key",
+        "token": null
+      },
+      "result": [
+        true,
+        "签到成功"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 签到成功"
+        ]
+      ]
+    },
+    {
+      "name": "RousiPro-adapter-none",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://rousi.pro/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false,
+        "apikey": "synthetic-personal-key",
+        "token": null
+      },
+      "result": [
+        false,
+        "签到失败，无法访问网站"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，无法访问网站"
+        ]
+      ]
+    },
+    {
+      "name": "YemaPT-adapter-success",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"success\": true}",
+            "status": 200
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://yemapt.org/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "签到成功"
+      ],
+      "error": null,
+      "logs": []
+    },
+    {
+      "name": "YemaPT-adapter-none",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://yemapt.org/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "签到失败，无法打开网站"
+      ],
+      "error": null,
+      "logs": []
+    },
+    {
+      "name": "ZhuQue-adapter-success",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": 12}}",
+            "status": 200
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://zhuque.in/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "模拟登录成功，技能释放成功，获得12魔力"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "【synthetic-site】模拟登录成功，技能释放成功，获得12魔力"
+        ]
+      ]
+    },
+    {
+      "name": "Tjupt-adapter-home-none",
+      "adapter": "Tjupt",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://tjupt.org/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false,
+        "timeout": 17
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "Tjupt-adapter-already",
+      "adapter": "Tjupt",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<a href=\"attendance.php\">今日已签到</a>",
+            "status": 200
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://tjupt.org/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false,
+        "timeout": 17
+      },
+      "result": [
+        true,
+        "今日已签到"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 今日已签到"
+        ]
+      ]
+    },
+    {
+      "name": "HDSky-adapter-none",
+      "adapter": "HDSky",
+      "input": {
+        "responses": [
+          null
+        ],
+        "ocr": []
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://hdsky.me/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "HDSky-adapter-already",
+      "adapter": "HDSky",
+      "input": {
+        "responses": [
+          {
+            "text": "已签到",
+            "status": 200
+          }
+        ],
+        "ocr": []
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://hdsky.me/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "今日已签到"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 今日已签到"
+        ]
+      ]
+    },
+    {
+      "name": "Opencd-adapter-none",
+      "adapter": "Opencd",
+      "input": {
+        "responses": [
+          null
+        ],
+        "ocr": []
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://open.cd/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "Opencd-adapter-already",
+      "adapter": "Opencd",
+      "input": {
+        "responses": [
+          {
+            "text": "签到成功",
+            "status": 200
+          }
+        ],
+        "ocr": []
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://open.cd/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "今日已签到"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 今日已签到"
+        ]
+      ]
+    },
+    {
+      "name": "TTG-adapter-none",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "timeout": 17
+        }
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://totheglory.im/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false,
+        "timeout": 17
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "TTG-adapter-already",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "<b style=\"color:green;\">已签到</b>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://totheglory.im/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false,
+        "timeout": 17
+      },
+      "result": [
+        true,
+        "今日已签到"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 今日已签到"
+        ]
+      ]
+    },
+    {
+      "name": "HDChina-adapter-none",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://hdchina.org/",
+        "cookie": "other=old; hdchina=synthetic-only; x=drop",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "HDChina-adapter-already",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<a class=\"label label-default\" href=\"#\">已签到</a>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://hdchina.org/",
+        "cookie": "other=old; hdchina=synthetic-only; x=drop",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "今日已签到"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 今日已签到"
+        ]
+      ]
+    },
+    {
+      "name": "MTorrent-adapter-success",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 200
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://kp.m-team.cc/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false,
+        "token": " synthetic-login-token ",
+        "timeout": 17
+      },
+      "result": [
+        true,
+        "模拟登录成功"
+      ],
+      "error": null,
+      "logs": []
+    },
+    {
+      "name": "MTorrent-adapter-none",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://kp.m-team.cc/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false,
+        "token": " synthetic-login-token ",
+        "timeout": 17
+      },
+      "result": [
+        false,
+        "模拟登录失败，无法打开网站"
+      ],
+      "error": null,
+      "logs": []
+    },
+    {
+      "name": "BTSchool-adapter-none",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://pt.btschool.club/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 开始签到"
+        ],
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "HDUpt-adapter-none",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://pt.hdupt.com/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "PTTime-adapter-none",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://pttime.org/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "HaiDan-adapter-none",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://haidan.cc/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "synthetic-site 签到失败，请检查站点连通性"
+        ]
+      ]
+    },
+    {
+      "name": "BTSchool-adapter-success",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>今天签到您获得12点魔力值",
+            "status": 200
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://pt.btschool.club/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "签到成功"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 开始签到"
+        ],
+        [
+          "INFO",
+          "synthetic-site 签到成功"
+        ]
+      ]
+    },
+    {
+      "name": "HDUpt-adapter-already",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "<span id=\"yiqiandao\"></span>",
+            "status": 200
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://pt.hdupt.com/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "今日已签到"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 今日已签到"
+        ]
+      ]
+    },
+    {
+      "name": "PTTime-adapter-success",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "签到成功",
+            "status": 200
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://pttime.org/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "签到成功"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 签到成功"
+        ]
+      ]
+    },
+    {
+      "name": "HaiDan-adapter-success",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ]
+      },
+      "site": {
+        "id": 1,
+        "name": "synthetic-site",
+        "url": "https://haidan.cc/",
+        "cookie": "synthetic-cookie=not-a-credential",
+        "ua": "synthetic-agent",
+        "render": false,
+        "proxy": false
+      },
+      "result": [
+        true,
+        "签到成功"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "synthetic-site 签到成功"
+        ]
+      ]
+    }
+  ]
+}

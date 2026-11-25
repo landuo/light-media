@@ -1,0 +1,2179 @@
+{
+  "source_hashes": {
+    "/app/app/plugins/systemprocess/__init__.py": "d0c8c6f1e034f46ce8b7d3c1bcd0cddc0e2d6455b2a6b35daa4b8002cd39f6ac",
+    "/app/app/schemas/dashboard.py": "5a0d3289a088678fda12c233a79d953a0d2f353dfaaa050d85454483a6374213",
+    "/app/app/utils/string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a"
+  },
+  "psutil_version": "7.2.2",
+  "form": [
+    [
+      {
+        "component": "VForm",
+        "content": [
+          {
+            "component": "VRow",
+            "content": [
+              {
+                "component": "VCol",
+                "props": {
+                  "cols": 12,
+                  "xxl": 4,
+                  "xl": 4,
+                  "lg": 4,
+                  "md": 4,
+                  "sm": 6,
+                  "xs": 12
+                },
+                "content": [
+                  {
+                    "component": "VSwitch",
+                    "props": {
+                      "model": "enable",
+                      "label": "启用插件",
+                      "hint": "插件总开关"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "component": "VRow",
+            "content": [
+              {
+                "component": "VCol",
+                "props": {
+                  "cols": 12,
+                  "xxl": 4,
+                  "xl": 4,
+                  "lg": 4,
+                  "md": 4,
+                  "sm": 6,
+                  "xs": 12
+                },
+                "content": [
+                  {
+                    "component": "VSelect",
+                    "props": {
+                      "model": "dashboard_widget_size",
+                      "label": "仪表板尺寸",
+                      "items": [
+                        {
+                          "title": "100%",
+                          "value": 12
+                        },
+                        {
+                          "title": "2/3",
+                          "value": 8
+                        },
+                        {
+                          "title": "50%",
+                          "value": 6
+                        },
+                        {
+                          "title": "1/3",
+                          "value": 4
+                        }
+                      ],
+                      "hint": "选择仪表板系统进程组件尺寸。"
+                    }
+                  }
+                ]
+              },
+              {
+                "component": "VCol",
+                "props": {
+                  "cols": 12,
+                  "xxl": 4,
+                  "xl": 4,
+                  "lg": 4,
+                  "md": 4,
+                  "sm": 6,
+                  "xs": 12
+                },
+                "content": [
+                  {
+                    "component": "VTextField",
+                    "props": {
+                      "model": "dashboard_widget_refresh",
+                      "label": "仪表板刷新间隔(秒)",
+                      "placeholder": "5",
+                      "type": "number",
+                      "hint": "仪表板组件刷新时间间隔，单位为秒，缺省时不刷新。"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    {
+      "dashboard_widget_refresh": 5,
+      "dashboard_widget_size": 8
+    }
+  ],
+  "cases": [
+    {
+      "name": "absent",
+      "config": null,
+      "state": false,
+      "dashboard": [
+        {
+          "cols": 12,
+          "xxl": 8,
+          "xl": 8,
+          "lg": 8,
+          "md": 8,
+          "sm": 12,
+          "xs": 12
+        },
+        {
+          "title": "系统进程"
+        },
+        [
+          {
+            "component": "VTable",
+            "props": {
+              "hover": true,
+              "fixed-header": true,
+              "density": "compact",
+              "style": {
+                "max-height": "242px"
+              }
+            },
+            "content": [
+              {
+                "component": "thead",
+                "content": [
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程ID"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程名称"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "CPU占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "内存占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "运行时长"
+                  }
+                ]
+              },
+              {
+                "component": "tbody",
+                "content": [
+                  {
+                    "component": "tr",
+                    "props": {
+                      "class": "text-sm"
+                    },
+                    "content": [
+                      {
+                        "component": "td",
+                        "props": {
+                          "colspan": "6",
+                          "class": "text-center"
+                        },
+                        "text": "暂无数据"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      ],
+      "page": [
+        {
+          "component": "VTable",
+          "props": {
+            "hover": true,
+            "fixed-header": true,
+            "density": "compact",
+            "style": {}
+          },
+          "content": [
+            {
+              "component": "thead",
+              "content": [
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程ID"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程名称"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "CPU占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "内存占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "运行时长"
+                }
+              ]
+            },
+            {
+              "component": "tbody",
+              "content": [
+                {
+                  "component": "tr",
+                  "props": {
+                    "class": "text-sm"
+                  },
+                  "content": [
+                    {
+                      "component": "td",
+                      "props": {
+                        "colspan": "6",
+                        "class": "text-center"
+                      },
+                      "text": "暂无数据"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "empty",
+      "config": {},
+      "state": false,
+      "dashboard": [
+        {
+          "cols": 12,
+          "xxl": 8,
+          "xl": 8,
+          "lg": 8,
+          "md": 8,
+          "sm": 12,
+          "xs": 12
+        },
+        {
+          "title": "系统进程"
+        },
+        [
+          {
+            "component": "VTable",
+            "props": {
+              "hover": true,
+              "fixed-header": true,
+              "density": "compact",
+              "style": {
+                "max-height": "242px"
+              }
+            },
+            "content": [
+              {
+                "component": "thead",
+                "content": [
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程ID"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程名称"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "CPU占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "内存占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "运行时长"
+                  }
+                ]
+              },
+              {
+                "component": "tbody",
+                "content": [
+                  {
+                    "component": "tr",
+                    "props": {
+                      "class": "text-sm"
+                    },
+                    "content": [
+                      {
+                        "component": "td",
+                        "props": {
+                          "colspan": "6",
+                          "class": "text-center"
+                        },
+                        "text": "暂无数据"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      ],
+      "page": [
+        {
+          "component": "VTable",
+          "props": {
+            "hover": true,
+            "fixed-header": true,
+            "density": "compact",
+            "style": {}
+          },
+          "content": [
+            {
+              "component": "thead",
+              "content": [
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程ID"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程名称"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "CPU占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "内存占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "运行时长"
+                }
+              ]
+            },
+            {
+              "component": "tbody",
+              "content": [
+                {
+                  "component": "tr",
+                  "props": {
+                    "class": "text-sm"
+                  },
+                  "content": [
+                    {
+                      "component": "td",
+                      "props": {
+                        "colspan": "6",
+                        "class": "text-center"
+                      },
+                      "text": "暂无数据"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "reset",
+      "config": {
+        "enabled": false,
+        "enable": false
+      },
+      "state": false,
+      "dashboard": [
+        {
+          "cols": 12,
+          "xxl": 8,
+          "xl": 8,
+          "lg": 8,
+          "md": 8,
+          "sm": 12,
+          "xs": 12
+        },
+        {
+          "title": "系统进程"
+        },
+        [
+          {
+            "component": "VTable",
+            "props": {
+              "hover": true,
+              "fixed-header": true,
+              "density": "compact",
+              "style": {
+                "max-height": "242px"
+              }
+            },
+            "content": [
+              {
+                "component": "thead",
+                "content": [
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程ID"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程名称"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "CPU占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "内存占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "运行时长"
+                  }
+                ]
+              },
+              {
+                "component": "tbody",
+                "content": [
+                  {
+                    "component": "tr",
+                    "props": {
+                      "class": "text-sm"
+                    },
+                    "content": [
+                      {
+                        "component": "td",
+                        "props": {
+                          "colspan": "6",
+                          "class": "text-center"
+                        },
+                        "text": "暂无数据"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      ],
+      "page": [
+        {
+          "component": "VTable",
+          "props": {
+            "hover": true,
+            "fixed-header": true,
+            "density": "compact",
+            "style": {}
+          },
+          "content": [
+            {
+              "component": "thead",
+              "content": [
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程ID"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程名称"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "CPU占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "内存占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "运行时长"
+                }
+              ]
+            },
+            {
+              "component": "tbody",
+              "content": [
+                {
+                  "component": "tr",
+                  "props": {
+                    "class": "text-sm"
+                  },
+                  "content": [
+                    {
+                      "component": "td",
+                      "props": {
+                        "colspan": "6",
+                        "class": "text-center"
+                      },
+                      "text": "暂无数据"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "enabled",
+      "config": {
+        "enable": true
+      },
+      "state": true,
+      "dashboard": [
+        {
+          "cols": 12,
+          "xxl": 8,
+          "xl": 8,
+          "lg": 8,
+          "md": 8,
+          "sm": 12,
+          "xs": 12
+        },
+        {
+          "title": "系统进程"
+        },
+        [
+          {
+            "component": "VTable",
+            "props": {
+              "hover": true,
+              "fixed-header": true,
+              "density": "compact",
+              "style": {
+                "max-height": "242px"
+              }
+            },
+            "content": [
+              {
+                "component": "thead",
+                "content": [
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程ID"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程名称"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "CPU占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "内存占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "运行时长"
+                  }
+                ]
+              },
+              {
+                "component": "tbody",
+                "content": [
+                  {
+                    "component": "tr",
+                    "props": {
+                      "class": "text-sm"
+                    },
+                    "content": [
+                      {
+                        "component": "td",
+                        "props": {
+                          "colspan": "6",
+                          "class": "text-center"
+                        },
+                        "text": "暂无数据"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      ],
+      "page": [
+        {
+          "component": "VTable",
+          "props": {
+            "hover": true,
+            "fixed-header": true,
+            "density": "compact",
+            "style": {}
+          },
+          "content": [
+            {
+              "component": "thead",
+              "content": [
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程ID"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程名称"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "CPU占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "内存占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "运行时长"
+                }
+              ]
+            },
+            {
+              "component": "tbody",
+              "content": [
+                {
+                  "component": "tr",
+                  "props": {
+                    "class": "text-sm"
+                  },
+                  "content": [
+                    {
+                      "component": "td",
+                      "props": {
+                        "colspan": "6",
+                        "class": "text-center"
+                      },
+                      "text": "暂无数据"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "false-string-truth",
+      "config": {
+        "enable": "false"
+      },
+      "state": true,
+      "dashboard": [
+        {
+          "cols": 12,
+          "xxl": 8,
+          "xl": 8,
+          "lg": 8,
+          "md": 8,
+          "sm": 12,
+          "xs": 12
+        },
+        {
+          "title": "系统进程"
+        },
+        [
+          {
+            "component": "VTable",
+            "props": {
+              "hover": true,
+              "fixed-header": true,
+              "density": "compact",
+              "style": {
+                "max-height": "242px"
+              }
+            },
+            "content": [
+              {
+                "component": "thead",
+                "content": [
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程ID"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程名称"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "CPU占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "内存占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "运行时长"
+                  }
+                ]
+              },
+              {
+                "component": "tbody",
+                "content": [
+                  {
+                    "component": "tr",
+                    "props": {
+                      "class": "text-sm"
+                    },
+                    "content": [
+                      {
+                        "component": "td",
+                        "props": {
+                          "colspan": "6",
+                          "class": "text-center"
+                        },
+                        "text": "暂无数据"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      ],
+      "page": [
+        {
+          "component": "VTable",
+          "props": {
+            "hover": true,
+            "fixed-header": true,
+            "density": "compact",
+            "style": {}
+          },
+          "content": [
+            {
+              "component": "thead",
+              "content": [
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程ID"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程名称"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "CPU占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "内存占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "运行时长"
+                }
+              ]
+            },
+            {
+              "component": "tbody",
+              "content": [
+                {
+                  "component": "tr",
+                  "props": {
+                    "class": "text-sm"
+                  },
+                  "content": [
+                    {
+                      "component": "td",
+                      "props": {
+                        "colspan": "6",
+                        "class": "text-center"
+                      },
+                      "text": "暂无数据"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "null-default",
+      "config": {
+        "dashboard_widget_size": null,
+        "dashboard_widget_refresh": null
+      },
+      "state": false,
+      "dashboard": [
+        {
+          "cols": 12,
+          "xxl": 8,
+          "xl": 8,
+          "lg": 8,
+          "md": 8,
+          "sm": 12,
+          "xs": 12
+        },
+        {
+          "title": "系统进程"
+        },
+        [
+          {
+            "component": "VTable",
+            "props": {
+              "hover": true,
+              "fixed-header": true,
+              "density": "compact",
+              "style": {
+                "max-height": "242px"
+              }
+            },
+            "content": [
+              {
+                "component": "thead",
+                "content": [
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程ID"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程名称"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "CPU占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "内存占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "运行时长"
+                  }
+                ]
+              },
+              {
+                "component": "tbody",
+                "content": [
+                  {
+                    "component": "tr",
+                    "props": {
+                      "class": "text-sm"
+                    },
+                    "content": [
+                      {
+                        "component": "td",
+                        "props": {
+                          "colspan": "6",
+                          "class": "text-center"
+                        },
+                        "text": "暂无数据"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      ],
+      "page": [
+        {
+          "component": "VTable",
+          "props": {
+            "hover": true,
+            "fixed-header": true,
+            "density": "compact",
+            "style": {}
+          },
+          "content": [
+            {
+              "component": "thead",
+              "content": [
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程ID"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程名称"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "CPU占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "内存占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "运行时长"
+                }
+              ]
+            },
+            {
+              "component": "tbody",
+              "content": [
+                {
+                  "component": "tr",
+                  "props": {
+                    "class": "text-sm"
+                  },
+                  "content": [
+                    {
+                      "component": "td",
+                      "props": {
+                        "colspan": "6",
+                        "class": "text-center"
+                      },
+                      "text": "暂无数据"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "width-string",
+      "config": {
+        "dashboard_widget_size": "6",
+        "dashboard_widget_refresh": "5"
+      },
+      "state": false,
+      "dashboard": [
+        {
+          "cols": 12,
+          "xxl": "6",
+          "xl": "6",
+          "lg": "6",
+          "md": "6",
+          "sm": 12,
+          "xs": 12
+        },
+        {
+          "title": "系统进程",
+          "refresh": "5"
+        },
+        [
+          {
+            "component": "VTable",
+            "props": {
+              "hover": true,
+              "fixed-header": true,
+              "density": "compact",
+              "style": {
+                "max-height": "242px"
+              }
+            },
+            "content": [
+              {
+                "component": "thead",
+                "content": [
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程ID"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程名称"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "CPU占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "内存占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "运行时长"
+                  }
+                ]
+              },
+              {
+                "component": "tbody",
+                "content": [
+                  {
+                    "component": "tr",
+                    "props": {
+                      "class": "text-sm"
+                    },
+                    "content": [
+                      {
+                        "component": "td",
+                        "props": {
+                          "colspan": "6",
+                          "class": "text-center"
+                        },
+                        "text": "暂无数据"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      ],
+      "page": [
+        {
+          "component": "VTable",
+          "props": {
+            "hover": true,
+            "fixed-header": true,
+            "density": "compact",
+            "style": {}
+          },
+          "content": [
+            {
+              "component": "thead",
+              "content": [
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程ID"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程名称"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "CPU占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "内存占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "运行时长"
+                }
+              ]
+            },
+            {
+              "component": "tbody",
+              "content": [
+                {
+                  "component": "tr",
+                  "props": {
+                    "class": "text-sm"
+                  },
+                  "content": [
+                    {
+                      "component": "td",
+                      "props": {
+                        "colspan": "6",
+                        "class": "text-center"
+                      },
+                      "text": "暂无数据"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "zero-width",
+      "config": {
+        "dashboard_widget_size": 0,
+        "dashboard_widget_refresh": 0
+      },
+      "state": false,
+      "dashboard": [
+        {
+          "cols": 12,
+          "xxl": 0,
+          "xl": 0,
+          "lg": 0,
+          "md": 0,
+          "sm": 12,
+          "xs": 12
+        },
+        {
+          "title": "系统进程"
+        },
+        [
+          {
+            "component": "VTable",
+            "props": {
+              "hover": true,
+              "fixed-header": true,
+              "density": "compact",
+              "style": {
+                "max-height": "242px"
+              }
+            },
+            "content": [
+              {
+                "component": "thead",
+                "content": [
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程ID"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程名称"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "CPU占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "内存占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "运行时长"
+                  }
+                ]
+              },
+              {
+                "component": "tbody",
+                "content": [
+                  {
+                    "component": "tr",
+                    "props": {
+                      "class": "text-sm"
+                    },
+                    "content": [
+                      {
+                        "component": "td",
+                        "props": {
+                          "colspan": "6",
+                          "class": "text-center"
+                        },
+                        "text": "暂无数据"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      ],
+      "page": [
+        {
+          "component": "VTable",
+          "props": {
+            "hover": true,
+            "fixed-header": true,
+            "density": "compact",
+            "style": {}
+          },
+          "content": [
+            {
+              "component": "thead",
+              "content": [
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程ID"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程名称"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "CPU占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "内存占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "运行时长"
+                }
+              ]
+            },
+            {
+              "component": "tbody",
+              "content": [
+                {
+                  "component": "tr",
+                  "props": {
+                    "class": "text-sm"
+                  },
+                  "content": [
+                    {
+                      "component": "td",
+                      "props": {
+                        "colspan": "6",
+                        "class": "text-center"
+                      },
+                      "text": "暂无数据"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "negative-refresh",
+      "config": {
+        "dashboard_widget_size": 8,
+        "dashboard_widget_refresh": -1
+      },
+      "state": false,
+      "dashboard": [
+        {
+          "cols": 12,
+          "xxl": 8,
+          "xl": 8,
+          "lg": 8,
+          "md": 8,
+          "sm": 12,
+          "xs": 12
+        },
+        {
+          "title": "系统进程",
+          "refresh": -1
+        },
+        [
+          {
+            "component": "VTable",
+            "props": {
+              "hover": true,
+              "fixed-header": true,
+              "density": "compact",
+              "style": {
+                "max-height": "242px"
+              }
+            },
+            "content": [
+              {
+                "component": "thead",
+                "content": [
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程ID"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程名称"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "CPU占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "内存占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "运行时长"
+                  }
+                ]
+              },
+              {
+                "component": "tbody",
+                "content": [
+                  {
+                    "component": "tr",
+                    "props": {
+                      "class": "text-sm"
+                    },
+                    "content": [
+                      {
+                        "component": "td",
+                        "props": {
+                          "colspan": "6",
+                          "class": "text-center"
+                        },
+                        "text": "暂无数据"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      ],
+      "page": [
+        {
+          "component": "VTable",
+          "props": {
+            "hover": true,
+            "fixed-header": true,
+            "density": "compact",
+            "style": {}
+          },
+          "content": [
+            {
+              "component": "thead",
+              "content": [
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程ID"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程名称"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "CPU占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "内存占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "运行时长"
+                }
+              ]
+            },
+            {
+              "component": "tbody",
+              "content": [
+                {
+                  "component": "tr",
+                  "props": {
+                    "class": "text-sm"
+                  },
+                  "content": [
+                    {
+                      "component": "td",
+                      "props": {
+                        "colspan": "6",
+                        "class": "text-center"
+                      },
+                      "text": "暂无数据"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "long-refresh",
+      "config": {
+        "dashboard_widget_size": 8,
+        "dashboard_widget_refresh": 86401
+      },
+      "state": false,
+      "dashboard": [
+        {
+          "cols": 12,
+          "xxl": 8,
+          "xl": 8,
+          "lg": 8,
+          "md": 8,
+          "sm": 12,
+          "xs": 12
+        },
+        {
+          "title": "系统进程",
+          "refresh": 86401
+        },
+        [
+          {
+            "component": "VTable",
+            "props": {
+              "hover": true,
+              "fixed-header": true,
+              "density": "compact",
+              "style": {
+                "max-height": "242px"
+              }
+            },
+            "content": [
+              {
+                "component": "thead",
+                "content": [
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程ID"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程名称"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "CPU占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "内存占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "运行时长"
+                  }
+                ]
+              },
+              {
+                "component": "tbody",
+                "content": [
+                  {
+                    "component": "tr",
+                    "props": {
+                      "class": "text-sm"
+                    },
+                    "content": [
+                      {
+                        "component": "td",
+                        "props": {
+                          "colspan": "6",
+                          "class": "text-center"
+                        },
+                        "text": "暂无数据"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      ],
+      "page": [
+        {
+          "component": "VTable",
+          "props": {
+            "hover": true,
+            "fixed-header": true,
+            "density": "compact",
+            "style": {}
+          },
+          "content": [
+            {
+              "component": "thead",
+              "content": [
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程ID"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程名称"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "CPU占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "内存占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "运行时长"
+                }
+              ]
+            },
+            {
+              "component": "tbody",
+              "content": [
+                {
+                  "component": "tr",
+                  "props": {
+                    "class": "text-sm"
+                  },
+                  "content": [
+                    {
+                      "component": "td",
+                      "props": {
+                        "colspan": "6",
+                        "class": "text-center"
+                      },
+                      "text": "暂无数据"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "fraction-refresh",
+      "config": {
+        "dashboard_widget_size": 6,
+        "dashboard_widget_refresh": 0.5
+      },
+      "state": false,
+      "dashboard": [
+        {
+          "cols": 12,
+          "xxl": 6,
+          "xl": 6,
+          "lg": 6,
+          "md": 6,
+          "sm": 12,
+          "xs": 12
+        },
+        {
+          "title": "系统进程",
+          "refresh": 0.5
+        },
+        [
+          {
+            "component": "VTable",
+            "props": {
+              "hover": true,
+              "fixed-header": true,
+              "density": "compact",
+              "style": {
+                "max-height": "242px"
+              }
+            },
+            "content": [
+              {
+                "component": "thead",
+                "content": [
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程ID"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程名称"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "CPU占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "内存占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "运行时长"
+                  }
+                ]
+              },
+              {
+                "component": "tbody",
+                "content": [
+                  {
+                    "component": "tr",
+                    "props": {
+                      "class": "text-sm"
+                    },
+                    "content": [
+                      {
+                        "component": "td",
+                        "props": {
+                          "colspan": "6",
+                          "class": "text-center"
+                        },
+                        "text": "暂无数据"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      ],
+      "page": [
+        {
+          "component": "VTable",
+          "props": {
+            "hover": true,
+            "fixed-header": true,
+            "density": "compact",
+            "style": {}
+          },
+          "content": [
+            {
+              "component": "thead",
+              "content": [
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程ID"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程名称"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "CPU占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "内存占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "运行时长"
+                }
+              ]
+            },
+            {
+              "component": "tbody",
+              "content": [
+                {
+                  "component": "tr",
+                  "props": {
+                    "class": "text-sm"
+                  },
+                  "content": [
+                    {
+                      "component": "td",
+                      "props": {
+                        "colspan": "6",
+                        "class": "text-center"
+                      },
+                      "text": "暂无数据"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "empty-strings",
+      "config": {
+        "dashboard_widget_size": "",
+        "dashboard_widget_refresh": ""
+      },
+      "state": false,
+      "dashboard": [
+        {
+          "cols": 12,
+          "xxl": "",
+          "xl": "",
+          "lg": "",
+          "md": "",
+          "sm": 12,
+          "xs": 12
+        },
+        {
+          "title": "系统进程"
+        },
+        [
+          {
+            "component": "VTable",
+            "props": {
+              "hover": true,
+              "fixed-header": true,
+              "density": "compact",
+              "style": {
+                "max-height": "242px"
+              }
+            },
+            "content": [
+              {
+                "component": "thead",
+                "content": [
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程ID"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "进程名称"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "CPU占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "内存占用"
+                  },
+                  {
+                    "component": "th",
+                    "props": {
+                      "class": "text-start ps-4"
+                    },
+                    "text": "运行时长"
+                  }
+                ]
+              },
+              {
+                "component": "tbody",
+                "content": [
+                  {
+                    "component": "tr",
+                    "props": {
+                      "class": "text-sm"
+                    },
+                    "content": [
+                      {
+                        "component": "td",
+                        "props": {
+                          "colspan": "6",
+                          "class": "text-center"
+                        },
+                        "text": "暂无数据"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      ],
+      "page": [
+        {
+          "component": "VTable",
+          "props": {
+            "hover": true,
+            "fixed-header": true,
+            "density": "compact",
+            "style": {}
+          },
+          "content": [
+            {
+              "component": "thead",
+              "content": [
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程ID"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "进程名称"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "CPU占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "内存占用"
+                },
+                {
+                  "component": "th",
+                  "props": {
+                    "class": "text-start ps-4"
+                  },
+                  "text": "运行时长"
+                }
+              ]
+            },
+            {
+              "component": "tbody",
+              "content": [
+                {
+                  "component": "tr",
+                  "props": {
+                    "class": "text-sm"
+                  },
+                  "content": [
+                    {
+                      "component": "td",
+                      "props": {
+                        "colspan": "6",
+                        "class": "text-center"
+                      },
+                      "text": "暂无数据"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

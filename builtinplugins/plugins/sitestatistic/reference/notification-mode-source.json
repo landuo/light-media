@@ -1,0 +1,289 @@
+{
+  "classification": "actual installed send_msg/approximation/traffic/fingerprint/format and actual StringUtils.str_filesize AST; get_data returns owned selected rows, config mode attribute returns an explicit ordered stream",
+  "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "source_sha256": {
+    "/Users/accidia/projects/light-media-plugins/work/migration-20261105/source-snapshot/sitestatistic/__init__.py": "763a88be85185a94082a2f131ed1c80d8306abe24b10ebe9ae95447cfe5da17d",
+    "/Users/accidia/projects/light-media-plugins/work/migration-20261105/host-reference/app/utils/string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a"
+  },
+  "cases": [
+    {
+      "case": "first-inc-second-total",
+      "mode_stream": [
+        "inc",
+        "inc",
+        "inc",
+        "inc",
+        "inc",
+        "total"
+      ],
+      "mode_reads": [
+        {
+          "line": 224,
+          "value": "inc"
+        },
+        {
+          "line": 228,
+          "value": "inc"
+        },
+        {
+          "line": 251,
+          "value": "inc"
+        },
+        {
+          "line": 282,
+          "value": "inc"
+        },
+        {
+          "line": 283,
+          "value": "inc"
+        },
+        {
+          "line": 251,
+          "value": "total"
+        },
+        {
+          "line": 282,
+          "value": "total"
+        },
+        {
+          "line": 283,
+          "value": "total"
+        },
+        {
+          "line": 290,
+          "value": "total"
+        },
+        {
+          "line": 291,
+          "value": "total"
+        },
+        {
+          "line": 313,
+          "value": "total"
+        }
+      ],
+      "day": "2026-10-16",
+      "current": [
+        {
+          "name": "A",
+          "upload": 200.0,
+          "download": 100.0,
+          "updated_day": "2026-10-16",
+          "err_msg": ""
+        },
+        {
+          "name": "B",
+          "upload": 80.0,
+          "download": 40.0,
+          "updated_day": "2026-10-16",
+          "err_msg": ""
+        }
+      ],
+      "previous": [
+        {
+          "name": "A",
+          "upload": 100.0,
+          "download": 60.0,
+          "updated_day": "2026-10-15",
+          "err_msg": ""
+        },
+        {
+          "name": "B",
+          "upload": 10.0,
+          "download": 20.0,
+          "updated_day": "2026-10-15",
+          "err_msg": ""
+        }
+      ],
+      "trace": [
+        {
+          "op": "log",
+          "level": "debug",
+          "text": "收到站点数据刷新事件，开始计算inc数据通知 ..."
+        },
+        {
+          "op": "get_data",
+          "key": "last_notify"
+        },
+        {
+          "op": "post",
+          "value": {
+            "mtype": "站点消息",
+            "title": "站点数据统计",
+            "text": "【汇总】\n总上传：180.0B\n总下载：80.0B\n————————————\n【A】\n上传量：100.0B\n下载量：40.0B\n————————————\n【B】\n上传量：80.0B\n下载量：40.0B\n————————————"
+          }
+        },
+        {
+          "op": "save_data",
+          "key": "last_notify",
+          "value": {
+            "date": "2026-10-16",
+            "type": "total",
+            "fingerprint": "c17c1408fcea465d0f64a07983b156d064242540703fc81f14a61fdff8633d41",
+            "time": "12:34:56"
+          }
+        },
+        {
+          "op": "log",
+          "level": "info",
+          "text": "站点数据统计通知发送完成（2026-10-16），总上传 180.0B，总下载 80.0B"
+        }
+      ],
+      "notices": [
+        {
+          "mtype": "站点消息",
+          "title": "站点数据统计",
+          "text": "【汇总】\n总上传：180.0B\n总下载：80.0B\n————————————\n【A】\n上传量：100.0B\n下载量：40.0B\n————————————\n【B】\n上传量：80.0B\n下载量：40.0B\n————————————"
+        }
+      ],
+      "last_notify": {
+        "date": "2026-10-16",
+        "type": "total",
+        "fingerprint": "c17c1408fcea465d0f64a07983b156d064242540703fc81f14a61fdff8633d41",
+        "time": "12:34:56"
+      }
+    },
+    {
+      "case": "first-total-second-inc",
+      "mode_stream": [
+        "total",
+        "total",
+        "total",
+        "total",
+        "total",
+        "inc"
+      ],
+      "mode_reads": [
+        {
+          "line": 224,
+          "value": "total"
+        },
+        {
+          "line": 228,
+          "value": "total"
+        },
+        {
+          "line": 251,
+          "value": "total"
+        },
+        {
+          "line": 282,
+          "value": "total"
+        },
+        {
+          "line": 283,
+          "value": "total"
+        },
+        {
+          "line": 251,
+          "value": "inc"
+        },
+        {
+          "line": 282,
+          "value": "inc"
+        },
+        {
+          "line": 283,
+          "value": "inc"
+        },
+        {
+          "line": 290,
+          "value": "inc"
+        },
+        {
+          "line": 291,
+          "value": "inc"
+        },
+        {
+          "line": 313,
+          "value": "inc"
+        }
+      ],
+      "day": "2026-10-16",
+      "current": [
+        {
+          "name": "A",
+          "upload": 200.0,
+          "download": 100.0,
+          "updated_day": "2026-10-16",
+          "err_msg": ""
+        },
+        {
+          "name": "B",
+          "upload": 80.0,
+          "download": 40.0,
+          "updated_day": "2026-10-16",
+          "err_msg": ""
+        }
+      ],
+      "previous": [
+        {
+          "name": "A",
+          "upload": 100.0,
+          "download": 60.0,
+          "updated_day": "2026-10-15",
+          "err_msg": ""
+        },
+        {
+          "name": "B",
+          "upload": 10.0,
+          "download": 20.0,
+          "updated_day": "2026-10-15",
+          "err_msg": ""
+        }
+      ],
+      "trace": [
+        {
+          "op": "log",
+          "level": "debug",
+          "text": "收到站点数据刷新事件，开始计算total数据通知 ..."
+        },
+        {
+          "op": "get_data",
+          "key": "last_notify"
+        },
+        {
+          "op": "post",
+          "value": {
+            "mtype": "站点消息",
+            "title": "站点数据统计",
+            "text": "【汇总】\n总上传：270.0B\n总下载：120.0B\n————————————\n【A】\n上传量：200.0B\n下载量：100.0B\n————————————\n【B】\n上传量：70.0B\n下载量：20.0B\n————————————"
+          }
+        },
+        {
+          "op": "save_data",
+          "key": "last_notify",
+          "value": {
+            "date": "2026-10-16",
+            "type": "inc",
+            "fingerprint": "6ccfa64bd0301b3b4840ee5d6c5a8ca483211b6718f1b47ddba10b00a18f96d0",
+            "time": "12:34:56"
+          }
+        },
+        {
+          "op": "log",
+          "level": "info",
+          "text": "站点数据统计通知发送完成（2026-10-16），总上传 270.0B，总下载 120.0B"
+        }
+      ],
+      "notices": [
+        {
+          "mtype": "站点消息",
+          "title": "站点数据统计",
+          "text": "【汇总】\n总上传：270.0B\n总下载：120.0B\n————————————\n【A】\n上传量：200.0B\n下载量：100.0B\n————————————\n【B】\n上传量：70.0B\n下载量：20.0B\n————————————"
+        }
+      ],
+      "last_notify": {
+        "date": "2026-10-16",
+        "type": "inc",
+        "fingerprint": "6ccfa64bd0301b3b4840ee5d6c5a8ca483211b6718f1b47ddba10b00a18f96d0",
+        "time": "12:34:56"
+      }
+    }
+  ],
+  "limits": [
+    "Local Python3.14 versus installed3.12.13; no float-sensitive sum or Unicode cases here",
+    "Attribute read stream deterministically models concurrent init between existing source reads, not a production scheduler test",
+    "Source data provider, data storage, logger and post are owned recorders; no source application imports, real notifications or DB"
+  ]
+}

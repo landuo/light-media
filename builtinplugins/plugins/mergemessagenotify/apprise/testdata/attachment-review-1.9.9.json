@@ -1,0 +1,130 @@
+{
+  "source": {
+    "apprise_version": "1.9.9",
+    "requests_version": "2.34.2",
+    "python_version": "3.14.4",
+    "sha256_by_path": {
+      "apprise.py": "096ad346f8ccad1f14612542a11f492b1e098d4e8727732ffa3c51b2345f317e",
+      "apprise_attachment.py": "3d4bec56416b16876d618e4a2960291b057346e713248712b118f2d180c4ef13",
+      "attachment/base.py": "a0007805d7e87fbb44806b4952a3ed151f483443c67ef58ec2e5dfe2c01137fb",
+      "attachment/http.py": "afbb29861e2d6fd251719f25d814497f2184acf7884435a8fbe01efc5b8560e8",
+      "attachment/file.py": "275e0b1f29680ce56ad6b5e5a88797ee991bf4c0811fb0b60c012a34b131786c",
+      "plugins/custom_json.py": "bb17123533acff1e948cb409db3177ecee80b3468db64e6a8c6b94730e830170",
+      "plugins/apprise_api.py": "14f12b4f55089599e22eaa53e3dab23571b2560b3b9494ed796a99cd6b4ffad9",
+      "plugins/bark.py": "07ea6b9509005f67f2a584d9f40887f8058c25f5c79631b723af55fa632d9b46"
+    }
+  },
+  "owned_file_base64": "c2Vjb25kLW93bmVk",
+  "fixture_http_body_base64": "iVBORw0KGgpvd25lZC1wYXlsb2FkAA==",
+  "multipart_boundary": "apprise-owned-boundary",
+  "note": "Synthetic source probe; external sockets and actual Requests transport forbidden. Parallel service send order is incidental; each consuming POST follows GET, while Bark may run independently.",
+  "cases": [
+    {
+      "name": "split-transient-get-retry",
+      "urls": [
+        "json://json.invalid/collect?overflow=split"
+      ],
+      "title": "标题",
+      "body": {
+        "repeat": "a",
+        "count": 32768,
+        "suffix": "tail-owned"
+      },
+      "attachment": "http://image.invalid/art.png?source=owned",
+      "added": [
+        true
+      ],
+      "result": false,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://image.invalid/art.png?source=owned",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "GET",
+          "url": "http://image.invalid/art.png?source=owned",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "http://json.invalid/collect",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"version\": \"1.0\", \"title\": \"\\u6807\\u9898 [2/2]\", \"message\": \"tail-owned\", \"attachments\": [{\"filename\": \"owned image.png\", \"base64\": \"iVBORw0KGgpvd25lZC1wYXlsb2FkAA==\", \"mimetype\": \"image/png\"}], \"type\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "case-sensitive-attachment-query",
+      "urls": [
+        "json://json.invalid/collect"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": "https://image.invalid/art.png?NAME=ignored.jpg&Verify=no&-X-Shared=base&+X-Shared=plus&+X-Plus=one&%20X-Space=two",
+      "added": [
+        true
+      ],
+      "result": true,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://image.invalid/art.png?NAME=ignored.jpg&Verify=no&-X-Shared=base&%2BX-Shared=plus&%2BX-Plus=one&+X-Space=two",
+          "headers": {
+            "User-Agent": "Apprise",
+            "X-Shared": "plus",
+            "X-Plus": "one",
+            "X-Space": "two"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "http://json.invalid/collect",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"version\": \"1.0\", \"title\": \"\\u6807\\u9898\", \"message\": \"owned body\", \"attachments\": [{\"filename\": \"owned image.png\", \"base64\": \"iVBORw0KGgpvd25lZC1wYXlsb2FkAA==\", \"mimetype\": \"image/png\"}], \"type\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    }
+  ]
+}

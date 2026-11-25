@@ -1,0 +1,197 @@
+{
+  "classification": "exact actual AutoSignIn.init_plugin + __update_config AST; empty inventory/stop fixture; no app/network/DB; disabled flags",
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "source_sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+  "subjects_codepoints": [
+    [
+      55296
+    ],
+    [
+      57343
+    ],
+    [
+      65533
+    ],
+    [
+      65536
+    ],
+    [
+      97,
+      115,
+      99,
+      105,
+      105
+    ]
+  ],
+  "rows": [
+    {
+      "raw_pattern": "\"\\ud800\"",
+      "runtime_codepoints": [
+        55296
+      ],
+      "saved_codepoints": [
+        55296
+      ],
+      "saved_json": "{\"enabled\": false, \"notify\": null, \"cron\": null, \"onlyonce\": false, \"queue_cnt\": 5, \"sign_sites\": [], \"login_sites\": [], \"retry_keyword\": \"\\ud800\", \"auto_cf\": null, \"clean\": null}",
+      "effects": [
+        "stop",
+        "config"
+      ],
+      "matches": [
+        true,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "raw_pattern": "\"\\udfff\"",
+      "runtime_codepoints": [
+        57343
+      ],
+      "saved_codepoints": [
+        57343
+      ],
+      "saved_json": "{\"enabled\": false, \"notify\": null, \"cron\": null, \"onlyonce\": false, \"queue_cnt\": 5, \"sign_sites\": [], \"login_sites\": [], \"retry_keyword\": \"\\udfff\", \"auto_cf\": null, \"clean\": null}",
+      "effects": [
+        "stop",
+        "config"
+      ],
+      "matches": [
+        false,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "raw_pattern": "\"\\ud800\\udc00\"",
+      "runtime_codepoints": [
+        65536
+      ],
+      "saved_codepoints": [
+        65536
+      ],
+      "saved_json": "{\"enabled\": false, \"notify\": null, \"cron\": null, \"onlyonce\": false, \"queue_cnt\": 5, \"sign_sites\": [], \"login_sites\": [], \"retry_keyword\": \"\\ud800\\udc00\", \"auto_cf\": null, \"clean\": null}",
+      "effects": [
+        "stop",
+        "config"
+      ],
+      "matches": [
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    {
+      "raw_pattern": "\"\\ud800x\\udc00\"",
+      "runtime_codepoints": [
+        55296,
+        120,
+        56320
+      ],
+      "saved_codepoints": [
+        55296,
+        120,
+        56320
+      ],
+      "saved_json": "{\"enabled\": false, \"notify\": null, \"cron\": null, \"onlyonce\": false, \"queue_cnt\": 5, \"sign_sites\": [], \"login_sites\": [], \"retry_keyword\": \"\\ud800x\\udc00\", \"auto_cf\": null, \"clean\": null}",
+      "effects": [
+        "stop",
+        "config"
+      ],
+      "matches": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "raw_pattern": "\"\\ufffd\"",
+      "runtime_codepoints": [
+        65533
+      ],
+      "saved_codepoints": [
+        65533
+      ],
+      "saved_json": "{\"enabled\": false, \"notify\": null, \"cron\": null, \"onlyonce\": false, \"queue_cnt\": 5, \"sign_sites\": [], \"login_sites\": [], \"retry_keyword\": \"\\ufffd\", \"auto_cf\": null, \"clean\": null}",
+      "effects": [
+        "stop",
+        "config"
+      ],
+      "matches": [
+        false,
+        false,
+        true,
+        false,
+        false
+      ]
+    },
+    {
+      "raw_pattern": "\"ascii\"",
+      "runtime_codepoints": [
+        97,
+        115,
+        99,
+        105,
+        105
+      ],
+      "saved_codepoints": [
+        97,
+        115,
+        99,
+        105,
+        105
+      ],
+      "saved_json": "{\"enabled\": false, \"notify\": null, \"cron\": null, \"onlyonce\": false, \"queue_cnt\": 5, \"sign_sites\": [], \"login_sites\": [], \"retry_keyword\": \"ascii\", \"auto_cf\": null, \"clean\": null}",
+      "effects": [
+        "stop",
+        "config"
+      ],
+      "matches": [
+        false,
+        false,
+        false,
+        false,
+        true
+      ]
+    },
+    {
+      "raw_pattern": "\"\\\\ud800\"",
+      "runtime_codepoints": [
+        92,
+        117,
+        100,
+        56,
+        48,
+        48
+      ],
+      "saved_codepoints": [
+        92,
+        117,
+        100,
+        56,
+        48,
+        48
+      ],
+      "saved_json": "{\"enabled\": false, \"notify\": null, \"cron\": null, \"onlyonce\": false, \"queue_cnt\": 5, \"sign_sites\": [], \"login_sites\": [], \"retry_keyword\": \"\\\\ud800\", \"auto_cf\": null, \"clean\": null}",
+      "effects": [
+        "stop",
+        "config"
+      ],
+      "matches": [
+        true,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  ]
+}

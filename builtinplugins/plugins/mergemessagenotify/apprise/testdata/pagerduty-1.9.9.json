@@ -1,0 +1,237 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "pagerduty_sha256": "4fe41a293188fc7c3c62fe7d2f99bf23297f222985d29eb8f18a31c1c9217d00"
+  },
+  "cases": [
+    {
+      "name": "default-trigger-and-image",
+      "url": "pagerduty://ownedRoute:ignored@OwnedToken?dedup_key=owned&event_action=resolve&version=1&action=acknowledge&incident=owned",
+      "title": "  标题 ",
+      "body": "body  ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://events.pagerduty.com/v2/enqueue",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Token token=OwnedToken"
+          },
+          "body": "{\"routing_key\": \"ownedRoute\", \"payload\": {\"summary\": \"\\u6807\\u9898\\r\\nbody\", \"severity\": \"info\", \"source\": \"Apprise\", \"component\": \"Notification\"}, \"client\": \"Apprise\", \"event_action\": \"trigger\", \"images\": [{\"src\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\", \"alt\": \"info\"}]}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "eu-region-path-details-attachment-and-tls",
+      "url": "pagerduty://ownedRoute:ignored@OwnedToken/Host%20Name/unused?component=Comp%2520Name&region=EU&severity=cr&group=owned%252Bgroup&class=ownedClass&click=https%253A%252F%252Fowned.invalid%252Fdetails&+First=A%252BB&+%2546irst=last&+First=late&%2BSecond=two&-Third=ignored&image=no&verify=no&cto=2.5&rto=8",
+      "title": "t",
+      "body": "b",
+      "attach": "https://owned.invalid/file.png",
+      "statuses": [
+        201
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://events.eu.pagerduty.com/v2/enqueue",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Token token=OwnedToken"
+          },
+          "body": "{\"routing_key\": \"ownedRoute\", \"payload\": {\"summary\": \"t\\r\\nb\", \"severity\": \"critical\", \"source\": \"Host Name\", \"component\": \"Comp Name\", \"group\": \"owned+group\", \"class\": \"ownedClass\", \"custom_details\": {\"First\": \"last\", \"Second\": \"two\"}}, \"client\": \"Apprise\", \"event_action\": \"trigger\", \"links\": [{\"href\": \"https://owned.invalid/details\"}]}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            8.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "credential-override-and-source-keeps-path",
+      "url": "pagerduty://ownedRoute:ignored@OwnedToken/first/second?apikey=Query%252BKey&integrationkey=Route%252BKey&source=source%2520name&severity=w&format=html&image=maybe",
+      "title": " title ",
+      "body": "<i>body</i>  ",
+      "attach": null,
+      "statuses": [
+        202
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://events.pagerduty.com/v2/enqueue",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Token token=Query+Key"
+          },
+          "body": "{\"routing_key\": \"Route+Key\", \"payload\": {\"summary\": \"<b>title</b><br />\\r\\n<i>body</i>\", \"severity\": \"warning\", \"source\": \"source name\", \"component\": \"first\"}, \"client\": \"Apprise\", \"event_action\": \"trigger\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "api-rejects-unlisted-success-status",
+      "url": "pagerduty://ownedRoute:ignored@OwnedToken?image=",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        204
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://events.pagerduty.com/v2/enqueue",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Token token=OwnedToken"
+          },
+          "body": "{\"routing_key\": \"ownedRoute\", \"payload\": {\"summary\": \"b\", \"severity\": \"info\", \"source\": \"Apprise\", \"component\": \"Notification\"}, \"client\": \"Apprise\", \"event_action\": \"trigger\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "transport-failure",
+      "url": "pagerduty://ownedRoute:ignored@OwnedToken?image=no",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        0
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://events.pagerduty.com/v2/enqueue",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Token token=OwnedToken"
+          },
+          "body": "{\"routing_key\": \"ownedRoute\", \"payload\": {\"summary\": \"b\", \"severity\": \"info\", \"source\": \"Apprise\", \"component\": \"Notification\"}, \"client\": \"Apprise\", \"event_action\": \"trigger\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "requires-routing-key",
+      "url": "pagerduty://OwnedToken",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "requires-api-key",
+      "url": "pagerduty://ownedRoute@",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "rejects-uppercase-severity",
+      "url": "pagerduty://ownedRoute:ignored@OwnedToken?severity=CR",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "rejects-invalid-region",
+      "url": "pagerduty://ownedRoute:ignored@OwnedToken?region=APAC",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "rejects-leading-space-in-source",
+      "url": "pagerduty://ownedRoute:ignored@OwnedToken?source=%2520owned",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "rejects-store-disable",
+      "url": "pagerduty://ownedRoute:ignored@OwnedToken?store=no",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "skips-attachment-only-notification",
+      "url": "pagerduty://ownedRoute:ignored@OwnedToken",
+      "title": "t",
+      "body": "",
+      "attach": "https://owned.invalid/file.png",
+      "statuses": [],
+      "added": true,
+      "result": false,
+      "requests": []
+    }
+  ]
+}

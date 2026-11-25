@@ -1,0 +1,597 @@
+{
+  "source": {
+    "apprise_version": "1.9.9",
+    "requests_version": "2.34.2",
+    "python_version": "3.14.4",
+    "sha256_by_path": {
+      "apprise.py": "096ad346f8ccad1f14612542a11f492b1e098d4e8727732ffa3c51b2345f317e",
+      "apprise_attachment.py": "3d4bec56416b16876d618e4a2960291b057346e713248712b118f2d180c4ef13",
+      "attachment/base.py": "a0007805d7e87fbb44806b4952a3ed151f483443c67ef58ec2e5dfe2c01137fb",
+      "attachment/http.py": "afbb29861e2d6fd251719f25d814497f2184acf7884435a8fbe01efc5b8560e8",
+      "attachment/file.py": "275e0b1f29680ce56ad6b5e5a88797ee991bf4c0811fb0b60c012a34b131786c",
+      "plugins/custom_json.py": "bb17123533acff1e948cb409db3177ecee80b3468db64e6a8c6b94730e830170",
+      "plugins/apprise_api.py": "14f12b4f55089599e22eaa53e3dab23571b2560b3b9494ed796a99cd6b4ffad9",
+      "plugins/bark.py": "07ea6b9509005f67f2a584d9f40887f8058c25f5c79631b723af55fa632d9b46"
+    }
+  },
+  "owned_file_base64": "c2Vjb25kLW93bmVk",
+  "fixture_http_body_base64": "iVBORw0KGgpvd25lZC1wYXlsb2FkAA==",
+  "multipart_boundary": "apprise-owned-boundary",
+  "note": "Synthetic source probe; external sockets and actual Requests transport forbidden. Parallel service send order is incidental; each consuming POST follows GET, while Bark may run independently.",
+  "cases": [
+    {
+      "name": "json-http",
+      "urls": [
+        "json://json.invalid/collect"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": "http://image.invalid/art.png?source=owned",
+      "added": [
+        true
+      ],
+      "result": true,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://image.invalid/art.png?source=owned",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "http://json.invalid/collect",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"version\": \"1.0\", \"title\": \"\\u6807\\u9898\", \"message\": \"owned body\", \"attachments\": [{\"filename\": \"owned image.png\", \"base64\": \"iVBORw0KGgpvd25lZC1wYXlsb2FkAA==\", \"mimetype\": \"image/png\"}], \"type\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "invalid-mime-override",
+      "urls": [
+        "apprise://gateway.invalid/Token?method=json"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": "https://owner:p%40ss@image.invalid:9443/x/remote?name=My%20PHOTO.PNG&mime=IMAGE%2FX-PNG&verify=no&cto=1.25&rto=3&+X-Token=A%252BB&z=1",
+      "added": [
+        true
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "gateway-form-multiple-http-and-local",
+      "urls": [
+        "apprise://gateway.invalid/Token"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": [
+        "http://image.invalid/art.png?source=owned",
+        "{owned_file}"
+      ],
+      "added": [
+        true
+      ],
+      "result": true,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://image.invalid/art.png?source=owned",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "http://gateway.invalid/notify/Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "X-Apprise-ID": "{uuid4}",
+            "X-Apprise-Recursion-Count": "1",
+            "Content-Type": "multipart/form-data; boundary=apprise-owned-boundary"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "5qCH6aKY"
+              },
+              {
+                "field": "body",
+                "filename": null,
+                "content_type": null,
+                "base64": "b3duZWQgYm9keQ=="
+              },
+              {
+                "field": "type",
+                "filename": null,
+                "content_type": null,
+                "base64": "aW5mbw=="
+              },
+              {
+                "field": "format",
+                "filename": null,
+                "content_type": null,
+                "base64": "dGV4dA=="
+              },
+              {
+                "field": "file01",
+                "filename": "owned image.png",
+                "content_type": "image/png",
+                "base64": "iVBORw0KGgpvd25lZC1wYXlsb2FkAA=="
+              },
+              {
+                "field": "file02",
+                "filename": "Local Artwork.PNG",
+                "content_type": "image/png",
+                "base64": "c2Vjb25kLW93bmVk"
+              }
+            ],
+            "raw_base64": "LS1hcHByaXNlLW93bmVkLWJvdW5kYXJ5DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5hbWU9InRpdGxlIg0KDQrmoIfpopgNCi0tYXBwcmlzZS1vd25lZC1ib3VuZGFyeQ0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJib2R5Ig0KDQpvd25lZCBib2R5DQotLWFwcHJpc2Utb3duZWQtYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0idHlwZSINCg0KaW5mbw0KLS1hcHByaXNlLW93bmVkLWJvdW5kYXJ5DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5hbWU9ImZvcm1hdCINCg0KdGV4dA0KLS1hcHByaXNlLW93bmVkLWJvdW5kYXJ5DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5hbWU9ImZpbGUwMSI7IGZpbGVuYW1lPSJvd25lZCBpbWFnZS5wbmciDQpDb250ZW50LVR5cGU6IGltYWdlL3BuZw0KDQqJUE5HDQoaCm93bmVkLXBheWxvYWQADQotLWFwcHJpc2Utb3duZWQtYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iZmlsZTAyIjsgZmlsZW5hbWU9IkxvY2FsIEFydHdvcmsuUE5HIg0KQ29udGVudC1UeXBlOiBpbWFnZS9wbmcNCg0Kc2Vjb25kLW93bmVkDQotLWFwcHJpc2Utb3duZWQtYm91bmRhcnktLQ0K"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            30.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bark-ignores-valid-unavailable",
+      "urls": [
+        "bark://bark.invalid/DeviceToken"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": "http://image.invalid/unavailable.jpg",
+      "added": [
+        true
+      ],
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://bark.invalid/push",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"title\": \"\\u6807\\u9898\", \"body\": \"owned body\", \"icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\", \"device_key\": \"DeviceToken\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "http-404-fails-only-consumer",
+      "urls": [
+        "json://json.invalid/collect",
+        "bark://bark.invalid/DeviceToken"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": "http://image.invalid/unavailable.jpg",
+      "added": [
+        true,
+        true
+      ],
+      "result": false,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://image.invalid/unavailable.jpg",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "http://bark.invalid/push",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"title\": \"\\u6807\\u9898\", \"body\": \"owned body\", \"icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\", \"device_key\": \"DeviceToken\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "malformed-attachment-aborts-all",
+      "urls": [
+        "json://json.invalid/collect",
+        "bark://bark.invalid/DeviceToken"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": [
+        "http://image.invalid/art.png?source=owned",
+        "unknown://owned"
+      ],
+      "added": [
+        true,
+        true
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "invalid-attachment-type-aborts-all",
+      "urls": [
+        "bark://bark.invalid/DeviceToken"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": 1,
+      "added": [
+        true
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "size-header-fails-before-upload",
+      "urls": [
+        "apprise://gateway.invalid/Token?method=json"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": "http://image.invalid/size.jpg",
+      "added": [
+        true
+      ],
+      "result": false,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://image.invalid/size.jpg",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        }
+      ]
+    },
+    {
+      "name": "shared-cache-json-gateway-bark",
+      "urls": [
+        "json://json.invalid/collect",
+        "apprise://gateway.invalid/Token?method=json",
+        "bark://bark.invalid/DeviceToken"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": "http://image.invalid/art.png?source=owned",
+      "added": [
+        true,
+        true,
+        true
+      ],
+      "result": true,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://image.invalid/art.png?source=owned",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "http://bark.invalid/push",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"title\": \"\\u6807\\u9898\", \"body\": \"owned body\", \"icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\", \"device_key\": \"DeviceToken\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "http://json.invalid/collect",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"version\": \"1.0\", \"title\": \"\\u6807\\u9898\", \"message\": \"owned body\", \"attachments\": [{\"filename\": \"owned image.png\", \"base64\": \"iVBORw0KGgpvd25lZC1wYXlsb2FkAA==\", \"mimetype\": \"image/png\"}], \"type\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "http://gateway.invalid/notify/Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-Apprise-ID": "{uuid4}",
+            "X-Apprise-Recursion-Count": "1"
+          },
+          "body": "{\"title\": \"\\u6807\\u9898\", \"body\": \"owned body\", \"type\": \"info\", \"format\": \"text\", \"attachments\": [{\"filename\": \"owned image.png\", \"base64\": \"iVBORw0KGgpvd25lZC1wYXlsb2FkAA==\", \"mimetype\": \"image/png\"}]}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            30.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "file-url-name-mime-guess",
+      "urls": [
+        "json://json.invalid/collect"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": "{owned_file}?name=NEW.JSON",
+      "added": [
+        true
+      ],
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://json.invalid/collect",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"version\": \"1.0\", \"title\": \"\\u6807\\u9898\", \"message\": \"owned body\", \"attachments\": [{\"filename\": \"new.json\", \"base64\": \"c2Vjb25kLW93bmVk\", \"mimetype\": \"application/json\"}], \"type\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gateway-json-name-mime-auth",
+      "urls": [
+        "apprise://gateway.invalid/Token?method=json"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": "https://owner:p%40ss@image.invalid:9443/x/remote?name=My%20PHOTO.PNG&mime=IMAGE%2FJPEG&verify=no&cto=1.25&rto=3&+X-Token=A%252BB&z=1",
+      "added": [
+        true
+      ],
+      "result": true,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://image.invalid:9443/x/remote?cto=1.25&rto=3&%2BX-Token=A%252BB&z=1",
+          "headers": {
+            "User-Agent": "Apprise",
+            "X-Token": "A%2BB",
+            "Authorization": "Basic b3duZXI6cEBzcw=="
+          },
+          "body": null,
+          "verify": false,
+          "timeout": [
+            1.25,
+            3.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "http://gateway.invalid/notify/Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-Apprise-ID": "{uuid4}",
+            "X-Apprise-Recursion-Count": "1"
+          },
+          "body": "{\"title\": \"\\u6807\\u9898\", \"body\": \"owned body\", \"type\": \"info\", \"format\": \"text\", \"attachments\": [{\"filename\": \"my photo.png\", \"base64\": \"iVBORw0KGgpvd25lZC1wYXlsb2FkAA==\", \"mimetype\": \"image/jpeg\"}]}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            30.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cache-disabled-observable-refetch",
+      "urls": [
+        "json://json.invalid/collect"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": "http://image.invalid/art.png?source=owned&cache=no",
+      "added": [
+        true
+      ],
+      "result": true,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://image.invalid/art.png?source=owned",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "http://json.invalid/collect",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"version\": \"1.0\", \"title\": \"\\u6807\\u9898\", \"message\": \"owned body\", \"attachments\": [{\"filename\": \"owned image.png\", \"base64\": \"iVBORw0KGgpvd25lZC1wYXlsb2FkAA==\", \"mimetype\": \"image/png\"}], \"type\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "attachment-only-json-and-bark",
+      "urls": [
+        "json://json.invalid/collect",
+        "bark://bark.invalid/DeviceToken"
+      ],
+      "title": "",
+      "body": "",
+      "attachment": "http://image.invalid/art.png?source=owned",
+      "added": [
+        true,
+        true
+      ],
+      "result": false,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://image.invalid/art.png?source=owned",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "http://json.invalid/collect",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"version\": \"1.0\", \"title\": \"\", \"message\": \"\", \"attachments\": [{\"filename\": \"owned image.png\", \"base64\": \"iVBORw0KGgpvd25lZC1wYXlsb2FkAA==\", \"mimetype\": \"image/png\"}], \"type\": \"info\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "overflow-truncate-keeps-first-attachment",
+      "urls": [
+        "apprise://gateway.invalid/Token?method=json&overflow=truncate"
+      ],
+      "title": "标题",
+      "body": "owned body",
+      "attachment": [
+        "http://image.invalid/art.png?source=owned",
+        "{owned_file}"
+      ],
+      "added": [
+        true
+      ],
+      "result": true,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://image.invalid/art.png?source=owned",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "http://gateway.invalid/notify/Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-Apprise-ID": "{uuid4}",
+            "X-Apprise-Recursion-Count": "1"
+          },
+          "body": "{\"title\": \"\\u6807\\u9898\", \"body\": \"owned body\", \"type\": \"info\", \"format\": \"text\", \"attachments\": [{\"filename\": \"owned image.png\", \"base64\": \"iVBORw0KGgpvd25lZC1wYXlsb2FkAA==\", \"mimetype\": \"image/png\"}]}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            30.0
+          ]
+        }
+      ]
+    }
+  ]
+}

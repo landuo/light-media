@@ -1,0 +1,130 @@
+{
+  "source": {
+    "path": "work/migration-20261105/source-snapshot/mediaserverrefresh/__init__.py",
+    "sha256": "ea92f39a852aa0333cb625885e0fbf7b2a679f4f7449463bb6126afe6694a3fc",
+    "moviepilot_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "harness": "work/mediaserverrefresh-20261107/stop-batch-oracle.py",
+    "coverage": "Installed class AST, owned fakes for clock/media host, real Python thread and lock. No external calls."
+  },
+  "config": {
+    "enabled": true,
+    "delay": "10",
+    "mediaservers": [
+      "fnos"
+    ]
+  },
+  "form_model": {
+    "enabled": false,
+    "delay": 0
+  },
+  "form_field_order": [
+    "enabled",
+    "mediaservers",
+    "delay"
+  ],
+  "form_options": [
+    {
+      "title": "fnos",
+      "value": "fnos"
+    },
+    {
+      "title": "unselected",
+      "value": "unselected"
+    }
+  ],
+  "events": [
+    {
+      "type": "transfer.complete",
+      "data": {
+        "mediainfo": {
+          "title": "Owned Movie",
+          "year": "2024",
+          "type": "电影",
+          "category": "Owned"
+        },
+        "transferinfo": {
+          "target_diritem": {
+            "path": "/owned/library/Owned Movie (2024)"
+          }
+        }
+      }
+    },
+    {
+      "type": "transfer.complete",
+      "data": {
+        "mediainfo": {
+          "title": "Owned Series",
+          "year": 2025,
+          "type": "电视剧",
+          "category": "Owned"
+        },
+        "transferinfo": {
+          "target_diritem": {
+            "path": "/owned/library/Owned Series (2025)"
+          }
+        }
+      }
+    }
+  ],
+  "expected": {
+    "state": true,
+    "registrations": [
+      {
+        "event": "transfer.complete",
+        "method": "refresh"
+      }
+    ],
+    "first_deadline": 110.0,
+    "extended_deadline": 111.0,
+    "stop_deadline": 0.0,
+    "poll_seconds": [
+      1
+    ],
+    "preflush_calls": 0,
+    "preflush_pending_items": 2,
+    "pending_items_after_flush": 0,
+    "service_filters": [
+      [
+        "fnos"
+      ],
+      [
+        "fnos"
+      ],
+      [
+        "fnos"
+      ]
+    ],
+    "refresh_calls": [
+      {
+        "server": "fnos",
+        "method": "refresh_library_by_items",
+        "items": [
+          {
+            "title": "Owned Movie",
+            "year": "2024",
+            "type": "电影",
+            "category": "Owned",
+            "target_path": "/owned/library/Owned Movie (2024)"
+          },
+          {
+            "title": "Owned Series",
+            "year": 2025,
+            "type": "电视剧",
+            "category": "Owned",
+            "target_path": "/owned/library/Owned Series (2025)"
+          }
+        ]
+      }
+    ],
+    "logs": [
+      {
+        "level": "INFO",
+        "message": "延迟 10 秒后刷新媒体库... "
+      },
+      {
+        "level": "INFO",
+        "message": "延迟 10 秒后刷新媒体库... "
+      }
+    ]
+  }
+}

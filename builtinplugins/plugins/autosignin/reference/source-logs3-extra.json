@@ -1,0 +1,241 @@
+{
+  "classification": "actual333/Python3.12 original adapter and signin_site AST; synthetic HTTP/Base/stats/module match/error/clock only; no app import/network",
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "cases": [
+    {
+      "name": "BTSchool-already-original-log",
+      "adapter": "BTSchool",
+      "site": {
+        "id": 1,
+        "name": "Owned",
+        "url": "https://pt.btschool.club/",
+        "cookie": "owned=fixture",
+        "render": false,
+        "timeout": 20,
+        "proxy": false,
+        "ua": "Owned"
+      },
+      "input": {
+        "responses": [
+          {
+            "status": 200,
+            "text": "<a href=\"logout.php\">out</a><div>已签到</div>"
+          }
+        ]
+      },
+      "result": [
+        true,
+        "今日已签到"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "Owned 开始签到"
+        ],
+        [
+          "INFO",
+          "Owned 今日已签到"
+        ]
+      ],
+      "log_locations": [
+        {
+          "file": "btschool.py",
+          "line": 44,
+          "level": "info"
+        },
+        {
+          "file": "btschool.py",
+          "line": 63,
+          "level": "info"
+        }
+      ]
+    },
+    {
+      "name": "Opencd-second-page-none",
+      "adapter": "Opencd",
+      "site": {
+        "id": 1,
+        "name": "Owned",
+        "url": "https://www.open.cd/",
+        "cookie": "owned=fixture",
+        "render": false,
+        "timeout": 20,
+        "proxy": false,
+        "ua": "Owned"
+      },
+      "input": {
+        "responses": [
+          {
+            "status": 200,
+            "text": "<a href=\"logout.php\">out</a>"
+          },
+          null
+        ]
+      },
+      "result": [
+        false,
+        "签到失败，请检查站点连通性"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "Owned 签到失败，请检查站点连通性"
+        ]
+      ],
+      "log_locations": [
+        {
+          "file": "opencd.py",
+          "line": 72,
+          "level": "error"
+        }
+      ]
+    },
+    {
+      "name": "RousiPro-token-already",
+      "adapter": "RousiPro",
+      "site": {
+        "id": 1,
+        "name": "Owned",
+        "url": "https://rousi.pro/",
+        "cookie": "owned=fixture",
+        "render": false,
+        "timeout": 20,
+        "proxy": false,
+        "ua": "Owned",
+        "token": "owned-token",
+        "apikey": null
+      },
+      "input": {
+        "site": {
+          "token": "owned-token",
+          "apikey": null
+        },
+        "responses": [
+          {
+            "status": 400,
+            "text": "{\"code\":1,\"message\":\"今日已签到\"}"
+          }
+        ]
+      },
+      "result": [
+        true,
+        "今日已签到"
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "Owned 今日已签到"
+        ]
+      ],
+      "log_locations": [
+        {
+          "file": "rousipro.py",
+          "line": 126,
+          "level": "info"
+        }
+      ]
+    }
+  ],
+  "wrapper_cases": [
+    {
+      "name": "module-match-error",
+      "site": {
+        "id": 1,
+        "name": "Owned",
+        "url": "https://owned.invalid/",
+        "cookie": "owned=fixture",
+        "render": false,
+        "timeout": 20,
+        "proxy": false,
+        "ua": "Owned"
+      },
+      "result": [
+        "Owned",
+        "签到失败，无法打开网站！；模拟登录失败，无法打开网站！",
+        false,
+        false
+      ],
+      "error": null,
+      "logs": [
+        [
+          "ERROR",
+          "站点模块加载失败：owned module match error"
+        ],
+        [
+          "INFO",
+          "开始站点签到：Owned，地址：https://owned.invalid/attendance.php..."
+        ],
+        [
+          "INFO",
+          "开始站点模拟登录：Owned，地址：https://owned.invalid/..."
+        ]
+      ],
+      "log_locations": [
+        {
+          "file": "main.py",
+          "line": 1783,
+          "level": "error"
+        },
+        {
+          "file": "main.py",
+          "line": 1882,
+          "level": "info"
+        },
+        {
+          "file": "main.py",
+          "line": 1972,
+          "level": "info"
+        }
+      ],
+      "stats": [
+        {
+          "domain": "owned.invalid",
+          "success": false
+        }
+      ]
+    },
+    {
+      "name": "module-login-fallback",
+      "site": {
+        "id": 1,
+        "name": "Owned",
+        "url": "https://owned.invalid/",
+        "cookie": "owned=fixture",
+        "render": false,
+        "timeout": 20,
+        "proxy": false,
+        "ua": "Owned"
+      },
+      "result": [
+        "Owned",
+        "登录成功，签到未确认",
+        false,
+        true
+      ],
+      "error": null,
+      "logs": [
+        [
+          "INFO",
+          "Owned 已确认登录，原签到结果：签到失败"
+        ]
+      ],
+      "log_locations": [
+        {
+          "file": "main.py",
+          "line": 1828,
+          "level": "info"
+        }
+      ],
+      "stats": [
+        {
+          "domain": "owned.invalid",
+          "success": true,
+          "seconds": 0
+        }
+      ]
+    }
+  ]
+}

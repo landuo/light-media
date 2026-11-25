@@ -1,0 +1,244 @@
+{
+  "runtime": "3.12.13",
+  "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+  "watchdog_version": "6.0.0",
+  "buffer_delay": 0.5,
+  "observations": [
+    {
+      "mode": "actual-source-selected",
+      "class": "watchdog.observers.inotify.InotifyObserver",
+      "steps": [
+        {
+          "step": "create",
+          "events": [
+            {
+              "kind": "created",
+              "path": "a.mkv",
+              "directory": false
+            }
+          ]
+        },
+        {
+          "step": "rename-same-object",
+          "events": [
+            {
+              "kind": "moved",
+              "path": "a.mkv",
+              "directory": false,
+              "dest": "b.mkv"
+            }
+          ]
+        },
+        {
+          "step": "delete",
+          "events": [
+            {
+              "kind": "deleted",
+              "path": "b.mkv",
+              "directory": false
+            }
+          ]
+        },
+        {
+          "step": "recursive-create",
+          "events": [
+            {
+              "kind": "created",
+              "path": "nested",
+              "directory": true
+            },
+            {
+              "kind": "created",
+              "path": "nested/child.mkv",
+              "directory": false
+            }
+          ]
+        },
+        {
+          "step": "directory-move",
+          "events": [
+            {
+              "kind": "moved",
+              "path": "nested",
+              "directory": true,
+              "dest": "renamed"
+            },
+            {
+              "kind": "moved",
+              "path": "nested/child.mkv",
+              "directory": false,
+              "dest": "renamed/child.mkv"
+            }
+          ]
+        }
+      ],
+      "alive_after_stop": false
+    },
+    {
+      "mode": "actual-polling",
+      "class": "watchdog.observers.polling.PollingObserver",
+      "steps": [
+        {
+          "step": "create",
+          "events": [
+            {
+              "kind": "created",
+              "path": "a.mkv",
+              "directory": false
+            }
+          ]
+        },
+        {
+          "step": "rename-same-object",
+          "events": [
+            {
+              "kind": "moved",
+              "path": "a.mkv",
+              "directory": false,
+              "dest": "b.mkv"
+            }
+          ]
+        },
+        {
+          "step": "delete",
+          "events": [
+            {
+              "kind": "deleted",
+              "path": "b.mkv",
+              "directory": false
+            }
+          ]
+        },
+        {
+          "step": "recursive-create",
+          "events": [
+            {
+              "kind": "created",
+              "path": "nested/child.mkv",
+              "directory": false
+            },
+            {
+              "kind": "created",
+              "path": "nested",
+              "directory": true
+            }
+          ]
+        },
+        {
+          "step": "directory-move",
+          "events": [
+            {
+              "kind": "moved",
+              "path": "nested/child.mkv",
+              "directory": false,
+              "dest": "renamed/child.mkv"
+            },
+            {
+              "kind": "moved",
+              "path": "nested",
+              "directory": true,
+              "dest": "renamed"
+            }
+          ]
+        }
+      ],
+      "alive_after_stop": false
+    }
+  ],
+  "special": [
+    {
+      "mode": "actual-source-selected",
+      "action": "root-move",
+      "events": [
+        {
+          "kind": "created",
+          "path": "/owned/watch/after.mkv",
+          "directory": false
+        }
+      ],
+      "alive_before_explicit_stop": true
+    },
+    {
+      "mode": "actual-source-selected",
+      "action": "root-delete",
+      "events": [
+        {
+          "kind": "deleted",
+          "path": "/owned/watch",
+          "directory": true
+        }
+      ],
+      "alive_before_explicit_stop": true
+    },
+    {
+      "mode": "actual-source-selected",
+      "action": "hardlink-path-delete",
+      "events": [
+        {
+          "kind": "deleted",
+          "path": "/owned/watch/source.mkv",
+          "directory": false
+        }
+      ],
+      "alive_before_explicit_stop": true
+    },
+    {
+      "mode": "actual-polling",
+      "action": "root-move",
+      "events": [
+        {
+          "kind": "deleted",
+          "path": "/owned/watch",
+          "directory": true
+        }
+      ],
+      "alive_before_explicit_stop": true
+    },
+    {
+      "mode": "actual-polling",
+      "action": "root-delete",
+      "events": [
+        {
+          "kind": "deleted",
+          "path": "/owned/watch",
+          "directory": true
+        }
+      ],
+      "alive_before_explicit_stop": true
+    },
+    {
+      "mode": "actual-polling",
+      "action": "hardlink-path-delete",
+      "events": [
+        {
+          "kind": "moved",
+          "path": "/owned/watch/source.mkv",
+          "directory": false,
+          "dest": "/owned/watch/linked.mkv"
+        }
+      ],
+      "alive_before_explicit_stop": true
+    }
+  ],
+  "classification": "actual current source observer selector and installed watchdog in isolated Linux image; owned tmpfs files; no app/config/service/network; nondeterministic event order retained raw",
+  "files": {
+    "watchdog.observers.inotify_buffer": {
+      "sha256": "5565ae95e15045a24bfd93348db7001a319d8f59195169948a00b85926cf9b24"
+    },
+    "watchdog.observers.inotify": {
+      "sha256": "8b4ef900f1c8c0851d885adf7687296d8b1e754be1feedc0b4ba94ddbaa58051"
+    },
+    "watchdog.utils.dirsnapshot": {
+      "sha256": "49a1a7c6ad268996f12d972925c48e8f9b04f2286e9ea8dbe7e9bcc30f45d5a0"
+    },
+    "watchdog.observers.polling": {
+      "sha256": "07c83212dce44621e64927fc75c63fd0ff81bb45398be55641a9c1a885714ecd"
+    },
+    "watchdog.observers.inotify_c": {
+      "sha256": "cace8dad511bc366cf650524cec858e651a57c3653e27cf9f159a7e00e3d7a65"
+    },
+    "watchdog.events": {
+      "sha256": "8a0e2808d726fa649eeab2b92cfb0851c30eddd7eaf4429e81f33d2384b056ff"
+    }
+  }
+}

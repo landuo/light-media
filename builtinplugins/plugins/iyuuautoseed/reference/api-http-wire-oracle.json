@@ -1,0 +1,131 @@
+{
+  "source": {
+    "helper_sha256": "74f0cbde2789eab6a6c0d0edcc6fe3364a5e4ccceb909b5c8842492dc11cdcf0",
+    "moviepilot_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "request_utils_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "python": "3.14.4",
+    "requests": "2.34.2",
+    "urllib3": "2.7.0",
+    "codec_availability": "Brotli import presence simulated for Accept-Encoding only (the local venv lacks its native binary). Python 3.14 built-in zstd import disabled to model original Linux Python 3.12. The gzip response uses actual urllib3 decoding.",
+    "network": "socket connect/connect_ex and DNS forbidden. Exact original RequestUtils class AST and installed IyuuHelper ran with Session.send replaced by synthetic urllib3 responses."
+  },
+  "origin": "https://2025.iyuu.cn",
+  "hashes": [
+    "😀 ",
+    "a"
+  ],
+  "unix": 1720000000,
+  "result": {
+    "ok": true,
+    "label": "café"
+  },
+  "message": "",
+  "failure_message": "请求IYUU失败，状态码：429，错误原因：Owned rate limit",
+  "calls": [
+    {
+      "method": "GET",
+      "url": "https://2025.iyuu.cn/reseed/sites/index",
+      "headers": {
+        "User-Agent": "python-requests/2.34.2",
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "token": "owned-synthetic-token"
+      },
+      "body": "",
+      "reply": {
+        "status": 200,
+        "reason": "OK",
+        "headers": {
+          "Content-Type": "application/json",
+          "Content-Encoding": "gzip"
+        },
+        "wire_base64": "H4sIAAAAAAAC/6tWSs5PSVWyMtBRSkksSVSyqlYqzixJLVayiq5WykxRsjLUUUpKLE6NLy3KUbJSyigpKSi20tfPL89LTdHLzCtLzMlM0Veq1YEoVnq2sfPp2ulKROmJra0FAEq/Tnh+AAAA"
+      },
+      "source_options": {
+        "timeout": 20,
+        "verify": false,
+        "allow_redirects": true,
+        "stream": false
+      }
+    },
+    {
+      "method": "POST",
+      "url": "https://2025.iyuu.cn/reseed/sites/reportExisting",
+      "headers": {
+        "User-Agent": "python-requests/2.34.2",
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "token": "owned-synthetic-token",
+        "Content-Type": "application/json"
+      },
+      "body": "{\"sid_list\": [1, \"\\u6c49\\u5b57\"]}",
+      "reply": {
+        "status": 200,
+        "reason": "OK",
+        "headers": {},
+        "wire_base64": "//57ACIAYwBvAGQAZQAiADoAMAAsACIAZABhAHQAYQAiADoAewAiAHMAaQBkAF8AcwBoAGEAMQAiADoAIgBzACIAfQB9AA=="
+      },
+      "source_options": {
+        "timeout": 20,
+        "verify": false,
+        "allow_redirects": true,
+        "stream": false
+      }
+    },
+    {
+      "method": "POST",
+      "url": "https://2025.iyuu.cn/reseed/index/index",
+      "headers": {
+        "User-Agent": "python-requests/2.34.2",
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "token": "owned-synthetic-token",
+        "Content-Type": "application/json"
+      },
+      "body": "{\"hash\": \"[\\\"a\\\",\\\"\\ud83d\\ude00\\u2028\\\"]\", \"sha1\": \"118e649afd0e8acaec8395ed7b5aa4aabd0f040b\", \"sid_sha1\": \"s\", \"timestamp\": 1720000000, \"version\": \"8.2.0\"}",
+      "reply": {
+        "status": 200,
+        "reason": "OK",
+        "headers": {
+          "Content-Type": "application/json; charset=windows-1252"
+        },
+        "wire_base64": "eyJjb2RlIjowLCJkYXRhIjp7Im9rIjp0cnVlLCJsYWJlbCI6ImNhZukifX0="
+      },
+      "source_options": {
+        "timeout": 20,
+        "verify": false,
+        "allow_redirects": true,
+        "stream": false
+      }
+    },
+    {
+      "method": "GET",
+      "url": "https://2025.iyuu.cn/reseed/sites/index",
+      "headers": {
+        "User-Agent": "python-requests/2.34.2",
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "token": "owned-synthetic-token"
+      },
+      "body": "",
+      "reply": {
+        "status": 429,
+        "reason": "Owned rate limit",
+        "headers": {
+          "Content-Type": "text/plain"
+        },
+        "wire_base64": "b3duZWQgbGltaXQ="
+      },
+      "source_options": {
+        "timeout": 20,
+        "verify": false,
+        "allow_redirects": true,
+        "stream": false
+      }
+    }
+  ]
+}

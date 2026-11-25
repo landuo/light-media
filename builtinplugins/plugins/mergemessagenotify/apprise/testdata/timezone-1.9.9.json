@@ -1,0 +1,105 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "zone_count": 598,
+    "zone_catalog": "Original Python zoneinfo.available_timezones on the isolated work machine, matches the Go 1.26.10 zoneinfo archive",
+    "time_py_sha256": "5b7ff2df7f21a5a02b26a36bd942071a33e29c43a2da8781885da147796f17d3"
+  },
+  "cases": [
+    {
+      "name": "exact",
+      "url": "feishu://OwnedToken?tz=Asia/Shanghai",
+      "added": true
+    },
+    {
+      "name": "case-folded",
+      "url": "feishu://OwnedToken?tz=aSIA/sHANGHAI",
+      "added": true
+    },
+    {
+      "name": "one-part-suffix",
+      "url": "dingtalk://OwnedToken?tz=shanghai",
+      "added": true
+    },
+    {
+      "name": "two-part-suffix",
+      "url": "pushplus://0123456789Abcdef0123456789Abcdef?tz=argentina/ushuaia",
+      "added": true
+    },
+    {
+      "name": "unrecognized-short-suffix",
+      "url": "feishu://OwnedToken?tz=ushuaia",
+      "added": false
+    },
+    {
+      "name": "utc-z",
+      "url": "feishu://OwnedToken?tz=z",
+      "added": true
+    },
+    {
+      "name": "utc0-alias",
+      "url": "feishu://OwnedToken?tz=UTC0",
+      "added": true
+    },
+    {
+      "name": "gmt0-alias",
+      "url": "feishu://OwnedToken?tz=%20GMT0%20",
+      "added": true
+    },
+    {
+      "name": "etc-gmt-offset",
+      "url": "feishu://OwnedToken?tz=etc/gmt%2B4",
+      "added": true
+    },
+    {
+      "name": "empty",
+      "url": "feishu://OwnedToken?tz=",
+      "added": false
+    },
+    {
+      "name": "unknown",
+      "url": "feishu://OwnedToken?tz=Owned/Unknown",
+      "added": false
+    },
+    {
+      "name": "go-local-is-not-source-alias",
+      "url": "feishu://OwnedToken?tz=Local",
+      "added": false
+    },
+    {
+      "name": "gotify-direct",
+      "url": "gotify://owned.invalid/OwnedToken?tz=z",
+      "added": true
+    },
+    {
+      "name": "gateway-direct",
+      "url": "apprises://owned.invalid?tz=shanghai",
+      "added": false
+    },
+    {
+      "name": "json-direct",
+      "url": "jsons://owned.invalid?tz=ASIA/SHANGHAI",
+      "added": true
+    },
+    {
+      "name": "json-reject",
+      "url": "jsons://owned.invalid?tz=Owned/Unknown",
+      "added": false
+    },
+    {
+      "name": "gateway-valid-token",
+      "url": "apprises://owned.invalid/OwnedToken?tz=shanghai",
+      "added": true
+    },
+    {
+      "name": "dotted-uppercase-i-is-not-ascii",
+      "url": "feishu://OwnedToken?tz=As%C4%B0a/Shanghai",
+      "added": false
+    },
+    {
+      "name": "kelvin-sign-folds-to-k",
+      "url": "feishu://OwnedToken?tz=Asia/%E2%84%AAolkata",
+      "added": true
+    }
+  ]
+}

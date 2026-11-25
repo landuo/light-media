@@ -1,0 +1,444 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "file_sha256": {
+      "qq": "45c504730823ad7f9d3637c1e24ed71d6b220b51ee29426231cc2e5cddf6fe93"
+    }
+  },
+  "cases": [
+    {
+      "name": "owned-title-and-body-form",
+      "url": "qq://OwnedToken1234567890ABCDE",
+      "title": " 标题 ",
+      "body": "消息 +/?☃ ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qmsg.zendee.cn/send/OwnedToken1234567890ABCDE",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "msg=%E6%A0%87%E9%A2%98%0A%E6%B6%88%E6%81%AF+%2B%2F%3F%E2%98%83",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "body-only",
+      "url": "qq://OwnedToken1234567890ABCDE",
+      "title": "",
+      "body": "  body  ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qmsg.zendee.cn/send/OwnedToken1234567890ABCDE",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "msg=++body",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "title-only-is-not-sent",
+      "url": "qq://OwnedToken1234567890ABCDE",
+      "title": "title",
+      "body": "",
+      "attach": null,
+      "statuses": [],
+      "added": true,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "query-token-override-double-unquote",
+      "url": "qq://OwnedToken1234567890ABCDE/unused?token=%2552eplacementToken76543210&verify=no&cto=2.5&rto=7",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qmsg.zendee.cn/send/ReplacementToken76543210",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "msg=t%0Ab",
+          "verify": false,
+          "timeout": [
+            2.5,
+            7.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "empty-token-query-keeps-host",
+      "url": "qq://OwnedToken1234567890ABCDE?token=",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qmsg.zendee.cn/send/OwnedToken1234567890ABCDE",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "msg=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "token-minimum-length",
+      "url": "qq://AAAAAAAAAAAAAAAAAAAAAAAA",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qmsg.zendee.cn/send/AAAAAAAAAAAAAAAAAAAAAAAA",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "msg=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "token-maximum-length",
+      "url": "qq://AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qmsg.zendee.cn/send/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "msg=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "token-too-short",
+      "url": "qq://AAAAAAAAAAAAAAAAAAAAAAA",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "token-too-long",
+      "url": "qq://AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "invalid-token-punctuation",
+      "url": "qq://AAAAAAAAAAAAAAAAAAAAAAA_",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "unicode-token-python-casefold",
+      "url": "qq://AAAAAAAAAAAAAAAAAAAAİıſK",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qmsg.zendee.cn/send/AAAAAAAAAAAAAAAAAAAA%C4%B0%C4%B1%C5%BF%E2%84%AA",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "msg=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "native-https-mixed-case",
+      "url": "HTTPS://QMSG.ZENDEE.CN/SEND/OwnedToken1234567890ABCDE",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qmsg.zendee.cn/send/OwnedToken1234567890ABCDE",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "msg=t%0Ab",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "native-unicode-token-encoded-on-wire",
+      "url": "https://qmsg.zendee.cn/send/AAAAAAAAAAAAAAAAAAAAİıſK",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qmsg.zendee.cn/send/AAAAAAAAAAAAAAAAAAAA%C4%B0%C4%B1%C5%BF%E2%84%AA",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "msg=b",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "native-with-invalid-short-token",
+      "url": "https://qmsg.zendee.cn/send/short",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "markdown-attachment-ignored",
+      "url": "qq://OwnedToken1234567890ABCDE?format=markdown",
+      "title": "**title**",
+      "body": "*body*",
+      "attach": "https://owned.invalid/unused.jpg",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qmsg.zendee.cn/send/OwnedToken1234567890ABCDE",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "msg=%2A%2Atitle%2A%2A%0A%2Abody%2A",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "truncated-title",
+      "url": "qq://OwnedToken1234567890ABCDE?overflow=truncate",
+      "title": "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qmsg.zendee.cn/send/OwnedToken1234567890ABCDE",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "msg=TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT%0Ab",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "status-other-than-200",
+      "url": "qq://OwnedToken1234567890ABCDE",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        201
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qmsg.zendee.cn/send/OwnedToken1234567890ABCDE",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "msg=t%0Ab",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "connection-error",
+      "url": "qq://OwnedToken1234567890ABCDE",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        0
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qmsg.zendee.cn/send/OwnedToken1234567890ABCDE",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "msg=t%0Ab",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    }
+  ]
+}

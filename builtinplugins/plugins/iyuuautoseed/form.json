@@ -1,0 +1,423 @@
+{
+  "form": [
+    {
+      "component": "VForm",
+      "content": [
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 3
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "enabled",
+                    "label": "启用插件"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 3
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "notify",
+                    "label": "发送通知"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 3
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "clearcache",
+                    "label": "清除缓存后运行"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 3
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "onlyonce",
+                    "label": "立即运行一次"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 6
+              },
+              "content": [
+                {
+                  "component": "VTextField",
+                  "props": {
+                    "model": "token",
+                    "label": "IYUU Token"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 6
+              },
+              "content": [
+                {
+                  "component": "VCronField",
+                  "props": {
+                    "model": "cron",
+                    "label": "执行周期",
+                    "placeholder": "0 0 0 ? *"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VSelect",
+                  "props": {
+                    "chips": true,
+                    "multiple": true,
+                    "clearable": true,
+                    "model": "downloaders",
+                    "label": "下载器",
+                    "items": []
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VSelect",
+                  "props": {
+                    "chips": true,
+                    "clearable": true,
+                    "model": "auto_downloader",
+                    "label": "主辅分离",
+                    "items": []
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VTextField",
+                  "props": {
+                    "model": "size",
+                    "label": "辅种体积大于(GB)",
+                    "placeholder": "只有大于该值的才辅种"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12
+              },
+              "content": [
+                {
+                  "component": "VSelect",
+                  "props": {
+                    "chips": true,
+                    "multiple": true,
+                    "model": "sites",
+                    "label": "辅种站点",
+                    "items": []
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VTextField",
+                  "props": {
+                    "model": "nolabels",
+                    "label": "不辅种标签",
+                    "placeholder": "使用,分隔多个标签"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VTextField",
+                  "props": {
+                    "model": "labelsafterseed",
+                    "label": "辅种后增加标签",
+                    "placeholder": "使用,分隔多个标签,不填写则默认为(已整理,辅种)"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VTextField",
+                  "props": {
+                    "model": "categoryafterseed",
+                    "label": "辅种后增加分类",
+                    "placeholder": "设置辅种的种子分类"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12
+              },
+              "content": [
+                {
+                  "component": "VTextarea",
+                  "props": {
+                    "model": "nopaths",
+                    "label": "不辅种数据文件目录",
+                    "rows": 3,
+                    "placeholder": "每一行一个目录"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 3
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "addhosttotag",
+                    "label": "将站点名添加到标签中"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 3
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "skipverify",
+                    "label": "跳过校验(仅QB有效)"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 3
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "auto_start",
+                    "label": "自动开始(跳过校验有效)"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 3
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "auto_category",
+                    "label": "分类复用(仅QB有效)"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 3
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "reuse_save_path",
+                    "label": "沿用原种路径(仅QB有效)"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "props": {
+            "style": {
+              "margin-top": "12px"
+            }
+          },
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12
+              },
+              "content": [
+                {
+                  "component": "VAlert",
+                  "props": {
+                    "type": "error",
+                    "variant": "tonal"
+                  },
+                  "content": [
+                    {
+                      "component": "span",
+                      "text": "注意：详细配置说明和注意事项请参考："
+                    },
+                    {
+                      "component": "a",
+                      "props": {
+                        "href": "https://github.com/jxxghp/MoviePilot-Plugins/tree/main/plugins.v2/iyuuautoseed/README.md",
+                        "target": "_blank"
+                      },
+                      "content": [
+                        {
+                          "component": "u",
+                          "text": "README"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "defaults": {
+    "enabled": false,
+    "skipverify": false,
+    "onlyonce": false,
+    "notify": false,
+    "clearcache": false,
+    "addhosttotag": false,
+    "auto_category": false,
+    "auto_start": false,
+    "reuse_save_path": true,
+    "cron": "",
+    "token": "",
+    "downloaders": [],
+    "auto_downloader": "",
+    "sites": [],
+    "nopaths": "",
+    "nolabels": "",
+    "labelsafterseed": "",
+    "categoryafterseed": "",
+    "size": ""
+  }
+}

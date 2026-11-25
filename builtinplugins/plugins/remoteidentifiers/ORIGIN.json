@@ -1,0 +1,38 @@
+{
+  "installed_version": "2.4.1",
+  "source": {
+    "plugin_sha256": "14ec7f5f2964ebd1674305d5294ffa56fb61e2cd1021ea31e50d9675813891a4",
+    "source_snapshot": "work/migration-20261105/source-snapshot/remoteidentifiers/__init__.py",
+    "moviepilot": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+    "prior_go_state_commit": "1d9658f2",
+    "prior_go_state_path": "internal/plugins/remoteidentifiers/state.go",
+    "prior_go_collection_path": "internal/app/plugin_identifiers_fetch.go"
+  },
+  "source_locations": {
+    "identity": "__init__.py:19-37",
+    "init_plugin": "__init__.py:48-72",
+    "get_file_content": "__init__.py:74-97",
+    "remote_http_and_word_lists": "__init__.py:99-147",
+    "replace_remote_word_suffix": "__init__.py:149-163",
+    "get_form": "__init__.py:165-311",
+    "update_config": "__init__.py:313-320",
+    "stop_service": "__init__.py:322-330",
+    "get_page": "__init__.py:332-333",
+    "get_state": "__init__.py:335-336",
+    "get_command": "__init__.py:339-340",
+    "get_api": "__init__.py:342-343",
+    "get_service": "__init__.py:345-363"
+  },
+  "targets": {
+    "form.json": "c7aed91019ccc0a7428740aa9375021ff32c60f1eb600fc7902b96448733696c"
+  },
+  "adaptations": [
+    "Execute only the fixed pure get_form method to obtain the Vuetify tree and its separate default model. The generated JSON preserves their two-element result, including field order, alert copy, and the original two default URLs joined by a newline.",
+    "The form uses the original spelling flitter and defaults it to true. Source initialization separately falls back to false when a supplied configuration lacks that key or contains null.",
+    "Run source private once and public cron on the negotiated host lifetimes. Bounded child SDK phases preserve one sequential collection and its original 5/10-second whole-collection retry behavior.",
+    "Use a finite source network profile with the host proxy and official GitHub credentials, Latin-1 URL Basic auth and authenticated configuration masking. Existing project verified TLS, destination and private redirect limits apply.",
+    "Read global CustomIdentifiers before remote collection. At commit preserve the latest local prefix in the existing sealed recognition transaction, as in the previous light-media adapter, so an edit made during a network wait is not lost."
+  ],
+  "scope": "Standalone Go worker with source form. Actual host/package acceptance is tracked in the migration ledger."
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "component": "VForm",
+    "content": [
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {"cols": 12, "md": 6},
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {"model": "enabled", "label": "启用插件（写入配置文件）"}
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {"cols": 12},
+            "content": [
+              {
+                "component": "VAceEditor",
+                "props": {
+                  "modelvalue": "content",
+                  "lang": "yaml",
+                  "theme": "monokai",
+                  "style": "height: 30rem"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

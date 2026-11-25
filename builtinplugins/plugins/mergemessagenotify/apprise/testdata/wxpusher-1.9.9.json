@@ -1,0 +1,397 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "file_sha256": {
+      "wxpusher": "623f9b87a7fb231788099ef68c306d4f74222c704bed937995d4a7ba127b5162"
+    }
+  },
+  "cases": [
+    {
+      "name": "mixed-targets-sorted-unique",
+      "url": "wxpusher://AT_OwnedToken/2/UID_OwnedB/12/UID_OwnedA/2/01/invalid?to=UID_OwnedB,2,UID_OwnedC",
+      "title": " 标题 ",
+      "body": "正文 ",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content": "{\"code\":1000,\"msg\":\"owned success\"}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"\\u6b63\\u6587\", \"summary\": \"\\u6807\\u9898\", \"contentType\": 1, \"topicIds\": [12, 2], \"uids\": [\"UID_OwnedA\", \"UID_OwnedB\", \"UID_OwnedC\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "query-token-and-host-target",
+      "url": "wxpusher://UID_OwnedHost/UID_OwnedPath?token=at_OwnedOverride&to=99,uid_OwnedQuery&format=markdown&verify=no&cto=2.5&rto=7",
+      "title": "owned title",
+      "body": "**owned body**",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content": "{\"code\":1000,\"msg\":\"owned success\"}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"at_OwnedOverride\", \"content\": \"**owned body**\", \"summary\": \"owned title\", \"contentType\": 3, \"topicIds\": [99], \"uids\": [\"UID_OwnedHost\", \"UID_OwnedPath\", \"uid_OwnedQuery\"], \"url\": null}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            7.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "encoded-authority-and-user",
+      "url": "wxpusher://%41T_%E8%AE%B0%E5%BD%95/UID_%E8%AE%B0%E5%BD%95?format=html",
+      "title": "",
+      "body": "<b>owned</b>",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content": "{\"code\":1000.0}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_\\u8bb0\\u5f55\", \"content\": \"<b>owned</b>\", \"summary\": \"\", \"contentType\": 2, \"topicIds\": [], \"uids\": [\"UID_\\u8bb0\\u5f55\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "longest-topic-uses-exact-integer",
+      "url": "wxpusher://AT_OwnedToken/999999999999999999999/1111111111111111111111/00001",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content": "{\"code\":1000,\"msg\":\"owned success\"}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [999999999999999999999], \"uids\": [], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "path-and-query-encoded-list",
+      "url": "wxpusher://AT_OwnedToken/UID_One%3BUID_Two?to=UID_Three%252CUID_Four",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content": "{\"code\":1000,\"msg\":\"owned success\"}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_Four\", \"UID_One\", \"UID_Three\", \"UID_Two\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "ignore-attachment-and-extra-options",
+      "url": "wxpusher://AT_OwnedToken/3?verifyPay=yes&url=https%3A%2F%2Fowned.invalid%2Fclick",
+      "title": "t",
+      "body": "b",
+      "attach": "https://owned.invalid/ignored.png",
+      "replies": [
+        {
+          "status": 200,
+          "content": "{\"code\":1000,\"msg\":\"owned success\"}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [3], \"uids\": [], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "invalid-token",
+      "url": "wxpusher://OwnedBadToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "no-valid-targets",
+      "url": "wxpusher://AT_OwnedToken/0/00/invalid/UID_",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [],
+      "added": true,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "status-201-with-success-code",
+      "url": "wxpusher://AT_OwnedToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 201,
+          "content": "{\"code\":1000,\"msg\":\"owned success\"}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_OwnedUser\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "failure-code",
+      "url": "wxpusher://AT_OwnedToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content": "{\"code\":1004,\"msg\":\"unknown target\"}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_OwnedUser\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "string-code-is-not-success",
+      "url": "wxpusher://AT_OwnedToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content": "{\"code\":\"1000\"}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_OwnedUser\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "malformed-reply",
+      "url": "wxpusher://AT_OwnedToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "content": "not json"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_OwnedUser\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "connection-error",
+      "url": "wxpusher://AT_OwnedToken/UID_OwnedUser",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 0,
+          "content": ""
+        }
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://wxpusher.zjiecode.com/api/send/message",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          "body": "{\"appToken\": \"AT_OwnedToken\", \"content\": \"b\", \"summary\": \"t\", \"contentType\": 1, \"topicIds\": [], \"uids\": [\"UID_OwnedUser\"], \"url\": null}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    }
+  ]
+}

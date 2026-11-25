@@ -1,0 +1,126 @@
+{
+  "classification": "actual333/Python3.12 stdlib re.search only; JSON encoded test strings; no app/network; source expected before target",
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "cases": [
+    {
+      "pattern": "\\x2e",
+      "text": "a",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "\\x2e",
+      "text": ".",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?x)\\x20",
+      "text": "a",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "(?x)\\x20",
+      "text": " ",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "\\x28",
+      "text": "(",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "\\x5c",
+      "text": "\\",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "\\u005e",
+      "text": "a",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "\\u005e",
+      "text": "^",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "\\U0001F600",
+      "text": "😀",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "[\\U0001F600]",
+      "text": "😀",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "\\N{SNOWMAN}",
+      "text": "☃",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "\\N{latin small letter a}",
+      "text": "a",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?x)\\N{SPACE}",
+      "text": " ",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?x)\\N{SPACE}",
+      "text": "x",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "[\\N{SNOWMAN}]",
+      "text": "☃",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "[\\N{LATIN CAPITAL LETTER A}-Z]",
+      "text": "C",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?P<a>x)(y)\\1",
+      "text": "xyx",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?P<a>x)(y)\\2",
+      "text": "xyy",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(x)(?P<a>y)\\2",
+      "text": "xyy",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?P<a>x)(y)(?(a)x|z)",
+      "text": "xyx",
+      "matched": true,
+      "error": null
+    }
+  ]
+}

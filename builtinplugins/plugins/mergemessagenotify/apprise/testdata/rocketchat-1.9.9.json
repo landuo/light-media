@@ -1,0 +1,808 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "rocketchat_sha256": "41ca5b774eb2a39e3c4650d99c9352a5a79be09ef6f0ec74e010ee89a8a65adb"
+  },
+  "cases": [
+    {
+      "name": "webhook-raw-path",
+      "url": "rocket://alpha/beta@owned.invalid?avatar=no",
+      "title": " title ",
+      "body": "body ",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "not json"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/hooks/alpha/beta",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"title\\r\\nbody\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "webhook-grouped-targets",
+      "url": "rockets://sender:owned%2Fhook@owned.invalid:9443/%23Channel/@alice/Room42?to=%40bob%2Cbad%21&verify=no&cto=3&rto=9&format=html&avatar=yes",
+      "title": "标题",
+      "body": "<i>正文</i>",
+      "attach": null,
+      "replies": [
+        {
+          "status": 503,
+          "body": "{}"
+        },
+        {
+          "status": 0,
+          "body": ""
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid:9443/hooks/owned/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"<b>\\u6807\\u9898</b><br />\\r\\n<i>\\u6b63\\u6587</i>\", \"avatar\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\", \"channel\": \"@alice\"}",
+          "verify": false,
+          "timeout": [
+            3.0,
+            9.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "https://owned.invalid:9443/hooks/owned/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"<b>\\u6807\\u9898</b><br />\\r\\n<i>\\u6b63\\u6587</i>\", \"avatar\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\", \"channel\": \"@bob\"}",
+          "verify": false,
+          "timeout": [
+            3.0,
+            9.0
+          ],
+          "stream": false,
+          "source_clock": 5.5
+        },
+        {
+          "method": "POST",
+          "url": "https://owned.invalid:9443/hooks/owned/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"<b>\\u6807\\u9898</b><br />\\r\\n<i>\\u6b63\\u6587</i>\", \"avatar\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\", \"channel\": \"#Channel\"}",
+          "verify": false,
+          "timeout": [
+            3.0,
+            9.0
+          ],
+          "stream": false,
+          "source_clock": 11.0
+        },
+        {
+          "method": "POST",
+          "url": "https://owned.invalid:9443/hooks/owned/hook",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"<b>\\u6807\\u9898</b><br />\\r\\n<i>\\u6b63\\u6587</i>\", \"avatar\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\", \"channel\": \"Room42\"}",
+          "verify": false,
+          "timeout": [
+            3.0,
+            9.0
+          ],
+          "stream": false,
+          "source_clock": 16.5
+        }
+      ],
+      "waits": [
+        5.5,
+        5.5,
+        5.5
+      ]
+    },
+    {
+      "name": "webhook-query-override-default-avatar",
+      "url": "rocket://owned.invalid?mode=webhook&webhook=qa%252Fok",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/hooks/qa/ok",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"t\\r\\nb\", \"avatar\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "basic-login-posts-logout",
+      "url": "rocket://owned:secret%2520word@owned.invalid/%23chan/Room42/@alice?avatar=yes&mode=basic",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"status\": \"success\", \"data\": {\"userId\": \"response-user\", \"authToken\": \"response-token\"}}"
+        },
+        {
+          "status": 400,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/login",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "username=owned&password=secret%2520word",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "X-Auth-Token": "response-token",
+            "X-User-Id": "response-user",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"t\\r\\nb\", \"avatar\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\", \"channel\": \"@alice\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "X-Auth-Token": "response-token",
+            "X-User-Id": "response-user",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"t\\r\\nb\", \"avatar\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\", \"channel\": \"#chan\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 5.5
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "X-Auth-Token": "response-token",
+            "X-User-Id": "response-user",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"t\\r\\nb\", \"avatar\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\", \"roomId\": \"Room42\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 11.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/logout",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "X-Auth-Token": "response-token",
+            "X-User-Id": "response-user"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 11.0
+        }
+      ],
+      "waits": [
+        5.5,
+        5.5
+      ]
+    },
+    {
+      "name": "basic-login-http-rejected",
+      "url": "rocket://owned:pass@owned.invalid/%23channel",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 401,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/login",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "username=owned&password=pass",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "basic-login-status-rejected",
+      "url": "rocket://owned:pass@owned.invalid/%23channel",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"status\": \"error\"}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/login",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "username=owned&password=pass",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "basic-login-malformed-json",
+      "url": "rocket://owned:pass@owned.invalid/%23channel",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "broken"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/login",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "username=owned&password=pass",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "basic-login-invalid-data",
+      "url": "rocket://owned:pass@owned.invalid/%23channel",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"status\": \"success\", \"data\": null}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/login",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "username=owned&password=pass",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "basic-missing-tokens-and-logout-failure",
+      "url": "rocket://owned:pass@owned.invalid/%23channel",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"status\": \"success\"}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 503,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/login",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "username=owned&password=pass",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"t\\r\\nb\", \"channel\": \"#channel\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/logout",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "basic-login-transport-failure",
+      "url": "rocket://owned:pass@owned.invalid/%23channel",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 0,
+          "body": ""
+        }
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/login",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "username=owned&password=pass",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "basic-webhook-encoded-password-when-forced",
+      "url": "rocket://owned:qa%2Fkey@owned.invalid/Room42?mode=basic",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"status\": \"success\", \"data\": {\"userId\": \"response-user\", \"authToken\": \"response-token\"}}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/login",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "username=owned&password=qa%2Fkey",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "X-Auth-Token": "response-token",
+            "X-User-Id": "response-user",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"t\\r\\nb\", \"roomId\": \"Room42\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/logout",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "X-Auth-Token": "response-token",
+            "X-User-Id": "response-user"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "token-explicit",
+      "url": "rockets://owned:short@owned.invalid/Room42?mode=TOKEN&avatar=no",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"success\":false}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/api/v1/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "X-User-Id": "owned",
+            "X-Auth-Token": "short",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"t\\r\\nb\", \"roomId\": \"Room42\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "token-auto",
+      "url": "rocket://owned:abcdefghijabcdefghijabcdefghijxyz@owned.invalid/@alice",
+      "title": "",
+      "body": "body",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/api/v1/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "X-User-Id": "owned",
+            "X-Auth-Token": "abcdefghijabcdefghijabcdefghijxyz",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"body\", \"avatar\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\", \"channel\": \"@alice\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "token-no-targets",
+      "url": "rocket://owned:short@owned.invalid?mode=token",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [],
+      "added": true,
+      "result": true,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "basic-no-room-or-channel",
+      "url": "rocket://owned:pass@owned.invalid/@alice",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "no-credentials",
+      "url": "rocket://owned.invalid/Room42",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "invalid-mode",
+      "url": "rocket://owned:pass@owned.invalid/Room42?mode=unknown",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [],
+      "added": false,
+      "result": false,
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "titleless-overflow-truncate",
+      "url": "rocket://alpha/beta@owned.invalid?overflow=truncate&avatar=no",
+      "title": "T",
+      "body": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/hooks/alpha/beta",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"T\\r\\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "webhook-attachment-ignored",
+      "url": "rocket://alpha/beta@owned.invalid?avatar=no",
+      "title": "",
+      "body": "body",
+      "attach": "https://owned-image.invalid/ignored.png",
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid/hooks/alpha/beta",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"text\": \"body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false,
+          "source_clock": 0.0
+        }
+      ],
+      "waits": []
+    }
+  ]
+}

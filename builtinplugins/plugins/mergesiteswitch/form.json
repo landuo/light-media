@@ -1,0 +1,466 @@
+[
+  {
+    "component": "VForm",
+    "content": [
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 12,
+              "xl": 12,
+              "lg": 12,
+              "md": 12,
+              "sm": 12,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "enable_sites",
+                  "label": "启用的站点",
+                  "multiple": true,
+                  "chips": true,
+                  "hint": "对应功能【站点管理 / 添加编辑站点 / 启用】，仅支持系统站点。"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 9,
+              "xl": 9,
+              "lg": 9,
+              "md": 9,
+              "sm": 8,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "search_sites",
+                  "label": "设定 / 搜索 / 搜索站点",
+                  "multiple": true,
+                  "chips": true,
+                  "hint": "只有选中的站点才会在搜索中使用，仅支持系统站点。"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 3,
+              "xl": 3,
+              "lg": 3,
+              "md": 3,
+              "sm": 4,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "search_follow_enable_sites",
+                  "label": "跟随启用的站点",
+                  "hint": "与站点的启用状态保持一致，保存时会立即生效，并在后台监听站点状态变化实时生效。"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 9,
+              "xl": 9,
+              "lg": 9,
+              "md": 9,
+              "sm": 8,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "rss_sites",
+                  "label": "设定 / 订阅 / 订阅站点",
+                  "multiple": true,
+                  "chips": true,
+                  "hint": "只有选中的站点才会在订阅中使用，仅支持系统站点。"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 3,
+              "xl": 3,
+              "lg": 3,
+              "md": 3,
+              "sm": 4,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "rss_follow_enable_sites",
+                  "label": "跟随启用的站点",
+                  "hint": "与站点的启用状态保持一致，保存时会立即生效，并在后台监听站点状态变化实时生效。"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 9,
+              "xl": 9,
+              "lg": 9,
+              "md": 9,
+              "sm": 8,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "signin_sites",
+                  "label": "插件 / 站点自动签到 / 签到站点",
+                  "multiple": true,
+                  "chips": true,
+                  "hint": "只有选中的站点才会在签到中使用，支持系统站点和自定义站点。"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 3,
+              "xl": 3,
+              "lg": 3,
+              "md": 3,
+              "sm": 4,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "signin_follow_enable_sites",
+                  "label": "跟随启用的站点",
+                  "hint": "与站点的启用状态保持一致，保存时会立即生效，并在后台监听站点状态变化实时生效。"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 9,
+              "xl": 9,
+              "lg": 9,
+              "md": 9,
+              "sm": 8,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "login_sites",
+                  "label": "插件 / 站点自动签到 / 登录站点",
+                  "multiple": true,
+                  "chips": true,
+                  "hint": "只有选中的站点才会在登录中使用，支持系统站点和自定义站点。"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 3,
+              "xl": 3,
+              "lg": 3,
+              "md": 3,
+              "sm": 4,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "login_follow_enable_sites",
+                  "label": "跟随启用的站点",
+                  "hint": "与站点的启用状态保持一致，保存时会立即生效，并在后台监听站点状态变化实时生效。"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 9,
+              "xl": 9,
+              "lg": 9,
+              "md": 9,
+              "sm": 8,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "statistic_sites",
+                  "label": "插件 / 站点数据统计 / 统计站点",
+                  "multiple": true,
+                  "chips": true,
+                  "hint": "缺省时默认全部站点，支持系统站点和自定义站点。"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 3,
+              "xl": 3,
+              "lg": 3,
+              "md": 3,
+              "sm": 4,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "statistic_follow_enable_sites",
+                  "label": "跟随启用的站点",
+                  "hint": "与站点的启用状态保持一致，保存时会立即生效，并在后台监听站点状态变化实时生效。"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 9,
+              "xl": 9,
+              "lg": 9,
+              "md": 9,
+              "sm": 8,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "iyuu_seed_sites",
+                  "label": "插件 / IYUU自动辅种 / 辅种站点",
+                  "multiple": true,
+                  "chips": true,
+                  "hint": "缺省时默认全部站点，支持系统站点和自定义站点。"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 3,
+              "xl": 3,
+              "lg": 3,
+              "md": 3,
+              "sm": 4,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "iyuu_seed_follow_enable_sites",
+                  "label": "跟随启用的站点",
+                  "hint": "与站点的启用状态保持一致，保存时会立即生效，并在后台监听站点状态变化实时生效。"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 9,
+              "xl": 9,
+              "lg": 9,
+              "md": 9,
+              "sm": 8,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "brush_flow_sites",
+                  "label": "插件 / 站点刷流 / 刷流站点",
+                  "multiple": true,
+                  "chips": true,
+                  "hint": "只有选中的站点才会在刷流中使用，仅支持系统站点。"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 3,
+              "xl": 3,
+              "lg": 3,
+              "md": 3,
+              "sm": 4,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "brush_flow_follow_enable_sites",
+                  "label": "跟随启用的站点",
+                  "hint": "与站点的启用状态保持一致，保存时会立即生效，并在后台监听站点状态变化实时生效。"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 9,
+              "xl": 9,
+              "lg": 9,
+              "md": 9,
+              "sm": 8,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "cross_seed_sites",
+                  "label": "插件 / 青蛙辅种助手 / 辅种站点",
+                  "multiple": true,
+                  "chips": true,
+                  "hint": "只有选中的站点才会在辅种中使用，支持系统站点和自定义站点。"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 3,
+              "xl": 3,
+              "lg": 3,
+              "md": 3,
+              "sm": 4,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "cross_seed_follow_enable_sites",
+                  "label": "跟随启用的站点",
+                  "hint": "与站点的启用状态保持一致，保存时会立即生效，并在后台监听站点状态变化实时生效。"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "xxl": 12,
+              "xl": 12,
+              "lg": 12,
+              "md": 12,
+              "sm": 12,
+              "xs": 12
+            },
+            "content": [
+              {
+                "component": "VAlert",
+                "props": {
+                  "type": "warning",
+                  "variant": "tonal"
+                },
+                "text": "点击保存后会立即生效，各项站点开关配置即会更新！"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

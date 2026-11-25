@@ -1,0 +1,40 @@
+{
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+  "records": [
+    {
+      "before_release": {
+        "enabled": false,
+        "reload_waits_for_old_observer": true,
+        "first_unlink_still_blocked": true
+      },
+      "remaining_links": [
+        "/owned/m/linked-00.mkv",
+        "/owned/m/linked-01.mkv",
+        "/owned/m/linked-02.mkv",
+        "/owned/m/linked-03.mkv",
+        "/owned/m/linked-04.mkv",
+        "/owned/m/linked-05.mkv",
+        "/owned/m/linked-06.mkv",
+        "/owned/m/linked-07.mkv"
+      ],
+      "deleted_links": [
+        "/owned/m/linked-08.mkv"
+      ],
+      "trace": [
+        {
+          "op": "event",
+          "event": "DownloadFileDeleted",
+          "src": "/owned/m/source.mkv"
+        },
+        {
+          "op": "history",
+          "id": "src:/owned/m/source.mkv"
+        }
+      ],
+      "errors": [],
+      "queue_size": 0
+    }
+  ],
+  "classification": "actual current2.18 AST, real Python threads and owned tmpfs hardlinks; fake observer join waits the actual handler thread; no app import/network/config"
+}

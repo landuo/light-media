@@ -9,15 +9,19 @@ require (
 	github.com/chromedp/chromedp v0.14.2
 	github.com/dlclark/regexp2/v2 v2.9.0
 	github.com/dustin/go-humanize v1.0.1
+	github.com/gen2brain/gav1d v0.2.6
 	github.com/json-iterator/go v1.1.12
 	github.com/klauspost/compress v1.20.3
 	github.com/markusmobius/go-dateparser v1.4.7
 	github.com/mattn/go-sqlite3 v1.14.52
 	github.com/pkg/errors v0.9.1
+	github.com/shirou/gopsutil/v4 v4.26.9
 	github.com/sirupsen/logrus v1.9.3
+	github.com/yuin/goldmark v1.8.7
 	go.yaml.in/yaml/v3 v3.0.5
 	golang.org/x/crypto v0.58.0
 	golang.org/x/exp v0.0.0-20260908205506-85c1c2202aba
+	golang.org/x/image v0.24.0
 	golang.org/x/net v0.61.0
 	golang.org/x/sys v0.49.0
 	golang.org/x/text v0.43.0
@@ -27,14 +31,10 @@ require (
 require (
 	github.com/chromedp/sysutil v1.1.0 // indirect
 	github.com/ebitengine/purego v0.11.1 // indirect
-	github.com/gen2brain/gav1d v0.2.6 // indirect
 	github.com/go-json-experiment/json v0.0.0-20250725192818-e39067aee2d2 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gobwas/ws v1.4.0 // indirect
-	github.com/shirou/gopsutil/v4 v4.26.9 // indirect
-	github.com/yuin/goldmark v1.8.7 // indirect
-	golang.org/x/image v0.24.0 // indirect
 )
 
 require (
@@ -44,7 +44,6 @@ require (
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/google/uuid v1.6.0
-	github.com/landuo/light-media-plugins v0.0.0
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
 	github.com/markusmobius/go-dateutil/v2 v2.9.1 // indirect
 	github.com/mattn/go-isatty v0.0.24 // indirect
@@ -67,5 +66,3 @@ require (
 
 // Keep locale data out of short-lived plugin process initialization.
 replace github.com/markusmobius/go-dateparser => ./third_party/go-dateparser
-
-replace github.com/landuo/light-media-plugins => ../light-media-plugins

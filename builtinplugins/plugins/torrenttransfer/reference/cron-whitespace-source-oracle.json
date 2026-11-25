@@ -1,0 +1,149 @@
+{
+  "kind": "actual installed APScheduler3.11.3 CronTrigger.from_crontab/class/fields/expressions AST with explicit UTC and synthetic environment dependencies",
+  "source_sha256": {
+    "apscheduler/util.py": "f97dea0b2f5da9d6ffcbbc18ebfa7c00dcf6f6a45c03fffeeb42ac4bb6813c9a",
+    "apscheduler/triggers/base.py": "f222a596e6da7b1178e7a20af637e2e7a413ad521f0c33cb6af51cf304e59cbd",
+    "apscheduler/triggers/cron/expressions.py": "7cdde1781829e9211e167c2bd5b7dce817c13b4b1bc33c706b1bcabf7284b92a",
+    "apscheduler/triggers/cron/fields.py": "8ad524dd9439edaff6050b6cb173638c2de8802a02aedc6340d1568c24f744eb",
+    "apscheduler/triggers/cron/__init__.py": "d45d8fb6987ab66b2a9d69498a4589c7d2d2667a3647c41c1b9f7a8ebd6b31f5"
+  },
+  "cases": [
+    {
+      "separator_codepoint": "U+0020",
+      "expression": "0 0 * * *",
+      "split_fields": [
+        "0",
+        "0",
+        "*",
+        "*",
+        "*"
+      ],
+      "accepted": true,
+      "fields": {
+        "year": "*",
+        "month": "*",
+        "day": "*",
+        "week": "*",
+        "day_of_week": "*",
+        "hour": "0",
+        "minute": "0",
+        "second": "0"
+      }
+    },
+    {
+      "separator_codepoint": "U+001C",
+      "expression": "0\u001c0 * * *",
+      "split_fields": [
+        "0",
+        "0",
+        "*",
+        "*",
+        "*"
+      ],
+      "accepted": true,
+      "fields": {
+        "year": "*",
+        "month": "*",
+        "day": "*",
+        "week": "*",
+        "day_of_week": "*",
+        "hour": "0",
+        "minute": "0",
+        "second": "0"
+      }
+    },
+    {
+      "separator_codepoint": "U+001D",
+      "expression": "0\u001d0 * * *",
+      "split_fields": [
+        "0",
+        "0",
+        "*",
+        "*",
+        "*"
+      ],
+      "accepted": true,
+      "fields": {
+        "year": "*",
+        "month": "*",
+        "day": "*",
+        "week": "*",
+        "day_of_week": "*",
+        "hour": "0",
+        "minute": "0",
+        "second": "0"
+      }
+    },
+    {
+      "separator_codepoint": "U+001E",
+      "expression": "0\u001e0 * * *",
+      "split_fields": [
+        "0",
+        "0",
+        "*",
+        "*",
+        "*"
+      ],
+      "accepted": true,
+      "fields": {
+        "year": "*",
+        "month": "*",
+        "day": "*",
+        "week": "*",
+        "day_of_week": "*",
+        "hour": "0",
+        "minute": "0",
+        "second": "0"
+      }
+    },
+    {
+      "separator_codepoint": "U+001F",
+      "expression": "0\u001f0 * * *",
+      "split_fields": [
+        "0",
+        "0",
+        "*",
+        "*",
+        "*"
+      ],
+      "accepted": true,
+      "fields": {
+        "year": "*",
+        "month": "*",
+        "day": "*",
+        "week": "*",
+        "day_of_week": "*",
+        "hour": "0",
+        "minute": "0",
+        "second": "0"
+      }
+    },
+    {
+      "separator_codepoint": "U+00A0",
+      "expression": "0\u00a00 * * *",
+      "split_fields": [
+        "0",
+        "0",
+        "*",
+        "*",
+        "*"
+      ],
+      "accepted": true,
+      "fields": {
+        "year": "*",
+        "month": "*",
+        "day": "*",
+        "week": "*",
+        "day_of_week": "*",
+        "hour": "0",
+        "minute": "0",
+        "second": "0"
+      }
+    }
+  ],
+  "limitations": [
+    "Python3.14 interpreter executes captured installed3.12 source, standard str.split whitespace stable on these six codepoints",
+    "No source application/package import, live config or scheduling execution",
+    "Class bootstrap is shared with the independent DST oracle; its test case loop is not executed"
+  ]
+}

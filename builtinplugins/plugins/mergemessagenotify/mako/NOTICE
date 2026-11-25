@@ -1,0 +1,16 @@
+Native Go implementation for MergeMessageNotify 1.20.1's template dependency.
+No Python interpreter, Python subprocess, or original plugin runtime is used.
+
+Compatibility reference: Mako 1.4.1, copyright the Mako authors/contributors,
+MIT license (licenses/Mako-MIT.txt). MarkupSafe 3.0.3 is used only by the offline
+reference generator; its BSD license is retained (licenses/MarkupSafe-BSD.txt).
+
+The Unicode 15.0.0 casing/property tables and HTML4 named entities are derived
+offline from CPython 3.12.14. Python Software Foundation license and third party
+notices are retained in licenses/CPython-PSF.txt.
+
+This is an incremental native implementation, not a claim of full Mako/Python
+language equivalence. Imports, Python standard-library modules, inheritance
+lookups requiring a TemplateLookup (not configured by original TemplateUtil),
+unported native methods, decorators/caching and some code statements remain
+explicitly bounded in the implementation and source comparison record.

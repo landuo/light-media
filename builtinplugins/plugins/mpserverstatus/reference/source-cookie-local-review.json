@@ -1,0 +1,118 @@
+{
+  "classification": "actual333/Python3.12 Requests default cookiejar .local extraction+redirect generation; stdlib static bytes read; no HTTP/app/config/network",
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "cases": [
+    {
+      "origin": "https://localhost/status",
+      "target": "https://localhost/after",
+      "domain": "local",
+      "set_cookie": "owned=test; Path=/; Domain=local",
+      "cookie_header": "owned=test",
+      "stored_domains": [
+        ".local"
+      ]
+    },
+    {
+      "origin": "https://localhost/status",
+      "target": "https://localhost/after",
+      "domain": ".local",
+      "set_cookie": "owned=test; Path=/; Domain=.local",
+      "cookie_header": "owned=test",
+      "stored_domains": [
+        ".local"
+      ]
+    },
+    {
+      "origin": "https://localhost/status",
+      "target": "https://localhost/after",
+      "domain": "localhost",
+      "set_cookie": "owned=test; Path=/; Domain=localhost",
+      "cookie_header": null,
+      "stored_domains": [
+        ".localhost"
+      ]
+    },
+    {
+      "origin": "https://localhost/status",
+      "target": "https://localhost/after",
+      "domain": ".localhost",
+      "set_cookie": "owned=test; Path=/; Domain=.localhost",
+      "cookie_header": null,
+      "stored_domains": [
+        ".localhost"
+      ]
+    },
+    {
+      "origin": "https://localhost/status",
+      "target": "https://localhost/after",
+      "domain": "",
+      "set_cookie": "owned=test; Path=/",
+      "cookie_header": "owned=test",
+      "stored_domains": [
+        "localhost.local"
+      ]
+    },
+    {
+      "origin": "https://a.local/status",
+      "target": "https://a.local/after",
+      "domain": "local",
+      "set_cookie": "owned=test; Path=/; Domain=local",
+      "cookie_header": "owned=test",
+      "stored_domains": [
+        ".local"
+      ]
+    },
+    {
+      "origin": "https://a.local/status",
+      "target": "https://a.local/after",
+      "domain": ".local",
+      "set_cookie": "owned=test; Path=/; Domain=.local",
+      "cookie_header": "owned=test",
+      "stored_domains": [
+        ".local"
+      ]
+    },
+    {
+      "origin": "https://a.local/status",
+      "target": "https://a.local/after",
+      "domain": "a.local",
+      "set_cookie": "owned=test; Path=/; Domain=a.local",
+      "cookie_header": "owned=test",
+      "stored_domains": [
+        ".a.local"
+      ]
+    },
+    {
+      "origin": "https://machine/status",
+      "target": "https://machine/after",
+      "domain": "local",
+      "set_cookie": "owned=test; Path=/; Domain=local",
+      "cookie_header": "owned=test",
+      "stored_domains": [
+        ".local"
+      ]
+    },
+    {
+      "origin": "https://movie-pilot.org/status",
+      "target": "https://movie-pilot.org/after",
+      "domain": "local",
+      "set_cookie": "owned=test; Path=/; Domain=local",
+      "cookie_header": null,
+      "stored_domains": []
+    },
+    {
+      "origin": "https://localhost.local/status",
+      "target": "https://localhost.local/after",
+      "domain": "local",
+      "set_cookie": "owned=test; Path=/; Domain=local",
+      "cookie_header": "owned=test",
+      "stored_domains": [
+        ".local"
+      ]
+    }
+  ],
+  "static_cookiejar": {
+    "path": "/usr/local/lib/python3.12/http/cookiejar.py",
+    "sha256": "2a64dbc46edd0173600f32d195531741de562522da28bc76c2f97dccceb37ddb"
+  }
+}

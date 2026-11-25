@@ -1,0 +1,902 @@
+{
+  "source": {
+    "apprise_version": "1.9.9",
+    "discord_sha256": "e28790c06e5daa23539b7a2a9e2f6c6e27e08c3f030635cec9f475c780ddfaab",
+    "python": "3.14.4",
+    "requests": "2.34.2",
+    "network": "blocked, actual pinned provider with synthetic Requests responses and fixed clock"
+  },
+  "boundary": "owned-discord-multipart",
+  "cases": [
+    {
+      "name": "text-default",
+      "url": "discord://1234/Owned_Token",
+      "title": " 标题 ",
+      "body": " body\n",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 204
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"avatar_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png\", \"content\": \"\\u6807\\u9898\\r\\n body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "explicit-text-mentions-and-tts",
+      "url": "discord://1234/Owned_Token?avatar=no&tts=yes&flags=4&ping=%3C%40123%3E,%3C%40%26456%3E,%40here",
+      "title": "Title",
+      "body": "Ignore @everyone",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 204
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": true, \"wait\": false, \"flags\": 4, \"allow_mentions\": {\"parse\": [\"here\"], \"users\": [\"123\"], \"roles\": [\"456\"]}, \"content\": \"Title\\r\\nIgnore @everyone\\ud83d\\udc49 @here <@&456> <@123>\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "thread-embed-options-and-mentions",
+      "url": "discord://original@1234/Owned_Token?botname=Owned%2520Bot&avatar_url=https%3A%2F%2Fassets.invalid%2Ficon.png&thread=99&href=https%3A%2F%2Fexample.invalid%2Fpreferred&url=https%3A%2F%2Fexample.invalid%2Fignored&footer=yes&image=yes&verify=no&cto=2.5&rto=11&ping=%3C%40%26456%3E",
+      "title": "Title",
+      "body": "Hello @here <@123>\n## Topic\nOwned detail",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 204
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token?thread_id=99",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"avatar_url\": \"https://assets.invalid/icon.png\", \"username\": \"Owned Bot\", \"allow_mentions\": {\"parse\": [\"here\"], \"users\": [\"123\"], \"roles\": [\"456\"]}, \"content\": \"\\ud83d\\udc49 @here <@&456> <@123>\", \"embeds\": [{\"author\": {\"name\": \"Apprise\", \"url\": \"https://github.com/caronc/apprise\"}, \"title\": \"Title\", \"description\": \"Hello @here <@123>\", \"color\": 3843043, \"url\": \"https://example.invalid/preferred\", \"footer\": {\"text\": \"Apprise Notifications\", \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-logo.png\"}, \"thumbnail\": {\"url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png\", \"height\": 256, \"width\": 256}, \"fields\": [{\"name\": \"Topic\", \"value\": \"```md\\nOwned detail\\n```\"}]}]}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            11.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "native-legacy-url-alias-markdown",
+      "url": "http://discordapp.com/api/webhooks/1234/Owned_Token/?url=https%3A%2F%2Fexample.invalid%2Fstory&fields=no&footer=yes&footer_logo=no",
+      "title": "",
+      "body": "## Keep heading\nBody",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"avatar_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png\", \"embeds\": [{\"author\": {\"name\": \"Apprise\", \"url\": \"https://github.com/caronc/apprise\"}, \"title\": \"\", \"description\": \"## Keep heading\\nBody\", \"color\": 3843043, \"url\": \"https://example.invalid/story\", \"footer\": {\"text\": \"Apprise Notifications\"}}]}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "thread-extra-fields-unthreaded",
+      "url": "discord://1234/Owned_Token?thread=99&avatar=no",
+      "title": "Title",
+      "body": "Intro\n## Section 1\nMessage 1\n## Section 2\nMessage 2\n## Section 3\nMessage 3\n## Section 4\nMessage 4\n## Section 5\nMessage 5\n## Section 6\nMessage 6\n## Section 7\nMessage 7\n## Section 8\nMessage 8\n## Section 9\nMessage 9\n## Section 10\nMessage 10\n## Section 11\nMessage 11\n## Section 12\nMessage 12",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 204
+        },
+        {
+          "status": 204
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token?thread_id=99",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"embeds\": [{\"author\": {\"name\": \"Apprise\", \"url\": \"https://github.com/caronc/apprise\"}, \"title\": \"Title\", \"description\": \"Intro\", \"color\": 3843043, \"fields\": [{\"name\": \"Section 1\", \"value\": \"```md\\nMessage 1\\n```\"}, {\"name\": \"Section 2\", \"value\": \"```md\\nMessage 2\\n```\"}, {\"name\": \"Section 3\", \"value\": \"```md\\nMessage 3\\n```\"}, {\"name\": \"Section 4\", \"value\": \"```md\\nMessage 4\\n```\"}, {\"name\": \"Section 5\", \"value\": \"```md\\nMessage 5\\n```\"}, {\"name\": \"Section 6\", \"value\": \"```md\\nMessage 6\\n```\"}, {\"name\": \"Section 7\", \"value\": \"```md\\nMessage 7\\n```\"}, {\"name\": \"Section 8\", \"value\": \"```md\\nMessage 8\\n```\"}, {\"name\": \"Section 9\", \"value\": \"```md\\nMessage 9\\n```\"}, {\"name\": \"Section 10\", \"value\": \"```md\\nMessage 10\\n```\"}]}]}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"embeds\": [{\"author\": {\"name\": \"Apprise\", \"url\": \"https://github.com/caronc/apprise\"}, \"title\": \"Title\", \"description\": \"\", \"color\": 3843043, \"fields\": [{\"name\": \"Section 11\", \"value\": \"```md\\nMessage 11\\n```\"}, {\"name\": \"Section 12\", \"value\": \"```md\\nMessage 12\\n```\"}]}]}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "failed-embed-skips-fields-and-attachments",
+      "url": "discord://1234/Owned_Token?thread=99&avatar=no",
+      "title": "Title",
+      "body": "Intro\n## Section 1\nMessage 1\n## Section 2\nMessage 2\n## Section 3\nMessage 3\n## Section 4\nMessage 4\n## Section 5\nMessage 5\n## Section 6\nMessage 6\n## Section 7\nMessage 7\n## Section 8\nMessage 8\n## Section 9\nMessage 9\n## Section 10\nMessage 10\n## Section 11\nMessage 11\n## Section 12\nMessage 12",
+      "attachments": [
+        "https://assets.invalid/picture.png"
+      ],
+      "replies": [
+        {
+          "status": 500
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token?thread_id=99",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"embeds\": [{\"author\": {\"name\": \"Apprise\", \"url\": \"https://github.com/caronc/apprise\"}, \"title\": \"Title\", \"description\": \"Intro\", \"color\": 3843043, \"fields\": [{\"name\": \"Section 1\", \"value\": \"```md\\nMessage 1\\n```\"}, {\"name\": \"Section 2\", \"value\": \"```md\\nMessage 2\\n```\"}, {\"name\": \"Section 3\", \"value\": \"```md\\nMessage 3\\n```\"}, {\"name\": \"Section 4\", \"value\": \"```md\\nMessage 4\\n```\"}, {\"name\": \"Section 5\", \"value\": \"```md\\nMessage 5\\n```\"}, {\"name\": \"Section 6\", \"value\": \"```md\\nMessage 6\\n```\"}, {\"name\": \"Section 7\", \"value\": \"```md\\nMessage 7\\n```\"}, {\"name\": \"Section 8\", \"value\": \"```md\\nMessage 8\\n```\"}, {\"name\": \"Section 9\", \"value\": \"```md\\nMessage 9\\n```\"}, {\"name\": \"Section 10\", \"value\": \"```md\\nMessage 10\\n```\"}]}]}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": false
+    },
+    {
+      "name": "retry-429-without-reset-header",
+      "url": "discord://1234/Owned_Token",
+      "title": "",
+      "body": "Try once more",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 429
+        },
+        {
+          "status": 204
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"avatar_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png\", \"content\": \"Try once more\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"avatar_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png\", \"content\": \"Try once more\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "retry-429-stops-after-second",
+      "url": "discord://1234/Owned_Token",
+      "title": "",
+      "body": "Try once more",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 429
+        },
+        {
+          "status": 429
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"avatar_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png\", \"content\": \"Try once more\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"avatar_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png\", \"content\": \"Try once more\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": false
+    },
+    {
+      "name": "rate-limit-reset-and-clock-skew",
+      "url": "discord://1234/Owned_Token?thread=99&avatar=no",
+      "title": "",
+      "body": "Intro\n## Section 1\nMessage 1\n## Section 2\nMessage 2\n## Section 3\nMessage 3\n## Section 4\nMessage 4\n## Section 5\nMessage 5\n## Section 6\nMessage 6\n## Section 7\nMessage 7\n## Section 8\nMessage 8\n## Section 9\nMessage 9\n## Section 10\nMessage 10\n## Section 11\nMessage 11\n## Section 12\nMessage 12",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200,
+          "headers": {
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": "@clock+1"
+          }
+        },
+        {
+          "status": 204
+        }
+      ],
+      "waits": [
+        11.0
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token?thread_id=99",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"embeds\": [{\"author\": {\"name\": \"Apprise\", \"url\": \"https://github.com/caronc/apprise\"}, \"title\": \"\", \"description\": \"Intro\", \"color\": 3843043, \"fields\": [{\"name\": \"Section 1\", \"value\": \"```md\\nMessage 1\\n```\"}, {\"name\": \"Section 2\", \"value\": \"```md\\nMessage 2\\n```\"}, {\"name\": \"Section 3\", \"value\": \"```md\\nMessage 3\\n```\"}, {\"name\": \"Section 4\", \"value\": \"```md\\nMessage 4\\n```\"}, {\"name\": \"Section 5\", \"value\": \"```md\\nMessage 5\\n```\"}, {\"name\": \"Section 6\", \"value\": \"```md\\nMessage 6\\n```\"}, {\"name\": \"Section 7\", \"value\": \"```md\\nMessage 7\\n```\"}, {\"name\": \"Section 8\", \"value\": \"```md\\nMessage 8\\n```\"}, {\"name\": \"Section 9\", \"value\": \"```md\\nMessage 9\\n```\"}, {\"name\": \"Section 10\", \"value\": \"```md\\nMessage 10\\n```\"}]}]}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"embeds\": [{\"author\": {\"name\": \"Apprise\", \"url\": \"https://github.com/caronc/apprise\"}, \"title\": \"\", \"description\": \"\", \"color\": 3843043, \"fields\": [{\"name\": \"Section 11\", \"value\": \"```md\\nMessage 11\\n```\"}, {\"name\": \"Section 12\", \"value\": \"```md\\nMessage 12\\n```\"}]}]}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "attachment-multipart-and-order",
+      "url": "discord://1234/Owned_Token?thread=99&tts=yes&flags=4&ping=%40here&avatar=no",
+      "title": "Title",
+      "body": "Body",
+      "attachments": [
+        "https://assets.invalid/picture.png",
+        "https://assets.invalid/notes.txt"
+      ],
+      "replies": [
+        {
+          "status": 204
+        },
+        {
+          "status": 204
+        },
+        {
+          "status": 204
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token?thread_id=99",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": true, \"wait\": false, \"flags\": 4, \"allow_mentions\": {\"parse\": [\"here\"], \"users\": [], \"roles\": []}, \"content\": \"\\ud83d\\udc49 @here\", \"embeds\": [{\"author\": {\"name\": \"Apprise\", \"url\": \"https://github.com/caronc/apprise\"}, \"title\": \"Title\", \"description\": \"Body\", \"color\": 3843043}]}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/picture.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token?thread_id=99",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-discord-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "tts",
+                "filename": null,
+                "content_type": null,
+                "base64": "RmFsc2U="
+              },
+              {
+                "field": "wait",
+                "filename": null,
+                "content_type": null,
+                "base64": "VHJ1ZQ=="
+              },
+              {
+                "field": "flags",
+                "filename": null,
+                "content_type": null,
+                "base64": "NA=="
+              },
+              {
+                "field": "file",
+                "filename": "picture.png",
+                "content_type": null,
+                "base64": "b3duZWQgcGljdHVyZQ=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/notes.txt",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token?thread_id=99",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-discord-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "tts",
+                "filename": null,
+                "content_type": null,
+                "base64": "RmFsc2U="
+              },
+              {
+                "field": "wait",
+                "filename": null,
+                "content_type": null,
+                "base64": "VHJ1ZQ=="
+              },
+              {
+                "field": "flags",
+                "filename": null,
+                "content_type": null,
+                "base64": "NA=="
+              },
+              {
+                "field": "file",
+                "filename": "notes.txt",
+                "content_type": null,
+                "base64": "b3duZWQgdGV4dA=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "attachment-only",
+      "url": "discord://1234/Owned_Token?avatar=no",
+      "title": "Discarded title",
+      "body": "",
+      "attachments": [
+        "https://assets.invalid/picture.png"
+      ],
+      "replies": [
+        {
+          "status": 204
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/picture.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-discord-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "tts",
+                "filename": null,
+                "content_type": null,
+                "base64": "RmFsc2U="
+              },
+              {
+                "field": "wait",
+                "filename": null,
+                "content_type": null,
+                "base64": "VHJ1ZQ=="
+              },
+              {
+                "field": "file",
+                "filename": "picture.png",
+                "content_type": null,
+                "base64": "b3duZWQgcGljdHVyZQ=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "missing-attachment-probed-twice",
+      "url": "discord://1234/Owned_Token?avatar=no",
+      "title": "",
+      "body": "",
+      "attachments": [
+        "https://assets.invalid/missing.png"
+      ],
+      "replies": [],
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/missing.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/missing.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        }
+      ],
+      "added": true,
+      "result": false
+    },
+    {
+      "name": "named-missing-attachment-probed-once",
+      "url": "discord://1234/Owned_Token?avatar=no",
+      "title": "",
+      "body": "",
+      "attachments": [
+        "https://assets.invalid/missing.png?name=chosen.png"
+      ],
+      "replies": [],
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/missing.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        }
+      ],
+      "added": true,
+      "result": false
+    },
+    {
+      "name": "transport-failure-no-retry",
+      "url": "discord://1234/Owned_Token",
+      "title": "",
+      "body": "Body",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 0
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"avatar_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-256x256.png\", \"content\": \"Body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": false
+    },
+    {
+      "name": "truncate-body-and-first-attachment",
+      "url": "discord://1234/Owned_Token?overflow=truncate&avatar=no",
+      "title": "Title",
+      "body": {
+        "repeat": "字",
+        "count": 2001
+      },
+      "attachments": [
+        "https://assets.invalid/picture.png",
+        "https://assets.invalid/notes.txt"
+      ],
+      "replies": [
+        {
+          "status": 204
+        },
+        {
+          "status": 204
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": {
+            "sha256": "09acfc2f6cd8b75bad55fa71d75e804edef678bbd375828e84297ed784c90bb7"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/picture.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-discord-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "tts",
+                "filename": null,
+                "content_type": null,
+                "base64": "RmFsc2U="
+              },
+              {
+                "field": "wait",
+                "filename": null,
+                "content_type": null,
+                "base64": "VHJ1ZQ=="
+              },
+              {
+                "field": "file",
+                "filename": "picture.png",
+                "content_type": null,
+                "base64": "b3duZWQgcGljdHVyZQ=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "split-body-and-counter",
+      "url": "discord://1234/Owned_Token?overflow=split&avatar=no",
+      "title": "Title",
+      "body": {
+        "repeat": "x",
+        "count": 2010
+      },
+      "attachments": [],
+      "replies": [
+        {
+          "status": 204
+        },
+        {
+          "status": 204
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": {
+            "sha256": "5dfc0485b49b0f58ca3f9852e5c3b61090e4939c4aa86a412e98202e36a3c754"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1234/Owned_Token",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"tts\": false, \"wait\": true, \"content\": \"Title [2/2]\\r\\nxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "whitespace-only-no-request",
+      "url": "discord://1234/Owned_Token",
+      "title": "Title",
+      "body": " \t ",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": true,
+      "result": true
+    },
+    {
+      "name": "missing-token",
+      "url": "discord://1234",
+      "title": "",
+      "body": "Body",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": false,
+      "result": false
+    },
+    {
+      "name": "negative-flags",
+      "url": "discord://1234/Owned_Token?flags=-1",
+      "title": "",
+      "body": "Body",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": false,
+      "result": false
+    },
+    {
+      "name": "disabled-persistence",
+      "url": "discord://1234/Owned_Token?store=no",
+      "title": "",
+      "body": "Body",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": false,
+      "result": false
+    }
+  ]
+}

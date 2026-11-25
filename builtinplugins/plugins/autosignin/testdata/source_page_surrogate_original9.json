@@ -1,0 +1,360 @@
+{
+  "rows": [
+    {
+      "name": "lone-surrogate",
+      "caller": "core-signin",
+      "input_json": "\"\\ud800\"",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "OwnedUnicode",
+          "message": "\u7b7e\u5230\u5931\u8d25\uff1aDocument is empty\uff01",
+          "success": false,
+          "logged_in": false
+        }
+      },
+      "error": null,
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwnedUnicode\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:35679/attendance.php..."
+        },
+        {
+          "level": "warn",
+          "message": "OwnedUnicode \u7b7e\u5230\u5931\u8d25\uff1aDocument is empty"
+        }
+      ],
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:35679/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "classification": "actual original FS RequestUtils physical loopback HTTP and selected original downstream bodies; no target code, no original service/real PT"
+    },
+    {
+      "name": "lone-surrogate",
+      "caller": "core-login",
+      "input_json": "\"\\ud800\"",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1aDocument is empty\uff01"
+        ]
+      },
+      "error": null,
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwnedUnicode\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:35679/..."
+        },
+        {
+          "level": "warn",
+          "message": "OwnedUnicode \u6a21\u62df\u767b\u5f55\u5931\u8d25\uff1aDocument is empty"
+        }
+      ],
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:35679/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "classification": "actual original FS RequestUtils physical loopback HTTP and selected original downstream bodies; no target code, no original service/real PT"
+    },
+    {
+      "name": "lone-surrogate",
+      "caller": "pttime",
+      "input_json": "\"\\ud800\"",
+      "result": {
+        "type": "tuple",
+        "value": [
+          false,
+          "\u7b7e\u5230\u5931\u8d25"
+        ]
+      },
+      "error": null,
+      "logs": [
+        {
+          "level": "error",
+          "message": "OwnedUnicode \u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u63a5\u53e3\u8fd4\u56de \ud800"
+        }
+      ],
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://www.pttime.org/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "classification": "actual original FS RequestUtils physical loopback HTTP and selected original downstream bodies; no target code, no original service/real PT"
+    },
+    {
+      "name": "surrogate-in-positive-html",
+      "caller": "core-signin",
+      "input_json": "\"<html><body><a href=\\\"logout.php\\\">\\u9000\\u51fa</a><span>\\u7b7e\\u5230\\u6210\\u529f</span>\\ud800</body></html>\"",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "OwnedUnicode",
+          "message": "\u7b7e\u5230\u6210\u529f",
+          "success": true,
+          "logged_in": true
+        }
+      },
+      "error": null,
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwnedUnicode\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:35679/attendance.php..."
+        },
+        {
+          "level": "debug",
+          "message": "under_challenge page_title="
+        },
+        {
+          "level": "info",
+          "message": "OwnedUnicode \u7b7e\u5230\u6210\u529f\uff0c\u5df2\u786e\u8ba4\u7ad9\u70b9\u8fd4\u56de\u7684\u7b7e\u5230\u72b6\u6001"
+        }
+      ],
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:35679/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "classification": "actual original FS RequestUtils physical loopback HTTP and selected original downstream bodies; no target code, no original service/real PT"
+    },
+    {
+      "name": "surrogate-in-positive-html",
+      "caller": "core-login",
+      "input_json": "\"<html><body><a href=\\\"logout.php\\\">\\u9000\\u51fa</a><span>\\u7b7e\\u5230\\u6210\\u529f</span>\\ud800</body></html>\"",
+      "result": {
+        "type": "tuple",
+        "value": [
+          true,
+          "\u6a21\u62df\u767b\u5f55\u6210\u529f"
+        ]
+      },
+      "error": null,
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwnedUnicode\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:35679/..."
+        },
+        {
+          "level": "debug",
+          "message": "under_challenge page_title="
+        },
+        {
+          "level": "info",
+          "message": "OwnedUnicode \u6a21\u62df\u767b\u5f55\u6210\u529f"
+        }
+      ],
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:35679/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "classification": "actual original FS RequestUtils physical loopback HTTP and selected original downstream bodies; no target code, no original service/real PT"
+    },
+    {
+      "name": "surrogate-in-positive-html",
+      "caller": "pttime",
+      "input_json": "\"<html><body><a href=\\\"logout.php\\\">\\u9000\\u51fa</a><span>\\u7b7e\\u5230\\u6210\\u529f</span>\\ud800</body></html>\"",
+      "result": {
+        "type": "tuple",
+        "value": [
+          true,
+          "\u7b7e\u5230\u6210\u529f"
+        ]
+      },
+      "error": null,
+      "logs": [
+        {
+          "level": "info",
+          "message": "OwnedUnicode \u7b7e\u5230\u6210\u529f"
+        }
+      ],
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://www.pttime.org/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "classification": "actual original FS RequestUtils physical loopback HTTP and selected original downstream bodies; no target code, no original service/real PT"
+    },
+    {
+      "name": "valid-nonBMP-positive-html",
+      "caller": "core-signin",
+      "input_json": "\"<html><body><a href=\\\"logout.php\\\">\\u9000\\u51fa</a><span>\\u7b7e\\u5230\\u6210\\u529f</span>\\ud83d\\ude00</body></html>\"",
+      "result": {
+        "type": "SiteResult",
+        "value": {
+          "site_name": "OwnedUnicode",
+          "message": "\u7b7e\u5230\u6210\u529f",
+          "success": true,
+          "logged_in": true
+        }
+      },
+      "error": null,
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u7b7e\u5230\uff1aOwnedUnicode\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:35679/attendance.php..."
+        },
+        {
+          "level": "debug",
+          "message": "under_challenge page_title="
+        },
+        {
+          "level": "info",
+          "message": "OwnedUnicode \u7b7e\u5230\u6210\u529f\uff0c\u5df2\u786e\u8ba4\u7ad9\u70b9\u8fd4\u56de\u7684\u7b7e\u5230\u72b6\u6001"
+        }
+      ],
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:35679/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "classification": "actual original FS RequestUtils physical loopback HTTP and selected original downstream bodies; no target code, no original service/real PT"
+    },
+    {
+      "name": "valid-nonBMP-positive-html",
+      "caller": "core-login",
+      "input_json": "\"<html><body><a href=\\\"logout.php\\\">\\u9000\\u51fa</a><span>\\u7b7e\\u5230\\u6210\\u529f</span>\\ud83d\\ude00</body></html>\"",
+      "result": {
+        "type": "tuple",
+        "value": [
+          true,
+          "\u6a21\u62df\u767b\u5f55\u6210\u529f"
+        ]
+      },
+      "error": null,
+      "logs": [
+        {
+          "level": "info",
+          "message": "\u5f00\u59cb\u7ad9\u70b9\u6a21\u62df\u767b\u5f55\uff1aOwnedUnicode\uff0c\u5730\u5740\uff1ahttp://127.0.0.1:35679/..."
+        },
+        {
+          "level": "debug",
+          "message": "under_challenge page_title="
+        },
+        {
+          "level": "info",
+          "message": "OwnedUnicode \u6a21\u62df\u767b\u5f55\u6210\u529f"
+        }
+      ],
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"http://127.0.0.1:35679/\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "classification": "actual original FS RequestUtils physical loopback HTTP and selected original downstream bodies; no target code, no original service/real PT"
+    },
+    {
+      "name": "valid-nonBMP-positive-html",
+      "caller": "pttime",
+      "input_json": "\"<html><body><a href=\\\"logout.php\\\">\\u9000\\u51fa</a><span>\\u7b7e\\u5230\\u6210\\u529f</span>\\ud83d\\ude00</body></html>\"",
+      "result": {
+        "type": "tuple",
+        "value": [
+          true,
+          "\u7b7e\u5230\u6210\u529f"
+        ]
+      },
+      "error": null,
+      "logs": [
+        {
+          "level": "info",
+          "message": "OwnedUnicode \u7b7e\u5230\u6210\u529f"
+        }
+      ],
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/v1",
+          "ua": "python-urllib3/2.7.0",
+          "cookie": null,
+          "content_type": "application/json",
+          "body": "{\"cmd\": \"request.get\", \"url\": \"https://www.pttime.org/attendance.php\", \"maxTimeout\": 60000, \"cookies\": [{\"name\": \"a\", \"value\": \"owned\"}]}"
+        }
+      ],
+      "classification": "actual original FS RequestUtils physical loopback HTTP and selected original downstream bodies; no target code, no original service/real PT"
+    }
+  ],
+  "runtime": {
+    "uid": 1000,
+    "interfaces": [
+      [
+        1,
+        "lo"
+      ]
+    ],
+    "requests": "2.34.2",
+    "recursion_limit": 1000
+  },
+  "source_hashes": {
+    "HTTP": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "BROWSER": "cb455ffadc75b32fa0fe151242b7c4162233e525d35257ac3a71e1dda1316f29",
+    "DB": "6da490f32d0de67839249b4e318fecbf4c877ec5acde4eef08634738c4cfafc9",
+    "MODEL": "56c948af28f482b39e0d599b6889fd803c375aff50ecdde2d5b4583dca581164",
+    "OPER": "87bff2e7c63d2ba98c72d92d6aed2018548730215de017330019bb54478634a2",
+    "PLUGINBASE": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+    "BASE": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d",
+    "ASI": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+    "CLOUDFLARE": "1543472ddccb90704d30f74fb420fe87f9e613a66daf2fbf4402f1ebccecd7a1",
+    "SITE": "c278d537bdea0394c4dc083c27726316a815ae26a2e64ddc2f3d42e2921fcf40",
+    "STRING": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+    "RESULT": "7a2a49fd8aafe084c6a9a482ca6883cbee8505f443ae5e9741af25161bb458b2",
+    "PTER": "3cd559c4ef3510180da4f57db19595de2de75dcd85519430a9aa1ee4dadfd3d3",
+    "ADAPTER_btschool": "efc63422cc4b2c3e18c35324f358b4d9899a58cffbf8099c4efc533cc5b48bcd",
+    "ADAPTER_hdupt": "eb8e2c96088fdf956a0cb1efb58ac69716d89ebfd4d3240089eb53fa0c0e55f3",
+    "ADAPTER_pttime": "e1e8e5a446ed15802774eda142c57b22a8482ddee511d49aff256a5a8089bb7b",
+    "ADAPTER_haidan": "d68586c83b5721a495e7af5172e7642cbe6cf74d7c555eab8a3c3153ba281461",
+    "ADAPTER_hdcity": "b13a4af9d4df371b1fb5c74323ddb532ff016fe53d36caf7c36bcacdb7148475",
+    "ADAPTER_hares": "27d5be0a5c313b3cbadb50a029cc4fa627e3f4aa393503e330f5c56be48ad0e2",
+    "ADAPTER_zhuque": "69301edf86db5f68d2e3fb720841b03a4d1489e90b37ec3384a0fbbc764a0563",
+    "ADAPTER_hdsky": "a2f272ff66d9ade5106942f3e577fd12a967b7375d516c92dc189b9672fa7a70",
+    "ADAPTER_opencd": "30045d631f459d7a04fdd068a1cab48bcd6dcb7cc21ebb0fb8fbac5bf0d32b2b",
+    "ADAPTER_ttg": "4cc08e4951e89348e02164990ab66a63ff6917b98d2d86cfbaaf7e21d859d51b",
+    "ADAPTER_chdbits": "d1f745f0b69b167e0f51038a3f09b495806096f44587889bca585e6782b5eb89",
+    "ADAPTER_52pt": "88d1fb315d2272097f8e124eb8245aa952fd1933f7685005118e9c875528d2fb",
+    "ADAPTER_tjupt": "ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0",
+    "ADAPTER_u2": "787e2e2752b8d35029e3fe4066303b23149152f29f40759e16114873f141fdd5"
+  }
+}

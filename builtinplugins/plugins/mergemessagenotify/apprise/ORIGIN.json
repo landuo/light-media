@@ -1,0 +1,439 @@
+{
+  "source_repository": "https://github.com/landuo/light-media",
+  "source_revision": "30bf6ae87f431cdc83a34cfd75a62d1cc666897b",
+  "source_directory": "internal/plugins/mergemessagenotify/apprise",
+  "relocation": "Tracked production files copied from the pinned host tree; HTTP uses the existing standalone Requests proxy implementation. No old test drivers or replay artifacts.",
+  "upstream_apprise": "1.9.9",
+  "implemented_schemes": [
+    "json",
+    "jsons",
+    "apprise",
+    "apprises",
+    "bark",
+    "barks",
+    "gotify",
+    "gotifys",
+    "ntfy",
+    "ntfys",
+    "pushdeer",
+    "pushdeers",
+    "pbul",
+    "schan",
+    "psafer",
+    "psafers",
+    "join",
+    "ifttt",
+    "pjet",
+    "pjets",
+    "discord",
+    "pover",
+    "mmost",
+    "mmosts",
+    "gchat",
+    "slack",
+    "tgram",
+    "zulip",
+    "flock",
+    "prowl",
+    "spush",
+    "rocket",
+    "rockets",
+    "matrix",
+    "matrixs",
+    "pushplus",
+    "feishu",
+    "dingtalk",
+    "pagerduty",
+    "twist",
+    "chanify",
+    "pushme",
+    "wxpusher",
+    "wecombot",
+    "lark",
+    "pushy",
+    "line",
+    "qq",
+    "wxteams",
+    "webex",
+    "form",
+    "forms",
+    "xml",
+    "xmls",
+    "hassio",
+    "hassios"
+  ],
+  "upstream_files_sha256": {
+    "APPRISE-LICENSE": "9ac007e806bd7199cf3158adff83a16351ae85c46373c3533a98b961975103f2",
+    "CERTIFI-LICENSE": "e93716da6b9c0d5a4a1df60fe695b370f0695603d21f6f83f053e42cfc10caf7",
+    "NOTICE": "82a051bab27f882ac58ebb0ea62cad733c3bf4ae0dae1af4b0a5e87913a35718",
+    "certifi-ca.pem": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+    "client.go": "f64c987a4a1016175b8359ba84510053fb84c344a08bf3ff362a3c6dfb5579a5",
+    "format.go": "2bc6b24f36929316fe98c1ac820e3257d9024b92a6a4f0d1fec4f0181470775e",
+    "http.go": "5b67869f5e0fe0dbcf0bce09160c80dff06e0f4fdee2cc60229290b0a685574b",
+    "ip_patterns.go": "ea469b1a164e712f4c554b99ef9286fe26cdec3b9f24ff4094ffe9bc9e43d684",
+    "json.go": "939220d23f0b09840fc78a49b02cfdd458c32c6331d105488cef28dfc32c8bfc",
+    "url.go": "5522ff598d1b96f1a01f48a8aa8353640683d535fe4f8a0d336dd271d4c5feae",
+    "testdata/catalog.json": "dc2c06b139499350d58d0dca39fb69c6045f1b8e21f2cf86e86bde6c36e8938f",
+    "testdata/emoji-patterns.json": "6eea1f48aa34a42c639f83ef0535474e7bf63a29cf6c805631ed139a0513f41a"
+  },
+  "adaptations": [
+    {
+      "file": "http.go",
+      "reason": "Use the standalone requestsproxy with the same Requests environment, proxy authentication and cancellation interfaces.",
+      "target_sha256": "1119df060f50e208a27a7a5026f9ef3c9c749a5bb60de6d422ef42e7b082623b"
+    },
+    {
+      "file": "gateway.go",
+      "reason": "Port fixed NotifyAppriseAPI gateway parsing and notification delivery, including native HTTP(S) aliases, multipart attachments, and common overflow behavior.",
+      "original_path": "apprise/plugins/apprise_api.py",
+      "original_sha256": "14f12b4f55089599e22eaa53e3dab23571b2560b3b9494ed796a99cd6b4ffad9",
+      "source_observations": "testdata/gateway-1.9.9.json"
+    },
+    {
+      "file": "bark.go",
+      "reason": "Port fixed NotifyBark device targets and text/Markdown payloads with strict HTTP status and per-provider send interval. Reuse native HTTP transport and common overflow planner.",
+      "original_path": "apprise/plugins/bark.py",
+      "original_sha256": "07ea6b9509005f67f2a584d9f40887f8058c25f5c79631b723af55fa632d9b46",
+      "source_observations": "testdata/bark-1.9.9.json"
+    },
+    {
+      "file": "gotify.go",
+      "original_path": "apprise/plugins/gotify.py",
+      "original_sha256": "5e04ccd856654d0c115c3e307ccbd861c22e8cff1d704a983397038678f480de",
+      "source_observations": "testdata/gotify-1.9.9.json",
+      "reason": "Port the original Gotify HTTP provider, response predicate, auth, query options, format and overflow."
+    },
+    {
+      "file": "attachment.go",
+      "original_paths": [
+        "apprise/apprise_attachment.py",
+        "apprise/attachment/base.py",
+        "apprise/attachment/http.py",
+        "apprise/attachment/file.py",
+        "apprise/plugins/custom_json.py",
+        "apprise/plugins/apprise_api.py"
+      ],
+      "source_observations": [
+        "testdata/attachment-1.9.9.json",
+        "testdata/attachment-review-1.9.9.json"
+      ],
+      "mime_reference": {
+        "host_revision": "30bf6ae87f431cdc83a34cfd75a62d1cc666897b",
+        "host_path": "internal/plugins/mergemessagenotify/apprise/testdata/original-linux-mimetypes.json",
+        "local_path": "mimetypes-linux.json",
+        "sha256": "ba02be18b5d7a76a40783fd701d56ef415e1d9681474d81ad6bff4b7a1e5a630"
+      },
+      "reason": "Resolve HTTP attachments using original query/cache behavior and size limits. Local attachment paths require the paired host file grant. Encode JSON/base64 or multipart as the selected provider requires."
+    },
+    {
+      "file": "ntfy.go",
+      "original_path": "apprise/plugins/ntfy.py",
+      "original_sha256": "9db4fe5c7985f0f198a833317618c5681fcd7f6077257644772df679a1fd3f4c",
+      "source_observations": "testdata/ntfy-1.9.9.json",
+      "reason": "Port cloud and private topics, native HTTP(S) aliases, auth, notification options, JSON and ordered attachments.",
+      "source_boundary_observations": "testdata/ntfy-boundary-1.9.9.json"
+    },
+    {
+      "file": "pushdeer.go",
+      "original_path": "apprise/plugins/pushdeer.py",
+      "original_sha256": "029dd1d885637dcc95cd28292c2e6d6329b453848da1a953b5b3a0b35eb298be",
+      "source_observations": "testdata/pushdeer-1.9.9.json",
+      "reason": "Port both service schemes, request form and response status, auth-free request, and per-service send interval."
+    },
+    {
+      "file": "pushbullet.go",
+      "original_path": "apprise/plugins/pushbullet.py",
+      "original_sha256": "3c173a4453db8bc3a1bfc3ab6546516a6e6bbe3f3eedf274d3fb70a630d752b0",
+      "source_observations": "testdata/pushbullet-1.9.9.json",
+      "reason": "Port original recipient routing and sequential upload handshake, multipart delivery and response-controlled note/file dispatch.",
+      "source_boundary_observations": "testdata/pushbullet-boundary-1.9.9.json"
+    },
+    {
+      "file": "serverchan.go",
+      "original_path": "apprise/plugins/serverchan.py",
+      "original_sha256": "556b605bc02020f1ea06d26efd48698ddf1949a3c2924165a1b64fe592cb0e4c",
+      "source_observations": "testdata/serverchan-1.9.9.json",
+      "reason": "Port original token parsing, request form and status-only response behavior."
+    },
+    {
+      "file": "pushsafer.go",
+      "original_path": "apprise/plugins/pushsafer.py",
+      "original_sha256": "43d1ca62da6a09a8ee85b963899cd9d357a1a3dfd8534bca51e9444d45b03b31",
+      "source_observations": "testdata/pushsafer-1.9.9.json",
+      "reason": "Port source device parsing, mutable attachment batching, numeric/boolean response status and request interval."
+    },
+    {
+      "file": "client.go",
+      "original_paths": [
+        "apprise/apprise.py:266–346",
+        "apprise/utils/parse.py:125–128,1021–1046",
+        "apprise/plugins/__init__.py:419–429"
+      ],
+      "source_observations": "testdata/url-list-1.9.9.json",
+      "reason": "Recognize service URL lists in one configuration line while retaining supported services when an unknown URL was rejected. Ordered attachment providers receive the HTTP response for source upload handshakes and provider-specific success checks."
+    },
+    {
+      "file": "join.go",
+      "original_path": "apprise/plugins/join.py",
+      "original_sha256": "19783aa7173578a59a7a8186ca6bc23130a60bfc726f36a723e80e9e4a813014",
+      "source_observations": "testdata/join-ifttt-1.9.9.json",
+      "reason": "Port device and group selection, normalized target ordering, icon/priority queries, 1000-character overflow and status-only delivery."
+    },
+    {
+      "file": "ifttt.go",
+      "original_path": "apprise/plugins/ifttt.py",
+      "original_sha256": "3d4b2f6a97d702b79663228a4c08c314b1cfd4eb3dbeef553873dc30a1d59da0",
+      "source_observations": "testdata/join-ifttt-1.9.9.json",
+      "reason": "Port sorted Webhook events and native maker URL handling. URL ingredient keys retain the original parser-to-constructor behavior.",
+      "source_boundary_observations": "testdata/ifttt-dot-1.9.9.json"
+    },
+    {
+      "file": "pushjet.go",
+      "original_path": "apprise/plugins/pushjet.py",
+      "original_sha256": "b520f92f29872bc12e5eb5a2c58042ddee62773dc1457db2cec629aceb206365",
+      "source_observations": "testdata/pushjet-1.9.9.json",
+      "reason": "Port HTTP(S) endpoint/port and secret selection, optional Basic auth, zero send interval and exact JSON-in-form-content-type request."
+    },
+    {
+      "file": "discord.go",
+      "original_path": "apprise/plugins/discord.py",
+      "original_sha256": "e28790c06e5daa23539b7a2a9e2f6c6e27e08c3f030635cec9f475c780ddfaab",
+      "source_observations": "testdata/discord-1.9.9.json",
+      "reason": "Port native webhook parsing, threads, embeds, mentions, multipart, first failure and one-shot rate-limit retry."
+    },
+    {
+      "file": "pushover.go",
+      "original_path": "apprise/plugins/pushover.py",
+      "original_sha256": "75d8164357e714a4d27209ee9bb7ace132c4db9d363a4178b5bfac302aedea8c",
+      "source_observations": "testdata/pushover-1.9.9.json",
+      "reason": "Port emergency priorities, source attachment and timeout behavior, and Markdown conversion with source-derived Go renderer adaptation.",
+      "markdown_reference": {
+        "installed_version": "Python-Markdown 3.11.2",
+        "target_module": "github.com/yuin/goldmark v1.8.7",
+        "target_source_commit": "6dafb0cf955a823afd513a641b6747424c40ee5d",
+        "target_license": "third_party/goldmark-LICENSE",
+        "target_license_sha256": "c1d6f653c38c80294dc7994647ba0dcc508ce64a86996303c804efa2f7982bff",
+        "source": "https://github.com/yuin/goldmark/releases/tag/v1.8.7",
+        "remaining": "Additional Python-Markdown and CommonMark dialect differences remain open."
+      }
+    },
+    {
+      "file": "mattermost.go",
+      "original_path": "apprise/plugins/mattermost.py",
+      "original_sha256": "1d2959a51bfb7c34717fe64898fd89871eea456568c44e147f6d1ba344765bca",
+      "source_observations": "testdata/mattermost-googlechat-1.9.9.json",
+      "reason": "Port incoming webhooks and bot sends, response-driven channel lookup, scoped memory caching and exact continuation/abort behavior.",
+      "source_boundary_observations": "testdata/titleless-boundary-1.9.9.json"
+    },
+    {
+      "file": "googlechat.go",
+      "original_path": "apprise/plugins/google_chat.py",
+      "original_sha256": "2c923514b1d645c5f7823b299c5df1542aae5adeced15dc9483b7421c7cb8cf5",
+      "source_observations": "testdata/mattermost-googlechat-1.9.9.json",
+      "reason": "Port native URL alias, path and query credentials, title composition, optional thread payload and response handling.",
+      "source_boundary_observations": "testdata/titleless-boundary-1.9.9.json"
+    },
+    {
+      "file": "slack.go",
+      "original_path": "apprise/plugins/slack.py",
+      "original_sha256": "e52509ad487214e66e54705c4a50834a7e636d1819cca68c0dba8a1d55fbfed2",
+      "source_observations": "testdata/slack-1.9.9.json",
+      "reason": "Port webhook/Gov and bot modes, channel resolution, rich message formatting, response-sensitive upload and completion."
+    },
+    {
+      "file": "telegram.go",
+      "original_path": "apprise/plugins/telegram.py",
+      "original_sha256": "f5d0a5a8fc1214b529604b6787d57695d6498980dc77728cbd255113d8e836d4",
+      "source_observations": "testdata/telegram-1.9.9.json",
+      "reason": "Port explicit and discovered recipients, topics, message format, exact optional icon, attachment MIME/order and source throttle rules.",
+      "installed_icon": {
+        "source_path": "apprise/assets/themes/default/apprise-info-256x256.png",
+        "target_path": "telegram-info.png",
+        "sha256": "079aff3b877d3070a64966707dba908194a9f997ad4dd8814b029c3131756850",
+        "bytes": 43331,
+        "license": "APPRISE-LICENSE"
+      }
+    },
+    {
+      "file": "zulip.go",
+      "original_path": "apprise/plugins/zulip.py",
+      "original_sha256": "a6cc435d7f25ba8a2d1ea88495256dbcc445610f3f5d92cca464b90987bed830",
+      "source_observations": "testdata/zulip-1.9.9.json",
+      "reason": "Port default and self-hosted organization URLs, scoped Basic auth, stream and private recipients, payload order, and source size/response rules."
+    },
+    {
+      "file": "flock.go",
+      "original_path": "apprise/plugins/flock.py",
+      "original_sha256": "decff173dd49befb28e23f08cef9664825ff62411740960e51c8d350cce905d9",
+      "source_observations": "testdata/flock-prowl-1.9.9.json",
+      "reason": "Port webhook/native aliases, user and channel targets, FlockML encoding and source status handling.",
+      "source_boundary_observations": "testdata/flock-image-1.9.9.json"
+    },
+    {
+      "file": "prowl.go",
+      "original_path": "apprise/plugins/prowl.py",
+      "original_sha256": "892668cba5478cb9e4ef368e2012739ccb5dd1ca04dc62a5d42331135de4895d",
+      "source_observations": "testdata/flock-prowl-1.9.9.json",
+      "reason": "Port key and provider key validation, priority, no send interval, message sizing and original form."
+    },
+    {
+      "file": "simplepush.go",
+      "original_path": "apprise/plugins/simplepush.py",
+      "original_sha256": "f63d15a80436bfcb6febefac652ff63a7e4234c2bf5012c94651c3c31eb38b4c",
+      "source_observations": "testdata/simplepush-1.9.9.json",
+      "reason": "Port plaintext and AES-CBC protocol payloads, per-client IV reuse, and exact HTTP/JSON success conditions.",
+      "crypto": "Go standard library AES-CBC, PKCS7, SHA-1 key derivation and URL-safe Base64. Offline reference used the installed cryptography 49.0.0 version."
+    },
+    {
+      "file": "rocketchat.go",
+      "original_path": "apprise/plugins/rocketchat.py",
+      "original_sha256": "41ca5b774eb2a39e3c4650d99c9352a5a79be09ef6f0ec74e010ee89a8a65adb",
+      "source_observations": "testdata/rocketchat-1.9.9.json",
+      "reason": "Port webhook, API-token and login modes, grouped targets, exact headers, failure continuation and logout."
+    },
+    {
+      "file": "matrix.go",
+      "original_path": "apprise/plugins/matrix.py",
+      "original_sha256": "02aeca506dfd2533ceca741207f1a7e9a8f81a8fdf4ac0dbef3c31fad2317dab",
+      "source_observations": "testdata/matrix-1.9.9.json",
+      "reason": "Port three webhook formats, direct v2/v3, discovery, acquired-token session, rooms, media, retry and cleanup.",
+      "markdown_reference": "Installed Python-Markdown 3.11.2 default conversion; Go Goldmark v1.8.7, with differences beyond sampled dialect cases still open."
+    },
+    {
+      "file": "pushplus.go",
+      "original_path": "apprise/plugins/pushplus.py",
+      "original_sha256": "8870129d7710d7176b7fc3a9cf4340d03271b0e4a5548ad49faba09e5a6eb6d6",
+      "source_observations": "testdata/cn-webhooks-1.9.9.json",
+      "reason": "Port the token URL and native alias, title fallback, webhook JSON and strict response status."
+    },
+    {
+      "file": "feishu.go",
+      "original_path": "apprise/plugins/feishu.py",
+      "original_sha256": "92a3e38adc2651fd9c6badaefcd2ad89117c155150fb3c9e26406b8df6b88d84",
+      "source_observations": "testdata/cn-webhooks-1.9.9.json",
+      "reason": "Port token and query override, titleless message sizing and strict webhook response status."
+    },
+    {
+      "file": "dingtalk.go",
+      "original_path": "apprise/plugins/dingtalk.py",
+      "original_sha256": "85dd8b1c10da3c0cb6e35f8d5edbe0ae6a5e82fa4f3c42a4116ac56bce327d97",
+      "source_observations": "testdata/cn-webhooks-1.9.9.json",
+      "reason": "Port recipient phone normalization, text and Markdown payloads, per-send timestamp and HMAC signing."
+    },
+    {
+      "file": "pagerduty.go",
+      "original_path": "apprise/plugins/pagerduty.py",
+      "original_sha256": "4fe41a293188fc7c3c62fe7d2f99bf23297f222985d29eb8f18a31c1c9217d00",
+      "source_observations": "testdata/pagerduty-1.9.9.json",
+      "reason": "Port Events API v2 trigger, US/EU routing, token credentials, severity, ordered custom details and response conditions."
+    },
+    {
+      "file": "twist.go",
+      "original_path": "apprise/plugins/twist.py",
+      "original_sha256": "44cef94d16e2a0df4f3c6be4298e74df5201d6e4014d5693320c849a30779993",
+      "source_observations": "testdata/twist-1.9.9.json",
+      "reason": "Port password login, workspace and channel discovery, Markdown thread creation and notification client cleanup."
+    },
+    {
+      "file": "chanify.go",
+      "original_path": "apprise/plugins/chanify.py",
+      "original_sha256": "95404cecc5d6be304934bdff21222836f66702b4c5a4412704f25c181856716c",
+      "source_observations": "testdata/chanify-1.9.9.json",
+      "reason": "Port token parsing and overrides, titleless notifications, form encoding, and strict HTTP status."
+    },
+    {
+      "file": "pushme.go",
+      "original_path": "apprise/plugins/pushme.py",
+      "original_sha256": "85f9cafbd0d0ce0ac2707b43c6e6318c8ecdd7f660b50a595a750492311a23f1",
+      "source_observations": "testdata/pushme-1.9.9.json",
+      "reason": "Port token precedence, status prefix, format selection, and exact POST query and status behavior."
+    },
+    {
+      "file": "wxpusher.go",
+      "original_path": "apprise/plugins/wxpusher.py",
+      "original_sha256": "623f9b87a7fb231788099ef68c306d4f74222c704bed937995d4a7ba127b5162",
+      "source_observations": [
+        "testdata/wxpusher-1.9.9.json",
+        "testdata/wxpusher-encoded-replies-1.9.9.json"
+      ],
+      "reason": "Port AppToken overrides, UID/topic targets, three content formats, exact request JSON, and status and numeric response code handling.",
+      "response_encoding": "Go x/text decoders implement CPython json.detect_encoding for valid UTF-8/16/32 bytes, preserving byte order detection with or without a BOM."
+    },
+    {
+      "file": "timezone.go",
+      "original_path": "apprise/utils/time.py",
+      "original_sha256": "5b7ff2df7f21a5a02b26a36bd942071a33e29c43a2da8781885da147796f17d3",
+      "source_observations": "testdata/timezone-1.9.9.json",
+      "reason": "Validate original UTC aliases, case-insensitive full names and one/two-part region suffixes without a Python runtime.",
+      "timezone_catalog": {
+        "file": "timezone-names.txt",
+        "sha256": "8725722643bf1f4ff4fc4b22268ade98b6fae047a86897219c3a13d4c4ced93d",
+        "keys": 598,
+        "provenance": "Isolated original Python zoneinfo.available_timezones, sorted and identical to the pinned Go 1.26.10 zoneinfo.zip key set."
+      }
+    },
+    {
+      "file": "wecombot.go",
+      "original_path": "apprise/plugins/wecombot.py",
+      "original_sha256": "1b5801338240ce52121e6ad106e2360d2a1d2613cba594a8de5e5435cc28ef2c",
+      "source_observations": "testdata/wecombot-1.9.9.json",
+      "reason": "Port WeCom Bot key and native HTTP(S) URLs, titleless formats, strict response status and source request JSON."
+    },
+    {
+      "file": "lark.go",
+      "original_path": "apprise/plugins/lark.py",
+      "original_sha256": "25d014e18a5e5cad9b42dbd7d4141da8b27d0eeb5eb1abdde144934e18b09b2f",
+      "source_observations": "testdata/lark-1.9.9.json",
+      "reason": "Port fixed Lark global webhook URL, native alias, title/body merge and two original throttle calls per delivery."
+    },
+    {
+      "file": "pushy.go",
+      "original_path": "apprise/plugins/pushy.py",
+      "original_sha256": "8c53c286217d53598754f62cadb89c7564a0191de43eb32040620901fee3420a",
+      "source_observations": "testdata/pushy-1.9.9.json",
+      "reason": "Port target parsing and ordered dispatch, status and JSON truthiness, title/body truncation and source request encoding."
+    },
+    {
+      "file": "line.go",
+      "original_path": "apprise/plugins/line.py",
+      "original_sha256": "fd1838c782e13c1d361d669527dce716884ea8032b3af1ffd5778ea0d7f90df7",
+      "source_observations": "testdata/line-1.9.9.json",
+      "reason": "Port bearer token normalization, ordered LINE recipients, titleless payload and original icon and failure handling."
+    },
+    {
+      "file": "qq.go",
+      "original_path": "apprise/plugins/qq.py",
+      "original_sha256": "45c504730823ad7f9d3637c1e24ed71d6b220b51ee29426231cc2e5cddf6fe93",
+      "source_observations": "testdata/qq-1.9.9.json",
+      "reason": "Port Qmsg native HTTPS alias, token override and validation, exact form and title/body encoding, and strict status."
+    },
+    {
+      "file": "webexteams.go",
+      "original_path": "apprise/plugins/webexteams.py",
+      "original_sha256": "b046ed321f98cb10b234d3e32e98983e9578c02b9dcc93aa628941cd2987e2c6",
+      "source_observations": "testdata/webexteams-1.9.9.json",
+      "reason": "Port both schemes and native URL aliases, fixed HTTPS routing, text/Markdown payload, source message limits and response conditions."
+    },
+    {
+      "file": "custom_form.go",
+      "original_path": "apprise/plugins/custom_form.py",
+      "original_sha256": "2835ac8dd26a20ed7c0206166e769fc6a0070538b151311b802a71d0cc48a099",
+      "source_observations": "testdata/custom-form-1.9.9.json",
+      "reason": "Port GET query merge, form payload and field remapping, headers/auth, and local and remote multipart attachments."
+    },
+    {
+      "file": "custom_xml.go",
+      "original_path": "apprise/plugins/custom_xml.py",
+      "original_sha256": "395a8226c6aae9608deb25ce9df5471647647aa74bea09f435d6c16f5325863c",
+      "source_observations": "testdata/custom-xml-1.9.9.json",
+      "reason": "Port XML/SOAP envelopes, namespace and field remapping, headers/auth, URL normalization and embedded Base64 attachments."
+    },
+    {
+      "file": "home_assistant.go",
+      "original_path": "apprise/plugins/home_assistant.py",
+      "original_sha256": "0a33957a3b08f7909d9070e34f0dfc4b1148a33e41c69896263d7fd69ee05d89",
+      "source_observations": "testdata/home-assistant-1.9.9.json",
+      "reason": "Port persistent notifications, default ports, auth and reverse proxy URL parsing, notification identifiers and source wait/status rules."
+    }
+  ]
+}

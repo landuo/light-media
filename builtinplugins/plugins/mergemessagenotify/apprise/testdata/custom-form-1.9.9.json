@@ -1,0 +1,744 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "sha256": "2835ac8dd26a20ed7c0206166e769fc6a0070538b151311b802a71d0cc48a099"
+  },
+  "owned_file_base64": "b3duZWQgbG9jYWwgYXR0YWNobWVudAo=",
+  "http_file_base64": "iVBORw0KGgpvd25lZC1pbWFnZQA=",
+  "multipart_boundary": "apprise-owned-form-boundary",
+  "cases": [
+    {
+      "name": "post-default-form",
+      "url": "form://receiver.invalid/inbox",
+      "title": " 标题 ",
+      "body": " owned +/%? ",
+      "attachment": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://receiver.invalid/inbox",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "version=1.0&title=%E6%A0%87%E9%A2%98&message=+owned+%2B%2F%25%3F&type=info",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "post-secure-path-auth-header-and-query",
+      "url": "forms://owner:p%40ss@RECEIVER.invalid:9443/base/../in%20box?method=patch&verify=no&cto=2.25&rto=7&+X-Trace=A%252BB&-first=%E9%9B%AA&-second=two",
+      "title": "t",
+      "body": "b",
+      "attachment": null,
+      "statuses": [
+        202
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "url": "https://receiver.invalid:9443/in%20box?first=%E9%9B%AA&second=two",
+          "headers": {
+            "User-Agent": "Apprise",
+            "X-Trace": "A+B",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic b3duZXI6cEBzcw=="
+          },
+          "body": "version=1.0&title=t&message=b&type=info",
+          "verify": false,
+          "timeout": [
+            2.25,
+            7.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "remap-drop-and-overwrite-payload",
+      "url": "form://receiver.invalid/inbox?:title=subject&:message=subject&:version=&:type=kind&:extra=values%252Bplus&:subject=last&:%2520=space",
+      "title": "before",
+      "body": "after",
+      "attachment": null,
+      "statuses": [
+        204
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://receiver.invalid/inbox",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "subject=last&kind=info&extra=values%2Bplus&+=space",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "get-moves-payload-and-merges-query",
+      "url": "form://receiver.invalid/inbox?method=get&:title=subject&:message=&-subject=override&-new=q%2Bv&+user-agent=Owned%20Agent",
+      "title": "title",
+      "body": "body",
+      "attachment": null,
+      "statuses": [
+        206
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://receiver.invalid/inbox?version=1.0&subject=override&type=info&new=q%2Bv",
+          "headers": {
+            "user-agent": "Owned Agent"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "head-method-keeps-body",
+      "url": "form://receiver.invalid/inbox?method=head&+Content-Type=text%2Fplain&format=html",
+      "title": "title",
+      "body": "<b>body</b>",
+      "attachment": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "HEAD",
+          "url": "http://receiver.invalid/inbox",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "text/plain"
+          },
+          "body": "version=1.0&title=title&message=%3Cb%3Ebody%3C%2Fb%3E&type=info",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "all-payload-fields-removed",
+      "url": "form://receiver.invalid/inbox?:version=&:title=&:message=&:type=",
+      "title": "title",
+      "body": "body",
+      "attachment": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://receiver.invalid/inbox",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "default-root-and-user-without-password",
+      "url": "form://owner@receiver.invalid",
+      "title": "t",
+      "body": "b",
+      "attachment": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://receiver.invalid/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic b3duZXI6Tm9uZQ=="
+          },
+          "body": "version=1.0&title=t&message=b&type=info",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "multipart-default-remote-and-local",
+      "url": "form://receiver.invalid/inbox?:title=label",
+      "title": "t",
+      "body": "b",
+      "attachment": [
+        "http://image.invalid/art.png",
+        "{owned_file}"
+      ],
+      "statuses": [
+        200,
+        201
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://image.invalid/art.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "http://receiver.invalid/inbox",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=apprise-owned-form-boundary"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "version",
+                "filename": null,
+                "content_type": null,
+                "base64": "MS4w"
+              },
+              {
+                "field": "label",
+                "filename": null,
+                "content_type": null,
+                "base64": "dA=="
+              },
+              {
+                "field": "message",
+                "filename": null,
+                "content_type": null,
+                "base64": "Yg=="
+              },
+              {
+                "field": "type",
+                "filename": null,
+                "content_type": null,
+                "base64": "aW5mbw=="
+              },
+              {
+                "field": "file01",
+                "filename": "remote image.png",
+                "content_type": "image/png",
+                "base64": "iVBORw0KGgpvd25lZC1pbWFnZQA="
+              },
+              {
+                "field": "file02",
+                "filename": "Owned Note.TXT",
+                "content_type": "text/plain",
+                "base64": "b3duZWQgbG9jYWwgYXR0YWNobWVudAo="
+              }
+            ],
+            "raw_base64": "LS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0idmVyc2lvbiINCg0KMS4wDQotLWFwcHJpc2Utb3duZWQtZm9ybS1ib3VuZGFyeQ0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJsYWJlbCINCg0KdA0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0ibWVzc2FnZSINCg0KYg0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0idHlwZSINCg0KaW5mbw0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iZmlsZTAxIjsgZmlsZW5hbWU9InJlbW90ZSBpbWFnZS5wbmciDQpDb250ZW50LVR5cGU6IGltYWdlL3BuZw0KDQqJUE5HDQoaCm93bmVkLWltYWdlAA0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iZmlsZTAyIjsgZmlsZW5hbWU9Ik93bmVkIE5vdGUuVFhUIg0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluDQoNCm93bmVkIGxvY2FsIGF0dGFjaG1lbnQKDQotLWFwcHJpc2Utb3duZWQtZm9ybS1ib3VuZGFyeS0tDQo="
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "multipart-static-duplicate-fields",
+      "url": "form://receiver.invalid/inbox?attach-as=document",
+      "title": "t",
+      "body": "b",
+      "attachment": [
+        "{owned_file}",
+        "{owned_file}"
+      ],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://receiver.invalid/inbox",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=apprise-owned-form-boundary"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "version",
+                "filename": null,
+                "content_type": null,
+                "base64": "MS4w"
+              },
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "dA=="
+              },
+              {
+                "field": "message",
+                "filename": null,
+                "content_type": null,
+                "base64": "Yg=="
+              },
+              {
+                "field": "type",
+                "filename": null,
+                "content_type": null,
+                "base64": "aW5mbw=="
+              },
+              {
+                "field": "document",
+                "filename": "Owned Note.TXT",
+                "content_type": "text/plain",
+                "base64": "b3duZWQgbG9jYWwgYXR0YWNobWVudAo="
+              },
+              {
+                "field": "document",
+                "filename": "Owned Note.TXT",
+                "content_type": "text/plain",
+                "base64": "b3duZWQgbG9jYWwgYXR0YWNobWVudAo="
+              }
+            ],
+            "raw_base64": "LS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0idmVyc2lvbiINCg0KMS4wDQotLWFwcHJpc2Utb3duZWQtZm9ybS1ib3VuZGFyeQ0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJ0aXRsZSINCg0KdA0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0ibWVzc2FnZSINCg0KYg0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0idHlwZSINCg0KaW5mbw0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iZG9jdW1lbnQiOyBmaWxlbmFtZT0iT3duZWQgTm90ZS5UWFQiDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW4NCg0Kb3duZWQgbG9jYWwgYXR0YWNobWVudAoNCi0tYXBwcmlzZS1vd25lZC1mb3JtLWJvdW5kYXJ5DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5hbWU9ImRvY3VtZW50IjsgZmlsZW5hbWU9Ik93bmVkIE5vdGUuVFhUIg0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluDQoNCm93bmVkIGxvY2FsIGF0dGFjaG1lbnQKDQotLWFwcHJpc2Utb3duZWQtZm9ybS1ib3VuZGFyeS0tDQo="
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "multipart-pattern-prefix-and-suffix",
+      "url": "form://receiver.invalid/inbox?attach-as=asset%2Aname&:%2522field=owned",
+      "title": "t",
+      "body": "b",
+      "attachment": [
+        "{owned_file}",
+        "{owned_file}"
+      ],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://receiver.invalid/inbox",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=apprise-owned-form-boundary"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "version",
+                "filename": null,
+                "content_type": null,
+                "base64": "MS4w"
+              },
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "dA=="
+              },
+              {
+                "field": "message",
+                "filename": null,
+                "content_type": null,
+                "base64": "Yg=="
+              },
+              {
+                "field": "type",
+                "filename": null,
+                "content_type": null,
+                "base64": "aW5mbw=="
+              },
+              {
+                "field": "%22field",
+                "filename": null,
+                "content_type": null,
+                "base64": "b3duZWQ="
+              },
+              {
+                "field": "asset01name",
+                "filename": "Owned Note.TXT",
+                "content_type": "text/plain",
+                "base64": "b3duZWQgbG9jYWwgYXR0YWNobWVudAo="
+              },
+              {
+                "field": "asset02name",
+                "filename": "Owned Note.TXT",
+                "content_type": "text/plain",
+                "base64": "b3duZWQgbG9jYWwgYXR0YWNobWVudAo="
+              }
+            ],
+            "raw_base64": "LS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0idmVyc2lvbiINCg0KMS4wDQotLWFwcHJpc2Utb3duZWQtZm9ybS1ib3VuZGFyeQ0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJ0aXRsZSINCg0KdA0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0ibWVzc2FnZSINCg0KYg0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0idHlwZSINCg0KaW5mbw0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iJTIyZmllbGQiDQoNCm93bmVkDQotLWFwcHJpc2Utb3duZWQtZm9ybS1ib3VuZGFyeQ0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJhc3NldDAxbmFtZSI7IGZpbGVuYW1lPSJPd25lZCBOb3RlLlRYVCINCkNvbnRlbnQtVHlwZTogdGV4dC9wbGFpbg0KDQpvd25lZCBsb2NhbCBhdHRhY2htZW50Cg0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iYXNzZXQwMm5hbWUiOyBmaWxlbmFtZT0iT3duZWQgTm90ZS5UWFQiDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW4NCg0Kb3duZWQgbG9jYWwgYXR0YWNobWVudAoNCi0tYXBwcmlzZS1vd25lZC1mb3JtLWJvdW5kYXJ5LS0NCg=="
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "get-with-files-keeps-only-files-in-body",
+      "url": "form://receiver.invalid/inbox?method=get&attach-as=%3Fupload&-flag=yes",
+      "title": "t",
+      "body": "b",
+      "attachment": "{owned_file}",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://receiver.invalid/inbox?version=1.0&title=t&message=b&type=info&flag=yes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=apprise-owned-form-boundary"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "01upload",
+                "filename": "Owned Note.TXT",
+                "content_type": "text/plain",
+                "base64": "b3duZWQgbG9jYWwgYXR0YWNobWVudAo="
+              }
+            ],
+            "raw_base64": "LS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iMDF1cGxvYWQiOyBmaWxlbmFtZT0iT3duZWQgTm90ZS5UWFQiDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW4NCg0Kb3duZWQgbG9jYWwgYXR0YWNobWVudAoNCi0tYXBwcmlzZS1vd25lZC1mb3JtLWJvdW5kYXJ5LS0NCg=="
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "truncate-keeps-first-file-only",
+      "url": "form://receiver.invalid/inbox?overflow=truncate",
+      "title": "t",
+      "body": "b",
+      "attachment": [
+        "{owned_file}",
+        "http://image.invalid/art.png"
+      ],
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://receiver.invalid/inbox",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=apprise-owned-form-boundary"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "version",
+                "filename": null,
+                "content_type": null,
+                "base64": "MS4w"
+              },
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "dA=="
+              },
+              {
+                "field": "message",
+                "filename": null,
+                "content_type": null,
+                "base64": "Yg=="
+              },
+              {
+                "field": "type",
+                "filename": null,
+                "content_type": null,
+                "base64": "aW5mbw=="
+              },
+              {
+                "field": "file01",
+                "filename": "Owned Note.TXT",
+                "content_type": "text/plain",
+                "base64": "b3duZWQgbG9jYWwgYXR0YWNobWVudAo="
+              }
+            ],
+            "raw_base64": "LS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0idmVyc2lvbiINCg0KMS4wDQotLWFwcHJpc2Utb3duZWQtZm9ybS1ib3VuZGFyeQ0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJ0aXRsZSINCg0KdA0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0ibWVzc2FnZSINCg0KYg0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0idHlwZSINCg0KaW5mbw0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iZmlsZTAxIjsgZmlsZW5hbWU9Ik93bmVkIE5vdGUuVFhUIg0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluDQoNCm93bmVkIGxvY2FsIGF0dGFjaG1lbnQKDQotLWFwcHJpc2Utb3duZWQtZm9ybS1ib3VuZGFyeS0tDQo="
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "attachment-only",
+      "url": "form://receiver.invalid/inbox",
+      "title": "",
+      "body": "",
+      "attachment": "{owned_file}",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://receiver.invalid/inbox",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=apprise-owned-form-boundary"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "version",
+                "filename": null,
+                "content_type": null,
+                "base64": "MS4w"
+              },
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": ""
+              },
+              {
+                "field": "message",
+                "filename": null,
+                "content_type": null,
+                "base64": ""
+              },
+              {
+                "field": "type",
+                "filename": null,
+                "content_type": null,
+                "base64": "aW5mbw=="
+              },
+              {
+                "field": "file01",
+                "filename": "Owned Note.TXT",
+                "content_type": "text/plain",
+                "base64": "b3duZWQgbG9jYWwgYXR0YWNobWVudAo="
+              }
+            ],
+            "raw_base64": "LS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0idmVyc2lvbiINCg0KMS4wDQotLWFwcHJpc2Utb3duZWQtZm9ybS1ib3VuZGFyeQ0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJ0aXRsZSINCg0KDQotLWFwcHJpc2Utb3duZWQtZm9ybS1ib3VuZGFyeQ0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJtZXNzYWdlIg0KDQoNCi0tYXBwcmlzZS1vd25lZC1mb3JtLWJvdW5kYXJ5DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5hbWU9InR5cGUiDQoNCmluZm8NCi0tYXBwcmlzZS1vd25lZC1mb3JtLWJvdW5kYXJ5DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5hbWU9ImZpbGUwMSI7IGZpbGVuYW1lPSJPd25lZCBOb3RlLlRYVCINCkNvbnRlbnQtVHlwZTogdGV4dC9wbGFpbg0KDQpvd25lZCBsb2NhbCBhdHRhY2htZW50Cg0KLS1hcHByaXNlLW93bmVkLWZvcm0tYm91bmRhcnktLQ0K"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "unavailable-file-stops-send",
+      "url": "form://receiver.invalid/inbox",
+      "title": "t",
+      "body": "b",
+      "attachment": [
+        "{owned_file}",
+        "http://image.invalid/unavailable.png"
+      ],
+      "statuses": [
+        404
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "GET",
+          "url": "http://image.invalid/unavailable.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        }
+      ]
+    },
+    {
+      "name": "status-outside-success-range",
+      "url": "form://receiver.invalid/inbox",
+      "title": "t",
+      "body": "b",
+      "attachment": null,
+      "statuses": [
+        300
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://receiver.invalid/inbox",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "version=1.0&title=t&message=b&type=info",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "connection-failure",
+      "url": "form://receiver.invalid/inbox",
+      "title": "t",
+      "body": "b",
+      "attachment": null,
+      "statuses": [
+        0
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://receiver.invalid/inbox",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "version=1.0&title=t&message=b&type=info",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "invalid-method",
+      "url": "form://receiver.invalid/inbox?method=TRACE",
+      "title": "t",
+      "body": "b",
+      "attachment": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "invalid-attachment-field",
+      "url": "form://receiver.invalid/inbox?attach-as=%40",
+      "title": "t",
+      "body": "b",
+      "attachment": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "storage-setting-rejected",
+      "url": "form://receiver.invalid/inbox?store=no",
+      "title": "t",
+      "body": "b",
+      "attachment": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    }
+  ]
+}

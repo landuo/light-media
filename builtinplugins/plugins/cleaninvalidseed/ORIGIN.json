@@ -1,0 +1,40 @@
+{
+  "plugin_id": "CleanInvalidSeed",
+  "version": "2.1",
+  "author": "DzAvril",
+  "source": {
+    "path": "cleaninvalidseed/__init__.py",
+    "baseline_commit": "270ae0bcbf1d270b916ca9b14f8bffff9b1938d0",
+    "baseline_kind": "Local content snapshot of the installed source.",
+    "git_blob": "a9e053b68531130d5bb6bc58822afa27d6bfa4ca",
+    "sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda"
+  },
+  "platform": {
+    "moviepilot": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "moviepilot_frontend": "2829e3b08214348f05ff2f5beae644882eccad58"
+  },
+  "reused_host_commit": "d7066e7be72ae8c5de4aa2c7515bef2a1d010f7b",
+  "reused_host_path": "internal/plugins/cleaninvalidseed",
+  "source_oracle": {
+    "installed-reference.json": "3892d4024efb2fe55e3e1d59dabded5e2025e32d40acef46622cc3bed5cb84f1",
+    "oracle.json": "0a32e626931ca354d7e13a82b22bd504d49e4be729f7e47d80d5f60f1f12f4a5",
+    "native-wrapper-methods.json": "9cfa16246312528e160d8e1557d7f16edbfd6ef97b5d384a53ef5ddda982a5f5"
+  },
+  "adapter": "Go worker reuses source-shaped configuration, command, torrent classification, local orphan detection and reporting. The host owns guarded downloader and filesystem observations and mutations. Only redacted tracker equality, display and exact error flags cross the worker boundary.",
+  "go_port_files": {
+    "cmd/clean-invalid-seed/main.go": "c1870232cac69c9175db68f4f351035e5842257844ffa73608994f144283906b",
+    "plugins/cleaninvalidseed/clean.go": "6432f303476664ba732bdc59e4f58055baedd6806c0ea575fa37cba8ffd791d6",
+    "plugins/cleaninvalidseed/commands.json": "d3d5a62218b15fb3ebfa9c10e81935abca6d4a447dff1f68e4896746e61cc9fa",
+    "plugins/cleaninvalidseed/digit.go": "04cb6aed325c4e4fca1192d4e7173f3725c74f1fdc8cbb8c496b3d4e0e0e2479",
+    "plugins/cleaninvalidseed/entry.go": "52d31969ffbdc3f801998ba94f70f630766289b8cb8d91fb05c075a1e0e643f5",
+    "plugins/cleaninvalidseed/files.go": "7e197d0c618f23e1086a59f1a31b8800fe4ecf3752edf8d4b36f50adf3eae97d",
+    "plugins/cleaninvalidseed/form.json": "d88ce34ef52e4c9cabebd7840479093952179f149ced07b8c7347580ceba7b2c",
+    "plugins/cleaninvalidseed/host.go": "eac527d8db07bbb6ec97e663d03a49bd2559aac18dd490e9d3ada8d8fe43e532",
+    "plugins/cleaninvalidseed/logging.go": "581d6923f596663424c0e1facf44f7acd831407060f4156a235404f543832e47",
+    "plugins/cleaninvalidseed/native.go": "c2b6c56e780eadc74b96d6dd4e06aca342bda13add8846bc34f5cb949a9458f3",
+    "plugins/cleaninvalidseed/plugin.go": "6f605b405f650aaa8470a36bbfa9bdd0ee226278d8749cd73e3fe38f11ca85bd",
+    "plugins/cleaninvalidseed/tracker.go": "576e7212b4452070d003f89457916584d610d6dae18e6c9190126c893356298e",
+    "plugins/cleaninvalidseed/types.go": "7fee70f3f7812abae6a27eaed7fc43ce29dd519708d7a4bd3fcab901afe6b692",
+    "plugins/cleaninvalidseed/utils.go": "0ece852345bd0cb7786a770b68fb5278507cb6264c5e239c936a334ba2c626eb"
+  }
+}

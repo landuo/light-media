@@ -1,0 +1,42 @@
+{
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "classification": "actual original staticmethod AST + actual json/int/datetime, synthetic saved values, no app/config/DB/network",
+  "rows": [
+    {
+      "raw": "[{\"hour\":1267650600228229401496703205376,\"minute\":1e400}]",
+      "result": null,
+      "error": {
+        "kind": "OverflowError",
+        "message": "cannot convert float infinity to integer"
+      }
+    },
+    {
+      "raw": "[{\"hour\":1e100,\"minute\":-1e400}]",
+      "result": null,
+      "error": {
+        "kind": "OverflowError",
+        "message": "cannot convert float infinity to integer"
+      }
+    },
+    {
+      "raw": "[{\"hour\":1267650600228229401496703205376,\"minute\":\"bad\"}]",
+      "result": [],
+      "error": null
+    },
+    {
+      "raw": "[{\"hour\":1267650600228229401496703205376,\"minute\":7}]",
+      "result": [],
+      "error": null
+    },
+    {
+      "raw": "[{\"hour\":7,\"minute\":1267650600228229401496703205376}]",
+      "result": [],
+      "error": null
+    },
+    {
+      "raw": "[{\"hour\":\"bad\",\"minute\":1e400}]",
+      "result": [],
+      "error": null
+    }
+  ]
+}

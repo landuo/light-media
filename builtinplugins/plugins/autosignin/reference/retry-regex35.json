@@ -1,0 +1,185 @@
+{
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "classification": "actual333/Python3.12 installed AST+Requests Response/chardet/lxml; HTTP/config/KV synthetic, no network/app imports; original log expected before Go comparison",
+  "cases": [
+    {
+      "pattern": "\\w+",
+      "text": "中文_１２²",
+      "matched": true
+    },
+    {
+      "pattern": "\\w+",
+      "text": "á",
+      "matched": true
+    },
+    {
+      "pattern": "\\d+",
+      "text": "²１２",
+      "matched": true
+    },
+    {
+      "pattern": "\\s+",
+      "text": "\u001c ",
+      "matched": true
+    },
+    {
+      "pattern": "\\b中\\b",
+      "text": "中",
+      "matched": true
+    },
+    {
+      "pattern": "\\B",
+      "text": "",
+      "matched": false
+    },
+    {
+      "pattern": "\\B",
+      "text": " ",
+      "matched": true
+    },
+    {
+      "pattern": "(?a)\\w+",
+      "text": "中a",
+      "matched": true
+    },
+    {
+      "pattern": "(?a:\\w+)(\\w+)",
+      "text": "a中",
+      "matched": true
+    },
+    {
+      "pattern": "(?u)\\w+",
+      "text": "中",
+      "matched": true
+    },
+    {
+      "pattern": "(?i)failure",
+      "text": "FAILURE",
+      "matched": true
+    },
+    {
+      "pattern": "(?i)[a-z]+",
+      "text": "İıſK",
+      "matched": true
+    },
+    {
+      "pattern": "(?i)k",
+      "text": "K",
+      "matched": true
+    },
+    {
+      "pattern": "(?i)i",
+      "text": "ı",
+      "matched": true
+    },
+    {
+      "pattern": "(?i)s",
+      "text": "ſ",
+      "matched": true
+    },
+    {
+      "pattern": "(?i)ß",
+      "text": "SS",
+      "matched": false
+    },
+    {
+      "pattern": "(?x) bad \\s+ result ",
+      "text": "bad result",
+      "matched": true
+    },
+    {
+      "pattern": "(?P<word>中)(?P=word)",
+      "text": "中中",
+      "matched": true
+    },
+    {
+      "pattern": "(?<=a)b",
+      "text": "ab",
+      "matched": true
+    },
+    {
+      "pattern": "(?<=a+)b",
+      "text": "aab",
+      "exception": "error",
+      "message": "look-behind requires fixed-width pattern"
+    },
+    {
+      "pattern": "a++a",
+      "text": "aaa",
+      "matched": false
+    },
+    {
+      "pattern": "(?>a+)a",
+      "text": "aaa",
+      "matched": false
+    },
+    {
+      "pattern": "a(?i)b",
+      "text": "ab",
+      "exception": "error",
+      "message": "global flags not at the start of the expression at position 1"
+    },
+    {
+      "pattern": "(?<name>a)",
+      "text": "a",
+      "exception": "error",
+      "message": "unknown extension ?<n at position 1"
+    },
+    {
+      "pattern": "\\p{L}",
+      "text": "中",
+      "exception": "error",
+      "message": "bad escape \\p at position 0"
+    },
+    {
+      "pattern": "\\Z",
+      "text": "a\n",
+      "matched": true
+    },
+    {
+      "pattern": "[\\W_]",
+      "text": "_",
+      "matched": true
+    },
+    {
+      "pattern": "[^\\W_]",
+      "text": "中",
+      "matched": true
+    },
+    {
+      "pattern": "[\\D5]",
+      "text": "5",
+      "matched": true
+    },
+    {
+      "pattern": "(?a:[^\\W_])",
+      "text": "中",
+      "matched": false
+    },
+    {
+      "pattern": "(?m)^two$",
+      "text": "one\ntwo\n",
+      "matched": true
+    },
+    {
+      "pattern": "(?s)a.b",
+      "text": "a\nb",
+      "matched": true
+    },
+    {
+      "pattern": "(a)?(?(1)b|c)",
+      "text": "c",
+      "matched": true
+    },
+    {
+      "pattern": "(?i:foo)BAR",
+      "text": "FOOBAR",
+      "matched": true
+    },
+    {
+      "pattern": "(?u)(?i)foo",
+      "text": "FOO",
+      "matched": true
+    }
+  ]
+}

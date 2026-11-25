@@ -1,0 +1,190 @@
+{
+  "classification": "fresh actual originalbase.get_page_source + RequestUtils +Requests/urllib3/chardet, rawtimeouts to ownedloopback, no app/config/productionimports ornetwork",
+  "source_image": "33354456",
+  "base_sha256": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d",
+  "requestutils_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "rows": [
+    {
+      "timeout_json": "null",
+      "effective_timeout_json": "20",
+      "result": "owned-body",
+      "error": null,
+      "physical_requests": 1,
+      "connects": 1,
+      "logs": []
+    },
+    {
+      "timeout_json": "false",
+      "effective_timeout_json": "20",
+      "result": "owned-body",
+      "error": null,
+      "physical_requests": 1,
+      "connects": 1,
+      "logs": []
+    },
+    {
+      "timeout_json": "0",
+      "effective_timeout_json": "20",
+      "result": "owned-body",
+      "error": null,
+      "physical_requests": 1,
+      "connects": 1,
+      "logs": []
+    },
+    {
+      "timeout_json": "\"\"",
+      "effective_timeout_json": "20",
+      "result": "owned-body",
+      "error": null,
+      "physical_requests": 1,
+      "connects": 1,
+      "logs": []
+    },
+    {
+      "timeout_json": "[]",
+      "effective_timeout_json": "20",
+      "result": "owned-body",
+      "error": null,
+      "physical_requests": 1,
+      "connects": 1,
+      "logs": []
+    },
+    {
+      "timeout_json": "{}",
+      "effective_timeout_json": "20",
+      "result": "owned-body",
+      "error": null,
+      "physical_requests": 1,
+      "connects": 1,
+      "logs": []
+    },
+    {
+      "timeout_json": "true",
+      "effective_timeout_json": "true",
+      "result": null,
+      "error": {
+        "class": "ValueError",
+        "message": "Timeout cannot be a boolean value. It must be an int, float or None."
+      },
+      "physical_requests": 0,
+      "connects": 0,
+      "logs": []
+    },
+    {
+      "timeout_json": "1.25",
+      "effective_timeout_json": "1.25",
+      "result": "owned-body",
+      "error": null,
+      "physical_requests": 1,
+      "connects": 1,
+      "logs": []
+    },
+    {
+      "timeout_json": "\"1.25\"",
+      "effective_timeout_json": "\"1.25\"",
+      "result": null,
+      "error": {
+        "class": "ValueError",
+        "message": "Timeout value connect was 1.25, but it must be an int, float or None."
+      },
+      "physical_requests": 0,
+      "connects": 0,
+      "logs": []
+    },
+    {
+      "timeout_json": "-1",
+      "effective_timeout_json": "-1",
+      "result": null,
+      "error": {
+        "class": "ValueError",
+        "message": "Attempted to set connect timeout to -1, but the timeout cannot be set to a value less than or equal to 0."
+      },
+      "physical_requests": 0,
+      "connects": 0,
+      "logs": []
+    },
+    {
+      "timeout_json": "-0.0",
+      "effective_timeout_json": "20",
+      "result": "owned-body",
+      "error": null,
+      "physical_requests": 1,
+      "connects": 1,
+      "logs": []
+    },
+    {
+      "timeout_json": "\" \"",
+      "effective_timeout_json": "\" \"",
+      "result": null,
+      "error": {
+        "class": "ValueError",
+        "message": "Timeout value connect was  , but it must be an int, float or None."
+      },
+      "physical_requests": 0,
+      "connects": 0,
+      "logs": []
+    },
+    {
+      "timeout_json": "NaN",
+      "effective_timeout_json": "NaN",
+      "result": null,
+      "error": {
+        "class": "ValueError",
+        "message": "Invalid value NaN (not a number)"
+      },
+      "physical_requests": 0,
+      "connects": 0,
+      "logs": []
+    },
+    {
+      "timeout_json": "Infinity",
+      "effective_timeout_json": "Infinity",
+      "result": null,
+      "error": {
+        "class": "OverflowError",
+        "message": "timestamp out of range for platform time_t"
+      },
+      "physical_requests": 0,
+      "connects": 0,
+      "logs": []
+    },
+    {
+      "timeout_json": "-Infinity",
+      "effective_timeout_json": "-Infinity",
+      "result": null,
+      "error": {
+        "class": "ValueError",
+        "message": "Attempted to set connect timeout to -inf, but the timeout cannot be set to a value less than or equal to 0."
+      },
+      "physical_requests": 0,
+      "connects": 0,
+      "logs": []
+    },
+    {
+      "timeout_json": "[1,2]",
+      "effective_timeout_json": "[1,2]",
+      "result": null,
+      "error": {
+        "class": "ValueError",
+        "message": "Timeout value connect was [1, 2], but it must be an int, float or None."
+      },
+      "physical_requests": 0,
+      "connects": 0,
+      "logs": []
+    },
+    {
+      "timeout_json": "{\"x\":1}",
+      "effective_timeout_json": "{\"x\":1}",
+      "result": null,
+      "error": {
+        "class": "ValueError",
+        "message": "Timeout value connect was {'x': 1}, but it must be an int, float or None."
+      },
+      "physical_requests": 0,
+      "connects": 0,
+      "logs": []
+    }
+  ],
+  "physical_requests": 8,
+  "connects": 8
+}

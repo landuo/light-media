@@ -1,0 +1,460 @@
+{
+  "kind": "actual installed ModuleHelper.load + Python3.12 pkgutil file discovery + ModuleManager.load_modules + module init/ServiceBase/_DownloaderBase + configuration/DownloaderHelper method AST",
+  "source_sha256": {
+    "host-reference/app/modules/__init__.py": "06cae6a5953b8dbd438affdb6a00ae1b065ba8549f3157e5253870c6f093831b",
+    "host-reference/app/modules/qbittorrent/__init__.py": "9ad7ed04eb9b99876ee91fe505af5bfbe9c2c19504c2104d0000a67fa79b4055",
+    "host-reference/app/modules/transmission/__init__.py": "def83e0be041d0b6f633a949c15aea122d15cfbc4bba4427eea59457ea4aa016",
+    "host-reference/app/core/module.py": "3d0a57719f3040e985c54aad91fef5cf7e8d72d91acb6a5faf86c2c21b370b32",
+    "host-reference/app/helper/module.py": "bc522e2b80b43e98423cfd42226a7d46f9f2108cabdc0beec0b03270e1988422",
+    "host-reference/app/helper/service.py": "fa1c4bd99c5196bb2d8170a0fd942f4386e12c5f7e230e43cb0778c22193d6b9",
+    "host-reference/app/helper/downloader.py": "932b1718c3a47f8fc848036f4fe38ba59793475c97d24f7e2065bda0310782f5",
+    "python-runtime-reference/stdlib/pkgutil.py": "44300bc77f6f52ef2ad74d26e5053309c04f49eaa91c099356eb61426cde504f"
+  },
+  "limitations": [
+    "No production package import/native constructor: constructors are synthetic no-IO objects",
+    "Config rows are legal synthetic dictionaries with a SimpleNamespace schema double; no Pydantic validation completeness claim",
+    "Import/reload of owned empty package names returns extracted source classes; actual loader selection and manager/module/service ordering remain unmodified",
+    "Installed Python3.12 pkgutil iter_modules/get_importer/_iter_file_finder_modules AST executes on local3.14 stdlib lower-level FileFinder/inspect against only owned empty .py package directories",
+    "Actual Singleton decorator is replaced by injection of already-loaded manager; singleton lifecycle behavior is outside this ordering oracle"
+  ],
+  "cases": [
+    {
+      "case": "distinct-names-config-order",
+      "config_inputs": [
+        {
+          "name": "B",
+          "type": "transmission",
+          "enabled": true,
+          "label": "tr-B",
+          "config": {
+            "marker": "tr-B"
+          }
+        },
+        {
+          "name": "A",
+          "type": "qbittorrent",
+          "enabled": true,
+          "label": "qb-A",
+          "config": {
+            "marker": "qb-A"
+          }
+        },
+        {
+          "name": "Z",
+          "type": "transmission",
+          "enabled": true,
+          "label": "tr-Z",
+          "config": {
+            "marker": "tr-Z"
+          }
+        }
+      ],
+      "pkgutil_packages": [
+        "qbittorrent",
+        "transmission"
+      ],
+      "loaded_modules": [
+        "QbittorrentModule",
+        "TransmissionModule"
+      ],
+      "form_order": [
+        "B",
+        "A",
+        "Z"
+      ],
+      "selected_config_labels": {
+        "B": "tr-B",
+        "A": "qb-A",
+        "Z": "tr-Z"
+      },
+      "runtime_instances": [
+        {
+          "module": "QbittorrentModule",
+          "name": "A",
+          "runtime_class": "Qbittorrent",
+          "marker": "qb-A"
+        },
+        {
+          "module": "TransmissionModule",
+          "name": "B",
+          "runtime_class": "Transmission",
+          "marker": "tr-B"
+        },
+        {
+          "module": "TransmissionModule",
+          "name": "Z",
+          "runtime_class": "Transmission",
+          "marker": "tr-Z"
+        }
+      ],
+      "get_service": {
+        "B": {
+          "metadata_kind": "transmission",
+          "metadata_label": "tr-B",
+          "runtime_class": "Transmission",
+          "runtime_marker": "tr-B",
+          "is_qb": false,
+          "is_tr": true
+        },
+        "A": {
+          "metadata_kind": "qbittorrent",
+          "metadata_label": "qb-A",
+          "runtime_class": "Qbittorrent",
+          "runtime_marker": "qb-A",
+          "is_qb": true,
+          "is_tr": false
+        },
+        "Z": {
+          "metadata_kind": "transmission",
+          "metadata_label": "tr-Z",
+          "runtime_class": "Transmission",
+          "runtime_marker": "tr-Z",
+          "is_qb": false,
+          "is_tr": true
+        }
+      }
+    },
+    {
+      "case": "same-kind-last-value-first-slot",
+      "config_inputs": [
+        {
+          "name": "B",
+          "type": "qbittorrent",
+          "enabled": true,
+          "label": "qb-B-first",
+          "config": {
+            "marker": "qb-B-first"
+          }
+        },
+        {
+          "name": "A",
+          "type": "qbittorrent",
+          "enabled": true,
+          "label": "qb-A",
+          "config": {
+            "marker": "qb-A"
+          }
+        },
+        {
+          "name": "B",
+          "type": "qbittorrent",
+          "enabled": true,
+          "label": "qb-B-last",
+          "config": {
+            "marker": "qb-B-last"
+          }
+        }
+      ],
+      "pkgutil_packages": [
+        "qbittorrent",
+        "transmission"
+      ],
+      "loaded_modules": [
+        "QbittorrentModule",
+        "TransmissionModule"
+      ],
+      "form_order": [
+        "B",
+        "A"
+      ],
+      "selected_config_labels": {
+        "B": "qb-B-last",
+        "A": "qb-A"
+      },
+      "runtime_instances": [
+        {
+          "module": "QbittorrentModule",
+          "name": "B",
+          "runtime_class": "Qbittorrent",
+          "marker": "qb-B-last"
+        },
+        {
+          "module": "QbittorrentModule",
+          "name": "A",
+          "runtime_class": "Qbittorrent",
+          "marker": "qb-A"
+        }
+      ],
+      "get_service": {
+        "B": {
+          "metadata_kind": "qbittorrent",
+          "metadata_label": "qb-B-last",
+          "runtime_class": "Qbittorrent",
+          "runtime_marker": "qb-B-last",
+          "is_qb": true,
+          "is_tr": false
+        },
+        "A": {
+          "metadata_kind": "qbittorrent",
+          "metadata_label": "qb-A",
+          "runtime_class": "Qbittorrent",
+          "runtime_marker": "qb-A",
+          "is_qb": true,
+          "is_tr": false
+        }
+      }
+    },
+    {
+      "case": "cross-kind-TR-metadata-QB-runtime",
+      "config_inputs": [
+        {
+          "name": "Mixed",
+          "type": "qbittorrent",
+          "enabled": true,
+          "label": "qb-first",
+          "config": {
+            "marker": "qb-first"
+          }
+        },
+        {
+          "name": "Other",
+          "type": "transmission",
+          "enabled": true,
+          "label": "tr-other",
+          "config": {
+            "marker": "tr-other"
+          }
+        },
+        {
+          "name": "Mixed",
+          "type": "transmission",
+          "enabled": true,
+          "label": "tr-last",
+          "config": {
+            "marker": "tr-last"
+          }
+        }
+      ],
+      "pkgutil_packages": [
+        "qbittorrent",
+        "transmission"
+      ],
+      "loaded_modules": [
+        "QbittorrentModule",
+        "TransmissionModule"
+      ],
+      "form_order": [
+        "Mixed",
+        "Other"
+      ],
+      "selected_config_labels": {
+        "Mixed": "tr-last",
+        "Other": "tr-other"
+      },
+      "runtime_instances": [
+        {
+          "module": "QbittorrentModule",
+          "name": "Mixed",
+          "runtime_class": "Qbittorrent",
+          "marker": "qb-first"
+        },
+        {
+          "module": "TransmissionModule",
+          "name": "Other",
+          "runtime_class": "Transmission",
+          "marker": "tr-other"
+        },
+        {
+          "module": "TransmissionModule",
+          "name": "Mixed",
+          "runtime_class": "Transmission",
+          "marker": "tr-last"
+        }
+      ],
+      "get_service": {
+        "Mixed": {
+          "metadata_kind": "transmission",
+          "metadata_label": "tr-last",
+          "runtime_class": "Qbittorrent",
+          "runtime_marker": "qb-first",
+          "is_qb": false,
+          "is_tr": true
+        },
+        "Other": {
+          "metadata_kind": "transmission",
+          "metadata_label": "tr-other",
+          "runtime_class": "Transmission",
+          "runtime_marker": "tr-other",
+          "is_qb": false,
+          "is_tr": true
+        }
+      }
+    },
+    {
+      "case": "cross-kind-QB-metadata-QB-runtime",
+      "config_inputs": [
+        {
+          "name": "Mixed",
+          "type": "transmission",
+          "enabled": true,
+          "label": "tr-first",
+          "config": {
+            "marker": "tr-first"
+          }
+        },
+        {
+          "name": "Mixed",
+          "type": "qbittorrent",
+          "enabled": true,
+          "label": "qb-last",
+          "config": {
+            "marker": "qb-last"
+          }
+        }
+      ],
+      "pkgutil_packages": [
+        "qbittorrent",
+        "transmission"
+      ],
+      "loaded_modules": [
+        "QbittorrentModule",
+        "TransmissionModule"
+      ],
+      "form_order": [
+        "Mixed"
+      ],
+      "selected_config_labels": {
+        "Mixed": "qb-last"
+      },
+      "runtime_instances": [
+        {
+          "module": "QbittorrentModule",
+          "name": "Mixed",
+          "runtime_class": "Qbittorrent",
+          "marker": "qb-last"
+        },
+        {
+          "module": "TransmissionModule",
+          "name": "Mixed",
+          "runtime_class": "Transmission",
+          "marker": "tr-first"
+        }
+      ],
+      "get_service": {
+        "Mixed": {
+          "metadata_kind": "qbittorrent",
+          "metadata_label": "qb-last",
+          "runtime_class": "Qbittorrent",
+          "runtime_marker": "qb-last",
+          "is_qb": true,
+          "is_tr": false
+        }
+      }
+    },
+    {
+      "case": "disabled-does-not-overwrite",
+      "config_inputs": [
+        {
+          "name": "B",
+          "type": "qbittorrent",
+          "enabled": true,
+          "label": "qb-enabled",
+          "config": {
+            "marker": "qb-enabled"
+          }
+        },
+        {
+          "name": "B",
+          "type": "transmission",
+          "enabled": false,
+          "label": "tr-disabled",
+          "config": {
+            "marker": "tr-disabled"
+          }
+        },
+        {
+          "name": "A",
+          "type": "transmission",
+          "enabled": true,
+          "label": "tr-A",
+          "config": {
+            "marker": "tr-A"
+          }
+        }
+      ],
+      "pkgutil_packages": [
+        "qbittorrent",
+        "transmission"
+      ],
+      "loaded_modules": [
+        "QbittorrentModule",
+        "TransmissionModule"
+      ],
+      "form_order": [
+        "B",
+        "A"
+      ],
+      "selected_config_labels": {
+        "B": "qb-enabled",
+        "A": "tr-A"
+      },
+      "runtime_instances": [
+        {
+          "module": "QbittorrentModule",
+          "name": "B",
+          "runtime_class": "Qbittorrent",
+          "marker": "qb-enabled"
+        },
+        {
+          "module": "TransmissionModule",
+          "name": "A",
+          "runtime_class": "Transmission",
+          "marker": "tr-A"
+        }
+      ],
+      "get_service": {
+        "B": {
+          "metadata_kind": "qbittorrent",
+          "metadata_label": "qb-enabled",
+          "runtime_class": "Qbittorrent",
+          "runtime_marker": "qb-enabled",
+          "is_qb": true,
+          "is_tr": false
+        },
+        "A": {
+          "metadata_kind": "transmission",
+          "metadata_label": "tr-A",
+          "runtime_class": "Transmission",
+          "runtime_marker": "tr-A",
+          "is_qb": false,
+          "is_tr": true
+        }
+      }
+    },
+    {
+      "case": "all-disabled",
+      "config_inputs": [
+        {
+          "name": "B",
+          "type": "qbittorrent",
+          "enabled": false,
+          "label": "qb-disabled",
+          "config": {
+            "marker": "qb-disabled"
+          }
+        },
+        {
+          "name": "A",
+          "type": "transmission",
+          "enabled": false,
+          "label": "tr-disabled",
+          "config": {
+            "marker": "tr-disabled"
+          }
+        }
+      ],
+      "pkgutil_packages": [
+        "qbittorrent",
+        "transmission"
+      ],
+      "loaded_modules": [
+        "QbittorrentModule",
+        "TransmissionModule"
+      ],
+      "form_order": [],
+      "selected_config_labels": {},
+      "runtime_instances": [],
+      "get_service": {}
+    }
+  ]
+}

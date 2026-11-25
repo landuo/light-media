@@ -1,0 +1,340 @@
+{
+  "classification": "Root-approved private same-version candidate; NOT final or independent unused-consumer/host/main acceptance",
+  "module": "github.com/dlclark/regexp2/v2",
+  "version": "v2.9.0",
+  "original_go_requirement": "1.25",
+  "license_files": [
+    "LICENSE",
+    "ATTRIB"
+  ],
+  "original_go_mod": {
+    "original_path": "/Users/accidia/go/pkg/mod/github.com/dlclark/regexp2/v2@v2.9.0/go.mod",
+    "sha256": "369b6fa60dfc57254cc1baee2becffe594ec1b4ec4f63f46a3c714fb1e2eb107",
+    "bytes": 46
+  },
+  "import_relocation": {
+    "from": "github.com/dlclark/regexp2/v2",
+    "to": "github.com/landuo/light-media-plugins/plugins/autosignin/regexengine"
+  },
+  "source_canonical_ascii_behavior": "Original Python3.12 actual re.search fixtures regex-backref-source-r1 and regex-scope-source-r1; ASCII CI references fold only ASCII A-Z, not Unicode KELVIN SIGN or Greek capital sigma.",
+  "changes_beyond_imports": [
+    "syntax/code.go",
+    "syntax/parser.go",
+    "syntax/writer.go",
+    "runner.go"
+  ],
+  "patch_sha256": "9ec83393ef38fe10ff060a81c19f6a9aef00a2de1e135d7bc4cbfe9663004f80",
+  "patch_scope": [
+    "syntax/parser: add private scoped a option bit",
+    "syntax/code: Ref ASCII folding instruction modifier",
+    "syntax/writer: carry option only onto Ref opcode",
+    "runner: mask modifier and fold ASCII A-Z for those CI Ref operations; Unicode/default behavior stays existing"
+  ],
+  "files": [
+    {
+      "path": "syntax/charclass.go",
+      "kind": "Go production",
+      "upstream_sha256": "f1c6b1f27348c563d1205b7cfb3609c1af76267cddd171ff7fcfab8aafcb73de",
+      "relocated_sha256": "f1c6b1f27348c563d1205b7cfb3609c1af76267cddd171ff7fcfab8aafcb73de",
+      "candidate_sha256": "f1c6b1f27348c563d1205b7cfb3609c1af76267cddd171ff7fcfab8aafcb73de",
+      "bytes": 45208,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "syntax/code.go",
+      "kind": "Go production",
+      "upstream_sha256": "3a48766ab242430edc4d3265be74965df80f083468630120e35c11c20bc285cb",
+      "relocated_sha256": "3a48766ab242430edc4d3265be74965df80f083468630120e35c11c20bc285cb",
+      "candidate_sha256": "fc7b11ab0dd1a22786111896db9eac6d165c40afaed9a7683a061f6226922d8c",
+      "bytes": 13559,
+      "beyond_import_relocation": true
+    },
+    {
+      "path": "syntax/ecma_unicode.go",
+      "kind": "Go production",
+      "upstream_sha256": "0f738a046c14854e91a7df5c8ba5e2a5c60c0cbd5995b3ba13014a120235b025",
+      "relocated_sha256": "0f738a046c14854e91a7df5c8ba5e2a5c60c0cbd5995b3ba13014a120235b025",
+      "candidate_sha256": "0f738a046c14854e91a7df5c8ba5e2a5c60c0cbd5995b3ba13014a120235b025",
+      "bytes": 7209,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "syntax/ecma_unicode_tables.go",
+      "kind": "Go production",
+      "upstream_sha256": "1160066538f80b316b6a830ec1621f7e84f45771fe0b8355ca64b8ae3d0d97e1",
+      "relocated_sha256": "1160066538f80b316b6a830ec1621f7e84f45771fe0b8355ca64b8ae3d0d97e1",
+      "candidate_sha256": "1160066538f80b316b6a830ec1621f7e84f45771fe0b8355ca64b8ae3d0d97e1",
+      "bytes": 246041,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "syntax/escape.go",
+      "kind": "Go production",
+      "upstream_sha256": "4d27153f99f650363ff69c556222c4234980d34f41dc62894638e1bf050da833",
+      "relocated_sha256": "4d27153f99f650363ff69c556222c4234980d34f41dc62894638e1bf050da833",
+      "candidate_sha256": "4d27153f99f650363ff69c556222c4234980d34f41dc62894638e1bf050da833",
+      "bytes": 1762,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "syntax/grapheme.go",
+      "kind": "Go production",
+      "upstream_sha256": "27ce8b1a5641a50f489743066a37979a1f793def36892c607796e383a7393320",
+      "relocated_sha256": "27ce8b1a5641a50f489743066a37979a1f793def36892c607796e383a7393320",
+      "candidate_sha256": "27ce8b1a5641a50f489743066a37979a1f793def36892c607796e383a7393320",
+      "bytes": 7999,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "syntax/optimizations.go",
+      "kind": "Go production",
+      "upstream_sha256": "16cd8cc7f0028a9a633c951f93454e934d896f2d5393327f3783a049cbd8e08b",
+      "relocated_sha256": "16cd8cc7f0028a9a633c951f93454e934d896f2d5393327f3783a049cbd8e08b",
+      "candidate_sha256": "16cd8cc7f0028a9a633c951f93454e934d896f2d5393327f3783a049cbd8e08b",
+      "bytes": 25001,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "syntax/parser.go",
+      "kind": "Go production",
+      "upstream_sha256": "a2c5015321f8e5e07da1a3ed41cabba42e42133768212dfbbe0d5ebe08889892",
+      "relocated_sha256": "a2c5015321f8e5e07da1a3ed41cabba42e42133768212dfbbe0d5ebe08889892",
+      "candidate_sha256": "a7f355d81ba9381b9ec836f9c27d16246d58fa4cfae71c045f243e8e80b490eb",
+      "bytes": 69424,
+      "beyond_import_relocation": true
+    },
+    {
+      "path": "syntax/prefix.go",
+      "kind": "Go production",
+      "upstream_sha256": "9a402ff9d8e41d7093f6739fedecea113213a093e7186c6d2c40f631142eb0eb",
+      "relocated_sha256": "9a402ff9d8e41d7093f6739fedecea113213a093e7186c6d2c40f631142eb0eb",
+      "candidate_sha256": "9a402ff9d8e41d7093f6739fedecea113213a093e7186c6d2c40f631142eb0eb",
+      "bytes": 21699,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "syntax/prefixanalyzer.go",
+      "kind": "Go production",
+      "upstream_sha256": "5b5be57ea1a9f026c963aac24eaf8406ace41d864023f1c9c6a8035757773787",
+      "relocated_sha256": "5b5be57ea1a9f026c963aac24eaf8406ace41d864023f1c9c6a8035757773787",
+      "candidate_sha256": "5b5be57ea1a9f026c963aac24eaf8406ace41d864023f1c9c6a8035757773787",
+      "bytes": 51658,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "syntax/replacerdata.go",
+      "kind": "Go production",
+      "upstream_sha256": "17f81d0f3bf7631d107c2c33c1452d9580cb8200a7784c06f1fe946ee9bac1ad",
+      "relocated_sha256": "17f81d0f3bf7631d107c2c33c1452d9580cb8200a7784c06f1fe946ee9bac1ad",
+      "candidate_sha256": "17f81d0f3bf7631d107c2c33c1452d9580cb8200a7784c06f1fe946ee9bac1ad",
+      "bytes": 3372,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "syntax/tree.go",
+      "kind": "Go production",
+      "upstream_sha256": "8fed6918321435d4d88c2d50ecd3f34ed9897a47392c5e85f75d69a3d10fe975",
+      "relocated_sha256": "8fed6918321435d4d88c2d50ecd3f34ed9897a47392c5e85f75d69a3d10fe975",
+      "candidate_sha256": "8fed6918321435d4d88c2d50ecd3f34ed9897a47392c5e85f75d69a3d10fe975",
+      "bytes": 87169,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "syntax/unicode_alias_tables.go",
+      "kind": "Go production",
+      "upstream_sha256": "ffff1d9b33599ae1421b45de2e04c03befd97b77d7309d94aa6b6f7a1966c9e7",
+      "relocated_sha256": "ffff1d9b33599ae1421b45de2e04c03befd97b77d7309d94aa6b6f7a1966c9e7",
+      "candidate_sha256": "ffff1d9b33599ae1421b45de2e04c03befd97b77d7309d94aa6b6f7a1966c9e7",
+      "bytes": 252048,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "syntax/writer.go",
+      "kind": "Go production",
+      "upstream_sha256": "793c991a51565c3269af0fd31b03a9d702d92e5195af08a23cb6a8f5f3d86169",
+      "relocated_sha256": "793c991a51565c3269af0fd31b03a9d702d92e5195af08a23cb6a8f5f3d86169",
+      "candidate_sha256": "182a14a4cc8f2b21e55d0cabd149596fed065e12e927c033a43f574f84f42073",
+      "bytes": 17648,
+      "beyond_import_relocation": true
+    },
+    {
+      "path": "helpers/ascii.go",
+      "kind": "Go production",
+      "upstream_sha256": "1bcf885a4ea3f46e6c3d3ae98f77ece3be69ad1789b58b69b410151ab95af069",
+      "relocated_sha256": "1bcf885a4ea3f46e6c3d3ae98f77ece3be69ad1789b58b69b410151ab95af069",
+      "candidate_sha256": "1bcf885a4ea3f46e6c3d3ae98f77ece3be69ad1789b58b69b410151ab95af069",
+      "bytes": 1661,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "helpers/indexof.go",
+      "kind": "Go production",
+      "upstream_sha256": "5288b18c6ae0746ea795baaeb1db5f40b34c005fb2b7e748ca95ead8f226e08b",
+      "relocated_sha256": "c152c4b893d67d040a3e0a8c951b4b8fe5325a788e3db174db448741400c1934",
+      "candidate_sha256": "c152c4b893d67d040a3e0a8c951b4b8fe5325a788e3db174db448741400c1934",
+      "bytes": 9267,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "helpers/math.go",
+      "kind": "Go production",
+      "upstream_sha256": "e9c5a8e42c4459b28255a568c97ef87f939e517f7b8c6efba2898db09e205de8",
+      "relocated_sha256": "e9c5a8e42c4459b28255a568c97ef87f939e517f7b8c6efba2898db09e205de8",
+      "candidate_sha256": "e9c5a8e42c4459b28255a568c97ef87f939e517f7b8c6efba2898db09e205de8",
+      "bytes": 144,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "helpers/runes.go",
+      "kind": "Go production",
+      "upstream_sha256": "aaeb2fe52301bb89fc8a8566015d115dc3436f467fb6d6067dce5b753f05ad59",
+      "relocated_sha256": "aaeb2fe52301bb89fc8a8566015d115dc3436f467fb6d6067dce5b753f05ad59",
+      "candidate_sha256": "aaeb2fe52301bb89fc8a8566015d115dc3436f467fb6d6067dce5b753f05ad59",
+      "bytes": 1741,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "helpers/searchvalues.go",
+      "kind": "Go production",
+      "upstream_sha256": "37e5c4f9cf2154e5571186b06545e8ec25e39646e225db7650fbccee31f28a77",
+      "relocated_sha256": "37e5c4f9cf2154e5571186b06545e8ec25e39646e225db7650fbccee31f28a77",
+      "candidate_sha256": "37e5c4f9cf2154e5571186b06545e8ec25e39646e225db7650fbccee31f28a77",
+      "bytes": 4583,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "bufferpool.go",
+      "kind": "Go production",
+      "upstream_sha256": "d6449a727bc5729a5b2b49a3f40a08e0bea3c0ae15ef86d8195b315c168cb2a0",
+      "relocated_sha256": "d6449a727bc5729a5b2b49a3f40a08e0bea3c0ae15ef86d8195b315c168cb2a0",
+      "candidate_sha256": "d6449a727bc5729a5b2b49a3f40a08e0bea3c0ae15ef86d8195b315c168cb2a0",
+      "bytes": 1697,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "decode.go",
+      "kind": "Go production",
+      "upstream_sha256": "893d30e32145de0cba93bad4f4b595613178063d21bbf085b9c9e76a166171c8",
+      "relocated_sha256": "63e17de57964589b82cad6a425258a23243566b706b328a0ba9cf590ed7de157",
+      "candidate_sha256": "63e17de57964589b82cad6a425258a23243566b706b328a0ba9cf590ed7de157",
+      "bytes": 4333,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "fastclock.go",
+      "kind": "Go production",
+      "upstream_sha256": "0a70861485edf19e4fea9c46c9af8b41c5be11792a58fe661cc8abbc2bd26494",
+      "relocated_sha256": "0a70861485edf19e4fea9c46c9af8b41c5be11792a58fe661cc8abbc2bd26494",
+      "candidate_sha256": "0a70861485edf19e4fea9c46c9af8b41c5be11792a58fe661cc8abbc2bd26494",
+      "bytes": 4221,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "match.go",
+      "kind": "Go production",
+      "upstream_sha256": "294f206f706d69c1ee39425831d251687ca8c7a012a46000fc8fc527b14f3aa3",
+      "relocated_sha256": "294f206f706d69c1ee39425831d251687ca8c7a012a46000fc8fc527b14f3aa3",
+      "candidate_sha256": "294f206f706d69c1ee39425831d251687ca8c7a012a46000fc8fc527b14f3aa3",
+      "bytes": 13772,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "options.go",
+      "kind": "Go production",
+      "upstream_sha256": "e335a4c17e592dd5a7c4c419227fe7578c5f0f6ac0401f4a2879ffcfa8ec4884",
+      "relocated_sha256": "e335a4c17e592dd5a7c4c419227fe7578c5f0f6ac0401f4a2879ffcfa8ec4884",
+      "candidate_sha256": "e335a4c17e592dd5a7c4c419227fe7578c5f0f6ac0401f4a2879ffcfa8ec4884",
+      "bytes": 6161,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "prefixsearch.go",
+      "kind": "Go production",
+      "upstream_sha256": "b448825e9b318c95f35b4043e0600c278a53e70cbcf7680d37f5281a6f7eddbd",
+      "relocated_sha256": "b448825e9b318c95f35b4043e0600c278a53e70cbcf7680d37f5281a6f7eddbd",
+      "candidate_sha256": "b448825e9b318c95f35b4043e0600c278a53e70cbcf7680d37f5281a6f7eddbd",
+      "bytes": 3793,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "regexp.go",
+      "kind": "Go production",
+      "upstream_sha256": "0259e2960da280459cf55c3ccef3fc83cf3aea2ac3d39157ccb1a3781cdf7360",
+      "relocated_sha256": "1f5471fdaf252da544c97e820f73dacb226d452a88ea24c87cab15b4810d58d5",
+      "candidate_sha256": "1f5471fdaf252da544c97e820f73dacb226d452a88ea24c87cab15b4810d58d5",
+      "bytes": 22180,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "regexp_codegen.go",
+      "kind": "Go production",
+      "upstream_sha256": "1ed18e885ec05f1525d3e91af12fbf9d409f7843262ed68a87f94248ea95c70f",
+      "relocated_sha256": "1ed18e885ec05f1525d3e91af12fbf9d409f7843262ed68a87f94248ea95c70f",
+      "candidate_sha256": "1ed18e885ec05f1525d3e91af12fbf9d409f7843262ed68a87f94248ea95c70f",
+      "bytes": 2909,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "replace.go",
+      "kind": "Go production",
+      "upstream_sha256": "3d43d29ecdb68b21a75a8af187d5365849872cc6a57f0294b4c3cb2df93d6b3e",
+      "relocated_sha256": "58d1f2b951f03d9c5458dbf3b5117bc30798152a4d3c7768e3f87ebd9e61c640",
+      "candidate_sha256": "58d1f2b951f03d9c5458dbf3b5117bc30798152a4d3c7768e3f87ebd9e61c640",
+      "bytes": 9421,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "runner.go",
+      "kind": "Go production",
+      "upstream_sha256": "02a9e2355af1ea53e2dbaf186c01970cb81def8ec72fb9fcfd2fcb9f7895e158",
+      "relocated_sha256": "b7310629ad78cbb53073288020211519218a2df90ff07c58bde4c34090ce7063",
+      "candidate_sha256": "5f0553719978a2e1991e0824003b928e8b2af0787410929da957aeddf3d21e6f",
+      "bytes": 73289,
+      "beyond_import_relocation": true
+    },
+    {
+      "path": "split.go",
+      "kind": "Go production",
+      "upstream_sha256": "e70a95e179d7413f21c954124a121adf893984b7d7859426043afef401d7adf6",
+      "relocated_sha256": "e70a95e179d7413f21c954124a121adf893984b7d7859426043afef401d7adf6",
+      "candidate_sha256": "e70a95e179d7413f21c954124a121adf893984b7d7859426043afef401d7adf6",
+      "bytes": 2836,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "stringprefixfilter.go",
+      "kind": "Go production",
+      "upstream_sha256": "1feb55bf6e22c1664cb4dc0b8254f616e755435251596186750425b259b6d6b6",
+      "relocated_sha256": "bef48947a55522c1739f47b7e60d754fed241bf2c996dbd156394907512e5bc0",
+      "candidate_sha256": "bef48947a55522c1739f47b7e60d754fed241bf2c996dbd156394907512e5bc0",
+      "bytes": 14630,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "LICENSE",
+      "kind": "license/attribution",
+      "upstream_sha256": "9be5d04bb4d706914d5bf943710da4afeb42048f7c529902fb57c82762a991a9",
+      "relocated_sha256": "9be5d04bb4d706914d5bf943710da4afeb42048f7c529902fb57c82762a991a9",
+      "candidate_sha256": "9be5d04bb4d706914d5bf943710da4afeb42048f7c529902fb57c82762a991a9",
+      "bytes": 1072,
+      "beyond_import_relocation": false
+    },
+    {
+      "path": "ATTRIB",
+      "kind": "license/attribution",
+      "upstream_sha256": "8db174fc98abc02f154c20ffdacdfbd37528ef25e0f098e20a2c21defd76329a",
+      "relocated_sha256": "8db174fc98abc02f154c20ffdacdfbd37528ef25e0f098e20a2c21defd76329a",
+      "candidate_sha256": "8db174fc98abc02f154c20ffdacdfbd37528ef25e0f098e20a2c21defd76329a",
+      "bytes": 6955,
+      "beyond_import_relocation": false
+    }
+  ],
+  "no_module_cache_mutation": true,
+  "shared_sdk_and_root_modules_changed": false,
+  "remaining_gates": [
+    "source controls/race/vet/Linux final candidate",
+    "independent source/target review",
+    "Root independent unused-consumer dependency/license integration gate",
+    "integrated SDK/App/native/main acceptance"
+  ]
+}

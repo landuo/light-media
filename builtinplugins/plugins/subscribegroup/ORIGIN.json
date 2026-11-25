@@ -1,0 +1,39 @@
+{
+  "installed_version": "2.8.7",
+  "source": {
+    "author": "thsrite",
+    "license": "GPL-3.0",
+    "plugin_sha256": "06870f20e39237e4a69c9615ce005411feaa5e1a97cad50fd3b7b0645bead383",
+    "source_snapshot": "work/migration-20261105/source-snapshot/subscribegroup/__init__.py",
+    "moviepilot": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+    "prior_go_form": "light-media@8b00a593:internal/plugins/subscribegroup/form.json",
+    "prior_go_history_view": "light-media@62d8f3ac:internal/plugins/subscribegroup/page_raw.go",
+    "prior_go_rules": "light-media@e8eabd81:internal/plugins/subscribegroup/group.go"
+  },
+  "source_locations": {
+    "identity": "__init__.py:15-33",
+    "init_plugin_and_config": "__init__.py:47-139",
+    "subscribe_notice": "__init__.py:141-227",
+    "download_notice": "__init__.py:229-359",
+    "download_parsers": "__init__.py:361-402",
+    "get_state": "__init__.py:404-405",
+    "get_command_and_api": "__init__.py:407-412",
+    "get_form": "__init__.py:414-656",
+    "get_page": "__init__.py:658-768",
+    "stop_service": "__init__.py:770-774"
+  },
+  "targets": {
+    "form.json": "e130d69a918fa7a847e17d50e6fb66c1dbe3c652165a19ba2d9ddb4ba69fb731"
+  },
+  "adaptations": [
+    "Read the fixed installed get_form return as a Python literal to reproduce the native Vuetify tree and default model as a two-element SDK result. Preserve the original item key spelling vale. The two values equal the prior Go conf and model projection.",
+    "Read the current instance's history through the Base data capability. Render the existing raw rows as the source native table, including the original single-object fallback, falsey empty state, stable descending time order and null cells.",
+    "Reuse the previous Go history display decoder for source-generated json.dumps history and legacy UTF-8 text. Named Unicode escapes in hand-written legacy rows and isolated surrogate escapes retain the prior Go transport limitations.",
+    "Use standard subscribe.added and download.added events. The worker preserves additive rules in the same live object, exact active site name matching, source site IDs in visible history and separate clear flags.",
+    "Use stable host site/subscription IDs at the SDK boundary. Source-shaped history retains original site ID types, ordered json.dumps fields, exact filters and local time.",
+    "Patch a subscription and append its history and handled entry atomically with the observed revision. The native host retains frozen Intents at the exact prior revision, preserving earlier light-media behavior.",
+    "Download history selects the newest actual accepted native or Intent fact and uses the retained source season; no provider or cloud-drive storage is introduced."
+  ],
+  "scope": "Standalone Go migration of the fixed installed plugin. Host event, data and package acceptance are tracked in the migration ledger."
+}

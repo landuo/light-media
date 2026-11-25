@@ -1,0 +1,60 @@
+{
+  "classification": "actual333/Python3.12 stdlib re.search only; JSON encoded test strings; no app/network; source expected before target",
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "cases": [
+    {
+      "pattern": "(?ai:(?u:(σ)\\1))",
+      "text": "σΣ",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?ui:(?a:(σ)\\1))",
+      "text": "σΣ",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "(?ai:(?u:(k)\\1))",
+      "text": "kK",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?ui:(?a:(k)\\1))",
+      "text": "kK",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "(?ai)(k)(?u:\\1)",
+      "text": "kK",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?ui)(σ)(?a:\\1)",
+      "text": "σΣ",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "(?a)(?u)k",
+      "text": "k",
+      "matched": null,
+      "error": {
+        "class": "ValueError",
+        "message": "ASCII and UNICODE flags are incompatible"
+      }
+    },
+    {
+      "pattern": "(?u)(?a)k",
+      "text": "k",
+      "matched": null,
+      "error": {
+        "class": "ValueError",
+        "message": "ASCII and UNICODE flags are incompatible"
+      }
+    }
+  ]
+}

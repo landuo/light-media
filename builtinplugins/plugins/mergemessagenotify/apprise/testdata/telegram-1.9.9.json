@@ -1,0 +1,2042 @@
+{
+  "source": {
+    "apprise_version": "1.9.9",
+    "telegram_sha256": "f5d0a5a8fc1214b529604b6787d57695d6498980dc77728cbd255113d8e836d4",
+    "bundled_image_sha256": "079aff3b877d3070a64966707dba908194a9f997ad4dd8814b029c3131756850",
+    "python": "3.14.4",
+    "requests": "2.34.2",
+    "network": "blocked; synthetic Requests replies and clock; split case executes source sequential mode"
+  },
+  "boundary": "owned-telegram-multipart",
+  "cases": [
+    {
+      "name": "html-default",
+      "url": "tgram://bot1234:Owned_Token/12",
+      "title": " 标题 ",
+      "body": " <h2>Head</h2><p>Body&nbsp;&emsp;<strong>Bold</strong><em>Italic</em></p>\n<div><ul><li>one</li></ul></div><!-- comment --><span>&quot;Q&apos;&amp;</span>  ",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"HTML\", \"text\": \"<b>\\u6807\\u9898</b>\\r\\n<b>Head</b>Body    <b>Bold</b><i>Italic</i>\\r\\n-one\\r\\n\\\"Q'&amp;\", \"chat_id\": 12}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ]
+    },
+    {
+      "name": "sorted-topics-and-url-options",
+      "url": "tgram://old:pass@1234%3A%3AOwned_Token/%40Team_Ab:9/001/-44?to=%40Chat,22%253A8&thread=13&silent=yes&preview=yes&verify=no&cto=2.5&rto=11",
+      "title": "T",
+      "body": "B",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        }
+      ],
+      "waits": [
+        0.001,
+        0.001,
+        0.001,
+        0.001
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": true, \"disable_web_page_preview\": false, \"parse_mode\": \"HTML\", \"text\": \"<b>T</b>\\r\\nB\", \"chat_id\": -44, \"message_thread_id\": 13}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            11.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": true, \"disable_web_page_preview\": false, \"parse_mode\": \"HTML\", \"text\": \"<b>T</b>\\r\\nB\", \"chat_id\": 1, \"message_thread_id\": 13}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            11.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": true, \"disable_web_page_preview\": false, \"parse_mode\": \"HTML\", \"text\": \"<b>T</b>\\r\\nB\", \"chat_id\": 22, \"message_thread_id\": 8}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            11.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": true, \"disable_web_page_preview\": false, \"parse_mode\": \"HTML\", \"text\": \"<b>T</b>\\r\\nB\", \"chat_id\": \"@Chat\", \"message_thread_id\": 13}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            11.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": true, \"disable_web_page_preview\": false, \"parse_mode\": \"HTML\", \"text\": \"<b>T</b>\\r\\nB\", \"chat_id\": \"@Team_Ab\", \"message_thread_id\": 9}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            11.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ]
+    },
+    {
+      "name": "markdown-v2-no-escape",
+      "url": "tgram://bot1234:Owned_Token/12?format=markdown&mdv=v2",
+      "title": " # Heading ",
+      "body": "! **bold** [x] ~ _z. ",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"MarkdownV2\", \"text\": \"# Heading\\r\\n! **bold** [x] ~ _z.\", \"chat_id\": 12}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ]
+    },
+    {
+      "name": "markdown-v1-default",
+      "url": "tgram://bot1234:Owned_Token/12?format=markdown",
+      "title": "T",
+      "body": "B # End",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"MARKDOWN\", \"text\": \"T\\r\\nB # End\", \"chat_id\": 12}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ]
+    },
+    {
+      "name": "text-format-html-send",
+      "url": "tgram://bot1234:Owned_Token/12?format=text",
+      "title": " Title ",
+      "body": "<strong>Still mapped</strong>",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"HTML\", \"text\": \"Title\\r\\n<b>Still mapped</b>\", \"chat_id\": 12}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ]
+    },
+    {
+      "name": "owner-lookup-memory-topic",
+      "url": "tgram://bot1234:Owned_Token?topic=5",
+      "title": "T",
+      "body": "B",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200,
+          "content": {
+            "ok": true,
+            "result": [
+              {
+                "channel_post": {}
+              },
+              {
+                "message": {
+                  "from": {
+                    "id": 789,
+                    "first_name": "Owned"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        }
+      ],
+      "waits": [
+        0.001
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/getUpdates",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"HTML\", \"text\": \"<b>T</b>\\r\\nB\", \"chat_id\": \"789\", \"message_thread_id\": 5}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"HTML\", \"text\": \"<b>T</b>\\r\\nB\", \"chat_id\": \"789\", \"message_thread_id\": 5}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true,
+        true
+      ]
+    },
+    {
+      "name": "owner-http-rejected",
+      "url": "tgram://bot1234:Owned_Token",
+      "title": "T",
+      "body": "B",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 401,
+          "content": {
+            "description": "bad"
+          }
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/getUpdates",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ]
+    },
+    {
+      "name": "owner-invalid-json",
+      "url": "tgram://bot1234:Owned_Token",
+      "title": "T",
+      "body": "B",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200,
+          "content": "invalid JSON"
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/getUpdates",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ]
+    },
+    {
+      "name": "owner-first-zero-ends-search",
+      "url": "tgram://bot1234:Owned_Token",
+      "title": "T",
+      "body": "B",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200,
+          "content": {
+            "ok": true,
+            "result": [
+              {
+                "message": {
+                  "from": {
+                    "id": 0
+                  }
+                }
+              },
+              {
+                "message": {
+                  "from": {
+                    "id": 789
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/getUpdates",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ]
+    },
+    {
+      "name": "owner-detection-disabled",
+      "url": "tgram://bot1234:Owned_Token?detect=no",
+      "title": "T",
+      "body": "B",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": true,
+      "results": [
+        false
+      ]
+    },
+    {
+      "name": "invalid-target-disables-owner",
+      "url": "tgram://bot1234:Owned_Token/bad!id?detect=yes",
+      "title": "T",
+      "body": "B",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": true,
+      "results": [
+        false
+      ]
+    },
+    {
+      "name": "invalid-token",
+      "url": "tgram://bot1234/Owned_Token/12",
+      "title": "T",
+      "body": "B",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": false,
+      "results": [
+        false
+      ]
+    },
+    {
+      "name": "invalid-topic",
+      "url": "tgram://bot1234:Owned_Token/12?topic=bad",
+      "title": "T",
+      "body": "B",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": false,
+      "results": [
+        false
+      ]
+    },
+    {
+      "name": "invalid-content",
+      "url": "tgram://bot1234:Owned_Token/12?content=middle",
+      "title": "T",
+      "body": "B",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": false,
+      "results": [
+        false
+      ]
+    },
+    {
+      "name": "disabled-store",
+      "url": "tgram://bot1234:Owned_Token/12?store=no",
+      "title": "T",
+      "body": "B",
+      "attachments": [],
+      "replies": [],
+      "waits": [],
+      "requests": [],
+      "added": false,
+      "results": [
+        false
+      ]
+    },
+    {
+      "name": "target-http-and-transport-continue",
+      "url": "tgram://bot1234:Owned_Token/11/22/33",
+      "title": "T",
+      "body": "B",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 500
+        },
+        {
+          "status": 0
+        },
+        {
+          "status": 200
+        }
+      ],
+      "waits": [
+        0.001,
+        0.001
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"HTML\", \"text\": \"<b>T</b>\\r\\nB\", \"chat_id\": 11}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"HTML\", \"text\": \"<b>T</b>\\r\\nB\", \"chat_id\": 22}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"HTML\", \"text\": \"<b>T</b>\\r\\nB\", \"chat_id\": 33}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ]
+    },
+    {
+      "name": "caption-first-file-and-source-thread-carry",
+      "url": "tgram://bot1234:Owned_Token/11:4/22",
+      "title": "Title",
+      "body": "Body",
+      "attachments": [
+        "https://assets.invalid/picture.png",
+        "https://assets.invalid/notes.txt"
+      ],
+      "replies": [
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        }
+      ],
+      "waits": [
+        0.001,
+        0.001,
+        0.001
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/picture.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendPhoto",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "caption",
+                "filename": null,
+                "content_type": null,
+                "base64": "PGI+VGl0bGU8L2I+DQpCb2R5"
+              },
+              {
+                "field": "show_caption_above_media",
+                "filename": null,
+                "content_type": null,
+                "base64": "VHJ1ZQ=="
+              },
+              {
+                "field": "parse_mode",
+                "filename": null,
+                "content_type": null,
+                "base64": "SFRNTA=="
+              },
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "cGljdHVyZS5wbmc="
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTE="
+              },
+              {
+                "field": "message_thread_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "NA=="
+              },
+              {
+                "field": "photo",
+                "filename": "picture.png",
+                "content_type": null,
+                "base64": "b3duZWQgcGljdHVyZQ=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/notes.txt",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendDocument",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "bm90ZXMudHh0"
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTE="
+              },
+              {
+                "field": "message_thread_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "NA=="
+              },
+              {
+                "field": "document",
+                "filename": "notes.txt",
+                "content_type": null,
+                "base64": "b3duZWQgZG9jdW1lbnQ="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendPhoto",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "caption",
+                "filename": null,
+                "content_type": null,
+                "base64": "PGI+VGl0bGU8L2I+DQpCb2R5"
+              },
+              {
+                "field": "show_caption_above_media",
+                "filename": null,
+                "content_type": null,
+                "base64": "VHJ1ZQ=="
+              },
+              {
+                "field": "parse_mode",
+                "filename": null,
+                "content_type": null,
+                "base64": "SFRNTA=="
+              },
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "cGljdHVyZS5wbmc="
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MjI="
+              },
+              {
+                "field": "message_thread_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "NA=="
+              },
+              {
+                "field": "photo",
+                "filename": "picture.png",
+                "content_type": null,
+                "base64": "b3duZWQgcGljdHVyZQ=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendDocument",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "bm90ZXMudHh0"
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MjI="
+              },
+              {
+                "field": "document",
+                "filename": "notes.txt",
+                "content_type": null,
+                "base64": "b3duZWQgZG9jdW1lbnQ="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ]
+    },
+    {
+      "name": "caption-placement-after",
+      "url": "tgram://bot1234:Owned_Token/12?content=after",
+      "title": "",
+      "body": "Only caption",
+      "attachments": [
+        "https://assets.invalid/picture.png"
+      ],
+      "replies": [
+        {
+          "status": 200
+        }
+      ],
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/picture.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendPhoto",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "caption",
+                "filename": null,
+                "content_type": null,
+                "base64": "T25seSBjYXB0aW9u"
+              },
+              {
+                "field": "show_caption_above_media",
+                "filename": null,
+                "content_type": null,
+                "base64": "RmFsc2U="
+              },
+              {
+                "field": "parse_mode",
+                "filename": null,
+                "content_type": null,
+                "base64": "SFRNTA=="
+              },
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "cGljdHVyZS5wbmc="
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTI="
+              },
+              {
+                "field": "photo",
+                "filename": "picture.png",
+                "content_type": null,
+                "base64": "b3duZWQgcGljdHVyZQ=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ]
+    },
+    {
+      "name": "caption-limit-and-before",
+      "url": "tgram://bot1234:Owned_Token/12",
+      "title": "",
+      "body": {
+        "repeat": "x",
+        "count": 1024
+      },
+      "attachments": [
+        "https://assets.invalid/picture.png"
+      ],
+      "replies": [
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        }
+      ],
+      "waits": [
+        0.001
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"HTML\", \"text\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\", \"chat_id\": 12}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/picture.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendPhoto",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "cGljdHVyZS5wbmc="
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTI="
+              },
+              {
+                "field": "photo",
+                "filename": "picture.png",
+                "content_type": null,
+                "base64": "b3duZWQgcGljdHVyZQ=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ]
+    },
+    {
+      "name": "long-body-after",
+      "url": "tgram://bot1234:Owned_Token/12?content=after",
+      "title": "",
+      "body": {
+        "repeat": "x",
+        "count": 1030
+      },
+      "attachments": [
+        "https://assets.invalid/picture.png"
+      ],
+      "replies": [
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        }
+      ],
+      "waits": [
+        0.001
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/picture.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendPhoto",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "cGljdHVyZS5wbmc="
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTI="
+              },
+              {
+                "field": "photo",
+                "filename": "picture.png",
+                "content_type": null,
+                "base64": "b3duZWQgcGljdHVyZQ=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"HTML\", \"text\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\", \"chat_id\": 12}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ]
+    },
+    {
+      "name": "media-routing",
+      "url": "tgram://bot1234:Owned_Token/12",
+      "title": "",
+      "body": "",
+      "attachments": [
+        "https://assets.invalid/motion.gif",
+        "https://assets.invalid/picture.png",
+        "https://assets.invalid/clip.mp4",
+        "https://assets.invalid/note.ogg",
+        "https://assets.invalid/song.mp3",
+        "https://assets.invalid/notes.txt"
+      ],
+      "replies": [
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        }
+      ],
+      "waits": [
+        0.001,
+        0.001,
+        0.001,
+        0.001,
+        0.001
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/motion.gif",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendAnimation",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "bW90aW9uLmdpZg=="
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTI="
+              },
+              {
+                "field": "animation",
+                "filename": "motion.gif",
+                "content_type": null,
+                "base64": "b3duZWQgYW5pbWF0aW9u"
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/picture.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendPhoto",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "cGljdHVyZS5wbmc="
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTI="
+              },
+              {
+                "field": "photo",
+                "filename": "picture.png",
+                "content_type": null,
+                "base64": "b3duZWQgcGljdHVyZQ=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/clip.mp4",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendVideo",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "Y2xpcC5tcDQ="
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTI="
+              },
+              {
+                "field": "video",
+                "filename": "clip.mp4",
+                "content_type": null,
+                "base64": "b3duZWQgdmlkZW8="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/note.ogg",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendVoice",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "bm90ZS5vZ2c="
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTI="
+              },
+              {
+                "field": "voice",
+                "filename": "note.ogg",
+                "content_type": null,
+                "base64": "b3duZWQgdm9pY2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/song.mp3",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendAudio",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "c29uZy5tcDM="
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTI="
+              },
+              {
+                "field": "audio",
+                "filename": "song.mp3",
+                "content_type": null,
+                "base64": "b3duZWQgYXVkaW8="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/notes.txt",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendDocument",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "bm90ZXMudHh0"
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTI="
+              },
+              {
+                "field": "document",
+                "filename": "notes.txt",
+                "content_type": null,
+                "base64": "b3duZWQgZG9jdW1lbnQ="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ]
+    },
+    {
+      "name": "image-failure-does-not-fail-text",
+      "url": "tgram://bot1234:Owned_Token/12?image=yes",
+      "title": "T",
+      "body": "B",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 500
+        },
+        {
+          "status": 200
+        }
+      ],
+      "waits": [
+        0.001
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/SendPhoto",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTI="
+              },
+              {
+                "field": "photo",
+                "filename": "apprise-info-256x256.png",
+                "content_type": null,
+                "base64": {
+                  "sha256": "079aff3b877d3070a64966707dba908194a9f997ad4dd8814b029c3131756850",
+                  "size": 43331
+                }
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"HTML\", \"text\": \"<b>T</b>\\r\\nB\", \"chat_id\": 12}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ]
+    },
+    {
+      "name": "attachment-failure-skips-rest-for-target",
+      "url": "tgram://bot1234:Owned_Token/11/22",
+      "title": "T",
+      "body": "B",
+      "attachments": [
+        "https://assets.invalid/picture.png",
+        "https://assets.invalid/notes.txt"
+      ],
+      "replies": [
+        {
+          "status": 500
+        },
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        }
+      ],
+      "waits": [
+        0.001,
+        0.001
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/picture.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendPhoto",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "caption",
+                "filename": null,
+                "content_type": null,
+                "base64": "PGI+VDwvYj4NCkI="
+              },
+              {
+                "field": "show_caption_above_media",
+                "filename": null,
+                "content_type": null,
+                "base64": "VHJ1ZQ=="
+              },
+              {
+                "field": "parse_mode",
+                "filename": null,
+                "content_type": null,
+                "base64": "SFRNTA=="
+              },
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "cGljdHVyZS5wbmc="
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTE="
+              },
+              {
+                "field": "photo",
+                "filename": "picture.png",
+                "content_type": null,
+                "base64": "b3duZWQgcGljdHVyZQ=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendPhoto",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "caption",
+                "filename": null,
+                "content_type": null,
+                "base64": "PGI+VDwvYj4NCkI="
+              },
+              {
+                "field": "show_caption_above_media",
+                "filename": null,
+                "content_type": null,
+                "base64": "VHJ1ZQ=="
+              },
+              {
+                "field": "parse_mode",
+                "filename": null,
+                "content_type": null,
+                "base64": "SFRNTA=="
+              },
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "cGljdHVyZS5wbmc="
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MjI="
+              },
+              {
+                "field": "photo",
+                "filename": "picture.png",
+                "content_type": null,
+                "base64": "b3duZWQgcGljdHVyZQ=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/notes.txt",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendDocument",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "bm90ZXMudHh0"
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MjI="
+              },
+              {
+                "field": "document",
+                "filename": "notes.txt",
+                "content_type": null,
+                "base64": "b3duZWQgZG9jdW1lbnQ="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ]
+    },
+    {
+      "name": "missing-attachment-probes",
+      "url": "tgram://bot1234:Owned_Token/12",
+      "title": "",
+      "body": "",
+      "attachments": [
+        "https://assets.invalid/missing.png"
+      ],
+      "replies": [],
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/missing.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/missing.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ]
+    },
+    {
+      "name": "missing-explicit-name-probe",
+      "url": "tgram://bot1234:Owned_Token/12",
+      "title": "",
+      "body": "",
+      "attachments": [
+        "https://assets.invalid/missing.png?name=chosen.png"
+      ],
+      "replies": [],
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/missing.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ]
+    },
+    {
+      "name": "truncate-first-attachment",
+      "url": "tgram://bot1234:Owned_Token/12?overflow=truncate",
+      "title": "",
+      "body": {
+        "repeat": "x",
+        "count": 4110
+      },
+      "attachments": [
+        "https://assets.invalid/picture.png",
+        "https://assets.invalid/notes.txt"
+      ],
+      "replies": [
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        }
+      ],
+      "waits": [
+        0.001
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "sha256": "34a07f6115581c76056c72fcac8a4d879024a200d7b4781ec159798fbdc7321d"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://assets.invalid/picture.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendPhoto",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-telegram-multipart"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "title",
+                "filename": null,
+                "content_type": null,
+                "base64": "cGljdHVyZS5wbmc="
+              },
+              {
+                "field": "chat_id",
+                "filename": null,
+                "content_type": null,
+                "base64": "MTI="
+              },
+              {
+                "field": "photo",
+                "filename": "picture.png",
+                "content_type": null,
+                "base64": "b3duZWQgcGljdHVyZQ=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ]
+    },
+    {
+      "name": "split-body",
+      "url": "tgram://bot1234:Owned_Token/12?overflow=split&format=text",
+      "title": "T",
+      "body": {
+        "repeat": "x",
+        "count": 4110
+      },
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        },
+        {
+          "status": 200
+        }
+      ],
+      "waits": [
+        0.001,
+        0.001
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"HTML\", \"text\": \"T\", \"chat_id\": 12}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "sha256": "34a07f6115581c76056c72fcac8a4d879024a200d7b4781ec159798fbdc7321d"
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot1234:Owned_Token/sendMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"disable_notification\": false, \"disable_web_page_preview\": true, \"parse_mode\": \"HTML\", \"text\": \"xxxxxxxxxxxxxx\", \"chat_id\": 12}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ]
+    }
+  ]
+}

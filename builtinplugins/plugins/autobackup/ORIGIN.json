@@ -1,0 +1,45 @@
+{
+  "installed_version": "2.1.4",
+  "source": {
+    "author": "thsrite",
+    "plugin_sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+    "source_snapshot": "work/migration-20261105/source-snapshot/autobackup/__init__.py",
+    "moviepilot": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+    "prior_go_form": "light-media@cb6fabfe:internal/plugins/autobackup/form.json",
+    "prior_go_form_sha256": "cbb8966d67caad6023b166a2cff8094c223965dc5bb5a01f238c7be0b5498dcc",
+    "prior_native_acceptance": "light-media:docs/plugin-auto-backup-current-completion.md",
+    "prior_form_isolation": "light-media:docs/plugin-auto-backup-form-isolation-stage.md"
+  },
+  "source_locations": {
+    "identity": "__init__.py:30-47",
+    "init_plugin": "__init__.py:73-128",
+    "authenticated_api_and_backup": "__init__.py:130-209",
+    "archive": "__init__.py:211-301",
+    "postgresql_helpers": "__init__.py:302-366",
+    "webdav_helpers": "__init__.py:368-493",
+    "get_state_command_api_and_service": "__init__.py:495-529",
+    "backup_wrapper": "__init__.py:531-539",
+    "get_form": "__init__.py:541-947",
+    "local_controls": "__init__.py:548-654",
+    "remote_form_section": "__init__.py:655-895",
+    "get_page_and_stop": "__init__.py:949-963"
+  },
+  "targets": {
+    "form.json": "01e8874e5082dd80377d1a76f400049637edd815e7402c4ca28761b4a4b58fde",
+    "form.go": "a927757c44eb9d7c38379365c3989fc1dc68099b74b21988527fe148bf1acafe",
+    "plugin.go": "2eac0b14922e44574ab48f97f7ceab4af2b77c9888d5be14f11b5015dbb4ad88",
+    "../../cmd/auto-backup/main.go": "7cc6363bb7f20f95f67220fb2cd708a4f5c6c9943d0905312ee7915f7b6fd96f",
+    "../../internal/sdk/local_backup.go": "1d30983f396c83da48bfdd3b1c2fcb71519290e35225d2f4fc2723525b4cc4a6"
+  },
+  "adaptations": [
+    "Compare the legacy schema and defaults to the pinned get_form return, substituting only its get_data_path call with the legacy fixture value for comparison. Emit the two-element standard native form result.",
+    "Keep the installed local controls, including the immediate-run switch and native VCronField. Keep the source inert request_method and webhook_url defaults.",
+    "Keep back_path empty by default so a saved fresh form and its clone resolve to their own instance-private directories, as in the previously accepted host projection. Update the local help to describe that effective destination.",
+    "The Linux local SQLite scope excludes the WebDAV section and its defaults and the PostgreSQL installation help.",
+    "The standard SDK worker controls initialization, the private +3 second scheduler, public cron, API response, and SiteMessage. It requests one host-bound operation for local snapshot publication and ctime rotation.",
+    "The archive contains a consistent light-media.db snapshot, the matching host encryption key, and category.yaml when present. Light-media stores configuration and credentials in its native SQLite store. The worker receives only the archive path and counts.",
+    "Implicit storage is instance-private. Explicit local destinations require the host AllowedRoots grant and no-follow directory checks. The ordinary plugin API uses the host API-key dependency and forwards only its match result to the worker."
+  ],
+  "scope": "Standalone Go AutoBackup migration for Linux, local SQLite and local directories. No restore is declared by the installed plugin."
+}

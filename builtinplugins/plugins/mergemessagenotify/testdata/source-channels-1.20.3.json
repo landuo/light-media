@@ -1,0 +1,84 @@
+{
+  "source_sha256": "f87e851eb3e8184adc481ed8e15fa64f05fa4439e2060152eced80fdbbf8fcca",
+  "source_snapshot_sha256": "64f7604c9d070f984ba38c6accf08ea8a4326b3b6955b9e12d7ce8bf6cb98140",
+  "scope": "Exact local source form methods in a synthetic host; HTTP/SMTP/dependencies cannot reach the network. The two OneBot cases use a literal-template stub and capture original request arguments; missing-config calls exercise original guard returns.",
+  "cases": [
+    {
+      "channel": "custom.onebot-11",
+      "config": {
+        "server_url": "https://owned.invalid/",
+        "user_ids": "101",
+        "group_ids": "202",
+        "message_template": "owned message"
+      },
+      "result": true,
+      "requests": [
+        {
+          "url": "https://owned.invalid/send_msg",
+          "headers": {},
+          "json": {
+            "message": "owned message",
+            "user_id": "101"
+          },
+          "proxies": null
+        },
+        {
+          "url": "https://owned.invalid/send_msg",
+          "headers": {},
+          "json": {
+            "message": "owned message",
+            "group_id": "202"
+          },
+          "proxies": null
+        }
+      ]
+    },
+    {
+      "channel": "custom.onebot-11",
+      "config": {
+        "server_url": "https://owned.invalid/",
+        "user_ids": "101",
+        "group_ids": "202",
+        "message_template": "owned message",
+        "access_token": "synthetic-bearer-token"
+      },
+      "result": true,
+      "requests": [
+        {
+          "url": "https://owned.invalid/send_msg",
+          "headers": {
+            "Authorization": "Bearer synthetic-bearer-token"
+          },
+          "json": {
+            "message": "owned message",
+            "user_id": "101"
+          },
+          "proxies": null
+        },
+        {
+          "url": "https://owned.invalid/send_msg",
+          "headers": {
+            "Authorization": "Bearer synthetic-bearer-token"
+          },
+          "json": {
+            "message": "owned message",
+            "group_id": "202"
+          },
+          "proxies": null
+        }
+      ]
+    },
+    {
+      "channel": "custom.qiyeweixinbot",
+      "config": {},
+      "result": false,
+      "requests": []
+    },
+    {
+      "channel": "custom.serverchan",
+      "config": {},
+      "result": false,
+      "requests": []
+    }
+  ]
+}

@@ -1,0 +1,675 @@
+{
+  "classification": "actual333/Python3.12 original AutoSignIn AST+real ThreadPool, synthetic configured sites and signin result/clock/Base only; no app/network",
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "cases": [
+    {
+      "name": "bool_true",
+      "settings": {
+        "queue": true
+      },
+      "initial": {},
+      "rows": [
+        {
+          "id": 1,
+          "name": "One",
+          "url": "https://owned-one.invalid/",
+          "public": false
+        },
+        {
+          "id": 2,
+          "name": "Two",
+          "url": "https://owned-two.invalid/",
+          "public": false
+        }
+      ],
+      "data": {
+        "11月5日": [
+          {
+            "site": "One",
+            "status": "签到成功",
+            "site_id": 1,
+            "type": "签到",
+            "success": true,
+            "logged_in": true
+          },
+          {
+            "site": "Two",
+            "status": "签到成功",
+            "site_id": 2,
+            "type": "签到",
+            "success": true,
+            "logged_in": true
+          }
+        ],
+        "签到-2026-11-05": {
+          "do": [
+            1,
+            2
+          ],
+          "retry": [
+            1,
+            2
+          ],
+          "results": {
+            "1": {
+              "success": true,
+              "message": "签到成功",
+              "logged_in": true
+            },
+            "2": {
+              "success": true,
+              "message": "签到成功",
+              "logged_in": true
+            }
+          }
+        }
+      },
+      "config": {
+        "enabled": false,
+        "notify": false,
+        "cron": "",
+        "onlyonce": false,
+        "queue_cnt": true,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": 0,
+        "clean": false
+      },
+      "messages": [],
+      "events": [],
+      "logs": [
+        [
+          "INFO",
+          "今日 2026-11-05 未签到，开始签到已选站点"
+        ],
+        [
+          "INFO",
+          "开始执行签到任务 ..."
+        ],
+        [
+          "INFO",
+          "站点签到任务完成！"
+        ],
+        [
+          "DEBUG",
+          "下次签到重试站点 [1, 2]"
+        ]
+      ],
+      "error": null
+    },
+    {
+      "name": "bool_false",
+      "settings": {
+        "queue": false
+      },
+      "initial": {},
+      "rows": [
+        {
+          "id": 1,
+          "name": "One",
+          "url": "https://owned-one.invalid/",
+          "public": false
+        },
+        {
+          "id": 2,
+          "name": "Two",
+          "url": "https://owned-two.invalid/",
+          "public": false
+        }
+      ],
+      "data": {},
+      "config": {},
+      "messages": [],
+      "events": [],
+      "logs": [
+        [
+          "INFO",
+          "今日 2026-11-05 未签到，开始签到已选站点"
+        ],
+        [
+          "INFO",
+          "开始执行签到任务 ..."
+        ]
+      ],
+      "error": {
+        "class": "ValueError",
+        "message": "Number of processes must be at least 1"
+      }
+    },
+    {
+      "name": "float_one",
+      "settings": {
+        "queue": 1.0
+      },
+      "initial": {},
+      "rows": [
+        {
+          "id": 1,
+          "name": "One",
+          "url": "https://owned-one.invalid/",
+          "public": false
+        },
+        {
+          "id": 2,
+          "name": "Two",
+          "url": "https://owned-two.invalid/",
+          "public": false
+        }
+      ],
+      "data": {
+        "11月5日": [
+          {
+            "site": "One",
+            "status": "签到成功",
+            "site_id": 1,
+            "type": "签到",
+            "success": true,
+            "logged_in": true
+          },
+          {
+            "site": "Two",
+            "status": "签到成功",
+            "site_id": 2,
+            "type": "签到",
+            "success": true,
+            "logged_in": true
+          }
+        ],
+        "签到-2026-11-05": {
+          "do": [
+            1,
+            2
+          ],
+          "retry": [
+            1,
+            2
+          ],
+          "results": {
+            "1": {
+              "success": true,
+              "message": "签到成功",
+              "logged_in": true
+            },
+            "2": {
+              "success": true,
+              "message": "签到成功",
+              "logged_in": true
+            }
+          }
+        }
+      },
+      "config": {
+        "enabled": false,
+        "notify": false,
+        "cron": "",
+        "onlyonce": false,
+        "queue_cnt": 1.0,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": 0,
+        "clean": false
+      },
+      "messages": [],
+      "events": [],
+      "logs": [
+        [
+          "INFO",
+          "今日 2026-11-05 未签到，开始签到已选站点"
+        ],
+        [
+          "INFO",
+          "开始执行签到任务 ..."
+        ],
+        [
+          "INFO",
+          "站点签到任务完成！"
+        ],
+        [
+          "DEBUG",
+          "下次签到重试站点 [1, 2]"
+        ]
+      ],
+      "error": null
+    },
+    {
+      "name": "float_half",
+      "settings": {
+        "queue": 0.5
+      },
+      "initial": {},
+      "rows": [
+        {
+          "id": 1,
+          "name": "One",
+          "url": "https://owned-one.invalid/",
+          "public": false
+        },
+        {
+          "id": 2,
+          "name": "Two",
+          "url": "https://owned-two.invalid/",
+          "public": false
+        }
+      ],
+      "data": {},
+      "config": {},
+      "messages": [],
+      "events": [],
+      "logs": [
+        [
+          "INFO",
+          "今日 2026-11-05 未签到，开始签到已选站点"
+        ],
+        [
+          "INFO",
+          "开始执行签到任务 ..."
+        ]
+      ],
+      "error": {
+        "class": "ValueError",
+        "message": "Number of processes must be at least 1"
+      }
+    },
+    {
+      "name": "float_negative",
+      "settings": {
+        "queue": -1.0
+      },
+      "initial": {},
+      "rows": [
+        {
+          "id": 1,
+          "name": "One",
+          "url": "https://owned-one.invalid/",
+          "public": false
+        },
+        {
+          "id": 2,
+          "name": "Two",
+          "url": "https://owned-two.invalid/",
+          "public": false
+        }
+      ],
+      "data": {},
+      "config": {},
+      "messages": [],
+      "events": [],
+      "logs": [
+        [
+          "INFO",
+          "今日 2026-11-05 未签到，开始签到已选站点"
+        ],
+        [
+          "INFO",
+          "开始执行签到任务 ..."
+        ]
+      ],
+      "error": {
+        "class": "ValueError",
+        "message": "Number of processes must be at least 1"
+      }
+    },
+    {
+      "name": "float_two_half",
+      "settings": {
+        "queue": 2.5
+      },
+      "initial": {},
+      "rows": [
+        {
+          "id": 1,
+          "name": "One",
+          "url": "https://owned-one.invalid/",
+          "public": false
+        },
+        {
+          "id": 2,
+          "name": "Two",
+          "url": "https://owned-two.invalid/",
+          "public": false
+        }
+      ],
+      "data": {
+        "11月5日": [
+          {
+            "site": "One",
+            "status": "签到成功",
+            "site_id": 1,
+            "type": "签到",
+            "success": true,
+            "logged_in": true
+          },
+          {
+            "site": "Two",
+            "status": "签到成功",
+            "site_id": 2,
+            "type": "签到",
+            "success": true,
+            "logged_in": true
+          }
+        ],
+        "签到-2026-11-05": {
+          "do": [
+            1,
+            2
+          ],
+          "retry": [
+            1,
+            2
+          ],
+          "results": {
+            "1": {
+              "success": true,
+              "message": "签到成功",
+              "logged_in": true
+            },
+            "2": {
+              "success": true,
+              "message": "签到成功",
+              "logged_in": true
+            }
+          }
+        }
+      },
+      "config": {
+        "enabled": false,
+        "notify": false,
+        "cron": "",
+        "onlyonce": false,
+        "queue_cnt": 2.5,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": 0,
+        "clean": false
+      },
+      "messages": [],
+      "events": [],
+      "logs": [
+        [
+          "INFO",
+          "今日 2026-11-05 未签到，开始签到已选站点"
+        ],
+        [
+          "INFO",
+          "开始执行签到任务 ..."
+        ],
+        [
+          "INFO",
+          "站点签到任务完成！"
+        ],
+        [
+          "DEBUG",
+          "下次签到重试站点 [1, 2]"
+        ]
+      ],
+      "error": null
+    },
+    {
+      "name": "string_two",
+      "settings": {
+        "queue": "2"
+      },
+      "initial": {},
+      "rows": [
+        {
+          "id": 1,
+          "name": "One",
+          "url": "https://owned-one.invalid/",
+          "public": false
+        },
+        {
+          "id": 2,
+          "name": "Two",
+          "url": "https://owned-two.invalid/",
+          "public": false
+        }
+      ],
+      "data": {
+        "11月5日": [
+          {
+            "site": "One",
+            "status": "签到成功",
+            "site_id": 1,
+            "type": "签到",
+            "success": true,
+            "logged_in": true
+          },
+          {
+            "site": "Two",
+            "status": "签到成功",
+            "site_id": 2,
+            "type": "签到",
+            "success": true,
+            "logged_in": true
+          }
+        ],
+        "签到-2026-11-05": {
+          "do": [
+            1,
+            2
+          ],
+          "retry": [
+            1,
+            2
+          ],
+          "results": {
+            "1": {
+              "success": true,
+              "message": "签到成功",
+              "logged_in": true
+            },
+            "2": {
+              "success": true,
+              "message": "签到成功",
+              "logged_in": true
+            }
+          }
+        }
+      },
+      "config": {
+        "enabled": false,
+        "notify": false,
+        "cron": "",
+        "onlyonce": false,
+        "queue_cnt": "2",
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": 0,
+        "clean": false
+      },
+      "messages": [],
+      "events": [],
+      "logs": [
+        [
+          "INFO",
+          "今日 2026-11-05 未签到，开始签到已选站点"
+        ],
+        [
+          "INFO",
+          "开始执行签到任务 ..."
+        ],
+        [
+          "INFO",
+          "站点签到任务完成！"
+        ],
+        [
+          "DEBUG",
+          "下次签到重试站点 [1, 2]"
+        ]
+      ],
+      "error": null
+    },
+    {
+      "name": "list",
+      "settings": {
+        "queue": [
+          2
+        ]
+      },
+      "initial": {},
+      "rows": [
+        {
+          "id": 1,
+          "name": "One",
+          "url": "https://owned-one.invalid/",
+          "public": false
+        },
+        {
+          "id": 2,
+          "name": "Two",
+          "url": "https://owned-two.invalid/",
+          "public": false
+        }
+      ],
+      "data": {},
+      "config": {},
+      "messages": [],
+      "events": [],
+      "logs": [
+        [
+          "INFO",
+          "今日 2026-11-05 未签到，开始签到已选站点"
+        ],
+        [
+          "INFO",
+          "开始执行签到任务 ..."
+        ]
+      ],
+      "error": {
+        "class": "TypeError",
+        "message": "int() argument must be a string, a bytes-like object or a real number, not 'list'"
+      }
+    },
+    {
+      "name": "object",
+      "settings": {
+        "queue": {
+          "x": 1
+        }
+      },
+      "initial": {},
+      "rows": [
+        {
+          "id": 1,
+          "name": "One",
+          "url": "https://owned-one.invalid/",
+          "public": false
+        },
+        {
+          "id": 2,
+          "name": "Two",
+          "url": "https://owned-two.invalid/",
+          "public": false
+        }
+      ],
+      "data": {},
+      "config": {},
+      "messages": [],
+      "events": [],
+      "logs": [
+        [
+          "INFO",
+          "今日 2026-11-05 未签到，开始签到已选站点"
+        ],
+        [
+          "INFO",
+          "开始执行签到任务 ..."
+        ]
+      ],
+      "error": {
+        "class": "TypeError",
+        "message": "int() argument must be a string, a bytes-like object or a real number, not 'dict'"
+      }
+    },
+    {
+      "name": "zero",
+      "settings": {
+        "queue": 0
+      },
+      "initial": {},
+      "rows": [
+        {
+          "id": 1,
+          "name": "One",
+          "url": "https://owned-one.invalid/",
+          "public": false
+        },
+        {
+          "id": 2,
+          "name": "Two",
+          "url": "https://owned-two.invalid/",
+          "public": false
+        }
+      ],
+      "data": {},
+      "config": {},
+      "messages": [],
+      "events": [],
+      "logs": [
+        [
+          "INFO",
+          "今日 2026-11-05 未签到，开始签到已选站点"
+        ],
+        [
+          "INFO",
+          "开始执行签到任务 ..."
+        ]
+      ],
+      "error": {
+        "class": "ValueError",
+        "message": "Number of processes must be at least 1"
+      }
+    },
+    {
+      "name": "negative",
+      "settings": {
+        "queue": -1
+      },
+      "initial": {},
+      "rows": [
+        {
+          "id": 1,
+          "name": "One",
+          "url": "https://owned-one.invalid/",
+          "public": false
+        },
+        {
+          "id": 2,
+          "name": "Two",
+          "url": "https://owned-two.invalid/",
+          "public": false
+        }
+      ],
+      "data": {},
+      "config": {},
+      "messages": [],
+      "events": [],
+      "logs": [
+        [
+          "INFO",
+          "今日 2026-11-05 未签到，开始签到已选站点"
+        ],
+        [
+          "INFO",
+          "开始执行签到任务 ..."
+        ]
+      ],
+      "error": {
+        "class": "ValueError",
+        "message": "Number of processes must be at least 1"
+      }
+    }
+  ]
+}

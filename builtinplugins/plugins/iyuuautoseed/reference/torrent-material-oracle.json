@@ -1,0 +1,394 @@
+{
+  "moviepilot_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "1c8a420d419ee53579079283ea0828536de9d978b6b15e722f1ba53cb51d5dd5",
+  "torrentool_version": "1.2.0",
+  "method": "fixed host TorrentHelper AST and installed torrentool with offline cache and HTTP inputs",
+  "cases": [
+    {
+      "name": "cached",
+      "url": "https://tracker.invalid/download.php?id=1&https=1",
+      "initial_cache": "ZDQ6aW5mb2Q1OmZpbGVzbGQ2Omxlbmd0aGkxZTQ6cGF0aGw3Om9uZS5ta3ZlZWQ2Omxlbmd0aGkyZTQ6cGF0aGw3OnR3by5ta3ZlZWU0Om5hbWU3OlNlcmllcy9lZQ==",
+      "fail_write": false,
+      "responses": [],
+      "result": {
+        "cache_key": "b1460d93f470f26ebe64d97a1c5d94af.torrent",
+        "content": "ZDQ6aW5mb2Q1OmZpbGVzbGQ2Omxlbmd0aGkxZTQ6cGF0aGw3Om9uZS5ta3ZlZWQ2Omxlbmd0aGkyZTQ6cGF0aGw3OnR3by5ta3ZlZWU0Om5hbWU3OlNlcmllcy9lZQ==",
+        "magnet": "",
+        "folder": "Series/",
+        "files": [
+          "Series/one.mkv",
+          "Series/two.mkv"
+        ],
+        "message": ""
+      },
+      "calls": [
+        {
+          "operation": "cache_get",
+          "key": "b1460d93f470f26ebe64d97a1c5d94af.torrent"
+        }
+      ]
+    },
+    {
+      "name": "redirect-form",
+      "url": "https://tracker.invalid/download.php?id=1&https=1",
+      "initial_cache": "",
+      "fail_write": false,
+      "responses": [
+        {
+          "status": 302,
+          "content": "",
+          "location": "https://tracker.invalid/moved"
+        },
+        {
+          "status": 200,
+          "content": "5LiL6L2956eN5a2Q5paH5Lu2PGZvcm0gYWN0aW9uPSI/Ij48aW5wdXQgbmFtZT0ieiIgdmFsdWU9Im9sZCI+PGlucHV0IG5hbWU9ImEiIHZhbHVlPSJ5ZXMiPjxpbnB1dCBuYW1lPSJ6IiB2YWx1ZT0ibmV3Ij48L2Zvcm0+",
+          "location": null
+        },
+        {
+          "status": 200,
+          "content": "ZDQ6aW5mb2Q1OmZpbGVzbGQ2Omxlbmd0aGkxZTQ6cGF0aGw3Om9uZS5ta3ZlZWQ2Omxlbmd0aGkyZTQ6cGF0aGw3OnR3by5ta3ZlZWU0Om5hbWU3OlNlcmllcy9lZQ==",
+          "location": null
+        }
+      ],
+      "result": {
+        "cache_key": "b1460d93f470f26ebe64d97a1c5d94af.torrent",
+        "content": "ZDQ6aW5mb2Q1OmZpbGVzbGQ2Omxlbmd0aGkxZTQ6cGF0aGw3Om9uZS5ta3ZlZWQ2Omxlbmd0aGkyZTQ6cGF0aGw3OnR3by5ta3ZlZWU0Om5hbWU3OlNlcmllcy9lZQ==",
+        "magnet": "",
+        "folder": "Series/",
+        "files": [
+          "Series/one.mkv",
+          "Series/two.mkv"
+        ],
+        "message": ""
+      },
+      "calls": [
+        {
+          "operation": "cache_get",
+          "key": "b1460d93f470f26ebe64d97a1c5d94af.torrent"
+        },
+        {
+          "operation": "get",
+          "url": "https://tracker.invalid/download.php?id=1&https=1"
+        },
+        {
+          "operation": "get",
+          "url": "https://tracker.invalid/moved"
+        },
+        {
+          "operation": "post",
+          "url": "https://tracker.invalid/moved",
+          "form": [
+            {
+              "name": "z",
+              "value": "new"
+            },
+            {
+              "name": "a",
+              "value": "yes"
+            }
+          ]
+        },
+        {
+          "operation": "cache_put",
+          "key": "b1460d93f470f26ebe64d97a1c5d94af.torrent",
+          "content": "ZDQ6aW5mb2Q1OmZpbGVzbGQ2Omxlbmd0aGkxZTQ6cGF0aGw3Om9uZS5ta3ZlZWQ2Omxlbmd0aGkyZTQ6cGF0aGw3OnR3by5ta3ZlZWU0Om5hbWU3OlNlcmllcy9lZQ=="
+        }
+      ]
+    },
+    {
+      "name": "redirect-magnet",
+      "url": "https://tracker.invalid/download.php?id=1&https=1",
+      "initial_cache": "",
+      "fail_write": false,
+      "responses": [
+        {
+          "status": 301,
+          "content": "",
+          "location": "magnet:?xt=synthetic"
+        }
+      ],
+      "result": {
+        "cache_key": "",
+        "content": "",
+        "magnet": "magnet:?xt=synthetic",
+        "folder": "",
+        "files": [],
+        "message": "获取到磁力链接"
+      },
+      "calls": [
+        {
+          "operation": "cache_get",
+          "key": "b1460d93f470f26ebe64d97a1c5d94af.torrent"
+        },
+        {
+          "operation": "get",
+          "url": "https://tracker.invalid/download.php?id=1&https=1"
+        }
+      ]
+    },
+    {
+      "name": "failed-prompt",
+      "url": "https://tracker.invalid/download.php?id=1&https=1",
+      "initial_cache": "",
+      "fail_write": false,
+      "responses": [
+        {
+          "status": 200,
+          "content": "5LiL6L2956eN5a2Q5paH5Lu2PGZvcm0gYWN0aW9uPSI/Ij48aW5wdXQgbmFtZT0ieiIgdmFsdWU9Im9sZCI+PGlucHV0IG5hbWU9ImEiIHZhbHVlPSJ5ZXMiPjxpbnB1dCBuYW1lPSJ6IiB2YWx1ZT0ibmV3Ij48L2Zvcm0+",
+          "location": null
+        },
+        {
+          "status": 200,
+          "content": "aTFfXzBl",
+          "location": null
+        }
+      ],
+      "result": {
+        "cache_key": "b1460d93f470f26ebe64d97a1c5d94af.torrent",
+        "content": "",
+        "magnet": "",
+        "folder": "",
+        "files": [],
+        "message": "种子数据有误，请确认链接是否正确，如为PT站点则需手工在站点下载一次种子"
+      },
+      "calls": [
+        {
+          "operation": "cache_get",
+          "key": "b1460d93f470f26ebe64d97a1c5d94af.torrent"
+        },
+        {
+          "operation": "get",
+          "url": "https://tracker.invalid/download.php?id=1&https=1"
+        },
+        {
+          "operation": "post",
+          "url": "https://tracker.invalid/download.php?id=1&https=1",
+          "form": [
+            {
+              "name": "z",
+              "value": "new"
+            },
+            {
+              "name": "a",
+              "value": "yes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "decode-with-unfinished-container",
+      "url": "https://tracker.invalid/download.php?id=1&https=1",
+      "initial_cache": "",
+      "fail_write": false,
+      "responses": [
+        {
+          "status": 200,
+          "content": "5LiL6L2956eN5a2Q5paH5Lu2PGZvcm0gYWN0aW9uPSI/Ij48aW5wdXQgbmFtZT0ieiIgdmFsdWU9Im9sZCI+PGlucHV0IG5hbWU9ImEiIHZhbHVlPSJ5ZXMiPjxpbnB1dCBuYW1lPSJ6IiB2YWx1ZT0ibmV3Ij48L2Zvcm0+",
+          "location": null
+        },
+        {
+          "status": 200,
+          "content": "ZA==",
+          "location": null
+        }
+      ],
+      "result": {
+        "cache_key": "b1460d93f470f26ebe64d97a1c5d94af.torrent",
+        "content": "ZA==",
+        "magnet": "",
+        "folder": "",
+        "files": [],
+        "message": ""
+      },
+      "calls": [
+        {
+          "operation": "cache_get",
+          "key": "b1460d93f470f26ebe64d97a1c5d94af.torrent"
+        },
+        {
+          "operation": "get",
+          "url": "https://tracker.invalid/download.php?id=1&https=1"
+        },
+        {
+          "operation": "post",
+          "url": "https://tracker.invalid/download.php?id=1&https=1",
+          "form": [
+            {
+              "name": "z",
+              "value": "new"
+            },
+            {
+              "name": "a",
+              "value": "yes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cache-write-fails",
+      "url": "https://tracker.invalid/download.php?id=1&https=1",
+      "initial_cache": "",
+      "fail_write": true,
+      "responses": [
+        {
+          "status": 200,
+          "content": "ZDQ6aW5mb2Q1OmZpbGVzbGQ2Omxlbmd0aGkxZTQ6cGF0aGw3Om9uZS5ta3ZlZWQ2Omxlbmd0aGkyZTQ6cGF0aGw3OnR3by5ta3ZlZWU0Om5hbWU3OlNlcmllcy9lZQ==",
+          "location": null
+        }
+      ],
+      "result": {
+        "cache_key": "b1460d93f470f26ebe64d97a1c5d94af.torrent",
+        "content": "",
+        "magnet": "",
+        "folder": "",
+        "files": [],
+        "message": "种子数据有误，请确认链接是否正确"
+      },
+      "calls": [
+        {
+          "operation": "cache_get",
+          "key": "b1460d93f470f26ebe64d97a1c5d94af.torrent"
+        },
+        {
+          "operation": "get",
+          "url": "https://tracker.invalid/download.php?id=1&https=1"
+        },
+        {
+          "operation": "cache_put",
+          "key": "b1460d93f470f26ebe64d97a1c5d94af.torrent",
+          "content": "ZDQ6aW5mb2Q1OmZpbGVzbGQ2Omxlbmd0aGkxZTQ6cGF0aGw3Om9uZS5ta3ZlZWQ2Omxlbmd0aGkyZTQ6cGF0aGw3OnR3by5ta3ZlZWU0Om5hbWU3OlNlcmllcy9lZQ=="
+        }
+      ]
+    },
+    {
+      "name": "bad-status-at-redirect-target",
+      "url": "https://tracker.invalid/download.php?id=1&https=1",
+      "initial_cache": "",
+      "fail_write": false,
+      "responses": [
+        {
+          "status": 302,
+          "content": "",
+          "location": "https://tracker.invalid/moved"
+        },
+        {
+          "status": 403,
+          "content": "",
+          "location": null
+        }
+      ],
+      "result": {
+        "cache_key": "b1460d93f470f26ebe64d97a1c5d94af.torrent",
+        "content": "",
+        "magnet": "",
+        "folder": "",
+        "files": [],
+        "message": "下载种子出错，状态码：403"
+      },
+      "calls": [
+        {
+          "operation": "cache_get",
+          "key": "b1460d93f470f26ebe64d97a1c5d94af.torrent"
+        },
+        {
+          "operation": "get",
+          "url": "https://tracker.invalid/download.php?id=1&https=1"
+        },
+        {
+          "operation": "get",
+          "url": "https://tracker.invalid/moved"
+        },
+        {
+          "operation": "invalid",
+          "url": "https://tracker.invalid/moved"
+        }
+      ]
+    },
+    {
+      "name": "rate-limited",
+      "url": "https://tracker.invalid/download.php?id=1&https=1",
+      "initial_cache": "",
+      "fail_write": false,
+      "responses": [
+        {
+          "status": 429,
+          "content": "",
+          "location": null
+        }
+      ],
+      "result": {
+        "cache_key": "b1460d93f470f26ebe64d97a1c5d94af.torrent",
+        "content": "",
+        "magnet": "",
+        "folder": "",
+        "files": [],
+        "message": "触发站点流控，请稍后重试"
+      },
+      "calls": [
+        {
+          "operation": "cache_get",
+          "key": "b1460d93f470f26ebe64d97a1c5d94af.torrent"
+        },
+        {
+          "operation": "get",
+          "url": "https://tracker.invalid/download.php?id=1&https=1"
+        }
+      ]
+    },
+    {
+      "name": "no-response",
+      "url": "https://tracker.invalid/download.php?id=1&https=1",
+      "initial_cache": "",
+      "fail_write": false,
+      "responses": [
+        null
+      ],
+      "result": {
+        "cache_key": "b1460d93f470f26ebe64d97a1c5d94af.torrent",
+        "content": "",
+        "magnet": "",
+        "folder": "",
+        "files": [],
+        "message": "无法打开链接"
+      },
+      "calls": [
+        {
+          "operation": "cache_get",
+          "key": "b1460d93f470f26ebe64d97a1c5d94af.torrent"
+        },
+        {
+          "operation": "get",
+          "url": "https://tracker.invalid/download.php?id=1&https=1"
+        }
+      ]
+    },
+    {
+      "name": "missing-location",
+      "url": "https://tracker.invalid/download.php?id=1&https=1",
+      "initial_cache": "",
+      "fail_write": false,
+      "responses": [
+        {
+          "status": 302,
+          "content": "",
+          "location": null
+        }
+      ],
+      "result": {
+        "fault": "KeyError"
+      },
+      "calls": [
+        {
+          "operation": "cache_get",
+          "key": "b1460d93f470f26ebe64d97a1c5d94af.torrent"
+        },
+        {
+          "operation": "get",
+          "url": "https://tracker.invalid/download.php?id=1&https=1"
+        }
+      ]
+    }
+  ]
+}

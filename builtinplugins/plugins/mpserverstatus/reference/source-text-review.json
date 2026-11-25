@@ -1,0 +1,123 @@
+{
+  "classification": "exact original MPS class+actual RequestUtils selected AST plus actual333 Requests.Response.text/codecs into owned loopback HTTP; no app imports/external HTTP",
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "cases": [
+    {
+      "encoding": "utf-8",
+      "error": null,
+      "result": {
+        "metrics_present": true,
+        "snapshot_error": null,
+        "status": 200,
+        "text_contains_stub": true
+      },
+      "sample_present": true,
+      "log_levels": [
+        "info",
+        "info"
+      ]
+    },
+    {
+      "encoding": "owned-unknown-codec",
+      "error": null,
+      "result": {
+        "metrics_present": true,
+        "snapshot_error": null,
+        "status": 200,
+        "text_contains_stub": true
+      },
+      "sample_present": true,
+      "log_levels": [
+        "info",
+        "info"
+      ]
+    },
+    {
+      "encoding": "undefined",
+      "error": {
+        "type": "UnicodeError",
+        "message": "undefined encoding"
+      },
+      "result": null,
+      "sample_present": false,
+      "log_levels": [
+        "info",
+        "info"
+      ]
+    },
+    {
+      "encoding": "idna",
+      "error": {
+        "type": "UnicodeError",
+        "message": "Unsupported error handling replace"
+      },
+      "result": null,
+      "sample_present": false,
+      "log_levels": [
+        "info",
+        "info"
+      ]
+    },
+    {
+      "encoding": "punycode",
+      "error": null,
+      "result": {
+        "metrics_present": false,
+        "snapshot_error": "\u670d\u52a1\u5668\u72b6\u6001\u683c\u5f0f\u5f02\u5e38\uff1a\u7f3a\u5c11\u6d3b\u8dc3\u8fde\u63a5\u6570\u636e",
+        "status": 200,
+        "text_contains_stub": false
+      },
+      "sample_present": false,
+      "log_levels": [
+        "info",
+        "info",
+        "warn"
+      ]
+    },
+    {
+      "encoding": "rot_13",
+      "error": null,
+      "result": {
+        "metrics_present": true,
+        "snapshot_error": null,
+        "status": 200,
+        "text_contains_stub": true
+      },
+      "sample_present": true,
+      "log_levels": [
+        "info",
+        "info"
+      ]
+    },
+    {
+      "encoding": "unicode_escape",
+      "error": null,
+      "result": {
+        "metrics_present": true,
+        "snapshot_error": null,
+        "status": 200,
+        "text_contains_stub": true
+      },
+      "sample_present": true,
+      "log_levels": [
+        "info",
+        "info"
+      ]
+    },
+    {
+      "encoding": "raw_unicode_escape",
+      "error": null,
+      "result": {
+        "metrics_present": true,
+        "snapshot_error": null,
+        "status": 200,
+        "text_contains_stub": true
+      },
+      "sample_present": true,
+      "log_levels": [
+        "info",
+        "info"
+      ]
+    }
+  ]
+}

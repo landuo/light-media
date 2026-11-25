@@ -1,0 +1,84 @@
+{
+  "classification": "actual333/Python3.12 stdlib re.search only; JSON encoded test strings; no app/network; source expected before target",
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "cases": [
+    {
+      "pattern": "(?ai)(k)\\1",
+      "text": "kK",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "(?ai)(k)\\1",
+      "text": "kK",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?ai)(σ)\\1",
+      "text": "σΣ",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "(?ai)(σ)\\1",
+      "text": "σσ",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?i:a(?-mi:i))",
+      "text": "aI",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "(?i:a(?-mi:i))",
+      "text": "ai",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "\\e",
+      "text": "\u001b",
+      "matched": null,
+      "error": {
+        "class": "error",
+        "message": "bad escape \\e at position 0"
+      }
+    },
+    {
+      "pattern": "\\中",
+      "text": "中",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?i)(?P<Id>k)(?P=Id)",
+      "text": "kK",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?i)(?P<Id>k)\\1",
+      "text": "kK",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?P<1>k)",
+      "text": "k",
+      "matched": null,
+      "error": {
+        "class": "error",
+        "message": "bad character in group name '1' at position 4"
+      }
+    },
+    {
+      "pattern": "(?P<中文>k)(?P=中文)",
+      "text": "kk",
+      "matched": true,
+      "error": null
+    }
+  ]
+}

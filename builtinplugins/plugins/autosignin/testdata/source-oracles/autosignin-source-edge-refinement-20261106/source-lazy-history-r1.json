@@ -1,0 +1,329 @@
+{
+  "classification": "actual original do/visitor/SQLite persistence with matched synthetic responses; tests lazy short circuit and late setitem error timing, no app/network",
+  "rows": [
+    {
+      "history": {
+        "results": [
+          "bad"
+        ],
+        "do": [],
+        "retry": 7
+      },
+      "error": {
+        "kind": "TypeError",
+        "message": "list indices must be integers or slices, not str"
+      },
+      "effects": [
+        "indexers",
+        "HTTP",
+        "HTTP",
+        "stats.fail"
+      ],
+      "keys": [
+        "\u7b7e\u5230-2026-11-06",
+        "11\u67086\u65e5"
+      ],
+      "data": {
+        "\u7b7e\u5230-2026-11-06": {
+          "results": [
+            "bad"
+          ],
+          "do": [],
+          "retry": 7
+        },
+        "11\u67086\u65e5": [
+          {
+            "site": "Owned",
+            "status": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1aowned-failure\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+            "site_id": 1,
+            "type": "\u7b7e\u5230",
+            "success": false,
+            "logged_in": false
+          }
+        ]
+      }
+    },
+    {
+      "history": {
+        "results": "bad",
+        "do": [
+          1
+        ],
+        "retry": [
+          1
+        ]
+      },
+      "error": {
+        "kind": "TypeError",
+        "message": "'str' object does not support item assignment"
+      },
+      "effects": [
+        "indexers",
+        "HTTP",
+        "HTTP",
+        "stats.fail"
+      ],
+      "keys": [
+        "\u7b7e\u5230-2026-11-06",
+        "11\u67086\u65e5"
+      ],
+      "data": {
+        "\u7b7e\u5230-2026-11-06": {
+          "results": "bad",
+          "do": [
+            1
+          ],
+          "retry": [
+            1
+          ]
+        },
+        "11\u67086\u65e5": [
+          {
+            "site": "Owned",
+            "status": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1aowned-failure\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+            "site_id": 1,
+            "type": "\u7b7e\u5230",
+            "success": false,
+            "logged_in": false
+          }
+        ]
+      }
+    },
+    {
+      "history": {
+        "results": {
+          "1": null
+        },
+        "do": []
+      },
+      "error": null,
+      "effects": [
+        "indexers",
+        "HTTP",
+        "HTTP",
+        "stats.fail",
+        "update_config"
+      ],
+      "keys": [
+        "\u7b7e\u5230-2026-11-06",
+        "11\u67086\u65e5"
+      ],
+      "data": {
+        "\u7b7e\u5230-2026-11-06": {
+          "do": [
+            1
+          ],
+          "retry": [
+            1
+          ],
+          "results": {
+            "1": {
+              "success": false,
+              "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1aowned-failure\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+              "logged_in": false
+            }
+          }
+        },
+        "11\u67086\u65e5": [
+          {
+            "site": "Owned",
+            "status": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1aowned-failure\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+            "site_id": 1,
+            "type": "\u7b7e\u5230",
+            "success": false,
+            "logged_in": false
+          }
+        ]
+      }
+    },
+    {
+      "history": {
+        "results": {
+          "1": null
+        },
+        "do": [
+          1
+        ],
+        "retry": [
+          1
+        ]
+      },
+      "error": null,
+      "effects": [
+        "indexers",
+        "HTTP",
+        "HTTP",
+        "stats.fail",
+        "update_config"
+      ],
+      "keys": [
+        "\u7b7e\u5230-2026-11-06",
+        "11\u67086\u65e5"
+      ],
+      "data": {
+        "\u7b7e\u5230-2026-11-06": {
+          "do": [
+            1
+          ],
+          "retry": [
+            1
+          ],
+          "results": {
+            "1": {
+              "success": false,
+              "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1aowned-failure\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+              "logged_in": false
+            }
+          }
+        },
+        "11\u67086\u65e5": [
+          {
+            "site": "Owned",
+            "status": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1aowned-failure\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+            "site_id": 1,
+            "type": "\u7b7e\u5230",
+            "success": false,
+            "logged_in": false
+          }
+        ]
+      }
+    },
+    {
+      "history": {
+        "results": {
+          "1": {
+            "success": true,
+            "logged_in": [
+              "bad"
+            ]
+          }
+        },
+        "do": [
+          1
+        ]
+      },
+      "error": null,
+      "effects": [
+        "indexers"
+      ],
+      "keys": [
+        "\u7b7e\u5230-2026-11-06"
+      ],
+      "data": {
+        "\u7b7e\u5230-2026-11-06": {
+          "results": {
+            "1": {
+              "success": true,
+              "logged_in": [
+                "bad"
+              ]
+            }
+          },
+          "do": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "history": {
+        "results": {},
+        "do": [],
+        "retry": 7
+      },
+      "error": null,
+      "effects": [
+        "indexers",
+        "HTTP",
+        "HTTP",
+        "stats.fail",
+        "update_config"
+      ],
+      "keys": [
+        "\u7b7e\u5230-2026-11-06",
+        "11\u67086\u65e5"
+      ],
+      "data": {
+        "\u7b7e\u5230-2026-11-06": {
+          "do": [
+            1
+          ],
+          "retry": [
+            1
+          ],
+          "results": {
+            "1": {
+              "success": false,
+              "message": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1aowned-failure\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+              "logged_in": false
+            }
+          }
+        },
+        "11\u67086\u65e5": [
+          {
+            "site": "Owned",
+            "status": "\u7b7e\u5230\u5931\u8d25\uff0c\u7b7e\u5230\u7ed3\u679c\uff1aowned-failure\uff1b\u6a21\u62df\u767b\u5f55\u5931\u8d25\uff0c\u72b6\u6001\u7801\uff1a200",
+            "site_id": 1,
+            "type": "\u7b7e\u5230",
+            "success": false,
+            "logged_in": false
+          }
+        ]
+      }
+    },
+    {
+      "history": {
+        "results": {},
+        "do": 7
+      },
+      "error": {
+        "kind": "TypeError",
+        "message": "argument of type 'int' is not iterable"
+      },
+      "effects": [
+        "indexers"
+      ],
+      "keys": [
+        "\u7b7e\u5230-2026-11-06"
+      ],
+      "data": {
+        "\u7b7e\u5230-2026-11-06": {
+          "results": {},
+          "do": 7
+        }
+      }
+    },
+    {
+      "history": {
+        "results": {},
+        "do": [
+          1
+        ],
+        "retry": 7
+      },
+      "error": {
+        "kind": "TypeError",
+        "message": "argument of type 'int' is not iterable"
+      },
+      "effects": [
+        "indexers"
+      ],
+      "keys": [
+        "\u7b7e\u5230-2026-11-06"
+      ],
+      "data": {
+        "\u7b7e\u5230-2026-11-06": {
+          "results": {},
+          "do": [
+            1
+          ],
+          "retry": 7
+        }
+      }
+    }
+  ],
+  "cleanup": {
+    "owned_logs_removed": true,
+    "logger_thread_alive": false
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "file_sha256": "95404cecc5d6be304934bdff21222836f66702b4c5a4412704f25c181856716c"
+  },
+  "cases": [
+    {
+      "name": "titleless-utf8-form",
+      "url": "chanify://Owned_3-v.1",
+      "title": " 标题 ",
+      "body": "a+b & x=1%  ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.chanify.net/v1/sender/Owned_3-v.1/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "text=%E6%A0%87%E9%A2%98%0D%0Aa%2Bb+%26+x%3D1%25",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "html-override-and-attachment",
+      "url": "chanify://invalid!/?token=Owned%252EOverride&format=html&verify=no&cto=2.5&rto=7",
+      "title": "Title",
+      "body": "<i>正文</i>",
+      "attach": "https://owned-image.invalid/image.png",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.chanify.net/v1/sender/Owned.Override/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "text=%3Cb%3ETitle%3C%2Fb%3E%3Cbr+%2F%3E%0D%0A%3Ci%3E%E6%AD%A3%E6%96%87%3C%2Fi%3E",
+          "verify": false,
+          "timeout": [
+            2.5,
+            7.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "status-must-be-200",
+      "url": "chanify://OwnedToken",
+      "title": "",
+      "body": "body",
+      "attach": null,
+      "statuses": [
+        201
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.chanify.net/v1/sender/OwnedToken/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "text=body",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "connection-failure",
+      "url": "chanify://OwnedToken",
+      "title": "Title",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        0
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.chanify.net/v1/sender/OwnedToken/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "text=Title%0D%0ABody",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "empty-body",
+      "url": "chanify://OwnedToken",
+      "title": "Title only",
+      "body": "",
+      "attach": null,
+      "statuses": [],
+      "added": true,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "reject-token-punctuation",
+      "url": "chanify://bad%21token",
+      "title": "",
+      "body": "body",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "reject-decoded-leading-space",
+      "url": "chanify://%20OwnedToken",
+      "title": "",
+      "body": "body",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "unicode-regex-casefold",
+      "url": "chanify://%C4%B0%C4%B1%C5%BF%E2%84%AA",
+      "title": "",
+      "body": "body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.chanify.net/v1/sender/%C4%B0%C4%B1%C5%BF%E2%84%AA/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "text=body",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "dot-token-url-normalization",
+      "url": "chanify://ignored?token=..",
+      "title": "",
+      "body": "body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.chanify.net/v1/",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "body": "text=body",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    }
+  ]
+}

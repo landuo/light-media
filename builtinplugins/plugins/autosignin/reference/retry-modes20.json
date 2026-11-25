@@ -1,0 +1,126 @@
+{
+  "classification": "actual333/Python3.12 stdlib re.search only; JSON encoded test strings; no app/network; source expected before target",
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "cases": [
+    {
+      "pattern": "(?#\\b)a",
+      "text": "a",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?#\\p{L})a",
+      "text": "a",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?#escaped \\))a",
+      "text": "a",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?x)# \\p{L}\na",
+      "text": "a",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?#lead)(?i)a",
+      "text": "A",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?x)  #lead\n(?i)a",
+      "text": "A",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?x:(?-x:#))",
+      "text": "#",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?ai)k",
+      "text": "K",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "(?ai)k",
+      "text": "K",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?ai)[\\w]",
+      "text": "K",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "(?ai)[\\w]",
+      "text": "K",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?ai)[a-z]",
+      "text": "K",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "(?ai)[a-z]",
+      "text": "K",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?i:a(?-mi:b))",
+      "text": "aB",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "(?i:a(?-mi:b))",
+      "text": "Ab",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?i)σ",
+      "text": "ς",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?i)Σ",
+      "text": "ς",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?i)[Σ]",
+      "text": "ς",
+      "matched": true,
+      "error": null
+    },
+    {
+      "pattern": "(?ai)σ",
+      "text": "Σ",
+      "matched": false,
+      "error": null
+    },
+    {
+      "pattern": "(?i)(s)\\1",
+      "text": "sſ",
+      "matched": false,
+      "error": null
+    }
+  ]
+}

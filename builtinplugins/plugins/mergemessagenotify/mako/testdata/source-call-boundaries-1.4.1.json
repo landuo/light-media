@@ -1,0 +1,106 @@
+{
+  "mako": "1.4.1",
+  "markupsafe": "3.0.3",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "source_sha256": {
+    "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+    "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+    "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+    "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+    "mako/ast.py": "f0248c12c8827349ea6d1b7d88dcf325743c589d04d50fcde63e982a5e44395b",
+    "mako/pyparser.py": "6c0319ab7a64674b58c3be700396c4ad5f0a9df91f6e679b0264a0642df3db66",
+    "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d"
+  },
+  "cases": [
+    {
+      "name": "untaken-control-export",
+      "template": "<%def name=\"wrap()\">[${caller.hidden()}]</%def><%call expr=\"wrap()\">\n% if False:\n<%def name=\"hidden()\">H</%def>\n% endif\n</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "[H]",
+      "source_error": false
+    },
+    {
+      "name": "untaken-control-default-effects",
+      "template": "<%def name=\"wrap()\">[${caller.hidden()}]</%def><%call expr=\"wrap()\">\n% if False:\n<%def name=\"hidden(v=context.write('D'))\">H</%def>\n% endif\n</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "DD[H]",
+      "source_error": false
+    },
+    {
+      "name": "nested-call-export",
+      "template": "<%def name=\"wrap()\">O[${caller.piece()}|${caller.body()}]</%def><%def name=\"inner()\">I[${caller.piece()}]</%def><%call expr=\"wrap()\"><%call expr=\"inner()\"><%def name=\"piece()\">P</%def></%call></%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "O[P|I[P]]",
+      "source_error": false
+    },
+    {
+      "name": "nested-def-export-barrier",
+      "template": "<%def name=\"wrap()\">${caller.part()}|${caller.hidden()}</%def><%call expr=\"wrap()\"><%def name=\"part()\"><%def name=\"hidden()\">H</%def>${hidden()}</%def></%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "<%def name=\"wrap()\">${caller.part()}|${caller.hidden()}</%def><%call expr=\"wrap()\"><%def name=\"part()\"><%def name=\"hidden()\">H</%def>${hidden()}</%def></%call>",
+      "source_error": true
+    },
+    {
+      "name": "namespace-context-read-write",
+      "template": "<%def name=\"wrap()\" buffered=\"True\"><% caller.context.write(caller.context.get(\"title\")) %>|${caller.context.get(\"missing\", \"default\")}|${bool(caller.context.caller_stack)}|${caller.body()}</%def><%call expr=\"wrap()\">owned body</%call>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "Owned <text>|default|True|owned body",
+      "source_error": false
+    },
+    {
+      "name": "namespace-context-local-is-absent",
+      "template": "<% local_value = \"local\" %><%def name=\"wrap()\">${caller.context.get(\"local_value\", \"missing\")}</%def><%call expr=\"wrap()\"/>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "missing",
+      "source_error": false
+    },
+    {
+      "name": "namespace-builtins",
+      "template": "<%def name=\"wrap()\">${caller.name}|${caller.inherits is None}|${caller.module is None}|${caller.template is None}|${caller.filename is None}|${caller.uri is None}</%def><%call expr=\"wrap()\"/>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "caller|True|True|True|True|True",
+      "source_error": false
+    },
+    {
+      "name": "noncallable-still-evaluates-arguments",
+      "template": "<%def name=\"arg()\">A</%def><% f = 7 %>\n% try:\n<%call expr=\"f(arg())\"/>\n% except TypeError:\nT\n% endtry",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "\nAT\n",
+      "source_error": false
+    },
+    {
+      "name": "star-before-keyword-evaluation",
+      "template": "<%def name=\"pos()\">P</%def><%def name=\"kw()\">K</%def><%def name=\"wrap(a,b)\">W</%def><%call expr=\"wrap(b=kw(), *(pos(),))\"/>",
+      "vars": {
+        "title": "Owned <text>",
+        "count": 7
+      },
+      "expected": "PKW",
+      "source_error": false
+    }
+  ]
+}

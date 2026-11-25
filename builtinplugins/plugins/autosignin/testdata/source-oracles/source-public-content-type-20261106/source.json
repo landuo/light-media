@@ -1,0 +1,212 @@
+{
+  "classification": "actual immutable333 RequestUtils AST + Requests2.34.2 Response.encoding/text to owned rawloopback peer, no app/config/credentials",
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "requests": "2.34.2",
+  "urllib3": "2.7.0",
+  "source_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "library_hashes": {
+    "requests.models": "d1bc0d990abf5d5ebee05f890911b4363fadf2d5264b686a963df47c529b6ace",
+    "requests.utils": "657fd02343b2586bbd138a4ec0f03ceeb7610c2712f96ac54f28a708bf7d079c",
+    "urllib3.response": "f525f806491da0b82cc759deea1a6dfb93e772b9c3ccfcdea82d4369285273e3"
+  },
+  "rows": [
+    {
+      "name": "absent_utf8",
+      "content_type": "",
+      "encoding": null,
+      "apparent_encoding": "utf-8",
+      "body_hex": "e4b8ade69687",
+      "text": "\u4e2d\u6587",
+      "source_header_values": []
+    },
+    {
+      "name": "absent_latin1",
+      "content_type": "",
+      "encoding": null,
+      "apparent_encoding": "ISO-8859-1",
+      "body_hex": "636166e9",
+      "text": "caf\u00e9",
+      "source_header_values": []
+    },
+    {
+      "name": "plain_default",
+      "content_type": "text/plain",
+      "encoding": "ISO-8859-1",
+      "apparent_encoding": "utf-8",
+      "body_hex": "e4b8ade69687",
+      "text": "\u00e4\u00b8\u00ad\u00e6\u0096\u0087",
+      "source_header_values": [
+        "text/plain"
+      ]
+    },
+    {
+      "name": "utf8",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "UTF-8",
+      "apparent_encoding": "utf-8",
+      "body_hex": "e4b8ade69687",
+      "text": "\u4e2d\u6587",
+      "source_header_values": [
+        "text/html; charset=UTF-8"
+      ]
+    },
+    {
+      "name": "gbk",
+      "content_type": "text/html; charset=GBK",
+      "encoding": "GBK",
+      "apparent_encoding": "GB18030",
+      "body_hex": "d6d0cec4",
+      "text": "\u4e2d\u6587",
+      "source_header_values": [
+        "text/html; charset=GBK"
+      ]
+    },
+    {
+      "name": "json",
+      "content_type": "application/json",
+      "encoding": "utf-8",
+      "apparent_encoding": "utf-8",
+      "body_hex": "7b226e616d65223a22e4b8ade69687227d",
+      "text": "{\"name\":\"\u4e2d\u6587\"}",
+      "source_header_values": [
+        "application/json"
+      ]
+    },
+    {
+      "name": "problem_json",
+      "content_type": "application/problem+json",
+      "encoding": null,
+      "apparent_encoding": "utf-8",
+      "body_hex": "7b226e616d65223a22e4b8ade69687227d",
+      "text": "{\"name\":\"\u4e2d\u6587\"}",
+      "source_header_values": [
+        "application/problem+json"
+      ]
+    },
+    {
+      "name": "quoted_latin1",
+      "content_type": "text/plain; charset=\"ISO-8859-1\"",
+      "encoding": "ISO-8859-1",
+      "apparent_encoding": "ISO-8859-1",
+      "body_hex": "636166e9",
+      "text": "caf\u00e9",
+      "source_header_values": [
+        "text/plain; charset=\"ISO-8859-1\""
+      ]
+    },
+    {
+      "name": "case_windows",
+      "content_type": "TEXT/PLAIN; CHARSET=windows-1252",
+      "encoding": "windows-1252",
+      "apparent_encoding": "cp862",
+      "body_hex": "636166e92080",
+      "text": "caf\u00e9 \u20ac",
+      "source_header_values": [
+        "TEXT/PLAIN; CHARSET=windows-1252"
+      ]
+    },
+    {
+      "name": "invalid_charset",
+      "content_type": "text/plain; charset=not-an-owned-encoding",
+      "encoding": "not-an-owned-encoding",
+      "apparent_encoding": "ISO-8859-1",
+      "body_hex": "636166e9",
+      "text": "caf\ufffd",
+      "source_header_values": [
+        "text/plain; charset=not-an-owned-encoding"
+      ]
+    },
+    {
+      "name": "empty",
+      "content_type": "",
+      "encoding": null,
+      "apparent_encoding": "utf-8",
+      "body_hex": "e4b8ade69687",
+      "text": "\u4e2d\u6587",
+      "source_header_values": [
+        ""
+      ]
+    },
+    {
+      "name": "duplicate_utf8_last",
+      "content_type": "text/plain; charset=ISO-8859-1, text/plain; charset=UTF-8",
+      "encoding": "UTF-8",
+      "apparent_encoding": "utf-8",
+      "body_hex": "e4b8ade69687",
+      "text": "\u4e2d\u6587",
+      "source_header_values": [
+        "text/plain; charset=ISO-8859-1",
+        "text/plain; charset=UTF-8"
+      ]
+    },
+    {
+      "name": "duplicate_latin1_last",
+      "content_type": "text/plain; charset=UTF-8, text/plain; charset=ISO-8859-1",
+      "encoding": "ISO-8859-1",
+      "apparent_encoding": "utf-8",
+      "body_hex": "e4b8ade69687",
+      "text": "\u00e4\u00b8\u00ad\u00e6\u0096\u0087",
+      "source_header_values": [
+        "text/plain; charset=UTF-8",
+        "text/plain; charset=ISO-8859-1"
+      ]
+    },
+    {
+      "name": "duplicate_case",
+      "content_type": "text/plain, application/json",
+      "encoding": "ISO-8859-1",
+      "apparent_encoding": "utf-8",
+      "body_hex": "e4b8ade69687",
+      "text": "\u00e4\u00b8\u00ad\u00e6\u0096\u0087",
+      "source_header_values": [
+        "text/plain",
+        "application/json"
+      ]
+    },
+    {
+      "name": "utf8_badbytes",
+      "content_type": "text/plain; charset=utf-8",
+      "encoding": "utf-8",
+      "apparent_encoding": "ISO-8859-1",
+      "body_hex": "636166e9",
+      "text": "caf\ufffd",
+      "source_header_values": [
+        "text/plain; charset=utf-8"
+      ]
+    },
+    {
+      "name": "bom_absent",
+      "content_type": "",
+      "encoding": null,
+      "apparent_encoding": "UTF-8-SIG",
+      "body_hex": "efbbbf6f776e6564",
+      "text": "owned",
+      "source_header_values": []
+    },
+    {
+      "name": "html_meta",
+      "content_type": "text/html",
+      "encoding": "ISO-8859-1",
+      "apparent_encoding": "utf-8",
+      "body_hex": "3c6d65746120636861727365743d227574662d38223ee4b8ade69687",
+      "text": "<meta charset=\"utf-8\">\u00e4\u00b8\u00ad\u00e6\u0096\u0087",
+      "source_header_values": [
+        "text/html"
+      ]
+    },
+    {
+      "name": "binary",
+      "content_type": "image/jpeg",
+      "encoding": null,
+      "apparent_encoding": "ascii",
+      "body_hex": "202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60616263",
+      "text": " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abc",
+      "source_header_values": [
+        "image/jpeg"
+      ]
+    }
+  ],
+  "physical_requests": 18,
+  "connects": 18,
+  "source_image": "33354456"
+}

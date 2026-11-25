@@ -1,0 +1,17 @@
+This private AutoSignIn regex leaf contains only the necessary production Go
+closure of github.com/dlclark/regexp2/v2 v2.9.0. All original file SHA256s,
+import relocations and candidate hashes are in ORIGIN.json. There is no nested
+module and no module-cache edit. LICENSE and ATTRIB retain complete upstream
+MIT/Doug Clark/Microsoft notices.
+
+Four source files are modified after import relocation: syntax/parser.go,
+syntax/code.go, syntax/writer.go and runner.go. A scoped internal ASCII option
+is carried only onto case-insensitive backreference instructions, which then
+fold A-Z only, following actual Python3.12 source observations. No new timeout,
+executor, persistent queue, host permission or transport API is introduced.
+The AutoSignIn Python syntax/Unicode/class translator remains outside this leaf.
+No CGo or Python product runtime is required.
+
+This is a migration candidate. Independent unused-consumer, license packaging
+and actual integrated host/main gates remain pending; historical external-module
+v2.9.0 checks do not certify this private source variant.

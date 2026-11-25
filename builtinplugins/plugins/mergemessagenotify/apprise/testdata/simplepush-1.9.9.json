@@ -1,0 +1,377 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "simplepush_sha256": "f63d15a80436bfcb6febefac652ff63a7e4234c2bf5012c94651c3c31eb38b4c",
+    "cryptography": "49.0.0"
+  },
+  "iv_hex": "000102030405060708090a0b0c0d0e0f",
+  "cases": [
+    {
+      "name": "simplepush-plaintext-and-event",
+      "url": "spush://OwnedKey?event=owned%2520event&verify=no&cto=2&rto=8",
+      "title": " 标题 ",
+      "body": "body ",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"status\": \"OK\"}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.simplepush.io/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          "body": "key=OwnedKey&msg=body&title=%E6%A0%87%E9%A2%98&event=owned+event",
+          "verify": false,
+          "timeout": [
+            2.0,
+            8.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "iv_draws": []
+    },
+    {
+      "name": "simplepush-encrypted-iv-reuse",
+      "url": "spush://salt%2B:pass%252B@OwnedKey?event=owned",
+      "title": "题",
+      "body": "正文😀",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"status\": \"OK\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"status\": \"OK\"}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true,
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.simplepush.io/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          "body": "key=OwnedKey&encrypted=true&iv=000102030405060708090A0B0C0D0E0F&msg=Nc4Qf_WeftpnhhyKFNV4FA%3D%3D&title=NbhdeVxe9mSoxy5ZthN9rQ%3D%3D&event=owned",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.simplepush.io/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          "body": "key=OwnedKey&encrypted=true&iv=000102030405060708090A0B0C0D0E0F&msg=Nc4Qf_WeftpnhhyKFNV4FA%3D%3D&title=NbhdeVxe9mSoxy5ZthN9rQ%3D%3D&event=owned",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        5.5
+      ],
+      "iv_draws": [
+        16
+      ]
+    },
+    {
+      "name": "simplepush-encrypted-empty-title",
+      "url": "spush://OwnedKey?user=salt&pass=password",
+      "title": "",
+      "body": "body",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"status\": \"OK\"}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.simplepush.io/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          "body": "key=OwnedKey&encrypted=true&iv=000102030405060708090A0B0C0D0E0F&msg=FWaFinWMyOdsro2HbLc7gg%3D%3D&title=TvLySlatEeZdM6MKBvE1rg%3D%3D",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "iv_draws": [
+        16
+      ]
+    },
+    {
+      "name": "simplepush-salt-without-password",
+      "url": "spush://ownedSalt@OwnedKey",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"status\": \"OK\"}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.simplepush.io/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          "body": "key=OwnedKey&msg=b&title=t",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "iv_draws": []
+    },
+    {
+      "name": "simplepush-201-rejected",
+      "url": "spush://OwnedKey",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 201,
+          "body": "{\"status\": \"OK\"}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.simplepush.io/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          "body": "key=OwnedKey&msg=b&title=t",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "iv_draws": []
+    },
+    {
+      "name": "simplepush-status-case-sensitive",
+      "url": "spush://OwnedKey",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"status\": \"ok\"}"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.simplepush.io/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          "body": "key=OwnedKey&msg=b&title=t",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "iv_draws": []
+    },
+    {
+      "name": "simplepush-nonobject-reply",
+      "url": "spush://OwnedKey",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 200,
+          "body": "[]"
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.simplepush.io/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          "body": "key=OwnedKey&msg=b&title=t",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "iv_draws": []
+    },
+    {
+      "name": "simplepush-transport-failure",
+      "url": "spush://OwnedKey",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [
+        {
+          "status": 0,
+          "body": ""
+        }
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.simplepush.io/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          "body": "key=OwnedKey&msg=b&title=t",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "iv_draws": []
+    },
+    {
+      "name": "simplepush-blank-api-key",
+      "url": "spush://%20",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "replies": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": [],
+      "iv_draws": []
+    },
+    {
+      "name": "simplepush-attachment-ignored",
+      "url": "spush://OwnedKey",
+      "title": "t",
+      "body": "b",
+      "attach": "https://owned-image.invalid/ignore.png",
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"status\": \"OK\"}"
+        }
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.simplepush.io/send",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-type": "application/x-www-form-urlencoded"
+          },
+          "body": "key=OwnedKey&msg=b&title=t",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "iv_draws": []
+    }
+  ]
+}

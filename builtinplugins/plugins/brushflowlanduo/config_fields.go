@@ -1,0 +1,6 @@
+package brushflowlanduo
+
+var taskFields = []string{"enabled", "notify", "site_id", "downloader", "brush_interval", "check_interval", "cron", "active_time_range", "site_ratio_control", "site_ratio_target", "disksize", "maxupspeed", "maxdlspeed", "maxdlcount", "freeleech", "hr", "include", "exclude", "size", "seeder", "timezone_offset", "pubtime", "seed_time", "hr_seed_time", "seed_ratio", "seed_size", "download_time", "seed_avgspeed", "seed_inactivetime", "delete_size_range", "up_speed", "dl_speed", "auto_archive_days", "save_path", "delete_except_tags", "except_subscribe", "proxy_delete", "del_no_free", "promo_max_hours", "qb_category", "site_hr_active", "site_skip_tips", "rss_support"}
+var globalLimitFields = []string{"global_disksize", "global_maxdlcount", "global_maxupspeed", "global_maxdlspeed"}
+var globalDeleteFields = []string{"global_proxy_delete", "global_delete_size_range"}
+var legacyOverrideFields = []string{"del_no_free", "download_time", "exclude", "freeleech", "hr", "hr_seed_time", "include", "promo_max_hours", "proxy_delete", "pubtime", "qb_category", "rss_support", "save_path", "seed_avgspeed", "seed_inactivetime", "seed_ratio", "seed_size", "seed_time", "seeder", "site_hr_active", "site_skip_tips", "size", "timezone_offset"}

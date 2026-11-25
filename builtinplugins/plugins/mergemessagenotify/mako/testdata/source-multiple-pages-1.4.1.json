@@ -1,0 +1,257 @@
+{
+  "mako": "1.4.1",
+  "markupsafe": "3.0.4",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "has_beaker": false,
+  "source_sha256": {
+    "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+    "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+    "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+    "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+    "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d",
+    "mako/cache.py": "0e7a30b905b44dc9c06b9bb9b4d37b0ffaaf5a3a9f3ca72c4c80a202a7038e83",
+    "mako/ext/beaker_cache.py": "4ca18af1570ca3eb29c257039f004dfc6ea6856a93b12c0e9916e18c3315d93e"
+  },
+  "cases": [
+    {
+      "name": "last-page-ignores-old-required",
+      "template": "<%page args=\"missing\"/><%page args=\"count=3\"/>count=${count}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"missing\"/><%page args=\"count=3\"/>count=${count}",
+      "source_error": true
+    },
+    {
+      "name": "last-page-default-overwrites-old",
+      "template": "<%page args=\"chosen=missing_call()\"/><%page args=\"chosen=3\"/>${chosen}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "3",
+      "source_error": false
+    },
+    {
+      "name": "old-only-binding-remains-unbound",
+      "template": "<%page args=\"title\"/><%page args=\"count\"/>before=${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"title\"/><%page args=\"count\"/>before=${title}",
+      "source_error": true
+    },
+    {
+      "name": "old-only-binding-before-tag",
+      "template": "before=${title}<%page args=\"title\"/><%page args=\"count\"/>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "before=${title}<%page args=\"title\"/><%page args=\"count\"/>",
+      "source_error": true
+    },
+    {
+      "name": "old-only-binding-module-value",
+      "template": "<%! title='module' %><%page args=\"title\"/><%page args=\"count\"/>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "module",
+      "source_error": false
+    },
+    {
+      "name": "last-empty-clears-page-signature",
+      "template": "<%page args=\"unused\"/><%page/>${count}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"unused\"/><%page/>${count}",
+      "source_error": true
+    },
+    {
+      "name": "old-pageargs-collision-ignored",
+      "template": "<%page args=\"pageargs\"/><%page args=\"count\"/>${count}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "7",
+      "source_error": false
+    },
+    {
+      "name": "last-pageargs-collision-fallback",
+      "template": "<%page args=\"count\"/><%page args=\"pageargs\"/>${count}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"count\"/><%page args=\"pageargs\"/>${count}",
+      "source_error": true
+    },
+    {
+      "name": "last-filter-and-cache",
+      "template": "<%page expression_filter=\"missing_filter\" cached=\"True\"/><%page expression_filter=\"h\"/>${\"<x>\"}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "&lt;x&gt;",
+      "source_error": false
+    },
+    {
+      "name": "old-cached-eval-ignored",
+      "template": "<%page cached=\"missing_cache_option\"/><%page/>${count}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "7",
+      "source_error": false
+    },
+    {
+      "name": "last-cached-uses-beaker",
+      "template": "<%page/><%page cached=\"True\"/>${count}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page/><%page cached=\"True\"/>${count}",
+      "source_error": true
+    },
+    {
+      "name": "page-in-inactive-control-still-selected",
+      "template": "<%page args=\"unused\"/>\n% if False:\n<%page args=\"chosen=4\"/>\n% endif\n${chosen}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"unused\"/>\n% if False:\n<%page args=\"chosen=4\"/>\n% endif\n${chosen}",
+      "source_error": true
+    },
+    {
+      "name": "page-in-def-selected-for-body",
+      "template": "<%page args=\"unused\"/><%def name=\"inner()\"><%page args=\"chosen=5\"/>inside</%def>${chosen}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"unused\"/><%def name=\"inner()\"><%page args=\"chosen=5\"/>inside</%def>${chosen}",
+      "source_error": true
+    },
+    {
+      "name": "page-in-def-not-bound-by-body-signature",
+      "template": "<%page args=\"unused\"/><%def name=\"inner()\"><%page args=\"chosen=5\"/>${chosen}</%def>${inner()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"unused\"/><%def name=\"inner()\"><%page args=\"chosen=5\"/>${chosen}</%def>${inner()}",
+      "source_error": true
+    },
+    {
+      "name": "nested-page-can-set-body-argument",
+      "template": "<%page/><%def name=\"inner()\"><%page args=\"chosen=5\"/>inside</%def>${chosen}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page/><%def name=\"inner()\"><%page args=\"chosen=5\"/>inside</%def>${chosen}",
+      "source_error": true
+    },
+    {
+      "name": "nested-page-does-not-bind-def-argument",
+      "template": "<%page/><%def name=\"inner()\"><%page args=\"chosen=5\"/>${chosen}</%def>${inner()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page/><%def name=\"inner()\"><%page args=\"chosen=5\"/>${chosen}</%def>${inner()}",
+      "source_error": true
+    },
+    {
+      "name": "old-page-name-locally-assigned",
+      "template": "<%! title='module' %><%page args=\"title\"/><%page args=\"count\"/><% title='local' %>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%! title='module' %><%page args=\"title\"/><%page args=\"count\"/><% title='local' %>${title}",
+      "source_error": true
+    },
+    {
+      "name": "old-name-still-in-pageargs",
+      "template": "<%! title='module' %><%page args=\"title\"/><%page args=\"count\"/>${title}|${pageargs['title']}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "module|Owned",
+      "source_error": false
+    },
+    {
+      "name": "old-enable-loop-option-ignored",
+      "template": "<%page enable_loop=\"missing_option\"/><%page/>${count}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "7",
+      "source_error": false
+    },
+    {
+      "name": "selected-enable-loop-uses-true-default",
+      "template": "<%page/><%page enable_loop=\"missing_option\"/>${count}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "7",
+      "source_error": false
+    },
+    {
+      "name": "false-page-option-retains-loop-default",
+      "template": "<%page/><%page enable_loop=\"False\"/>\n% for item in [1, 2]:\n${loop.index}\n% endfor\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\n0\n1\n",
+      "source_error": false
+    },
+    {
+      "name": "old-page-name-is-loop-target",
+      "template": "<%! title='module' %><%page args=\"title\"/><%page args=\"count\"/>\n% for title in ['row']:\n${title}\n% endfor\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%! title='module' %><%page args=\"title\"/><%page args=\"count\"/>\n% for title in ['row']:\n${title}\n% endfor\n",
+      "source_error": true
+    },
+    {
+      "name": "old-page-name-is-exception-target",
+      "template": "<%! title='module' %><%page args=\"title\"/><%page args=\"count\"/>\n% try:\n${1 / 0}\n% except Exception as title:\n${title}\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%! title='module' %><%page args=\"title\"/><%page args=\"count\"/>\n% try:\n${1 / 0}\n% except Exception as title:\n${title}\n% endtry\n",
+      "source_error": true
+    },
+    {
+      "name": "nested-page-default-not-forwarded",
+      "template": "<%page/><%def name=\"holder()\"><%page args=\"chosen=5\"/></%def><%def name=\"use()\">${chosen}</%def>${use()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page/><%def name=\"holder()\"><%page args=\"chosen=5\"/></%def><%def name=\"use()\">${chosen}</%def>${use()}",
+      "source_error": true
+    }
+  ]
+}

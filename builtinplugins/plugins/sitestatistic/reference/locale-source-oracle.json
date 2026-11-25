@@ -1,0 +1,433 @@
+{
+  "classification": "captured complete pure stdlib LocaleHelper with synthetic requests; no app import, network or production state",
+  "python": "3.14.4",
+  "source_hashes": {
+    "locale-source-reference/locale.py": "3fdc78c7e7478a79f6a472716d7d4fc1b57b5306100d9e5c3cf6c8703117bd69",
+    "locale-source-reference/app/locales/en-US.json": "4cde1f9dfbcc7a88057a82c8e890cebef4732f087ca1f9f8d7472bd2b998e73e",
+    "locale-source-reference/app/locales/zh-CN.json": "4a0a115e310a30ace85a380ca0526ec88ba5b52064823435a0168cb640f865d0",
+    "locale-source-reference/app/locales/zh-TW.json": "16783327721814da1ae801ce06f0668afa8fb3ef4d851d529138162ae54a8a62"
+  },
+  "requests": [
+    {
+      "name": "default",
+      "query": {},
+      "headers": {},
+      "locale": "zh-CN"
+    },
+    {
+      "name": "query",
+      "query": {
+        "locale": "en_US"
+      },
+      "headers": {
+        "x-locale": "zh-TW"
+      },
+      "locale": "en-US"
+    },
+    {
+      "name": "bad-query",
+      "query": {
+        "locale": "fr"
+      },
+      "headers": {
+        "x-locale": "en"
+      },
+      "locale": "zh-CN"
+    },
+    {
+      "name": "empty-query",
+      "query": {
+        "locale": ""
+      },
+      "headers": {
+        "x-locale": "en"
+      },
+      "locale": "en-US"
+    },
+    {
+      "name": "blank-query",
+      "query": {
+        "locale": " "
+      },
+      "headers": {
+        "x-locale": "en"
+      },
+      "locale": "zh-CN"
+    },
+    {
+      "name": "first-header",
+      "query": {},
+      "headers": {
+        "x-moviepilot-locale": "zh_Hant",
+        "x-locale": "en"
+      },
+      "locale": "zh-TW"
+    },
+    {
+      "name": "bad-first-header",
+      "query": {},
+      "headers": {
+        "x-moviepilot-locale": "fr",
+        "x-locale": "en"
+      },
+      "locale": "zh-CN"
+    },
+    {
+      "name": "second-header",
+      "query": {},
+      "headers": {
+        "x-locale": "\u001cen\u001f"
+      },
+      "locale": "en-US"
+    },
+    {
+      "name": "quality",
+      "query": {},
+      "headers": {
+        "accept-language": "fr;q=1,zh-TW;q=.3,en-US;q=.8"
+      },
+      "locale": "en-US"
+    },
+    {
+      "name": "quality-tie",
+      "query": {},
+      "headers": {
+        "accept-language": "en;q=0.2,zh-TW;q=0.2"
+      },
+      "locale": "en-US"
+    },
+    {
+      "name": "unsupported",
+      "query": {},
+      "headers": {
+        "accept-language": "fr;q=1,de;q=.9"
+      },
+      "locale": "zh-CN"
+    },
+    {
+      "name": "bad-quality",
+      "query": {},
+      "headers": {
+        "accept-language": "en;q=oops,zh-TW;q=.1"
+      },
+      "locale": "zh-TW"
+    },
+    {
+      "name": "zero-quality",
+      "query": {},
+      "headers": {
+        "accept-language": "en;q=0"
+      },
+      "locale": "en-US"
+    },
+    {
+      "name": "negative-quality",
+      "query": {},
+      "headers": {
+        "accept-language": "en;q=-1,zh-TW;q=-2"
+      },
+      "locale": "en-US"
+    },
+    {
+      "name": "multiple-quality",
+      "query": {},
+      "headers": {
+        "accept-language": "en;q=1;q=oops,zh-TW;q=.1"
+      },
+      "locale": "zh-TW"
+    },
+    {
+      "name": "uppercase-quality",
+      "query": {},
+      "headers": {
+        "accept-language": "en;Q=0,zh-TW;q=.1"
+      },
+      "locale": "en-US"
+    },
+    {
+      "name": "nan-first",
+      "query": {},
+      "headers": {
+        "accept-language": "fr;q=nan,en;q=.1,zh-TW;q=.5"
+      },
+      "locale": "zh-TW"
+    },
+    {
+      "name": "nan-middle",
+      "query": {},
+      "headers": {
+        "accept-language": "en;q=.1,fr;q=nan,zh-TW;q=.5"
+      },
+      "locale": "en-US"
+    },
+    {
+      "name": "infinite-quality",
+      "query": {},
+      "headers": {
+        "accept-language": "en;q=inf,zh-TW;q=1"
+      },
+      "locale": "en-US"
+    },
+    {
+      "name": "unicode-quality",
+      "query": {},
+      "headers": {
+        "accept-language": "en;q=٠.٩,zh-TW;q=0.5"
+      },
+      "locale": "en-US"
+    },
+    {
+      "name": "underscore-quality",
+      "query": {},
+      "headers": {
+        "accept-language": "en;q=0.1_0,zh-TW;q=0.2"
+      },
+      "locale": "zh-TW"
+    }
+  ],
+  "translations": [
+    {
+      "locale": "zh-CN",
+      "text": "API密钥错误",
+      "translated": "API密钥错误"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "站点 fixture.invalid 不存在",
+      "translated": "站点 fixture.invalid 不存在"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "站点 fixture.invalid 刷新成功",
+      "translated": "站点 fixture.invalid 刷新成功"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "站点 fixture.invalid 刷新数据失败，未获取到数据",
+      "translated": "站点 fixture.invalid 刷新数据失败，未获取到数据"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "API密钥错误",
+      "translated": "API密钥错误"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "站点 任务已完成 不存在",
+      "translated": "站点 任务已完成 不存在"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "站点 任务已完成 刷新成功",
+      "translated": "站点 任务已完成 刷新成功"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "站点 任务已完成 刷新数据失败，未获取到数据",
+      "translated": "站点 任务已完成 刷新数据失败，未获取到数据"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "API密钥错误",
+      "translated": "API密钥错误"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "站点 a\nb 不存在",
+      "translated": "站点 a\nb 不存在"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "站点 a\nb 刷新成功",
+      "translated": "站点 a\nb 刷新成功"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "站点 a\nb 刷新数据失败，未获取到数据",
+      "translated": "站点 a\nb 刷新数据失败，未获取到数据"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "API密钥错误",
+      "translated": "API密钥错误"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "站点 站点 foo 不存在 不存在",
+      "translated": "站点 站点 foo 不存在 不存在"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "站点 站点 foo 不存在 刷新成功",
+      "translated": "站点 站点 foo 不存在 刷新成功"
+    },
+    {
+      "locale": "zh-CN",
+      "text": "站点 站点 foo 不存在 刷新数据失败，未获取到数据",
+      "translated": "站点 站点 foo 不存在 刷新数据失败，未获取到数据"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "API密钥错误",
+      "translated": "API密钥错误"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "站点 fixture.invalid 不存在",
+      "translated": "站點 fixture.invalid 不存在"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "站点 fixture.invalid 刷新成功",
+      "translated": "站点 fixture.invalid 刷新成功"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "站点 fixture.invalid 刷新数据失败，未获取到数据",
+      "translated": "站点 fixture.invalid 刷新数据失败，未获取到数据"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "API密钥错误",
+      "translated": "API密钥错误"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "站点 任务已完成 不存在",
+      "translated": "站點 任务已完成 不存在"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "站点 任务已完成 刷新成功",
+      "translated": "站点 任务已完成 刷新成功"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "站点 任务已完成 刷新数据失败，未获取到数据",
+      "translated": "站点 任务已完成 刷新数据失败，未获取到数据"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "API密钥错误",
+      "translated": "API密钥错误"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "站点 a\nb 不存在",
+      "translated": "站点 a\nb 不存在"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "站点 a\nb 刷新成功",
+      "translated": "站点 a\nb 刷新成功"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "站点 a\nb 刷新数据失败，未获取到数据",
+      "translated": "站点 a\nb 刷新数据失败，未获取到数据"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "API密钥错误",
+      "translated": "API密钥错误"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "站点 站点 foo 不存在 不存在",
+      "translated": "站點 站点 foo 不存在 不存在"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "站点 站点 foo 不存在 刷新成功",
+      "translated": "站点 站点 foo 不存在 刷新成功"
+    },
+    {
+      "locale": "zh-TW",
+      "text": "站点 站点 foo 不存在 刷新数据失败，未获取到数据",
+      "translated": "站点 站点 foo 不存在 刷新数据失败，未获取到数据"
+    },
+    {
+      "locale": "en-US",
+      "text": "API密钥错误",
+      "translated": "API密钥错误"
+    },
+    {
+      "locale": "en-US",
+      "text": "站点 fixture.invalid 不存在",
+      "translated": "Site fixture.invalid does not exist"
+    },
+    {
+      "locale": "en-US",
+      "text": "站点 fixture.invalid 刷新成功",
+      "translated": "站点 fixture.invalid 刷新成功"
+    },
+    {
+      "locale": "en-US",
+      "text": "站点 fixture.invalid 刷新数据失败，未获取到数据",
+      "translated": "站点 fixture.invalid 刷新数据失败，未获取到数据"
+    },
+    {
+      "locale": "en-US",
+      "text": "API密钥错误",
+      "translated": "API密钥错误"
+    },
+    {
+      "locale": "en-US",
+      "text": "站点 任务已完成 不存在",
+      "translated": "Site 任务已完成 does not exist"
+    },
+    {
+      "locale": "en-US",
+      "text": "站点 任务已完成 刷新成功",
+      "translated": "站点 任务已完成 刷新成功"
+    },
+    {
+      "locale": "en-US",
+      "text": "站点 任务已完成 刷新数据失败，未获取到数据",
+      "translated": "站点 任务已完成 刷新数据失败，未获取到数据"
+    },
+    {
+      "locale": "en-US",
+      "text": "API密钥错误",
+      "translated": "API密钥错误"
+    },
+    {
+      "locale": "en-US",
+      "text": "站点 a\nb 不存在",
+      "translated": "站点 a\nb 不存在"
+    },
+    {
+      "locale": "en-US",
+      "text": "站点 a\nb 刷新成功",
+      "translated": "站点 a\nb 刷新成功"
+    },
+    {
+      "locale": "en-US",
+      "text": "站点 a\nb 刷新数据失败，未获取到数据",
+      "translated": "站点 a\nb 刷新数据失败，未获取到数据"
+    },
+    {
+      "locale": "en-US",
+      "text": "API密钥错误",
+      "translated": "API密钥错误"
+    },
+    {
+      "locale": "en-US",
+      "text": "站点 站点 foo 不存在 不存在",
+      "translated": "Site 站点 foo 不存在 does not exist"
+    },
+    {
+      "locale": "en-US",
+      "text": "站点 站点 foo 不存在 刷新成功",
+      "translated": "站点 站点 foo 不存在 刷新成功"
+    },
+    {
+      "locale": "en-US",
+      "text": "站点 站点 foo 不存在 刷新数据失败，未获取到数据",
+      "translated": "站点 站点 foo 不存在 刷新数据失败，未获取到数据"
+    }
+  ],
+  "limits": [
+    "Local Python3.14.4; source helper only uses stdlib; no current-request middleware or actual HTTP host is executed."
+  ]
+}

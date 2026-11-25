@@ -1,0 +1,71 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "flock_sha256": "decff173dd49befb28e23f08cef9664825ff62411740960e51c8d350cce905d9",
+    "prowl_sha256": "892668cba5478cb9e4ef368e2012739ccb5dd1ca04dc62a5d42331135de4895d"
+  },
+  "cases": [
+    {
+      "name": "flock-invalid-image-flag",
+      "url": "flock://0123456789AbCdEf01234567?image=unknown",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.flock.com/hooks/sendMessage/0123456789AbCdEf01234567",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"token\": \"0123456789AbCdEf01234567\", \"flockml\": \"<flockml><b>t</b><br/>b</flockml>\", \"sendAs\": {\"name\": \"Apprise\", \"profileImage\": null}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "flock-empty-image-flag",
+      "url": "flock://0123456789AbCdEf01234567?image=",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.flock.com/hooks/sendMessage/0123456789AbCdEf01234567",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json"
+          },
+          "body": "{\"token\": \"0123456789AbCdEf01234567\", \"flockml\": \"<flockml><b>t</b><br/>b</flockml>\", \"sendAs\": {\"name\": \"Apprise\", \"profileImage\": null}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    }
+  ]
+}

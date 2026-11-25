@@ -1,0 +1,272 @@
+{
+  "source_sha256": "f87e851eb3e8184adc481ed8e15fa64f05fa4439e2060152eced80fdbbf8fcca",
+  "source_method": "MergeMessageNotify.listen_notice_message_event lines 505–567, get_state and __get_config_item",
+  "scope": "Executed original extracted methods with owned channel spies; no production recipients or network. WARN level normalized to WARNING.",
+  "cases": [
+    {
+      "name": "disabled",
+      "config": {
+        "enable": false
+      },
+      "fields": {
+        "title": "x"
+      },
+      "calls": [],
+      "logs": []
+    },
+    {
+      "name": "no-event",
+      "config": {
+        "enable": true
+      },
+      "fields": {},
+      "calls": [],
+      "logs": []
+    },
+    {
+      "name": "no-selection",
+      "config": {
+        "enable": true
+      },
+      "fields": {
+        "title": "x",
+        "channel": "system"
+      },
+      "calls": [],
+      "logs": [
+        [
+          "INFO",
+          "监听到发送消息通知事件"
+        ],
+        [
+          "WARNING",
+          "发送消息通知事件监听任务执行中止: 没有启用任何渠道"
+        ]
+      ]
+    },
+    {
+      "name": "system-channel",
+      "config": {
+        "enable": true,
+        "enable_channels": [
+          "first"
+        ]
+      },
+      "fields": {
+        "title": "x",
+        "channel": "system"
+      },
+      "calls": [],
+      "logs": [
+        [
+          "INFO",
+          "监听到发送消息通知事件"
+        ],
+        [
+          "WARNING",
+          "发送消息通知事件监听任务执行中止: 忽略系统渠道的消息"
+        ]
+      ]
+    },
+    {
+      "name": "empty-message",
+      "config": {
+        "enable": true,
+        "enable_channels": [
+          "first"
+        ]
+      },
+      "fields": {
+        "mtype": "m"
+      },
+      "calls": [],
+      "logs": [
+        [
+          "INFO",
+          "监听到发送消息通知事件"
+        ],
+        [
+          "WARNING",
+          "发送消息通知事件监听任务执行中止: 标题和内容不允许同时为空"
+        ]
+      ]
+    },
+    {
+      "name": "all-selected",
+      "config": {
+        "enable": true,
+        "enable_channels": [
+          "",
+          "unknown",
+          "broken",
+          "first",
+          "second",
+          "first"
+        ]
+      },
+      "fields": {
+        "title": "标题",
+        "text": "正文",
+        "type": "old",
+        "mtype": "new",
+        "image": "owned-image"
+      },
+      "calls": [
+        {
+          "channel": "broken",
+          "title": "标题",
+          "text": "正文",
+          "type": "old",
+          "fields": {
+            "title": "标题",
+            "text": "正文",
+            "type": "old",
+            "mtype": "new",
+            "image": "owned-image"
+          }
+        },
+        {
+          "channel": "first",
+          "title": "标题",
+          "text": "正文",
+          "type": "old",
+          "fields": {
+            "title": "标题",
+            "text": "正文",
+            "type": "old",
+            "mtype": "new",
+            "image": "owned-image"
+          }
+        },
+        {
+          "channel": "second",
+          "title": "标题",
+          "text": "正文",
+          "type": "old",
+          "fields": {
+            "title": "标题",
+            "text": "正文",
+            "type": "old",
+            "mtype": "new",
+            "image": "owned-image"
+          }
+        },
+        {
+          "channel": "first",
+          "title": "标题",
+          "text": "正文",
+          "type": "old",
+          "fields": {
+            "title": "标题",
+            "text": "正文",
+            "type": "old",
+            "mtype": "new",
+            "image": "owned-image"
+          }
+        }
+      ],
+      "logs": [
+        [
+          "INFO",
+          "监听到发送消息通知事件"
+        ],
+        [
+          "ERROR",
+          "消息发送执行异常: 渠道 = broken"
+        ],
+        [
+          "INFO",
+          "消息发送执行完成: 渠道 = first success = True"
+        ],
+        [
+          "INFO",
+          "消息发送执行完成: 渠道 = second success = False"
+        ],
+        [
+          "INFO",
+          "消息发送执行完成: 渠道 = first success = True"
+        ],
+        [
+          "INFO",
+          "发送消息通知事件监听任务执行成功: 成功渠道数 = 2, 失败渠道数 = 2"
+        ]
+      ]
+    },
+    {
+      "name": "ordered-first-success",
+      "config": {
+        "enable": true,
+        "enable_channels": [
+          "unknown",
+          "broken",
+          "second",
+          "first",
+          "second"
+        ],
+        "channel_strategy": "ORDER_SUCCESS_ONE"
+      },
+      "fields": {
+        "text": "正文",
+        "type": null,
+        "mtype": "new"
+      },
+      "calls": [
+        {
+          "channel": "broken",
+          "title": null,
+          "text": "正文",
+          "type": "new",
+          "fields": {
+            "text": "正文",
+            "type": null,
+            "mtype": "new"
+          }
+        },
+        {
+          "channel": "second",
+          "title": null,
+          "text": "正文",
+          "type": "new",
+          "fields": {
+            "text": "正文",
+            "type": null,
+            "mtype": "new"
+          }
+        },
+        {
+          "channel": "first",
+          "title": null,
+          "text": "正文",
+          "type": "new",
+          "fields": {
+            "text": "正文",
+            "type": null,
+            "mtype": "new"
+          }
+        }
+      ],
+      "logs": [
+        [
+          "INFO",
+          "监听到发送消息通知事件"
+        ],
+        [
+          "ERROR",
+          "消息发送执行异常: 渠道 = broken"
+        ],
+        [
+          "INFO",
+          "消息发送执行完成: 渠道 = second success = False"
+        ],
+        [
+          "INFO",
+          "消息发送执行完成: 渠道 = first success = True"
+        ],
+        [
+          "INFO",
+          "发送消息通知事件监听任务执行成功: 成功渠道数 = 1, 失败渠道数 = 2"
+        ]
+      ]
+    }
+  ]
+}

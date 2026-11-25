@@ -1,0 +1,4348 @@
+{
+  "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+  "cases": [
+    {
+      "input": {
+        "name": "immediate-0",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep",
+          "m/a.nfo": "a",
+          "m/b.zh.srt": "b",
+          "m/poster.jpg": "poster"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/poster.jpg",
+          "/fixture/m/b.zh.srt",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.nfo",
+          "m/b.zh.srt",
+          "m/keep.bin",
+          "m/poster.jpg"
+        ],
+        "state": [
+          "/fixture/m/poster.jpg",
+          "/fixture/m/b.zh.srt",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "immediate-1",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_torrents": true,
+          "delete_history": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep",
+          "m/a.nfo": "a",
+          "m/b.zh.srt": "b",
+          "m/poster.jpg": "poster"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/poster.jpg",
+          "/fixture/m/b.zh.srt",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.nfo",
+          "m/b.zh.srt",
+          "m/keep.bin",
+          "m/poster.jpg"
+        ],
+        "state": [
+          "/fixture/m/poster.jpg",
+          "/fixture/m/b.zh.srt",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/b.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/b.mkv"
+          },
+          {
+            "op": "notify",
+            "mtype": "SiteMessage",
+            "title": "🧹 媒体文件清理",
+            "text": "⚡ 立即删除完成\n\n🗂️ 源文件：/fixture/m/a.mkv\n🔗 硬链接：/fixture/m/b.mkv\n📝 已清理转移记录\n🌱 已联动删除种子"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "immediate-2",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_scrap_infos": true,
+          "delete_torrents": true,
+          "delete_history": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep",
+          "m/a.nfo": "a",
+          "m/b.zh.srt": "b",
+          "m/poster.jpg": "poster"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/poster.jpg",
+          "/fixture/m/b.zh.srt",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin",
+          "m/poster.jpg"
+        ],
+        "state": [
+          "/fixture/m/poster.jpg",
+          "/fixture/m/b.zh.srt",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/b.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/b.mkv"
+          },
+          {
+            "op": "notify",
+            "mtype": "SiteMessage",
+            "title": "🧹 媒体文件清理",
+            "text": "⚡ 立即删除完成\n\n🗂️ 源文件：/fixture/m/a.mkv\n🔗 硬链接：/fixture/m/b.mkv\n📝 已清理转移记录\n🌱 已联动删除种子\n🖼️ 已清理刮削文件"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-config-3",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200000
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 10,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-config-4",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": false
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200000
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 10,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-config-5",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": null
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200000
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-config-6",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 0
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200000
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 10,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-config-7",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 9
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200000
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 10,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-config-8",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 10
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200000
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 10,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-config-9",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 30
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200000
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-config-10",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 86401
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200000
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 86400,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-config-11",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": "42"
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200000
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 42,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-config-12",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": "bad"
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200000
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-config-13",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 2.9
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200000
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 10,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-config-14",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": []
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200000
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-config-15",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": {}
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200000
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delayed-recreate-16",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 30,
+          "delete_history": true,
+          "delete_torrents": true,
+          "delete_scrap_infos": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep",
+          "m/a.nfo": "old"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "create",
+            "path": "m/new.mkv",
+            "at": 125,
+            "link": "m/b.mkv"
+          },
+          {
+            "op": "tick",
+            "at": 140
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin",
+          "m/new.mkv"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin",
+          "/fixture/m/new.mkv"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delayed-recreate-17",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 30,
+          "delete_history": true,
+          "delete_torrents": true,
+          "delete_scrap_infos": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep",
+          "m/a.nfo": "old"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 140
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/b.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/b.mkv"
+          },
+          {
+            "op": "notify",
+            "mtype": "SiteMessage",
+            "title": "🧹 媒体文件清理",
+            "text": "⏰ 延迟删除完成\n\n🗂️ 源文件：/fixture/m/a.mkv\n🔗 硬链接：/fixture/m/b.mkv\n📝 已清理转移记录\n🌱 已联动删除种子\n🖼️ 已清理刮削文件"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delayed-recreate-18",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 30,
+          "delete_history": true,
+          "delete_torrents": true,
+          "delete_scrap_infos": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep",
+          "m/a.nfo": "old"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "create",
+            "path": "m/new.mkv",
+            "at": 50,
+            "link": "m/b.mkv"
+          },
+          {
+            "op": "tick",
+            "at": 140
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/b.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/b.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/new.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/new.mkv"
+          },
+          {
+            "op": "notify",
+            "mtype": "SiteMessage",
+            "title": "🧹 媒体文件清理",
+            "text": "⏰ 延迟删除完成\n\n🗂️ 源文件：/fixture/m/a.mkv\n🔗 删除了 2 个硬链接文件\n📝 已清理转移记录\n🌱 已联动删除种子\n🖼️ 已清理刮削文件"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delayed-recreate-19",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 30,
+          "delete_history": true,
+          "delete_torrents": true,
+          "delete_scrap_infos": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep",
+          "m/a.nfo": "old"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "create",
+            "path": "m/a.mkv",
+            "at": 130
+          },
+          {
+            "op": "tick",
+            "at": 140
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.mkv",
+          "m/a.nfo",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "excluded-20",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "exclude_dirs": "@ROOT@/m/b.mkv",
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "excluded-21",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "exclude_dirs": "@ROOT@/m/b",
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/b.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/b.mkv"
+          },
+          {
+            "op": "notify",
+            "mtype": "SiteMessage",
+            "title": "🧹 媒体文件清理",
+            "text": "⚡ 立即删除完成\n\n🗂️ 源文件：/fixture/m/a.mkv\n🔗 硬链接：/fixture/m/b.mkv\n📝 已清理转移记录\n🌱 已联动删除种子"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "excluded-22",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "exclude_dirs": "@ROOT@/m",
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "excluded-23",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "exclude_dirs": " @ROOT@/m/b.mkv \n",
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "initial-temp-24",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_history": true,
+          "delete_torrents": true
+        },
+        "files": {
+          "m/a.tmp": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.tmp",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.tmp"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.tmp"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.tmp"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "initial-temp-25",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_history": true,
+          "delete_torrents": true
+        },
+        "files": {
+          "m/a.part": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.part",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.part"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.part"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "initial-temp-26",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_history": true,
+          "delete_torrents": true
+        },
+        "files": {
+          "m/a.TMP": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.TMP",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.TMP"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.TMP"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.TMP"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "initial-temp-27",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_history": true,
+          "delete_torrents": true
+        },
+        "files": {
+          "m/a.nfo": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.nfo",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.nfo"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.nfo"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "initial-temp-28",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_history": true,
+          "delete_torrents": true
+        },
+        "files": {
+          "m/a.trickplay/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.trickplay/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.trickplay/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "move-29",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_torrents": true,
+          "delete_history": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "move",
+            "path": "m/a.mkv",
+            "dest": "m/new.mkv",
+            "missing": false,
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin",
+          "m/new.mkv"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/new.mkv"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "move-30",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_torrents": true,
+          "delete_history": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "move",
+            "path": "m/a.mkv",
+            "dest": "m/new.mkv",
+            "missing": true,
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/b.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/b.mkv"
+          },
+          {
+            "op": "notify",
+            "mtype": "SiteMessage",
+            "title": "🧹 媒体文件清理",
+            "text": "⚡ 立即删除完成\n\n🗂️ 源文件：/fixture/m/a.mkv\n🔗 硬链接：/fixture/m/b.mkv\n📝 已清理转移记录\n🌱 已联动删除种子"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "stop-31",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 86400,
+          "delete_history": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "stop",
+            "at": 101
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/b.mkv"
+          }
+        ],
+        "delay": 86400,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "stop-32",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 86400,
+          "delete_history": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 101
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [
+          {
+            "path": "/fixture/m/a.mkv",
+            "at": 100.0,
+            "processed": false
+          }
+        ],
+        "trace": [],
+        "delay": 86400,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "root-is-not-boundary",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_scrap_infos": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/a.nfo": "meta"
+        },
+        "links": [],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/a.nfo",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [],
+        "state": [
+          "/fixture/m/a.nfo"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "notify",
+            "mtype": "SiteMessage",
+            "title": "📁 目录清理",
+            "text": "🗑️ 清理空目录：/fixture/m"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "entity-replaced-without-event",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "replace_without_event",
+            "path": "m/b.mkv",
+            "at": 90
+          },
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "directory-event-before-filters",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "exclude_keywords": "m",
+          "delete_torrents": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m",
+            "directory": true,
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [],
+        "state": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "strm-local-False-False",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "monitor_strm_deletion": true,
+          "strm_path_mappings": "@ROOT@/m:local:/cloud/series",
+          "delete_scrap_infos": true,
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.strm": "stream",
+          "m/a.nfo": "meta",
+          "m/keep.bin": "keep"
+        },
+        "storage": [
+          {
+            "storage": "local",
+            "path": "/cloud",
+            "type": "dir",
+            "name": "cloud",
+            "fileid": "root"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series",
+            "type": "dir",
+            "name": "series",
+            "fileid": "dirid"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/a.mkv",
+            "type": "file",
+            "name": "a.mkv",
+            "extension": "mkv",
+            "fileid": "videoid",
+            "fail": false
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/a.nfo",
+            "type": "file",
+            "name": "a.nfo",
+            "extension": "nfo",
+            "fileid": "nfoid"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/poster.jpg",
+            "type": "file",
+            "name": "poster.jpg",
+            "extension": "jpg",
+            "fileid": "posterid"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.strm",
+            "mode": "strm",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.nfo",
+          "/fixture/m/a.strm"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.nfo",
+          "/fixture/m/a.strm"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "storage_delete",
+            "storage": "local",
+            "path": "/cloud/series/a.mkv",
+            "type": "file",
+            "fileid": "videoid"
+          },
+          {
+            "op": "storage_delete",
+            "storage": "local",
+            "path": "/cloud/series/a.nfo",
+            "type": "file",
+            "fileid": "nfoid"
+          },
+          {
+            "op": "storage_delete",
+            "storage": "local",
+            "path": "/cloud/series/poster.jpg",
+            "type": "file",
+            "fileid": "posterid"
+          },
+          {
+            "op": "storage_delete",
+            "storage": "local",
+            "path": "/cloud/series",
+            "type": "dir",
+            "fileid": "dirid"
+          },
+          {
+            "op": "history",
+            "id": "dest:/cloud/series/a.mkv"
+          },
+          {
+            "op": "notify",
+            "mtype": "SiteMessage",
+            "title": "🧹 媒体文件清理",
+            "text": "✅ 清理完成\n\n🗂️ STRM 文件：/fixture/m/a.strm\n🗑️ 已删除网盘文件：[local] /cloud/series/a.mkv\n📝 已清理转移记录\n🖼️ 已清理刮削文件（本地+网盘 2 个），清理空目录 1 个"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "history-failure-False-a",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200
+          }
+        ],
+        "history_failures": [
+          "src:@ROOT@/m/a.mkv"
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": "RuntimeError:synthetic history failure",
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "history-failure-False-b",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200
+          }
+        ],
+        "history_failures": [
+          "src:@ROOT@/m/b.mkv"
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/b.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/b.mkv"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 1
+      }
+    },
+    {
+      "input": {
+        "name": "history-failure-True-a",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200
+          }
+        ],
+        "history_failures": [
+          "src:@ROOT@/m/a.mkv"
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 1
+      }
+    },
+    {
+      "input": {
+        "name": "history-failure-True-b",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "tick",
+            "at": 200
+          }
+        ],
+        "history_failures": [
+          "src:@ROOT@/m/b.mkv"
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/b.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/b.mkv"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 1
+      }
+    },
+    {
+      "input": {
+        "name": "missing-history",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_history": true,
+          "delete_torrents": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "missing_history": [
+          "src:@ROOT@/m/a.mkv"
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/b.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/b.mkv"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "dev-is-part-of-identity",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "identities": {
+          "m/a.mkv": {
+            "dev": 1,
+            "inode": 100
+          },
+          "m/b.mkv": {
+            "dev": 2,
+            "inode": 100
+          }
+        },
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "same-dev-inode-is-match",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "identities": {
+          "m/a.mkv": {
+            "dev": 2,
+            "inode": 100
+          },
+          "m/b.mkv": {
+            "dev": 2,
+            "inode": 100
+          }
+        },
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "created-filter-.tmp",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_history": true,
+          "delete_torrents": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [],
+        "steps": [
+          {
+            "op": "create",
+            "path": "m/new.tmp",
+            "at": 50
+          },
+          {
+            "op": "delete",
+            "path": "m/new.tmp",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "created-filter-.temp",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_history": true,
+          "delete_torrents": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [],
+        "steps": [
+          {
+            "op": "create",
+            "path": "m/new.temp",
+            "at": 50
+          },
+          {
+            "op": "delete",
+            "path": "m/new.temp",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "created-filter-.part",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_history": true,
+          "delete_torrents": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [],
+        "steps": [
+          {
+            "op": "create",
+            "path": "m/new.part",
+            "at": 50
+          },
+          {
+            "op": "delete",
+            "path": "m/new.part",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "created-filter-.TMP",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_history": true,
+          "delete_torrents": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [],
+        "steps": [
+          {
+            "op": "create",
+            "path": "m/new.TMP",
+            "at": 50
+          },
+          {
+            "op": "delete",
+            "path": "m/new.TMP",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/new.TMP"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/new.TMP"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-extra-999999999999999999999999999999999999",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": "999999999999999999999999999999999999"
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [
+          {
+            "path": "/fixture/m/a.mkv",
+            "at": 100.0,
+            "processed": false
+          }
+        ],
+        "trace": [],
+        "delay": 86400,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-extra-1_000",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": "1_000"
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [
+          {
+            "path": "/fixture/m/a.mkv",
+            "at": 100.0,
+            "processed": false
+          }
+        ],
+        "trace": [],
+        "delay": 1000,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-extra-١٢",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": "١٢"
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [
+          {
+            "path": "/fixture/m/a.mkv",
+            "at": 100.0,
+            "processed": false
+          }
+        ],
+        "trace": [],
+        "delay": 12,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-extra-１２",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": "１２"
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [
+          {
+            "path": "/fixture/m/a.mkv",
+            "at": 100.0,
+            "processed": false
+          }
+        ],
+        "trace": [],
+        "delay": 12,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-extra-2.9",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": "2.9"
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [
+          {
+            "path": "/fixture/m/a.mkv",
+            "at": 100.0,
+            "processed": false
+          }
+        ],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-extra-0x10",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": "0x10"
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [
+          {
+            "path": "/fixture/m/a.mkv",
+            "at": 100.0,
+            "processed": false
+          }
+        ],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "delay-extra-1e+100",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 1e+100
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [
+          {
+            "path": "/fixture/m/a.mkv",
+            "at": 100.0,
+            "processed": false
+          }
+        ],
+        "trace": [],
+        "delay": 86400,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "reload-new-config-drains-old-queue",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": true,
+          "delay_seconds": 1000,
+          "delete_history": false
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          },
+          {
+            "op": "reload",
+            "at": 101,
+            "config": {
+              "enabled": true,
+              "monitor_dirs": "@ROOT@/m",
+              "delayed_deletion": false,
+              "delete_history": true
+            }
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/b.mkv"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "storage-error-exists:/cloud/series",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "monitor_strm_deletion": true,
+          "strm_path_mappings": "@ROOT@/m:local:/cloud/series",
+          "delete_scrap_infos": true,
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.strm": "stream",
+          "m/a.nfo": "meta",
+          "m/keep.bin": "keep"
+        },
+        "storage": [
+          {
+            "storage": "local",
+            "path": "/cloud",
+            "type": "dir",
+            "name": "cloud",
+            "fileid": "root"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series",
+            "type": "dir",
+            "name": "series",
+            "fileid": "dirid"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/a.mkv",
+            "type": "file",
+            "name": "a.mkv",
+            "extension": "mkv",
+            "fileid": "videoid",
+            "fail": false
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/a.nfo",
+            "type": "file",
+            "name": "a.nfo",
+            "extension": "nfo",
+            "fileid": "nfoid"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/poster.jpg",
+            "type": "file",
+            "name": "poster.jpg",
+            "extension": "jpg",
+            "fileid": "posterid"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.strm",
+            "mode": "strm",
+            "at": 100
+          }
+        ],
+        "storage_errors": [
+          "exists:/cloud/series"
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.nfo",
+          "/fixture/m/a.strm"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.nfo",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.nfo",
+          "/fixture/m/a.strm"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 1
+      }
+    },
+    {
+      "input": {
+        "name": "storage-error-list:/cloud/series",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "monitor_strm_deletion": true,
+          "strm_path_mappings": "@ROOT@/m:local:/cloud/series",
+          "delete_scrap_infos": true,
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.strm": "stream",
+          "m/a.nfo": "meta",
+          "m/keep.bin": "keep"
+        },
+        "storage": [
+          {
+            "storage": "local",
+            "path": "/cloud",
+            "type": "dir",
+            "name": "cloud",
+            "fileid": "root"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series",
+            "type": "dir",
+            "name": "series",
+            "fileid": "dirid"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/a.mkv",
+            "type": "file",
+            "name": "a.mkv",
+            "extension": "mkv",
+            "fileid": "videoid",
+            "fail": false
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/a.nfo",
+            "type": "file",
+            "name": "a.nfo",
+            "extension": "nfo",
+            "fileid": "nfoid"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/poster.jpg",
+            "type": "file",
+            "name": "poster.jpg",
+            "extension": "jpg",
+            "fileid": "posterid"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.strm",
+            "mode": "strm",
+            "at": 100
+          }
+        ],
+        "storage_errors": [
+          "list:/cloud/series"
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.nfo",
+          "/fixture/m/a.strm"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.nfo",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.nfo",
+          "/fixture/m/a.strm"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 1
+      }
+    },
+    {
+      "input": {
+        "name": "storage-error-delete:/cloud/series/a.mkv",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "monitor_strm_deletion": true,
+          "strm_path_mappings": "@ROOT@/m:local:/cloud/series",
+          "delete_scrap_infos": true,
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.strm": "stream",
+          "m/a.nfo": "meta",
+          "m/keep.bin": "keep"
+        },
+        "storage": [
+          {
+            "storage": "local",
+            "path": "/cloud",
+            "type": "dir",
+            "name": "cloud",
+            "fileid": "root"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series",
+            "type": "dir",
+            "name": "series",
+            "fileid": "dirid"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/a.mkv",
+            "type": "file",
+            "name": "a.mkv",
+            "extension": "mkv",
+            "fileid": "videoid",
+            "fail": false
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/a.nfo",
+            "type": "file",
+            "name": "a.nfo",
+            "extension": "nfo",
+            "fileid": "nfoid"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/poster.jpg",
+            "type": "file",
+            "name": "poster.jpg",
+            "extension": "jpg",
+            "fileid": "posterid"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.strm",
+            "mode": "strm",
+            "at": 100
+          }
+        ],
+        "storage_errors": [
+          "delete:/cloud/series/a.mkv"
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.nfo",
+          "/fixture/m/a.strm"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.nfo",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.nfo",
+          "/fixture/m/a.strm"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "storage_delete",
+            "storage": "local",
+            "path": "/cloud/series/a.mkv",
+            "type": "file",
+            "fileid": "videoid"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 1
+      }
+    },
+    {
+      "input": {
+        "name": "storage-error-delete:/cloud/series/a.nfo",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "monitor_strm_deletion": true,
+          "strm_path_mappings": "@ROOT@/m:local:/cloud/series",
+          "delete_scrap_infos": true,
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.strm": "stream",
+          "m/a.nfo": "meta",
+          "m/keep.bin": "keep"
+        },
+        "storage": [
+          {
+            "storage": "local",
+            "path": "/cloud",
+            "type": "dir",
+            "name": "cloud",
+            "fileid": "root"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series",
+            "type": "dir",
+            "name": "series",
+            "fileid": "dirid"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/a.mkv",
+            "type": "file",
+            "name": "a.mkv",
+            "extension": "mkv",
+            "fileid": "videoid",
+            "fail": false
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/a.nfo",
+            "type": "file",
+            "name": "a.nfo",
+            "extension": "nfo",
+            "fileid": "nfoid"
+          },
+          {
+            "storage": "local",
+            "path": "/cloud/series/poster.jpg",
+            "type": "file",
+            "name": "poster.jpg",
+            "extension": "jpg",
+            "fileid": "posterid"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.strm",
+            "mode": "strm",
+            "at": 100
+          }
+        ],
+        "storage_errors": [
+          "delete:/cloud/series/a.nfo"
+        ],
+        "scan_order": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.nfo",
+          "/fixture/m/a.strm"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.nfo",
+          "/fixture/m/a.strm"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "storage_delete",
+            "storage": "local",
+            "path": "/cloud/series/a.mkv",
+            "type": "file",
+            "fileid": "videoid"
+          },
+          {
+            "op": "storage_delete",
+            "storage": "local",
+            "path": "/cloud/series/a.nfo",
+            "type": "file",
+            "fileid": "nfoid"
+          },
+          {
+            "op": "storage_delete",
+            "storage": "local",
+            "path": "/cloud/series/a.nfo",
+            "type": "file",
+            "fileid": "nfoid"
+          },
+          {
+            "op": "history",
+            "id": "dest:/cloud/series/a.mkv"
+          },
+          {
+            "op": "notify",
+            "mtype": "SiteMessage",
+            "title": "🧹 媒体文件清理",
+            "text": "✅ 清理完成\n\n🗂️ STRM 文件：/fixture/m/a.strm\n🗑️ 已删除网盘文件：[local] /cloud/series/a.mkv\n📝 已清理转移记录\n🖼️ 已清理本地刮削文件"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 2
+      }
+    },
+    {
+      "input": {
+        "name": "typed-config-custom_scrap_extensions",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_torrents": true,
+          "custom_scrap_extensions": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": []
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.mkv",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": "AttributeError:'bool' object has no attribute 'replace'",
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "typed-config-monitor_dirs",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": true,
+          "delayed_deletion": false,
+          "delete_torrents": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": []
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.mkv",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": "AttributeError:'bool' object has no attribute 'split'",
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "typed-config-exclude_keywords",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_torrents": true,
+          "exclude_keywords": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": true,
+        "error": "AttributeError:'bool' object has no attribute 'split'",
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "typed-config-exclude_dirs",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_torrents": true,
+          "exclude_dirs": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 1
+      }
+    },
+    {
+      "input": {
+        "name": "inactive-unused-typed-monitor",
+        "config": {
+          "enabled": false,
+          "monitor_dirs": {
+            "unexpected": "old scalar"
+          },
+          "delayed_deletion": false
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [],
+        "scan_order": []
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.mkv",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [],
+        "queue": [],
+        "trace": [],
+        "delay": 30,
+        "enabled": false,
+        "error": null,
+        "logged_errors": 0
+      }
+    },
+    {
+      "input": {
+        "name": "unlink-denied-m/b.mkv",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_scrap_infos": true,
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep",
+          "m/a.nfo": "meta"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          },
+          {
+            "path": "m/c.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "deny_unlink": [
+          "m/b.mkv"
+        ],
+        "scan_order": [
+          "/fixture/m/c.mkv",
+          "/fixture/m/b.mkv",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/b.mkv",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/b.mkv",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/c.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/c.mkv"
+          },
+          {
+            "op": "notify",
+            "mtype": "SiteMessage",
+            "title": "🧹 媒体文件清理",
+            "text": "⚡ 立即删除完成\n\n🗂️ 源文件：/fixture/m/a.mkv\n🔗 硬链接：/fixture/m/c.mkv\n📝 已清理转移记录\n🌱 已联动删除种子\n🖼️ 已清理刮削文件"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 1
+      }
+    },
+    {
+      "input": {
+        "name": "unlink-denied-m/a.nfo",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_scrap_infos": true,
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep",
+          "m/a.nfo": "meta"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          },
+          {
+            "path": "m/c.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "deny_unlink": [
+          "m/a.nfo"
+        ],
+        "scan_order": [
+          "/fixture/m/c.mkv",
+          "/fixture/m/b.mkv",
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/a.nfo",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/a.nfo",
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/c.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/c.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/b.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/b.mkv"
+          },
+          {
+            "op": "notify",
+            "mtype": "SiteMessage",
+            "title": "🧹 媒体文件清理",
+            "text": "⚡ 立即删除完成\n\n🗂️ 源文件：/fixture/m/a.mkv\n🔗 删除了 2 个硬链接文件\n📝 已清理转移记录\n🌱 已联动删除种子\n🖼️ 已清理刮削文件"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 1
+      }
+    },
+    {
+      "input": {
+        "name": "stale-missing-link",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delayed_deletion": false,
+          "delete_history": true,
+          "delete_torrents": true,
+          "notify": true
+        },
+        "files": {
+          "m/a.mkv": "video",
+          "m/keep.bin": "keep"
+        },
+        "links": [
+          {
+            "path": "m/b.mkv",
+            "target": "m/a.mkv"
+          },
+          {
+            "path": "m/c.mkv",
+            "target": "m/a.mkv"
+          }
+        ],
+        "steps": [
+          {
+            "op": "external_remove",
+            "path": "m/b.mkv",
+            "at": 99
+          },
+          {
+            "op": "delete",
+            "path": "m/a.mkv",
+            "at": 100
+          }
+        ],
+        "scan_order": [
+          "/fixture/m/c.mkv",
+          "/fixture/m/b.mkv",
+          "/fixture/m/keep.bin",
+          "/fixture/m/a.mkv"
+        ]
+      },
+      "expected": {
+        "files": [
+          "m/",
+          "m/keep.bin"
+        ],
+        "state": [
+          "/fixture/m/keep.bin"
+        ],
+        "queue": [],
+        "trace": [
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/a.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/a.mkv"
+          },
+          {
+            "op": "event",
+            "event": "DownloadFileDeleted",
+            "src": "/fixture/m/c.mkv"
+          },
+          {
+            "op": "history",
+            "id": "src:/fixture/m/c.mkv"
+          },
+          {
+            "op": "notify",
+            "mtype": "SiteMessage",
+            "title": "🧹 媒体文件清理",
+            "text": "⚡ 立即删除完成\n\n🗂️ 源文件：/fixture/m/a.mkv\n🔗 硬链接：/fixture/m/c.mkv\n📝 已清理转移记录\n🌱 已联动删除种子"
+          }
+        ],
+        "delay": 30,
+        "enabled": true,
+        "error": null,
+        "logged_errors": 0
+      }
+    }
+  ]
+}

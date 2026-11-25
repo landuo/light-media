@@ -1,0 +1,324 @@
+{
+  "classification": "actual333/Python3.12 installed APScheduler CronTrigger.from_crontab explicitUTC, no app imports/scheduler/network; independent diagnostic expected",
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "source_sha256": {
+    "fields": "8ad524dd9439edaff6050b6cb173638c2de8802a02aedc6340d1568c24f744eb",
+    "expressions": "7cdde1781829e9211e167c2bd5b7dce817c13b4b1bc33c706b1bcabf7284b92a"
+  },
+  "cases": [
+    {
+      "expression": "x * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Unrecognized expression \"x\" for field \"minute\""
+      },
+      "fields": null
+    },
+    {
+      "expression": "* x * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Unrecognized expression \"x\" for field \"hour\""
+      },
+      "fields": null
+    },
+    {
+      "expression": "* * x * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Unrecognized expression \"x\" for field \"day\""
+      },
+      "fields": null
+    },
+    {
+      "expression": "* * * x *",
+      "error": {
+        "class": "ValueError",
+        "message": "Invalid month name \"x\""
+      },
+      "fields": null
+    },
+    {
+      "expression": "* * * * x",
+      "error": {
+        "class": "ValueError",
+        "message": "Invalid weekday name \"x\""
+      },
+      "fields": null
+    },
+    {
+      "expression": "*/0 * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Increment must be higher than 0"
+      },
+      "fields": null
+    },
+    {
+      "expression": "*/60 * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '*/60': the step value (60) is higher than the total range of the expression (59)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "60 * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '60': the last value (60) is higher than the maximum value (59)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "10-2 * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "The minimum value in a range must not be higher than the maximum"
+      },
+      "fields": null
+    },
+    {
+      "expression": "1-2/3 * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '1-2/3': the step value (3) is higher than the total range of the expression (1)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "10/90 * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '10/90': the step value (90) is higher than the total range of the expression (59)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "* */24 * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '*/24': the step value (24) is higher than the total range of the expression (23)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 0 * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '0': the first value (0) is lower than the minimum value (1)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 32 * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '32': the last value (32) is higher than the maximum value (31)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 * 0 *",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '0': the first value (0) is lower than the minimum value (1)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 * 13 *",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '13': the last value (13) is higher than the maximum value (12)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 * jan-fak *",
+      "error": {
+        "class": "ValueError",
+        "message": "Invalid month name \"fak\""
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 * mar-jan *",
+      "error": {
+        "class": "ValueError",
+        "message": "The minimum value in a range must not be higher than the maximum"
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 * * mon-fak",
+      "error": {
+        "class": "ValueError",
+        "message": "Invalid weekday name \"fak\""
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 * * sun-mon",
+      "error": {
+        "class": "ValueError",
+        "message": "The minimum value in a range must not be higher than the maximum"
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 * * 7",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '7': the last value (7) is higher than the maximum value (6)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 * * 0-7",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '0-7': the last value (7) is higher than the maximum value (6)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "1_0 * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Unrecognized expression \"1_0\" for field \"minute\""
+      },
+      "fields": null
+    },
+    {
+      "expression": "1,,2 * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Unrecognized expression \"\" for field \"minute\""
+      },
+      "fields": null
+    },
+    {
+      "expression": "1,2x * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Unrecognized expression \"2x\" for field \"minute\""
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 lastfoo * *",
+      "error": null,
+      "fields": [
+        "*",
+        "*",
+        "last",
+        "*",
+        "*",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "expression": "0 0 * jan-mar/2 *",
+      "error": null,
+      "fields": [
+        "*",
+        "jan-mar",
+        "*",
+        "*",
+        "*",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "expression": "٠ ٠ * * *",
+      "error": null,
+      "fields": [
+        "*",
+        "*",
+        "*",
+        "*",
+        "*",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "expression": "*/٦٠ * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '*/٦٠': the step value (60) is higher than the total range of the expression (59)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "١-٢/٣ * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '١-٢/٣': the step value (3) is higher than the total range of the expression (1)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "* * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Wrong number of fields; got 4, expected 5"
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 2nd\tfri * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Wrong number of fields; got 6, expected 5"
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 * İ *",
+      "error": {
+        "class": "ValueError",
+        "message": "Invalid month name \"İ\""
+      },
+      "fields": null
+    },
+    {
+      "expression": "0 0 * * ı",
+      "error": {
+        "class": "ValueError",
+        "message": "Invalid weekday name \"ı\""
+      },
+      "fields": null
+    },
+    {
+      "expression": "999999999999999999999999 * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '999999999999999999999999': the last value (999999999999999999999999) is higher than the maximum value (59)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "*/999999999999999999999999 * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Error validating expression '*/999999999999999999999999': the step value (999999999999999999999999) is higher than the total range of the expression (59)"
+      },
+      "fields": null
+    },
+    {
+      "expression": "1, 2 * * * *",
+      "error": {
+        "class": "ValueError",
+        "message": "Wrong number of fields; got 6, expected 5"
+      },
+      "fields": null
+    }
+  ]
+}

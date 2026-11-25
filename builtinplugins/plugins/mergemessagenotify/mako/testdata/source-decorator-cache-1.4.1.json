@@ -1,0 +1,307 @@
+{
+  "mako": "1.4.1",
+  "markupsafe": "3.0.4",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "has_beaker": false,
+  "source_sha256": {
+    "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+    "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+    "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+    "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+    "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d",
+    "mako/cache.py": "0e7a30b905b44dc9c06b9bb9b4d37b0ffaaf5a3a9f3ca72c4c80a202a7038e83",
+    "mako/ext/beaker_cache.py": "4ca18af1570ca3eb29c257039f004dfc6ea6856a93b12c0e9916e18c3315d93e"
+  },
+  "cases": [
+    {
+      "name": "toplevel-lambda",
+      "template": "<%! deco = lambda fn: lambda ctx, x: ctx.write('(') or fn(x) or ctx.write(')') or '' %><%def name=\"f(x)\" decorator=\"deco\">${x}</%def>${f(count)}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "(7)",
+      "source_error": false
+    },
+    {
+      "name": "toplevel-python-closure-defaults",
+      "template": "<%!\ndef decorate(fn):\n    def wrapped(ctx, *args, **kwargs):\n        ctx.write('[')\n        result = fn(*args, **kwargs)\n        ctx.write(']')\n        return result\n    return wrapped\n%><%def name=\"f(x, y=2)\" decorator=\"decorate\" buffered=\"True\">${x + y}</%def>${f(count)}|${f(y=3, x=count)}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "[]9|[]10",
+      "source_error": false
+    },
+    {
+      "name": "toplevel-return-wrapper",
+      "template": "<%! deco = lambda fn: lambda ctx: '<' + fn() + '>' %><%def name=\"f()\" decorator=\"deco\" buffered=\"True\">${title}</%def>${f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<Owned>",
+      "source_error": false
+    },
+    {
+      "name": "toplevel-render-context",
+      "template": "<%! deco = lambda fn: lambda ctx: ctx.get('title') + ':' + fn() %><%def name=\"f()\" decorator=\"deco\" buffered=\"True\">${count}</%def>${f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned:7",
+      "source_error": false
+    },
+    {
+      "name": "toplevel-noncallable-uninvoked",
+      "template": "<%def name=\"f()\" decorator=\"None\">Hidden</%def>Ready ${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Ready Owned",
+      "source_error": false
+    },
+    {
+      "name": "toplevel-noncallable-caught",
+      "template": "<%def name=\"f()\" decorator=\"None\">Hidden</%def>\n% try:\n${f()}\n% except TypeError:\ncaught\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\ncaught\n",
+      "source_error": false
+    },
+    {
+      "name": "toplevel-decorator-exception-caught",
+      "template": "<%! deco = lambda fn: 1/0 %><%def name=\"f()\" decorator=\"deco\">Hidden</%def>\n% try:\n${f()}\n% except ZeroDivisionError:\ncaught\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\ncaught\n",
+      "source_error": false
+    },
+    {
+      "name": "toplevel-factory-compile-error",
+      "template": "<%! deco = lambda: 1/0 %><%def name=\"f()\" decorator=\"deco()\">Hidden</%def>Ready ${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%! deco = lambda: 1/0 %><%def name=\"f()\" decorator=\"deco()\">Hidden</%def>Ready ${title}",
+      "source_error": true
+    },
+    {
+      "name": "inline-python-closure-bound-once",
+      "template": "<%!\ndef make(ctx):\n    def decorate(fn):\n        ctx.write('D')\n        def wrapped(context, *args, **kwargs):\n            return fn(*args, **kwargs)\n        return wrapped\n    return decorate\n%><%def name=\"outer()\"><%def name=\"inner()\" decorator=\"make(context)\">I</%def>${inner()}${inner()}</%def>${outer()}|${outer()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "DII|DII",
+      "source_error": false
+    },
+    {
+      "name": "inline-anonymous-block",
+      "template": "<%!\ndef make(ctx):\n    def decorate(fn):\n        ctx.write('D')\n        def wrapped(context, *args, **kwargs):\n            return fn(*args, **kwargs)\n        return wrapped\n    return decorate\n%><%block decorator=\"make(context)\">[${title}]</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "D[Owned]",
+      "source_error": false
+    },
+    {
+      "name": "named-block",
+      "template": "<%!\ndef decorate(fn):\n    def wrapped(ctx, *args, **kwargs):\n        ctx.write('[')\n        result = fn(*args, **kwargs)\n        ctx.write(']')\n        return result\n    return wrapped\n%><%block name=\"headline\" decorator=\"decorate\">${title}</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "[Owned]",
+      "source_error": false
+    },
+    {
+      "name": "decorator-suppresses-original",
+      "template": "<%! deco = lambda fn: lambda ctx: 'replacement' %><%def name=\"f()\" decorator=\"deco\">${1/0}</%def>${f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "replacement",
+      "source_error": false
+    },
+    {
+      "name": "decorator-empty-is-disabled",
+      "template": "<%def name=\"f()\" decorator=\"\">${title}</%def>${f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned",
+      "source_error": false
+    },
+    {
+      "name": "cache-key-without-caching",
+      "template": "<%def name=\"f()\" cache_key=\"${1/0}\">${title}</%def>${f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned",
+      "source_error": false
+    },
+    {
+      "name": "disabled-cache-ignores-options",
+      "template": "<%def name=\"f()\" cached=\"False\" cache_timeout=\"bad\" cache_key=\"${1/0}\">${count}</%def>${f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "7",
+      "source_error": false
+    },
+    {
+      "name": "cached-unused-does-not-load-backend",
+      "template": "<%def name=\"f()\" cached=\"True\" cache_timeout=\"5\">Hidden</%def>Ready ${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Ready Owned",
+      "source_error": false
+    },
+    {
+      "name": "cache-def-error-catch-before-key-or-body",
+      "template": "<%def name=\"f()\" cached=\"True\" cache_key=\"${context.write('wrong key')}\">${context.write('wrong body')}</%def>\n% try:\n${f()}\n% except Exception:\ncaught cache\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\ncaught cache\n",
+      "source_error": false
+    },
+    {
+      "name": "cache-def-args-bound-first",
+      "template": "<%def name=\"f(required)\" cached=\"True\">Hidden</%def>\n% try:\n${f()}\n% except TypeError:\ncaught args\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\ncaught args\n",
+      "source_error": false
+    },
+    {
+      "name": "cache-anonymous-block-error-caught",
+      "template": "\n% try:\n<%block cached=\"True\">${title}</%block>\n% except Exception:\ncaught block\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "\ncaught block\n",
+      "source_error": false
+    },
+    {
+      "name": "cache-named-block-fallback",
+      "template": "<%block name=\"item\" cached=\"True\">${title}</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%block name=\"item\" cached=\"True\">${title}</%block>",
+      "source_error": true
+    },
+    {
+      "name": "cache-page-fallback",
+      "template": "<%page cached=\"True\" cache_key=\"${count}\"/>Ready ${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page cached=\"True\" cache_key=\"${count}\"/>Ready ${title}",
+      "source_error": true
+    },
+    {
+      "name": "cache-page-disabled",
+      "template": "<%page cached=\"False\" cache_timeout=\"invalid\"/>Ready ${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Ready Owned",
+      "source_error": false
+    },
+    {
+      "name": "cache-compile-time-boolean",
+      "template": "<%def name=\"f()\" cached=\"1 == 0\" cache_timeout=\"bad\">${title}</%def>${f()}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned",
+      "source_error": false
+    },
+    {
+      "name": "cache-timeout-compile-fallback-when-unused",
+      "template": "<%def name=\"f()\" cached=\"True\" cache_timeout=\"invalid\">Hidden</%def>Ready ${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%def name=\"f()\" cached=\"True\" cache_timeout=\"invalid\">Hidden</%def>Ready ${title}",
+      "source_error": true
+    },
+    {
+      "name": "cache-timeout-inherited-from-page",
+      "template": "<%page cache_timeout=\"invalid\"/><%def name=\"f()\" cached=\"True\">Hidden</%def>Ready ${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page cache_timeout=\"invalid\"/><%def name=\"f()\" cached=\"True\">Hidden</%def>Ready ${title}",
+      "source_error": true
+    },
+    {
+      "name": "cache-timeout-local-overrides-page",
+      "template": "<%page cache_timeout=\"invalid\"/><%def name=\"f()\" cached=\"True\" cache_timeout=\"${2 + 3}\">Hidden</%def>Ready ${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Ready Owned",
+      "source_error": false
+    },
+    {
+      "name": "cache-inline-decorated-before-backend",
+      "template": "<%!\ndef make(ctx):\n    def decorate(fn):\n        ctx.write('D')\n        def wrapped(context, *args, **kwargs):\n            return fn(*args, **kwargs)\n        return wrapped\n    return decorate\n%>\n% try:\n<%block cached=\"True\" decorator=\"make(context)\">Hidden</%block>\n% except Exception:\ncaught cache\n% endtry\n",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "D\ncaught cache\n",
+      "source_error": false
+    },
+    {
+      "name": "cache-page-decorator-is-invalid",
+      "template": "<%page decorator=\"deco\"/>Ready ${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page decorator=\"deco\"/>Ready ${title}",
+      "source_error": true
+    },
+    {
+      "name": "inline-context-uses-page-data-without-def-locals",
+      "template": "<%! deco = lambda fn: lambda ctx: ctx.write(ctx.get('page_only', 'missing-page')) or ctx.write(':') or ctx.write(ctx.get('outer_arg', 'missing-def')) or ctx.write(':') or fn() %><%page args=\"page_only='visible'\"/><%def name=\"outer(outer_arg)\"><%def name=\"inner()\" decorator=\"deco\">${outer_arg}</%def>${inner()}</%def>${outer('private')}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "visible:missing-def:private",
+      "source_error": false
+    }
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "source": {
+    "apprise_version": "1.9.9",
+    "bark_sha256": "07ea6b9509005f67f2a584d9f40887f8058c25f5c79631b723af55fa632d9b46",
+    "python": "3.14.4",
+    "requests": "2.34.2",
+    "clock": "fixed virtual source clock; network denied"
+  },
+  "cases": [
+    {
+      "name": "documented-default",
+      "url": "bark://bark.invalid/device_key",
+      "title": " ",
+      "body": "  合成正文 \n",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://bark.invalid/push",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"title\": \"Apprise Notifications\", \"body\": \"  \\u5408\\u6210\\u6b63\\u6587\", \"icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-128x128.png\", \"device_key\": \"device_key\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "secure-markdown-options",
+      "url": "barks://owner:p%40ss@bark.invalid:9443/device_key?format=markdown&sound=CH&level=timeSensitive&badge=3&volume=8&category=owned%20category&group=owned%20group&call=yes&image=no&icon=https%3A%2F%2Ficon.invalid%2Fcustom.png&click=https%3A%2F%2Fclick.invalid%2Fgo%3Fa%3Db&cto=2.25&rto=9&verify=no",
+      "title": "  标题  ",
+      "body": "# synthetic",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://bark.invalid:9443/push",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Basic b3duZXI6cEBzcw=="
+          },
+          "body": "{\"title\": \"\\u6807\\u9898\", \"markdown\": \"# synthetic\", \"icon\": \"https://icon.invalid/custom.png\", \"sound\": \"chime.caf\", \"url\": \"https://click.invalid/go?a=b\", \"badge\": 3, \"level\": \"timeSensitive\", \"category\": \"owned category\", \"group\": \"owned group\", \"volume\": 8, \"call\": 1, \"device_key\": \"device_key\"}",
+          "verify": false,
+          "timeout": [
+            2.25,
+            9.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "multiple-targets-failure-and-throttle",
+      "url": "bark://bark.invalid/alpha/alpha?to=beta%2Calpha&image=no",
+      "title": "title",
+      "body": "body",
+      "statuses": [
+        503,
+        200
+      ],
+      "added": true,
+      "result": false,
+      "waits": [
+        5.5
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://bark.invalid/push",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"title\": \"title\", \"body\": \"body\", \"device_key\": \"beta\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "method": "POST",
+          "url": "http://bark.invalid/push",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"title\": \"title\", \"body\": \"body\", \"device_key\": \"alpha\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "invalid-optional-values",
+      "url": "bark://bark.invalid/device_key?image=no&volume=-1&badge=-4&level=Critical&sound=missing&cto=bogus&call=no",
+      "title": "title",
+      "body": "body",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://bark.invalid/push",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"title\": \"title\", \"body\": \"body\", \"volume\": -1, \"device_key\": \"device_key\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "zero-is-omitted",
+      "url": "bark://bark.invalid/device_key?image=no&volume=0&badge=0",
+      "title": "title",
+      "body": "body",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://bark.invalid/push",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"title\": \"title\", \"body\": \"body\", \"device_key\": \"device_key\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "http-201-is-failure",
+      "url": "bark://bark.invalid/device_key?image=no",
+      "title": "title",
+      "body": "body",
+      "statuses": [
+        201
+      ],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://bark.invalid/push",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"title\": \"title\", \"body\": \"body\", \"device_key\": \"device_key\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "no-targets",
+      "url": "bark://bark.invalid",
+      "title": "title",
+      "body": "body",
+      "statuses": [],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": []
+    }
+  ]
+}

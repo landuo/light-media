@@ -1,0 +1,582 @@
+{
+  "method": "two exact installed plugin AST methods + original RequestUtils constructor + exact installed requests/lxml/chardet; synthetic controlled responses; selected branches reused after exact AST equality of both resolver methods against installed IYUU 2.22",
+  "sources": {
+    "plugin": "a47d36432e87da046af025fc76281d99c714064a8fe05bdf8b11e83d2c683a3f",
+    "http": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "installed_plugin_2_22": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7"
+  },
+  "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "versions": {
+    "requests": "2.34.2",
+    "lxml": [
+      6,
+      1,
+      1,
+      0
+    ],
+    "libxml": [
+      2,
+      14,
+      6
+    ],
+    "chardet": "7.4.3"
+  },
+  "cases": [
+    {
+      "name": "template-3",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://source.invalid/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "get/{id}/{torrent_key}?uid={uid}&passkey={passkey}",
+      "responses": [
+        {
+          "status": 200,
+          "content": "PGEgaHJlZj0iZG93bmxvYWQucGhwP2lkPTciPmZhbGxiYWNrPC9hPg==",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": "https://source.invalid/get/712synthetic-passkey"
+      },
+      "calls": []
+    },
+    {
+      "name": "template-6",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://source.invalid/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "download.php?id={id:04d}",
+      "responses": [
+        {
+          "status": 200,
+          "content": "PGEgaHJlZj0iZG93bmxvYWQucGhwP2lkPTciPmZhbGxiYWNrPC9hPg==",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": "https://source.invalid/download.php?id=0007"
+      },
+      "calls": []
+    },
+    {
+      "name": "template-9",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://source.invalid/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "{{download}}/{id}",
+      "responses": [
+        {
+          "status": 200,
+          "content": "PGEgaHJlZj0iZG93bmxvYWQucGhwP2lkPTciPmZhbGxiYWNrPC9hPg==",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": null
+      },
+      "calls": []
+    },
+    {
+      "name": "template-10",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://source.invalid/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "broken{",
+      "responses": [
+        {
+          "status": 200,
+          "content": "PGEgaHJlZj0iZG93bmxvYWQucGhwP2lkPTciPmZhbGxiYWNrPC9hPg==",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": "https://source.invalid/download.php?id=7"
+      },
+      "calls": [
+        {
+          "op": "get",
+          "url": "https://source.invalid/details.php?id=7&hit=1",
+          "body": null,
+          "headers": {
+            "User-Agent": "synthetic-UA",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "a=last; b=%FF"
+          },
+          "proxy": null,
+          "timeout": 20
+        }
+      ]
+    },
+    {
+      "name": "template-14",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://source.invalid/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "{id:{uid}}",
+      "responses": [
+        {
+          "status": 200,
+          "content": "PGEgaHJlZj0iZG93bmxvYWQucGhwP2lkPTciPmZhbGxiYWNrPC9hPg==",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": "https://source.invalid/           7"
+      },
+      "calls": []
+    },
+    {
+      "name": "mteam",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://kp.m-team.cc/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false,
+        "apikey": "synthetic-api-key"
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "download.php?id={id}",
+      "responses": [
+        {
+          "status": 200,
+          "content": "eyJkYXRhIjoiaHR0cHM6Ly9kb3dubG9hZC5pbnZhbGlkL3Rva2VuIn0=",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": "https://download.invalid/token"
+      },
+      "calls": [
+        {
+          "op": "post",
+          "url": "https://api.m-team.cc/api/torrent/genDlToken?id=7",
+          "body": null,
+          "headers": {
+            "User-Agent": "synthetic-UA",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "x-api-key": "synthetic-api-key",
+            "Content-Length": "0"
+          },
+          "proxy": null,
+          "timeout": 20
+        }
+      ]
+    },
+    {
+      "name": "mteam-no-key",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://kp.m-team.cc/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "download.php?id={id}",
+      "responses": [
+        {
+          "status": 200,
+          "content": "PGEgaHJlZj0idG9ycmVudHMucGhwP2FjdGlvbj1kb3dubG9hZCZpZD03Ij5ncHc8L2E+PGEgaHJlZj0iZG93bmxvYWQucGhwP2lkPTciPmdlbmVyaWM8L2E+",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": null
+      },
+      "calls": []
+    },
+    {
+      "name": "monika",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://monikadesign.uk/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false,
+        "rss": "https://monikadesign.uk/rss/123.abcd_中文"
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "download.php?id={id}",
+      "responses": [
+        {
+          "status": 200,
+          "content": "PGEgaHJlZj0idG9ycmVudHMucGhwP2FjdGlvbj1kb3dubG9hZCZpZD03Ij5ncHc8L2E+PGEgaHJlZj0iZG93bmxvYWQucGhwP2lkPTciPmdlbmVyaWM8L2E+",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": "https://monikadesign.uk/torrents/download/7.abcd_中文"
+      },
+      "calls": []
+    },
+    {
+      "name": "monika-bad-rss",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://monikadesign.uk/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false,
+        "rss": "wrong"
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "download.php?id={id}",
+      "responses": [
+        {
+          "status": 200,
+          "content": "PGEgaHJlZj0idG9ycmVudHMucGhwP2FjdGlvbj1kb3dubG9hZCZpZD03Ij5ncHc8L2E+PGEgaHJlZj0iZG93bmxvYWQucGhwP2lkPTciPmdlbmVyaWM8L2E+",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": "https://monikadesign.uk/download.php?id=7"
+      },
+      "calls": [
+        {
+          "op": "get",
+          "url": "https://monikadesign.uk/details.php?id=7&hit=1",
+          "body": null,
+          "headers": {
+            "User-Agent": "synthetic-UA",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "a=last; b=%FF"
+          },
+          "proxy": null,
+          "timeout": 20
+        }
+      ]
+    },
+    {
+      "name": "gpw",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://greatposterwall.com/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "download.php?id={id}",
+      "responses": [
+        {
+          "status": 200,
+          "content": "PGEgaHJlZj0idG9ycmVudHMucGhwP2FjdGlvbj1kb3dubG9hZCZpZD03Ij5ncHc8L2E+PGEgaHJlZj0iZG93bmxvYWQucGhwP2lkPTciPmdlbmVyaWM8L2E+",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": "https://greatposterwall.com/torrents.php?action=download&id=7"
+      },
+      "calls": [
+        {
+          "op": "get",
+          "url": "https://greatposterwall.com/torrents.php?torrentid=7&hit=1",
+          "body": null,
+          "headers": {
+            "User-Agent": "synthetic-UA",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "a=last; b=%FF"
+          },
+          "proxy": null,
+          "timeout": 20
+        }
+      ]
+    },
+    {
+      "name": "hdchina",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://hdchina.org/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "download.php?id={id}",
+      "responses": [
+        {
+          "status": 200,
+          "content": "PGEgaHJlZj0idG9ycmVudHMucGhwP2FjdGlvbj1kb3dubG9hZCZpZD03Ij5ncHc8L2E+PGEgaHJlZj0iZG93bmxvYWQucGhwP2lkPTciPmdlbmVyaWM8L2E+",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": "https://hdchina.org/download.php?id=7"
+      },
+      "calls": [
+        {
+          "op": "get",
+          "url": "https://hdchina.org/details.php?id=7&hit=1",
+          "body": null,
+          "headers": {
+            "User-Agent": "synthetic-UA",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "a=last; b=%FF"
+          },
+          "proxy": null,
+          "timeout": 20
+        }
+      ]
+    },
+    {
+      "name": "status-403",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://source.invalid/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "download.php?hash={id}",
+      "responses": [
+        {
+          "status": 403,
+          "content": "PGEgaHJlZj0iZG93bmxvYWQucGhwP2lkPTciPng8L2E+",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": null
+      },
+      "calls": [
+        {
+          "op": "get",
+          "url": "https://source.invalid/details.php?id=7&hit=1",
+          "body": null,
+          "headers": {
+            "User-Agent": "synthetic-UA",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "a=last; b=%FF"
+          },
+          "proxy": null,
+          "timeout": 20
+        }
+      ]
+    },
+    {
+      "name": "status-500",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://source.invalid/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "download.php?hash={id}",
+      "responses": [
+        {
+          "status": 500,
+          "content": "PGEgaHJlZj0iZG93bmxvYWQucGhwP2lkPTciPng8L2E+",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": "https://source.invalid/download.php?id=7"
+      },
+      "calls": [
+        {
+          "op": "get",
+          "url": "https://source.invalid/details.php?id=7&hit=1",
+          "body": null,
+          "headers": {
+            "User-Agent": "synthetic-UA",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "a=last; b=%FF"
+          },
+          "proxy": null,
+          "timeout": 20
+        }
+      ]
+    },
+    {
+      "name": "nil-response",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://source.invalid/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "download.php?hash={id}",
+      "responses": [
+        null
+      ],
+      "result": {
+        "value": null
+      },
+      "calls": [
+        {
+          "op": "get",
+          "url": "https://source.invalid/details.php?id=7&hit=1",
+          "body": null,
+          "headers": {
+            "User-Agent": "synthetic-UA",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "a=last; b=%FF"
+          },
+          "proxy": null,
+          "timeout": 20
+        }
+      ]
+    },
+    {
+      "name": "html-selfclosing-script",
+      "site": {
+        "id": 1,
+        "name": "synthetic",
+        "url": "https://source.invalid/",
+        "passkey": "synthetic-passkey",
+        "uid": "12",
+        "cookie": "a=1; b=%FF; a=last",
+        "ua": "synthetic-UA",
+        "proxy": false
+      },
+      "seed": {
+        "torrent_id": 7
+      },
+      "template": "download.php?hash={id}",
+      "responses": [
+        {
+          "status": 200,
+          "content": "PHNjcmlwdC8+PGEgaHJlZj0iZG93bmxvYWQucGhwP2lkPTciPng8L2E+",
+          "headers": {}
+        }
+      ],
+      "result": {
+        "value": "https://source.invalid/download.php?id=7"
+      },
+      "calls": [
+        {
+          "op": "get",
+          "url": "https://source.invalid/details.php?id=7&hit=1",
+          "body": null,
+          "headers": {
+            "User-Agent": "synthetic-UA",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "a=last; b=%FF"
+          },
+          "proxy": null,
+          "timeout": 20
+        }
+      ]
+    }
+  ]
+}

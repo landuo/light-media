@@ -1,0 +1,43 @@
+{
+  "installed_version": "1.1",
+  "source": {
+    "plugin_sha256": "d0c8c6f1e034f46ce8b7d3c1bcd0cddc0e2d6455b2a6b35daa4b8002cd39f6ac",
+    "source_snapshot": "work/migration-20261105/source-snapshot/systemprocess/__init__.py",
+    "moviepilot": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "frontend": "2829e3b08214348f05ff2f5beae644882eccad58"
+  },
+  "reuse": [
+    {
+      "host_commit": "294a70cc02050634378926d3271f388a1349e857",
+      "host_file": "internal/app/plugin_processes.go",
+      "host_sha256": "25d80a9601c8791e8175a3e544404c863bfd5a63159be69ee21d98c4595ae5dd",
+      "target": "sample.go"
+    },
+    {
+      "host_commit": "8332fa4fd56acaec903c0901f671c13e417b2448",
+      "host_file": "internal/plugins/builtin/system_process.go",
+      "host_sha256": "42a8a921c35f711f8f7cc13445f9da0b3011d9b8e6795d7431219d6e7ea9281e",
+      "target": "table.go and form.json"
+    },
+    {
+      "host_commit": "8332fa4fd56acaec903c0901f671c13e417b2448",
+      "host_file": "internal/plugins/builtin/testdata/system-process-original.json",
+      "host_sha256": "149980242947682821ed5c4d633ee6fc32db81309d64ee6f5c4e28bcfe425bc9",
+      "target": "reference/system-process-original.json (source replay cases and form excerpt)"
+    }
+  ],
+  "targets": {
+    "sample.go": "10e316d77d6de61abe2e5a3e61de8496c27ba6b6424047a28ebf791f51e7f6b9",
+    "table.go": "4d56d5c1054440b1bffe4faad708347c8410fbf7c8577a0056ee3a33b4ec26bf",
+    "form.json": "9c0384b7d4b398649ca2776a224624f4e4e6cacb2538c535ea4592cc6aeb75c7",
+    "plugin.go": "c199aba49ddcb05520dc62d9d0f0d6bd93d36b34d194a69648f19850868e1d75",
+    "reference/system-process-original.json": "0c2897a3e992dd539efd47da46749ef937156aeb7f4a2c3e6bc93f645ccab036"
+  },
+  "adaptations": [
+    "Use a standalone standard SDK worker and native form/page/dashboard tuples.",
+    "Read the Linux container process namespace through the existing pinned Go gopsutil v4.26.9 sampler. Display-only name expansion may read argv[0]. Arguments and environment do not enter the process DTO.",
+    "Read verified instance metadata for dashboard titles so an original clone display name is preserved. Let the host emit the inherited default dashboard metadata key.",
+    "Process statistics represent local successive samples, including Python-style decimal rounding and elapsed local wall-time day residue. Live CPU samples have timing-dependent variance."
+  ],
+  "scope": "Plugin implementation and source replay. Real host and packaging acceptance are recorded in the migration ledger when observed."
+}

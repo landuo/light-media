@@ -1,0 +1,1050 @@
+{
+  "provenance": {
+    "plugin_source_sha256": "63583e9706aeee31a181b2fefa4e80c793ae4f2b9a76c9efea5956f8b0043d90",
+    "http_source_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "distributions": {
+      "requests": "2.34.2",
+      "urllib3": "2.7.0",
+      "certifi": "2026.7.22",
+      "idna": "3.18",
+      "charset-normalizer": "3.4.9",
+      "chardet": "7.4.3",
+      "brotli": "1.2.0",
+      "zstandard": "0.25.0"
+    },
+    "runtime": "actual installed AST plus matching pinned dependency versions on local disposable self-signed loopback server",
+    "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+    "openssl": "OpenSSL 3.0.20 7 Apr 2026",
+    "strict_http_rejects_same_certificate": true,
+    "network_scope": "127.0.0.1 only; generated key destroyed; no original app imports/user configuration/credentials/notifications; netrc is owned empty fixture"
+  },
+  "cases": [
+    {
+      "path": "/status",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/status",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/status",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 200,
+        "bool": true,
+        "text": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\n",
+        "encoding": "ISO-8859-1",
+        "apparent_encoding": "ascii",
+        "content_hex": "41637469766520636f6e6e656374696f6e733a2031320a73657276657220616363657074732068616e646c65642072657175657374730a31303030203939352031323334350a52656164696e673a20322057726974696e673a20332057616974696e673a20370a",
+        "protocol": 11,
+        "final_path": "/status",
+        "content_encoding": null,
+        "content_length_header": "103",
+        "dns": {
+          "host": "127.0.0.1",
+          "ips": [
+            "127.0.0.1"
+          ],
+          "error": ""
+        },
+        "tls": {
+          "enabled": true,
+          "version": "-",
+          "issuer": "-",
+          "subject": "-",
+          "expires_at": "-",
+          "days_left": null,
+          "error": "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate (_ssl.c:1010)"
+        },
+        "tls_failed_verification": true,
+        "tls_failure_cached": true,
+        "http_metrics": 12
+      }
+    },
+    {
+      "path": "/latin1",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/latin1",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/latin1",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 200,
+        "bool": true,
+        "text": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\né",
+        "encoding": "ISO-8859-1",
+        "apparent_encoding": "Windows-1252",
+        "content_hex": "41637469766520636f6e6e656374696f6e733a2031320a73657276657220616363657074732068616e646c65642072657175657374730a31303030203939352031323334350a52656164696e673a20322057726974696e673a20332057616974696e673a20370ae980",
+        "protocol": 11,
+        "final_path": "/latin1",
+        "content_encoding": null,
+        "content_length_header": "105"
+      }
+    },
+    {
+      "path": "/utf8",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/utf8",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/utf8",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 200,
+        "bool": true,
+        "text": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\n标签",
+        "encoding": "utf-8",
+        "apparent_encoding": "utf-8",
+        "content_hex": "41637469766520636f6e6e656374696f6e733a2031320a73657276657220616363657074732068616e646c65642072657175657374730a31303030203939352031323334350a52656164696e673a20322057726974696e673a20332057616974696e673a20370ae6a087e7adbe",
+        "protocol": 11,
+        "final_path": "/utf8",
+        "content_encoding": null,
+        "content_length_header": "109"
+      }
+    },
+    {
+      "path": "/invalid-utf8",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/invalid-utf8",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/invalid-utf8",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 200,
+        "bool": true,
+        "text": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\n���",
+        "encoding": "utf-8",
+        "apparent_encoding": "cp437",
+        "content_hex": "41637469766520636f6e6e656374696f6e733a2031320a73657276657220616363657074732068616e646c65642072657175657374730a31303030203939352031323334350a52656164696e673a20322057726974696e673a20332057616974696e673a20370affffe282",
+        "protocol": 11,
+        "final_path": "/invalid-utf8",
+        "content_encoding": null,
+        "content_length_header": "107"
+      }
+    },
+    {
+      "path": "/json-default",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/json-default",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/json-default",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 200,
+        "bool": true,
+        "text": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\n标签",
+        "encoding": "utf-8",
+        "apparent_encoding": "utf-8",
+        "content_hex": "41637469766520636f6e6e656374696f6e733a2031320a73657276657220616363657074732068616e646c65642072657175657374730a31303030203939352031323334350a52656164696e673a20322057726974696e673a20332057616974696e673a20370ae6a087e7adbe",
+        "protocol": 11,
+        "final_path": "/json-default",
+        "content_encoding": null,
+        "content_length_header": "109"
+      }
+    },
+    {
+      "path": "/apparent",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/apparent",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/apparent",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 200,
+        "bool": true,
+        "text": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\n标签",
+        "encoding": null,
+        "apparent_encoding": "utf-8",
+        "content_hex": "41637469766520636f6e6e656374696f6e733a2031320a73657276657220616363657074732068616e646c65642072657175657374730a31303030203939352031323334350a52656164696e673a20322057726974696e673a20332057616974696e673a20370ae6a087e7adbe",
+        "protocol": 11,
+        "final_path": "/apparent",
+        "content_encoding": null,
+        "content_length_header": "109"
+      }
+    },
+    {
+      "path": "/gzip",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/gzip",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/gzip",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 200,
+        "bool": true,
+        "text": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\n",
+        "encoding": "ISO-8859-1",
+        "apparent_encoding": "ascii",
+        "content_hex": "41637469766520636f6e6e656374696f6e733a2031320a73657276657220616363657074732068616e646c65642072657175657374730a31303030203939352031323334350a52656164696e673a20322057726974696e673a20332057616974696e673a20370a",
+        "protocol": 11,
+        "final_path": "/gzip",
+        "content_encoding": "gzip",
+        "content_length_header": "108"
+      }
+    },
+    {
+      "path": "/deflate",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/deflate",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/deflate",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 200,
+        "bool": true,
+        "text": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\n",
+        "encoding": "ISO-8859-1",
+        "apparent_encoding": "ascii",
+        "content_hex": "41637469766520636f6e6e656374696f6e733a2031320a73657276657220616363657074732068616e646c65642072657175657374730a31303030203939352031323334350a52656164696e673a20322057726974696e673a20332057616974696e673a20370a",
+        "protocol": 11,
+        "final_path": "/deflate",
+        "content_encoding": "deflate",
+        "content_length_header": "96"
+      }
+    },
+    {
+      "path": "/deflate-raw",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/deflate-raw",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/deflate-raw",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 200,
+        "bool": true,
+        "text": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\n",
+        "encoding": "ISO-8859-1",
+        "apparent_encoding": "ascii",
+        "content_hex": "41637469766520636f6e6e656374696f6e733a2031320a73657276657220616363657074732068616e646c65642072657175657374730a31303030203939352031323334350a52656164696e673a20322057726974696e673a20332057616974696e673a20370a",
+        "protocol": 11,
+        "final_path": "/deflate-raw",
+        "content_encoding": "deflate",
+        "content_length_header": "90"
+      }
+    },
+    {
+      "path": "/br",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/br",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/br",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 200,
+        "bool": true,
+        "text": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\n",
+        "encoding": "ISO-8859-1",
+        "apparent_encoding": "ascii",
+        "content_hex": "41637469766520636f6e6e656374696f6e733a2031320a73657276657220616363657074732068616e646c65642072657175657374730a31303030203939352031323334350a52656164696e673a20322057726974696e673a20332057616974696e673a20370a",
+        "protocol": 11,
+        "final_path": "/br",
+        "content_encoding": "br",
+        "content_length_header": "71"
+      }
+    },
+    {
+      "path": "/zstd",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/zstd",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/zstd",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 200,
+        "bool": true,
+        "text": "(µ/ý gÅ\u0002\u0000²\u0013\u0018piÛ(RT{YYÚwVÙ\u000bÃ3|Ê×ª¿#\u0016¸ÄÅª\u0018\u0019!¤J÷\u0019\u0002\u001d\u001bÇacÌ1]}\u0002ñåtCÊ+X÷pÄóú²®\u0011ME->SAQ\u0002\u0000 ©r[Ì",
+        "encoding": "ISO-8859-1",
+        "apparent_encoding": null,
+        "content_hex": "28b52ffd2067c50200b28513187069db2852547b599d59da7756d90bc3337ccad7aabf7f2316b8c4c5aa95181921a44af7811980021d1bc76163cc315d7d02f1e57443ca2b58f770c4f3fab2ae868e114d452d3e53417f518b82020020a9725bcc",
+        "protocol": 11,
+        "final_path": "/zstd",
+        "content_encoding": "zstd",
+        "content_length_header": "97"
+      }
+    },
+    {
+      "path": "/redirect",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/redirect",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/redirect",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        },
+        {
+          "path": "/status",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 200,
+        "bool": true,
+        "text": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\n",
+        "encoding": "ISO-8859-1",
+        "apparent_encoding": "ascii",
+        "content_hex": "41637469766520636f6e6e656374696f6e733a2031320a73657276657220616363657074732068616e646c65642072657175657374730a31303030203939352031323334350a52656164696e673a20322057726974696e673a20332057616974696e673a20370a",
+        "protocol": 11,
+        "final_path": "/status",
+        "content_encoding": null,
+        "content_length_header": "103"
+      }
+    },
+    {
+      "path": "/503",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/503",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/503",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 503,
+        "bool": false,
+        "text": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\n",
+        "encoding": "ISO-8859-1",
+        "apparent_encoding": "ascii",
+        "content_hex": "41637469766520636f6e6e656374696f6e733a2031320a73657276657220616363657074732068616e646c65642072657175657374730a31303030203939352031323334350a52656164696e673a20322057726974696e673a20332057616974696e673a20370a",
+        "protocol": 11,
+        "final_path": "/503",
+        "content_encoding": null,
+        "content_length_header": "103"
+      }
+    },
+    {
+      "path": "/truncated",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/truncated",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/truncated",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": true,
+        "request_error": "网络错误",
+        "request_seconds_nonnegative": true
+      }
+    },
+    {
+      "path": "/slow",
+      "constructors": [
+        {
+          "timeout": 0.03
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/slow",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 0.03,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/slow",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": true,
+        "request_error": "网络错误",
+        "request_seconds_nonnegative": true
+      }
+    },
+    {
+      "path": "/trickle",
+      "constructors": [
+        {
+          "timeout": 0.1
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/trickle",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 0.1,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "wire": [
+        {
+          "path": "/trickle",
+          "headers": {
+            "Host": "<fixture-host>",
+            "User-Agent": "python-urllib3/2.7.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        }
+      ],
+      "result": {
+        "none": false,
+        "request_error": null,
+        "request_seconds_nonnegative": true,
+        "status": 200,
+        "bool": true,
+        "text": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\n",
+        "encoding": "ISO-8859-1",
+        "apparent_encoding": "ascii",
+        "content_hex": "41637469766520636f6e6e656374696f6e733a2031320a73657276657220616363657074732068616e646c65642072657175657374730a31303030203939352031323334350a52656164696e673a20322057726974696e673a20332057616974696e673a20370a",
+        "protocol": 11,
+        "final_path": "/trickle",
+        "content_encoding": null,
+        "content_length_header": "103",
+        "elapsed_exceeded_read_timeout": true
+      }
+    },
+    {
+      "mode": "request-exception",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/status",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "result": {
+        "none": true,
+        "status": null,
+        "request_error": "网络错误"
+      }
+    },
+    {
+      "mode": "unexpected",
+      "constructors": [
+        {
+          "timeout": 20
+        }
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/status",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "result": {
+        "none": true,
+        "status": null,
+        "request_error": "synthetic unexpected request error"
+      }
+    },
+    {
+      "mode": "signature",
+      "constructors": [
+        {
+          "timeout": 20
+        },
+        {}
+      ],
+      "request_calls": [
+        {
+          "method": "get",
+          "path": "/status",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        },
+        {
+          "method": "get",
+          "path": "/status",
+          "params": null,
+          "data": null,
+          "json": null,
+          "allow_redirects": true,
+          "headers": {
+            "User-Agent": null,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept": null,
+            "referer": null
+          },
+          "cookies": null,
+          "proxies": null,
+          "timeout": 20,
+          "verify": false,
+          "stream": false
+        }
+      ],
+      "result": {
+        "none": false,
+        "status": 200,
+        "request_error": null
+      }
+    }
+  ]
+}

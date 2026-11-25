@@ -1,0 +1,67 @@
+{
+  "installed_version": "5.2.18",
+  "source": {
+    "repository": "https://github.com/landuo/MoviePilot-Plugins",
+    "commit": "3795f1045958fc3e81ecefdf181ad49d8d9e6d7d",
+    "path": "plugins.v2/brushflowlanduo",
+    "installed_entry_sha256": "9e60e6e548f8df78a0b72c7ddbc4762083941ff1778f5b63edc219e42d573dc9",
+    "live_file_count": 33,
+    "matching_source_manifest_sha256": "54b7e89102602c19e3f96916f4da8488975151dfb126f0768660d989f5f2a7a0",
+    "moviepilot": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "frontend_host": "2829e3b08214348f05ff2f5beae644882eccad58"
+  },
+  "reused_light_media_core": {
+    "source_commit": "b2a843bea5e3130907787ff1632c48ce1802daba",
+    "path": "internal/plugins/brushflow",
+    "original_version": "5.2.15",
+    "standard_bridge_reference": "192449dc:internal/plugins/brushflow/standard.go",
+    "paired_sdk_commit": "ad2acdef245f9b18f690b49c7b66af22ae494fa0"
+  },
+  "source_behavior": {
+    "5.2.16": "Invalidate stale promotion clocks. Pause Add, persist task record, then start after fresh free-promotion check and ten-minute margin.",
+    "5.2.17": "Removed retired standalone guard and compose. The Go package has no Python runtime.",
+    "5.2.18": "Retains 5.2.17 business behavior. Loads the installed Module Federation workbench through the host."
+  },
+  "worker_paths": {
+    "plugins/brushflowlanduo/api.go": "e026c4ce96c08bc4ee96c1130669f7036e95eff47ca1d040c8ea7335fecaf076",
+    "plugins/brushflowlanduo/brush.go": "d30620323a40fafe738eec7c1400a8776e669a83105a760d9546b6b2695c866b",
+    "plugins/brushflowlanduo/check.go": "a2381afadd444bfa3480280e9060df940fea9942bb9eba40bdd715835567fa1a",
+    "plugins/brushflowlanduo/config.go": "2c639ca850b25378053d917a69f67ee611c456671793bdd0a5c2e188b9cd9e65",
+    "plugins/brushflowlanduo/config_fields.go": "5682595d90c8d6c919917278cef779d43aed3dbda840239f78c090115d941a62",
+    "plugins/brushflowlanduo/core.go": "fc57e0406885c03e26c988736e707f961a61f7d45cb52159b825c75293da0a6c",
+    "plugins/brushflowlanduo/frontend.go": "c41bd8164096920bf59325e90b0847b8184295bf721064c49c091b7a3788fcb5",
+    "plugins/brushflowlanduo/global_delete.go": "1ea19a96354213fc61e41c3a5cd17fd6c4eb710afa672452410299c5643952cb",
+    "plugins/brushflowlanduo/promotion.go": "8c2a387182044cbdd6d049f608f04eca9f2b8843dd843da9fe0fe7e664124081",
+    "plugins/brushflowlanduo/promotion_patterns.go": "f56e6160b749423a92ccbde27861837e0c1865a96292ee09153c7e21ffc38b46",
+    "plugins/brushflowlanduo/records.go": "2da09b7b251cc789cc71b9e89a0ec93713d70215447efed99fd242a318c6b829",
+    "plugins/brushflowlanduo/size_limits.go": "a035ccbcc0d236c3b307b34c7c77d62f5703e875505228e922d87766304cdba6",
+    "plugins/brushflowlanduo/standard_host.go": "644d5ce69da9b50ced9ece54e140d298e1312dd96d13358d442d6fb58c08363a",
+    "plugins/brushflowlanduo/standard_resources.go": "60e0ca3d316716a87ad71b6987f4a60c1cccf86ed3d14e6cb965fa7bceb9440e",
+    "plugins/brushflowlanduo/torrents.go": "4362de030817ffb25cb988f3012046bb2472aeb49218860a29a5e5e21f20258c",
+    "plugins/brushflowlanduo/types.go": "b8976a422e5adbfe7aa0118e268022840a8b6137fb69de836298ecaa46586aeb",
+    "plugins/brushflowlanduo/worker.go": "25670acc777e41cc9623c08b137a7539efa7a3bc1fb6f85f29d1c0789a08f010",
+    "plugins/brushflowlanduo/compat/pythonre/LICENSE.PSF": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
+    "plugins/brushflowlanduo/compat/pythonre/LICENSE.Unicode": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+    "plugins/brushflowlanduo/compat/pythonre/NOTICE.CPython": "a35968b1c6c3c314406d4bb959aed26c1d9355206363e8521e60059a37947902",
+    "plugins/brushflowlanduo/compat/pythonre/brush_matches.go": "a99ec178d08e1cf0a358c4249025dbe2d0023fc6c17df88ab8c21c9e2c2d32e5",
+    "plugins/brushflowlanduo/compat/pythonre/casefix.go": "d777c2b9a1b9cf372c79d8ca8796b198049696c06113128c0b382c0cd845fb13",
+    "plugins/brushflowlanduo/compat/pythonre/compiler.go": "3062a63e3a7ce75bffde459a0fd6f320703b04b03083b942e16ea3a9bcb6ea23",
+    "plugins/brushflowlanduo/compat/pythonre/internal/data/names.z": "d375bd0caff3e7763dafdb689ac86edc97862c5a3675867c28e7557965e46f93",
+    "plugins/brushflowlanduo/compat/pythonre/internal/data/unicode.z": "dc919125ef6edf2d8386e2670c6de15c797739702ee397985f388b3defcf7c8e",
+    "plugins/brushflowlanduo/compat/pythonre/parser.go": "a15175d04d59828556a9ec8a2e0aa79d5833247eccb08ff141bafc6ade941a89",
+    "plugins/brushflowlanduo/compat/pythonre/types.go": "fc7ac161f3270721519b85fa0c19db34edbfb5d4753d3c69a22463524ebeae6c",
+    "plugins/brushflowlanduo/compat/pythonre/unicode.go": "94910bf222d36f290559de3a5d10dbef1605e387d3bf2be5ef5939b7acc0defa",
+    "plugins/brushflowlanduo/compat/pythonre/vm.go": "105f6a1f2e80a52153374080620bfc1dabfbdfe4dd69e9237386c1e9629c6912",
+    "plugins/brushflowlanduo/FRONTEND_ORIGIN.json": "e4ab9b60ef8920a101cacf4474dd7445674f8a223edc19be332f3fab362f195a",
+    "plugins/brushflowlanduo/frontend-licenses/NOTICE.md": "e2563ac6f79648392a733e20b82e3c1af2b2509cb1e41d358a228283e74731f5",
+    "cmd/brush-flow-landuo/main.go": "e28a04c130a334a0edcaaad2897d9b174dce3fcd3e5fe9fa92ad5fb8896495d1"
+  },
+  "adaptations": [
+    "The standard manager owns identity, clone, initialization, public clocks, ordinary PluginReload and plugin data namespaces. Each callback receives its own SDK authorization.",
+    "Station candidate materials stay in the host and use an invocation-bound opaque token. The host owns downloader destination authorization and durable exact-hash receipts for destructive operations. Legacy installed download rows are outside this fresh-use receipt proof.",
+    "Existing guarded native qBittorrent and Transmission operations, RSS, subscriptions and recognition are reused. Tracker origins omit credentials and passkeys. The fixed M-Team detail profile only sends its saved key to the configured official origin.",
+    "Local Linux scope with no cloud storage, workflow or AI. PluginTriggered is an ordinary event with the source shape. Exact package/browser results are recorded separately.",
+    "The retained BrushFlow invocation uses ordered single-outstanding callbacks. The installed host validates monotonic IDs and retains ordinary per-message and namespace checks without the default cumulative call or byte quotas."
+  ],
+  "brush_stream_sdk_source": "4ae9d95e736038115d44c2c60288783a1915776f"
+}

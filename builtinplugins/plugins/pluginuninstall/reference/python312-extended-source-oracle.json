@@ -1,0 +1,6890 @@
+{
+  "classification": "actual Python3.12 immutable333 image; fixed plugin+actual manager stop/delete/getlocal/Base.update_config/SystemConfigOper/Scheduler selected exact AST, synthetic SQL/jobs/FS/plugin callback boundaries; no app imports/liveconfig/DB/real deletion/network",
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "source_sha256": {
+    "plugin": "2210e9dea47eeccdc46208d515e45ce1222dcadf50dbfc63cbeb41f94e470487",
+    "manager": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+    "base": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+    "scheduler": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+    "systemconfig": "87bff2e7c63d2ba98c72d92d6aed2018548730215de017330019bb54478634a2",
+    "schema": "d57a96c4ab5ec4525ce56e40dccffa93da719626449ed9bf7be80f47809e0f1a",
+    "types": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1"
+  },
+  "cases": [
+    {
+      "name": "one",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": [
+          "Alpha"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "db.update",
+          "UserInstalledPlugins",
+          [
+            "Beta"
+          ]
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "installed-order",
+      "input": {
+        "installed": [
+          "Beta",
+          "Alpha"
+        ],
+        "selection": [
+          "Alpha",
+          "Beta"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "b|3"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Bdefault"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Beta..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Beta"
+        ],
+        [
+          "plugin.stop",
+          "Beta"
+        ],
+        [
+          "modules.clear",
+          "Beta"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/beta"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/beta",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Beta 已卸载"
+        ],
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "selection-duplicates",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": [
+          "Alpha",
+          "Alpha"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "db.update",
+          "UserInstalledPlugins",
+          [
+            "Beta"
+          ]
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha",
+          "Alpha"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "installed-duplicates",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Alpha",
+          "Beta"
+        ],
+        "selection": [
+          "Alpha"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "log",
+          "debug",
+          "插件 Alpha 不存在或未加载"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "db.update",
+          "UserInstalledPlugins",
+          [
+            "Beta"
+          ]
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "substring",
+      "input": {
+        "installed": [
+          "Alpha",
+          "AlphaBeta",
+          "Beta"
+        ],
+        "selection": "AlphaBeta",
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 AlphaBeta..."
+        ],
+        [
+          "log",
+          "debug",
+          "插件 AlphaBeta 不存在或未加载"
+        ],
+        [
+          "modules.clear",
+          "AlphaBeta"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alphabeta"
+        ],
+        [
+          "log",
+          "info",
+          "插件 AlphaBeta 已卸载"
+        ],
+        [
+          "scheduler.remove_job",
+          "b|3"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Bdefault"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Beta..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Beta"
+        ],
+        [
+          "plugin.stop",
+          "Beta"
+        ],
+        [
+          "modules.clear",
+          "Beta"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/beta"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/beta",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Beta 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": "AlphaBeta",
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": "AlphaBeta",
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": "AlphaBeta",
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "dictmembership",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": {
+          "Alpha": false
+        },
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "db.update",
+          "UserInstalledPlugins",
+          [
+            "Beta"
+          ]
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": {
+            "Alpha": false
+          },
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": {
+            "Alpha": false
+          },
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": {
+          "Alpha": false
+        },
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "unknown-selection",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": [
+          "NotInstalled"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "NotInstalled"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "NotInstalled"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "NotInstalled"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "empty-installed",
+      "input": {
+        "installed": [],
+        "selection": [
+          "Alpha"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "self",
+      "input": {
+        "installed": [
+          "Alpha",
+          "PluginUnInstall",
+          "Beta"
+        ],
+        "selection": [
+          "PluginUnInstall"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "self|4"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(插件彻底卸载)：Self"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 PluginUnInstall..."
+        ],
+        [
+          "events.disable",
+          "PluginUnInstall"
+        ],
+        [
+          "modules.clear",
+          "PluginUnInstall"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/pluginuninstall"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/pluginuninstall",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 PluginUnInstall 已卸载"
+        ],
+        [
+          "db.update",
+          "UserInstalledPlugins",
+          [
+            "Alpha",
+            "Beta"
+          ]
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "PluginUnInstall"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "PluginUnInstall"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "PluginUnInstall"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "clone",
+      "input": {
+        "installed": [
+          "PluginUnInstall",
+          "PluginUnInstallowned"
+        ],
+        "selection": [
+          "PluginUnInstallowned"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": true,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "self|4"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(插件彻底卸载)：Self"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 PluginUnInstallowned..."
+        ],
+        [
+          "events.disable",
+          "PluginUnInstallowned"
+        ],
+        [
+          "modules.clear",
+          "PluginUnInstallowned"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/pluginuninstallowned"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/pluginuninstallowned",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 PluginUnInstallowned 已卸载"
+        ],
+        [
+          "db.update",
+          "UserInstalledPlugins",
+          [
+            "PluginUnInstall"
+          ]
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstallowned",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "PluginUnInstall"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [
+            "PluginUnInstallowned"
+          ],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "PluginUnInstall"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [
+            "PluginUnInstallowned"
+          ],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "PluginUnInstallowned"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "selection-None",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": null,
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": null,
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": null,
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": null,
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": null,
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "selection-[]",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": [],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "selection-False",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": false,
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": false,
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": false,
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": false,
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": false,
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "selection-''",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": "",
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": "",
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": "",
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": "",
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": "",
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "selection-{}",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": {},
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": {},
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": {},
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": {},
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": {},
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "selection-0",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": 0,
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": 0,
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": 0,
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": 0,
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": 0,
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "selection-1",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": 1,
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": {
+        "type": "TypeError",
+        "message": "argument of type 'int' is not iterable"
+      },
+      "trace": [],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": 1,
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": 1,
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": 1,
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": 1,
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": 1,
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "selection-True",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": true,
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": {
+        "type": "TypeError",
+        "message": "argument of type 'bool' is not iterable"
+      },
+      "trace": [],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": true,
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": true,
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": true,
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": true,
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": true,
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "selection-2",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": 2,
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": {
+        "type": "TypeError",
+        "message": "argument of type 'int' is not iterable"
+      },
+      "trace": [],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": 2,
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": 2,
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": 2,
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": 2,
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": 2,
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "flags-(False, False)",
+      "input": {
+        "installed": [
+          "Alpha"
+        ],
+        "selection": [
+          "Alpha"
+        ],
+        "flags": [
+          false,
+          false
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": false,
+            "clear_data": false
+          }
+        ]
+      ],
+      "classes": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": false,
+          "clear_data": false
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": false,
+          "clear_data": false
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha"
+        ],
+        "clear_config": false,
+        "clear_data": false,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "flags-(None, None)",
+      "input": {
+        "installed": [
+          "Alpha"
+        ],
+        "selection": [
+          "Alpha"
+        ],
+        "flags": [
+          null,
+          null
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": null,
+            "clear_data": null
+          }
+        ]
+      ],
+      "classes": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": null,
+          "clear_data": null
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": null,
+          "clear_data": null
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha"
+        ],
+        "clear_config": null,
+        "clear_data": null,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "flags-('false', 'false')",
+      "input": {
+        "installed": [
+          "Alpha"
+        ],
+        "selection": [
+          "Alpha"
+        ],
+        "flags": [
+          "false",
+          "false"
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": "false",
+            "clear_data": "false"
+          }
+        ]
+      ],
+      "classes": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": "false",
+          "clear_data": "false"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": "false",
+          "clear_data": "false"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha"
+        ],
+        "clear_config": "false",
+        "clear_data": "false",
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "flags-([], {})",
+      "input": {
+        "installed": [
+          "Alpha"
+        ],
+        "selection": [
+          "Alpha"
+        ],
+        "flags": [
+          [],
+          {}
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": [],
+            "clear_data": {}
+          }
+        ]
+      ],
+      "classes": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": [],
+          "clear_data": {}
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": [],
+          "clear_data": {}
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha"
+        ],
+        "clear_config": [],
+        "clear_data": {},
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "flags-([0], {'x': 0})",
+      "input": {
+        "installed": [
+          "Alpha"
+        ],
+        "selection": [
+          "Alpha"
+        ],
+        "flags": [
+          [
+            0
+          ],
+          {
+            "x": 0
+          }
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": [
+              0
+            ],
+            "clear_data": {
+              "x": 0
+            }
+          }
+        ]
+      ],
+      "classes": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": [
+            0
+          ],
+          "clear_data": {
+            "x": 0
+          }
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": [
+            0
+          ],
+          "clear_data": {
+            "x": 0
+          }
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha"
+        ],
+        "clear_config": [
+          0
+        ],
+        "clear_data": {
+          "x": 0
+        },
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "flags-(0, 1)",
+      "input": {
+        "installed": [
+          "Alpha"
+        ],
+        "selection": [
+          "Alpha"
+        ],
+        "flags": [
+          0,
+          1
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": 0,
+            "clear_data": 1
+          }
+        ]
+      ],
+      "classes": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": 0,
+          "clear_data": 1
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": 0,
+          "clear_data": 1
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha"
+        ],
+        "clear_config": 0,
+        "clear_data": 1,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "fault-exists",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": [
+          "Alpha",
+          "Beta"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": "exists",
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": {
+        "type": "PermissionError",
+        "message": "[Errno 13] synthetic exists denied: '/owned-root/app/plugins/alpha'"
+      },
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ]
+      ],
+      "classes": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "fault-rmtree-unexpected",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": [
+          "Alpha",
+          "Beta"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": "rmtree-unexpected",
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": {
+        "type": "TypeError",
+        "message": "synthetic unexpected rmtree error"
+      },
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ]
+      ],
+      "classes": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha",
+          "Beta"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "fault-close",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": [
+          "Alpha",
+          "Beta"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": "close",
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "log",
+          "warn",
+          "停止插件 Alpha 时发生错误: synthetic close failure"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "scheduler.remove_job",
+          "b|3"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Bdefault"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Beta..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Beta"
+        ],
+        [
+          "log",
+          "warn",
+          "停止插件 Beta 时发生错误: synthetic close failure"
+        ],
+        [
+          "modules.clear",
+          "Beta"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/beta"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/beta",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Beta 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "fault-scheduler-get",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": [
+          "Alpha",
+          "Beta"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": "scheduler-get",
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "log",
+          "error",
+          "移除插件服务失败：synthetic get_jobs - a: {'pid': 'Alpha', 'name': 'Adefault'}"
+        ],
+        [
+          "scheduler.message",
+          {
+            "title": "插件 None 服务移除失败",
+            "message": "synthetic get_jobs",
+            "role": "system"
+          }
+        ],
+        [
+          "log",
+          "error",
+          "移除插件服务失败：synthetic get_jobs - ax: {'pid': 'Alpha', 'name': 'Aextra'}"
+        ],
+        [
+          "scheduler.message",
+          {
+            "title": "插件 None 服务移除失败",
+            "message": "synthetic get_jobs",
+            "role": "system"
+          }
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "log",
+          "error",
+          "移除插件服务失败：synthetic get_jobs - b: {'pid': 'Beta', 'name': 'Bdefault'}"
+        ],
+        [
+          "scheduler.message",
+          {
+            "title": "插件 None 服务移除失败",
+            "message": "synthetic get_jobs",
+            "role": "system"
+          }
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Beta..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Beta"
+        ],
+        [
+          "plugin.stop",
+          "Beta"
+        ],
+        [
+          "modules.clear",
+          "Beta"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/beta"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/beta",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Beta 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "fault-scheduler-lookup",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": [
+          "Alpha",
+          "Beta"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": "scheduler-lookup",
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "scheduler.remove_job",
+          "b|3"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Beta..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Beta"
+        ],
+        [
+          "plugin.stop",
+          "Beta"
+        ],
+        [
+          "modules.clear",
+          "Beta"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/beta"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/beta",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Beta 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "fault-db:UserInstalledPlugins",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": [
+          "Alpha",
+          "Beta"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": "db:UserInstalledPlugins",
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "scheduler.remove_job",
+          "b|3"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Bdefault"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Beta..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Beta"
+        ],
+        [
+          "plugin.stop",
+          "Beta"
+        ],
+        [
+          "modules.clear",
+          "Beta"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/beta"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/beta",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Beta 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "fault-db:plugin.PluginUnInstall",
+      "input": {
+        "installed": [
+          "Alpha",
+          "Beta"
+        ],
+        "selection": [
+          "Alpha",
+          "Beta"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": "db:plugin.PluginUnInstall",
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": {
+        "type": "RuntimeError",
+        "message": "synthetic DB failure plugin.PluginUnInstall"
+      },
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "scheduler.remove_job",
+          "b|3"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Bdefault"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Beta..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Beta"
+        ],
+        [
+          "plugin.stop",
+          "Beta"
+        ],
+        [
+          "modules.clear",
+          "Beta"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/beta"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/beta",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Beta 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha",
+            "Beta"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha",
+          "Beta"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "rmtree-suppressed-residue",
+      "input": {
+        "installed": [
+          "Alpha"
+        ],
+        "selection": [
+          "Alpha"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": true,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "a|1"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Adefault"
+        ],
+        [
+          "scheduler.remove_job",
+          "ax|2"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(None)：Aextra"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 Alpha..."
+        ],
+        [
+          "events.disable",
+          "Other"
+        ],
+        [
+          "plugin.close",
+          "Alpha"
+        ],
+        [
+          "plugin.stop",
+          "Alpha"
+        ],
+        [
+          "modules.clear",
+          "Alpha"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/alpha"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/alpha",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 Alpha 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "Alpha"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "init-none",
+      "input": {
+        "installed": [
+          "Alpha"
+        ],
+        "selection": [
+          "Alpha"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "none"
+      },
+      "error": null,
+      "trace": [],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [],
+        "clear_config": false,
+        "clear_data": false,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "init-empty",
+      "input": {
+        "installed": [
+          "Alpha"
+        ],
+        "selection": [
+          "Alpha"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "empty"
+      },
+      "error": null,
+      "trace": [],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        },
+        "self": {
+          "pid": "PluginUnInstall",
+          "name": "Self"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3",
+        "self|4"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstall",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "UserInstalledPlugins": [
+          "Alpha"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [
+          "Alpha"
+        ],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "lost"
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "Alpha"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [],
+        "clear_config": false,
+        "clear_data": false,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "self-followup-empty",
+      "input": {
+        "installed": [
+          "PluginUnInstall"
+        ],
+        "selection": [
+          "PluginUnInstall"
+        ],
+        "flags": [
+          true,
+          true
+        ],
+        "fault": null,
+        "clone": false,
+        "rmtree_residual": false,
+        "config": "normal"
+      },
+      "error": null,
+      "trace": [
+        [
+          "scheduler.remove_job",
+          "self|4"
+        ],
+        [
+          "log",
+          "info",
+          "移除插件服务(插件彻底卸载)：Self"
+        ],
+        [
+          "log",
+          "info",
+          "正在停止插件 PluginUnInstall..."
+        ],
+        [
+          "events.disable",
+          "PluginUnInstall"
+        ],
+        [
+          "modules.clear",
+          "PluginUnInstall"
+        ],
+        [
+          "log",
+          "info",
+          "插件停止完成"
+        ],
+        [
+          "fs.exists",
+          "/owned-root/app/plugins/pluginuninstall"
+        ],
+        [
+          "fs.rmtree",
+          "/owned-root/app/plugins/pluginuninstall",
+          {
+            "ignore_errors": true
+          }
+        ],
+        [
+          "log",
+          "info",
+          "插件 PluginUnInstall 已卸载"
+        ],
+        [
+          "db.delete",
+          "UserInstalledPlugins"
+        ],
+        [
+          "db.update",
+          "plugin.PluginUnInstall",
+          {
+            "plugin_ids": [],
+            "clear_config": true,
+            "clear_data": true
+          }
+        ]
+      ],
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "running": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstallowned",
+        "Uninstalled"
+      ],
+      "jobs": {
+        "a": {
+          "pid": "Alpha",
+          "name": "Adefault"
+        },
+        "ax": {
+          "pid": "Alpha",
+          "name": "Aextra"
+        },
+        "b": {
+          "pid": "Beta",
+          "name": "Bdefault"
+        }
+      },
+      "backend_jobs": [
+        "a|1",
+        "ax|2",
+        "b|3"
+      ],
+      "filesystem": [
+        "/owned-root/app/plugins/alpha",
+        "/owned-root/app/plugins/beta",
+        "/owned-root/app/plugins/pluginuninstallowned",
+        "/owned-root/app/plugins/uninstalled"
+      ],
+      "DB": {
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "PluginUnInstall"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "cache": {
+        "UserInstalledPlugins": [],
+        "plugin.Alpha": {
+          "keep": "a"
+        },
+        "plugin.Beta": {
+          "keep": "b"
+        },
+        "plugin.PluginUnInstall": {
+          "plugin_ids": [],
+          "clear_config": true,
+          "clear_data": true
+        },
+        "plugin.PluginUnInstallowned": {
+          "plugin_ids": [
+            "PluginUnInstall"
+          ],
+          "unknown": "clone-lost"
+        }
+      },
+      "data": {
+        "Alpha": {
+          "owned": 1
+        },
+        "Beta": {
+          "owned": 2
+        },
+        "PluginUnInstall": {
+          "owned": 3
+        },
+        "PluginUnInstallowned": {
+          "owned": 4
+        }
+      },
+      "internal": {
+        "ids": [
+          "PluginUnInstall"
+        ],
+        "clear_config": true,
+        "clear_data": true,
+        "state": false,
+        "command": null,
+        "api": null,
+        "page": null
+      }
+    },
+    {
+      "name": "actual-manager-options-and-form",
+      "options": [
+        {
+          "title": "Alpha Name v1.0",
+          "value": "Alpha"
+        },
+        {
+          "title": "Beta Name v1.0",
+          "value": "Beta"
+        },
+        {
+          "title": "PluginUnInstallowned Name v1.0",
+          "value": "PluginUnInstallowned"
+        },
+        {
+          "title": "插件彻底卸载 v2.2",
+          "value": "PluginUnInstall"
+        }
+      ],
+      "form": [
+        [
+          {
+            "component": "VForm",
+            "content": [
+              {
+                "component": "VRow",
+                "content": [
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 12,
+                      "md": 3
+                    },
+                    "content": [
+                      {
+                        "component": "VSwitch",
+                        "props": {
+                          "model": "clear_config",
+                          "label": "清除配置(配置信息)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 12,
+                      "md": 3
+                    },
+                    "content": [
+                      {
+                        "component": "VSwitch",
+                        "props": {
+                          "model": "clear_data",
+                          "label": "清除数据(运行数据)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 12,
+                      "md": 6
+                    },
+                    "content": [
+                      {
+                        "component": "VSelect",
+                        "props": {
+                          "multiple": true,
+                          "chips": true,
+                          "model": "plugin_ids",
+                          "label": "卸载插件",
+                          "items": [
+                            {
+                              "title": "Alpha Name v1.0",
+                              "value": "Alpha"
+                            },
+                            {
+                              "title": "Beta Name v1.0",
+                              "value": "Beta"
+                            },
+                            {
+                              "title": "PluginUnInstallowned Name v1.0",
+                              "value": "PluginUnInstallowned"
+                            },
+                            {
+                              "title": "插件彻底卸载 v2.2",
+                              "value": "PluginUnInstall"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "component": "VRow",
+                "content": [
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 12
+                    },
+                    "content": [
+                      {
+                        "component": "VAlert",
+                        "props": {
+                          "type": "info",
+                          "variant": "tonal",
+                          "text": "删除数据库中已安装插件记录、清理插件文件。"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        {
+          "plugin_ids": [],
+          "clear_config": false,
+          "clear_data": false
+        }
+      ],
+      "trace": [
+        [
+          "plugin.state",
+          "Alpha"
+        ],
+        [
+          "log",
+          "error",
+          "获取插件 Beta 状态出错：state-failed"
+        ],
+        [
+          "plugin.state",
+          "PluginUnInstallowned"
+        ],
+        [
+          "plugin.state",
+          "Uninstalled"
+        ],
+        [
+          "plugin.state",
+          "Alpha"
+        ],
+        [
+          "log",
+          "error",
+          "获取插件 Beta 状态出错：state-failed"
+        ],
+        [
+          "plugin.state",
+          "PluginUnInstallowned"
+        ],
+        [
+          "plugin.state",
+          "Uninstalled"
+        ]
+      ],
+      "no_market_or_version_comparison_call": true
+    },
+    {
+      "name": "raw-options-stability-fallbacks",
+      "options": [
+        {
+          "title": "A vN/A",
+          "value": "A"
+        },
+        {
+          "title": "Bee v2",
+          "value": "B"
+        },
+        {
+          "title": "None vNone",
+          "value": "Z"
+        }
+      ]
+    },
+    {
+      "name": "order-above-2pow53",
+      "options": [
+        {
+          "title": "early vN/A",
+          "value": "early"
+        },
+        {
+          "title": "tied vN/A",
+          "value": "tied"
+        },
+        {
+          "title": "late vN/A",
+          "value": "late"
+        }
+      ]
+    },
+    {
+      "name": "order-large-negative",
+      "options": [
+        {
+          "title": "earlier vN/A",
+          "value": "earlier"
+        },
+        {
+          "title": "later vN/A",
+          "value": "later"
+        }
+      ]
+    },
+    {
+      "name": "order-int-float-exact",
+      "options": [
+        {
+          "title": "float-early vN/A",
+          "value": "float-early"
+        },
+        {
+          "title": "int-tie vN/A",
+          "value": "int-tie"
+        },
+        {
+          "title": "int-late vN/A",
+          "value": "int-late"
+        }
+      ]
+    },
+    {
+      "name": "order-float-fractions",
+      "options": [
+        {
+          "title": "c vN/A",
+          "value": "c"
+        },
+        {
+          "title": "a vN/A",
+          "value": "a"
+        },
+        {
+          "title": "b vN/A",
+          "value": "b"
+        },
+        {
+          "title": "z vN/A",
+          "value": "z"
+        }
+      ]
+    },
+    {
+      "name": "order-bool-integer-tie",
+      "options": [
+        {
+          "title": "zero vN/A",
+          "value": "zero"
+        },
+        {
+          "title": "a vN/A",
+          "value": "a"
+        },
+        {
+          "title": "b vN/A",
+          "value": "b"
+        }
+      ]
+    },
+    {
+      "name": "order-none-mixed",
+      "raises": "TypeError",
+      "message": "'<' not supported between instances of 'int' and 'NoneType'"
+    },
+    {
+      "name": "order-string-mixed",
+      "raises": "TypeError",
+      "message": "'<' not supported between instances of 'int' and 'str'"
+    },
+    {
+      "name": "metadata-none",
+      "options": [
+        {
+          "title": "None vNone",
+          "value": "n"
+        }
+      ]
+    },
+    {
+      "name": "metadata-boolean",
+      "options": [
+        {
+          "title": "False vTrue",
+          "value": "b"
+        }
+      ]
+    },
+    {
+      "name": "metadata-numeric",
+      "options": [
+        {
+          "title": "9007199254740993 v1.5",
+          "value": "i"
+        }
+      ]
+    },
+    {
+      "name": "metadata-list-dict",
+      "options": [
+        {
+          "title": "['x', None, True] v{'z': 1, 'a': 'q'}",
+          "value": "c"
+        }
+      ]
+    },
+    {
+      "name": "metadata-missing",
+      "options": [
+        {
+          "title": "id vN/A",
+          "value": "id"
+        }
+      ]
+    }
+  ],
+  "excluded_boundaries": [
+    "Official authentication helper syntheticTrue as user excludes official levels/RSA",
+    "AI cache invalidation external stop dependency synthetic no-op, no AI system implemented",
+    "Actual filesystem semantics evaluated separately if needed; fs calls here recorder only"
+  ]
+}

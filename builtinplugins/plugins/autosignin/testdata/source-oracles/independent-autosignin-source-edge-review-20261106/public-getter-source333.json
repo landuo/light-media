@@ -1,0 +1,52 @@
+{
+  "python": "3.12.13",
+  "classification": "actual original public get_service\u2192_get_random_schedule\u2192_parse_random_schedule; fixed datetime and synthetic store/random; no app/network/DB",
+  "source_main_sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+  "cases": [
+    {
+      "raw_times": "[{\"hour\":1e400,\"minute\":0}]",
+      "effects": [
+        "get_data"
+      ],
+      "job_count": null,
+      "error": "cannot convert float infinity to integer",
+      "error_type": "OverflowError"
+    },
+    {
+      "raw_times": "[{\"hour\":-1e400,\"minute\":0}]",
+      "effects": [
+        "get_data"
+      ],
+      "job_count": null,
+      "error": "cannot convert float infinity to integer",
+      "error_type": "OverflowError"
+    },
+    {
+      "raw_times": "[{\"hour\":2.7,\"minute\":0}]",
+      "effects": [
+        "get_data"
+      ],
+      "job_count": 1,
+      "error": null,
+      "error_type": null
+    },
+    {
+      "raw_times": "[{\"hour\":1e-400,\"minute\":0}]",
+      "effects": [
+        "get_data"
+      ],
+      "job_count": 1,
+      "error": null,
+      "error_type": null
+    },
+    {
+      "raw_times": "[{\"hour\":8,\"minute\":0}]",
+      "effects": [
+        "get_data"
+      ],
+      "job_count": 1,
+      "error": null,
+      "error_type": null
+    }
+  ]
+}

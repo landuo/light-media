@@ -1,0 +1,1567 @@
+{
+  "source": {
+    "version": "1.9.9",
+    "sha256": "e52509ad487214e66e54705c4a50834a7e636d1819cca68c0dba8a1d55fbfed2",
+    "python": "3.14.4",
+    "requests": "2.34.2",
+    "network": "forbidden; original provider through Apprise with deterministic local responses and clock"
+  },
+  "timestamp": 1700000000.25,
+  "boundary": "owned-slack-boundary",
+  "cases": [
+    {
+      "name": "webhook-default-timestamp-markdown",
+      "url": "slack://OwnedA/OwnedB/OwnedC",
+      "title": " <Title> & Owned ",
+      "body": "Body & <other> <!channel|all> <@U1> <https://example.invalid/?a=1&b=2|owned>\r\nTail",
+      "attachments": [],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://hooks.slack.com/services/OwnedA/OwnedB/OwnedC",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"&lt;Title&gt; &amp; Owned\", \"text\": \"Body &amp; &lt;other&gt; <!channel|all> <@U1> <https://example.invalid/?a=1&b=2|owned>\\r\\nTail\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\", \"ts\": 1700000000.25}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "ok"
+        }
+      ]
+    },
+    {
+      "name": "native-hook-block-footer-and-title",
+      "url": "https://hooks.slack.com/services/OwnedA/OwnedB/OwnedC?blocks=yes",
+      "title": " 标题 & ",
+      "body": "Body <literal>",
+      "attachments": [],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://hooks.slack.com/services/OwnedA/OwnedB/OwnedC",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"username\": \"Apprise\", \"attachments\": [{\"blocks\": [{\"type\": \"header\", \"text\": {\"type\": \"plain_text\", \"text\": \"\\u6807\\u9898 &\", \"emoji\": true}}, {\"type\": \"section\", \"text\": {\"type\": \"mrkdwn\", \"text\": \"Body <literal>\"}}, {\"type\": \"context\", \"elements\": [{\"type\": \"image\", \"image_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"alt_text\": \"info\"}, {\"type\": \"mrkdwn\", \"text\": \"Apprise\"}]}], \"color\": \"#3AA3E3\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "ok"
+        }
+      ]
+    },
+    {
+      "name": "native-gov-alias",
+      "url": "https://hooks.slack-gov.com/services/OwnedA/OwnedB/OwnedC",
+      "title": "t",
+      "body": "b",
+      "attachments": [],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://hooks.slack-gov.com/services/OwnedA/OwnedB/OwnedC",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\", \"ts\": 1700000000.25}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "ok"
+        }
+      ]
+    },
+    {
+      "name": "native-gov-query-produces-invalid-target",
+      "url": "https://hooks.slack-gov.com/services/OwnedA/OwnedB/OwnedC?blocks=yes&image=no&footer=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": [],
+      "replies": []
+    },
+    {
+      "name": "explicit-gov-prefix-and-query-credential",
+      "url": "slack://Alias@ignored/foo?mode=g&token=OwnedA%252FOwnedB%252FOwnedC&footer=no&image=no&format=text&verify=no&cto=2.5&rto=11",
+      "title": "<t>",
+      "body": "b < &",
+      "attachments": [],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://hooks.slack-gov.com/services/OwnedA/OwnedB/OwnedC",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"username\": \"Alias\", \"mrkdwn\": false, \"attachments\": [{\"title\": \"&lt;t&gt;\", \"text\": \"b < &\", \"color\": \"#3AA3E3\"}]}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            11.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "ok"
+        }
+      ]
+    },
+    {
+      "name": "blocks-text-without-title",
+      "url": "slack://Alias@OwnedA/OwnedB/OwnedC?blocks=yes&footer=no&format=text",
+      "title": "",
+      "body": " text <&>",
+      "attachments": [],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://hooks.slack.com/services/OwnedA/OwnedB/OwnedC",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"username\": \"Alias\", \"attachments\": [{\"blocks\": [{\"type\": \"section\", \"text\": {\"type\": \"plain_text\", \"text\": \" text <&>\"}}], \"color\": \"#3AA3E3\"}]}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "ok"
+        }
+      ]
+    },
+    {
+      "name": "channel-target-encoding-sorting-thread",
+      "url": "slack://OwnedA/OwnedB/OwnedC/%2BC123%3A10.22/%23owned/@myuser?to=%2BABC&timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://hooks.slack.com/services/OwnedA/OwnedB/OwnedC",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#owned\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://hooks.slack.com/services/OwnedA/OwnedB/OwnedC",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"ABC\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://hooks.slack.com/services/OwnedA/OwnedB/OwnedC",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"C123\", \"thread_ts\": \"10.22\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://hooks.slack.com/services/OwnedA/OwnedB/OwnedC",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"@myuser\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "ok"
+        },
+        {
+          "status": 200,
+          "body": "ok"
+        },
+        {
+          "status": 200,
+          "body": "ok"
+        },
+        {
+          "status": 200,
+          "body": "ok"
+        }
+      ]
+    },
+    {
+      "name": "webhook-attachment-ignored-without-fetch",
+      "url": "slack://OwnedA/OwnedB/OwnedC?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [
+        "https://asset.invalid/missing.png"
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://hooks.slack.com/services/OwnedA/OwnedB/OwnedC",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "ok"
+        }
+      ]
+    },
+    {
+      "name": "webhook-only-attachment-posts-empty-message",
+      "url": "slack://OwnedA/OwnedB/OwnedC?timestamp=no",
+      "title": "",
+      "body": "",
+      "attachments": [
+        "https://asset.invalid/a.png"
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://hooks.slack.com/services/OwnedA/OwnedB/OwnedC",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"\", \"text\": \"\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "ok"
+        }
+      ]
+    },
+    {
+      "name": "webhook-body-must-be-exact",
+      "url": "slack://OwnedA/OwnedB/OwnedC?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://hooks.slack.com/services/OwnedA/OwnedB/OwnedC",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "ok\n"
+        }
+      ]
+    },
+    {
+      "name": "bot-default-channel",
+      "url": "slack://xoxb-owned-123?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#general\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C123\"}"
+        }
+      ]
+    },
+    {
+      "name": "bot-email-cached-and-thread-inherited",
+      "url": "slack://xoxb-owned-123/%2BC123%3A10.22/owner%40example.invalid?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [],
+      "added": true,
+      "results": [
+        true,
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"thread_ts\": \"10.22\", \"channel\": \"C123\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://slack.com/api/users.lookupByEmail?email=owner%40example.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"thread_ts\": \"10.22\", \"channel\": \"U7\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"thread_ts\": \"10.22\", \"channel\": \"C123\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"thread_ts\": \"10.22\", \"channel\": \"U7\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        1.2,
+        1.2,
+        1.2,
+        1.2
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C123\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"user\": {\"id\": \"U7\"}}"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C456\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C123\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C456\"}"
+        }
+      ]
+    },
+    {
+      "name": "bot-email-lookup-failure-and-continues",
+      "url": "slack://xoxb-owned-123/owner%40example.invalid/zeta?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://slack.com/api/users.lookupByEmail?email=owner%40example.invalid",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#zeta\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        1.2
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"ok\": false}"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C123\"}"
+        }
+      ]
+    },
+    {
+      "name": "bot-reply-failure-continues-without-429-retry",
+      "url": "slack://xoxb-owned-123/a/b/c?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#a\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#b\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#c\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        1.2,
+        1.2
+      ],
+      "replies": [
+        {
+          "status": 429,
+          "body": "rate_limited"
+        },
+        {
+          "status": 0,
+          "body": ""
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C123\"}"
+        }
+      ]
+    },
+    {
+      "name": "bot-binary-ok-substring-without-json",
+      "url": "slack://xoxb-owned-123?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#general\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "owned OK result"
+        }
+      ]
+    },
+    {
+      "name": "bot-upload-transaction-and-two-channel-completions",
+      "url": "slack://xoxb-owned-123/a/b?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [
+        "https://asset.invalid/a.png"
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#a\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#b\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://asset.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "GET",
+          "url": "https://slack.com/api/files.getUploadURLExternal?filename=a.png&length=11",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://upload.invalid/owned/file?token=fixture",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Authorization": "Bearer xoxb-owned-123",
+            "Content-Type": "multipart/form-data; boundary=owned-slack-boundary"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "file",
+                "filename": "a.png",
+                "content_type": null,
+                "base64": "b3duZWQgaW1hZ2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/files.completeUploadExternal",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"files\": [{\"id\": \"F12\", \"title\": \"a.png\"}], \"channel_id\": \"C123\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/files.completeUploadExternal",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"files\": [{\"id\": \"F12\", \"title\": \"a.png\"}], \"channel_id\": \"C456\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        1.2,
+        1.2,
+        1.2,
+        1.2,
+        1.2
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C123\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C456\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"file_id\": \"F12\", \"upload_url\": \"https://upload.invalid/owned/file?token=fixture\"}"
+        },
+        {
+          "status": 200,
+          "body": "OK - 11"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"files\": [{\"id\": \"F12\"}]}"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"files\": [{\"id\": \"F12\"}]}"
+        }
+      ]
+    },
+    {
+      "name": "bot-failed-upload-still-completes",
+      "url": "slack://xoxb-owned-123?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [
+        "https://asset.invalid/a.png"
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#general\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://asset.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "GET",
+          "url": "https://slack.com/api/files.getUploadURLExternal?filename=a.png&length=11",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://upload.invalid/owned/file?token=fixture",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Authorization": "Bearer xoxb-owned-123",
+            "Content-Type": "multipart/form-data; boundary=owned-slack-boundary"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "file",
+                "filename": "a.png",
+                "content_type": null,
+                "base64": "b3duZWQgaW1hZ2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/files.completeUploadExternal",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"files\": [{\"id\": \"F12\", \"title\": \"a.png\"}], \"channel_id\": \"C123\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C123\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"file_id\": \"F12\", \"upload_url\": \"https://upload.invalid/owned/file?token=fixture\"}"
+        },
+        {
+          "status": 500,
+          "body": "owned unavailable"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"files\": [{\"id\": \"F12\"}]}"
+        }
+      ]
+    },
+    {
+      "name": "bot-upload-incomplete-aborts",
+      "url": "slack://xoxb-owned-123?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [
+        "https://asset.invalid/a.png",
+        "https://asset.invalid/b.txt"
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#general\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://asset.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "GET",
+          "url": "https://slack.com/api/files.getUploadURLExternal?filename=a.png&length=11",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://upload.invalid/owned/file?token=fixture",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Authorization": "Bearer xoxb-owned-123",
+            "Content-Type": "multipart/form-data; boundary=owned-slack-boundary"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "file",
+                "filename": "a.png",
+                "content_type": null,
+                "base64": "b3duZWQgaW1hZ2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/files.completeUploadExternal",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"files\": [{\"id\": \"F12\", \"title\": \"a.png\"}], \"channel_id\": \"C123\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C123\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"file_id\": \"F12\", \"upload_url\": \"https://upload.invalid/owned/file?token=fixture\"}"
+        },
+        {
+          "status": 200,
+          "body": "OK - 11"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": false}"
+        }
+      ]
+    },
+    {
+      "name": "bot-missing-upload-url-aborts",
+      "url": "slack://xoxb-owned-123?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [
+        "https://asset.invalid/a.png"
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#general\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://asset.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "GET",
+          "url": "https://slack.com/api/files.getUploadURLExternal?filename=a.png&length=11",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        1.2
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C123\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true}"
+        }
+      ]
+    },
+    {
+      "name": "bot-no-response-channel-skips-attachment",
+      "url": "slack://xoxb-owned-123?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [
+        "https://asset.invalid/missing.png"
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#general\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"ok\": true}"
+        }
+      ]
+    },
+    {
+      "name": "bot-one-channel-failed-and-success-still-uploads",
+      "url": "slack://xoxb-owned-123/a/b?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [
+        "https://asset.invalid/a.png"
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#a\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#b\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://asset.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "GET",
+          "url": "https://slack.com/api/files.getUploadURLExternal?filename=a.png&length=11",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://upload.invalid/owned/file?token=fixture",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Authorization": "Bearer xoxb-owned-123",
+            "Content-Type": "multipart/form-data; boundary=owned-slack-boundary"
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "file",
+                "filename": "a.png",
+                "content_type": null,
+                "base64": "b3duZWQgaW1hZ2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/files.completeUploadExternal",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"files\": [{\"id\": \"F12\", \"title\": \"a.png\"}], \"channel_id\": \"C123\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        1.2,
+        1.2,
+        1.2,
+        1.2
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"ok\": false}"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C123\"}"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"file_id\": \"F12\", \"upload_url\": \"https://upload.invalid/owned/file?token=fixture\"}"
+        },
+        {
+          "status": 200,
+          "body": "OK - 11"
+        },
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"files\": [{\"id\": \"F12\"}]}"
+        }
+      ]
+    },
+    {
+      "name": "bot-broken-attachment-after-notify",
+      "url": "slack://xoxb-owned-123?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [
+        "https://asset.invalid/missing.png"
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://slack.com/api/chat.postMessage",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Accept": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer xoxb-owned-123"
+          },
+          "body": "{\"username\": \"Apprise\", \"mrkdwn\": true, \"attachments\": [{\"title\": \"t\", \"text\": \"b\", \"color\": \"#3AA3E3\", \"footer_icon\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"footer\": \"Apprise\"}], \"icon_url\": \"https://github.com/caronc/apprise/raw/master/apprise/assets/themes/default/apprise-info-72x72.png\", \"channel\": \"#general\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://asset.invalid/missing.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        }
+      ],
+      "waits": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"ok\": true, \"channel\": \"C123\"}"
+        }
+      ]
+    },
+    {
+      "name": "webhook-email-cannot-be-looked-up",
+      "url": "slack://OwnedA/OwnedB/OwnedC/owner%40example.invalid?timestamp=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": [],
+      "replies": []
+    },
+    {
+      "name": "invalid-mode",
+      "url": "slack://OwnedA/OwnedB/OwnedC?mode=unknown",
+      "title": "t",
+      "body": "b",
+      "attachments": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": [],
+      "replies": []
+    },
+    {
+      "name": "invalid-token",
+      "url": "slack://xoxb-owned$$",
+      "title": "t",
+      "body": "b",
+      "attachments": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": [],
+      "replies": []
+    },
+    {
+      "name": "invalid-store",
+      "url": "slack://OwnedA/OwnedB/OwnedC?store=no",
+      "title": "t",
+      "body": "b",
+      "attachments": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": [],
+      "replies": []
+    }
+  ]
+}

@@ -1,0 +1,628 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "file_sha256": "0a33957a3b08f7909d9070e34f0dfc4b1148a33e41c69896263d7fd69ee05d89"
+  },
+  "cases": [
+    {
+      "name": "default-insecure-port-and-unique-ids",
+      "url": "hassio://owned.invalid/OwnedToken",
+      "title": " 标题 ",
+      "body": " 内容 ",
+      "attach": null,
+      "statuses": [
+        200,
+        200
+      ],
+      "added": true,
+      "results": [
+        true,
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid:8123/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedToken"
+          },
+          "body": "{\"title\": \"\\u6807\\u9898\", \"message\": \" \\u5185\\u5bb9\", \"notification_id\": \"{uuid4}\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "http://owned.invalid:8123/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedToken"
+          },
+          "body": "{\"title\": \"\\u6807\\u9898\", \"message\": \" \\u5185\\u5bb9\", \"notification_id\": \"{uuid4}\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": [
+        5.5
+      ]
+    },
+    {
+      "name": "secure-with-reverse-proxy-and-fixed-id",
+      "url": "hassios://Owned.INVALID/reverse%20proxy/OwnedToken?nid=fixed-1&verify=no&cto=2.5&rto=7",
+      "title": "Title",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/reverse%20proxy/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedToken"
+          },
+          "body": "{\"title\": \"Title\", \"message\": \"Body\", \"notification_id\": \"fixed-1\"}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            7.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "query-token-keeps-prefix-and-ignores-attachment",
+      "url": "hassios://owned.invalid:9443/path%2520literal/last?accesstoken=Owned%252EOverride&nid=replace&format=html",
+      "title": "<b>T</b>",
+      "body": "<b>B</b>",
+      "attach": "https://owned.invalid/file.png",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid:9443/path%2520literal/last/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer Owned.Override"
+          },
+          "body": "{\"title\": \"<b>T</b>\", \"message\": \"<b>B</b>\", \"notification_id\": \"replace\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "query-token-retains-last-segment",
+      "url": "hassio://owned.invalid:80/prefix/kept?accesstoken=OwnedQuery&nid=fixed",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid:80/prefix/kept/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedQuery"
+          },
+          "body": "{\"title\": \"\", \"message\": \"Body\", \"notification_id\": \"fixed\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "empty-query-token-falls-back-to-path",
+      "url": "hassios://owned.invalid/prefix/OwnedToken?accesstoken=&nid=",
+      "title": "Title",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/prefix/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedToken"
+          },
+          "body": "{\"title\": \"Title\", \"message\": \"Body\", \"notification_id\": \"{uuid4}\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "basic-auth-overrides-bearer-and-ipv6",
+      "url": "hassios://OwnedUser:Owned%3APass@[2001:db8::2]:9443/prefix/OwnedToken?nid=fixed",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://[2001:db8::2]:9443/prefix/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic T3duZWRVc2VyOk93bmVkOlBhc3M="
+          },
+          "body": "{\"title\": \"\", \"message\": \"Body\", \"notification_id\": \"fixed\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "username-without-password-uses-none",
+      "url": "hassios://OwnedUser@owned.invalid/OwnedToken?nid=fixed",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic T3duZWRVc2VyOk5vbmU="
+          },
+          "body": "{\"title\": \"\", \"message\": \"Body\", \"notification_id\": \"fixed\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "username-query-keeps-authority-as-password",
+      "url": "hassio://OwnedPassword@owned.invalid/OwnedToken?user=OwnedUser&port=8124&nid=fixed",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid:8124/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic T3duZWRVc2VyOk93bmVkUGFzc3dvcmQ="
+          },
+          "body": "{\"title\": \"\", \"message\": \"Body\", \"notification_id\": \"fixed\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "invalid-port-override-falls-back",
+      "url": "hassio://owned.invalid:8443/OwnedToken?port=unknown&nid=fixed",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid:8123/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedToken"
+          },
+          "body": "{\"title\": \"\", \"message\": \"Body\", \"notification_id\": \"fixed\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "query-token-validation-rejects-leading-space",
+      "url": "hassio://owned.invalid?accesstoken=%2520Owned",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "token-validation-keeps-internal-whitespace",
+      "url": "hassio://owned.invalid/Owned%20Token?nid=fixed",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "http://owned.invalid:8123/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer Owned Token"
+          },
+          "body": "{\"title\": \"\", \"message\": \"Body\", \"notification_id\": \"fixed\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "strict-response-status",
+      "url": "hassios://owned.invalid/OwnedToken?nid=fixed",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        201
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedToken"
+          },
+          "body": "{\"title\": \"\", \"message\": \"Body\", \"notification_id\": \"fixed\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "transport-failure",
+      "url": "hassios://owned.invalid/OwnedToken?nid=fixed",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        0
+      ],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedToken"
+          },
+          "body": "{\"title\": \"\", \"message\": \"Body\", \"notification_id\": \"fixed\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "invalid-notification-id",
+      "url": "hassios://owned.invalid/OwnedToken?nid=bad%21",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "unicode-notification-id",
+      "url": "hassios://owned.invalid/OwnedToken?nid=%C4%B0%EF%AC%80",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "unicode-regex-case-folded-id",
+      "url": "hassios://owned.invalid/OwnedToken?nid=%C4%B0%C4%B1%C5%BF%E2%84%AA",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedToken"
+          },
+          "body": "{\"title\": \"\", \"message\": \"Body\", \"notification_id\": \"\\u0130\\u0131\\u017f\\u212a\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "no-token",
+      "url": "hassios://owned.invalid?nid=fixed",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "empty-body-skips-provider",
+      "url": "hassios://owned.invalid/OwnedToken?nid=fixed",
+      "title": "Title",
+      "body": "",
+      "attach": null,
+      "statuses": [],
+      "added": true,
+      "results": [
+        false
+      ],
+      "requests": [],
+      "waits": []
+    },
+    {
+      "name": "path-dot-segments-normalized",
+      "url": "hassios://owned.invalid/outer/../reverse/OwnedToken?nid=fixed",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/reverse/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedToken"
+          },
+          "body": "{\"title\": \"\", \"message\": \"Body\", \"notification_id\": \"fixed\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "reverse-path-decodes-unreserved-escapes",
+      "url": "hassios://owned.invalid/p%257e%252f/OwnedToken?nid=fixed",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/p~%2F/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedToken"
+          },
+          "body": "{\"title\": \"\", \"message\": \"Body\", \"notification_id\": \"fixed\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    },
+    {
+      "name": "reverse-path-quotes-invalid-percent",
+      "url": "hassios://owned.invalid/p%252f%25zz/OwnedToken?nid=fixed",
+      "title": "",
+      "body": "Body",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "results": [
+        true
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://owned.invalid/p%252F%25zz/api/services/persistent_notification/create",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer OwnedToken"
+          },
+          "body": "{\"title\": \"\", \"message\": \"Body\", \"notification_id\": \"fixed\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ],
+      "waits": []
+    }
+  ]
+}

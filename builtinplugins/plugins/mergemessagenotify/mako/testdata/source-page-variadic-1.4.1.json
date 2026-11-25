@@ -1,0 +1,353 @@
+{
+  "mako": "1.4.1",
+  "markupsafe": "3.0.4",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "has_beaker": false,
+  "source_sha256": {
+    "mergemessagenotify/util.py": "33cd9fa88f42e8e1918ff12d268c5a4260f79e598d2da6b7336428d68028b4a0",
+    "mako/ast.py": "f0248c12c8827349ea6d1b7d88dcf325743c589d04d50fcde63e982a5e44395b",
+    "mako/pyparser.py": "6c0319ab7a64674b58c3be700396c4ad5f0a9df91f6e679b0264a0642df3db66",
+    "mako/parsetree.py": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+    "mako/codegen.py": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+    "mako/runtime.py": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+    "mako/template.py": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d"
+  },
+  "cases": [
+    {
+      "name": "explicit-kwargs",
+      "template": "<%page args=\"title, **extras\"/>${title}|${extras[\"count\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned|7",
+      "source_error": false
+    },
+    {
+      "name": "explicit-kwargs-has-no-implicit-pageargs",
+      "template": "<%page args=\"**extras\"/>${pageargs}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"**extras\"/>${pageargs}",
+      "source_error": true
+    },
+    {
+      "name": "explicit-pageargs-kwargs",
+      "template": "<%page args=\"**pageargs\"/>${pageargs[\"title\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned",
+      "source_error": false
+    },
+    {
+      "name": "explicit-pageargs-kwargs-forwarded-to-block",
+      "template": "<%page args=\"title, **pageargs\"/><%block name=\"box\" args=\"title\">${title}:${pageargs[\"count\"]}</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned:7",
+      "source_error": false
+    },
+    {
+      "name": "other-kwargs-does-not-feed-block-pageargs",
+      "template": "<%page args=\"title, **extras\"/><%block name=\"box\" args=\"title\">${title}</%block>",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"title, **extras\"/><%block name=\"box\" args=\"title\">${title}</%block>",
+      "source_error": true
+    },
+    {
+      "name": "varargs-are-empty",
+      "template": "<%page args=\"title, *items\"/>${items}|${pageargs[\"count\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "()|7",
+      "source_error": false
+    },
+    {
+      "name": "varargs-named-input-stays-keyword",
+      "template": "<%page args=\"*title, **extras\"/>${len(title)}|${extras[\"title\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "0|Owned",
+      "source_error": false
+    },
+    {
+      "name": "keyword-only-required-with-varargs",
+      "template": "<%page args=\"*items, title, increment=2, **extras\"/>${title}|${increment}|${extras[\"count\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned|2|7",
+      "source_error": false
+    },
+    {
+      "name": "keyword-only-missing-with-varargs",
+      "template": "<%page args=\"*items, missing, **extras\"/>${missing}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"*items, missing, **extras\"/>${missing}",
+      "source_error": true
+    },
+    {
+      "name": "bare-star-keyword-lowered",
+      "template": "<%page args=\"*, title, suffix=3\"/>${title}|${suffix}|${pageargs[\"count\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned|3|7",
+      "source_error": false
+    },
+    {
+      "name": "bare-star-lowering-rejects-default-before-required",
+      "template": "<%page args=\"prefix=3, *, title\"/>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"prefix=3, *, title\"/>${title}",
+      "source_error": true
+    },
+    {
+      "name": "bare-star-lowering-rejects-keyword-default-before-required",
+      "template": "<%page args=\"*, prefix=3, title\"/>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"*, prefix=3, title\"/>${title}",
+      "source_error": true
+    },
+    {
+      "name": "positional-only-name-is-context-lookup",
+      "template": "<%page args=\"title, /, count\"/>${title}|${count}|${pageargs[\"title\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned|7|Owned",
+      "source_error": false
+    },
+    {
+      "name": "positional-only-unused-default-not-evaluated",
+      "template": "<%page args=\"old=missing_call(), /, used=4\"/>${used}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "4",
+      "source_error": false
+    },
+    {
+      "name": "annotated-variadic-defaults",
+      "template": "<%page args=\"title: MissingType, *items: MissingType, **extras: MissingType\"/>${title}|${len(items)}|${extras[\"count\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "Owned|0|7",
+      "source_error": false
+    },
+    {
+      "name": "explicit-kwargs-lets-pageargs-be-ordinary-parameter",
+      "template": "<%page args=\"pageargs=3, **extras\"/>${pageargs}|${extras[\"title\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "3|Owned",
+      "source_error": false
+    },
+    {
+      "name": "implicit-pageargs-varargs-conflict",
+      "template": "<%page args=\"*pageargs\"/>${pageargs}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"*pageargs\"/>${pageargs}",
+      "source_error": true
+    },
+    {
+      "name": "implicit-context-kwargs-conflict",
+      "template": "<%page args=\"**context\"/>${context}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"**context\"/>${context}",
+      "source_error": true
+    },
+    {
+      "name": "old-explicit-kwargs-with-module-fallback",
+      "template": "<%! extras = 'module' %><%page args=\"**extras\"/><%page args=\"title\"/>${extras}|${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "module|Owned",
+      "source_error": false
+    },
+    {
+      "name": "variadic-defaults-evaluated-before-cache-failure",
+      "template": "<%page args=\"prefix=3, *items, **extras\" cached=\"True\"/>${prefix}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"prefix=3, *items, **extras\" cached=\"True\"/>${prefix}",
+      "source_error": true
+    },
+    {
+      "name": "reserved-context-input",
+      "template": "<%page args=\"**extras\"/>${extras[\"context\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7,
+        "context": "owned"
+      },
+      "expected": "<%page args=\"**extras\"/>${extras[\"context\"]}",
+      "source_error": true
+    },
+    {
+      "name": "reserved-loop-input",
+      "template": "<%page args=\"**extras\"/>${extras[\"loop\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7,
+        "loop": "owned"
+      },
+      "expected": "<%page args=\"**extras\"/>${extras[\"loop\"]}",
+      "source_error": true
+    },
+    {
+      "name": "reserved-runtime-global-input",
+      "template": "<%page args=\"**extras\"/>${extras[\"UNDEFINED\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7,
+        "UNDEFINED": "owned"
+      },
+      "expected": "<%page args=\"**extras\"/>${extras[\"UNDEFINED\"]}",
+      "source_error": true
+    },
+    {
+      "name": "runtime-context-constructor-collision",
+      "template": "<%page args=\"**extras\"/>${extras[\"buffer\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7,
+        "buffer": "owned"
+      },
+      "expected": "<%page args=\"**extras\"/>${extras[\"buffer\"]}",
+      "source_error": true
+    },
+    {
+      "name": "runtime-render-call-collision",
+      "template": "<%page args=\"**extras\"/>${extras[\"callable_\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7,
+        "callable_": "owned"
+      },
+      "expected": "<%page args=\"**extras\"/>${extras[\"callable_\"]}",
+      "source_error": true
+    },
+    {
+      "name": "bound-template-method-collision",
+      "template": "<%page args=\"**extras\"/>${extras[\"self\"]}",
+      "vars": {
+        "title": "Owned",
+        "count": 7,
+        "self": "owned"
+      },
+      "expected": "<%page args=\"**extras\"/>${extras[\"self\"]}",
+      "source_error": true
+    },
+    {
+      "name": "reserved-page-parameter",
+      "template": "<%page args=\"loop=3, **extras\"/>${loop}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"loop=3, **extras\"/>${loop}",
+      "source_error": true
+    },
+    {
+      "name": "reserved-old-page-parameter",
+      "template": "<%page args=\"loop\"/><%page/>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"loop\"/><%page/>${title}",
+      "source_error": true
+    },
+    {
+      "name": "ordinary-buffer-declaration-valid",
+      "template": "<%page args=\"buffer=3, **extras\"/>${buffer}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "3",
+      "source_error": false
+    },
+    {
+      "name": "nested-ordinary-pageargs-uses-context",
+      "template": "<%page/><%def name=\"holder()\"><%page args=\"pageargs=3, **extras\"/></%def>${pageargs}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page/><%def name=\"holder()\"><%page args=\"pageargs=3, **extras\"/></%def>${pageargs}",
+      "source_error": true
+    },
+    {
+      "name": "python-hard-keyword-kwargs",
+      "template": "<%page args=\"**for\"/>${title}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "<%page args=\"**for\"/>${title}",
+      "source_error": true
+    },
+    {
+      "name": "context-excludes-signature-locals",
+      "template": "<%page args=\"value=3, *items, **extras\"/>${context.get('value','missing')}|${value}|${context.get('extras','missing')}|${context.get('items','missing')}|${context.get('count')}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "missing|3|missing|missing|7",
+      "source_error": false
+    },
+    {
+      "name": "context-excludes-generated-namespace-globals",
+      "template": "<%page args=\"**extras\"/>${context.get('UNDEFINED','missing')}|${context.get('STOP_RENDERING','missing')}|${context.get('context','missing')}",
+      "vars": {
+        "title": "Owned",
+        "count": 7
+      },
+      "expected": "missing|missing|missing",
+      "source_error": false
+    }
+  ]
+}

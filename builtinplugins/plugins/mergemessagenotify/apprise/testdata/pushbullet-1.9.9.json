@@ -1,0 +1,1059 @@
+{
+  "source": {
+    "version": "1.9.9",
+    "pushbullet_sha256": "3c173a4453db8bc3a1bfc3ab6546516a6e6bbe3f3eedf274d3fb70a630d752b0",
+    "python": "3.14.4",
+    "requests": "2.34.2",
+    "network": "forbidden; original request capture with synthetic replies and fixed time"
+  },
+  "boundary": "owned-fixed-boundary",
+  "cases": [
+    {
+      "name": "broadcast-204",
+      "url": "pbul://ownedToken",
+      "title": " Title ",
+      "body": "body ",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 204,
+          "body": ""
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"note\", \"title\": \"Title\", \"body\": \"body\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "sorted-path-query-recipients",
+      "url": "pbul://owned%2BToken/dev/%23news/person%40example.invalid?to=dev%2Czeta&verify=no&cto=3&rto=7",
+      "title": "标题",
+      "body": "body",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWQrVG9rZW46"
+          },
+          "body": "{\"type\": \"note\", \"title\": \"\\u6807\\u9898\", \"body\": \"body\", \"channel_tag\": \"news\"}",
+          "verify": false,
+          "timeout": [
+            3.0,
+            7.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWQrVG9rZW46"
+          },
+          "body": "{\"type\": \"note\", \"title\": \"\\u6807\\u9898\", \"body\": \"body\", \"device_iden\": \"dev\"}",
+          "verify": false,
+          "timeout": [
+            3.0,
+            7.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWQrVG9rZW46"
+          },
+          "body": "{\"type\": \"note\", \"title\": \"\\u6807\\u9898\", \"body\": \"body\", \"email\": \"person@example.invalid\"}",
+          "verify": false,
+          "timeout": [
+            3.0,
+            7.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWQrVG9rZW46"
+          },
+          "body": "{\"type\": \"note\", \"title\": \"\\u6807\\u9898\", \"body\": \"body\", \"device_iden\": \"zeta\"}",
+          "verify": false,
+          "timeout": [
+            3.0,
+            7.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "target-failure-continues",
+      "url": "pbul://ownedToken/a/b",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "replies": [
+        {
+          "status": 401,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "waits": [
+        1.2
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"note\", \"title\": \"title\", \"body\": \"body\", \"device_iden\": \"a\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"note\", \"title\": \"title\", \"body\": \"body\", \"device_iden\": \"b\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "upload-then-file-and-note",
+      "url": "pbul://ownedToken/target",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://attach.invalid/a.png",
+        "https://attach.invalid/b.txt"
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"file_name\": \"image.png\", \"file_type\": \"image/png\", \"file_url\": \"https://file.invalid/image.png\", \"upload_url\": \"https://upload.invalid/image.png?key=owned\"}"
+        },
+        {
+          "status": 204,
+          "body": ""
+        },
+        {
+          "status": 200,
+          "body": "{\"file_name\": \"text.txt\", \"file_type\": \"text/plain\", \"file_url\": \"https://file.invalid/text.txt\", \"upload_url\": \"https://upload.invalid/text.txt?key=owned\"}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [
+        1.2,
+        1.2,
+        1.2,
+        1.2,
+        1.2,
+        1.2
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/upload-request",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"file_name\": \"a.png\", \"file_type\": \"image/png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://upload.invalid/image.png?key=owned",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-fixed-boundary",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "file",
+                "filename": "a.png",
+                "content_type": null,
+                "base64": "b3duZWQtaW1hZ2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/b.txt",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/upload-request",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"file_name\": \"b.txt\", \"file_type\": \"text/plain\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://upload.invalid/text.txt?key=owned",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-fixed-boundary",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "file",
+                "filename": "b.txt",
+                "content_type": null,
+                "base64": "b3duZWQtdGV4dA=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"note\", \"title\": \"title\", \"body\": \"body\", \"device_iden\": \"target\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"file\", \"file_name\": \"image.png\", \"file_type\": \"image/png\", \"file_url\": \"https://file.invalid/image.png\", \"image_url\": \"https://file.invalid/image.png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"file\", \"file_name\": \"text.txt\", \"file_type\": \"text/plain\", \"file_url\": \"https://file.invalid/text.txt\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "attachment-only-unaddressed-repeated",
+      "url": "pbul://ownedToken/a/b",
+      "title": "",
+      "body": "",
+      "attachments": [
+        "https://attach.invalid/a.png"
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"file_name\": \"image.png\", \"file_type\": \"image/png\", \"file_url\": \"https://file.invalid/image.png\", \"upload_url\": \"https://upload.invalid/image.png?key=owned\"}"
+        },
+        {
+          "status": 204,
+          "body": ""
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": true,
+      "waits": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/upload-request",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"file_name\": \"a.png\", \"file_type\": \"image/png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://upload.invalid/image.png?key=owned",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-fixed-boundary",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "file",
+                "filename": "a.png",
+                "content_type": null,
+                "base64": "b3duZWQtaW1hZ2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"file\", \"file_name\": \"image.png\", \"file_type\": \"image/png\", \"file_url\": \"https://file.invalid/image.png\", \"image_url\": \"https://file.invalid/image.png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"file\", \"file_name\": \"image.png\", \"file_type\": \"image/png\", \"file_url\": \"https://file.invalid/image.png\", \"image_url\": \"https://file.invalid/image.png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "failed-note-skips-its-files",
+      "url": "pbul://ownedToken/a/b",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://attach.invalid/a.png"
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"file_name\": \"image.png\", \"file_type\": \"image/png\", \"file_url\": \"https://file.invalid/image.png\", \"upload_url\": \"https://upload.invalid/image.png?key=owned\"}"
+        },
+        {
+          "status": 204,
+          "body": ""
+        },
+        {
+          "status": 503,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "waits": [
+        1.2,
+        1.2,
+        1.2,
+        1.2
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/upload-request",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"file_name\": \"a.png\", \"file_type\": \"image/png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://upload.invalid/image.png?key=owned",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-fixed-boundary",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "file",
+                "filename": "a.png",
+                "content_type": null,
+                "base64": "b3duZWQtaW1hZ2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"note\", \"title\": \"title\", \"body\": \"body\", \"device_iden\": \"a\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"note\", \"title\": \"title\", \"body\": \"body\", \"device_iden\": \"b\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"file\", \"file_name\": \"image.png\", \"file_type\": \"image/png\", \"file_url\": \"https://file.invalid/image.png\", \"image_url\": \"https://file.invalid/image.png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "failed-first-file-continues-other-files",
+      "url": "pbul://ownedToken/a",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://attach.invalid/a.png",
+        "https://attach.invalid/b.txt"
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"file_name\": \"image.png\", \"file_type\": \"image/png\", \"file_url\": \"https://file.invalid/image.png\", \"upload_url\": \"https://upload.invalid/image.png?key=owned\"}"
+        },
+        {
+          "status": 204,
+          "body": ""
+        },
+        {
+          "status": 200,
+          "body": "{\"file_name\": \"text.txt\", \"file_type\": \"text/plain\", \"file_url\": \"https://file.invalid/text.txt\", \"upload_url\": \"https://upload.invalid/text.txt?key=owned\"}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        },
+        {
+          "status": 500,
+          "body": "{}"
+        },
+        {
+          "status": 200,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "waits": [
+        1.2,
+        1.2,
+        1.2,
+        1.2,
+        1.2,
+        1.2
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/upload-request",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"file_name\": \"a.png\", \"file_type\": \"image/png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://upload.invalid/image.png?key=owned",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-fixed-boundary",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "file",
+                "filename": "a.png",
+                "content_type": null,
+                "base64": "b3duZWQtaW1hZ2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/b.txt",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/upload-request",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"file_name\": \"b.txt\", \"file_type\": \"text/plain\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://upload.invalid/text.txt?key=owned",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-fixed-boundary",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "file",
+                "filename": "b.txt",
+                "content_type": null,
+                "base64": "b3duZWQtdGV4dA=="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"note\", \"title\": \"title\", \"body\": \"body\", \"device_iden\": \"a\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"file\", \"file_name\": \"image.png\", \"file_type\": \"image/png\", \"file_url\": \"https://file.invalid/image.png\", \"image_url\": \"https://file.invalid/image.png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/pushes",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"type\": \"file\", \"file_name\": \"text.txt\", \"file_type\": \"text/plain\", \"file_url\": \"https://file.invalid/text.txt\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "upload-init-malformed",
+      "url": "pbul://ownedToken",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://attach.invalid/a.png"
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"upload_url\": \"https://upload.invalid/partial\"}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/upload-request",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"file_name\": \"a.png\", \"file_type\": \"image/png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "failed-upload-no-notification",
+      "url": "pbul://ownedToken",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://attach.invalid/a.png"
+      ],
+      "replies": [
+        {
+          "status": 200,
+          "body": "{\"file_name\": \"image.png\", \"file_type\": \"image/png\", \"file_url\": \"https://file.invalid/image.png\", \"upload_url\": \"https://upload.invalid/image.png?key=owned\"}"
+        },
+        {
+          "status": 201,
+          "body": "{}"
+        }
+      ],
+      "added": true,
+      "result": false,
+      "waits": [
+        1.2
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/a.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        },
+        {
+          "method": "POST",
+          "url": "https://api.pushbullet.com/v2/upload-request",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": "{\"file_name\": \"a.png\", \"file_type\": \"image/png\"}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        },
+        {
+          "method": "POST",
+          "url": "https://upload.invalid/image.png?key=owned",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "multipart/form-data; boundary=owned-fixed-boundary",
+            "Authorization": "Basic b3duZWRUb2tlbjo="
+          },
+          "body": {
+            "multipart": [
+              {
+                "field": "file",
+                "filename": "a.png",
+                "content_type": null,
+                "base64": "b3duZWQtaW1hZ2U="
+              }
+            ]
+          },
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "unavailable-attachment-before-notice",
+      "url": "pbul://ownedToken",
+      "title": "title",
+      "body": "body",
+      "attachments": [
+        "https://attach.invalid/missing.png"
+      ],
+      "replies": [],
+      "added": true,
+      "result": false,
+      "waits": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://attach.invalid/missing.png",
+          "headers": {
+            "User-Agent": "Apprise"
+          },
+          "body": null,
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": true
+        }
+      ]
+    },
+    {
+      "name": "invalid-timezone",
+      "url": "pbul://ownedToken?tz=Invalid/Owned",
+      "title": "title",
+      "body": "body",
+      "attachments": [],
+      "replies": [],
+      "added": false,
+      "result": false,
+      "waits": [],
+      "requests": []
+    }
+  ]
+}

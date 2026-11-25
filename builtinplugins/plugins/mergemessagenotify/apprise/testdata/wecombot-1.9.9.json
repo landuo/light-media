@@ -1,0 +1,335 @@
+{
+  "source": {
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "network": "forbidden",
+    "file_sha256": {
+      "wecombot": "1b5801338240ce52121e6ad106e2360d2a1d2613cba594a8de5e5435cc28ef2c"
+    }
+  },
+  "cases": [
+    {
+      "name": "owned-titleless-text",
+      "url": "wecombot://OwnedBot_Key-7",
+      "title": " 标题 ",
+      "body": "消息 ",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=OwnedBot_Key-7",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"msgtype\": \"text\", \"text\": {\"content\": \"\\u6807\\u9898\\r\\n\\u6d88\\u606f\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "query-key-override-double-unquote",
+      "url": "wecombot://OwnedBot_Key-7/unused?key=%254Fverride&verify=no&cto=2.5&rto=7",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=Override",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"msgtype\": \"text\", \"text\": {\"content\": \"t\\r\\nb\"}}",
+          "verify": false,
+          "timeout": [
+            2.5,
+            7.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "empty-key-query-keeps-host",
+      "url": "wecombot://OwnedBot_Key-7?key=",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=OwnedBot_Key-7",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"msgtype\": \"text\", \"text\": {\"content\": \"b\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "unicode-key-python-casefold",
+      "url": "wecombot://%C4%B0%25C4%25B1",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "unicode-key-encoded-on-wire",
+      "url": "wecombot://%C4%B0%C4%B1%C5%BF%E2%84%AA",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%C4%B0%C4%B1%C5%BF%E2%84%AA",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"msgtype\": \"text\", \"text\": {\"content\": \"b\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "native-https-trailing-slash",
+      "url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send/?key=OwnedBot_Key-7/",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=OwnedBot_Key-7",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"msgtype\": \"text\", \"text\": {\"content\": \"b\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "native-http-rewritten-and-query-kept",
+      "url": "HTTP://QYAPI.WEIXIN.QQ.COM/cgi-bin/webhook/send?key=First/&key=Second&verify=no&format=html",
+      "title": "title",
+      "body": "<i>body</i>",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=Second",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"msgtype\": \"text\", \"text\": {\"content\": \"<b>title</b><br />\\r\\n<i>body</i>\"}}",
+          "verify": false,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "native-key-prefix-keeps-trailing-params",
+      "url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=OwnedBot_Key-7!unparsed",
+      "title": "",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=OwnedBot_Key-7",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"msgtype\": \"text\", \"text\": {\"content\": \"b\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "markdown-attachment-ignored",
+      "url": "wecombot://OwnedBot_Key-7?format=markdown",
+      "title": "**title**",
+      "body": "body",
+      "attach": "https://owned.invalid/unused.jpg",
+      "statuses": [
+        200
+      ],
+      "added": true,
+      "result": true,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=OwnedBot_Key-7",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"msgtype\": \"text\", \"text\": {\"content\": \"**title**\\r\\nbody\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "invalid-key",
+      "url": "wecombot://invalid!",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "disabled-storage-rejected",
+      "url": "wecombot://OwnedBot_Key-7?store=no",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [],
+      "added": false,
+      "result": false,
+      "requests": []
+    },
+    {
+      "name": "status-other-than-200",
+      "url": "wecombot://OwnedBot_Key-7",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        201
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=OwnedBot_Key-7",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"msgtype\": \"text\", \"text\": {\"content\": \"t\\r\\nb\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    },
+    {
+      "name": "connection-error",
+      "url": "wecombot://OwnedBot_Key-7",
+      "title": "t",
+      "body": "b",
+      "attach": null,
+      "statuses": [
+        0
+      ],
+      "added": true,
+      "result": false,
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=OwnedBot_Key-7",
+          "headers": {
+            "User-Agent": "Apprise",
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "body": "{\"msgtype\": \"text\", \"text\": {\"content\": \"t\\r\\nb\"}}",
+          "verify": true,
+          "timeout": [
+            4.0,
+            4.0
+          ],
+          "stream": false
+        }
+      ]
+    }
+  ]
+}

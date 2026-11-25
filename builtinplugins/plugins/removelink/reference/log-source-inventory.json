@@ -1,0 +1,599 @@
+{
+  "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+  "logger_calls": [
+    {
+      "function": "_is_excluded_file",
+      "line": 135,
+      "level": "debug",
+      "expression": "logger.debug(f'{file_path} 命中过滤关键字 {keyword}，不处理')"
+    },
+    {
+      "function": "_add_file_to_state",
+      "line": 155,
+      "level": "debug",
+      "expression": "logger.debug(f'添加文件到监控：{file_path}')"
+    },
+    {
+      "function": "_add_file_to_state",
+      "line": 157,
+      "level": "debug",
+      "expression": "logger.debug(f'无法访问文件 {file_path}：{e}')"
+    },
+    {
+      "function": "_add_file_to_state",
+      "line": 159,
+      "level": "error",
+      "expression": "logger.error(f'新增文件记录失败：{str(e)}')"
+    },
+    {
+      "function": "on_created",
+      "line": 165,
+      "level": "info",
+      "expression": "logger.info(f'监测到新增文件：{file_path}')"
+    },
+    {
+      "function": "on_moved",
+      "line": 183,
+      "level": "info",
+      "expression": "logger.info(f'监测到文件移动：{src_path} -> {dest_path}')"
+    },
+    {
+      "function": "on_moved",
+      "line": 202,
+      "level": "info",
+      "expression": "logger.info(f'移动目标未进入监控或文件实体不一致，按删除处理源文件：{src_path}')"
+    },
+    {
+      "function": "on_deleted",
+      "line": 225,
+      "level": "info",
+      "expression": "logger.info(f'监测到删除文件夹：{file_path}')"
+    },
+    {
+      "function": "on_deleted",
+      "line": 233,
+      "level": "info",
+      "expression": "logger.info(f'监测到删除文件：{file_path}')"
+    },
+    {
+      "function": "on_deleted",
+      "line": 238,
+      "level": "info",
+      "expression": "logger.info(f'{file_path} 命中过滤关键字 {keyword}，不处理')"
+    },
+    {
+      "function": "updateState",
+      "line": 266,
+      "level": "warning",
+      "expression": "logger.warning(f'监控目录不存在：{mon_path}')"
+    },
+    {
+      "function": "updateState",
+      "line": 290,
+      "level": "debug",
+      "expression": "logger.debug(f'无法访问文件 {file_path}：{e}')"
+    },
+    {
+      "function": "updateState",
+      "line": 292,
+      "level": "error",
+      "expression": "logger.error(f'扫描目录 {mon_path} 时发生错误：{e}')"
+    },
+    {
+      "function": "updateState",
+      "line": 299,
+      "level": "info",
+      "expression": "logger.info(f'更新文件列表完成，共计 {len(file_state)} 个文件，耗时 {elapsed_time:.2f} 秒')"
+    },
+    {
+      "function": "updateState",
+      "line": 303,
+      "level": "warning",
+      "expression": "logger.warning(f'扫描过程中有 {error_count} 个文件无法访问')"
+    },
+    {
+      "function": "__choose_observer",
+      "line": 409,
+      "level": "warn",
+      "expression": "logger.warn(f'导入模块错误：{error}，将使用 PollingObserver 监控目录')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 413,
+      "level": "info",
+      "expression": "logger.info(f'初始化媒体文件清理插件')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 449,
+      "level": "info",
+      "expression": "logger.info(f'延迟删除功能已启用，延迟时间: {self._delay_seconds} 秒')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 451,
+      "level": "info",
+      "expression": "logger.info('延迟删除功能已禁用，将使用立即删除模式')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 456,
+      "level": "info",
+      "expression": "logger.info('STRM 文件删除监控功能已启用')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 459,
+      "level": "info",
+      "expression": "logger.info(f'配置了 {len(mappings)} 个 STRM 路径映射')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 462,
+      "level": "info",
+      "expression": "logger.info(f'STRM 监控目录：{strm_monitor_dirs}')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 464,
+      "level": "warning",
+      "expression": "logger.warning('STRM 监控已启用但未配置路径映射')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 466,
+      "level": "info",
+      "expression": "logger.info('STRM 文件删除监控功能已禁用')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 474,
+      "level": "info",
+      "expression": "logger.info(f'硬链接监控目录：{hardlink_monitor_dirs}')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 491,
+      "level": "info",
+      "expression": "logger.info(f'{mon_path} 的硬链接监控服务启动')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 496,
+      "level": "warn",
+      "expression": "logger.warn(f'目录监控服务启动出现异常：{err_msg}，请在宿主机上（不是docker容器内）执行以下命令并重启：' + '\\n                             echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf\\n                             echo fs.inotify.max_user_instances=524288 | sudo tee -a /etc/sysctl.conf\\n                             sudo sysctl -p\\n                             ')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 505,
+      "level": "error",
+      "expression": "logger.error(f'{mon_path} 启动硬链接监控失败：{err_msg}')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 526,
+      "level": "info",
+      "expression": "logger.info(f'{mon_path} 的 STRM 监控服务启动')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 531,
+      "level": "warn",
+      "expression": "logger.warn(f'目录监控服务启动出现异常：{err_msg}，请在宿主机上（不是docker容器内）执行以下命令并重启：' + '\\n                             echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf\\n                             echo fs.inotify.max_user_instances=524288 | sudo tee -a /etc/sysctl.conf\\n                             sudo sysctl -p\\n                             ')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 540,
+      "level": "error",
+      "expression": "logger.error(f'{mon_path} 启动 STRM 监控失败：{err_msg}')"
+    },
+    {
+      "function": "init_plugin",
+      "line": 552,
+      "level": "debug",
+      "expression": "logger.debug('监控集合更新完成')"
+    },
+    {
+      "function": "stop_service",
+      "line": 1037,
+      "level": "debug",
+      "expression": "logger.debug('开始停止服务')"
+    },
+    {
+      "function": "stop_service",
+      "line": 1047,
+      "level": "error",
+      "expression": "logger.error(f'停止目录监控失败：{str(e)}')"
+    },
+    {
+      "function": "stop_service",
+      "line": 1049,
+      "level": "debug",
+      "expression": "logger.debug('文件监控已停止')"
+    },
+    {
+      "function": "stop_service",
+      "line": 1056,
+      "level": "debug",
+      "expression": "logger.debug('延迟删除定时器已停止')"
+    },
+    {
+      "function": "stop_service",
+      "line": 1058,
+      "level": "error",
+      "expression": "logger.error(f'停止延迟删除定时器失败：{str(e)}')"
+    },
+    {
+      "function": "stop_service",
+      "line": 1064,
+      "level": "info",
+      "expression": "logger.info(f'处理剩余的 {len(self.deletion_queue)} 个延迟删除任务')"
+    },
+    {
+      "function": "stop_service",
+      "line": 1074,
+      "level": "debug",
+      "expression": "logger.debug('服务停止完成')"
+    },
+    {
+      "function": "delete_scrap_infos",
+      "line": 1174,
+      "level": "info",
+      "expression": "logger.info(f'删除刮削目录：{file}')"
+    },
+    {
+      "function": "delete_scrap_infos",
+      "line": 1177,
+      "level": "info",
+      "expression": "logger.info(f'删除刮削文件：{file}')"
+    },
+    {
+      "function": "delete_scrap_infos",
+      "line": 1179,
+      "level": "error",
+      "expression": "logger.error(f'清理刮削文件发生错误：{str(e)}.')"
+    },
+    {
+      "function": "delete_history",
+      "line": 1194,
+      "level": "info",
+      "expression": "logger.info(f'删除转移记录：{transfer_history.id}')"
+    },
+    {
+      "function": "delete_empty_folders",
+      "line": 1221,
+      "level": "info",
+      "expression": "logger.info(f'删除刮削目录：{file}')"
+    },
+    {
+      "function": "delete_empty_folders",
+      "line": 1224,
+      "level": "info",
+      "expression": "logger.info(f'删除刮削文件：{file}')"
+    },
+    {
+      "function": "delete_empty_folders",
+      "line": 1226,
+      "level": "error",
+      "expression": "logger.error(f'清理刮削文件发生错误：{str(e)}.')"
+    },
+    {
+      "function": "delete_empty_folders",
+      "line": 1231,
+      "level": "info",
+      "expression": "logger.info(f'清理空目录：{parent_path}')"
+    },
+    {
+      "function": "delete_empty_folders",
+      "line": 1241,
+      "level": "error",
+      "expression": "logger.error(f'清理空目录发生错误：{str(e)}')"
+    },
+    {
+      "function": "_unlink_tracked_file",
+      "line": 1259,
+      "level": "debug",
+      "expression": "logger.debug(f'文件 {file} 在不删除目录中，跳过')"
+    },
+    {
+      "function": "_unlink_tracked_file",
+      "line": 1263,
+      "level": "info",
+      "expression": "logger.info(f'{action}硬链接文件：{state_key}')"
+    },
+    {
+      "function": "_unlink_tracked_file",
+      "line": 1266,
+      "level": "warning",
+      "expression": "logger.warning(f'硬链接文件已不存在，清理过期监控记录：{state_key}')"
+    },
+    {
+      "function": "_unlink_tracked_file",
+      "line": 1270,
+      "level": "error",
+      "expression": "logger.error(f'删除硬链接文件失败：{state_key} - {e}')"
+    },
+    {
+      "function": "_execute_delayed_deletion",
+      "line": 1291,
+      "level": "debug",
+      "expression": "logger.debug(f'开始执行延迟删除任务: {task.file_path}')"
+    },
+    {
+      "function": "_execute_delayed_deletion",
+      "line": 1295,
+      "level": "info",
+      "expression": "logger.info(f'文件 {task.file_path} 已被重新创建，跳过删除操作')"
+    },
+    {
+      "function": "_execute_delayed_deletion",
+      "line": 1322,
+      "level": "info",
+      "expression": "logger.info(f'检测到相同文件实体的新文件 {path}，添加时间 {file_info.add_time} 接近删除事件 {task.timestamp}，可能是重新硬链接，跳过硬链接删除')"
+    },
+    {
+      "function": "_execute_delayed_deletion",
+      "line": 1332,
+      "level": "debug",
+      "expression": "logger.debug(f'文件 {task.file_path} 确认被删除且无重新硬链接，开始执行延迟删除操作')"
+    },
+    {
+      "function": "_execute_delayed_deletion",
+      "line": 1398,
+      "level": "error",
+      "expression": "logger.error(f'执行延迟删除任务失败：{str(e)} - {traceback.format_exc()}')"
+    },
+    {
+      "function": "_process_deletion_queue",
+      "line": 1420,
+      "level": "debug",
+      "expression": "logger.debug(f'处理延迟删除队列，待处理任务数: {len(tasks_to_process)}')"
+    },
+    {
+      "function": "_process_deletion_queue",
+      "line": 1431,
+      "level": "error",
+      "expression": "logger.error(f'处理延迟删除任务失败：{task.file_path} - {e}')"
+    },
+    {
+      "function": "_process_deletion_queue",
+      "line": 1443,
+      "level": "debug",
+      "expression": "logger.debug(f'清理了 {cleaned_count} 个已处理的任务')"
+    },
+    {
+      "function": "_process_deletion_queue",
+      "line": 1455,
+      "level": "debug",
+      "expression": "logger.debug(f'还有 {len(self.deletion_queue)} 个任务待处理，{wait_time:.1f} 秒后重新检查')"
+    },
+    {
+      "function": "_process_deletion_queue",
+      "line": 1462,
+      "level": "debug",
+      "expression": "logger.debug('延迟删除队列已清空，定时器停止')"
+    },
+    {
+      "function": "_process_deletion_queue",
+      "line": 1465,
+      "level": "error",
+      "expression": "logger.error(f'处理延迟删除队列失败：{str(e)} - {traceback.format_exc()}')"
+    },
+    {
+      "function": "handle_deleted",
+      "line": 1490,
+      "level": "debug",
+      "expression": "logger.debug(f'处理删除事件: {file_path}')"
+    },
+    {
+      "function": "handle_deleted",
+      "line": 1497,
+      "level": "debug",
+      "expression": "logger.debug(f'文件 {file_path} 未在监控列表中，跳过处理')"
+    },
+    {
+      "function": "handle_deleted",
+      "line": 1508,
+      "level": "info",
+      "expression": "logger.info(f'文件 {file_path.name} 加入延迟删除队列，延迟 {self._delay_seconds} 秒')"
+    },
+    {
+      "function": "handle_deleted",
+      "line": 1525,
+      "level": "debug",
+      "expression": "logger.debug('启动延迟删除定时器')"
+    },
+    {
+      "function": "handle_deleted",
+      "line": 1527,
+      "level": "debug",
+      "expression": "logger.debug('延迟删除定时器已在运行，任务已加入队列')"
+    },
+    {
+      "function": "handle_deleted",
+      "line": 1595,
+      "level": "error",
+      "expression": "logger.error('删除硬链接文件发生错误：%s - %s' % (str(e), traceback.format_exc()))"
+    },
+    {
+      "function": "_parse_strm_path_mappings",
+      "line": 1624,
+      "level": "warning",
+      "expression": "logger.warning(f'无效的 strm 路径映射配置: {line}')"
+    },
+    {
+      "function": "_parse_strm_path_mappings",
+      "line": 1632,
+      "level": "warning",
+      "expression": "logger.warning(f'无效的 strm 路径映射配置: {line}')"
+    },
+    {
+      "function": "_find_storage_media_file",
+      "line": 1675,
+      "level": "debug",
+      "expression": "logger.debug(f'父目录不存在: [{storage_type}] {parent_path}')"
+    },
+    {
+      "function": "_find_storage_media_file",
+      "line": 1681,
+      "level": "debug",
+      "expression": "logger.debug(f'父目录为空: [{storage_type}] {parent_path}')"
+    },
+    {
+      "function": "_find_storage_media_file",
+      "line": 1693,
+      "level": "info",
+      "expression": "logger.info(f'找到匹配的视频文件: [{storage_type}] {file_item.path}')"
+    },
+    {
+      "function": "_find_storage_media_file",
+      "line": 1698,
+      "level": "debug",
+      "expression": "logger.debug(f'未找到匹配的视频文件: [{storage_type}] {base_path}')"
+    },
+    {
+      "function": "_delete_storage_scrap_files",
+      "line": 1723,
+      "level": "debug",
+      "expression": "logger.debug(f'网盘父目录不存在: [{storage_type}] {parent_path}')"
+    },
+    {
+      "function": "_delete_storage_scrap_files",
+      "line": 1729,
+      "level": "debug",
+      "expression": "logger.debug(f'网盘父目录为空: [{storage_type}] {parent_path}')"
+    },
+    {
+      "function": "_delete_storage_scrap_files",
+      "line": 1758,
+      "level": "info",
+      "expression": "logger.info(f'删除网盘刮削文件: [{storage_type}] {file_item.path}')"
+    },
+    {
+      "function": "_delete_storage_scrap_files",
+      "line": 1763,
+      "level": "warning",
+      "expression": "logger.warning(f'删除网盘刮削文件失败: [{storage_type}] {file_item.path}')"
+    },
+    {
+      "function": "_delete_storage_scrap_files",
+      "line": 1767,
+      "level": "info",
+      "expression": "logger.info(f'网盘刮削文件清理完成: [{storage_type}] {parent_path}，删除了 {deleted_count} 个文件')"
+    },
+    {
+      "function": "_delete_storage_scrap_files",
+      "line": 1772,
+      "level": "error",
+      "expression": "logger.error(f'清理网盘刮削文件失败: [{storage_type}] {storage_file_item.path} - {str(e)}')"
+    },
+    {
+      "function": "_delete_storage_empty_folders",
+      "line": 1796,
+      "level": "debug",
+      "expression": "logger.debug(f'网盘目录不存在: [{storage_type}] {current_path}')"
+    },
+    {
+      "function": "_delete_storage_empty_folders",
+      "line": 1805,
+      "level": "info",
+      "expression": "logger.info(f'删除网盘空目录: [{storage_type}] {current_path}')"
+    },
+    {
+      "function": "_delete_storage_empty_folders",
+      "line": 1816,
+      "level": "warning",
+      "expression": "logger.warning(f'删除网盘空目录失败: [{storage_type}] {current_path}')"
+    },
+    {
+      "function": "_delete_storage_empty_folders",
+      "line": 1838,
+      "level": "info",
+      "expression": "logger.info(f'删除网盘刮削文件: [{storage_type}] {file_item.path}')"
+    },
+    {
+      "function": "_delete_storage_empty_folders",
+      "line": 1842,
+      "level": "warning",
+      "expression": "logger.warning(f'删除网盘刮削文件失败: [{storage_type}] {file_item.path}')"
+    },
+    {
+      "function": "_delete_storage_empty_folders",
+      "line": 1859,
+      "level": "info",
+      "expression": "logger.info(f'删除网盘空目录: [{storage_type}] {current_path}')"
+    },
+    {
+      "function": "_delete_storage_empty_folders",
+      "line": 1881,
+      "level": "info",
+      "expression": "logger.info(f'网盘空目录清理完成: [{storage_type}] 删除了 {deleted_count} 个目录')"
+    },
+    {
+      "function": "_delete_storage_empty_folders",
+      "line": 1886,
+      "level": "error",
+      "expression": "logger.error(f'清理网盘空目录失败: [{storage_type}] {storage_file_item.path} - {str(e)}')"
+    },
+    {
+      "function": "_get_storage_dir_item",
+      "line": 1971,
+      "level": "debug",
+      "expression": "logger.debug(f'获取网盘目录信息失败: [{storage_type}] {dir_path} - {str(e)}')"
+    },
+    {
+      "function": "handle_strm_deleted",
+      "line": 1982,
+      "level": "info",
+      "expression": "logger.info(f'处理 strm 文件删除: {strm_file_path}')"
+    },
+    {
+      "function": "handle_strm_deleted",
+      "line": 1991,
+      "level": "warning",
+      "expression": "logger.warning(f'无法找到 strm 文件 {strm_file_path} 对应的网盘路径映射')"
+    },
+    {
+      "function": "handle_strm_deleted",
+      "line": 2002,
+      "level": "info",
+      "expression": "logger.info(f'网盘中未找到对应的视频文件: [{storage_type}] {storage_path}')"
+    },
+    {
+      "function": "handle_strm_deleted",
+      "line": 2007,
+      "level": "info",
+      "expression": "logger.info(f'准备删除网盘文件: [{storage_type}] {storage_file_item.path}')"
+    },
+    {
+      "function": "handle_strm_deleted",
+      "line": 2011,
+      "level": "info",
+      "expression": "logger.info(f'成功删除网盘文件: [{storage_type}] {storage_file_item.path}')"
+    },
+    {
+      "function": "handle_strm_deleted",
+      "line": 2078,
+      "level": "error",
+      "expression": "logger.error(f'删除网盘文件失败: [{storage_type}] {storage_file_item.path}')"
+    },
+    {
+      "function": "handle_strm_deleted",
+      "line": 2083,
+      "level": "error",
+      "expression": "logger.error(f'处理 strm 文件删除失败: {strm_file_path} - {str(e)} - {traceback.format_exc()}')"
+    },
+    {
+      "function": "delete_history_by_dest",
+      "line": 2099,
+      "level": "info",
+      "expression": "logger.info(f'删除转移记录：{transfer_history.id} - {dest_path}')"
+    },
+    {
+      "function": "delete_history_by_dest",
+      "line": 2102,
+      "level": "debug",
+      "expression": "logger.debug(f'未找到转移记录：{dest_path}')"
+    }
+  ]
+}
