@@ -19,6 +19,17 @@ func (a *App) enqueueDirectoryOrganizeFile(ctx context.Context, guard directoryI
 		}
 		return tx.Commit()
 	}
+	deleted, err := directorySourceHistoryDeleted(ctx, tx, file.Path, observed.Snapshot)
+	if err != nil {
+		return err
+	}
+	if deleted {
+		observed.retainDeletedHistory()
+		if err = txPut(ctx, tx, "directory_file", observed.ID, observed); err != nil {
+			return err
+		}
+		return tx.Commit()
+	}
 	existing, err := activeOrganizeSourceTx(ctx, tx, file.Path)
 	if err != nil {
 		return err

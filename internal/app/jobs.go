@@ -345,7 +345,9 @@ func (a *App) runClaimedJob(ctx context.Context, j Job) {
 		// Two cases ask for their own delay; everything else fails outright and
 		// waits for the next scheduled cycle, which is what a periodic schedule
 		// already provides. No attempt counter, no exponential backoff.
-		if code == "PLUGIN_REFRESH_PENDING" {
+		if code == "DIRECTORY_HISTORY_DELETED" {
+			state = "cancelled"
+		} else if code == "PLUGIN_REFRESH_PENDING" {
 			state = "queued"
 			runAt = time.Now().Add(2 * time.Second).Unix()
 		} else if code == "DOWNLOADER_DISABLED" {
@@ -367,6 +369,8 @@ func (a *App) runClaimedJob(ctx context.Context, j Job) {
 	if changed {
 		if code == "PLUGIN_REFRESH_PENDING" {
 			a.log("DEBUG", j.Kind, code, message, j.WorkflowID, j.ID)
+		} else if state == "cancelled" {
+			a.log("INFO", j.Kind, code, message, j.WorkflowID, j.ID)
 		} else if e != nil {
 			a.log("ERROR", j.Kind, code, message, j.WorkflowID, j.ID)
 		} else {

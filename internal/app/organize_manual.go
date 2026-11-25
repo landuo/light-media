@@ -700,6 +700,13 @@ func (a *App) recordManualOrganizeFailurePlan(ctx context.Context, path, wf stri
 		return Job{}, e
 	}
 	defer tx.Rollback()
+	work, isFileJob := ctx.Value(organizeFileKey{}).(organizeFileWork)
+	if isFileJob && work.DirectoryObservation {
+		consumed, err := directorySourceHistoryDeleted(ctx, tx, work.File.Path, work.Stamp)
+		if err != nil || consumed {
+			return work.Job, err
+		}
+	}
 	if e = txPut(ctx, tx, "import_plan", plan.ID, plan); e != nil {
 		return Job{}, e
 	}
@@ -714,7 +721,6 @@ func (a *App) recordManualOrganizeFailurePlan(ctx context.Context, path, wf stri
 	}
 	reason := a.clean(cause.Error())
 	var job Job
-	work, isFileJob := ctx.Value(organizeFileKey{}).(organizeFileWork)
 	var events []json.RawMessage
 	if isFileJob {
 		job, e = promoteOrganizeFileTx(ctx, tx, work, plan.ID, []string{plan.Files[0].ID}, "failed", code, reason)

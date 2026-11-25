@@ -352,7 +352,12 @@ AND COALESCE(`+transferHistoryFileIDExpr+`, '')=?`, item.ID, item.Source, item.F
 	if rows == 0 {
 		return bad("HISTORY_CHANGED", "整理记录已更新，请刷新后重新确认删除")
 	}
+	stamp, err := directoryDeletedSourceStamp(ctx, tx, item)
+	if err != nil {
+		return err
+	}
 	if err = txPut(ctx, tx, "transfer_history_hidden", item.ID, map[string]any{
+		"source": item.Source, "source_snapshot": stamp,
 		"at": now(), "plan_id": item.PlanID, "delete_source": in.DeleteSource, "delete_target": in.DeleteTarget,
 		"file_id": item.executionFileID(), "execution_key": item.ExecutionKey,
 	}); err != nil {

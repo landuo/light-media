@@ -26,6 +26,35 @@ func (a *App) startImportRun(ctx context.Context, job Job, plan *ImportPlan, sel
 	if !active {
 		return bad("JOB_CANCELLED", "任务已取消")
 	}
+	// A directory observation may already have been promoted to a queued
+	// single-file import when a user deletes history. Stop before publishing or
+	// taking reservations. Running transfers retain their own recovery path.
+	if plan.State == "queued" && !plan.Manual && plan.IntentID == "" && len(plan.Files) == 1 {
+		var auto bool
+		if err := tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM directory_import WHERE id=?)`, plan.ID).Scan(&auto); err != nil {
+			return err
+		}
+		if auto {
+			file := plan.Files[0]
+			consumed, err := directorySourceHistoryDeleted(ctx, tx, file.Source, planSnapshot(file))
+			if err != nil {
+				return err
+			}
+			if consumed {
+				plan.State = "cancelled"
+				if _, err = tx.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id=?`, plan.ID); err != nil {
+					return err
+				}
+				if err = txPut(ctx, tx, "import_plan", plan.ID, *plan); err != nil {
+					return err
+				}
+				if err = tx.Commit(); err != nil {
+					return err
+				}
+				return bad("DIRECTORY_HISTORY_DELETED", "整理记录已删除，未变化的源文件已跳过")
+			}
+		}
+	}
 	// The generic job retry can bypass submission. Check or reacquire its
 	// reservation before it can publish after a same-source handoff.
 	for _, index := range selected {

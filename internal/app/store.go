@@ -155,6 +155,10 @@ func OpenStore(dir string) (*Store, error) {
 		db.Close()
 		return fail(fmt.Errorf("download receipt migration: %w", err))
 	}
+	if err = migrateDeletedDirectorySources(context.Background(), db); err != nil {
+		db.Close()
+		return fail(fmt.Errorf("deleted directory source migration: %w", err))
+	}
 	// Subscribe aliases are allocated by a trigger on subscribe; re-run the
 	// idempotent backfill so rows migrated from records also get their stable
 	// numeric ID before any plugin call can observe them.

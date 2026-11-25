@@ -15,11 +15,12 @@ import (
 type organizeFileKey struct{}
 
 type organizeFileWork struct {
-	Job           Job
-	File          importScanFile
-	Stamp         importSnapshot
-	BatchID       string
-	HistorySource string
+	DirectoryObservation bool
+	Job                  Job
+	File                 importScanFile
+	Stamp                importSnapshot
+	BatchID              string
+	HistorySource        string
 }
 
 type organizeFilePayload struct {
@@ -175,6 +176,12 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 	if err := json.Unmarshal(job.Payload, &item); err != nil || item.File.Path == "" || (job.ParentJobID == "" && item.Directory == nil) || item.BatchID == "" {
 		return bad("INVALID_JOB", "目录整理文件参数无效")
 	}
+	if item.Directory != nil {
+		// The row may have been deleted after this observation was queued.
+		if consumed, err := directorySourceHistoryDeleted(ctx, a.Store.reader(), item.File.Path, item.Snapshot); err != nil || consumed {
+			return err
+		}
+	}
 	var parent organizePreparationPayload
 	if item.Directory == nil {
 		var rawRequest []byte
@@ -216,7 +223,7 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 		}
 		file.originalDirectoryListings[path] = entries
 	}
-	ctx = context.WithValue(ctx, organizeFileKey{}, organizeFileWork{Job: job, File: file, Stamp: item.Snapshot, BatchID: item.BatchID, HistorySource: item.HistorySource})
+	ctx = context.WithValue(ctx, organizeFileKey{}, organizeFileWork{DirectoryObservation: item.Directory != nil, Job: job, File: file, Stamp: item.Snapshot, BatchID: item.BatchID, HistorySource: item.HistorySource})
 	ctx = context.WithValue(ctx, originalScrapeBatchKey{}, item.BatchID)
 	known := ImportPlan{Files: []PlanFile{{Source: file.Path}}}
 	known.Media.Title, known.Media.Year = file.Parsed.Title, file.Parsed.Year
@@ -266,7 +273,7 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 			return fail(bad("REVIEW_ORGANIZE_HISTORY", "历史记录不再对应一个文件"))
 		}
 		file = files[0]
-		ctx = context.WithValue(ctx, organizeFileKey{}, organizeFileWork{Job: job, File: file, Stamp: item.Snapshot, BatchID: item.BatchID, HistorySource: item.HistorySource})
+		ctx = context.WithValue(ctx, organizeFileKey{}, organizeFileWork{DirectoryObservation: item.Directory != nil, Job: job, File: file, Stamp: item.Snapshot, BatchID: item.BatchID, HistorySource: item.HistorySource})
 	}
 	out, err := a.manualOrganize(ctx, parent.Request)
 	if err != nil {

@@ -9,8 +9,8 @@ import (
 )
 
 // A second directory with the same basename is not the same resource. Only
-// the exact source history gates a file; deleting it restarts stability, then
-// re-reads identity before putting a fresh job in the queue.
+// the exact source history gates a file. A replacement at the selected source
+// restarts stability and recognition; deleting the history alone does not.
 func TestDirectoryPollHistoryGateKeepsSourceIdentity(t *testing.T) {
 	a, base, _ := importTestApp(t)
 	var paths []string
@@ -34,12 +34,27 @@ func TestDirectoryPollHistoryGateKeepsSourceIdentity(t *testing.T) {
 	if f := directoryObservation(t, a, second, paths[1]); f.State != "error" || f.JobID != "old-job" || f.PlanID != "old-plan" {
 		t.Fatalf("lost history gate: %+v", f)
 	}
-	if _, err := a.Store.DB.Exec(`DELETE FROM transferhistory WHERE src=?`, paths[1]); err != nil {
+	var id string
+	if err := a.Store.DB.QueryRow(`SELECT id FROM transferhistory WHERE src=?`, paths[1]).Scan(&id); err != nil {
+		t.Fatal(err)
+	}
+	removeDirectoryHistoryForTest(t, a, id, false)
+	for i := 0; i < 2; i++ {
+		directoryAge(t, a, second, paths[1])
+		directoryPoll(t, a, second)
+	}
+	var jobs int
+	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM jobs WHERE kind='organize_file'`).Scan(&jobs); err != nil || jobs != 0 {
+		t.Fatalf("deleting an unchanged source's history queued %d jobs: %v", jobs, err)
+	}
+	replacement := paths[1] + ".new"
+	importWrite(t, replacement, []byte("replacement at the same source"))
+	if err := os.Rename(replacement, paths[1]); err != nil {
 		t.Fatal(err)
 	}
 	directoryPoll(t, a, second)
-	if f := directoryObservation(t, a, second, paths[1]); f.State != "observing" || f.JobID != "" || f.PlanID != "" {
-		t.Fatalf("deleted history skipped stability: %+v", f)
+	if f := directoryObservation(t, a, second, paths[1]); f.State != "observing" || f.JobID != "" {
+		t.Fatalf("replacement skipped stability: %+v", f)
 	}
 	directoryAge(t, a, second, paths[1])
 	directoryPoll(t, a, second)

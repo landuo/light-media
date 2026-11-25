@@ -124,13 +124,11 @@ func TestDirectoryFileNewStableVideoImportsOnceAndRetainsSource(t *testing.T) {
 			if f.State != "queued" || f.PlanID == "" {
 				t.Fatalf("stable file not queued: %+v", f)
 			}
-			job, e := a.claim(context.Background())
-			if e != nil || job.Kind != "import" {
+			job, e := a.claimImportJob(t.Context())
+			if e != nil || job.ID != f.JobID {
 				t.Fatalf("job=%+v err=%v", job, e)
 			}
-			if e = a.runImport(context.Background(), job, f.PlanID, nil); e != nil {
-				t.Fatal(e)
-			}
+			a.runClaimedJob(t.Context(), job)
 			directoryPoll(t, a, rule)
 			directoryPoll(t, a, rule)
 			if got := directoryObservation(t, a, rule, p); got.State != "imported" {
@@ -177,6 +175,7 @@ func TestDirectoryFileRuleChangeBlocksQueuedPublication(t *testing.T) {
 			case "source":
 				a.config.Directories[0].SourcePath = filepath.Dir(source)
 			}
+			a.invalidateSettings()
 			if f := directoryRecognize(t, a, rule, p); f.State != "error" {
 				t.Fatalf("changed rule did not fail only this file: %+v", f)
 			}
@@ -189,7 +188,7 @@ func TestDirectoryFileRuleChangeBlocksQueuedPublication(t *testing.T) {
 	}
 }
 
-func TestDirectoryFileAmbiguousIdentityRequiresHistoryDeletionBeforeAutomaticRetry(t *testing.T) {
+func TestDirectoryFileAmbiguousIdentityNeedsNewSourceEventAfterHistoryDeletion(t *testing.T) {
 	a, rule, source := directoryFileFixture(t, true)
 	p := filepath.Join(source, "Test Film (2024).mkv")
 	importWrite(t, p, []byte("synthetic"))
@@ -220,10 +219,16 @@ func TestDirectoryFileAmbiguousIdentityRequiresHistoryDeletionBeforeAutomaticRet
 	if _, err = a.deleteTransferHistory(ctx, history, historyDeleteRequest{Confirm: true}); err != nil {
 		t.Fatal(err)
 	}
-	directoryPoll(t, a, rule)
-	if f := directoryObservation(t, a, rule, p); f.State != "observing" || f.PlanID != "" {
-		t.Fatalf("deleted history did not release stable-file checks: %+v", f)
+	for i := 0; i < 2; i++ {
+		directoryAge(t, a, rule, p)
+		directoryPoll(t, a, rule)
 	}
+	var jobs int
+	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM jobs WHERE kind='organize_file'`).Scan(&jobs); err != nil || jobs != 0 {
+		t.Fatalf("unchanged failed source was queued after deleting history: %d jobs, %v", jobs, err)
+	}
+	importWrite(t, p, []byte("new version of the source after correcting the NFO"))
+	directoryPoll(t, a, rule)
 	directoryAge(t, a, rule, p)
 	directoryPoll(t, a, rule)
 	retry := directoryRecognize(t, a, rule, p)

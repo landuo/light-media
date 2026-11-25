@@ -345,14 +345,33 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		if err != nil {
 			return err
 		}
-		if !hasHistory && f.PlanID != "" {
-			// History deletion releases the automatic gate. Retain the usual
-			// stability/completeness checks instead of replaying the old plan.
-			f.PlanID, f.JobID = "", ""
-			f.State, f.Reason = "observing", "整理历史已删除，等待源文件稳定后重新检查"
-			f.StableSince = time.Now().UnixNano()
+		if !hasHistory && !fresh && !changed && before.PlanID != "" && (before.State == "error" || before.State == "imported") {
+			// Old observations can predate deletion receipts. Conversely, a
+			// replacement may already have been observed while the old row
+			// was visible. Only that new file should go through stability.
+			deleted, err := lastDeletedDirectorySnapshot(ctx, a.Store.DB, file.Path)
+			if err != nil {
+				return err
+			}
+			if deleted == nil || *deleted == stamp {
+				f.retainDeletedHistory()
+			} else {
+				f.PlanID, f.JobID = "", ""
+				f.State, f.Reason = "observing", "等待更换后的源文件稳定"
+				f.StableSince = time.Now().UnixNano()
+			}
 		}
-		terminal := f.State == "baseline" || f.State == "imported" || f.State == "queued" || f.State == "cancelled" || f.State == "needs_review" || f.State == "error"
+		if !hasHistory && f.State == "queued" {
+			// A pending directory job from a prior pass can outlive the row.
+			consumed, err := directorySourceHistoryDeleted(ctx, a.Store.DB, file.Path, stamp)
+			if err != nil {
+				return err
+			}
+			if consumed {
+				f.retainDeletedHistory()
+			}
+		}
+		terminal := f.State == "complete" || f.State == "baseline" || f.State == "imported" || f.State == "queued" || f.State == "cancelled" || f.State == "needs_review" || f.State == "error"
 		if !terminal && !fresh && !changed && time.Since(time.Unix(0, f.StableSince)) >= directoryStableTime {
 			// A finished managed download that has no plan yet must be organized
 			// here: nothing in this build advances download history to

@@ -133,6 +133,13 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		return Job{}, err
 	}
 	defer tx.Rollback()
+	if organizing && work.DirectoryObservation {
+		// Deletion may have committed during provider recognition.
+		consumed, err := directorySourceHistoryDeleted(ctx, tx, work.File.Path, work.Stamp)
+		if err != nil || consumed {
+			return work.Job, err
+		}
+	}
 	phase("directory_authorization")
 	if err = a.requireNativeDirectoryAuthorizationTx(ctx, tx, plan, meta); err != nil {
 		return Job{}, err
