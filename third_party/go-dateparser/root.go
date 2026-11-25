@@ -28,8 +28,7 @@ func Search(cfg *Configuration, text string) (string, []SearchResult, error) {
 // IsKnownLocale reports whether a language or locale code is supported,
 // for example "en", "fr-PF", or "zh-Hant".
 func IsKnownLocale(code string) bool {
-	_, exist := data.GetLocaleData(code)
-	return exist
+	return data.HasLocale(code)
 }
 
 // PopTzOffset extracts a timezone from str, returning the remaining string,

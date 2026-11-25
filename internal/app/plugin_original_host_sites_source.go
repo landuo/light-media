@@ -65,9 +65,19 @@ type originalSourceSiteRow struct {
 }
 
 func (a *App) originalSourceSiteRows(ctx context.Context) ([]originalSourceSiteRow, error) {
+	sites := a.Settings().Sites
+	tx, err := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+	return a.originalSourceSiteRowsTx(ctx, tx, sites)
+}
+
+func (a *App) originalSourceSiteRowsTx(ctx context.Context, tx *sql.Tx, sites []SiteConfig) ([]originalSourceSiteRow, error) {
 	out := []originalSourceSiteRow{}
-	for _, site := range a.Settings().Sites {
-		identity, err := a.Store.nativeSiteByAppID(ctx, site.ID)
+	for _, site := range sites {
+		identity, err := a.Store.readNativeSiteIdentity(ctx, tx, "site_id", site.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -76,7 +86,7 @@ func (a *App) originalSourceSiteRows(ctx context.Context) ([]originalSourceSiteR
 			return nil, siteIdentityError()
 		}
 		row := originalSourceSiteRow{site: site, sourceID: identity.SourceID, fields: map[string]any{"id": identity.SourceID, "name": site.Name, "domain": siteStatisticDomain(site), "url": site.BaseURL, "is_active": site.Enabled, "pri": site.Priority, "proxy": site.Proxy, "render": site.Render, "public": site.Public, "timeout": site.Timeout, "ua": site.UserAgent}}
-		source, mappedID, proof, err := a.Store.nativeSourceSiteFields(ctx, site, identity)
+		source, mappedID, proof, err := a.Store.nativeSourceSiteFieldsTx(ctx, tx, site, identity)
 		if err != nil {
 			return nil, err
 		}

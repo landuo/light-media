@@ -862,6 +862,9 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 				if err = txPut(ctx, tx, "asset", assetID, asset); err != nil {
 					return err
 				}
+				if err = reconcileInventorySubscriptions(ctx, tx, &asset.Media); err != nil {
+					return err
+				}
 			}
 			for _, record := range owned {
 				if err = txPut(ctx, tx, "managed_file", tokenHash(record.Path), record); err != nil {

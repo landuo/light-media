@@ -181,7 +181,8 @@ func boundedLogString(s string, n int) string {
 	return s
 }
 func sanitizeLogEntry(entry map[string]any, cfg Settings) map[string]any {
-	safe := map[string]any{}
+	safe := make(map[string]any, len(entry))
+	secrets := settingsRedactions(cfg)
 	for k, v := range entry {
 		if !logFields[k] {
 			continue
@@ -189,7 +190,7 @@ func sanitizeLogEntry(entry map[string]any, cfg Settings) map[string]any {
 		switch x := v.(type) {
 		case string:
 			// Sanitize every field, including external trace attributes and stack traces.
-			x = cleanWithSettings(x, cfg)
+			x = redactSettingsValues(x, secrets)
 			x = logSecretPattern.ReplaceAllString(x, "[REDACTED]")
 			n := 512
 			if k == "message" {

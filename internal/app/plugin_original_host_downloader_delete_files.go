@@ -7,7 +7,6 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
-	"strings"
 
 	"light-media/internal/download"
 	"light-media/internal/plugins"
@@ -334,7 +333,7 @@ func (a *App) originalHostDownloaderProtectSharedFiles(ctx context.Context, scop
 	}
 	overlap := func(candidate, selected string) bool {
 		left, right := cleanOf(candidate), cleanOf(selected)
-		if left == right || strings.HasPrefix(left, right+"/") || strings.HasPrefix(right, left+"/") {
+		if left == right || hasSlashDelimitedPrefix(left, right) || hasSlashDelimitedPrefix(right, left) {
 			return true
 		}
 		if candidateAliasFree(left) {
@@ -355,25 +354,7 @@ func (a *App) originalHostDownloaderProtectSharedFiles(ctx context.Context, scop
 			client.Close()
 			return bad("FILE_DOWNLOADER_UNVERIFIED", "无法核对其他任务的文件引用，未执行删除")
 		}
-		var rows []map[string]json.RawMessage
-		if json.Unmarshal(body, &rows) != nil || rows == nil {
-			client.Close()
-			return bad("DOWNLOADER_INVALID_RESPONSE", "无法核对其他任务的文件引用")
-		}
-		hashes := []string{}
-		key := "hash"
-		if kind == "transmission" {
-			key = "hashString"
-		}
-		for _, row := range rows {
-			var hash string
-			if json.Unmarshal(row[key], &hash) != nil || !plugins.DownloaderTaskHashValid(hash) {
-				client.Close()
-				return bad("DOWNLOADER_INVALID_RESPONSE", "其他下载任务Hash无效")
-			}
-			hashes = append(hashes, strings.ToLower(hash))
-		}
-		tasks, err := originalDownloaderTaskProjection(kind, hashes, body)
+		tasks, err := (originalDownloaderTaskSelection{daemonOrder: true}).project(kind, body, false, false)
 		if err != nil {
 			client.Close()
 			return err

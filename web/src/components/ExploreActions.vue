@@ -40,7 +40,7 @@ import {
 type Action = ExploreAction | 'add-seasons';
 const emit = defineEmits<{
   changed: [media: ExploreActionMedia];
-  singleSeason: [media: ExploreActionMedia, season: number];
+  singleSeason: [media: ExploreActionMedia, season: number, resolved: ExploreActionMedia];
 }>();
 const display = useDisplay();
 const visible = ref(false),
@@ -182,10 +182,15 @@ async function prepare(media: ExploreActionMedia, token: number) {
     phase.value = 'sites';
     return;
   }
+  const matching = '/subscriptions/matching?' + new URLSearchParams({
+    media_type: media.media_type,
+    tmdb_id: String(media.id),
+  });
+  const seasonPath = '/catalog/seasons?' + new URLSearchParams({ id: String(media.id) });
   if (action.value === 'add-seasons') {
     const [response, rows] = await Promise.all([
-      api('/subscriptions'),
-      api('/catalog/seasons?' + new URLSearchParams({ id: String(media.id) })),
+      api(matching),
+      api(seasonPath),
     ]);
     if (token !== generation) return;
     existing = exploreSubscriptions(media, response);
@@ -193,14 +198,14 @@ async function prepare(media: ExploreActionMedia, token: number) {
     updateSubscription();
     const soleSeason = seasons.value[0];
     if (seasons.value.length === 1 && soleSeason?.state === 'ready' && original.value) {
-      emit('singleSeason', original.value, soleSeason.season);
+      emit('singleSeason', original.value, soleSeason.season, { ...media, seasons: rows });
       hide();
     } else {
       phase.value = 'seasons';
     }
     return;
   }
-  const response = await api('/subscriptions');
+  const response = await api(matching);
   if (token !== generation) return;
   existing = exploreSubscriptions(media, response);
   if (media.media_type === 'movie') {
@@ -260,18 +265,10 @@ async function prepare(media: ExploreActionMedia, token: number) {
     }
     return;
   }
-  const detail = await api(
-    '/catalog/detail?' + new URLSearchParams({ kind: 'tv', id: String(media.id) }),
-  );
+  const seasonSummaries = await api(seasonPath);
   if (token !== generation) return;
-  if (
-    !tmdbExploreMedia(detail) ||
-    Number(detail.id) !== Number(media.id) ||
-    detail.media_type !== 'tv'
-  )
-    throw new Error('季集信息与当前影视不匹配');
-  resolved.value = detail;
-  seasons.value = exploreSeasonRows(detail, existing);
+  if (!Array.isArray(seasonSummaries)) throw new Error('季集信息返回格式无效');
+  seasons.value = exploreSeasonRows({ ...media, seasons: seasonSummaries }, existing);
   phase.value = 'seasons';
   updateSubscription();
 }

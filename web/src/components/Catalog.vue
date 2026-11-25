@@ -18,7 +18,7 @@ const creditsKind = ref('all'),
   creditsLimit = ref(24),
   creditsSort = ref('popularity');
 const props = defineProps<{ route: string }>();
-const subscriptionEditor = shallowRef<{ view: string; media: any } | null>(null);
+const subscriptionEditor = shallowRef<{ view: string; media: any; initialMedia: any } | null>(null);
 const subscriptionActions = ref<InstanceType<typeof ExploreActions>>();
 const [routePath, routeQuery] = props.route.split('?'),
   routeParams = new URLSearchParams(routeQuery),
@@ -131,7 +131,7 @@ async function loadSeason() {
   seasonLoading.value = true;
   try {
     const result = await action(() =>
-      api('/catalog/season?id=' + parts[2] + '&season=' + season.value),
+      api('/catalog/season?id=' + parts[2] + '&season=' + season.value + '&view=display'),
     );
     if (generation === seasonSeq) seasonData.value = result;
   } finally {
@@ -167,11 +167,12 @@ if (parts[0] === 'search') {
     return load();
   });
 }
-function openSubscriptionEditor(media: any, selectedSeason?: number) {
+function openSubscriptionEditor(media: any, selectedSeason?: number, initialMedia = media) {
   const query = selectedSeason === undefined ? '' : `?season=${selectedSeason}&start_episode=1`;
   subscriptionEditor.value = {
-    view: `subscriptions/new/${media.media_type}/${media.id}${query}`,
+    view: `subscriptions/new/${initialMedia.media_type}/${initialMedia.id}${query}`,
     media,
+    initialMedia,
   };
 }
 function openSubscription(media: any) {
@@ -390,6 +391,7 @@ onUnmounted(() => {
     <Subscriptions
       editor-only
       :view="subscriptionEditor.view"
+      :initial-media="subscriptionEditor.initialMedia"
       @close="subscriptionEditor = null"
       @saved="subscriptionSaved"
     />

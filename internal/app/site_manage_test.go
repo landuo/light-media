@@ -23,8 +23,8 @@ func TestManagedSiteCRUDProtectsCredentialsAndAdaptation(t *testing.T) {
 		t.Fatal(e)
 	}
 	raw, _ := json.Marshal(result)
-	if !strings.Contains(string(raw), s.Cookie) {
-		t.Fatal("secret not echoed")
+	if strings.Contains(string(raw), s.Cookie) {
+		t.Fatal("site credential exposed in ordinary response")
 	}
 	if len(a.Settings().Sites) != 1 || a.Settings().Sites[0].ID == "" {
 		t.Fatal("new site not persisted")
@@ -38,10 +38,10 @@ func TestManagedSiteCRUDProtectsCredentialsAndAdaptation(t *testing.T) {
 	if a.Settings().Sites[0].Cookie != "synthetic-cookie-not-live" {
 		t.Fatal("blank editor erased credential")
 	}
-	s.BaseURL = "https://not-adapted.invalid"
+	s.BaseURL = "ftp://invalid.example"
 	s.Cookie = "synthetic-other-secret"
 	if _, e = a.saveManagedSite(ctx, s); e == nil {
-		t.Fatal("unknown host pretended supported")
+		t.Fatal("invalid scheme accepted")
 	}
 	if len(a.Settings().Sites) != 1 || a.Settings().Sites[0].BaseURL != "https://hdhome.org" {
 		t.Fatal("failed save mutated config")

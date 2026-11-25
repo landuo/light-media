@@ -539,21 +539,11 @@ func (a *App) scheduler(ctx context.Context) {
 	defer ticker.Stop()
 	lastPoll := time.Time{}
 	lastMaterialCleanup := time.Time{}
-	lastHeapRelease := time.Time{}
-	// Go keeps freed heap as an address-space reserve and only scavenges lazily, so
-	// a long-lived process reports an RSS far above its live set (heap_alloc stays
-	// at its steady value while RSS climbs). Returning the idle pages on a slow
-	// timer keeps the footprint close to what the process actually uses.
-	const heapReleaseInterval = 5 * time.Minute
 	for {
 		select {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
-		}
-		if time.Since(lastHeapRelease) >= heapReleaseInterval {
-			lastHeapRelease = time.Now()
-			debug.FreeOSMemory()
 		}
 		if time.Since(lastMaterialCleanup) >= time.Hour {
 			if e := a.cleanupMaterialOrphans(ctx); e != nil {
@@ -600,28 +590,61 @@ func (a *App) scheduleSubscriptions(ctx context.Context, at time.Time) {
 	if a.paused() {
 		return
 	}
-	raw, e := a.Store.List(ctx, "subscription", 500, 0)
-	if e != nil {
+	due, err := a.dueSubscriptionChecks(ctx, at)
+	if err != nil {
 		return
 	}
-	for _, b := range raw {
-		var s Subscription
-		if json.Unmarshal(b, &s) != nil || s.State != "active" || s.Schedule.Mode == "manual" {
+	for _, check := range due {
+		_, _ = a.enqueue(ctx, "subscription", check, id("wf_"))
+	}
+}
+
+type subscriptionPollJob struct {
+	ID       string `json:"id"`
+	Revision int    `json:"revision"`
+}
+
+func (a *App) dueSubscriptionChecks(ctx context.Context, at time.Time) ([]subscriptionPollJob, error) {
+	rows, err := a.Store.reader().QueryContext(ctx, `SELECT payload FROM subscribe WHERE record_kind='subscription' ORDER BY updated_at DESC,uid LIMIT 500`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var due []subscriptionPollJob
+	var payload sql.RawBytes
+	for rows.Next() {
+		if err := rows.Scan(&payload); err != nil {
+			return nil, err
+		}
+		// Borrow this row only until Next. A normal idle tick needs none of
+		// the episode maps, media or policy data in the full subscription.
+		var clock struct {
+			State      string `json:"state"`
+			NextCheck  string `json:"next_check"`
+			LastReason string `json:"last_reason"`
+			Schedule   struct {
+				Mode string `json:"mode"`
+			} `json:"schedule"`
+		}
+		if json.Unmarshal(payload, &clock) != nil || clock.State != "active" || clock.Schedule.Mode == "manual" {
 			continue
 		}
-		t, e := time.Parse(time.RFC3339Nano, s.NextCheck)
+		t, err := time.Parse(time.RFC3339Nano, clock.NextCheck)
 		// Earlier versions could store a delay caused by the retired daily
 		// site budget. Let that check run and calculate its normal schedule.
-		oldBudgetDelay := s.LastReason == "站点调用预算不足，已按最早恢复时间延期检查" ||
-			strings.HasSuffix(s.LastReason, "；部分站点预算不足，检查将按恢复时间延期")
-		if !oldBudgetDelay && e == nil && t.After(at) {
+		oldBudgetDelay := clock.LastReason == "站点调用预算不足，已按最早恢复时间延期检查" ||
+			strings.HasSuffix(clock.LastReason, "；部分站点预算不足，检查将按恢复时间延期")
+		if !oldBudgetDelay && err == nil && t.After(at) {
 			continue
 		}
-		_, e = a.enqueue(ctx, "subscription", map[string]any{"id": s.ID, "revision": s.Revision}, id("wf_"))
-		if e != nil {
-			continue
+		// Preserve the full record validation for candidates. A malformed
+		// episode map, for example, must not result in a queued check.
+		var s Subscription
+		if json.Unmarshal(payload, &s) == nil {
+			due = append(due, subscriptionPollJob{ID: s.ID, Revision: s.Revision})
 		}
 	}
+	return due, rows.Err()
 }
 
 func jobErr(code string, e error) error { return bad(code, fmt.Sprint(e)) }

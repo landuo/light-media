@@ -17,6 +17,7 @@ import (
 	"strconv"
 	"sync/atomic"
 	"testing"
+	"testing/iotest"
 )
 
 const catalogExploreMIMEOrigin = "https://img3.doubanio.com/view/mime-fixture.jpg"
@@ -267,5 +268,104 @@ func TestCatalogExploreImageMIMEKeepsSourceURLAllowlist(t *testing.T) {
 		if w.Body.Len() != 0 || w.Header().Get("Content-Type") != "" || calls.Load() != 1 {
 			t.Fatal("rejected source URL served cached bytes or reached owned transport")
 		}
+	}
+}
+
+// No network: exercise a cache miss with a body of unknown length, as with a
+// chunked CDN response. The caller can also inject a read error after a prefix.
+func exploreImageStreamFixture(t testing.TB, open func() io.Reader) *App {
+	t.Helper()
+	for _, k := range []string{"HTTP_PROXY", "http_proxy", "HTTPS_PROXY", "https_proxy"} {
+		t.Setenv(k, "")
+	}
+	dir, err := filepath.EvalSymlinks(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	a := &App{Dir: dir}
+	t.Cleanup(a.closeImageWork)
+	old := assetImageClient
+	t.Cleanup(func() { assetImageClient = old })
+	assetImageClient = &http.Client{Transport: imageTransport(func(r *http.Request) (*http.Response, error) {
+		if r.URL.String() != catalogExploreMIMEOrigin {
+			t.Fatalf("unexpected fixture URL %q", r.URL.Redacted())
+		}
+		return &http.Response{StatusCode: 200, Header: http.Header{"Content-Type": {"image/jpeg"}}, ContentLength: -1, Body: io.NopCloser(open())}, nil
+	})}
+	return a
+}
+
+func TestExploreImageUnknownLengthCachePublication(t *testing.T) {
+	const limit = 8 << 20
+	data := make([]byte, limit+16)
+	copy(data, catalogExploreMIMEBytes(t, "image/jpeg"))
+	data[limit-1] = 0x73
+	for _, tc := range []struct {
+		name        string
+		size        int
+		interrupted bool
+	}{
+		{"exact limit", limit, false}, {"oversized", len(data), false}, {"interrupted", 128 << 10, true}, {"empty", 0, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			source := bytes.NewReader(data[:tc.size])
+			a := exploreImageStreamFixture(t, func() io.Reader {
+				if tc.interrupted {
+					return io.MultiReader(source, iotest.ErrReader(io.ErrUnexpectedEOF))
+				}
+				return source
+			})
+			r := catalogExploreMIMERequest(http.MethodGet, "douban", catalogExploreMIMEOrigin)
+			r.Header.Set("Range", "bytes=-1")
+			w := httptest.NewRecorder()
+			err := a.catalogExploreImage(w, r)
+			path := catalogExploreMIMECachePath(a)
+			if tc.size == limit {
+				if err != nil || w.Code != http.StatusPartialContent || !bytes.Equal(w.Body.Bytes(), data[limit-1:limit]) {
+					t.Fatalf("last byte of exact-limit response: status=%d err=%v", w.Code, err)
+				}
+				got, err := os.ReadFile(path)
+				if err != nil || !bytes.Equal(got, data[:limit]) {
+					t.Fatal("incomplete cache at the limit", err)
+				}
+				return
+			}
+			var apiErr *APIError
+			if !errors.As(err, &apiErr) || apiErr.Code != "IMAGE_UNAVAILABLE" || w.Body.Len() != 0 {
+				t.Fatalf("invalid upstream published: err=%v body=%d", err, w.Body.Len())
+			}
+			if consumed := tc.size - source.Len(); consumed > limit+1 {
+				t.Fatalf("read %d bytes beyond check limit", consumed)
+			}
+			entries, err := os.ReadDir(filepath.Dir(path))
+			if (err != nil && !os.IsNotExist(err)) || len(entries) != 0 {
+				t.Fatal("temporary or final cache entry left behind", entries, err)
+			}
+		})
+	}
+}
+
+func BenchmarkExploreImageColdMiss(b *testing.B) {
+	for _, size := range []int{256 << 10, 8 << 20} {
+		b.Run(strconv.Itoa(size>>10)+"KiB", func(b *testing.B) {
+			data := make([]byte, size)
+			copy(data, []byte{0xff, 0xd8, 0xff}) // synthetic, MIME-sniffable payload
+			a := exploreImageStreamFixture(b, func() io.Reader { return bytes.NewReader(data) })
+			r := catalogExploreMIMERequest(http.MethodHead, "douban", catalogExploreMIMEOrigin)
+			cache := catalogExploreMIMECachePath(a)
+			b.SetBytes(int64(size))
+			b.ReportAllocs()
+			for b.Loop() {
+				// HEAD still fetches and caches the whole upstream body on a miss,
+				// without allocating a second image-sized buffer in the recorder.
+				w := httptest.NewRecorder()
+				if err := a.catalogExploreImage(w, r); err != nil || w.Code != 200 || w.Header().Get("Content-Length") != strconv.Itoa(size) {
+					b.Fatalf("cache miss: status=%d err=%v", w.Code, err)
+				}
+				if err := os.Remove(cache); err != nil {
+					b.Fatal(err)
+				}
+			}
+		})
 	}
 }

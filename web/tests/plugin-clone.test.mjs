@@ -210,6 +210,7 @@ async function mount(t, name, { props = {}, api, emit, desktop = true } = {}) {
       if (dependency === 'vuedraggable') return { name: 'Draggable' };
       if (dependency.endsWith('.vue'))
         return { name: dependency.split('/').at(-1).replace('.vue', '') };
+      if (dependency === '../assets/plugin-utilities.css') return {};
       throw new Error('Unexpected dependency ' + dependency);
     },
     module.exports,
@@ -597,7 +598,7 @@ test('actual card-to-dialog flow creates once, refreshes lists and statistics an
   assert.equal(app.component('PluginCloneDialog'), undefined);
   assert.deepEqual(
     allRequests.slice(readsBefore).map((row) => row.path),
-    ['/plugins/SeedRescue2/clone', '/plugins?state=installed', '/plugins/market?details=true', '/plugins/statistic', '/plugins/organization'],
+    ['/plugins/SeedRescue2/clone', '/plugins?state=installed', '/plugins/organization', '/plugins/market?details=true', '/plugins/statistic'],
   );
   assert.equal(allRequests.filter((row) => row.body).length, 1);
   assert.deepEqual(allRequests.find((row) => row.body).body, { ...originalCloneDefaults, suffix: 'CopyA' });

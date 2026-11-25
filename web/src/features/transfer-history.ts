@@ -120,7 +120,7 @@ export function transferQueueState(file: { status: string; job_state?: string })
   if (['cancelled', 'canceled'].includes(file.job_state || file.status)) return 'cancelled';
   if (file.job_state === 'failed') return 'failed';
   if (file.job_state === 'running' || file.status === 'importing') return 'running';
-  if ((file.job_state || '') === 'queued') return 'waiting';
+  if (file.job_state === 'queued' || file.job_state === 'retry_wait') return 'waiting';
   if (file.status === 'failed') return 'failed';
   if (['ready', 'pending', 'queued', 'waiting'].includes(file.status)) return 'waiting';
   return 'unknown';

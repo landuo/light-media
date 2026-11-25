@@ -262,3 +262,36 @@ func TestAliasTrailingSeasonNumberingIsIdentityEvidence(t *testing.T) {
 	seq := catalog.Media{ID: 603, MediaType: "movie", Title: "The Matrix", OriginalTitle: "The Matrix", Year: 1999, Aliases: []string{"The Matrix"}}
 	_ = seq
 }
+
+func TestAuthoritativeEpisodeBoundaries(t *testing.T) {
+	for _, invalid := range [][]int{{0}, {-1}, {10000}, {63, 64, 65, 64}, {9999, 9999}} {
+		target := tvTarget(true)
+		target.KnownEpisodes = invalid
+		d := Evaluate(resource("诛仙 S04E05 1080p"), target, Policy{})
+		if d.Accepted || !hasReason(d, "invalid_known_episodes") {
+			t.Fatalf("invalid authority %v: %+v", invalid, d)
+		}
+	}
+	target := tvTarget(true)
+	target.KnownEpisodes = []int{1, 5, 63, 64, 65, 9999}
+	target.AiredEpisodes = []int{5, 64, 9999}
+	if d := Evaluate(resource("诛仙 S04E05 1080p"), target, Policy{}); !d.Accepted {
+		t.Fatalf("valid sparse authority rejected: %+v", d)
+	}
+}
+
+func BenchmarkEvaluateLongSeason(b *testing.B) {
+	target := tvTarget(true)
+	target.KnownEpisodes = nil
+	for i := 1; i <= 350; i++ {
+		target.KnownEpisodes = append(target.KnownEpisodes, i)
+	}
+	target.AiredEpisodes = target.KnownEpisodes
+	item := resource("诛仙 S04E05 1080p")
+	b.ReportAllocs()
+	for b.Loop() {
+		if !Evaluate(item, target, Policy{}).Accepted {
+			b.Fatal("expected admitted episode")
+		}
+	}
+}

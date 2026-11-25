@@ -2,6 +2,7 @@ package language
 
 import (
 	"fmt"
+	"iter"
 	"slices"
 	"sort"
 	"strings"
@@ -11,12 +12,12 @@ import (
 	"github.com/markusmobius/go-dateparser/internal/strutil"
 )
 
-var defaultLocaleLoaders = [...]func() ([]*data.LocaleData, error){
-	sync.OnceValues(func() ([]*data.LocaleData, error) {
-		return getLocalesUncached(nil, nil, "", false, false)
+var defaultLocaleNames = [...]func() ([]string, error){
+	sync.OnceValues(func() ([]string, error) {
+		return getLocaleNames(nil, nil, "", false, false)
 	}),
-	sync.OnceValues(func() ([]*data.LocaleData, error) {
-		return getLocalesUncached(nil, nil, "", true, false)
+	sync.OnceValues(func() ([]string, error) {
+		return getLocaleNames(nil, nil, "", true, false)
 	}),
 }
 
@@ -33,18 +34,38 @@ var defaultLocaleLoaders = [...]func() ([]*data.LocaleData, error){
 // If `allowConflictingLocales` is set to true, locales with same language and different region
 // can be loaded.
 func GetLocales(locales []string, languages []string, region string, useGivenOrder bool, allowConflictingLocales bool) ([]*data.LocaleData, error) {
-	if len(locales) == 0 && len(languages) == 0 && strings.TrimSpace(region) == "" {
-		var orderIndex int
-		if useGivenOrder {
-			orderIndex = 1
-		}
-		loaded, err := defaultLocaleLoaders[orderIndex]()
-		return slices.Clone(loaded), err
+	seq, err := IterLocales(locales, languages, region, useGivenOrder, allowConflictingLocales)
+	if err != nil {
+		return nil, err
 	}
-	return getLocalesUncached(locales, languages, region, useGivenOrder, allowConflictingLocales)
+	return slices.Collect(seq), nil
 }
 
-func getLocalesUncached(locales []string, languages []string, region string, useGivenOrder bool, allowConflictingLocales bool) ([]*data.LocaleData, error) {
+// IterLocales validates and orders names up front. Date parsing stops at its
+// first successful locale, so later language tables are never materialized.
+func IterLocales(locales, languages []string, region string, useGivenOrder, allowConflictingLocales bool) (iter.Seq[*data.LocaleData], error) {
+	var names []string
+	var err error
+	if len(locales) == 0 && len(languages) == 0 && strings.TrimSpace(region) == "" {
+		idx := 0
+		if useGivenOrder {
+			idx = 1
+		}
+		names, err = defaultLocaleNames[idx]()
+	} else {
+		names, err = getLocaleNames(locales, languages, region, useGivenOrder, allowConflictingLocales)
+	}
+	return func(yield func(*data.LocaleData) bool) {
+		for _, name := range names {
+			locale, _ := data.GetLocaleData(name)
+			if !yield(locale) {
+				return
+			}
+		}
+	}, err
+}
+
+func getLocaleNames(locales, languages []string, region string, useGivenOrder, allowConflictingLocales bool) ([]string, error) {
 	var validLocales []string
 	localeTracker := strutil.NewDict()
 	languageTracker := strutil.NewDict()
@@ -60,7 +81,7 @@ func getLocalesUncached(locales []string, languages []string, region string, use
 			}
 
 			// Check if the locale valid
-			if _, exist := data.GetLocaleData(locale); !exist {
+			if !data.HasLocale(locale) {
 				invalidLocales = append(invalidLocales, locale)
 				continue
 			}
@@ -126,7 +147,7 @@ func getLocalesUncached(locales []string, languages []string, region string, use
 			}
 
 			// Make sure generated locale is valid
-			if _, exist := data.GetLocaleData(locale); !exist {
+			if !data.HasLocale(locale) {
 				continue
 			}
 
@@ -157,18 +178,10 @@ func getLocalesUncached(locales []string, languages []string, region string, use
 		})
 	}
 
-	// Fetch the locale data
-	listLocaleData := make([]*data.LocaleData, len(validLocales))
-	for i, locale := range validLocales {
-		ld, _ := data.GetLocaleData(locale)
-		listLocaleData[i] = ld
-	}
-
-	if len(listLocaleData) == 0 {
+	if len(validLocales) == 0 {
 		return nil, ErrNotFound
 	}
-
-	return listLocaleData, nil
+	return validLocales, nil
 }
 
 // GetLocale returns a single locale instance based on the specified locale `code`,

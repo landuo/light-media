@@ -1,216 +1,210 @@
 package data
 
-import "sync"
-
-var localeDataInitialization sync.Once
-
-// Defer unchanged generated locale constructors until the first actual lookup.
-func initializeLocaleData() {
-	localeDataInitialization.Do(func() {
-		initializeLocale_af()
-		initializeLocale_agq()
-		initializeLocale_ak()
-		initializeLocale_am()
-		initializeLocale_ar()
-		initializeLocale_as()
-		initializeLocale_asa()
-		initializeLocale_ast()
-		initializeLocale_az_cyrl()
-		initializeLocale_az_latn()
-		initializeLocale_az()
-		initializeLocale_bas()
-		initializeLocale_be()
-		initializeLocale_bem()
-		initializeLocale_bez()
-		initializeLocale_bg()
-		initializeLocale_bm()
-		initializeLocale_bn()
-		initializeLocale_bo()
-		initializeLocale_br()
-		initializeLocale_brx()
-		initializeLocale_bs_cyrl()
-		initializeLocale_bs_latn()
-		initializeLocale_bs()
-		initializeLocale_ca()
-		initializeLocale_ce()
-		initializeLocale_cgg()
-		initializeLocale_chr()
-		initializeLocale_ckb()
-		initializeLocale_cs()
-		initializeLocale_cy()
-		initializeLocale_da()
-		initializeLocale_dav()
-		initializeLocale_de()
-		initializeLocale_dje()
-		initializeLocale_dsb()
-		initializeLocale_dua()
-		initializeLocale_dyo()
-		initializeLocale_dz()
-		initializeLocale_ebu()
-		initializeLocale_ee()
-		initializeLocale_el()
-		initializeLocale_en()
-		initializeLocale_eo()
-		initializeLocale_es()
-		initializeLocale_et()
-		initializeLocale_eu()
-		initializeLocale_ewo()
-		initializeLocale_fa()
-		initializeLocale_ff()
-		initializeLocale_fi()
-		initializeLocale_fil()
-		initializeLocale_fo()
-		initializeLocale_fr()
-		initializeLocale_fur()
-		initializeLocale_fy()
-		initializeLocale_ga()
-		initializeLocale_gd()
-		initializeLocale_gl()
-		initializeLocale_gsw()
-		initializeLocale_gu()
-		initializeLocale_guz()
-		initializeLocale_gv()
-		initializeLocale_ha()
-		initializeLocale_haw()
-		initializeLocale_he()
-		initializeLocale_hi()
-		initializeLocale_hr()
-		initializeLocale_hsb()
-		initializeLocale_hu()
-		initializeLocale_hy()
-		initializeLocale_id()
-		initializeLocale_ig()
-		initializeLocale_ii()
-		initializeLocale_is()
-		initializeLocale_it()
-		initializeLocale_ja()
-		initializeLocale_jgo()
-		initializeLocale_jmc()
-		initializeLocale_ka()
-		initializeLocale_kab()
-		initializeLocale_kam()
-		initializeLocale_kde()
-		initializeLocale_kea()
-		initializeLocale_khq()
-		initializeLocale_ki()
-		initializeLocale_kk()
-		initializeLocale_kl()
-		initializeLocale_kln()
-		initializeLocale_km()
-		initializeLocale_kn()
-		initializeLocale_ko()
-		initializeLocale_kok()
-		initializeLocale_ks()
-		initializeLocale_ksb()
-		initializeLocale_ksf()
-		initializeLocale_ksh()
-		initializeLocale_kw()
-		initializeLocale_ky()
-		initializeLocale_lag()
-		initializeLocale_lb()
-		initializeLocale_lg()
-		initializeLocale_lkt()
-		initializeLocale_ln()
-		initializeLocale_lo()
-		initializeLocale_lrc()
-		initializeLocale_lt()
-		initializeLocale_lu()
-		initializeLocale_luo()
-		initializeLocale_luy()
-		initializeLocale_lv()
-		initializeLocale_mas()
-		initializeLocale_mer()
-		initializeLocale_mfe()
-		initializeLocale_mg()
-		initializeLocale_mgh()
-		initializeLocale_mgo()
-		initializeLocale_mk()
-		initializeLocale_ml()
-		initializeLocale_mn()
-		initializeLocale_mr()
-		initializeLocale_ms()
-		initializeLocale_mt()
-		initializeLocale_mua()
-		initializeLocale_my()
-		initializeLocale_mzn()
-		initializeLocale_naq()
-		initializeLocale_nb()
-		initializeLocale_nd()
-		initializeLocale_ne()
-		initializeLocale_nl()
-		initializeLocale_nmg()
-		initializeLocale_nn()
-		initializeLocale_nnh()
-		initializeLocale_nus()
-		initializeLocale_nyn()
-		initializeLocale_om()
-		initializeLocale_or()
-		initializeLocale_os()
-		initializeLocale_pa_arab()
-		initializeLocale_pa_guru()
-		initializeLocale_pa()
-		initializeLocale_pl()
-		initializeLocale_ps()
-		initializeLocale_pt()
-		initializeLocale_qu()
-		initializeLocale_rm()
-		initializeLocale_rn()
-		initializeLocale_ro()
-		initializeLocale_rof()
-		initializeLocale_ru()
-		initializeLocale_rw()
-		initializeLocale_rwk()
-		initializeLocale_sah()
-		initializeLocale_saq()
-		initializeLocale_sbp()
-		initializeLocale_se()
-		initializeLocale_seh()
-		initializeLocale_ses()
-		initializeLocale_sg()
-		initializeLocale_shi_latn()
-		initializeLocale_shi_tfng()
-		initializeLocale_shi()
-		initializeLocale_si()
-		initializeLocale_sk()
-		initializeLocale_sl()
-		initializeLocale_smn()
-		initializeLocale_sn()
-		initializeLocale_so()
-		initializeLocale_sq()
-		initializeLocale_sr_cyrl()
-		initializeLocale_sr_latn()
-		initializeLocale_sr()
-		initializeLocale_sv()
-		initializeLocale_sw()
-		initializeLocale_ta()
-		initializeLocale_te()
-		initializeLocale_teo()
-		initializeLocale_th()
-		initializeLocale_ti()
-		initializeLocale_tl()
-		initializeLocale_to()
-		initializeLocale_tr()
-		initializeLocale_twq()
-		initializeLocale_tzm()
-		initializeLocale_ug()
-		initializeLocale_uk()
-		initializeLocale_ur()
-		initializeLocale_uz_arab()
-		initializeLocale_uz_cyrl()
-		initializeLocale_uz_latn()
-		initializeLocale_uz()
-		initializeLocale_vi()
-		initializeLocale_vun()
-		initializeLocale_wae()
-		initializeLocale_xog()
-		initializeLocale_yav()
-		initializeLocale_yi()
-		initializeLocale_yo()
-		initializeLocale_yue()
-		initializeLocale_zgh()
-		initializeLocale_zh_hans()
-		initializeLocale_zh_hant()
-		initializeLocale_zh()
-		initializeLocale_zu()
-	})
+// Each unchanged generated constructor initializes a language and its regions.
+var localeConstructors = map[string]func(){
+	"af":       initializeLocale_af,
+	"agq":      initializeLocale_agq,
+	"ak":       initializeLocale_ak,
+	"am":       initializeLocale_am,
+	"ar":       initializeLocale_ar,
+	"as":       initializeLocale_as,
+	"asa":      initializeLocale_asa,
+	"ast":      initializeLocale_ast,
+	"az":       initializeLocale_az,
+	"az-Cyrl":  initializeLocale_az_cyrl,
+	"az-Latn":  initializeLocale_az_latn,
+	"bas":      initializeLocale_bas,
+	"be":       initializeLocale_be,
+	"bem":      initializeLocale_bem,
+	"bez":      initializeLocale_bez,
+	"bg":       initializeLocale_bg,
+	"bm":       initializeLocale_bm,
+	"bn":       initializeLocale_bn,
+	"bo":       initializeLocale_bo,
+	"br":       initializeLocale_br,
+	"brx":      initializeLocale_brx,
+	"bs":       initializeLocale_bs,
+	"bs-Cyrl":  initializeLocale_bs_cyrl,
+	"bs-Latn":  initializeLocale_bs_latn,
+	"ca":       initializeLocale_ca,
+	"ce":       initializeLocale_ce,
+	"cgg":      initializeLocale_cgg,
+	"chr":      initializeLocale_chr,
+	"ckb":      initializeLocale_ckb,
+	"cs":       initializeLocale_cs,
+	"cy":       initializeLocale_cy,
+	"da":       initializeLocale_da,
+	"dav":      initializeLocale_dav,
+	"de":       initializeLocale_de,
+	"dje":      initializeLocale_dje,
+	"dsb":      initializeLocale_dsb,
+	"dua":      initializeLocale_dua,
+	"dyo":      initializeLocale_dyo,
+	"dz":       initializeLocale_dz,
+	"ebu":      initializeLocale_ebu,
+	"ee":       initializeLocale_ee,
+	"el":       initializeLocale_el,
+	"en":       initializeLocale_en,
+	"eo":       initializeLocale_eo,
+	"es":       initializeLocale_es,
+	"et":       initializeLocale_et,
+	"eu":       initializeLocale_eu,
+	"ewo":      initializeLocale_ewo,
+	"fa":       initializeLocale_fa,
+	"ff":       initializeLocale_ff,
+	"fi":       initializeLocale_fi,
+	"fil":      initializeLocale_fil,
+	"fo":       initializeLocale_fo,
+	"fr":       initializeLocale_fr,
+	"fur":      initializeLocale_fur,
+	"fy":       initializeLocale_fy,
+	"ga":       initializeLocale_ga,
+	"gd":       initializeLocale_gd,
+	"gl":       initializeLocale_gl,
+	"gsw":      initializeLocale_gsw,
+	"gu":       initializeLocale_gu,
+	"guz":      initializeLocale_guz,
+	"gv":       initializeLocale_gv,
+	"ha":       initializeLocale_ha,
+	"haw":      initializeLocale_haw,
+	"he":       initializeLocale_he,
+	"hi":       initializeLocale_hi,
+	"hr":       initializeLocale_hr,
+	"hsb":      initializeLocale_hsb,
+	"hu":       initializeLocale_hu,
+	"hy":       initializeLocale_hy,
+	"id":       initializeLocale_id,
+	"ig":       initializeLocale_ig,
+	"ii":       initializeLocale_ii,
+	"is":       initializeLocale_is,
+	"it":       initializeLocale_it,
+	"ja":       initializeLocale_ja,
+	"jgo":      initializeLocale_jgo,
+	"jmc":      initializeLocale_jmc,
+	"ka":       initializeLocale_ka,
+	"kab":      initializeLocale_kab,
+	"kam":      initializeLocale_kam,
+	"kde":      initializeLocale_kde,
+	"kea":      initializeLocale_kea,
+	"khq":      initializeLocale_khq,
+	"ki":       initializeLocale_ki,
+	"kk":       initializeLocale_kk,
+	"kl":       initializeLocale_kl,
+	"kln":      initializeLocale_kln,
+	"km":       initializeLocale_km,
+	"kn":       initializeLocale_kn,
+	"ko":       initializeLocale_ko,
+	"kok":      initializeLocale_kok,
+	"ks":       initializeLocale_ks,
+	"ksb":      initializeLocale_ksb,
+	"ksf":      initializeLocale_ksf,
+	"ksh":      initializeLocale_ksh,
+	"kw":       initializeLocale_kw,
+	"ky":       initializeLocale_ky,
+	"lag":      initializeLocale_lag,
+	"lb":       initializeLocale_lb,
+	"lg":       initializeLocale_lg,
+	"lkt":      initializeLocale_lkt,
+	"ln":       initializeLocale_ln,
+	"lo":       initializeLocale_lo,
+	"lrc":      initializeLocale_lrc,
+	"lt":       initializeLocale_lt,
+	"lu":       initializeLocale_lu,
+	"luo":      initializeLocale_luo,
+	"luy":      initializeLocale_luy,
+	"lv":       initializeLocale_lv,
+	"mas":      initializeLocale_mas,
+	"mer":      initializeLocale_mer,
+	"mfe":      initializeLocale_mfe,
+	"mg":       initializeLocale_mg,
+	"mgh":      initializeLocale_mgh,
+	"mgo":      initializeLocale_mgo,
+	"mk":       initializeLocale_mk,
+	"ml":       initializeLocale_ml,
+	"mn":       initializeLocale_mn,
+	"mr":       initializeLocale_mr,
+	"ms":       initializeLocale_ms,
+	"mt":       initializeLocale_mt,
+	"mua":      initializeLocale_mua,
+	"my":       initializeLocale_my,
+	"mzn":      initializeLocale_mzn,
+	"naq":      initializeLocale_naq,
+	"nb":       initializeLocale_nb,
+	"nd":       initializeLocale_nd,
+	"ne":       initializeLocale_ne,
+	"nl":       initializeLocale_nl,
+	"nmg":      initializeLocale_nmg,
+	"nn":       initializeLocale_nn,
+	"nnh":      initializeLocale_nnh,
+	"nus":      initializeLocale_nus,
+	"nyn":      initializeLocale_nyn,
+	"om":       initializeLocale_om,
+	"or":       initializeLocale_or,
+	"os":       initializeLocale_os,
+	"pa":       initializeLocale_pa,
+	"pa-Arab":  initializeLocale_pa_arab,
+	"pa-Guru":  initializeLocale_pa_guru,
+	"pl":       initializeLocale_pl,
+	"ps":       initializeLocale_ps,
+	"pt":       initializeLocale_pt,
+	"qu":       initializeLocale_qu,
+	"rm":       initializeLocale_rm,
+	"rn":       initializeLocale_rn,
+	"ro":       initializeLocale_ro,
+	"rof":      initializeLocale_rof,
+	"ru":       initializeLocale_ru,
+	"rw":       initializeLocale_rw,
+	"rwk":      initializeLocale_rwk,
+	"sah":      initializeLocale_sah,
+	"saq":      initializeLocale_saq,
+	"sbp":      initializeLocale_sbp,
+	"se":       initializeLocale_se,
+	"seh":      initializeLocale_seh,
+	"ses":      initializeLocale_ses,
+	"sg":       initializeLocale_sg,
+	"shi":      initializeLocale_shi,
+	"shi-Latn": initializeLocale_shi_latn,
+	"shi-Tfng": initializeLocale_shi_tfng,
+	"si":       initializeLocale_si,
+	"sk":       initializeLocale_sk,
+	"sl":       initializeLocale_sl,
+	"smn":      initializeLocale_smn,
+	"sn":       initializeLocale_sn,
+	"so":       initializeLocale_so,
+	"sq":       initializeLocale_sq,
+	"sr":       initializeLocale_sr,
+	"sr-Cyrl":  initializeLocale_sr_cyrl,
+	"sr-Latn":  initializeLocale_sr_latn,
+	"sv":       initializeLocale_sv,
+	"sw":       initializeLocale_sw,
+	"ta":       initializeLocale_ta,
+	"te":       initializeLocale_te,
+	"teo":      initializeLocale_teo,
+	"th":       initializeLocale_th,
+	"ti":       initializeLocale_ti,
+	"tl":       initializeLocale_tl,
+	"to":       initializeLocale_to,
+	"tr":       initializeLocale_tr,
+	"twq":      initializeLocale_twq,
+	"tzm":      initializeLocale_tzm,
+	"ug":       initializeLocale_ug,
+	"uk":       initializeLocale_uk,
+	"ur":       initializeLocale_ur,
+	"uz":       initializeLocale_uz,
+	"uz-Arab":  initializeLocale_uz_arab,
+	"uz-Cyrl":  initializeLocale_uz_cyrl,
+	"uz-Latn":  initializeLocale_uz_latn,
+	"vi":       initializeLocale_vi,
+	"vun":      initializeLocale_vun,
+	"wae":      initializeLocale_wae,
+	"xog":      initializeLocale_xog,
+	"yav":      initializeLocale_yav,
+	"yi":       initializeLocale_yi,
+	"yo":       initializeLocale_yo,
+	"yue":      initializeLocale_yue,
+	"zgh":      initializeLocale_zgh,
+	"zh":       initializeLocale_zh,
+	"zh-Hans":  initializeLocale_zh_hans,
+	"zh-Hant":  initializeLocale_zh_hant,
+	"zu":       initializeLocale_zu,
 }

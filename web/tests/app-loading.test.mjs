@@ -103,7 +103,7 @@ function mount(overrides = {}, hash = '#discover') {
 test('slow settings and statistics do not block independent browsing or plugin startup', async () => {
   const settings = deferred(),
     stats = deferred();
-  const h = mount({ '/settings': settings.promise, '/status': stats.promise });
+  const h = mount({ '/settings': settings.promise, '/status?view=navigation': stats.promise });
   await h.app.bootstrap();
   await flush();
   assert.equal(h.app.starting.value, false);
@@ -111,7 +111,7 @@ test('slow settings and statistics do not block independent browsing or plugin s
   assert.equal(h.ui.settings, null);
   assert.equal(h.ui.status, null);
   assert.equal(h.ensures(), 1);
-  assert.equal(h.requests.includes('/notifications'), true);
+  assert.equal(h.requests.includes('/notifications'), false);
   settings.resolve({ sites: [] });
   stats.resolve({ counts: { active_jobs: 1 } });
   await flush();
@@ -148,7 +148,7 @@ test('startup waits for authenticated lightweight readiness, polls serially at 1
   assert.equal(h.app.serviceStarting.value, true);
   assert.equal(h.app.businessReady.value, false);
   assert.equal(h.ensures(), 0);
-  assert.equal(h.requests.includes('/status'), false);
+  assert.equal(h.requests.includes('/status?view=navigation'), false);
   assert.equal(h.timers.length, 1);
   assert.equal(h.timers[0].ms, 1500);
   starting = false;
@@ -287,7 +287,7 @@ test('a running server restart closes the business gate and resumes lightweight 
   let restarting = false;
   const h = mount({
     '/ready': () => ({ starting: restarting }),
-    '/status': () => ({ starting: restarting }),
+    '/status?view=navigation': () => ({ starting: restarting }),
   });
   await h.app.bootstrap();
   await flush();

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../assets/plugin-utilities.css';
 import { computed, onMounted, onUnmounted } from 'vue';
 import { VAlert } from 'vuetify/components/VAlert';
 import { VBtn } from 'vuetify/components/VBtn';
@@ -69,5 +70,3 @@ onUnmounted(auth.destroy);
     </VThemeProvider>
   </VDialog>
 </template>
-
-<style src="../assets/plugin-utilities.css"></style>

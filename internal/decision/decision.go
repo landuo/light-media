@@ -139,29 +139,26 @@ func EvaluateContext(ctx context.Context, resource sites.Resource, target Target
 		reject("invalid_target_season")
 		return finish()
 	}
-	known, ok := episodeSet(target.KnownEpisodes)
-	if !ok {
+	var known, wanted, aired, early episodeMembership
+	if !known.load(target.KnownEpisodes) {
 		reject("invalid_known_episodes")
 		return finish()
 	}
-	wanted, ok := episodeSet(target.Episodes)
-	if !ok {
+	if !wanted.load(target.Episodes) {
 		reject("invalid_target_episodes")
 		return finish()
 	}
-	aired, ok := episodeSet(target.AiredEpisodes)
-	if !ok {
+	if !aired.load(target.AiredEpisodes) {
 		reject("invalid_aired_episodes")
 		return finish()
 	}
-	early, ok := episodeSet(target.AllowEarly)
-	if !ok {
+	if !early.load(target.AllowEarly) {
 		reject("invalid_early_episodes")
 		return finish()
 	}
-	for _, set := range []map[int]bool{wanted, aired, early} {
-		for ep := range set {
-			if !known[ep] {
+	for _, set := range [][]int{target.Episodes, target.AiredEpisodes, target.AllowEarly} {
+		for _, ep := range set {
+			if !known.contains(ep) {
 				reject("episode_not_in_authoritative_metadata")
 			}
 		}
@@ -169,11 +166,11 @@ func EvaluateContext(ctx context.Context, resource sites.Resource, target Target
 	if hard {
 		return finish()
 	}
-	if len(known) == 0 {
+	if len(target.KnownEpisodes) == 0 {
 		review("episode_metadata_unavailable")
 		return finish()
 	}
-	if target.Auto && len(wanted) == 0 {
+	if target.Auto && len(target.Episodes) == 0 {
 		reject("automatic_target_episodes_required")
 		return finish()
 	}
@@ -214,10 +211,6 @@ func EvaluateContext(ctx context.Context, resource sites.Resource, target Target
 		}
 		return finish()
 	}
-	authoritative := make([]media.Episode, 0, len(known))
-	for ep := range known {
-		authoritative = append(authoritative, media.Episode{Season: target.Season, Episode: ep})
-	}
 	source := media.Source{Site: resource.SiteID}
 	if m := groupSuffix.FindStringSubmatch(strings.TrimSuffix(filename, ".mkv")); len(m) > 1 {
 		source.Group = m[1]
@@ -227,7 +220,9 @@ func EvaluateContext(ctx context.Context, resource sites.Resource, target Target
 		mediaID = target.ProviderSearchKey
 	}
 	original := AliasSeasonNumbering(target.Media, target.Season, *parsed.Original)
-	mapping := media.Resolve(mediaID, original, source, target.Mappings, authoritative, nil)
+	mapping := media.ResolveWithMembership(mediaID, original, source, target.Mappings, func(ep media.Episode) bool {
+		return ep.Season == target.Season && known.contains(ep.Episode)
+	}, nil)
 	if mapping.Status != media.Parsed {
 		review("numbering_" + mapping.Reason)
 		return finish()
@@ -244,10 +239,10 @@ func EvaluateContext(ctx context.Context, resource sites.Resource, target Target
 		}
 		out.Season = ep.Season
 		out.Episodes = append(out.Episodes, ep.Episode)
-		if len(wanted) > 0 && !wanted[ep.Episode] {
+		if len(target.Episodes) > 0 && !wanted.contains(ep.Episode) {
 			review("resource_episode_outside_target")
 		}
-		if !aired[ep.Episode] && !early[ep.Episode] {
+		if !aired.contains(ep.Episode) && !early.contains(ep.Episode) {
 			review("episode_not_confirmed_aired")
 		}
 	}
@@ -395,19 +390,27 @@ func checkResourcePolicy(ctx context.Context, resource sites.Resource, policy Po
 	return true
 }
 
-func episodeSet(values []int) (map[int]bool, bool) {
-	if len(values) > 10000 {
-		return nil, false
-	}
-	out := map[int]bool{}
-	for _, ep := range values {
-		if ep <= 0 || ep > 9999 || out[ep] {
-			return nil, false
-		}
-		out[ep] = true
-	}
-	return out, true
+// Episode numbers accepted by the protocol are 1..9999. The fixed bitset
+// stays local to a decision, including when many sites search concurrently.
+type episodeMembership [1 + 9999/64]uint64
+
+func (s *episodeMembership) contains(ep int) bool {
+	return ep > 0 && ep <= 9999 && s[ep/64]&(uint64(1)<<uint(ep%64)) != 0
 }
+
+func (s *episodeMembership) load(values []int) bool {
+	if len(values) > 9999 {
+		return false
+	}
+	for _, ep := range values {
+		if ep <= 0 || ep > 9999 || s.contains(ep) {
+			return false
+		}
+		s[ep/64] |= uint64(1) << uint(ep%64)
+	}
+	return true
+}
+
 func normalizeTitle(value string) string {
 	return media.NormalizeTitle(value)
 }

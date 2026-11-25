@@ -1,6 +1,8 @@
 package artifacts
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -142,17 +144,18 @@ func readInstalledTarget(target string, validate func(plugins.Manifest, string) 
 	return Acquired{FrontendClass: frontendClass, Manifest: receipt.Manifest, ExecutablePath: executable, SHA256: workerSHA, HostContract: receipt.HostContract, RepositoryURL: receipt.RepositoryURL, PackageSHA256: packageSHA, Files: files, Command: plugins.Command{Path: executable, Dir: target}}, nil
 }
 
-func verifyLegacyWorker(executable, sha256 string) error {
+func verifyLegacyWorker(executable, want string) error {
 	f, err := os.Open(executable)
 	if err != nil {
 		return err
 	}
-	b, err := io.ReadAll(io.LimitReader(f, MaxExpandedBytes+1))
+	h := sha256.New()
+	n, err := io.Copy(h, io.LimitReader(verificationReader(f, MaxExpandedBytes), MaxExpandedBytes+1))
 	err = errors.Join(err, f.Close())
 	if err != nil {
 		return err
 	}
-	if int64(len(b)) > MaxExpandedBytes || digest(b) != sha256 {
+	if n > MaxExpandedBytes || hex.EncodeToString(h.Sum(nil)) != want {
 		return errors.New("installed executable digest mismatch")
 	}
 	return nil

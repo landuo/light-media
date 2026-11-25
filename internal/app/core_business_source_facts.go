@@ -164,15 +164,12 @@ func larkSourceSubscriptionInput(in SubscriptionRequest) any {
 	}{in, in.source}
 }
 
-func (a *App) saveSourceSubscriptionOriginTx(ctx context.Context, tx *sql.Tx, sub Subscription, origin *sourceSubscriptionOrigin, inputSHA string) error {
+func (a *App) saveSourceSubscriptionOriginTx(ctx context.Context, tx *sql.Tx, sub Subscription, origin *sourceSubscriptionOrigin) error {
 	if origin == nil {
 		return nil
 	}
 	if sub.SourceContextSHA != tokenHash(string(mustCleanSeedJSON(origin))) {
 		return bad("LARK_CORE_SCOPE_DENIED", "订阅新增缺少原消息来源授权")
-	}
-	if e := a.guardSourceSubscriptionMutationTx(ctx, tx, origin, inputSHA); e != nil {
-		return e
 	}
 	sealed, e := a.pluginStore.seal("source_subscription_origin", "system", sub.ID, mustCleanSeedJSON(origin))
 	if e != nil {
@@ -180,15 +177,6 @@ func (a *App) saveSourceSubscriptionOriginTx(ctx context.Context, tx *sql.Tx, su
 	}
 	_, e = tx.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES('source_subscription_origin',?,?,?)`, sub.ID, sealed, now())
 	return e
-}
-
-func (a *App) guardSourceSubscriptionMutationTx(ctx context.Context, tx *sql.Tx, origin *sourceSubscriptionOrigin, inputSHA string) error {
-	if origin != nil && origin.SourceAddID != "" {
-		return a.guardUISubscriptionAddMutationTx(ctx, tx, origin, inputSHA)
-	}
-	// A source-owned UI subscription has its ordinary core authorization above.
-	// The retired native Lark host cannot manufacture a core mutation scope.
-	return bad("PLUGIN_ADAPTER_UNAVAILABLE", "消息来源尚未适配新的标准模块")
 }
 
 func (a *App) sourceRecognizeTMDBMedia(ctx context.Context, input catalog.Media) (sourceMediaInformation, error) {

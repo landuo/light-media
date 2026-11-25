@@ -1,9 +1,11 @@
 package historywords
 
 import (
+	"bufio"
 	"bytes"
 	"compress/gzip"
 	"crypto/sha256"
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -11,8 +13,13 @@ import (
 	"os"
 	"runtime"
 	"slices"
+	"strconv"
+	"strings"
 	"testing"
 )
+
+//go:embed dict.txt.gz
+var compressedDictionary []byte
 
 func TestPinnedDictionaryAndOracle(t *testing.T) {
 	r, err := gzip.NewReader(bytes.NewReader(compressedDictionary))
@@ -27,6 +34,29 @@ func TestPinnedDictionaryAndOracle(t *testing.T) {
 	const want = "7197c3211ddd98962b036cdf40324d1ea2bfaa12bd028e68faa70111a88e12a8"
 	if got := fmt.Sprintf("%x", sha256.Sum256(dictionary)); got != want {
 		t.Fatalf("dictionary changed: %s", got)
+	}
+	freq := map[string]int{}
+	var sum int
+	scanner := bufio.NewScanner(bytes.NewReader(dictionary))
+	for scanner.Scan() {
+		fields := strings.Fields(scanner.Text())
+		v, err := strconv.Atoi(fields[1])
+		if err != nil {
+			t.Fatal(err)
+		}
+		freq[fields[0]] = v
+		sum += v
+	}
+	if err := scanner.Err(); err != nil {
+		t.Fatal(err)
+	}
+	if defaultDictionary.count != len(freq) || defaultDictionary.logTotal != math.Log(float64(sum)) {
+		t.Fatal("packed dictionary count or total differs from source")
+	}
+	for word, want := range freq {
+		if got, _ := defaultDictionary.lookup(word); got != want {
+			t.Fatalf("frequency for %q = %d, want %d", word, got, want)
+		}
 	}
 	raw, err := os.ReadFile("testdata/jieba-next-1.0.0rc1.json")
 	if err != nil {
@@ -56,19 +86,20 @@ func TestPinnedDictionaryAndOracle(t *testing.T) {
 
 func TestRouteTieCandidateLimitAndASCIIGrouping(t *testing.T) {
 	// Equal paths choose the longer first word, not the first encountered end.
-	d := &dictionary{frequencies: map[string]int{"甲": 1, "乙": 1, "甲乙": 1}, maxRunes: 2}
-	if got := d.cutBlock([]rune("甲乙"), nil); !slices.Equal(got, []string{"甲乙"}) {
+	freq := map[string]int{"甲": 1, "乙": 1, "甲乙": 1}
+	lookup := func(word string) (int, bool) { return freq[word], true }
+	if got := cutBlock([]rune("甲乙"), nil, 2, 0, lookup); !slices.Equal(got, []string{"甲乙"}) {
 		t.Fatal(got)
 	}
 	// Match the pinned Rust implementation's twelve-terminal-candidate cap.
-	d = &dictionary{frequencies: map[string]int{}, maxRunes: 13, logTotal: math.Log(1e9)}
+	freq = map[string]int{}
 	word := ""
 	for i := 1; i <= 13; i++ {
 		word += "甲"
-		d.frequencies[word] = 1
+		freq[word] = 1
 	}
-	d.frequencies[word] = 1000000000
-	if got := d.cutBlock([]rune(word), nil); !slices.Equal(got, []string{word[:12*3], "甲"}) {
+	freq[word] = 1000000000
+	if got := cutBlock([]rune(word), nil, 13, math.Log(1e9), lookup); !slices.Equal(got, []string{word[:12*3], "甲"}) {
 		t.Fatal(got)
 	}
 }

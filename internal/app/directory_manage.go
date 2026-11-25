@@ -316,9 +316,6 @@ func (a *App) managedDirectories(ctx context.Context) (any, error) {
 		pending := pendingCounts[rule.ID]
 		rows = append(rows, map[string]any{"config": publicDirectory(c, rule), "application_path": source, "connection": state, "pending_count": pending})
 	}
-	for i := range c.Downloaders {
-		c.Downloaders[i].Password = ""
-	}
 	return map[string]any{"directories": rows}, nil
 }
 func (a *App) saveManagedDirectory(ctx context.Context, in DirectoryRule) (any, error) {

@@ -69,3 +69,55 @@ func TestFileReferenceBatchRechecksActivePlansAndOwners(t *testing.T) {
 		}
 	}
 }
+
+func TestFileReferenceSnapshotInvalidationAndRollback(t *testing.T) {
+	a, _, target := importTestApp(t)
+	ctx := context.Background()
+	load := func() *fileReferenceSnapshot {
+		t.Helper()
+		s, _, err := a.Store.mutationReferences(ctx, true)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return s
+	}
+	empty := load()
+	if load() != empty {
+		t.Fatal("snapshot changed without an ownership write")
+	}
+	file := managedFile{Path: filepath.Join(target, "image.jpg"), AssetID: "owner"}
+	if err := a.Store.Put(ctx, "managed_file", "proof", file); err != nil {
+		t.Fatal(err)
+	}
+	added := load()
+	if added == empty || len(added.managed) != 1 || added.managed[0].Path != file.Path {
+		t.Fatal("insert invisible")
+	}
+	tx, err := a.Store.DB.Begin()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = tx.Exec("DELETE FROM managed_file"); err != nil {
+		tx.Rollback()
+		t.Fatal(err)
+	}
+	if err = tx.Rollback(); err != nil {
+		t.Fatal(err)
+	}
+	if load() != added {
+		t.Fatal("rolled back write invalidated live proof")
+	}
+	file.Path = filepath.Join(target, "new.jpg")
+	if err := a.Store.Put(ctx, "managed_file", "proof", file); err != nil {
+		t.Fatal(err)
+	}
+	if s := load(); s == added || s.managed[0].Path != file.Path {
+		t.Fatal("update invisible")
+	}
+	if err := a.Store.Delete(ctx, "managed_file", "proof"); err != nil {
+		t.Fatal(err)
+	}
+	if s := load(); len(s.managed) != 0 || added.managed[0].Path == file.Path {
+		t.Fatal("delete or snapshot isolation failed")
+	}
+}

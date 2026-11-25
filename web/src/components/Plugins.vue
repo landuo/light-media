@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../assets/plugin-utilities.css';
 import {
   ref,
   computed,
@@ -110,7 +111,7 @@ async function cloneCreated() {
   runningFilter.value = false;
   updateFilter.value = false;
   toast("插件分身已创建");
-  await load();
+  await pluginChanged();
 }
 function unavailable(plugin: PluginCard): boolean {
   if (plugin.available !== false) return false;
@@ -253,6 +254,10 @@ watch(tab, () => {
 let loadInFlight: Promise<void> | undefined;
 let reloadRequested = false;
 let marketRefreshRequested = false;
+function pluginChanged() {
+  emit("changed");
+  return load();
+}
 function load(forceMarket = false): Promise<void> {
   marketRefreshRequested ||= forceMarket;
   if (loadInFlight) {
@@ -280,7 +285,9 @@ async function loadOnce(forceMarket = false) {
   if (organizing.value || sortMode.value || dragging.value) return;
   const serial = ++loadSerial;
   try {
-    const installed = await api("/plugins?state=installed");
+    const [installed, groups] = await Promise.all([
+      api("/plugins?state=installed"), api("/plugins/organization"),
+    ]);
     if (
       serial !== loadSerial ||
       organizing.value ||
@@ -289,6 +296,15 @@ async function loadOnce(forceMarket = false) {
     )
       return;
     items.value = installed;
+    if (groups.revision >= organization.value.revision)
+      organization.value = { ...groups, folders: normalizePluginFolders(groups.folders) };
+    if (
+      currentFolder.value &&
+      !Object.hasOwn(groups.folders, currentFolder.value)
+    )
+      currentFolder.value = "";
+
+    if (tab.value === "installed") loading.value = false;
     if (selected.value) {
       const current = installed.find(
         (plugin: PluginCard) =>
@@ -353,17 +369,7 @@ async function loadOnce(forceMarket = false) {
         if (serial !== loadSerial) return;
         marketStatisticsError.value = errorText(e);
       }
-    const groups = await api("/plugins/organization");
-    if (serial !== loadSerial) return;
-    if (groups.revision >= organization.value.revision)
-      organization.value = { ...groups, folders: normalizePluginFolders(groups.folders) };
-    if (
-      currentFolder.value &&
-      !Object.hasOwn(groups.folders, currentFolder.value)
-    )
-      currentFolder.value = "";
     error.value = "";
-    emit("changed");
   } catch (e) {
     error.value = errorText(e);
   } finally {
@@ -615,7 +621,7 @@ async function install(plugin: PluginCard) {
     runningFilter.value = false;
     updateFilter.value = false;
     tab.value = "installed";
-    await load();
+    await pluginChanged();
   } catch (e) {
     error.value = errorText(e);
   } finally {
@@ -634,7 +640,7 @@ async function updatePlugin(plugin: PluginCard) {
     if (result?.success !== true) throw new Error(result?.message || '插件更新失败');
     toast(plugin.name + '已更新');
     historyPlugin.value = undefined;
-    await load();
+    await pluginChanged();
   } catch (e) {
     error.value = errorText(e);
   } finally {
@@ -669,7 +675,7 @@ async function confirmAction() {
             : "插件已卸载",
     );
     confirmation.value = undefined;
-    await load();
+    await pluginChanged();
   } catch (e) {
     error.value = errorText(e);
   } finally {
@@ -1090,7 +1096,7 @@ onActivated(() => {
       v-if="detail"
       :key="detail.instance_id"
       :plugin="detail"
-      @changed="load"
+      @changed="pluginChanged"
       @close="detail = undefined"
       @switch="
         if (detail && !unavailable(detail)) selected = detail;
@@ -1101,7 +1107,7 @@ onActivated(() => {
       v-if="selected"
       :key="selected.instance_id"
       :plugin="selected"
-      @changed="load"
+      @changed="pluginChanged"
       @close="selected = undefined"
       @switch="
         detail = selected;
@@ -1109,7 +1115,7 @@ onActivated(() => {
       "
       @saved="
         selected = undefined;
-        load();
+        pluginChanged();
       "
     />
     <VDialog
@@ -1287,5 +1293,3 @@ onActivated(() => {
   }
 }
 </style>
-
-<style src="../assets/plugin-utilities.css"></style>

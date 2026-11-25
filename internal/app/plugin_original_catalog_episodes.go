@@ -6,6 +6,7 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"time"
 
 	"light-media/internal/catalog"
 	"light-media/internal/plugins"
@@ -139,14 +140,53 @@ func (a *App) originalCatalogSeason(ctx context.Context, id int64, season int, g
 	if !validMedia("tv", id) || season < 0 || season > 1000 {
 		return catalog.Season{}, bad("INVALID_MEDIA", "请选择明确的剧集和季")
 	}
+	return a.catalogSeasonWithModules(ctx, id, season, group, nil)
+}
+
+func (a *App) catalogSeasonWithModules(ctx context.Context, id int64, season int, group any, groups []originalPluginModuleGroup) (catalog.Season, error) {
 	view := catalog.Season{SeriesID: id, SeasonNumber: season, Episodes: []catalog.Episode{}}
-	rows, err := a.originalCatalogEpisodes(ctx, id, season, group, func() (json.RawMessage, error) {
+	rows, err := a.originalCatalogEpisodesMethod(ctx, "async_tmdb_episodes", id, season, group, func() (json.RawMessage, error) {
 		return a.originalCatalogNativeEpisodeRows(ctx, id, season, group, &view)
-	})
+	}, groups)
 	if err != nil {
 		return catalog.Season{}, err
 	}
 	return originalCatalogSeasonProjection(view, rows)
+}
+
+// The detail panel consumes the episode list, dates and stills. The original
+// endpoint retains its full provider DTO for other clients.
+func (a *App) catalogSeasonDisplay(ctx context.Context, id int64, season int) (catalog.Season, error) {
+	if !validMedia("tv", id) || season < 0 || season > 1000 {
+		return catalog.Season{}, bad("INVALID_MEDIA", "请选择明确的剧集和季")
+	}
+	groups, err := a.originalPluginModules(ctx, "")
+	if err != nil {
+		return catalog.Season{}, err
+	}
+	native := !originalModuleGroupsHaveMethod(groups, "async_tmdb_episodes")
+	key := "display-season:" + strconv.FormatInt(id, 10) + ":" + strconv.Itoa(season)
+	var cached struct {
+		At   time.Time      `json:"at"`
+		Data catalog.Season `json:"data"`
+	}
+	if native && a.Store.Get(ctx, "cache", key, &cached) == nil && time.Since(cached.At) < 15*time.Minute && len(cached.Data.Episodes) > 0 {
+		return cached.Data, nil
+	}
+	view, err := a.catalogSeasonWithModules(ctx, id, season, nil, groups)
+	if err != nil {
+		return view, err
+	}
+	for i := range view.Episodes {
+		view.Episodes[i].OriginalEpisode = nil
+		view.Episodes[i].GuestStars = nil
+	}
+	if native && len(view.Episodes) > 0 {
+		cached.At = time.Now().UTC()
+		cached.Data = view
+		err = a.Store.Put(ctx, "cache", key, cached)
+	}
+	return view, err
 }
 
 func originalCatalogSeasonProjection(view catalog.Season, rows []map[string]any) (catalog.Season, error) {

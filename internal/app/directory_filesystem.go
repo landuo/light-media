@@ -277,14 +277,8 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 		stamp, e := snapshotTransferPath(file.Path)
 		if e != nil {
-			// A source that disappeared is not a failure to inspect: the file is
-			// gone, so its observation has nothing left to describe. Without this
-			// a deleted test file or a removed download leaves a record stuck in
-			// "queued" forever, which looks like a stuck task in the UI.
-			if errors.Is(e, fs.ErrNotExist) {
-				_ = a.Store.Delete(ctx, "directory_file", directoryFileID(rule.ID, file.Path))
-				continue
-			}
+			// A path just observed by this same scan may be moving. Report the
+			// failed inspection once; a later complete scan removes true orphans.
 			if e = inspectFailed(file.Path, e); e != nil {
 				return e
 			}
@@ -379,10 +373,7 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 			} else {
 				if file.Unchanged {
 					file.Parsed = a.parseMediaName(filepath.Base(file.Path))
-					nfoAnchor := file.Path
-					if stamp.Directory != "" {
-						nfoAnchor = directoryDiscNFOAnchor(file.Path)
-					}
+					nfoAnchor := importNFOAnchor(file.Path, stamp.Directory != "")
 					mediaHint, numbering, reason := a.importNFOEvidence(nfoAnchor)
 					if mediaHint != nil {
 						file.InferredMedia = mediaHint
@@ -511,9 +502,8 @@ func (a *App) refreshDirectoryFilePlan(ctx context.Context, f *DirectoryObserved
 	if a.Store.DB.QueryRowContext(ctx, `SELECT state,error_message FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? ORDER BY created_at DESC LIMIT 1`, p.ID).Scan(&state, &reason) == nil && (state == "failed" || state == "cancelled") {
 		f.State = "error"
 		f.Reason = a.clean(reason)
-		// Keep the verdict but drop the dead references so the next pass can
-		// enqueue a fresh attempt instead of reading this failed plan again.
-		f.PlanID, f.JobID = "", ""
+		// The failed plan and its job remain the evidence for this verdict.
+		// The ordinary history and retry gates decide when to release them.
 	}
 }
 func (a *App) guardDirectoryFilePlan(ctx context.Context, planID string) error {
@@ -608,11 +598,8 @@ func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, so
 		}
 	}
 	next := map[string]string{}
-	for hash, fingerprint := range fingerprints {
-		next[hash] = fingerprint
-	}
 	for _, d := range configs {
-		files, updated, err := a.directoryFilesForDownloader(ctx, d, source, next, stored)
+		files, updated, err := a.directoryFilesForDownloader(ctx, d, source, fingerprints, stored)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -634,13 +621,13 @@ func (a *App) directoryDownloadFiles(ctx context.Context, rule DirectoryRule, so
 func (a *App) directoryObservations(ctx context.Context, ruleID string) (map[string]DirectoryObservedFile, map[string]map[string]directoryDownloadFile, error) {
 	all := map[string]DirectoryObservedFile{}
 	stored := map[string]map[string]directoryDownloadFile{}
-	rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM directory_file WHERE json_extract(payload,'$.directory_id')=?`, ruleID)
+	rows, e := a.Store.reader().QueryContext(ctx, `SELECT payload FROM directory_file WHERE directory_id=? ORDER BY rowid`, ruleID)
 	if e != nil {
 		return nil, nil, e
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var b []byte
+		var b sql.RawBytes
 		var f DirectoryObservedFile
 		if e = rows.Scan(&b); e != nil {
 			return nil, nil, e
@@ -745,15 +732,12 @@ func directoryNativeHint(native NativeDownload) *importInferredMedia {
 // directoryFilesForDownloader maps downloader tasks to their files. One task
 // fingerprint is persisted per hash; when it is unchanged the per-file
 // observations already carry the ownership mapping, so no per-task file
-// listing is needed. This is the single incremental state shared with the
-// filesystem side.
+// listing is needed. Only tasks seen and verified on this pass contribute a
+// fingerprint. A removed or relocated task must not grow the baseline forever.
 func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfig, source string, fingerprints map[string]string, stored map[string]map[string]directoryDownloadFile) (map[string]directoryDownloadFile, map[string]string, error) {
 	settings := a.Settings()
 	out := map[string]directoryDownloadFile{}
 	next := map[string]string{}
-	for hash, fingerprint := range fingerprints {
-		next[hash] = fingerprint
-	}
 	client, e := download.New(d.Config)
 	if e != nil {
 		return nil, nil, e
@@ -762,10 +746,8 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 	if e != nil {
 		return nil, nil, bad("DIRECTORY_DOWNLOADER_UNAVAILABLE", "无法核对下载器文件是否完成，本轮不执行目录整理")
 	}
-	states, natives, e := a.directoryDownloadTaskState(ctx, d.ID)
-	if e != nil {
-		return nil, nil, e
-	}
+	var states map[string]directoryTaskState
+	var natives map[string]NativeDownload
 	for _, t := range tasks {
 		sharedPath := ""
 		if d.SharedPaths {
@@ -802,6 +784,13 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 		if !within(source, mapped) && !within(mapped, source) {
 			continue
 		}
+		// Load history once, only if a task passes the directory checks.
+		if states == nil {
+			states, natives, e = a.directoryDownloadTaskState(ctx, d.ID)
+			if e != nil {
+				return nil, nil, e
+			}
+		}
 		hash := strings.ToLower(t.Hash)
 		state := states[hash]
 		native := natives[hash]
@@ -811,6 +800,7 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 			count = len(entries)
 		}
 		fingerprint := directoryTaskFingerprint(t) + "|" + strconv.Itoa(count)
+		hint := directoryDownloadHint(native, state)
 		if fingerprints[hash] != fingerprint || entries == nil {
 			files, err := client.Files(ctx, t.Hash)
 			if err != nil {
@@ -842,25 +832,24 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 					continue
 				}
 				entry := directoryDownloadFile{Complete: ready && f.Size > 0 && f.Completed >= f.Size && f.Progress >= 1, Managed: state.Files > 0, Imported: state.Imported > 0, Size: f.Size, OwnerHash: hash}
-				if hint := directoryDownloadHint(native, state); hint != nil {
-					entry.Hint = hint
-				}
+				entry.Hint = hint
 				if old, ok := entries[path]; ok {
 					entry = mergeDirectoryDownloadFile(entry, old)
 				}
 				entries[path] = entry
 			}
-			next[hash] = directoryTaskFingerprint(t) + "|" + strconv.Itoa(len(entries))
+			fingerprint = directoryTaskFingerprint(t) + "|" + strconv.Itoa(len(entries))
 		} else {
 			ready := directoryTaskComplete(t)
 			for path, entry := range entries {
 				entry.Managed = state.Files > 0
 				entry.Imported = state.Imported > 0
 				entry.Complete = ready && entry.Size > 0
-				entry.Hint = directoryDownloadHint(native, state)
+				entry.Hint = hint
 				entries[path] = entry
 			}
 		}
+		next[hash] = fingerprint
 		for path, entry := range entries {
 			if old, ok := out[path]; ok {
 				entry = mergeDirectoryDownloadFile(entry, old)
@@ -939,14 +928,18 @@ func (a *App) directoryTVReleaseMatches(ctx context.Context, p media.ParseResult
 	if p.Original == nil || p.Original.Form != "season_episode" || p.Original.Season == nil {
 		return nil, nil
 	}
-	release := directoryTVReleaseYear.FindStringSubmatch(p.Title)
-	if release == nil {
-		return nil, nil
+	year := strconv.Itoa(p.Year)
+	names := append([]string{p.Title}, p.AlternateTitles...)
+	if p.Year == 0 {
+		release := directoryTVReleaseYear.FindStringSubmatch(p.Title)
+		if release == nil {
+			return nil, nil
+		}
+		names, year = []string{release[1]}, release[2]
 	}
-	// A year preceding SxxExx can describe that season. Keep literal-title
-	// recognition first and search the stripped title without a premiere year.
-	matches, err := a.directoryTitleMatches(ctx, "tv", 0, []string{release[1]})
-	if err != nil || len(matches) <= 1 {
+	// A release may use the season's year instead of the show's premiere.
+	matches, err := a.directoryTitleMatches(ctx, "tv", 0, names)
+	if err != nil || p.Year == 0 && len(matches) <= 1 {
 		return matches, err
 	}
 	// As in MoviePilot, check the requested season's year when the title alone
@@ -958,7 +951,7 @@ func (a *App) directoryTVReleaseMatches(ctx context.Context, p media.ParseResult
 			return nil, err
 		}
 		for _, season := range detail.Seasons {
-			if season.SeasonNumber == *p.Original.Season && strings.HasPrefix(season.AirDate, release[2]+"-") {
+			if season.SeasonNumber == *p.Original.Season && strings.HasPrefix(season.AirDate, year+"-") {
 				seasonMatches[id] = candidate
 				break
 			}
@@ -987,6 +980,13 @@ func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, fil
 		request.TMDBID = hint.ID
 		numbering = file.Numbering
 	} else {
+		if file.originalItem != nil && originalImportFileClass(ImportFileRequest{originalItem: file.originalItem}).Bluray {
+			parsed, err := a.discReleaseIdentity(ctx, file.Path, file.originalResolvedMeta)
+			if err != nil {
+				return request, err
+			}
+			file.Parsed = parsed
+		}
 		p := file.Parsed
 		if p.Status != media.Parsed || p.Title == "" {
 			return request, bad("DIRECTORY_IDENTITY_REVIEW", "文件名缺少明确影视身份，请在“手动整理”中选择电影或电视剧类型，并查询或填写TheMovieDb编号")

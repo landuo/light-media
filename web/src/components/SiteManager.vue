@@ -551,7 +551,7 @@ onUnmounted(() => {
             <SiteIcon
               :url="homepage(row)"
               :name="row.config.name"
-              :cached="`/api/sites/manage/${encodeURIComponent(row.config.id)}/icon`"
+              :cached="row.has_cached_icon === false ? undefined : `/api/sites/manage/${encodeURIComponent(row.config.id)}/icon`"
             />
             <div class="site-card-identity">
               <h2>{{ row.config.name }}</h2>

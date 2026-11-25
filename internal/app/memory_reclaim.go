@@ -10,13 +10,11 @@ import (
 	"time"
 )
 
-// The Go runtime keeps a freed heap mapped after a burst. GOMEMLIMIT only
-// lowers the GC target; it does not hand pages back while the process is idle,
-// so a container that has run a scrape or a batch keeps the high-water mark for
-// its whole lifetime. This reclaim loop returns those pages when nothing is
-// allocating, without adding a second GC policy: it reuses the runtime's own
-// scavenger and stays out of the way while work is in flight.
+// The runtime already scavenges in the background. Supplement it only when a
+// burst has left a meaningful amount of idle heap physically backed: unlike
+// ordinary scavenging, debug.FreeOSMemory also forces a full collection.
 const defaultMemoryReclaimInterval = 5 * time.Minute
+const memoryReclaimMinRetained = 16 << 20
 
 // A process that just finished a batch still allocates a little while settling.
 // Reclaiming only below this window keeps a busy host untouched.
@@ -48,7 +46,7 @@ func memoryReclaimInterval(lookup func(string) (string, bool)) (time.Duration, e
 // justify a scavenge. TotalAlloc is monotonic, so a small delta over one
 // interval means no batch, scrape or plugin call has been allocating.
 func shouldReclaim(previous, current runtime.MemStats, idleAlloc uint64) bool {
-	if current.TotalAlloc < previous.TotalAlloc {
+	if current.HeapIdle < current.HeapReleased || current.HeapIdle-current.HeapReleased < memoryReclaimMinRetained || current.TotalAlloc < previous.TotalAlloc {
 		return false
 	}
 	return current.TotalAlloc-previous.TotalAlloc < idleAlloc

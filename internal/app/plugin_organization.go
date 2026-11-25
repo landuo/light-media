@@ -68,7 +68,7 @@ func (p *PluginStore) organization(ctx context.Context, db pluginOrganizationRea
 }
 
 func (p *PluginStore) Organization(ctx context.Context) (PluginOrganization, error) {
-	return p.organization(ctx, p.store.DB)
+	return p.organization(ctx, p.store.reader())
 }
 
 func pluginFolderRawMembers(raw json.RawMessage) ([]json.RawMessage, error) {

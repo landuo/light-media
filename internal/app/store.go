@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"golang.org/x/sys/unix"
@@ -25,12 +26,16 @@ import (
 const supportedSchemaVersion = 3
 
 type Store struct {
-	RecoveredJobs int64
-	DB            *sql.DB
-	readDB        *sql.DB
-	key           []byte
-	lock          *os.File
-	mu            sync.Mutex
+	catalogPageCache         catalogPageCache
+	subscriptionDisplayCache atomic.Pointer[subscriptionDisplay]
+	fileReferencesCache      atomic.Pointer[fileReferenceSnapshot]
+	RecoveredJobs            int64
+	DB                       *sql.DB
+	readDB                   *sql.DB
+	bootstrapDB              *sql.DB
+	key                      []byte
+	lock                     *os.File
+	mu                       sync.Mutex
 }
 
 func OpenStore(dir string) (*Store, error) {
@@ -95,7 +100,7 @@ func OpenStore(dir string) (*Store, error) {
 	// long-running process look far heavier than its live heap (heap_alloc stayed
 	// near 20 MB while RSS climbed past 180 MB). Python's sqlite3 — what MoviePilot
 	// uses — does not map by default either.
-	db, err := sql.Open("sqlite", dbPath+"?_pragma=mmap_size(0)&_pragma=busy_timeout(5000)")
+	db, err := sql.Open("sqlite", dbPath+"?_pragma=mmap_size(0)&_pragma=busy_timeout(5000)&_pragma=cache_size(-1024)")
 	if err != nil {
 		return fail(err)
 	}
@@ -119,9 +124,14 @@ func OpenStore(dir string) (*Store, error) {
  CREATE TABLE IF NOT EXISTS admin(id INTEGER PRIMARY KEY CHECK(id=1),username TEXT NOT NULL,password_hash BLOB NOT NULL);
  CREATE TABLE IF NOT EXISTS sessions(token_hash TEXT PRIMARY KEY,expires_at INTEGER NOT NULL);
  CREATE TABLE IF NOT EXISTS jobs(id TEXT PRIMARY KEY,workflow_id TEXT NOT NULL,kind TEXT NOT NULL,state TEXT NOT NULL,payload BLOB NOT NULL,attempt INTEGER NOT NULL DEFAULT 0,generation INTEGER NOT NULL DEFAULT 0,run_at INTEGER NOT NULL,lease_until INTEGER NOT NULL DEFAULT 0,error_code TEXT NOT NULL DEFAULT '',error_message TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL,updated_at TEXT NOT NULL);
- CREATE INDEX IF NOT EXISTS jobs_display_priority ON jobs((` + jobDisplayPriority + `),created_at DESC,id);
+ -- The former expression also ranked retry_wait and waiting_paused. SQLite
+ -- keeps that obsolete expression when an index name is reused with IF NOT EXISTS.
+ CREATE INDEX IF NOT EXISTS jobs_display_priority_v2 ON jobs((` + jobDisplayPriority + `),created_at DESC,id);
+ DROP INDEX IF EXISTS jobs_display_priority;
  CREATE INDEX IF NOT EXISTS jobs_due ON jobs(state,run_at);
+ CREATE INDEX IF NOT EXISTS jobs_retention ON jobs(state,updated_at) WHERE state IN ('succeeded','cancelled');
  CREATE INDEX IF NOT EXISTS jobs_subject ON jobs(kind,json_extract(payload,'$.id'),created_at);
+ CREATE INDEX IF NOT EXISTS jobs_pending_scrape_batch ON jobs(json_extract(payload,'$.original_scrape_batch')) WHERE ` + pendingScrapeJobs + `;
  CREATE TABLE IF NOT EXISTS events(seq INTEGER PRIMARY KEY AUTOINCREMENT,time TEXT NOT NULL,workflow_id TEXT NOT NULL,job_id TEXT NOT NULL,level TEXT NOT NULL,module TEXT NOT NULL,event TEXT NOT NULL,message TEXT NOT NULL);
  CREATE INDEX IF NOT EXISTS events_job ON events(job_id,seq);
  CREATE TABLE IF NOT EXISTS reservations(media_key TEXT NOT NULL,season INTEGER NOT NULL,episode INTEGER NOT NULL,intent_id TEXT NOT NULL,PRIMARY KEY(media_key,season,episode));
@@ -170,6 +180,10 @@ func OpenStore(dir string) (*Store, error) {
 		db.Close()
 		return fail(err)
 	}
+	if _, err = db.Exec(fileReferenceVersionSchema() + subscriptionWordsSchema + subscriptionDisplayVersionSchema() + navigationListVersionSchema()); err != nil {
+		db.Close()
+		return fail(err)
+	}
 	recovery, err := db.Exec(`UPDATE jobs SET state='queued',run_at=unixepoch(),generation=generation+1 WHERE state='running'`)
 	if err != nil {
 		db.Close()
@@ -179,28 +193,46 @@ func OpenStore(dir string) (*Store, error) {
 	_ = os.Chmod(filepath.Join(dir, "light-media.db"), 0600)
 	// WAL readers do not wait for the organizer's single writer connection.
 	// Keep writes serialized; configure every reader connection through its DSN.
-	// A pure-Go SQLite page cache lives on the Go heap and is never reclaimed by
-	// GC, so the budget is per connection and multiplies: four readers reserve
-	// four times this number for a working set that fits in a fraction of it.
-	// The pool keeps four connections so concurrent UI reads and history
-	// transactions never queue behind each other while the cache drops.
+	// modernc's page cache uses memory outside the Go heap. Bound it per
+	// connection so concurrent history queries cannot multiply the old 2 MiB
+	// budget; keep the same read concurrency for the UI and background tasks.
 	readURL := url.URL{Scheme: "file", Path: dbPath}
-	params := url.Values{"mode": {"ro"}, "_pragma": {"busy_timeout(5000)", "query_only(ON)", "foreign_keys(ON)", "cache_size(-2048)"}}
-	readURL.RawQuery = params.Encode()
-	readDB, err := sql.Open("sqlite", readURL.String())
-	if err == nil {
-		readDB.SetMaxOpenConns(4)
-		readDB.SetMaxIdleConns(4)
-		err = readDB.Ping()
-	}
-	if err != nil {
-		if readDB != nil {
-			readDB.Close()
+	openReaders := func(count int, cache string) (*sql.DB, error) {
+		params := url.Values{"mode": {"ro"}, "_pragma": {"busy_timeout(5000)", "query_only(ON)", "foreign_keys(ON)", "cache_size(" + cache + ")"}}
+		readURL.RawQuery = params.Encode()
+		pool, err := sql.Open("sqlite", readURL.String())
+		if err != nil {
+			return nil, err
 		}
+		pool.SetMaxOpenConns(count)
+		pool.SetMaxIdleConns(count)
+		pool.SetConnMaxIdleTime(2 * time.Minute)
+		if err := pool.Ping(); err != nil {
+			pool.Close()
+			return nil, err
+		}
+		return pool, nil
+	}
+	readDB, err := openReaders(4, "-1024")
+	if err != nil {
 		db.Close()
 		return fail(err)
 	}
-	return &Store{DB: db, readDB: readDB, key: key, lock: lock, RecoveredJobs: recovered}, nil
+	// Session validation and initial settings must still be able to read while
+	// long-running page requests and background jobs hold all ordinary readers.
+	bootstrapDB, err := openReaders(1, "-256")
+	if err != nil {
+		readDB.Close()
+		db.Close()
+		return fail(err)
+	}
+	return &Store{DB: db, readDB: readDB, bootstrapDB: bootstrapDB, key: key, lock: lock, RecoveredJobs: recovered}, nil
+}
+func (s *Store) bootstrapReader() *sql.DB {
+	if s.bootstrapDB != nil {
+		return s.bootstrapDB
+	}
+	return s.reader()
 }
 func (s *Store) reader() *sql.DB {
 	if s.readDB != nil {
@@ -209,7 +241,10 @@ func (s *Store) reader() *sql.DB {
 	return s.DB
 }
 func (s *Store) Close() error {
-	var readErr error
+	var readErr, bootstrapErr error
+	if s.bootstrapDB != nil {
+		bootstrapErr = s.bootstrapDB.Close()
+	}
 	if s.readDB != nil {
 		readErr = s.readDB.Close()
 	}
@@ -217,7 +252,7 @@ func (s *Store) Close() error {
 	if s.lock != nil {
 		s.lock.Close()
 	}
-	return errors.Join(readErr, err)
+	return errors.Join(bootstrapErr, readErr, err)
 }
 func (s *Store) Seal(value any) ([]byte, error) {
 	b, e := json.Marshal(value)
@@ -287,6 +322,9 @@ func (s *Store) Put(ctx context.Context, kind, key string, value any) error {
 	return recordChildren(ctx, s.DB, kind, key, b, at)
 }
 func (s *Store) Get(ctx context.Context, kind, key string, dst any) error {
+	if kind == "cache" && len(key) <= 512 {
+		return s.readCatalogCache(ctx, key, dst)
+	}
 	var b []byte
 	t, ok := recordTableFor(kind)
 	if !ok {

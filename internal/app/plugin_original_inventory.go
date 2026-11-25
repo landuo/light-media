@@ -18,7 +18,7 @@ type originalInstalledOrderReader interface {
 // class registry or get_state. Failed, stopped and disabled installed objects
 // remain visible, and independent clones retain their own identifiers.
 func (a *App) originalInstalledPluginIDs(ctx context.Context) ([]string, error) {
-	return a.pluginStore.originalInstalledPluginIDs(ctx, a.Store.DB)
+	return a.pluginStore.originalInstalledPluginIDs(ctx, a.Store.reader())
 }
 
 func (p *PluginStore) originalInstalledPluginIDs(ctx context.Context, db originalInstalledOrderReader) ([]string, error) {

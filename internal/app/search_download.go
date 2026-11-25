@@ -1727,6 +1727,31 @@ func (a *App) downloadList(ctx context.Context, selected ...string) (any, error)
 	return map[string]any{"intents": intents, "instances": instances, "native_downloads": native}, nil
 }
 
+// The cards describe only visible downloading tasks. The legacy listing still
+// exposes complete intents for callers that use its download review workflow.
+func (a *App) downloadCards(ctx context.Context, selector string) (any, error) {
+	instances, err := a.downloadInstances(ctx, selector)
+	if err != nil {
+		return nil, err
+	}
+	hashes := []string{}
+	for _, instance := range instances {
+		tasks, _ := instance["tasks"].([]download.Task)
+		for _, task := range tasks {
+			hashes = append(hashes, strings.ToLower(task.Hash))
+		}
+	}
+	records := []json.RawMessage{}
+	if len(hashes) > 0 {
+		keys, _ := json.Marshal(hashes)
+		records, err = a.Store.listRecordPayloads(ctx, `SELECT json_object('downloader_id',downloader,'hash',download_hash,'state',state,'media',json_extract(payload,'$.media'),'season',json_extract(payload,'$.season'),'episodes',json_extract(payload,'$.episodes')) FROM downloadhistory WHERE downloader=? AND lower(download_hash) IN (SELECT value FROM json_each(?)) AND record_kind IN ('intent','native_download') AND state IS NOT 'cancelled' ORDER BY CASE record_kind WHEN 'intent' THEN 0 ELSE 1 END,updated_at DESC,uid`, selector, string(keys))
+		if err != nil {
+			return nil, err
+		}
+	}
+	return map[string]any{"instances": instances, "intents": records}, nil
+}
+
 func (a *App) downloadInstances(ctx context.Context, selector string) ([]map[string]any, error) {
 	moduleRows, useCore, e := a.originalDownloadingTorrents(ctx, selector)
 	if e != nil {

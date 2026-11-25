@@ -221,7 +221,16 @@ func (s *Store) readNativeSourceReceipts(ctx context.Context, q interface {
 	return out, rows.Err()
 }
 func (s *Store) nativeSourceSiteFields(ctx context.Context, site SiteConfig, identity nativeSiteIdentity) (*reviewedNativeSiteFields, int64, string, error) {
-	receipts, e := s.readNativeSourceReceipts(ctx, s.DB, site.ID)
+	tx, err := s.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if err != nil {
+		return nil, 0, "", err
+	}
+	defer tx.Rollback()
+	return s.nativeSourceSiteFieldsTx(ctx, tx, site, identity)
+}
+
+func (s *Store) nativeSourceSiteFieldsTx(ctx context.Context, tx *sql.Tx, site SiteConfig, identity nativeSiteIdentity) (*reviewedNativeSiteFields, int64, string, error) {
+	receipts, e := s.readNativeSourceReceipts(ctx, tx, site.ID)
 	if e != nil {
 		return nil, 0, "", e
 	}
@@ -234,7 +243,7 @@ func (s *Store) nativeSourceSiteFields(ctx context.Context, site SiteConfig, ide
 		if r.Ref.NativeSourceID != identity.SourceID || r.Ref.SiteID != site.ID || identity.State != "active" || i > 0 && r.Ref.OriginalSourceID != sourceID {
 			return nil, 0, "", nativeSourceSiteError()
 		}
-		ref, e := s.readNativeSourceRef(ctx, s.DB, r.Ref.RefID)
+		ref, e := s.readNativeSourceRef(ctx, tx, r.Ref.RefID)
 		if e != nil || ref != r.Ref {
 			return nil, 0, "", nativeSourceSiteError()
 		}
@@ -256,7 +265,7 @@ func (s *Store) nativeSourceSiteFields(ctx context.Context, site SiteConfig, ide
 	var sealed []byte
 	var fingerprint, digest string
 	var snapshot nativeSourceSiteSnapshot
-	if s.DB.QueryRowContext(ctx, `SELECT source_fingerprint,snapshot_digest,sealed FROM native_site_source_snapshots WHERE snapshot_id=?`, r.SnapshotID).Scan(&fingerprint, &digest, &sealed) != nil || s.Unseal(sealed, &snapshot) != nil || snapshot.Version != 1 || fingerprint != r.SourceFingerprint || digest != r.SnapshotDigest || snapshot.Fields.ID != sourceID || s.siteIdentityMAC("source-native-fingerprint", snapshot.SourceFingerprint) != fingerprint || s.siteIdentityMAC("source-native-snapshot", snapshot) != digest || r.SnapshotID != "sns_"+s.siteIdentityMAC("source-native-snapshot-id", []string{fingerprint, digest}) {
+	if tx.QueryRowContext(ctx, `SELECT source_fingerprint,snapshot_digest,sealed FROM native_site_source_snapshots WHERE snapshot_id=?`, r.SnapshotID).Scan(&fingerprint, &digest, &sealed) != nil || s.Unseal(sealed, &snapshot) != nil || snapshot.Version != 1 || fingerprint != r.SourceFingerprint || digest != r.SnapshotDigest || snapshot.Fields.ID != sourceID || s.siteIdentityMAC("source-native-fingerprint", snapshot.SourceFingerprint) != fingerprint || s.siteIdentityMAC("source-native-snapshot", snapshot) != digest || r.SnapshotID != "sns_"+s.siteIdentityMAC("source-native-snapshot-id", []string{fingerprint, digest}) {
 		return nil, 0, "", nativeSourceSiteError()
 	}
 	return &snapshot.Fields, sourceID, s.siteIdentityMAC("source-native-proof", r), nil
@@ -268,7 +277,22 @@ type nativeSourceSiteImportsKey struct{}
 // its existing wire shape and typed ordering even after provenance is imported.
 func (a *App) originalSourceConfiguredRows(ctx context.Context, in plugins.SiteHostRequestV1) (plugins.SiteHostResultV1, error) {
 	out := plugins.SiteHostResultV1{SchemaVersion: 1, Items: []plugins.SiteHostRowV1{}}
-	rows, e := a.originalSourceSiteRows(ctx)
+	owner := a.settingsSnapshot()
+	settings := *owner
+	tx, e := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if e != nil {
+		return out, e
+	}
+	defer tx.Rollback()
+	version, e := siteDisplayVersion(ctx, tx)
+	if e != nil {
+		return out, e
+	}
+	cacheable := in.ID == "" && !in.ActiveOnly && !in.OrderByPriority
+	if cached := a.sourceSiteDisplayCache.Load(); cacheable && cached != nil && cached.settings == owner && cached.version == version {
+		return cached.data, nil
+	}
+	rows, e := a.originalSourceSiteRowsTx(ctx, tx, settings.Sites)
 	if e != nil {
 		return out, e
 	}
@@ -289,6 +313,9 @@ func (a *App) originalSourceConfiguredRows(ctx context.Context, in plugins.SiteH
 			v.SourceFields = sourceSiteJSON(safe)
 		}
 		out.Items = append(out.Items, v)
+	}
+	if cacheable && len(out.Items) <= 512 {
+		a.sourceSiteDisplayCache.Store(&sourceSiteDisplay{version: version, settings: owner, data: out})
 	}
 	return out, nil
 }

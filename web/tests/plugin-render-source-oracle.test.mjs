@@ -22,6 +22,7 @@ new Function('require','exports',compiled)(name=>{
  if(name==='vue3-ace-editor')return {VAceEditor:{name:'VAceEditor'}};
  if(name.endsWith('.vue'))return {name:'PluginDialogCloseBtn'};
  if(name.startsWith('ace-builds/'))return {};
+ if (name === '../assets/plugin-utilities.css') return {};
  throw Error('unexpected renderer import '+name);
 },module.exports);
 function normalize(x){

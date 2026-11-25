@@ -3,11 +3,13 @@ package app
 import (
 	"context"
 	"testing"
+	"time"
+
+	"light-media/internal/sites"
 )
 
-// The reader pool exists to keep UI reads off the organizer's writer. Its page
-// cache is Go heap that GC never reclaims, so the budget is asserted here: four
-// connections must survive, but each must not reserve the old 8 MiB cache.
+// Keep all four readers off the organizer's writer while bounding their
+// SQLite page caches individually.
 func TestReadPoolKeepsFourConnectionsWithBoundedPageCache(t *testing.T) {
 	a, _, _ := importTestApp(t)
 	pool := a.Store.reader()
@@ -15,25 +17,49 @@ func TestReadPoolKeepsFourConnectionsWithBoundedPageCache(t *testing.T) {
 		t.Fatalf("reader pool lost concurrency: %d connections", got)
 	}
 	ctx := context.Background()
-	conn, err := pool.Conn(ctx)
+	for i := range 4 {
+		conn, err := pool.Conn(ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer conn.Close()
+		var cacheKiB int
+		if err = conn.QueryRowContext(ctx, `PRAGMA cache_size`).Scan(&cacheKiB); err != nil {
+			t.Fatal(err)
+		}
+		if cacheKiB != -1024 {
+			t.Fatalf("reader %d page cache = %d, want -1024 KiB", i, cacheKiB)
+		}
+		var readOnly int
+		if err = conn.QueryRowContext(ctx, `PRAGMA query_only`).Scan(&readOnly); err != nil {
+			t.Fatal(err)
+		}
+		if readOnly != 1 {
+			t.Fatalf("reader %d is not query_only: %d", i, readOnly)
+		}
+	}
+}
+
+func TestBrushPageSiteReadsContinueWhileWriterIsBusy(t *testing.T) {
+	a := newTestApp(t)
+	settings := a.Settings()
+	settings.Sites = []SiteConfig{{Config: sites.Config{
+		ID: "page-read", Name: "Page read", Kind: "nexusphp", BaseURL: "https://page-read.example.org/",
+	}, Enabled: true}}
+	ownedBrushInventorySave(t, a, settings)
+	ctx, cancel := context.WithTimeout(t.Context(), 3*time.Second)
+	defer cancel()
+	writer, err := a.Store.DB.Conn(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer conn.Close()
-	var cacheKiB int
-	if err = conn.QueryRowContext(ctx, `PRAGMA cache_size`).Scan(&cacheKiB); err != nil {
-		t.Fatal(err)
+	defer writer.Close()
+	rows, err := a.originalSourceSiteRows(ctx)
+	if err != nil || len(rows) != 1 || rows[0].site.ID != "page-read" {
+		t.Fatalf("source site list under writer contention: count=%d err=%v", len(rows), err)
 	}
-	// A positive value is a page count (and would be a hard-coded page size);
-	// negative means KiB. The bound must stay below the previous 8192.
-	if cacheKiB != -2048 {
-		t.Fatalf("reader page cache = %d, want -2048 KiB", cacheKiB)
-	}
-	var readOnly int
-	if err = conn.QueryRowContext(ctx, `PRAGMA query_only`).Scan(&readOnly); err != nil {
-		t.Fatal(err)
-	}
-	if readOnly != 1 {
-		t.Fatalf("reader connection is not query_only: %d", readOnly)
+	inventory, err := a.originalBrushInventory(ctx)
+	if err != nil || len(inventory.Sites) != 1 || inventory.Sites[0].SourceID != rows[0].sourceID {
+		t.Fatalf("brush inventory under writer contention: count=%d err=%v", len(inventory.Sites), err)
 	}
 }

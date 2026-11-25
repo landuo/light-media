@@ -22,7 +22,7 @@ const instance = computed(() => data.value?.instances?.find((d: any) => d.id ===
 let disposed = false;
 const requests = createSingleFlightRequest({
   request: (id, signal) =>
-    api('/downloads?downloader_id=' + encodeURIComponent(id), undefined, undefined, signal),
+    api('/downloads?downloader_id=' + encodeURIComponent(id) + '&view=cards', undefined, undefined, signal),
   result: (result) => {
     data.value = result;
   },

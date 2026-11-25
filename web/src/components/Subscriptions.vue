@@ -2,11 +2,12 @@
 import { VMenu } from 'vuetify/components/VMenu';
 import { VSelect } from 'vuetify/components/VSelect';
 import { VTextField } from 'vuetify/components/VTextField';
-import { ref, onMounted, computed, watch, useId } from 'vue';
+import { ref, onMounted, onUnmounted, computed, watch, useId } from 'vue';
 import { VTextarea } from 'vuetify/components/VTextarea';
 import {
   api,
   action,
+  toast,
   ui,
   emptyPolicy,
   emptySchedule,
@@ -45,9 +46,9 @@ import SubscriptionSeasonDialog from './SubscriptionSeasonDialog.vue';
 import SubscriptionFilters from './SubscriptionFilters.vue';
 import { subscriptionFilterValue, setSubscriptionFilter } from '../features/subscription-filters';
 import { downloadDestination, downloadDirectoryPaths } from '../features/download-directories';
-const emit = defineEmits<{ close: []; saved: [subscription: any] }>();
-const props = defineProps<{ view: string; editorOnly?: boolean }>(),
-  subs = ref<any[]>([]),
+const emit = defineEmits<{ close: []; saved: [subscription: any]; loaded: [items: any[]] }>();
+const props = defineProps<{ view: string; editorOnly?: boolean; initialMedia?: any; cachedItems?: any[]; ensureSettings?: () => Promise<void> }>(),
+  subs = ref<any[]>(props.cachedItems ?? []),
   entries = ref<any[]>([]),
   editing = ref<any>(null),
   seasonFor = ref<any>(null),
@@ -263,22 +264,32 @@ async function load() {
   const generation = ++loadGeneration;
   loading.value = true;
   try {
-    const response = await api('/subscriptions');
-    if (generation !== loadGeneration) return;
-    subs.value = Array.isArray(response) ? response : response?.items || [];
+    const reads = [api('/subscriptions').then((response) => {
+      if (generation !== loadGeneration) return;
+      subs.value = Array.isArray(response) ? response : response?.items || [];
+      if (!props.editorOnly) emit('loaded', subs.value);
+    })];
     if (isCalendar.value) {
       const visible = days.value.filter(Boolean);
-      if (!visible.length) throw new Error('请选择有效的日历日期');
-      const r = await api('/calendar?from=' + visible[0] + '&to=' + visible[visible.length - 1]);
-      if (generation === loadGeneration) entries.value = r.entries || [];
+      if (visible.length) {
+        reads.push(api('/calendar?from=' + visible[0] + '&to=' + visible[visible.length - 1]).then((r) => {
+          if (generation === loadGeneration) entries.value = r.entries || [];
+        }));
+      }
     }
+    await Promise.all(reads);
   } catch (e) {
     await action(() => Promise.reject(e));
   } finally {
     if (generation === loadGeneration) loading.value = false;
   }
 }
-function begin(s?: any) {
+async function begin(s?: any) {
+  if (!ui.settings && props.ensureSettings) {
+    await props.ensureSettings();
+    if (!mounted) return;
+    if (!ui.settings) { toast('无法载入编辑订阅所需的设置，请重试', true); return; }
+  }
   editing.value = s
     ? clone(s)
     : {
@@ -331,9 +342,9 @@ async function find() {
     (await action(() => api('/catalog/search?q=' + encodeURIComponent(lookup.value) + '&page=1')))
       ?.results || [];
 }
-async function pick(m: any) {
+async function pick(m: any, initial?: any) {
   const form = editing.value;
-  const media = await action(() => api('/catalog/detail?kind=' + m.media_type + '&id=' + m.id));
+  const media = initial || await action(() => api('/catalog/detail?kind=' + m.media_type + '&id=' + m.id));
   if (editing.value !== form) return;
   editing.value.media = media;
   editing.value.season =
@@ -377,7 +388,16 @@ function formInput() {
 }
 async function openMulti() {
   await action(async () => {
-    multiTemplate.value = formInput();
+    const template = formInput();
+    if (props.editorOnly) {
+      if (template.tmdb_id) {
+        subs.value = await api('/subscriptions/matching?' + new URLSearchParams({ media_type: 'tv', tmdb_id: String(template.tmdb_id) }));
+      } else {
+        const response = await api('/subscriptions');
+        subs.value = Array.isArray(response) ? response : response.items;
+      }
+    }
+    multiTemplate.value = template;
     multiSeason.value = true;
   });
 }
@@ -387,6 +407,10 @@ function closeEditor() {
 }
 function subscriptionChanged(subscription: any) {
   emit('saved', subscription);
+  if (props.editorOnly) {
+    subs.value = [...subs.value.filter((row) => row.id !== subscription.id), subscription];
+    return;
+  }
   return load();
 }
 function closeMulti(created: boolean) {
@@ -467,14 +491,19 @@ function showCalendar(view: CalendarView) {
 async function applyView() {
   const view = props.view;
   selectedEvent.value = null;
-  await load();
-  if (view !== props.view) return;
+  if (!props.editorOnly) await load();
+  if (!mounted || view !== props.view) return;
   if (props.view.includes('/new/')) {
-    begin();
+    await begin();
+    if (!editing.value || view !== props.view) return;
     const [path, qs] = props.view.split('?'),
       p = path!.split('/'),
       q = new URLSearchParams(qs);
-    await pick({ media_type: p[2], id: +p[3]! });
+    const initial = props.initialMedia;
+    const reuse = initial?.title && (!initial.source || initial.source === 'themoviedb')
+      && initial.media_type === p[2] && Number(initial.id) === +p[3]!
+      && (p[2] === 'movie' || mediaDetailSeasons(initial).length > 0);
+    await pick({ media_type: p[2], id: +p[3]! }, reuse ? initial : undefined);
     if (!editing.value || view !== props.view) return;
     setSeason(
       editing.value.media?.media_type === 'movie' ? 0 : +(q.get('season') || editing.value.season),
@@ -482,6 +511,8 @@ async function applyView() {
     editing.value.start_episode = Math.max(1, +(q.get('start_episode') || 1));
   }
 }
+let mounted = true;
+onUnmounted(() => { mounted = false; ++loadGeneration; });
 onMounted(applyView);
 watch(() => props.view, applyView);
 </script>
@@ -630,7 +661,7 @@ watch(() => props.view, applyView);
     </div>
     <div class="subscription-grid">
       <article
-        v-for="s in visibleSubs"
+        v-for="(s, index) in visibleSubs"
         :key="s.id"
         class="subscription-card"
         :class="{ paused: s.state === 'paused' }"
@@ -638,7 +669,7 @@ watch(() => props.view, applyView);
         <img
           v-if="subscriptionImage(s.media, s.media?.backdrop_path || s.media?.poster_path, 'w780')"
           class="subscription-backdrop"
-          loading="lazy"
+          :loading="index < 6 ? 'eager' : 'lazy'"
           decoding="async"
           :src="subscriptionImage(s.media, s.media.backdrop_path || s.media.poster_path, 'w780')"
           alt=""
@@ -652,7 +683,7 @@ watch(() => props.view, applyView);
             <img
               v-if="subscriptionImage(s.media, s.media?.poster_path, 'w185')"
               class="subscription-poster"
-              loading="lazy"
+              :loading="index < 6 ? 'eager' : 'lazy'"
               decoding="async"
               :src="subscriptionImage(s.media, s.media.poster_path, 'w185')"
               :alt="s.media.title"

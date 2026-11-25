@@ -268,7 +268,7 @@ func (p *Parser) getApplicableLocales(cfg *Configuration, iCfg *setting.Configur
 	}
 
 	// Load locales
-	locales, err := language.GetLocales(cfg.Locales, languages, cfg.Region, cfg.UseGivenOrder, false)
+	locales, err := language.IterLocales(cfg.Locales, languages, cfg.Region, cfg.UseGivenOrder, false)
 	if err != nil && err != language.ErrNotFound {
 		return nil, err
 	}
@@ -287,7 +287,7 @@ func (p *Parser) getApplicableLocales(cfg *Configuration, iCfg *setting.Configur
 			}
 		}
 
-		for _, locale := range locales {
+		for locale := range locales {
 			if resultTracker.Contain(locale.Name) {
 				continue
 			}

@@ -46,8 +46,10 @@ func within(root, target string) bool {
 	if !filepath.IsAbs(root) || !filepath.IsAbs(target) {
 		return false
 	}
-	relative, err := filepath.Rel(filepath.Clean(root), filepath.Clean(target))
-	return err == nil && relative != ".." && !strings.HasPrefix(relative, ".."+string(filepath.Separator))
+	// Both paths are absolute Unix paths. Compare whole components after
+	// cleaning rather than constructing a relative path for each sibling.
+	root, target = filepath.Clean(root), filepath.Clean(target)
+	return root == "/" || target == root || (len(target) > len(root) && target[len(root)] == '/' && strings.HasPrefix(target, root))
 }
 
 func isVideo(name string) bool {
@@ -80,7 +82,7 @@ func importDir(name string, create bool) (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
-	for _, part := range strings.Split(strings.TrimPrefix(name, "/"), "/") {
+	for part := range strings.SplitSeq(strings.TrimPrefix(name, "/"), "/") {
 		if part == "" {
 			continue
 		}

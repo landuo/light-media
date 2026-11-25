@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"path/filepath"
@@ -52,20 +53,22 @@ const jobSummarySubject = `COALESCE(subject_dl.payload,subject_sub.payload,subje
 
 const jobSummaryColumns = jobSummarySubject + `,old_asset.payload,COALESCE(latest.message,''),COALESCE(latest.time,'')`
 
+const jobSummaryReferenceID = `CASE WHEN j.id=j.ref_owner AND json_valid(j.payload) THEN NULLIF(json_extract(j.payload,'$.id'),'') END`
+
 const jobSummaryJoins = `
  LEFT JOIN events latest ON latest.seq=(SELECT seq FROM events WHERE job_id=j.id ORDER BY seq DESC LIMIT 1)
  LEFT JOIN downloadhistory subject_dl ON j.kind IN ('download','lark_download','subscription_download','subscription_acquisition_receipt','native_download')
-   AND subject_dl.uid=CASE WHEN json_valid(j.payload) THEN NULLIF(json_extract(j.payload,'$.id'),'') END
+   AND subject_dl.uid=` + jobSummaryReferenceID + `
  LEFT JOIN subscribe subject_sub ON j.kind='subscription'
-   AND subject_sub.uid=CASE WHEN json_valid(j.payload) THEN NULLIF(json_extract(j.payload,'$.id'),'') END
+   AND subject_sub.uid=` + jobSummaryReferenceID + `
  LEFT JOIN import_plan subject_plan ON j.kind='import'
-   AND subject_plan.id=CASE WHEN json_valid(j.payload) THEN NULLIF(json_extract(j.payload,'$.id'),'') END
+   AND subject_plan.id=` + jobSummaryReferenceID + `
  LEFT JOIN library_asset subject_asset ON j.kind IN ('scrape','fnos_sync','asset_check')
-   AND subject_asset.id=CASE WHEN json_valid(j.payload) THEN NULLIF(json_extract(j.payload,'$.id'),'') END
+   AND subject_asset.id=` + jobSummaryReferenceID + `
  LEFT JOIN history_cleanup subject_hist ON j.kind='reorganize_cleanup'
-   AND subject_hist.id=CASE WHEN json_valid(j.payload) THEN NULLIF(json_extract(j.payload,'$.id'),'') END
+   AND subject_hist.id=` + jobSummaryReferenceID + `
  LEFT JOIN library_asset old_asset ON j.kind='reorganize_cleanup'
-   AND old_asset.id=CASE WHEN json_valid(` + jobSummarySubject + `) THEN NULLIF(json_extract(` + jobSummarySubject + `,'$.old_asset_id'),'') END`
+   AND old_asset.id=CASE WHEN json_valid(subject_hist.payload) THEN NULLIF(json_extract(subject_hist.payload,'$.old_asset_id'),'') END`
 
 const jobDisplayPriority = `CASE
    WHEN state='running' THEN 0
@@ -76,26 +79,59 @@ const jobDisplayPriority = `CASE
 func (a *App) jobQueue(ctx context.Context) ([]jobView, error) {
 	// Limit before reading payloads. Running and other pending work stay
 	// visible when a directory adds hundreds of recent file jobs.
-	rows, err := a.Store.reader().QueryContext(ctx, `WITH selected AS MATERIALIZED (
- SELECT id,`+jobDisplayPriority+` AS priority FROM jobs ORDER BY priority,created_at DESC,id LIMIT 100
-), page AS (SELECT `+jobColumns+`,selected.priority FROM selected JOIN jobs USING(id))
- SELECT j.*,`+jobSummaryColumns+` FROM page j`+jobSummaryJoins+` ORDER BY j.priority,j.created_at DESC,j.id`)
+	tx, err := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+	var version int64
+	if err = tx.QueryRowContext(ctx, "SELECT version FROM navigation_list_versions WHERE name='jobs'").Scan(&version); err != nil {
+		return nil, err
+	}
+	settings := a.settingsSnapshot()
+	cached := a.jobDisplayCache.Load()
+	if cached != nil && cached.settings == settings && cached.version == version {
+		return cached.rows, nil
+	}
+	reuse, order, dirty, err := incrementalJobQueue(ctx, tx, cached, settings, version)
+	if err != nil {
+		return nil, err
+	}
+	selection := ""
+	var args []any
+	if order != nil {
+		selection = " WHERE id IN (SELECT value FROM json_each(?))"
+		ids, _ := json.Marshal(dirty)
+		args = []any{string(ids)}
+	}
+	rows, err := tx.QueryContext(ctx, `WITH selected AS MATERIALIZED (
+ SELECT id,`+jobDisplayPriority+` AS priority FROM jobs`+selection+` ORDER BY priority,created_at DESC,id LIMIT 100
+), page AS (SELECT `+jobColumns+`,selected.priority FROM selected JOIN jobs USING(id)),
+ refs AS (SELECT page.*,min(id) OVER (PARTITION BY kind,CASE WHEN json_valid(payload) THEN NULLIF(json_extract(payload,'$.id'),'') END) AS ref_owner FROM page)
+ SELECT j.*,`+jobSummaryColumns+` FROM refs j`+jobSummaryJoins+` ORDER BY j.priority,j.created_at DESC,j.id`, args...)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	type entry struct {
-		job   Job
-		input jobSummaryInput
+		job      Job
+		input    jobSummaryInput
+		refOwner string
 	}
 	var entries []entry
+	// Jobs on one page often reference the same subscription. Transfer and
+	// retain its blob once, while keeping every job's own latest activity.
+	refs := make(map[string]jobSummaryInput)
 	for rows.Next() {
 		var item entry
 		var priority int
 		input := &item.input
-		item.job, err = scanJobRow(rows, &priority, &input.subject, &input.oldAsset, &input.activity, &input.activityAt)
+		item.job, err = scanJobRow(rows, &priority, &item.refOwner, &input.subject, &input.oldAsset, &input.activity, &input.activityAt)
 		if err != nil {
 			return nil, err
+		}
+		if item.job.ID == item.refOwner {
+			refs[item.refOwner] = item.input
 		}
 		entries = append(entries, item)
 	}
@@ -106,30 +142,54 @@ func (a *App) jobQueue(ctx context.Context) ([]jobView, error) {
 		return nil, err
 	}
 	// Formatting and redaction should not keep the database connection busy.
-	settings := a.Settings()
+	if err = tx.Commit(); err != nil {
+		return nil, err
+	}
+	secrets := settingsRedactions(*settings)
+	bytes := 0
 	result := make([]jobView, 0, len(entries))
 	for _, item := range entries {
 		if err := ctx.Err(); err != nil {
 			return nil, err
 		}
 		readJobTrace(&item.job)
-		view, err := summarizeJob(item.job, item.input, settings)
+		shared := refs[item.refOwner]
+		item.input.subject, item.input.oldAsset = shared.subject, shared.oldAsset
+		view, err := summarizeJob(item.job, item.input, *settings, secrets)
 		if err != nil {
 			return nil, err
 		}
 		result = append(result, view)
+		if order != nil {
+			reuse[view.ID] = view
+		}
+	}
+	if order != nil {
+		result = make([]jobView, 0, len(order))
+		for _, id := range order {
+			result = append(result, reuse[id])
+		}
+	}
+	for _, view := range result {
+		bytes += len(view.Payload) + len(view.ErrorMessage) + len(view.ID) + len(view.WorkflowID) + len(view.ParentJobID) + len(view.RequestID) + len(view.ErrorCode) + len(view.Kind) + len(view.State) + len(view.CreatedAt) + len(view.UpdatedAt) + 512
+		summary := view.Summary
+		bytes += len(summary.Title) + len(summary.Subject) + len(summary.Source) + len(summary.Target) + len(summary.Downloader) + len(summary.Activity) + len(summary.ActivityAt) + len(summary.Stage)
+	}
+	if bytes <= 512<<10 {
+		a.jobDisplayCache.Store(&jobQueueDisplay{version: version, settings: settings, rows: result})
 	}
 	return result, nil
 }
 
 func (a *App) jobView(ctx context.Context, job Job) (jobView, error) {
 	var input jobSummaryInput
-	err := a.Store.reader().QueryRowContext(ctx, `SELECT `+jobSummaryColumns+` FROM (SELECT ? AS id,? AS kind,? AS payload) j`+jobSummaryJoins,
+	err := a.Store.reader().QueryRowContext(ctx, `SELECT `+jobSummaryColumns+` FROM (SELECT ?1 AS id,?2 AS kind,?3 AS payload,?1 AS ref_owner) j`+jobSummaryJoins,
 		job.ID, job.Kind, []byte(job.Payload)).Scan(&input.subject, &input.oldAsset, &input.activity, &input.activityAt)
 	if err != nil {
 		return jobView{}, err
 	}
-	return summarizeJob(job, input, a.Settings())
+	settings := a.Settings()
+	return summarizeJob(job, input, settings, settingsRedactions(settings))
 }
 
 func decodeJobSummaryRecord(raw []byte, out any) error {
@@ -139,7 +199,7 @@ func decodeJobSummaryRecord(raw []byte, out any) error {
 	return json.Unmarshal(raw, out)
 }
 
-func summarizeJob(job Job, input jobSummaryInput, settings Settings) (jobView, error) {
+func summarizeJob(job Job, input jobSummaryInput, settings Settings, secrets []string) (jobView, error) {
 	s := jobSummary{TypeLabel: jobTypeLabels[job.Kind], Activity: input.activity, ActivityAt: input.activityAt}
 	if s.TypeLabel == "" {
 		s.TypeLabel = "后台任务"
@@ -295,7 +355,7 @@ func summarizeJob(job Job, input jobSummaryInput, settings Settings) (jobView, e
 	s.Stage = jobSummaryStage(job)
 	// All display strings share the application's URL/credential redaction.
 	for _, value := range []*string{&s.Subject, &s.Source, &s.Target, &s.Downloader, &s.Activity} {
-		*value = boundedLogString(cleanWithSettings(*value, settings), 2048)
+		*value = boundedLogString(redactSettingsValues(*value, secrets), 2048)
 	}
 	s.Title = s.TypeLabel + " · " + s.Subject
 	return jobView{Job: job, Summary: s}, nil

@@ -88,6 +88,7 @@ func TestOriginalCatalogEpisodesActualHTTPAndRawAlias(t *testing.T) {
 	a.cfgMu.Lock()
 	a.config = settings
 	a.cfgMu.Unlock()
+	a.invalidateSettings()
 	proxy, _ := a.proxyConfig()
 	providerCalls := 0
 	providerStatus := 200
@@ -242,5 +243,46 @@ func TestOriginalInternalSeasonActualSyncModuleAndCacheBoundary(t *testing.T) {
 				t.Fatal("sync SDK input/call count", snapshot.Calls, string(input.Kwargs))
 			}
 		})
+	}
+}
+
+func TestDetailSeasonDisplayCachesOnlyNativeNonemptyEpisodes(t *testing.T) {
+	a := newTestApp(t)
+	ctx := context.Background()
+	settings := a.Settings()
+	settings.TMDB = TMDBConfig{APIKey: "owned-display"}
+	a.cfgMu.Lock()
+	a.config = settings
+	a.cfgMu.Unlock()
+	a.invalidateSettings()
+	proxy, _ := a.proxyConfig()
+	calls := 0
+	a.catMu.Lock()
+	a.catCreds = settings.TMDB
+	a.catProxy = proxy
+	a.catClient = catalog.NewWithTransport(catalog.Credentials{APIKey: settings.TMDB.APIKey}, imageTransport(func(r *http.Request) (*http.Response, error) {
+		calls++
+		body := `{"episodes":[]}`
+		if calls > 1 {
+			body = `{"season_number":1,"name":"Owned","episodes":[{"season_number":1,"episode_number":1,"name":"第一集","overview":"简介","still_path":"/owned.jpg"}]}`
+		}
+		return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(body))}, nil
+	}))
+	a.catMu.Unlock()
+	for i := 0; i < 3; i++ {
+		view, err := a.catalogSeasonDisplay(ctx, 120, 1)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if i > 0 && (len(view.Episodes) != 1 || view.Episodes[0].Overview != "简介" || view.Episodes[0].StillPath != "/owned.jpg" || view.Episodes[0].OriginalEpisode != nil) {
+			t.Fatalf("display projection lost episode content: %+v", view)
+		}
+	}
+	if calls != 2 {
+		t.Fatalf("provider calls=%d, want 2", calls)
+	}
+	a.dropSubscriptionSeasonCache(ctx, Subscription{Media: catalog.Media{ID: 120}, Season: 1})
+	if _, err := a.catalogSeasonDisplay(ctx, 120, 1); err != nil || calls != 3 {
+		t.Fatal(calls, err)
 	}
 }

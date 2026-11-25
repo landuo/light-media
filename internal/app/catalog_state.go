@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"light-media/internal/catalog"
 	"strconv"
 	"strings"
@@ -44,40 +43,32 @@ func (a *App) decorateMedia(ctx context.Context, items []catalog.Media) error {
 	for _, kind := range []string{"asset", "subscription", "intent"} {
 		params[0] = kind
 		table, _ := recordTableFor(kind)
-		rows, e := tx.QueryContext(ctx, `SELECT payload FROM `+table.name+` WHERE record_kind=? AND (json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id')) IN (`+marks+`)`, params...)
+		rows, e := tx.QueryContext(ctx, `SELECT (json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id')),json_extract(payload,'$.id'),json_extract(payload,'$.state') FROM `+table.name+` WHERE record_kind=? AND (json_extract(payload,'$.media.media_type')||':'||json_extract(payload,'$.media.id')) IN (`+marks+`)`, params...)
 		if e != nil {
 			return e
 		}
 		for rows.Next() {
-			var b []byte
-			if e = rows.Scan(&b); e != nil {
+			var key string
+			var id, status sql.NullString
+			if e = rows.Scan(&key, &id, &status); e != nil {
 				rows.Close()
 				return e
 			}
-			var v struct {
-				ID    string        `json:"id"`
-				Media catalog.Media `json:"media"`
-				State string        `json:"state"`
-			}
-			if json.Unmarshal(b, &v) != nil {
-				continue
-			}
-			key := mediaKey(v.Media)
 			value := state[key]
 			switch kind {
 			case "asset":
-				if v.State == "present" || v.State == "external" {
+				if status.String == "present" || status.String == "external" {
 					value.Library = "present"
 				} else if value.Library != "present" {
-					value.Library = v.State
+					value.Library = status.String
 				}
 			case "subscription":
-				if v.State == "active" || v.State == "paused" {
-					value.Subscription = v.ID
+				if status.String == "active" || status.String == "paused" {
+					value.Subscription = id.String
 				}
 			case "intent":
-				if v.State == "planned" || v.State == "submitting" || v.State == "accepted" || v.State == "downloading" || v.State == "downloaded" || v.State == "reconcile_pending" {
-					value.Download = v.State
+				if status.String == "planned" || status.String == "submitting" || status.String == "accepted" || status.String == "downloading" || status.String == "downloaded" || status.String == "reconcile_pending" {
+					value.Download = status.String
 				}
 			}
 			state[key] = value

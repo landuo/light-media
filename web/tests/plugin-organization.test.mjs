@@ -99,6 +99,7 @@ async function mount(t, { failSave = false, initialOrganization, installed } = {
       if (name === 'vuedraggable') return { name: 'Draggable' };
       if (name.startsWith('vuetify/')) return new Proxy({}, { get: (_, key) => ({ name: key }) });
       if (name.endsWith('.vue')) return { name: name.split('/').at(-1).replace('.vue', '') };
+      if (name === '../assets/plugin-utilities.css') return {};
       throw new Error('Unexpected dependency ' + name);
     },
     module.exports,
@@ -402,7 +403,11 @@ test('actual installed menu supports name choose/clear, quick-filter precedence,
     { ...plugin('three'), name: 'Gamma', state: true, has_update: true },
   ];
   const app = await mount(t, { installed });
-  const rootIDs = () => app.component('Draggable')?.props.modelValue.map((item) => item.id) || [];
+  const rootIDs = () => app.nodes().flatMap(node => {
+    if (node.type?.name === 'PluginFolderCard') return [node.props.name];
+    if (node.type?.name === 'PluginManageCard') return [node.props.plugin.instance_id];
+    return [];
+  }).sort();
   await app.click('筛选已安装插件');
   let input = app.label('插件名称');
   assert.deepEqual(input.props.items, ['Alpha', 'Beta', 'Gamma']);
@@ -427,14 +432,14 @@ test('actual installed menu supports name choose/clear, quick-filter precedence,
   assert.deepEqual(rootIDs(), ['three'], 'running and update are AND');
   await app.click('筛选已安装插件');
   await app.click('运行中');
-  assert.deepEqual(rootIDs(), ['新组', 'three'], 'update alone overrides name');
+  assert.deepEqual(rootIDs(), ['three', '新组'], 'update alone overrides name');
   await app.click('筛选已安装插件');
   await app.click('有新版本');
   assert.deepEqual(rootIDs(), ['旧组'], 'name remains when quick filters are cleared');
   await app.click('筛选已安装插件');
   app.label('插件名称').props['onUpdate:modelValue'](null);
   await app.flush();
-  assert.deepEqual(rootIDs(), ['新组', 'three', '旧组']);
+  assert.deepEqual(rootIDs(), ['three', '新组', '旧组']);
   assert.equal(app.writes().length, 0, 'filtering never saves the organization or plugin config');
 });
 

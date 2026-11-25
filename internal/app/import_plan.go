@@ -574,7 +574,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		}
 		seenSources[file.Source] = true
 		if a.importSourceAllowed(file.Source, request.Manual) {
-			if inferred, _, _ := a.importNFOEvidence(file.Source); inferred != nil && (inferred.Type != identity.MediaType || inferred.ID != identity.ID) {
+			if inferred, _, _ := a.importNFOEvidence(importNFOAnchor(file.Source, class.Bluray)); inferred != nil && (inferred.Type != identity.MediaType || inferred.ID != identity.ID) {
 				plan.Warnings = append(plan.Warnings, "源 NFO 身份与本次明确选择不同；本计划按你选择的 TMDB 身份整理，请核对后确认。")
 			}
 		}

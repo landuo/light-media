@@ -14,7 +14,7 @@ import (
 	"light-media/internal/catalog"
 )
 
-func importTestApp(t *testing.T) (*App, string, string) {
+func importTestApp(t testing.TB) (*App, string, string) {
 	t.Helper()
 	base, err := filepath.EvalSymlinks(t.TempDir())
 	if err != nil {
@@ -32,6 +32,9 @@ func importTestApp(t *testing.T) (*App, string, string) {
 	}
 	t.Cleanup(func() { app.Close() })
 	app.config = Settings{AllowedRoots: []string{source}, Roots: []Root{{ID: "root", Path: target, Kind: "mixed"}}}
+	// New may already have read settings during initialization. Publish the
+	// fixture configuration before consumers resolve its isolated roots.
+	app.invalidateSettings()
 	return app, source, target
 }
 

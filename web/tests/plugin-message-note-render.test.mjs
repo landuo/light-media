@@ -114,6 +114,7 @@ function compile(raw, history) {
         return { __esModule: true, default: linkAttributes };
       if (path === '@/@core/utils') return { isNullOrEmptyObject: sourceEmpty };
       if (path === '@core/utils/formatters') return { formatDateDifference: () => '' };
+      if (path === '../assets/plugin-utilities.css') return {};
       throw Error('unhandled SFC boundary ' + path);
     },
     module.exports,

@@ -1,8 +1,10 @@
 package releasemeta
 
 import (
-	"github.com/dlclark/regexp2/v2"
 	"strings"
+	"sync"
+
+	"github.com/dlclark/regexp2/v2"
 )
 
 // fullRustPattern expands pinned Rust classes in immutable source expressions.
@@ -61,31 +63,51 @@ func fullPattern(p, mode string) string {
 		return fullRustPattern(p)
 	}
 }
-func fullRXFirst(p, v string, ignore bool, mode string) *regexp2.Match {
-	p = fullPattern(p, mode)
-	if ignore {
-		p = sourceFoldASCII(p, mode)
+
+// Only fixed source expressions belong here, never titles or user patterns.
+// Bound retained entries even if the source pattern inventory grows. Overflow
+// takes the original preparation path; warmed entries keep serving readers.
+const maxPreparedSourcePatterns = 256
+
+type sourcePatternKey struct {
+	pattern, mode string
+	ignore        bool
+}
+
+var preparedPatterns = struct {
+	sync.RWMutex
+	values map[sourcePatternKey]string
+}{values: make(map[sourcePatternKey]string)}
+
+func preparedSourcePattern(p, mode string, ignore bool) string {
+	key := sourcePatternKey{p, mode, ignore}
+	preparedPatterns.RLock()
+	value, ok := preparedPatterns.values[key]
+	preparedPatterns.RUnlock()
+	if ok {
+		return value
 	}
-	return rxFirst(p, v, false)
+	value = fullPattern(p, mode)
+	if ignore {
+		value = sourceFoldASCII(value, mode)
+	}
+	preparedPatterns.Lock()
+	if len(preparedPatterns.values) < maxPreparedSourcePatterns {
+		preparedPatterns.values[key] = value
+	}
+	preparedPatterns.Unlock()
+	return value
+}
+
+func fullRXFirst(p, v string, ignore bool, mode string) *regexp2.Match {
+	return rxFirst(preparedSourcePattern(p, mode, ignore), v, false)
 }
 func fullRXHas(p, v string, ignore bool, mode string) bool {
-	p = fullPattern(p, mode)
-	if ignore {
-		p = sourceFoldASCII(p, mode)
-	}
-	return rxHas(p, v, false)
+	return rxHas(preparedSourcePattern(p, mode, ignore), v, false)
 }
 func fullRXMatches(p, v string, ignore bool, mode string) []*regexp2.Match {
-	p = fullPattern(p, mode)
-	if ignore {
-		p = sourceFoldASCII(p, mode)
-	}
-	return rxMatches(p, v, false)
+	return rxMatches(preparedSourcePattern(p, mode, ignore), v, false)
 }
 func fullRXReplace(p, v, r string, ignore bool, mode string) string {
-	p = fullPattern(p, mode)
-	if ignore {
-		p = sourceFoldASCII(p, mode)
-	}
-	return rxReplace(p, v, r, false)
+	return rxReplace(preparedSourcePattern(p, mode, ignore), v, r, false)
 }

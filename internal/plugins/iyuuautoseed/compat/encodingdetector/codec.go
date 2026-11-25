@@ -489,7 +489,7 @@ func DecodeErrors(data []byte, encoding, mode string) (string, error) {
 	if len(data) == 0 {
 		return "", nil
 	}
-	if e := loadData(); e != nil {
+	if e := loadRegistry(); e != nil {
 		return "", e
 	}
 	norm := codecNormalize(encoding)

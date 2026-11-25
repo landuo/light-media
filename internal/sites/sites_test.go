@@ -26,6 +26,31 @@ func htmlFixture(kind, query string) string {
 	return authHTML + `<table class="torrents"><tr><th>Title</th></tr>` + nexusRow + `</table><a href="torrents.php?search=` + url.QueryEscape(query) + `&amp;page=1">next</a>`
 }
 
+func BenchmarkNexusHTMLSearch100Rows(b *testing.B) {
+	c, err := New(Config{ID: "test", Kind: "ubits", BaseURL: "http://127.0.0.1", Cookie: "synthetic"})
+	if err != nil {
+		b.Fatal(err)
+	}
+	page := c.endpoint("torrents.php")
+	page.RawQuery = "search=sample&page=0"
+	var body strings.Builder
+	body.WriteString(authHTML)
+	body.WriteString(`<table class="torrents"><tr><th>Title</th></tr>`)
+	for i := range 100 {
+		body.WriteString(strings.ReplaceAll(nexusRow, "id=101", fmt.Sprintf("id=%d", i+1000)))
+	}
+	body.WriteString(`</table><a href="torrents.php?search=sample&amp;page=1">next</a>`)
+	html := []byte(body.String())
+	b.ReportAllocs()
+	for b.Loop() {
+		result, err := c.parseHTML(html, page, 1)
+		if err != nil || len(result.Resources) != 100 || !result.HasMore ||
+			result.Resources[99].ID != "1099" || result.Resources[99].Subtitle != "中文副标题" {
+			b.Fatalf("rows=%d next=%v err=%v", len(result.Resources), result.HasMore, err)
+		}
+	}
+}
+
 func TestNativeHTMLSearch(t *testing.T) {
 	for _, kind := range []string{"ubits", "jiayuan", "1ptba", "hhanclub"} {
 		t.Run(kind, func(t *testing.T) {

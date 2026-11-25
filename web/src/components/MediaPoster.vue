@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 import { VImg } from 'vuetify/components/VImg';
 import { VSkeletonLoader } from 'vuetify/components/VSkeletonLoader';
 
-const props = defineProps<{ src: string; alt: string }>();
+const props = defineProps<{ src: string; alt: string; eager?: boolean }>();
 const emit = defineEmits<{ error: []; load: [] }>();
 const loaded = ref(false),
   failed = ref(false);
@@ -30,6 +30,8 @@ function ready() {
     <VImg
       v-if="src && !failed"
       :key="src"
+      :eager="eager"
+      :transition="false"
       :src="src"
       :alt="alt"
       :aspect-ratio="2 / 3"

@@ -19,6 +19,7 @@ func subscriptionTestApp(t *testing.T) *App {
 	}
 	t.Cleanup(func() { _ = a.Close() })
 	a.config = Settings{Downloaders: []DownloaderConfig{{Config: download.Config{ID: "test-qb", Kind: "qb", BaseURL: "http://127.0.0.1:1"}, DownloadPath: "/downloads"}}, Roots: []Root{{ID: "test-tv", Path: t.TempDir(), Kind: "tv"}}, DefaultDownloader: "test-qb", DefaultRoot: "test-tv"}
+	a.invalidateSettings()
 	m := catalog.Media{ID: 206484, MediaType: "tv", Title: "诛仙", OriginalTitle: "Jade Dynasty", Year: 2022}
 	season := catalog.Season{SeriesID: m.ID, SeasonNumber: 4, Episodes: []catalog.Episode{{ID: 1, SeasonNumber: 4, EpisodeNumber: 1, AirDate: "2026-10-15"}, {ID: 2, SeasonNumber: 4, EpisodeNumber: 2, AirDate: "2026-10-16"}, {ID: 3, SeasonNumber: 4, EpisodeNumber: 3, AirDate: "2026-10-17"}, {ID: 4, SeasonNumber: 4, EpisodeNumber: 4, AirDate: "2026-10-18"}, {ID: 5, SeasonNumber: 4, EpisodeNumber: 5}}}
 	for key, value := range map[string]any{"media:tv:206484": m, "season:206484:4": season} {

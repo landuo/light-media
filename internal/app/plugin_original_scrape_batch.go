@@ -13,6 +13,10 @@ import (
 // closes and all tasks finish. Existing durable jobs supply the pending set;
 // failed/cancelled jobs finish it, while retries and paused jobs remain pending.
 type originalScrapeBatchKey struct{}
+
+const pendingScrapeJobs = `kind IN ('import','organize_file','reorganize_cleanup','quality_cleanup') AND state NOT IN ('succeeded','failed','cancelled','needs_review')`
+const pendingScrapeBatchSQL = `SELECT EXISTS(SELECT 1 FROM jobs WHERE ` + pendingScrapeJobs + ` AND json_extract(payload,'$.original_scrape_batch')=?)`
+
 type originalScrapeTarget struct {
 	Event  json.RawMessage `json:"event"`
 	Assets []string        `json:"assets"`
@@ -244,13 +248,15 @@ func (a *App) flushOriginalScrapeBatchTx(ctx context.Context, tx *sql.Tx, key st
 	if close {
 		batch.Closed = true
 	}
-	var pending int
-	const pendingBatchSQL = `SELECT COUNT(*) FROM jobs WHERE kind IN ('import','organize_file','reorganize_cleanup','quality_cleanup') AND json_extract(payload,'$.original_scrape_batch')=? AND state NOT IN ('succeeded','failed','cancelled','needs_review')`
-	if err = tx.QueryRowContext(ctx, pendingBatchSQL, key).Scan(&pending); err != nil {
-		return nil, fmt.Errorf("%w [sql: %s]", err, pendingBatchSQL)
+	if !batch.Closed {
+		return nil, nil
+	}
+	var pending bool
+	if err = tx.QueryRowContext(ctx, pendingScrapeBatchSQL, key).Scan(&pending); err != nil {
+		return nil, fmt.Errorf("%w [sql: %s]", err, pendingScrapeBatchSQL)
 	}
 	var events []json.RawMessage
-	if batch.Closed && pending == 0 {
+	if !pending {
 		for _, target := range batch.Targets {
 			if len(target.Assets) == 0 {
 				continue

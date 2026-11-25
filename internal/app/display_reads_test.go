@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
@@ -46,7 +47,7 @@ func TestDisplayReadsUseSelectiveIndexes(t *testing.T) {
 		t.Fatalf("queue priority sorts history: %s", plan)
 	}
 	plan = displayQueryPlan(t, a, `SELECT payload FROM subscribe WHERE json_extract(payload,'$.state') IS NOT 'cancelled' ORDER BY updated_at DESC,uid LIMIT 500`)
-	if !strings.Contains(plan, "subscription_display_order") || strings.Contains(plan, "TEMP B-TREE") {
+	if !strings.Contains(plan, "subscription_visible_order") || strings.Contains(plan, "TEMP B-TREE") {
 		t.Fatalf("subscription list sorts all records: %s", plan)
 	}
 	// These indexes must not evaluate JSON on unrelated encrypted payloads.
@@ -71,6 +72,9 @@ func TestDisplayReadsDoNotWaitForWriterAndHideUncommittedState(t *testing.T) {
 	}
 	readCtx, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
+	if _, _, err = a.directoryObservations(readCtx, "directory"); err != nil {
+		t.Fatal(err)
+	}
 	items := []catalog.Media{{ID: 91, MediaType: "movie", Recommendations: []catalog.Media{media}}}
 	if err = a.decorateMedia(readCtx, items); err != nil {
 		t.Fatal(err)
@@ -156,9 +160,14 @@ func TestSubscriptionDisplayBatchMatchesCoverageAndWords(t *testing.T) {
 	if response["total"] != 2 {
 		t.Fatalf("unexpected response: %+v", response)
 	}
-	for _, entry := range response["items"].([]map[string]any) {
-		if entry["id"] == sub.ID && entry["custom_words"] != words {
-			t.Fatal("editor words missing")
+	raw, err := json.Marshal(response["items"])
+	var entries []map[string]any
+	if err != nil || json.Unmarshal(raw, &entries) != nil || len(entries) != 2 {
+		t.Fatal("invalid subscription list response")
+	}
+	for _, entry := range entries {
+		if entry["known_episodes"] == nil || (entry["id"] == sub.ID && entry["custom_words"] != words) {
+			t.Fatal("coverage or editor words missing")
 		}
 	}
 }
@@ -168,6 +177,7 @@ func TestSubscriptionDisplayKeepsAtomicCoverageSnapshot(t *testing.T) {
 	ctx := context.Background()
 	sub := Subscription{ID: "atomic", Media: catalog.Media{ID: 19, MediaType: "movie"}, State: "active"}
 	summaryRecord(t, a, "subscription", sub.ID, sub)
+	summaryRecord(t, a, "intent", "intent", Intent{ID: "intent", State: "accepted"})
 	if _, err := a.Store.DB.Exec(`INSERT INTO reservations VALUES('movie:19',0,0,'intent')`); err != nil {
 		t.Fatal(err)
 	}
@@ -267,7 +277,10 @@ func BenchmarkDecorateMediaIndexed100k(b *testing.B) {
 func TestManagedDirectoryDisplayAggregatesPendingKinds(t *testing.T) {
 	a := newTestApp(t)
 	ctx := context.Background()
+	a.cfgMu.Lock()
 	a.config.Directories = []DirectoryRule{{ID: "one", SourcePath: t.TempDir(), Enabled: true, MonitorType: "poll"}, {ID: "two", SourcePath: t.TempDir()}}
+	a.invalidateSettings()
+	a.cfgMu.Unlock()
 	for _, kind := range []string{"intent", "directory_file"} {
 		for i, state := range []string{"planned", "downloaded", "imported", "cancelled", "complete", "baseline", "tracking"} {
 			summaryRecord(t, a, kind, fmt.Sprintf("%s-%d", kind, i), map[string]string{"directory_id": "one", "state": state})
@@ -291,10 +304,67 @@ func TestManagedDirectoryDisplayAggregatesPendingKinds(t *testing.T) {
 	dirs := result.(map[string]any)["directories"].([]map[string]any)
 	// Intent excludes only imported/cancelled (5); directory files exclude
 	// complete/imported/baseline/tracking (3). Preserve the distinct policies.
-	if dirs[0]["pending_count"] != 8 || dirs[1]["pending_count"] != 0 {
+	if len(dirs) != 2 || dirs[0]["pending_count"] != 8 || dirs[1]["pending_count"] != 0 {
 		t.Fatalf("pending counts %+v", dirs)
 	}
 	if dirs[0]["connection"].(managedConnection).Status != "connected" || dirs[1]["connection"].(managedConnection).Status != "disabled" {
 		t.Fatalf("directory states %+v", dirs)
+	}
+}
+
+func TestJobDisplayIndexUpgradesLegacyQueue(t *testing.T) {
+	dir := t.TempDir()
+	old, err := OpenStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	legacy := strings.ReplaceAll(jobDisplayPriority, activeOrganizeStates, "('queued','running','retry_wait','waiting_paused')")
+	query := "SELECT id FROM jobs ORDER BY " + jobDisplayPriority + ",created_at DESC,id LIMIT 100"
+	_, err = old.DB.Exec("DROP INDEX jobs_display_priority_v2; CREATE INDEX jobs_display_priority ON jobs((" + legacy + "),created_at DESC,id)")
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = old.DB.Exec(`INSERT INTO jobs(id,workflow_id,kind,state,payload,run_at,created_at,updated_at) VALUES
+		('finished','','subscription','succeeded','{}',0,'3','3'),
+		('retry','','subscription','retry_wait','{}',0,'1','1'),
+		('queued','','subscription','queued','{}',0,'2','2')`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Start a read of the modified on-disk schema before asking the WAL reader
+	// for EXPLAIN output; EXPLAIN alone can use its previous schema cookie.
+	var legacyIndexes int
+	if err := old.reader().QueryRow("SELECT count(*) FROM sqlite_schema WHERE name='jobs_display_priority'").Scan(&legacyIndexes); err != nil || legacyIndexes != 1 {
+		t.Fatalf("legacy index missing: count %d, error %v", legacyIndexes, err)
+	}
+	if plan := displayQueryPlan(t, &App{Store: old}, query); !strings.Contains(plan, "TEMP B-TREE") {
+		t.Fatalf("legacy fixture already uses the current priority index: %s", plan)
+	}
+	if err := old.Close(); err != nil {
+		t.Fatal(err)
+	}
+	store, err := OpenStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer store.Close()
+	if plan := displayQueryPlan(t, &App{Store: store}, query); !strings.Contains(plan, "jobs_display_priority_v2") || strings.Contains(plan, "TEMP B-TREE") {
+		t.Fatalf("upgraded queue still scans and sorts job history: %s", plan)
+	}
+	rows, err := store.reader().Query(query)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer rows.Close()
+	var ids []string
+	for rows.Next() {
+		var id string
+		if err := rows.Scan(&id); err != nil {
+			t.Fatal(err)
+		}
+		ids = append(ids, id)
+	}
+	if err := rows.Err(); err != nil || !reflect.DeepEqual(ids, []string{"queued", "finished", "retry"}) {
+		t.Fatalf("upgraded queue order %v, error %v", ids, err)
 	}
 }

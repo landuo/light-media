@@ -56,6 +56,7 @@ function fixture(name, { descriptor = meta, navKey = 'archive', getEntry, getFor
     if (path === '../features/plugin-remote-api') return remoteAPI;
     if (path === '../features/plugin-federation') return { loadPluginRemote: load, loadPluginAppRemote: (instance, key, options) => loadPluginAppRemote(instance, key, options, load) };
     if (path.startsWith('vuetify/') || path.endsWith('.vue')) return {};
+    if (path === '../assets/plugin-utilities.css') return {};
     throw new Error('unexpected component import: ' + path);
   }, module.exports);
   const scope = Vue.effectScope();

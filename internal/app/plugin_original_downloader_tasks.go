@@ -92,7 +92,7 @@ func (a *App) originalDownloaderTasksOutcome(ctx context.Context, scope original
 		}
 		return nil, err
 	}
-	out.Tasks, err = originalDownloaderTaskProjectionFields(kind, hashes, body, originalDownloaderFields{brushTrackers: originalBrushSourceScope(ctx, scope)})
+	out.Tasks, err = originalDownloaderTaskProjectionForBrush(kind, hashes, body, false, originalBrushSourceScope(ctx, scope))
 	if err != nil {
 		return nil, err
 	}
@@ -123,26 +123,38 @@ func originalDownloaderTaskProjection(kind string, hashes []string, raw json.Raw
 }
 
 func originalDownloaderTaskProjectionWithOptions(kind string, hashes []string, raw json.RawMessage, includeQBPackFields bool) ([]plugins.DownloaderTaskV1, error) {
-	return originalDownloaderTaskProjectionFields(kind, hashes, raw, originalDownloaderFields{qbPack: includeQBPackFields})
+	return originalDownloaderTaskProjectionForBrush(kind, hashes, raw, includeQBPackFields, false)
 }
 
-type originalDownloaderFields struct {
-	qbPack        bool
-	brushTrackers bool
-	activityTime  bool
+func originalDownloaderTaskProjectionForBrush(kind string, hashes []string, raw json.RawMessage, includeQBPackFields, includeBrushTrackers bool) ([]plugins.DownloaderTaskV1, error) {
+	return (originalDownloaderTaskSelection{hashes: hashes}).project(kind, raw, includeQBPackFields, includeBrushTrackers)
 }
 
-func originalDownloaderTaskProjectionFields(kind string, hashes []string, raw json.RawMessage, fields originalDownloaderFields) ([]plugins.DownloaderTaskV1, error) {
+// Exact reads follow the requested order and never interpret nil as all.
+// List/completion callbacks follow daemon order; only those may enumerate all.
+// Derive that order while projecting rather than decoding the daemon list twice.
+type originalDownloaderTaskSelection struct {
+	hashes              []string
+	daemonOrder         bool
+	includeActivityTime bool
+}
+
+func (s originalDownloaderTaskSelection) project(kind string, raw json.RawMessage, includeQBPackFields, includeBrushTrackers bool) ([]plugins.DownloaderTaskV1, error) {
 	invalid := func() error { return bad("DOWNLOADER_INVALID_RESPONSE", "下载器任务响应无效") }
 	var rows []map[string]json.RawMessage
 	if json.Unmarshal(raw, &rows) != nil || rows == nil {
 		return nil, invalid()
 	}
-	selected := make(map[string]bool, len(hashes))
-	for _, hash := range hashes {
+	selected := make(map[string]bool, len(s.hashes))
+	for _, hash := range s.hashes {
 		selected[hash] = true
 	}
-	observed := make(map[string]plugins.DownloaderTaskV1, len(hashes))
+	all := s.daemonOrder && s.hashes == nil
+	order := s.hashes
+	if s.daemonOrder {
+		order = nil
+	}
+	observed := make(map[string]plugins.DownloaderTaskV1, len(s.hashes))
 	key := "hash"
 	if kind == "transmission" {
 		key = "hashString" // Existing core client already resolves modern aliases.
@@ -153,7 +165,7 @@ func originalDownloaderTaskProjectionFields(kind string, hashes []string, raw js
 			return nil, invalid()
 		}
 		hash = strings.ToLower(hash)
-		if !selected[hash] {
+		if !all && !selected[hash] {
 			continue // A daemon cannot expand the caller's exact selection.
 		}
 		if _, duplicate := observed[hash]; duplicate {
@@ -164,7 +176,7 @@ func originalDownloaderTaskProjectionFields(kind string, hashes []string, raw js
 		numeric := originalQBTaskNumericFields
 		if kind == "transmission" {
 			numeric = originalTRTaskNumericFields
-		} else if !fields.qbPack {
+		} else if !includeQBPackFields {
 			// Older workers reject unknown fields in a resource response.
 			delete(row, "completed")
 			delete(row, "availability")
@@ -176,7 +188,7 @@ func originalDownloaderTaskProjectionFields(kind string, hashes []string, raw js
 		if kind == "transmission" {
 			clock = "secondsDownloading"
 		}
-		if !fields.activityTime {
+		if !s.includeActivityTime {
 			delete(row, clock)
 		} else {
 			omitInvalidActivityCounter(row, clock)
@@ -191,7 +203,7 @@ func originalDownloaderTaskProjectionFields(kind string, hashes []string, raw js
 			trackerKey = "trackerList"
 		}
 		var tracker string
-		if fields.brushTrackers {
+		if includeBrushTrackers {
 			_ = json.Unmarshal(row[trackerKey], &tracker)
 			tracker = originalBrushTrackerOrigins(tracker)
 		}
@@ -224,9 +236,12 @@ func originalDownloaderTaskProjectionFields(kind string, hashes []string, raw js
 			return nil, invalid()
 		}
 		observed[hash] = item
+		if s.daemonOrder {
+			order = append(order, hash)
+		}
 	}
-	out := []plugins.DownloaderTaskV1{}
-	for _, hash := range hashes {
+	out := make([]plugins.DownloaderTaskV1, 0, len(observed))
+	for _, hash := range order {
 		if item, ok := observed[hash]; ok {
 			out = append(out, item)
 		}

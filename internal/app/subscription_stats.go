@@ -73,7 +73,10 @@ func subscriptionStatsEvidenceError() error {
 }
 func (a *App) subscriptionStatsSettingsTx(ctx context.Context, tx *sql.Tx) (subscriptionstats.SettingsSnapshot, string, error) {
 	var sealed []byte
-	e := tx.QueryRowContext(ctx, `SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed)
+	e := tx.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind='source_statistics_settings' AND id='main'`).Scan(&sealed)
+	if errors.Is(e, sql.ErrNoRows) {
+		e = tx.QueryRowContext(ctx, `SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed)
+	}
 	if errors.Is(e, sql.ErrNoRows) {
 		return subscriptionstats.SettingsSnapshot{}, "source_settings_not_obtained", nil
 	}

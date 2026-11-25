@@ -98,6 +98,11 @@ async function observe() {
   if (viewport.value) viewport.value.scrollLeft = scrollLeft.value;
   syncLayout();
   if (feed.loaded || feed.error) return;
+  const bounds = container.value.getBoundingClientRect();
+  if (bounds.height && bounds.top < window.innerHeight && bounds.bottom > 0) {
+    void load();
+    return;
+  }
   intersection = new IntersectionObserver(
     (entries) => {
       if (entries.some((entry) => entry.isIntersecting) && props.active) {

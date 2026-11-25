@@ -107,7 +107,12 @@ export async function api<T = any>(
     const r = await fetch(apiURL(path), {
       method: method || (body === undefined ? 'GET' : 'POST'),
       credentials: 'same-origin',
-      headers: body === undefined ? {} : { 'Content-Type': 'application/json' },
+      headers: {
+        ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+        ...(path === '/subscriptions' && body !== undefined && (!method || method === 'POST')
+          ? { Prefer: 'respond-async' }
+          : {}),
+      },
       body: body === undefined ? undefined : JSON.stringify(body),
       signal,
     });

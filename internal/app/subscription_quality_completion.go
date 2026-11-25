@@ -5,6 +5,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 )
 
 // Stable shared identity for Notice v2. A completion is a core business job,
@@ -52,7 +53,16 @@ func completionEvidenceError() error {
 }
 func (p *PluginStore) readSubscriptionCompletionSealed(ctx context.Context, q subscriptionCompletionReader, kind, id string) (json.RawMessage, error) {
 	var sealed []byte
-	if e := q.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, kind, id).Scan(&sealed); e != nil {
+	var err error
+	if kind == "subscription_added" {
+		err = recordReadRow(ctx, q, kind, id).Scan(&sealed)
+	}
+	// Older installations also have signed Added events in the plugin namespace.
+	// Only a missing row may fall back; an invalid current signature must fail.
+	if kind != "subscription_added" || errors.Is(err, sql.ErrNoRows) {
+		err = q.QueryRowContext(ctx, `SELECT payload FROM plugin_record WHERE kind=? AND id=?`, kind, id).Scan(&sealed)
+	}
+	if err != nil {
 		return nil, completionEvidenceError()
 	}
 	raw, e := p.unseal(kind, "system", id, sealed)

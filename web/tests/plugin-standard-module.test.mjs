@@ -82,6 +82,7 @@ function fixture(
       name === "vuedraggable"
     )
       return {};
+    if (name === '../assets/plugin-utilities.css') return {};
     throw new Error("Unexpected component import " + name);
   }, module.exports);
   const scope = vue.effectScope();

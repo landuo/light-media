@@ -6,7 +6,6 @@ import (
 	"net/url"
 	"sort"
 	"strings"
-	"time"
 
 	"light-media/internal/plugins"
 )
@@ -16,35 +15,25 @@ import (
 // It never connects to a site/downloader or allocates an identity. All reads in
 // the transaction use tx: Store.DB has one connection.
 func (a *App) originalBrushInventory(ctx context.Context) (plugins.BrushInventoryV1, error) {
-	// The brush plugin polls this inventory repeatedly. Decoding every site
-	// snapshot is expensive, and the underlying account data only changes on a
-	// refresh, so a short-lived snapshot is enough for its decisions.
-	a.brushInventoryCache.mu.Lock()
-	if time.Since(a.brushInventoryCache.at) < 15*time.Second {
-		value, err := a.brushInventoryCache.value, a.brushInventoryCache.err
-		a.brushInventoryCache.mu.Unlock()
-		return value, err
-	}
-	a.brushInventoryCache.mu.Unlock()
-	value, err := a.buildOriginalBrushInventory(ctx)
-	a.brushInventoryCache.mu.Lock()
-	a.brushInventoryCache.at, a.brushInventoryCache.value, a.brushInventoryCache.err = time.Now(), value, err
-	a.brushInventoryCache.mu.Unlock()
-	return value, err
-}
-
-func (a *App) buildOriginalBrushInventory(ctx context.Context) (plugins.BrushInventoryV1, error) {
+	owner := a.settingsSnapshot()
 	out := plugins.BrushInventoryV1{SchemaVersion: 1, Sites: []plugins.BrushSiteReferenceV1{}, Downloaders: []plugins.BrushDownloaderReferenceV1{}}
 	if err := ctx.Err(); err != nil {
 		return out, err
 	}
-	settings := a.Settings()
-	tx, err := a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	settings := *owner
+	tx, err := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
 	if err != nil {
 		return out, err
 	}
 	defer tx.Rollback()
-	view, err := a.siteAccountViewTx(ctx, tx, settings.Sites)
+	version, err := siteDisplayVersion(ctx, tx)
+	if err != nil {
+		return out, err
+	}
+	if cached := a.brushInventoryCache.Load(); cached != nil && cached.settings == owner && cached.version == version {
+		return cached.data, nil
+	}
+	view, err := a.readSiteAccountViewTx(ctx, tx, settings.Sites, siteAccountViewScope{latestOnly: true})
 	if err != nil {
 		return out, err
 	}
@@ -92,10 +81,12 @@ func (a *App) buildOriginalBrushInventory(ctx context.Context) (plugins.BrushInv
 	if err := ctx.Err(); err != nil {
 		return out, err
 	}
-	// Explicit completion is necessary before the caller validates its live
-	// scope through Store.DB. A deferred rollback alone would deadlock there.
+	// Release the snapshot before the caller revalidates its live scope.
 	if err := tx.Commit(); err != nil {
 		return out, err
+	}
+	if len(out.Sites) <= 512 && len(out.Downloaders) <= 128 {
+		a.brushInventoryCache.Store(&brushSiteDisplay{version: version, settings: owner, data: out})
 	}
 	return out, nil
 }

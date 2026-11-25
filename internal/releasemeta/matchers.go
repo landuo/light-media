@@ -4,8 +4,6 @@ import (
 	"errors"
 	"sort"
 	"strings"
-
-	"light-media/internal/pyregex"
 )
 
 func matchTeam(title string, options Options) (string, error) {
@@ -28,7 +26,7 @@ func matchTeamOption(title string, options Options) (*string, error) {
 			groups += "|" + value
 		}
 	}
-	re, err := pyregex.Compile(`(?<=[-@\[￡【&])(?:(?:`+groups+`))(?=$|[@.\s\]\[】&])`, true)
+	re, err := options.patterns.compile(`(?<=[-@\[￡【&])(?:(?:`+groups+`))(?=$|[@.\s\]\[】&])`, true)
 	if err != nil {
 		if options.SourceMode == "rust" {
 			return nil, nil
@@ -66,7 +64,7 @@ func matchCustomization(title string, options Options) (string, error) {
 	if len(patterns) == 0 || title == "" {
 		return "", nil
 	}
-	re, err := pyregex.Compile(strings.Join(patterns, "|"), false)
+	re, err := options.patterns.compile(strings.Join(patterns, "|"), false)
 	if err != nil {
 		if options.SourceMode == "rust" {
 			return "", nil

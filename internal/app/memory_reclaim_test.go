@@ -51,13 +51,21 @@ func TestMemoryReclaimInterval(t *testing.T) {
 
 func TestShouldReclaimOnlyWhenQuiet(t *testing.T) {
 	previous := runtime.MemStats{TotalAlloc: 100 << 20}
-	if !shouldReclaim(previous, runtime.MemStats{TotalAlloc: previous.TotalAlloc + 1<<20}, memoryReclaimIdleAlloc) {
-		t.Fatal("a quiet interval should reclaim")
+	current := runtime.MemStats{TotalAlloc: previous.TotalAlloc + 1<<20, HeapIdle: 80 << 20, HeapReleased: 64 << 20}
+	if !shouldReclaim(previous, current, memoryReclaimIdleAlloc) {
+		t.Fatal("quiet interval with 16 MiB still retained should reclaim")
 	}
-	if shouldReclaim(previous, runtime.MemStats{TotalAlloc: previous.TotalAlloc + 64<<20}, memoryReclaimIdleAlloc) {
+	current.HeapReleased++
+	if shouldReclaim(previous, current, memoryReclaimIdleAlloc) {
+		t.Fatal("already scavenged pages must not trigger a GC")
+	}
+	current.HeapReleased = 0
+	current.TotalAlloc = previous.TotalAlloc + memoryReclaimIdleAlloc
+	if shouldReclaim(previous, current, memoryReclaimIdleAlloc) {
 		t.Fatal("a busy interval must not trigger a scavenge")
 	}
-	if shouldReclaim(previous, runtime.MemStats{TotalAlloc: previous.TotalAlloc - 1}, memoryReclaimIdleAlloc) {
+	current.TotalAlloc = previous.TotalAlloc - 1
+	if shouldReclaim(previous, current, memoryReclaimIdleAlloc) {
 		t.Fatal("a counter reset must not trigger a scavenge")
 	}
 }

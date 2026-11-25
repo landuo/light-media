@@ -148,8 +148,8 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 			if !a.importSourceAllowed(file.Path, request.Manual) || !video && !(request.Manual && classifier.Extra(class)) {
 				return request, bad("INVALID_SOURCE", "请选择容器媒体目录内的视频文件")
 			}
-			hint, numbering, reason := a.importNFOEvidence(file.Path)
-			scanned := importScanFile{Path: file.Path, Parsed: a.parseManualImportFileContext(ctx, file), InferredMedia: hint, Numbering: numbering, IdentityReason: reason}
+			hint, numbering, reason := a.importNFOEvidence(importNFOAnchor(file.Path, class.Bluray))
+			scanned := importScanFile{Path: file.Path, Parsed: a.parseManualImportFileContext(ctx, file), InferredMedia: hint, Numbering: numbering, IdentityReason: reason, originalItem: file.originalItem, originalResolvedMeta: file.originalResolvedMeta}
 			var inferred ImportRequest
 			var err error
 			if request.Manual && (request.originalRecognitionSource != "" || a.originalManualRecognitionAvailable()) {

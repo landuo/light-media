@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../assets/plugin-utilities.css';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useDisplay } from 'vuetify';
 import { VDialog } from 'vuetify/components/VDialog';
@@ -559,5 +560,3 @@ onUnmounted(() => {
   height: 100%;
 }
 </style>
-
-<style src="../assets/plugin-utilities.css"></style>

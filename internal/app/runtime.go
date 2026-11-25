@@ -72,37 +72,40 @@ type App struct {
 	// pluginBuiltinDisabled forces the external worker path. It exists for two
 	// honest reasons: an operator rollback (LIGHT_MEDIA_PLUGIN_BUILTIN=off)
 	// and framework tests that exercise the wire path with a compiled sample.
-	pluginBuiltinDisabled         bool
-	pluginOriginalUserUID         atomic.Pointer[string]
-	pluginOriginalDirectJobs      originalDirectJobs
-	pluginRegisteredAPIs          sync.Map // Exact instance routes refreshed by original register_plugin_api.
-	pluginOriginalClasses         sync.Map // Original _plugins: imported compiled class, independent of running and installed.
-	pluginOriginalClassOrder      []string // guarded by pluginOriginalRunningMu; source _plugins insertion order
-	pluginSubmittedObjects        sync.Map // Exact objects held by accepted asynchronous calls, including failed init.
-	pluginRunningInstances        sync.Map // Original _running_plugins: successful initialized call objects, not business enable state.
-	systemMessages                systemMessageRuntime
-	bigMemoryMode                 bool               // Trusted startup option; not worker or plugin configuration.
-	safeMode                      bool               // Recovery startup skips automatic plugin and background execution.
-	pluginDeveloperMode           bool               // Immutable DEV startup option, scoped to plugin local monitoring.
-	pluginMarketOverride          *[]string          // Immutable process environment override; never persisted by the settings UI.
-	brushRoots                    []string           // Trusted mounts for brush file checks; never exposed as media roots.
-	pluginLogRotation             *PluginLogRotation // Source ordinary log environment overrides, fixed for this process.
-	resourceSearchPages           *big.Int           // Trusted ordinary SEARCH_RESOURCE_PAGES, normalized at main startup.
-	originalSearchKeywordMu       sync.Mutex
-	originalSearchKeywordNext     time.Time
-	originalSearchKeywordOverflow bool
-	mediaSearchConfiguration      *MediaSearchConfiguration
-	transferExtensions            nativeTransferExtensionRuntime
-	subscriptionStats             subscriptionStatsRuntime
-	recognitionMu                 sync.Mutex
-	recognitionMatcher            atomic.Pointer[words.Matcher]
-	directoryFileMu               sync.Mutex
-	brushInventoryCache           struct {
-		mu    sync.Mutex
-		at    time.Time
-		value plugins.BrushInventoryV1
-		err   error
-	}
+	pluginBuiltinDisabled           bool
+	pluginOriginalUserUID           atomic.Pointer[string]
+	pluginOriginalDirectJobs        originalDirectJobs
+	pluginRegisteredAPIs            sync.Map // Exact instance routes refreshed by original register_plugin_api.
+	pluginOriginalClasses           sync.Map // Original _plugins: imported compiled class, independent of running and installed.
+	pluginOriginalClassOrder        []string // guarded by pluginOriginalRunningMu; source _plugins insertion order
+	pluginSubmittedObjects          sync.Map // Exact objects held by accepted asynchronous calls, including failed init.
+	pluginRunningInstances          sync.Map // Original _running_plugins: successful initialized call objects, not business enable state.
+	systemMessages                  systemMessageRuntime
+	bigMemoryMode                   bool               // Trusted startup option; not worker or plugin configuration.
+	safeMode                        bool               // Recovery startup skips automatic plugin and background execution.
+	pluginDeveloperMode             bool               // Immutable DEV startup option, scoped to plugin local monitoring.
+	pluginMarketOverride            *[]string          // Immutable process environment override; never persisted by the settings UI.
+	brushRoots                      []string           // Trusted mounts for brush file checks; never exposed as media roots.
+	pluginLogRotation               *PluginLogRotation // Source ordinary log environment overrides, fixed for this process.
+	resourceSearchPages             *big.Int           // Trusted ordinary SEARCH_RESOURCE_PAGES, normalized at main startup.
+	originalSearchKeywordMu         sync.Mutex
+	originalSearchKeywordNext       time.Time
+	originalSearchKeywordOverflow   bool
+	mediaSearchConfiguration        *MediaSearchConfiguration
+	transferExtensions              nativeTransferExtensionRuntime
+	subscriptionStats               subscriptionStatsRuntime
+	recognitionMu                   sync.Mutex
+	recognitionMatcher              atomic.Pointer[words.Matcher]
+	directoryFileMu                 sync.Mutex
+	jobDisplayCache                 atomic.Pointer[jobQueueDisplay]
+	historyPageCache                atomic.Pointer[historyPageDisplay]
+	brushInventoryCache             atomic.Pointer[brushSiteDisplay]
+	sourceSiteDisplayCache          atomic.Pointer[sourceSiteDisplay]
+	managedSitesCache               atomic.Pointer[managedSiteDisplay]
+	datedSourceAccounts             datedAccountDisplay
+	nativeAccountCache              nativeAccountCache
+	latestSourceAccounts            atomic.Pointer[sourceAccountDisplay]
+	siteArchive                     atomic.Pointer[accountArchiveDisplay]
 	startupPending                  atomic.Bool
 	RestartRequested                chan struct{}
 	logs                            *runtimeLogger
@@ -117,6 +120,7 @@ type App struct {
 	metadataProxyClient             *http.Client
 	metadataAPITransport            http.RoundTripper
 	metadataAPIConfig               networkproxy.Config
+	posterDisplay                   posterCache
 	imageWork                       catalogImageWork
 	cacheReads                      cachedReadFlights
 	Store                           *Store
@@ -365,6 +369,10 @@ func (a *App) Start(parent context.Context) {
 		a.log("INFO", "runtime", "safe_mode", "安全模式已启动：跳过插件加载、定时任务、监控和自动同步，管理接口仍可使用", "", "")
 		return
 	}
+	// Populate the small local read models once, independently of readiness.
+	// Normal requests check their committed versions on every use.
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.warmNavigationData(ctx) }()
 	// Align persisted installation rows with the compiled-in catalog before
 	// any object loads: shipping this build upgrades every builtin plugin.
 	a.adoptBuiltinVersions(ctx)
@@ -378,6 +386,8 @@ func (a *App) Start(parent context.Context) {
 	if err := a.initializeOriginalPlugins(ctx); err != nil {
 		a.log("ERROR", "plugins", "initialize_failed", "恢复插件初始化失败，请查看插件执行记录", "", "")
 	}
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.warmNavigationFrontends(ctx) }()
 	a.completeOriginalChatRestart(ctx)
 	if err := a.recoverOriginalScrapeBatches(ctx); err != nil {
 		a.log("ERROR", "import", "scrape_batch_recovery_failed", "整理刮削批次恢复失败，请检查任务状态", "", "")
@@ -479,19 +489,24 @@ func (a *App) Close() error {
 	a.logs.close()
 	return a.Store.Close()
 }
-func (a *App) Settings() Settings {
+func (a *App) Settings() Settings { return *a.settingsSnapshot() }
+
+func (a *App) settingsSnapshot() *Settings {
 	// Settings is read on hot paths such as the directory monitor, where the
 	// JSON round trip and per-site credential decoding used to dominate CPU.
 	// The cached value is only read by callers; slices are never mutated in
 	// place, so sharing them keeps the copy cheap.
 	if cached := a.settingsCache.Load(); cached != nil {
-		return *cached
+		return cached
 	}
-	a.cfgMu.RLock()
+	a.cfgMu.Lock()
+	defer a.cfgMu.Unlock()
+	if cached := a.settingsCache.Load(); cached != nil {
+		return cached
+	}
 	b, _ := json.Marshal(a.config)
 	var c Settings
 	_ = json.Unmarshal(b, &c)
-	a.cfgMu.RUnlock()
 	if c.PluginServerURL == nil {
 		value := originalPluginDefaultServerURL(os.LookupEnv)
 		c.PluginServerURL = &value
@@ -500,15 +515,16 @@ func (a *App) Settings() Settings {
 		c.PluginMarkets = append([]string{}, (*a.pluginMarketOverride)...)
 	}
 	a.settingsCache.Store(&c)
-	return c
+	return &c
 }
 
 // invalidateSettings drops the derived snapshot after any config write.
 func (a *App) invalidateSettings() {
 	a.settingsCache.Store(nil)
-	a.brushInventoryCache.mu.Lock()
-	a.brushInventoryCache.at = time.Time{}
-	a.brushInventoryCache.mu.Unlock()
+	a.brushInventoryCache.Store(nil)
+	a.managedSitesCache.Store(nil)
+	a.sourceSiteDisplayCache.Store(nil)
+	a.latestSourceAccounts.Store(nil)
 }
 func (a *App) saveSettings(ctx context.Context, c Settings) error {
 	a.pluginMu.Lock()
@@ -636,8 +652,8 @@ func (a *App) persistSettingsWithEffect(ctx context.Context, c Settings, effect 
 	phase("publish_and_plugins")
 	a.cfgMu.Lock()
 	a.config = c
-	a.cfgMu.Unlock()
 	a.invalidateSettings()
+	a.cfgMu.Unlock()
 	a.reloadInitializedOriginalSourceConnections(ctx, previous.Downloaders, c.Downloaders)
 	a.emitStandardSiteDeletions(ctx, previous, c)
 	a.emitStandardPluginSettingsChanged(ctx, previous, a.Settings())
@@ -695,7 +711,7 @@ func (a *App) setControl(ctx context.Context, pause bool) error {
 
 var urlPattern = regexp.MustCompile(`(?i)https?://[^\s"<>]+`)
 
-func cleanWithSettings(s string, c Settings) string {
+func settingsRedactions(c Settings) []string {
 	secrets := []string{c.TMDB.APIKey, c.TMDB.AccessToken, c.FNOS.Password, c.APIToken}
 	secrets = append(secrets, proxySecrets(c.ProxyHost)...)
 	secrets = append(secrets, c.GitHubToken, c.RepoGitHubToken)
@@ -709,6 +725,18 @@ func cleanWithSettings(s string, c Settings) string {
 	}
 	for _, x := range c.Downloaders {
 		secrets = append(secrets, x.Password, x.APIKey)
+	}
+	return secrets
+}
+func cleanWithSettings(s string, c Settings) string {
+	if s == "" {
+		return ""
+	}
+	return redactSettingsValues(s, settingsRedactions(c))
+}
+func redactSettingsValues(s string, secrets []string) string {
+	if s == "" {
+		return ""
 	}
 	for _, v := range secrets {
 		if v != "" {
@@ -747,7 +775,7 @@ func (a *App) hasAdmin() bool {
 }
 func (a *App) hasAdminContext(ctx context.Context) (bool, error) {
 	var n int
-	err := a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM admin`).Scan(&n)
+	err := a.Store.bootstrapReader().QueryRowContext(ctx, `SELECT COUNT(*) FROM admin`).Scan(&n)
 	return n > 0, err
 }
 func (a *App) auth(w http.ResponseWriter, r *http.Request) (bool, error) {
@@ -818,7 +846,7 @@ func (a *App) authenticated(r *http.Request) bool {
 		return false
 	}
 	var expires int64
-	e = a.Store.reader().QueryRowContext(r.Context(), `SELECT expires_at FROM sessions WHERE token_hash=?`, tokenHash(cookie.Value)).Scan(&expires)
+	e = a.Store.bootstrapReader().QueryRowContext(r.Context(), `SELECT expires_at FROM sessions WHERE token_hash=?`, tokenHash(cookie.Value)).Scan(&expires)
 	return e == nil && expires > time.Now().Unix()
 }
 func (a *App) cached(ctx context.Context, key string, ttl time.Duration, dst any, fetch func() (any, error)) (time.Time, error) {

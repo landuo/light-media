@@ -73,3 +73,25 @@ func TestPriorityRuleDownloadSortAffectsRealIdentitySearch(t *testing.T) {
 	}
 	search(second.ID)
 }
+
+func TestSortSearchCandidatesRecomputesPreferencesAndPreservesTies(t *testing.T) {
+	candidates := []Candidate{
+		{Resource: sites.Resource{ID: "rejected", Title: "Film.2160p-Top", Seeders: 99}},
+		{Accepted: true, Resource: sites.Resource{ID: "first", Title: "Film.1080p-Group", Free: true}},
+		{Accepted: true, Resource: sites.Resource{ID: "second", Title: "Film.1080p-Group", Free: true}},
+		{Accepted: true, Resource: sites.Resource{ID: "resolution", Title: "Film.2160p-Top"}},
+		{Accepted: true, Resource: sites.Resource{ID: "priority", Title: "Film.720p", PriorityOrder: 9}},
+	}
+	check := func(policy Policy, expected ...string) {
+		t.Helper()
+		sortSearchCandidates(candidates, policy)
+		for i, id := range expected {
+			if candidates[i].Resource.ID != id {
+				t.Fatalf("position %d: got %s, want %s", i, candidates[i].Resource.ID, id)
+			}
+		}
+	}
+	check(Policy{PreferredResolutions: []string{"2160p"}}, "priority", "resolution", "first", "second", "rejected")
+	check(Policy{PreferredGroups: []string{"Group"}}, "priority", "first", "second", "resolution", "rejected")
+	check(Policy{}, "priority", "first", "second", "resolution", "rejected")
+}

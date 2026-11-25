@@ -314,3 +314,40 @@ func TestPluginStoreNeutralInstallationAndValueValidation(t *testing.T) {
 		t.Fatal("unsupported future plugin schema accepted")
 	}
 }
+
+func TestBrushDisplayDataKeepsCommittedValues(t *testing.T) {
+	s, p := pluginStoreFixture(t)
+	ctx := t.Context()
+	installStoredPlugin(t, p, "test")
+	value, _ := json.Marshal(strings.Repeat("x", 8192))
+	key := "task.test.torrents"
+	if err := p.originalBaseSaveData(ctx, "test", key, value); err != nil {
+		t.Fatal(err)
+	}
+	first, err := p.Data(ctx, "test", key)
+	if err != nil {
+		t.Fatal(err)
+	}
+	first.Value[2] = 'y'
+	next, err := p.Data(ctx, "test", key)
+	if err != nil || !bytes.Equal(next.Value, value) {
+		t.Fatal("cached list aliased caller", err)
+	}
+	tx, err := s.DB.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tx.Rollback()
+	if _, err = tx.ExecContext(ctx, "UPDATE plugin_values SET sealed=x'ff' WHERE item_key=?", key); err != nil {
+		t.Fatal(err)
+	}
+	if current, err := p.Data(ctx, "test", key); err != nil || !bytes.Equal(current.Value, value) {
+		t.Fatal("observed uncommitted data", err)
+	}
+	if err = tx.Commit(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = p.Data(ctx, "test", key); pluginErrorCode(err) != "PLUGIN_DATA_CORRUPT" {
+		t.Fatal("cached data hid changed storage", err)
+	}
+}

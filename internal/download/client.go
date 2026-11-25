@@ -346,6 +346,16 @@ func validTags(tags []string) bool {
 }
 func fraction(v float64) bool { return !math.IsNaN(v) && !math.IsInf(v, 0) && v >= 0 && v <= 1 }
 func decode(data []byte, to any) error {
+	// request already buffered and bounded the entire response. Decode directly
+	// from it rather than growing a second buffer for the whole JSON value.
+	if err := json.Unmarshal(data, to); err == nil {
+		return nil
+	}
+	if json.Valid(data) {
+		return failure("response", "invalid_json") // single value, wrong type
+	}
+	// Unmarshal checks syntax before populating to. On malformed input retain
+	// the distinction between an invalid first value and an invalid tail.
 	d := json.NewDecoder(bytes.NewReader(data))
 	if err := d.Decode(to); err != nil {
 		return failure("response", "invalid_json")

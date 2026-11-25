@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"io"
 	"light-media/internal/catalog"
 	"net/http"
@@ -36,7 +37,7 @@ func (a *App) catalogExploreImage(w http.ResponseWriter, r *http.Request) error 
 		if err != nil || st.Size() <= 0 || st.Size() > 8<<20 {
 			return false
 		}
-		contentType, err := catalogImageContentType(f)
+		content, contentType, err := a.posterDisplay.content(f, r)
 		if err != nil {
 			return false
 		}
@@ -48,7 +49,7 @@ func (a *App) catalogExploreImage(w http.ResponseWriter, r *http.Request) error 
 		w.Header().Set("Content-Type", contentType)
 		w.Header().Set("Cache-Control", "private, max-age=86400")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
-		http.ServeContent(w, r, name, st.ModTime(), f)
+		http.ServeContent(w, r, name, st.ModTime(), content)
 		return true
 	}
 	if serve() {
@@ -92,16 +93,6 @@ func (a *App) catalogExploreImage(w http.ResponseWriter, r *http.Request) error 
 	if response.StatusCode != 200 || response.ContentLength > 8<<20 || (content != "image/jpeg" && content != "image/png" && content != "image/webp") {
 		return bad("IMAGE_UNAVAILABLE", "来源图片未返回可用结果")
 	}
-	data, err := io.ReadAll(io.LimitReader(response.Body, (8<<20)+1))
-	response.Body.Close()
-	releaseSlot()
-	if err != nil {
-		return bad("IMAGE_UNAVAILABLE", "来源图片读取失败")
-	}
-	actual := http.DetectContentType(data)
-	if len(data) == 0 || len(data) > 8<<20 || (actual != "image/jpeg" && actual != "image/png" && actual != "image/webp") {
-		return bad("IMAGE_UNAVAILABLE", "来源图片数据无效")
-	}
 	d, err := importDir(dir, true)
 	if err != nil {
 		return err
@@ -113,7 +104,21 @@ func (a *App) catalogExploreImage(w http.ResponseWriter, r *http.Request) error 
 	}
 	tmpName := tmp.Name()
 	defer os.Remove(tmpName)
-	_, err = tmp.Write(data)
+	// Stream to an unpublished file: unknown-length responses need one extra
+	// byte to distinguish an exact-limit image from an oversized one.
+	n, err := io.Copy(tmp, io.LimitReader(response.Body, (8<<20)+1))
+	response.Body.Close()
+	releaseSlot()
+	if err != nil {
+		var fileErr *os.PathError
+		if !errors.As(err, &fileErr) || fileErr.Path != tmpName {
+			err = bad("IMAGE_UNAVAILABLE", "来源图片读取失败")
+		}
+	} else if n == 0 || n > 8<<20 {
+		err = bad("IMAGE_UNAVAILABLE", "来源图片数据无效")
+	} else if _, err = catalogImageContentType(tmp); err != nil {
+		err = bad("IMAGE_UNAVAILABLE", "来源图片数据无效")
+	}
 	if err == nil {
 		err = tmp.Sync()
 	}

@@ -14,6 +14,7 @@ import (
 
 // Options 保存本次解析所使用的原版配置快照。
 type Options struct {
+	patterns      *configuredPatterns
 	SourceMode    string   `json:"source_mode,omitempty"`
 	CustomWords   []string `json:"custom_words,omitempty"`
 	ReleaseGroups []string `json:"release_groups,omitempty"`
@@ -74,7 +75,7 @@ func Parse(title string, subtitle *string, options Options) (result Metadata, pa
 	preparedTitle := title
 	var err error
 	if options.SourceMode == "rust" {
-		preparedTitle, err = prepareRustWords(title, options.CustomWords)
+		preparedTitle, err = prepareRustWords(title, options.CustomWords, options.patterns)
 		if errors.Is(err, errRustFallback) {
 			options.SourceMode = "legacy"
 		} else if err != nil {

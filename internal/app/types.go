@@ -354,6 +354,7 @@ type Event struct {
 	Message    string `json:"message"`
 }
 type Candidate struct {
+	sortRank                 int // computed once per candidate for the current search policy
 	chatSearchQuery          string
 	chatSeasonPack           []int
 	originalSelectionContext json.RawMessage

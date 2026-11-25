@@ -42,7 +42,7 @@ function subscribe(m: any) {
 <template>
   <div class="media-grid">
     <article
-      v-for="m in items"
+      v-for="(m, index) in items"
       :key="exploreMediaKey(m)"
       class="media-card"
       :class="{ 'no-poster': !poster(m) || failedImages.has(posterKey(m)) }"
@@ -51,6 +51,7 @@ function subscribe(m: any) {
         <MediaPoster
           :src="poster(m)"
           :alt="m.title"
+          :eager="index < 4"
           @error="failedImages.add(posterKey(m))"
           @load="failedImages.delete(posterKey(m))"
           v-slot="{ loaded }"

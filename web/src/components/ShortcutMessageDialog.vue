@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../assets/plugin-utilities.css';
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { useDisplay } from 'vuetify';
 import { VDialog } from 'vuetify/components/VDialog';
@@ -442,5 +443,3 @@ onUnmounted(() => {
   padding: 16px;
 }
 </style>
-
-<style src="../assets/plugin-utilities.css"></style>

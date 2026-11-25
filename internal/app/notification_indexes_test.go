@@ -15,7 +15,7 @@ func assertNotificationQueryPlans(t *testing.T, s *Store) {
 		query, index string
 		args         []any
 	}{
-		{notificationListSQL, "notification_display_order", []any{100}},
+		{notificationListSQL, "notification_time_uid", []any{100}},
 		{notificationUnreadSQL, "notification_unread", nil},
 	} {
 		rows, err := s.reader().QueryContext(t.Context(), "EXPLAIN QUERY PLAN "+tc.query, tc.args...)
@@ -49,7 +49,7 @@ func TestNotificationIndexesUpgradeEncryptedStoreAndReadState(t *testing.T) {
 		t.Fatal(err)
 	}
 	ctx := context.Background()
-	if _, err = s.DB.ExecContext(ctx, `DROP INDEX notification_display_order; DROP INDEX notification_unread; INSERT INTO plugin_record VALUES('encrypted-fixture','main',x'FFFEFD','2020')`); err != nil {
+	if _, err = s.DB.ExecContext(ctx, `DROP INDEX notification_time_uid; DROP INDEX notification_unread; INSERT INTO plugin_record VALUES('encrypted-fixture','main',x'FFFEFD','2020')`); err != nil {
 		t.Fatal(err)
 	}
 	for _, id := range []string{"b", "a"} {
@@ -105,9 +105,9 @@ func TestNotificationPollIndexedLargeHistory(t *testing.T) {
 	ctx := t.Context()
 	// Populate a previously deployed database before adding the indexes, so
 	// startup migration cost is measured separately from the indexed poll.
-	if _, err := a.Store.DB.ExecContext(ctx, `DROP INDEX notification_display_order; DROP INDEX notification_unread;
+	if _, err := a.Store.DB.ExecContext(ctx, `DROP INDEX notification_time_uid; DROP INDEX notification_unread;
  WITH RECURSIVE n(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM n WHERE x<100000)
- INSERT INTO plugin_record(kind,id,payload,updated_at) SELECT 'notification','notice-'||x,json_object('id','notice-'||x,'read',json('false'),'message',printf('%0500d',0)),printf('%020d',x) FROM n`); err != nil {
+ INSERT INTO message(record_kind,uid,payload,updated_at) SELECT 'notification','notice-'||x,json_object('id','notice-'||x,'read',json('false'),'message',printf('%0500d',0)),printf('%020d',x) FROM n`); err != nil {
 		t.Fatal(err)
 	}
 	start := time.Now()
@@ -120,7 +120,7 @@ func TestNotificationPollIndexedLargeHistory(t *testing.T) {
 	}
 	baseline := time.Since(start)
 	start = time.Now()
-	if _, err := a.Store.DB.ExecContext(ctx, `DROP INDEX IF EXISTS notification_display_order; DROP INDEX IF EXISTS notification_unread; CREATE INDEX notification_display_order ON message(updated_at DESC,id) WHERE record_kind='notification'; CREATE INDEX notification_unread ON message(json_extract(payload,'$.read')) WHERE record_kind='notification'`); err != nil {
+	if _, err := a.Store.DB.ExecContext(ctx, notificationOrderIndex+`; CREATE INDEX notification_unread ON message(read)`); err != nil {
 		t.Fatal(err)
 	}
 	migration := time.Since(start)

@@ -457,10 +457,7 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	}
 	if duplicate {
 		if in.source != nil {
-			if e = a.guardSourceSubscriptionMutationTx(ctx, tx, in.source, sourceInputSHA); e != nil {
-				return old, e
-			}
-			if e = a.commitUISubscriptionSaveTx(ctx, tx, sourceInputSHA, duplicateSubscription, true); e != nil {
+			if e = a.commitUISubscriptionSaveTx(ctx, tx, in.source, sourceInputSHA, duplicateSubscription, true); e != nil {
 				return old, e
 			}
 			return duplicateSubscription, tx.Commit()
@@ -525,7 +522,10 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 			s.LastReason = "仅手动检查"
 		}
 	}
-	if e = a.saveSourceSubscriptionOriginTx(ctx, tx, s, in.source, sourceInputSHA); e != nil {
+	if e = a.commitUISubscriptionSaveTx(ctx, tx, in.source, sourceInputSHA, s, false); e != nil {
+		return s, e
+	}
+	if e = a.saveSourceSubscriptionOriginTx(ctx, tx, s, in.source); e != nil {
 		return s, e
 	}
 	if e = txPut(ctx, tx, "subscription", key, s); e != nil {
@@ -541,9 +541,6 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 		if e = a.recordSubscriptionAddedTx(ctx, tx, s); e != nil {
 			return s, e
 		}
-	}
-	if e = a.commitUISubscriptionSaveTx(ctx, tx, sourceInputSHA, s, false); e != nil {
-		return s, e
 	}
 	var modifiedEvent json.RawMessage
 	if old.ID != "" && eventSnapshotErr == nil {
@@ -823,12 +820,19 @@ func (a *App) cachedSeasonEpisodes(ctx context.Context, s Subscription) []int {
 	sort.Ints(out)
 	return out
 }
+
+type subscriptionListEntry struct {
+	Subscription
+	subscriptionCoverage
+	CustomWords string `json:"custom_words"`
+}
+
 func (a *App) subscriptionList(ctx context.Context) (any, error) {
 	snapshot, e := a.loadSubscriptionDisplay(ctx)
 	if e != nil {
 		return nil, e
 	}
-	items := []map[string]any{}
+	items := make([]subscriptionListEntry, 0, len(snapshot.subscriptions))
 	at := time.Now().In(shanghai())
 	for _, sub := range snapshot.subscriptions {
 		data := snapshot.coverage[subscriptionDisplayKey(sub)]
@@ -840,15 +844,10 @@ func (a *App) subscriptionList(ctx context.Context) (any, error) {
 		if e != nil {
 			return nil, e
 		}
-		b, _ := json.Marshal(sub)
-		entry := map[string]any{}
-		if e = json.Unmarshal(b, &entry); e != nil {
-			return nil, e
+		if lack, changed := inventorySubscriptionLack(sub, data.library); changed {
+			sub.LackEpisode = &lack
 		}
-		entry["custom_words"] = snapshot.words[sub.ID]
-		cb, _ := json.Marshal(coverage)
-		_ = json.Unmarshal(cb, &entry)
-		items = append(items, entry)
+		items = append(items, subscriptionListEntry{Subscription: sub, subscriptionCoverage: coverage, CustomWords: snapshot.words[sub.ID]})
 	}
 	return map[string]any{"items": items, "total": len(items)}, nil
 }
@@ -865,43 +864,51 @@ func (a *App) recordSubscriptionCheck(ctx context.Context, s Subscription, reaso
 func (a *App) recordSubscriptionCheckLack(ctx context.Context, s Subscription, reason string, metadataDates []string, lack int) error {
 	a.subMu.Lock()
 	defer a.subMu.Unlock()
-	var current Subscription
-	if e := a.Store.Get(ctx, "subscription", s.ID, &current); errors.Is(e, sql.ErrNoRows) {
-		return nil
-	} else if e != nil {
-		return e
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
 	}
-	if lack >= 0 {
-		previous := -1
-		if current.LackEpisode != nil {
-			previous = *current.LackEpisode
-		}
-		if previous != lack {
-			value := lack
-			current.LackEpisode = &value
-			if e := a.Store.Put(ctx, "subscription", s.ID, current); e != nil {
-				return e
-			}
-		}
+	defer tx.Rollback()
+	var raw []byte
+	err = tx.QueryRowContext(ctx, "SELECT payload FROM subscribe WHERE uid=?", s.ID).Scan(&raw)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	var current Subscription
+	if err = json.Unmarshal(raw, &current); err != nil {
+		return err
 	}
 	if current.Revision != s.Revision || !a.subscriptionSearchState(ctx, current) {
 		return nil
 	}
+	if lack >= 0 {
+		current.LackEpisode = &lack
+		if current.Media.MediaType == "tv" && !current.BestVersion {
+			library, err := inventorySubscriptionEpisodes(ctx, tx, current)
+			if err != nil {
+				return err
+			}
+			if corrected, changed := inventorySubscriptionLack(current, library); changed {
+				current.LackEpisode = &corrected
+			}
+		}
+	}
 	current.LastCheck = now()
 	current.LastReason = reason
-	if current.State == "paused" {
-		_, err := a.Store.DB.ExecContext(ctx, `UPDATE subscribe
-			SET payload=json_set(payload,'$.last_check',?,'$.last_reason',?),updated_at=?
-			WHERE uid=? AND json_extract(payload,'$.revision')=? AND json_extract(payload,'$.state')='paused'`,
-			current.LastCheck, current.LastReason, current.LastCheck, s.ID, s.Revision)
+	if current.State != "paused" {
+		next := nextScheduleCheck(current.Schedule, time.Now(), metadataDates)
+		current.NextCheck = ""
+		if !next.IsZero() {
+			current.NextCheck = next.UTC().Format(time.RFC3339Nano)
+		}
+	}
+	if err = txPut(ctx, tx, "subscription", s.ID, current); err != nil {
 		return err
 	}
-	next := nextScheduleCheck(current.Schedule, time.Now(), metadataDates)
-	current.NextCheck = ""
-	if !next.IsZero() {
-		current.NextCheck = next.UTC().Format(time.RFC3339Nano)
-	}
-	return a.Store.Put(ctx, "subscription", s.ID, current)
+	return tx.Commit()
 }
 
 func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision int) (err error) {
@@ -958,7 +965,6 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		}
 	}
 	known := []int{}
-	available := map[int]bool{}
 	dates := map[int]string{}
 	metadataDates := []string{}
 	provider := providerNativeMedia(s.Media)
@@ -1006,13 +1012,8 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		}
 	}
 	if s.Media.MediaType == "tv" {
-		today := time.Now().In(shanghai()).Format("2006-01-02")
-		// MoviePilot derives the wanted range from the subscription itself
-		// (`for episode := start; episode <= total; episode++`) and never from the
-		// season's episode list: a provider answering with a short season would
-		// otherwise shrink the range and the wanted episodes would never be asked
-		// for. Air dates are still read from the season, because "not aired yet" is
-		// a fact about an episode, not about the range.
+		// Keep MoviePilot's start..total range for progress even when the season
+		// metadata has not yet listed all episodes.
 		start := subscriptionStartEpisode(episodeScope)
 		total := episodeScope.TotalEpisodes
 		if total <= 0 {
@@ -1033,32 +1034,33 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 			if date != "" {
 				metadataDates = append(metadataDates, date)
 			}
-			if (date != "" && date <= today) || provider && providerEpisodeAired(date, releaseDate, today) || containsInt(episodeScope.AllowEarly, ep.EpisodeNumber) {
-				available[ep.EpisodeNumber] = true
-			}
 		}
 	}
 	coverage, e := a.subscriptionCoverageWithExistence(ctx, s, known, originalExistenceFromRecognition(resolved))
 	if e != nil {
 		return e
 	}
-	// MoviePilot treats every episode in start..total that is not downloaded or in
-	// flight as wanted; it never filters by air date. Filtering here meant an
-	// episode TMDB lists without a date (a special, or a provider that dropped the
-	// date) was wanted forever but never searched.
-	missing := append([]int(nil), coverage.Missing...)
+	missing := coverage.Missing
 	if len(missing) == 0 {
-		if len(coverage.Missing) == 0 && (len(coverage.Library) > 0 || len(coverage.Reserved) > 0) {
+		if len(coverage.Library) > 0 || len(coverage.Reserved) > 0 {
 			return a.requestOrdinarySubscriptionCompletion(ctx, j, s)
 		}
-		reason := "当前没有已播缺集；继续等待元数据和更新窗口"
-		if len(coverage.Library) > 0 && len(coverage.Missing) == 0 {
-			reason = "目标已入库，不会重复获取"
+		return a.recordSubscriptionCheckLack(ctx, s, "当前没有已播缺集；继续等待元数据和更新窗口", metadataDates, 0)
+	}
+	allowEarly := s.AllowEarly
+	if s.Media.MediaType == "tv" {
+		// Keep the full subscription range for progress and completion. A search
+		// target can only contain episodes on the current season, including
+		// those without an air date. An empty target would request the whole season.
+		unlisted := func(ep int) bool {
+			_, listed := dates[ep]
+			return !listed
 		}
-		if len(coverage.Reserved) > 0 {
-			reason = "缺集已有在途下载，保留占位并等待完成"
+		missing = slices.DeleteFunc(slices.Clone(missing), unlisted)
+		allowEarly = slices.DeleteFunc(slices.Clone(allowEarly), unlisted)
+		if len(missing) == 0 {
+			return a.recordSubscriptionCheckLack(ctx, s, "剩余缺集尚无可检查的元数据，等待下次更新", metadataDates, len(coverage.Missing))
 		}
-		return a.recordSubscriptionCheckLack(ctx, s, reason, metadataDates, len(coverage.Missing))
 	}
 	if s.Media.MediaType == "movie" && releaseDate > time.Now().In(shanghai()).Format("2006-01-02") {
 		return a.recordSubscriptionCheck(ctx, s, "电影尚未到上映日期，保持订阅", metadataDates)
@@ -1102,7 +1104,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	// subscription's complete selected-site and missing-episode scope. Reuse
 	// that snapshot below; per-episode download admission must not rerun plugin
 	// recognition, batch search, filter mutations or MediaInfo.clear.
-	sharedRequest := SearchRequest{originalSubscription: &s, originalSearchInfo: originalSearchInfo, Query: query, MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: searchEpisodes, Policy: s.Policy, SiteIDs: selectedSiteIDs, Mappings: s.Mappings, AllowEarly: s.AllowEarly, EpisodeDates: dates}
+	sharedRequest := SearchRequest{originalSubscription: &s, originalSearchInfo: originalSearchInfo, Query: query, MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: searchEpisodes, Policy: s.Policy, SiteIDs: selectedSiteIDs, Mappings: s.Mappings, AllowEarly: allowEarly, EpisodeDates: dates}
 	phase = "search"
 	result, searchErr := a.originalSubscriptionCandidates(ctx, sharedRequest)
 	if searchErr != nil {

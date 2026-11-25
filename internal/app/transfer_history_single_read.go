@@ -11,15 +11,14 @@ import (
 	"light-media/internal/catalog"
 )
 
-const transferHistoryMPColumns = `id,src,src_fileitem,dest,dest_fileitem,mode,type,category,title,year,
-tmdbid,media_source,media_id,seasons,episodes,status,errmsg,date,files,episode_group`
+const transferHistoryMPColumns = `id,src,src_fileitem,dest,mode,type,category,title,year,
+tmdbid,media_source,media_id,seasons,episodes,status,errmsg,date,episode_group`
 
 type transferHistoryMPRow struct {
 	ID           int64
 	Src          string
 	SrcFileItem  []byte
 	Dest         sql.NullString
-	DestFileItem []byte
 	Mode         sql.NullString
 	Type         sql.NullString
 	Category     sql.NullString
@@ -33,7 +32,6 @@ type transferHistoryMPRow struct {
 	Status       int
 	Errmsg       sql.NullString
 	Date         string
-	Files        []byte
 	EpisodeGroup sql.NullString
 }
 
@@ -83,8 +81,6 @@ func (row transferHistoryMPRow) item() transferHistoryItem {
 		season, _ = strconv.Atoi(strings.TrimPrefix(row.Seasons.String, "S"))
 	}
 	episodes := transferHistoryMPEpisodeRange(row.Episodes.String)
-	var files []string
-	_ = json.Unmarshal(row.Files, &files)
 	status, fileStatus := "failed", "error"
 	if row.Status == 1 {
 		status, fileStatus = "success", "imported"
@@ -106,18 +102,16 @@ func (row transferHistoryMPRow) item() transferHistoryItem {
 
 func (a *App) scanTransferHistoryMP(row interface{ Scan(...any) error }) (transferHistoryItem, error) {
 	var value transferHistoryMPRow
-	if err := row.Scan(&value.ID, &value.Src, &value.SrcFileItem, &value.Dest, &value.DestFileItem,
+	if err := row.Scan(&value.ID, &value.Src, &value.SrcFileItem, &value.Dest,
 		&value.Mode, &value.Type, &value.Category, &value.Title, &value.Year, &value.TMDBID,
 		&value.MediaSource, &value.MediaID, &value.Seasons, &value.Episodes, &value.Status,
-		&value.Errmsg, &value.Date, &value.Files, &value.EpisodeGroup); err != nil {
+		&value.Errmsg, &value.Date, &value.EpisodeGroup); err != nil {
 		return transferHistoryItem{}, err
 	}
 	return value.item(), nil
 }
 
-// transferHistoryMPPage is the MoviePilot-shaped list reader for the single
-// table. It is exercised while the legacy projection still serves requests and
-// becomes the production reader once the switch lands.
+// Read the count and page from the same SQLite snapshot.
 func (a *App) transferHistoryMPPage(ctx context.Context, page, size int) ([]transferHistoryItem, int, error) {
 	if page < 1 {
 		page = 1
@@ -125,11 +119,26 @@ func (a *App) transferHistoryMPPage(ctx context.Context, page, size int) ([]tran
 	if size < 1 || size > 1000 {
 		size = 50
 	}
-	var total int
-	if err := a.Store.reader().QueryRowContext(ctx, `SELECT COUNT(*) FROM transferhistory`).Scan(&total); err != nil {
+	tx, err := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if err != nil {
 		return nil, 0, err
 	}
-	rows, err := a.Store.reader().QueryContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory ORDER BY date DESC,id DESC LIMIT ? OFFSET ?`, size, (page-1)*size)
+	defer tx.Rollback()
+	var version int64
+	common := page == 1 && size == 50
+	if common {
+		if err = tx.QueryRowContext(ctx, "SELECT version FROM navigation_list_versions WHERE name='history'").Scan(&version); err != nil {
+			return nil, 0, err
+		}
+		if cached := a.historyPageCache.Load(); cached != nil && cached.version == version {
+			return append([]transferHistoryItem{}, cached.rows...), cached.total, nil
+		}
+	}
+	var total int
+	if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM transferhistory`).Scan(&total); err != nil {
+		return nil, 0, err
+	}
+	rows, err := tx.QueryContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory ORDER BY date DESC,id DESC LIMIT ? OFFSET ?`, size, (page-1)*size)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -142,10 +151,26 @@ func (a *App) transferHistoryMPPage(ctx context.Context, page, size int) ([]tran
 		}
 		items = append(items, item)
 	}
-	return items, total, rows.Err()
+	if err = rows.Err(); err != nil {
+		return nil, 0, err
+	}
+	if common {
+		// Count variable-size database fields before retaining the common page.
+		var size int
+		for _, v := range items {
+			size += len(v.Source) + len(v.Target) + len(v.ResourceSource) + len(v.Media.Title) + len(v.Media.ProviderID) + len(v.Media.ProviderSource) + len(v.Error) + len(v.Mode) + len(v.Category) + len(v.EpisodeGroup) + len(v.CreatedAt)*2 + len(v.PlanID) + len(v.FileID) + len(v.JobID) + len(v.Episodes)*8 + 1024
+		}
+		if size <= 512<<10 {
+			a.historyPageCache.Store(&historyPageDisplay{version: version, total: total, rows: append([]transferHistoryItem{}, items...)})
+		}
+	}
+	return items, total, nil
 }
 
 func (a *App) transferHistoryMPFiltered(ctx context.Context, page, size int, status, query, pattern string) ([]transferHistoryItem, int, error) {
+	if status == "" && query == "" {
+		return a.transferHistoryMPPage(ctx, page, size)
+	}
 	predicates := []string{}
 	args := []any{}
 	if status == "success" {

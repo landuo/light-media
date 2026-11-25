@@ -3,7 +3,11 @@ package app
 import (
 	"context"
 	"path/filepath"
+	"strconv"
 	"strings"
+
+	"light-media/internal/media"
+	"light-media/internal/releasemeta"
 )
 
 // Only the automatic monitor opts into disc-root grouping. Its ordinary scanner
@@ -26,7 +30,7 @@ func (a *App) automaticDiscCandidate(ctx context.Context, path string, unchanged
 		file.Unchanged = true
 	} else {
 		file.Parsed = a.parseMediaName(filepath.Base(path))
-		file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(directoryDiscNFOAnchor(path))
+		file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(importNFOAnchor(path, true))
 		if file.InferredMedia != nil {
 			file.IdentitySource = "nfo"
 		}
@@ -36,8 +40,41 @@ func (a *App) automaticDiscCandidate(ctx context.Context, path string, unchanged
 
 // importNFOEvidence derives a basename NFO then movie.nfo from this anchor;
 // the anchor itself is never opened or treated as a real video.
-func directoryDiscNFOAnchor(path string) string {
+func importNFOAnchor(path string, disc bool) string {
+	if !disc {
+		return path
+	}
 	return filepath.Join(path, filepath.Base(path)+".mkv")
+}
+
+// A disc's release name has no video extension. Use the same path metadata
+// that MoviePilot passes to recognition, including its configured title words.
+func (a *App) discReleaseIdentity(ctx context.Context, path string, meta *releasemeta.MetaObject) (media.ParseResult, error) {
+	if meta == nil {
+		var err error
+		meta, err = a.originalTransferPathMeta(ctx, path)
+		if err != nil {
+			return media.ParseResult{}, err
+		}
+	}
+	year, _ := strconv.Atoi(sourceStringValue(meta.Get("year")))
+	p := media.ParseResult{Status: media.Parsed, Type: "movie", Title: meta.Name(), Year: year}
+	for _, name := range []string{meta.Text("cn_name"), meta.Text("en_name")} {
+		if name != "" && name != p.Title {
+			p.AlternateTitles = append(p.AlternateTitles, name)
+		}
+	}
+	if meta.Text("type") == "电视剧" {
+		p.Type = "episode"
+		seasons, episodes, err := larkMetaNumbers(meta)
+		if err != nil {
+			return media.ParseResult{}, err
+		}
+		if len(seasons) == 1 && len(episodes) > 0 {
+			p.Original = &media.Numbering{Season: &seasons[0], Episodes: episodes, Form: "season_episode"}
+		}
+	}
+	return p, nil
 }
 
 // A known torrent anywhere inside a disc prevents treating that disc as an

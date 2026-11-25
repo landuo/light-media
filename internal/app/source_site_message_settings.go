@@ -184,8 +184,12 @@ type siteMessagePolicy struct {
 }
 
 func (a *App) sourceSiteMessagePolicy(ctx context.Context, c Settings) (siteMessagePolicy, error) {
+	return a.readSourceSiteMessagePolicy(ctx, c, a.Store.reader())
+}
+
+func (a *App) readSourceSiteMessagePolicy(ctx context.Context, c Settings, db *sql.DB) (siteMessagePolicy, error) {
 	policy := siteMessagePolicy{enabled: siteMessagesEnabled(c)}
-	tx, e := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	tx, e := db.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
 	if e != nil {
 		return policy, e
 	}

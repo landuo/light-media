@@ -14,7 +14,7 @@ import (
 type downloaderTaskOwnership map[string][]string
 
 func (a *App) downloaderTaskOwnership(ctx context.Context, downloaderID string) (downloaderTaskOwnership, error) {
-	rows, err := a.Store.reader().QueryContext(ctx, `SELECT json_extract(payload,'$.hash') FROM downloadhistory WHERE json_extract(payload,'$.downloader_id')=? AND COALESCE(json_extract(payload,'$.state'),'')!='cancelled' AND length(json_extract(payload,'$.hash')) IN (40,64)`, downloaderID)
+	rows, err := a.Store.reader().QueryContext(ctx, `SELECT download_hash FROM downloadhistory WHERE downloader=? AND state IS NOT 'cancelled' AND length(download_hash) IN (40,64)`, downloaderID)
 	if err != nil {
 		return nil, err
 	}

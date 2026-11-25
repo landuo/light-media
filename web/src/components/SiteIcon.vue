@@ -31,7 +31,6 @@ watch(
     :alt="name"
     width="32"
     height="32"
-    loading="lazy"
     decoding="async"
     referrerpolicy="no-referrer"
     @error="imageFailed"

@@ -7,8 +7,34 @@ import (
 	"light-media/internal/catalog"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
+
+func TestPendingScrapeBatchSkipsTerminalHistory(t *testing.T) {
+	a, _, _ := importTestApp(t)
+	db := a.Store.DB
+	_, err := db.Exec(`WITH RECURSIVE nums(n) AS (VALUES(1) UNION ALL SELECT n+1 FROM nums WHERE n<12000)
+		INSERT INTO jobs(id,workflow_id,kind,state,payload,run_at,created_at,updated_at)
+		SELECT printf('history-%d',n),'','import','succeeded','{"original_scrape_batch":"batch"}',0,'','' FROM nums`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	plan := displayQueryPlan(t, a, pendingScrapeBatchSQL, "batch")
+	if !strings.Contains(plan, "jobs_pending_scrape_batch") || !strings.Contains(plan, "<expr>=?") {
+		t.Fatalf("batch lookup should seek by batch ID: %v", plan)
+	}
+	for _, state := range []string{"queued", "retry_wait", "waiting_paused", "running", "failed", "needs_review", "cancelled", "succeeded"} {
+		if _, err := db.Exec("UPDATE jobs SET state=? WHERE id='history-1'", state); err != nil {
+			t.Fatal(err)
+		}
+		var pending bool
+		want := state == "queued" || state == "retry_wait" || state == "waiting_paused" || state == "running"
+		if err := db.QueryRow(pendingScrapeBatchSQL, "batch").Scan(&pending); err != nil || pending != want {
+			t.Fatalf("%s: pending=%v, err=%v", state, pending, err)
+		}
+	}
+}
 
 func TestOriginalScrapeBatchFixedSource(t *testing.T) {
 	raw, err := os.ReadFile("../../testdata/standard-module-host/scrape-batch-source-oracle.json")

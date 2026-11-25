@@ -160,6 +160,7 @@ async function mount(t, name, options = {}) {
     if (dependency === '../features/resources') return resources;
     if (dependency.endsWith('.vue'))
       return { name: dependency.split('/').at(-1).replace('.vue', '') };
+    if (dependency === '../assets/plugin-utilities.css') return {};
     throw new Error('Unexpected dependency ' + dependency);
   }, module.exports);
   const scope = vue.effectScope();

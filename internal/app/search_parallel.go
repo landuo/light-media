@@ -246,6 +246,13 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 }
 
 func sortSearchCandidates(candidates []Candidate, policy Policy) {
+	if len(candidates) < 2 {
+		return
+	}
+	rankPolicy := decisionPolicy(policy)
+	for i := range candidates {
+		candidates[i].sortRank = decision.Rank(candidates[i].Resource, rankPolicy)
+	}
 	sort.SliceStable(candidates, func(i, j int) bool {
 		if candidates[i].Accepted != candidates[j].Accepted {
 			return candidates[i].Accepted
@@ -253,7 +260,7 @@ func sortSearchCandidates(candidates []Candidate, policy Policy) {
 		if left, right := priorityrules.PriorityKey(candidates[i].Resource.PriorityOrder), priorityrules.PriorityKey(candidates[j].Resource.PriorityOrder); left != right {
 			return left > right
 		}
-		left, right := decision.Rank(candidates[i].Resource, decisionPolicy(policy)), decision.Rank(candidates[j].Resource, decisionPolicy(policy))
+		left, right := candidates[i].sortRank, candidates[j].sortRank
 		if left != right {
 			return left > right
 		}

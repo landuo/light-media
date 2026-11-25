@@ -9,7 +9,7 @@ import (
 	"light-media/internal/media/words"
 )
 
-func fullRustWords(title string, list []string) (string, []string, error) {
+func fullRustWords(title string, list []string, patterns *configuredPatterns) (string, []string, error) {
 	mode := "rust"
 	applied := []string{}
 	for _, word := range list {
@@ -25,23 +25,23 @@ func fullRustWords(title string, list []string) (string, []string, error) {
 				for _, g := range match.Groups()[1:] {
 					p = append(p, strings.TrimSpace(g.String()))
 				}
-				title, state = replaceRustWord(title, p[0], p[1])
+				title, state = patterns.replaceRustWord(title, p[0], p[1])
 				if state {
-					title, state, fallback = offsetRustWordWithState(title, p[2], p[3], p[4])
+					title, state, fallback = patterns.offsetRustWordWithState(title, p[2], p[3], p[4])
 				}
 			}
 		case strings.Contains(word, " => "):
 			p := strings.Split(word, " => ")
-			title, state = replaceRustWord(title, p[0], p[1])
+			title, state = patterns.replaceRustWord(title, p[0], p[1])
 		case strings.Contains(word, " >> ") && strings.Contains(word, " <> "):
 			p := strings.Split(word, " <> ")
 			off := strings.Split(p[1], " >> ")
 			if len(off) > 1 {
-				title, state, fallback = offsetRustWordWithState(title, p[0], off[0], off[1])
+				title, state, fallback = patterns.offsetRustWordWithState(title, p[0], off[0], off[1])
 			}
 		default:
 			if strings.TrimSpace(word) != "" {
-				title, state = replaceRustWord(title, word, "")
+				title, state = patterns.replaceRustWord(title, word, "")
 			}
 		}
 		if fallback {
@@ -55,7 +55,7 @@ func fullRustWords(title string, list []string) (string, []string, error) {
 }
 func fullPrepare(title string, options Options) (string, []string, error) {
 	if options.SourceMode == "rust" {
-		return fullRustWords(title, options.CustomWords)
+		return fullRustWords(title, options.CustomWords, options.patterns)
 	}
 	matcher, e := words.New(options.CustomWords)
 	if e != nil {

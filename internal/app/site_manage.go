@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/url"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -128,14 +129,41 @@ func validateManagedSiteConfig(config sites.Config) error {
 }
 
 func (a *App) managedSites(ctx context.Context) (any, error) {
-	c := a.Settings()
-	sort.SliceStable(c.Sites, func(i, j int) bool { return c.Sites[i].Priority < c.Sites[j].Priority })
-	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	settings := a.settingsSnapshot()
+	c := *settings
+	tx, err := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
-	view, err := a.siteAccountViewTx(ctx, tx, c.Sites)
+	version, err := siteDisplayVersion(ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	if cached := a.managedSitesCache.Load(); cached != nil && cached.settings == settings && cached.version == version {
+		return cached.data, nil
+	}
+	c.Sites = slices.Clone(c.Sites)
+	sort.SliceStable(c.Sites, func(i, j int) bool { return c.Sites[i].Priority < c.Sites[j].Priority })
+	view, err := a.readSiteAccountViewTx(ctx, tx, c.Sites, siteAccountViewScope{latestOnly: true})
+	if err != nil {
+		return nil, err
+	}
+	icons := map[string]bool{}
+	iconRows, err := tx.QueryContext(ctx, "SELECT uid FROM siteicon WHERE record_kind='site_icon'")
+	if err != nil {
+		return nil, err
+	}
+	for iconRows.Next() {
+		var id string
+		if err = iconRows.Scan(&id); err != nil {
+			iconRows.Close()
+			return nil, err
+		}
+		icons[id] = true
+	}
+	err = iconRows.Err()
+	iconRows.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -165,12 +193,17 @@ func (a *App) managedSites(ctx context.Context) (any, error) {
 		}
 		configured := siteCredentialConfigured(s)
 		credentials := siteSecretState(s)
-		rows = append(rows, map[string]any{"config": s, "credential_configured": configured, "credential_state": credentials, "connection": latest.Connection, "stats": stats, "stale": stats != nil && latest.Connection.Status != "ok"})
+		hideSiteSecrets(&s)
+		rows = append(rows, map[string]any{"config": s, "has_cached_icon": icons[s.ID], "credential_configured": configured, "credential_state": credentials, "connection": latest.Connection, "stats": stats, "stale": stats != nil && latest.Connection.Status != "ok"})
 	}
 	if err = tx.Commit(); err != nil {
 		return nil, err
 	}
-	return map[string]any{"sites": rows, "supported": nativeSiteTemplates, "capabilities": map[string]bool{"rss": false, "token": true, "proxy": false, "render": false, "downloader": false, "filter": false, "limit": true, "timeout": true, "user_agent": true}}, nil
+	result := map[string]any{"sites": rows, "supported": nativeSiteTemplates, "capabilities": map[string]bool{"rss": false, "token": true, "proxy": false, "render": false, "downloader": false, "filter": false, "limit": true, "timeout": true, "user_agent": true}}
+	if encoded, e := json.Marshal(result); e == nil && len(encoded) <= 512<<10 {
+		a.managedSitesCache.Store(&managedSiteDisplay{version: version, settings: settings, data: result})
+	}
+	return result, nil
 }
 
 func (a *App) saveManagedSite(ctx context.Context, in SiteConfig) (any, error) {
@@ -512,7 +545,7 @@ func (a *App) managedSiteHistory(ctx context.Context, key string) (any, error) {
 	if s.ID == "" {
 		return nil, &APIError{"SITE_NOT_FOUND", "站点不存在", 404}
 	}
-	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	tx, err := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
 	if err != nil {
 		return nil, err
 	}

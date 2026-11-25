@@ -1,7 +1,7 @@
 package app
 
 import (
-	"fmt"
+	"os"
 	"path/filepath"
 	"syscall"
 )
@@ -16,14 +16,19 @@ func mountedDirectoryIdentity(path string) (mountedDirectoryID, error) {
 	if err != nil {
 		return mountedDirectoryID{}, err
 	}
-	info, err := opened.Stat()
-	opened.Close()
-	if err != nil {
-		return mountedDirectoryID{}, err
+	defer opened.Close()
+	// Every ancestor probe needs only dev/ino. Stat the same no-follow fd
+	// directly rather than allocating an os.FileInfo for every probe.
+	fd := int(opened.Fd())
+	var stat syscall.Stat_t
+	for {
+		err = syscall.Fstat(fd, &stat)
+		if err != syscall.EINTR {
+			break
+		}
 	}
-	stat, ok := info.Sys().(*syscall.Stat_t)
-	if !ok {
-		return mountedDirectoryID{}, fmt.Errorf("directory identity unavailable")
+	if err != nil {
+		return mountedDirectoryID{}, &os.PathError{Op: "stat", Path: path, Err: err}
 	}
 	return mountedDirectoryID{uint64(stat.Dev), uint64(stat.Ino)}, nil
 }

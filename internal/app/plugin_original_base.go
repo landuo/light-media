@@ -216,7 +216,7 @@ func (a *App) originalBaseInstanceMetadata(ctx context.Context, scope originalBa
 		return nil, err
 	}
 	in := scope.installation
-	metadata, err := a.pluginStore.instanceMetadata(ctx, a.Store.DB, in.InstanceID)
+	metadata, err := a.pluginStore.instanceMetadata(ctx, a.Store.reader(), in.InstanceID)
 	if err != nil {
 		return nil, err
 	}
@@ -328,7 +328,7 @@ func (a *App) originalBaseObserveConfigLocked(target string, observed originalBa
 }
 
 func (a *App) originalBaseConfigLocked(ctx context.Context, target string) (json.RawMessage, error) {
-	observed, sealed, err := a.pluginStore.readOriginalBaseConfigRow(ctx, a.pluginStore.store.DB, target)
+	observed, sealed, err := a.pluginStore.readOriginalBaseConfigRow(ctx, a.pluginStore.store.reader(), target)
 	if err != nil {
 		return nil, err
 	}
@@ -525,7 +525,7 @@ func (p *PluginStore) originalBaseGetData(ctx context.Context, target string, ke
 		}
 		return value.Value, err
 	}
-	rows, err := p.store.DB.QueryContext(ctx, `SELECT rowid,item_key,sealed FROM plugin_values WHERE instance_id=? AND kind='data'`, target)
+	rows, err := p.store.reader().QueryContext(ctx, `SELECT rowid,item_key,sealed FROM plugin_values WHERE instance_id=? AND kind='data'`, target)
 	if err != nil {
 		return nil, err
 	}

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../assets/plugin-utilities.css';
 import { ref, computed, watch, onMounted, onUnmounted, defineAsyncComponent } from 'vue';
 import { useDisplay } from 'vuetify';
 import { VDialog } from 'vuetify/components/VDialog';
@@ -408,5 +409,3 @@ onUnmounted(() => {
   line-height: 1.2;
 }
 </style>
-
-<style src="../assets/plugin-utilities.css"></style>

@@ -1,21 +1,25 @@
 Local fork of github.com/markusmobius/go-dateparser v1.4.7.
 
-Upstream source and BSD-3-Clause LICENSE are preserved. This application uses
-Go 1.26; remove the optional upstream toolchain go1.27.1 preference. No compiler
-installation is required by this fork.
+The application uses Go 1.26. The optional upstream toolchain go1.27.1
+preference is removed. Keep the upstream source, generator and BSD-3-Clause
+license.
 
-The generated internal/data locale initialization bodies are unchanged. Their
-205 init functions are renamed initializeLocale_<file>; zz-lazy.go calls them in
-the same lexical source-file order once, on the first GetLocaleData call.
-All locales are retained. The once barrier protects concurrent first readers.
-The concurrent first-lookup test covers 256 callers and eight locales.
+The 205 generated locale constructors retain their original bodies and build
+their regional variants together. zz-lazy.go maps the language name to its
+constructor. locale_cache.go uses the generated locale catalog to select one
+family, publishes immutable values, and clears the constructor staging slots.
+Construction is serialized. The eight most recently used locale values stay
+resident. A live caller can obtain the same value again through a weak pointer.
+The applicability dictionary is owned by the locale value.
 
-This avoids allocating all language tables in every short-lived Go plugin
-process. The host still loads those tables on its first date lookup; this is
-not a claim that parsing itself uses no memory or that production peak RSS
-has been measured. Generated tables and parsing behavior are not replaced.
+The parser validates and orders all names before iterating them. A successful
+parse stops further construction. A caller explicitly requesting the full list
+receives all the values and owns its result slice. An unrecognized string can
+still visit every language. That costs a cold scan, and the temporary values
+are eligible for collection when the caller releases them.
 
-The upstream generator is retained unchanged. Regeneration requires reapplying
-this local patch and running the upstream library, cold-concurrency and actual
-application checks; zz-lazy.go deliberately fails to build if renamed generated
-constructors are lost. See docs/site-dateparser-resource-initialization.txt.
+When regenerating language tables, keep the renamed constructor entry points
+and the generated switch for looking up each staging slot. Run the package
+tests, the cold concurrent lookup and eviction tests, and the application
+tracker date fixtures. Measurements on the NAS are in
+docs/nas-memory-0.58.14-verification.md in the host project.

@@ -30,8 +30,7 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 	if !allowed[size] {
 		return bad("INVALID_IMAGE_SIZE", "图片尺寸无效")
 	}
-	sum := sha256.Sum256([]byte(size + relative))
-	name := hex.EncodeToString(sum[:]) + ".img"
+	name := catalogImageCacheName(size, relative)
 	dir := filepath.Join(a.Dir, "catalog-images")
 	cache := filepath.Join(dir, name)
 	var releaseFlight func()
@@ -45,7 +44,7 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 		if e != nil || st.Size() <= 0 || st.Size() > 8<<20 {
 			return false
 		}
-		contentType, e := catalogImageContentType(f)
+		content, contentType, e := a.posterDisplay.content(f, r)
 		if e != nil {
 			return false
 		}
@@ -58,7 +57,7 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 		w.Header().Set("Content-Type", contentType)
 		w.Header().Set("Cache-Control", "private, max-age=86400")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
-		http.ServeContent(w, r, name, st.ModTime(), f)
+		http.ServeContent(w, r, name, st.ModTime(), content)
 		return true
 	}
 	if serve() {
@@ -137,6 +136,41 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 		return bad("IMAGE_UNAVAILABLE", "图片缓存不可访问")
 	}
 	return nil
+}
+
+func catalogImageCacheName(size, relative string) string {
+	sum := sha256.Sum256([]byte(size + relative))
+	return hex.EncodeToString(sum[:]) + ".img"
+}
+
+// Touch only existing first-screen images after a restart. Keep the bytes in
+// the reclaimable OS file cache; a cache miss never starts a network request.
+func (a *App) warmSubscriptionImages(ctx context.Context, subs []Subscription) {
+	remaining := int64(2 << 20)
+	for _, sub := range subs[:min(len(subs), 6)] {
+		if providerNativeMedia(sub.Media) {
+			continue
+		}
+		backdrop := sub.Media.BackdropPath
+		if backdrop == "" {
+			backdrop = sub.Media.PosterPath
+		}
+		for _, img := range [][2]string{{"w185", sub.Media.PosterPath}, {"w92", sub.Media.PosterPath}, {"w780", backdrop}} {
+			if ctx.Err() != nil || remaining <= 0 {
+				return
+			}
+			if !assetImagePattern.MatchString(img[1]) {
+				continue
+			}
+			file, err := importOpen(filepath.Join(a.Dir, "catalog-images", catalogImageCacheName(img[0], img[1])))
+			if err != nil {
+				continue
+			}
+			count, _ := io.CopyN(io.Discard, file, min(remaining, 256<<10))
+			remaining -= count
+			file.Close()
+		}
+	}
 }
 
 // Inspect both new downloads and existing cache entries. The upstream header

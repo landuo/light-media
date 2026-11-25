@@ -9,6 +9,44 @@ import (
 
 var staticRegex sync.Map
 
+type configuredPatternKey struct {
+	pattern    string
+	ignoreCase bool
+}
+
+// Scoped to one frozen parser. Concurrent titles reuse its programs, and
+// dropping the parser releases the user-supplied rules. Overflow still matches.
+type configuredPatterns struct {
+	mu       sync.Mutex
+	programs map[configuredPatternKey]*regexp2.Regexp
+}
+
+func (c *configuredPatterns) compile(pattern string, ignoreCase bool) (*regexp2.Regexp, error) {
+	if c == nil || len(pattern) > 4096 {
+		return pyregex.Compile(pattern, ignoreCase)
+	}
+	key := configuredPatternKey{pattern, ignoreCase}
+	c.mu.Lock()
+	if re := c.programs[key]; re != nil {
+		c.mu.Unlock()
+		return re, nil
+	}
+	c.mu.Unlock()
+	re, err := pyregex.Compile(pattern, ignoreCase)
+	if err != nil {
+		return nil, err
+	}
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if len(c.programs) < 64 {
+		if c.programs == nil {
+			c.programs = make(map[configuredPatternKey]*regexp2.Regexp)
+		}
+		c.programs[key] = re
+	}
+	return re, nil
+}
+
 func expression(pattern string, ignoreCase bool) *regexp2.Regexp {
 	key := pattern
 	if ignoreCase {

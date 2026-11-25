@@ -17,32 +17,32 @@ import (
 // import path wrote those rows were invisible to the library count, so a
 // subscription showed fewer downloaded episodes than the library actually held.
 func backfillAssetSlots(ctx context.Context, db *sql.DB) error {
-	rows, err := db.QueryContext(ctx, `SELECT payload FROM library_asset WHERE record_kind='asset'`)
-	if err != nil {
-		return err
-	}
-	var payloads [][]byte
-	for rows.Next() {
-		var raw []byte
-		if err = rows.Scan(&raw); err != nil {
-			rows.Close()
-			return err
-		}
-		payloads = append(payloads, raw)
-	}
-	err = rows.Err()
-	rows.Close()
-	if err != nil {
-		return err
-	}
+	// A single transaction can stream assets while writing the separate slot
+	// table. Keep only the current payload alive, including on old databases.
 	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
-	for _, raw := range payloads {
+	rows, err := tx.QueryContext(ctx, `SELECT payload FROM library_asset WHERE record_kind='asset'`)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var raw sql.RawBytes
+		if err = rows.Scan(&raw); err != nil {
+			return err
+		}
 		var asset Asset
 		if json.Unmarshal(raw, &asset) != nil || asset.ID == "" {
+			continue
+		}
+		if asset.State == "removed" || asset.State == "superseded" {
+			// A previously retired file cannot prove an episode is in the library.
+			if _, err = tx.ExecContext(ctx, "DELETE FROM asset_slots WHERE asset_id=?", asset.ID); err != nil {
+				return err
+			}
 			continue
 		}
 		// Assets imported before the episode fields were persisted carry no
@@ -62,6 +62,15 @@ func backfillAssetSlots(ctx context.Context, db *sql.DB) error {
 				return err
 			}
 		}
+	}
+	if err = rows.Err(); err != nil {
+		return err
+	}
+	if err = rows.Close(); err != nil {
+		return err
+	}
+	if err = reconcileInventorySubscriptions(ctx, tx, nil); err != nil {
+		return err
 	}
 	return tx.Commit()
 }
@@ -132,7 +141,7 @@ func processMemory() map[string]any {
 		return nil
 	}
 	want := map[string]string{
-		"VmRSS": "VmRSS", "VmSize": "VmSize",
+		"VmRSS": "VmRSS", "VmSize": "VmSize", "VmHWM": "VmHWM",
 		"RssAnon": "RssAnon", "RssFile": "RssFile", "RssShmem": "RssShmem",
 	}
 	out := map[string]any{}

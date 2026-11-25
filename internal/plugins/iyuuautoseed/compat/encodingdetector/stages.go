@@ -893,7 +893,7 @@ func run(d []byte) ([]Result, error) {
 	return postprocess(d, r), nil
 }
 func DetectAll(d []byte) ([]Result, error) {
-	if e := loadData(); e != nil {
+	if e := loadModels(); e != nil {
 		return nil, e
 	}
 	r, e := run(d)

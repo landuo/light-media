@@ -51,7 +51,10 @@ func (a *App) originalCatalogTMDBDetail(ctx context.Context, kind string, id int
 			if e != nil {
 				return nil, e
 			}
-			return a.catalog().SourceImages(ctx, imageKind, parsed, "zh", sourceText(originalLanguage))
+			language := sourceText(originalLanguage)
+			key := "detail-images:zh:" + imageKind + ":" + strconv.FormatInt(parsed, 10) + ":" + language
+			result := a.cachedRead(ctx, key, 24*time.Hour, func() (any, error) { return a.catalog().SourceImages(ctx, imageKind, parsed, "zh", language) })
+			return result.data, result.err
 		}, a.Settings().TMDBImageDomain)
 	})
 	if err != nil {

@@ -13,7 +13,7 @@ import (
 
 // Run after authentication but before ServeMux path cleaning and JSON routing.
 // A true return means the response has been written and must not be wrapped.
-func (a *App) serveOriginalPluginFrontend(w http.ResponseWriter, r *http.Request) bool {
+func (a *App) serveOriginalPluginFrontend(w http.ResponseWriter, r *http.Request, authenticated bool) bool {
 	const prefix = "/api/plugins/"
 	if !strings.HasPrefix(r.URL.Path, prefix) {
 		return false
@@ -30,7 +30,7 @@ func (a *App) serveOriginalPluginFrontend(w http.ResponseWriter, r *http.Request
 	// Authentication-provider declarations grant only this verified package's
 	// frontend directory. Management APIs remain behind the normal session gate.
 	var anonymous *originalFrontendDescriptor
-	if !a.authenticated(r) {
+	if !authenticated {
 		var err error
 		anonymous, err = a.originalAuthFrontend(r.Context(), parts[0])
 		if err != nil {

@@ -201,7 +201,7 @@ func (a *App) originalManualStorageScan(ctx context.Context, path string, in man
 		} else if classifier.Audio(class) {
 			file.materialKind = "audio"
 		}
-		file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(metadataPath)
+		file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(importNFOAnchor(metadataPath, candidate.Bluray))
 		if file.InferredMedia != nil {
 			file.IdentitySource = "nfo"
 		}

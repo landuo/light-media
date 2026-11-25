@@ -6,7 +6,7 @@ import (
 )
 
 func (a *App) validatePluginReadAuthority(ctx context.Context, authority pluginAPIAuthority) error {
-	tx, err := a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	tx, err := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
 	if err != nil {
 		return err
 	}

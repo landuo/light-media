@@ -35,9 +35,10 @@ type subscriptionAddReceipt struct {
 	EventID      string          `json:",omitempty"`
 }
 type subscriptionAddExecution struct {
-	a        *App
-	Identity subscriptionAddIdentity
-	Job      Job
+	a              *App
+	Identity       subscriptionAddIdentity
+	Job            Job
+	queueAfterSave bool
 }
 type subscriptionAddExecutionKey struct{}
 

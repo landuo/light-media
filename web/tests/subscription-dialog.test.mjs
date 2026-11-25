@@ -76,7 +76,7 @@ function text(node) {
 
 async function mount(
   t,
-  { view = 'subscriptions', items = [subscription()], editorOnly = false, images = false } = {},
+  { view = 'subscriptions', items = [subscription()], editorOnly = false, initialMedia, images = false } = {},
 ) {
   const fixture = {
       items,
@@ -164,7 +164,7 @@ async function mount(
   const scope = vue.effectScope();
   const render = scope.run(() =>
     module.exports.default.setup(
-      { view, editorOnly },
+      { view, editorOnly, initialMedia },
       { expose() {}, emit: (...event) => fixture.events.push(event) },
     ),
   );
@@ -387,8 +387,10 @@ test('the overlay editor saves its selected season and closes without changing t
   const app = await mount(t, {
     view: 'subscriptions/new/tv/42?season=2&start_episode=5',
     editorOnly: true,
+    initialMedia: media,
   });
   assert.ok(app.dialog());
+  assert.deepEqual(app.fixture.requests, []);
   assert.equal(app.label('新建订阅'), undefined);
   assert.equal(app.label('编辑订阅 合成剧集'), undefined);
   await app.click('保存');
@@ -528,7 +530,8 @@ test('500 subscriptions use bounded lazy-image pages and preserve editing and fi
     pictures = () => app.nodes().filter((n) => n.type === 'img');
   assert.equal(cards().length, 24);
   assert.equal(pictures().length, 48);
-  assert.ok(pictures().every((n) => n.props.loading === 'lazy'));
+  assert.equal(pictures().filter((n) => n.props.loading === 'eager').length, 12);
+  assert.equal(pictures().filter((n) => n.props.loading === 'lazy').length, 36);
   assert.match(text(app.nodes()), /本次载入 500 个/);
   await app.click('下一页');
   await app.click('编辑订阅 Series 24');

@@ -341,7 +341,7 @@ func verifyPackageFile(root string, f PackageFile) error {
 		return err
 	}
 	h := sha256.New()
-	n, copyErr := io.Copy(h, io.LimitReader(in, f.Size+1))
+	n, copyErr := io.Copy(h, io.LimitReader(verificationReader(in, f.Size), f.Size+1))
 	closeErr := in.Close()
 	if err = errors.Join(copyErr, closeErr); err != nil {
 		return err

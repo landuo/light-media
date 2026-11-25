@@ -60,3 +60,28 @@ func TestWordsConcurrentCacheAndBoundedPathologicalRule(t *testing.T) {
 		})
 	}
 }
+
+func TestLiteralReplacementsKeepPythonSemantics(t *testing.T) {
+	m, err := New(nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, tc := range []struct {
+		title, pattern, value, want string
+		applied                     bool
+	}{
+		{"电影电影", "电影", "$1", "$1$1", true},
+		{"aa", "a", "a", "aa", true},
+		{"a", "A", "x", "a", false},
+		{"ab", "a.b", "x", "ab", false},
+		{"x", "x", `\g<0>!`, "x!", true},
+	} {
+		got, applied, err := m.replace(tc.title, tc.pattern, tc.value)
+		if err != nil || got != tc.want || applied != tc.applied {
+			t.Fatalf("%q: %q, %t, %v", tc.pattern, got, applied, err)
+		}
+	}
+	if _, _, err = m.replace("absent", "word", `\g<9>`); err == nil {
+		t.Fatal("invalid group reference suppressed on miss")
+	}
+}

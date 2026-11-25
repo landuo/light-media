@@ -163,6 +163,7 @@ func TestBrowserProtectionSnapshotIsImmutableAndMutationRefreshes(t *testing.T) 
 		}
 	}
 	a.config.Downloaders[0].DownloadPath = "/new-downloads"
+	a.invalidateSettings()
 	if snapshot.reason("/downloads/x") == "" || a.browserStaticProtection("/downloads/x") != "" {
 		t.Fatal("snapshot or fresh mutation view incorrect")
 	}
@@ -241,4 +242,48 @@ func BenchmarkBrowserProtectionSnapshot(b *testing.B) {
 			p.reason("/media/movie.mkv")
 		}
 	})
+}
+
+func TestPosterCacheRejectsSameSizeRewriteWithRestoredMtime(t *testing.T) {
+	name := filepath.Join(t.TempDir(), "poster.img")
+	original := append([]byte{0xff, 0xd8, 0xff}, bytes.Repeat([]byte{0x51}, 1024)...)
+	if err := os.WriteFile(name, original, 0600); err != nil {
+		t.Fatal(err)
+	}
+	before, err := os.Stat(name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	time.Sleep(30 * time.Millisecond)
+	var cache posterCache
+	get := func() []byte {
+		f, err := os.Open(name)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer f.Close()
+		reader, mime, err := cache.content(f, httptest.NewRequest("GET", "/poster", nil))
+		if err != nil || mime != "image/jpeg" {
+			t.Fatal(mime, err)
+		}
+		data, err := io.ReadAll(reader)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return data
+	}
+	if !bytes.Equal(get(), original) || len(cache.entries) != 1 {
+		t.Fatal("immutable poster was not retained")
+	}
+	modified := bytes.Clone(original)
+	modified[len(modified)-1]++
+	if err = os.WriteFile(name, modified, 0600); err != nil {
+		t.Fatal(err)
+	}
+	if err = os.Chtimes(name, before.ModTime(), before.ModTime()); err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(get(), modified) {
+		t.Fatal("same-size image rewrite served old content")
+	}
 }

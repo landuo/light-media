@@ -110,7 +110,7 @@ func TestUISubscriptionActualSaveDefaultNoticeAddedColdAndDuplicateBeforeAwaitSt
 			if e = cold.safeRun(ctx, job); pluginErrorCodeInternal(e) != "SUBSCRIPTION_ASYNC_STATS_DEPENDENCY" || fixture.Sends.Load() != 1 || fixture.Metadata.Load() != 1 {
 				t.Fatal("cold saved UI operation repeated source business", e)
 			}
-			if _, e = cold.Store.DB.Exec(`DELETE FROM subscription_origin WHERE 1=1`); e != nil {
+			if _, e = cold.Store.DB.Exec(`DELETE FROM plugin_record WHERE kind='source_subscription_origin'`); e != nil {
 				t.Fatal(e)
 			}
 			if e = cold.safeRun(ctx, job); e == nil {
@@ -202,7 +202,7 @@ func TestUISubscriptionActualSaveReceiptFailureRollsBackAndRecovers(t *testing.T
 	}
 	var rows, origins int
 	a.Store.DB.QueryRow(`SELECT count(*) FROM subscribe WHERE 1=1`).Scan(&rows)
-	a.Store.DB.QueryRow(`SELECT count(*) FROM subscription_origin WHERE 1=1`).Scan(&origins)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_record WHERE kind='source_subscription_origin'`).Scan(&origins)
 	if rows != 0 || origins != 0 || noticeV2AddedCount(t, a) != 0 || fixture.Sends.Load() != 0 {
 		t.Fatal("save/receipt TX failure was partial", rows, origins)
 	}
@@ -296,7 +296,7 @@ func TestUISubscriptionAuthenticatedAPIAwaitsActualAsyncStatistics(t *testing.T)
 			subscriptionStatsInstallSettings(t, a, statistics.URL, true)
 			if mode == "nonascii_header" {
 				var sealed []byte
-				a.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed)
+				a.Store.DB.QueryRow(`SELECT payload FROM plugin_record WHERE kind='source_statistics_settings' AND id='main'`).Scan(&sealed)
 				raw, e := a.pluginStore.unseal("source_statistics_settings", "system", "main", sealed)
 				if e != nil {
 					t.Fatal(e)
@@ -310,7 +310,7 @@ func TestUISubscriptionAuthenticatedAPIAwaitsActualAsyncStatistics(t *testing.T)
 				if e != nil {
 					t.Fatal(e)
 				}
-				if _, e = a.Store.DB.Exec(`UPDATE systemconfig SET payload=? WHERE uid='main'`, sealed); e != nil {
+				if _, e = a.Store.DB.Exec(`UPDATE plugin_record SET payload=? WHERE kind='source_statistics_settings' AND id='main'`, sealed); e != nil {
 					t.Fatal(e)
 				}
 			}

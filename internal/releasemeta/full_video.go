@@ -788,7 +788,7 @@ func parseFullVideo(title string, subtitle *string, isfile bool, options Options
 			if mode == "rust" && subtitle != nil {
 				description = *subtitle
 			}
-			splitPattern := fullPattern(`[\s/|]+`, mode)
+			splitPattern := preparedSourcePattern(`[\s/|]+`, mode, false)
 			parts, _ := expression(splitPattern, false).Split(description, -1)
 			first := ""
 			if len(parts) > 0 {

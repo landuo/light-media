@@ -10,6 +10,7 @@ import (
 )
 
 type LocaleData struct {
+	wordDictionary        func() map[string]bool
 	Name                  string
 	DateOrder             string
 	NoWordSpacing         bool
@@ -92,8 +93,7 @@ func merge(parent *LocaleData, child LocaleData) LocaleData {
 	return child
 }
 
-func GetLocaleData(locale string) (*LocaleData, bool) {
-	initializeLocaleData()
+func generatedLocaleSlot(locale string) (*LocaleData, bool) {
 	switch locale {
 	case "af":
 		return &af_Locale, true

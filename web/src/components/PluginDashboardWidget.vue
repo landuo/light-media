@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../assets/plugin-utilities.css';
 import { computed, shallowRef, markRaw, watch, onUnmounted, type Component } from 'vue';
 import { VCard, VCardItem, VCardTitle, VCardSubtitle, VCardText } from 'vuetify/components/VCard';
 import { VAlert } from 'vuetify/components/VAlert';
@@ -97,5 +98,3 @@ onUnmounted(() => {
   min-block-size: 0;
 }
 </style>
-
-<style src="../assets/plugin-utilities.css"></style>

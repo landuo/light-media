@@ -4,58 +4,52 @@
 package historywords
 
 import (
-	"bufio"
-	"bytes"
-	"compress/gzip"
 	_ "embed"
+	"encoding/binary"
 	"math"
-	"strconv"
+	"sort"
 	"strings"
-	"sync"
-	"unicode/utf8"
 )
 
-// Source, license, and checksums: docs/history-jieba-source-20261115.md.
-//
-//go:embed dict.txt.gz
-var compressedDictionary []byte
+// Source, license and checksums are recorded in docs/history-jieba-source-20261115.md.
+//go:generate go run gen_dictionary.go
 
-var defaultDictionary = sync.OnceValue(loadDictionary)
+//go:embed dict.idx
+var packedDictionary string
 
 type dictionary struct {
-	frequencies map[string]int
-	maxRunes    int
-	logTotal    float64
+	// The file contains a 16-byte header, (offset, frequency) pairs, a
+	// sentinel offset and the sorted UTF-8 words, all immutably file-backed.
+	table, words    string
+	count, maxRunes int
+	logTotal        float64
 }
 
+func word32(data string) uint32 { return binary.LittleEndian.Uint32([]byte(data[:4])) }
+
 func loadDictionary() *dictionary {
-	r, err := gzip.NewReader(bytes.NewReader(compressedDictionary))
-	if err != nil {
-		panic(err)
+	count := int(word32(packedDictionary))
+	start := 16 + count*8 + 4
+	return &dictionary{
+		table: packedDictionary[16:start], words: packedDictionary[start:],
+		count: count, maxRunes: int(word32(packedDictionary[4:])),
+		logTotal: math.Log(float64(binary.LittleEndian.Uint64([]byte(packedDictionary[8:16])))),
 	}
-	defer r.Close()
-	d := &dictionary{frequencies: make(map[string]int, 350000)}
-	total := 0
-	scanner := bufio.NewScanner(r)
-	for scanner.Scan() {
-		fields := strings.Split(strings.TrimSpace(scanner.Text()), " ")
-		if len(fields) < 2 {
-			panic("invalid embedded jieba dictionary entry")
-		}
-		frequency, err := strconv.Atoi(fields[1])
-		if err != nil || frequency < 0 {
-			panic("invalid embedded jieba dictionary frequency")
-		}
-		d.frequencies[fields[0]] = frequency
-		// Upstream sums every line, including any repeated dictionary word.
-		total += frequency
-		d.maxRunes = max(d.maxRunes, utf8.RuneCountInString(fields[0]))
+}
+
+var defaultDictionary = loadDictionary()
+
+func (d *dictionary) lookup(word string) (frequency int, hasLonger bool) {
+	wordAt := func(i int) string {
+		entry := d.table[8*i:]
+		return d.words[word32(entry):word32(entry[8:])]
 	}
-	if err := scanner.Err(); err != nil {
-		panic(err)
+	i := sort.Search(d.count, func(i int) bool { return wordAt(i) >= word })
+	if i < d.count && wordAt(i) == word {
+		frequency = int(word32(d.table[8*i+4:]))
+		i++
 	}
-	d.logTotal = math.Log(float64(total))
-	return d
+	return frequency, i < d.count && strings.HasPrefix(wordAt(i), word)
 }
 
 func asciiAlnum(r rune) bool {
@@ -78,7 +72,7 @@ func Cut(text string) []string {
 			for end < len(runes) && inWordBlock(runes[end]) {
 				end++
 			}
-			out = defaultDictionary().cutBlock(runes[i:end], out)
+			out = cutBlock(runes[i:end], out, defaultDictionary.maxRunes, defaultDictionary.logTotal, defaultDictionary.lookup)
 			i = end
 		} else if runes[i] == '\r' && i+1 < len(runes) && runes[i+1] == '\n' {
 			out = append(out, "\r\n")
@@ -91,17 +85,27 @@ func Cut(text string) []string {
 	return out
 }
 
-func (d *dictionary) cutBlock(text []rune, out []string) []string {
+func cutBlock(text []rune, out []string, maxRunes int, logTotal float64, lookup func(string) (int, bool)) []string {
+	encoded := string(text)
+	offsets := make([]int, len(text)+1)
+	i := 0
+	for pos := range encoded {
+		offsets[i] = pos
+		i++
+	}
+	offsets[len(text)] = len(encoded)
 	scores := make([]float64, len(text)+1)
 	next := make([]int, len(text))
 	for start := len(text) - 1; start >= 0; start-- {
 		best, matches := -3.14e100, 0
-		for end := start + 1; end <= len(text) && end-start <= d.maxRunes; end++ {
-			frequency := d.frequencies[string(text[start:end])]
+		hasLonger := true
+		for end := start + 1; hasLonger && end <= len(text) && end-start <= maxRunes; end++ {
+			var frequency int
+			frequency, hasLonger = lookup(encoded[offsets[start]:offsets[end]])
 			if frequency <= 0 {
 				continue
 			}
-			candidate := math.Log(float64(frequency)) - d.logTotal + scores[end]
+			candidate := math.Log(float64(frequency)) - logTotal + scores[end]
 			// Rust PrefixDict visits ends in ascending order and uses >=.
 			if candidate >= best {
 				best, next[start] = candidate, end
@@ -112,7 +116,7 @@ func (d *dictionary) cutBlock(text []rune, out []string) []string {
 			}
 		}
 		if matches == 0 {
-			best, next[start] = -d.logTotal+scores[start+1], start+1
+			best, next[start] = -logTotal+scores[start+1], start+1
 		}
 		scores[start] = best
 	}

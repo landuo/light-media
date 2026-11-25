@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VTextField } from 'vuetify/components/VTextField';
-import { ref, onMounted, onUnmounted, computed, watch, defineAsyncComponent } from 'vue';
+import { ref, shallowRef, onMounted, onUnmounted, computed, watch, defineAsyncComponent } from 'vue';
 import { api, action, ui, go, errorText, date } from './api';
 import { createPluginNavigation, pluginNavigationTarget } from './features/plugin-navigation';
 import { boundedRead } from './features/bounded-read';
@@ -140,11 +140,17 @@ function systemMessageRelativeTime(date: string | null, _renderTick: number) {
   return formatSystemMessageRelativeTime(date);
 }
 let authGeneration = 0;
+let notificationRead = 0;
+const hasUnreadTasks = ref(false);
 async function loadNotifications() {
+  const request = ++notificationRead;
   notificationTime.value = Date.now();
   const generation = authGeneration;
   const result = await api('/notifications', undefined, 'GET', undefined, true);
-  if (generation === authGeneration && auth.value?.authenticated) notifications.value = result;
+  if (generation === authGeneration && request === notificationRead && auth.value?.authenticated) {
+    notifications.value = result;
+    hasUnreadTasks.value = result.unread > 0;
+  }
 }
 function readAllSystemMessages() {
   systemMessageFeed.markAllRead();
@@ -206,6 +212,7 @@ let readyTimer: ReturnType<typeof setTimeout> | undefined;
 const readiness = ref<boolean | null>(null);
 const readinessError = ref('');
 const settingsError = ref('');
+const subscriptionCards = shallowRef<any[]>([]);
 let settingsPending: Promise<void> | undefined;
 let statusPending = false;
 function cancelSessionReads() {
@@ -240,9 +247,11 @@ async function loadStatus() {
   statusPending = true;
   const generation = authGeneration;
   try {
-    const status = await readSession('/status', true);
+    const request = notificationRead;
+    const status = await readSession('/status?view=navigation', true);
     if (generation === authGeneration && auth.value?.authenticated) {
       ui.status = status;
+      if (request === notificationRead && !notificationsOpen.value) hasUnreadTasks.value = !!status.has_unread;
       if (status?.starting === true && readiness.value === true) {
         readiness.value = false;
         void checkReadiness();
@@ -274,12 +283,14 @@ function expired() {
   abortPluginAPIRequests();
   authGeneration++;
   systemMessageFeed.setAuthenticated(false);
+  hasUnreadTasks.value = false;
   notifications.value = { items: [], unread: 0 };
   notificationsOpen.value = false;
   notificationTab.value = 'system';
   starting.value = false;
   auth.value = { authenticated: false, setup_required: false };
   ui.settings = null;
+  subscriptionCards.value = [];
   ui.status = null;
   clearSearchSession();
   pluginNavigation.reset();
@@ -298,7 +309,8 @@ async function bootstrap() {
     auth.value = status;
     if (auth.value.authenticated) {
       void loadSettings();
-      await checkReadiness();
+      if (status.starting === false) readiness.value = true;
+      else await checkReadiness();
       if (generation !== authGeneration || !auth.value?.authenticated) return;
     } else {
       systemMessageFeed.setAuthenticated(false);
@@ -316,7 +328,9 @@ const businessReady = computed(
 // Pages that initialize settings-dependent selections retain a local gate.
 const needsSettings = computed(
   () =>
+    !(pageKey.value === 'subscriptions' && !route.value.includes('/new/')) &&
     ![
+      'calendar',
       'discover',
       'recommend-browse',
       'explore',
@@ -334,7 +348,6 @@ watch(businessReady, (ready) => {
   systemMessageFeed.setAuthenticated(ready);
   if (ready) {
     void loadStatus();
-    loadNotifications().catch(() => {});
     pluginNavigation.ensure();
   }
 });
@@ -527,7 +540,7 @@ onUnmounted(() => {
             "
           >
             <AppIcon name="bell" /><span
-              v-if="systemMessages.hasNew || notifications.unread"
+              v-if="systemMessages.hasNew || hasUnreadTasks"
               class="notification-unread-dot"
               aria-label="有未读通知"
             ></span></button
@@ -726,6 +739,9 @@ onUnmounted(() => {
             v-else-if="route.startsWith('subscriptions') || route === 'calendar'"
             :key="route"
             :view="route"
+            :cached-items="subscriptionCards"
+            :ensure-settings="loadSettings"
+            @loaded="subscriptionCards = $event"
           /><SiteManager v-else-if="pageKey === 'sites'" />
           <PluginAppPage
             v-else-if="pageKey === 'plugin-app'"
@@ -751,7 +767,8 @@ onUnmounted(() => {
             v-else-if="
               !searchComponent &&
               ![
-                'discover',
+                'calendar',
+      'discover',
                 'recommend-browse',
                 'explore',
                 'explore-detail',

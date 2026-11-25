@@ -19,6 +19,7 @@ func TestSubscriptionCreateReusesServerDetailNotBrowserCopy(t *testing.T) {
 	raw := json.RawMessage(`{"id":123,"name":"Trusted detail","original_name":"Original","first_air_date":"2026-01-01","original_language":"zh","origin_country":["CN"],"genres":[],"credits":{"cast":[],"crew":[]},"external_ids":{},"alternative_titles":{"titles":[],"results":[]},"translations":{"translations":[]},"seasons":[],"poster_path":"/owned.jpg"}`)
 	info := sourceMediaInformation{ProviderInfo: raw, MediaInfo: json.RawMessage(`{"title":"stale","category":"stale"}`)}
 	a.config.TMDBImageDomain = "https://images.example.invalid"
+	a.invalidateSettings()
 
 	if err := a.Store.Put(ctx, "cache", "source-detail:tv:123", map[string]any{"at": time.Now(), "data": info}); err != nil {
 		t.Fatal(err)

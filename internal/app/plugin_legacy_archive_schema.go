@@ -1,5 +1,7 @@
 package app
 
+const subscriptionWordsSchema = `CREATE TABLE IF NOT EXISTS subscription_words(subscription_id TEXT PRIMARY KEY,sealed BLOB NOT NULL,updated_at TEXT NOT NULL);`
+
 // Historical tables only. No legacy queue, journal, recovery or native host
 // code executes against these tables in the standard manager. Existing user
 // rows are preserved; this is not a data purge or a compatibility executor.
@@ -13,7 +15,7 @@ CREATE TABLE IF NOT EXISTS plugin_site_control_operations(run_id TEXT PRIMARY KE
 CREATE TABLE IF NOT EXISTS plugin_site_statistic_operations(run_id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,result BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS plugin_subscribe_group_operations(run_id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,result BLOB NOT NULL,FOREIGN KEY(run_id) REFERENCES plugin_runs(id));
 CREATE TABLE IF NOT EXISTS resource_metadata_settings(id TEXT PRIMARY KEY,revision INTEGER NOT NULL,sealed BLOB NOT NULL,updated_at TEXT NOT NULL);
-CREATE TABLE IF NOT EXISTS subscription_words(subscription_id TEXT PRIMARY KEY,sealed BLOB NOT NULL,updated_at TEXT NOT NULL);
+` + subscriptionWordsSchema + `
 CREATE TABLE IF NOT EXISTS plugin_api_calls(run_id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,scope BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS plugin_installations(
  instance_id TEXT PRIMARY KEY,plugin_id TEXT NOT NULL,version TEXT NOT NULL,manifest_schema INTEGER NOT NULL,

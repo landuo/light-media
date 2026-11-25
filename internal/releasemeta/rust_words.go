@@ -10,14 +10,13 @@ import (
 	"unicode"
 
 	"github.com/dlclark/regexp2/v2"
-	"light-media/internal/pyregex"
 )
 
 // Rust 0.2.6 uses checked i64 arithmetic and its own replacement expansion;
 // the legacy WordsMatcher deliberately remains a separate implementation.
 var errRustFallback = errors.New("release_meta_rust_fallback")
 
-func prepareRustWords(title string, list []string) (string, error) {
+func prepareRustWords(title string, list []string, patterns *configuredPatterns) (string, error) {
 	deadline := time.Now().Add(2 * time.Second)
 	for index, word := range list {
 		if index%16 == 0 && time.Now().After(deadline) {
@@ -34,10 +33,10 @@ func prepareRustWords(title string, list []string) (string, error) {
 					parameters = append(parameters, strings.TrimSpace(group.String()))
 				}
 				var replaced bool
-				title, replaced = replaceRustWord(title, parameters[0], parameters[1])
+				title, replaced = patterns.replaceRustWord(title, parameters[0], parameters[1])
 				if replaced {
 					var fallback bool
-					title, fallback = offsetRustWord(title, parameters[2], parameters[3], parameters[4])
+					title, fallback = patterns.offsetRustWord(title, parameters[2], parameters[3], parameters[4])
 					if fallback {
 						return "", errRustFallback
 					}
@@ -45,20 +44,20 @@ func prepareRustWords(title string, list []string) (string, error) {
 			}
 		case strings.Contains(word, " => "):
 			parts := strings.Split(word, " => ")
-			title, _ = replaceRustWord(title, parts[0], parts[1])
+			title, _ = patterns.replaceRustWord(title, parts[0], parts[1])
 		case strings.Contains(word, " >> ") && strings.Contains(word, " <> "):
 			parts := strings.Split(word, " <> ")
 			offsets := strings.Split(parts[1], " >> ")
 			if len(offsets) > 1 {
 				var fallback bool
-				title, fallback = offsetRustWord(title, parts[0], offsets[0], offsets[1])
+				title, fallback = patterns.offsetRustWord(title, parts[0], offsets[0], offsets[1])
 				if fallback {
 					return "", errRustFallback
 				}
 			}
 		default:
 			if strings.TrimSpace(word) != "" {
-				title, _ = replaceRustWord(title, word, "")
+				title, _ = patterns.replaceRustWord(title, word, "")
 			}
 		}
 		if len(title) > 64<<10 {
@@ -68,8 +67,8 @@ func prepareRustWords(title string, list []string) (string, error) {
 	return title, nil
 }
 
-func replaceRustWord(title, pattern, replacement string) (string, bool) {
-	re, err := pyregex.Compile(pattern, false)
+func (patterns *configuredPatterns) replaceRustWord(title, pattern, replacement string) (string, bool) {
+	re, err := patterns.compile(pattern, false)
 	if err != nil {
 		return title, false
 	}
@@ -104,15 +103,15 @@ func replaceRustWord(title, pattern, replacement string) (string, bool) {
 	return result, matched
 }
 
-func offsetRustWord(title, front, back, arithmetic string) (string, bool) {
-	result, _, fallback := offsetRustWordWithState(title, front, back, arithmetic)
+func (patterns *configuredPatterns) offsetRustWord(title, front, back, arithmetic string) (string, bool) {
+	result, _, fallback := patterns.offsetRustWordWithState(title, front, back, arithmetic)
 	return result, fallback
 }
 
-func offsetRustWordWithState(title, front, back, arithmetic string) (string, bool, bool) {
+func (patterns *configuredPatterns) offsetRustWordWithState(title, front, back, arithmetic string) (string, bool, bool) {
 	for _, condition := range []string{front, back} {
 		if condition != "" {
-			re, err := pyregex.Compile(condition, false)
+			re, err := patterns.compile(condition, false)
 			if err != nil {
 				return title, false, false
 			}
@@ -121,7 +120,7 @@ func offsetRustWordWithState(title, front, back, arithmetic string) (string, boo
 			}
 		}
 	}
-	re, err := pyregex.Compile(`(?<=`+front+`.*?)[0-9一二三四五六七八九十]+(?=.*?`+back+`)`, false)
+	re, err := patterns.compile(`(?<=`+front+`.*?)[0-9一二三四五六七八九十]+(?=.*?`+back+`)`, false)
 	if err != nil {
 		return title, false, false
 	}

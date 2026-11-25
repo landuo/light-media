@@ -142,7 +142,7 @@ onMounted(() => {
 });
 onActivated(() => {
   activated.value = true;
-  void loadExtraSources();
+  if (wasDeactivated) void loadExtraSources();
   void locateHeader();
   if (wasDeactivated) void nextTick(() => window.scrollTo({ top: lastScroll, behavior: 'auto' }));
 });

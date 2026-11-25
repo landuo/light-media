@@ -31,6 +31,7 @@ type PluginStoredValue struct {
 }
 
 type PluginStore struct {
+	displayData            pluginDataCache
 	originalInstalledCache originalInstalledCache
 	store                  *Store
 	notices                pluginNoticeRuntime
@@ -52,7 +53,7 @@ func NewPluginStore(ctx context.Context, store *Store) (*PluginStore, error) {
 		return nil, err
 	}
 	defer tx.Rollback()
-	if _, err = tx.ExecContext(ctx, legacyPluginArchiveSchema); err != nil {
+	if _, err = tx.ExecContext(ctx, legacyPluginArchiveSchema+siteDisplayVersionSchema()+pluginDataVersionSchema()); err != nil {
 		return nil, err
 	}
 	var count, version int
@@ -172,7 +173,7 @@ func (p *PluginStore) Install(ctx context.Context, in PluginInstallation) error 
 func (p *PluginStore) Installation(ctx context.Context, instanceID string) (PluginInstallation, error) {
 	var in PluginInstallation
 	var sealed []byte
-	err := p.store.DB.QueryRowContext(ctx, `SELECT instance_id,plugin_id,version,manifest_schema,manifest,desired_enabled,installed,generation,created_at,updated_at FROM plugin_installations WHERE instance_id=?`, instanceID).
+	err := p.store.reader().QueryRowContext(ctx, `SELECT instance_id,plugin_id,version,manifest_schema,manifest,desired_enabled,installed,generation,created_at,updated_at FROM plugin_installations WHERE instance_id=?`, instanceID).
 		Scan(&in.InstanceID, &in.PluginID, &in.Version, &in.ManifestSchemaVersion, &sealed, &in.DesiredEnabled, &in.Installed, &in.Generation, &in.CreatedAt, &in.UpdatedAt)
 	if err != nil {
 		return in, err
@@ -184,7 +185,7 @@ func (p *PluginStore) Installation(ctx context.Context, instanceID string) (Plug
 func (p *PluginStore) readValue(ctx context.Context, instanceID, kind, key string) (PluginStoredValue, error) {
 	var value PluginStoredValue
 	var sealed []byte
-	err := p.store.DB.QueryRowContext(ctx, `SELECT revision,sealed,updated_at FROM plugin_values WHERE instance_id=? AND kind=? AND item_key=?`, instanceID, kind, key).Scan(&value.Revision, &sealed, &value.UpdatedAt)
+	err := p.store.reader().QueryRowContext(ctx, `SELECT revision,sealed,updated_at FROM plugin_values WHERE instance_id=? AND kind=? AND item_key=?`, instanceID, kind, key).Scan(&value.Revision, &sealed, &value.UpdatedAt)
 	if err != nil {
 		return value, err
 	}
@@ -193,10 +194,13 @@ func (p *PluginStore) readValue(ctx context.Context, instanceID, kind, key strin
 }
 
 func (p *PluginStore) Data(ctx context.Context, instanceID, key string) (PluginStoredValue, error) {
+	if strings.HasPrefix(key, "task.") && strings.Count(key, ".") >= 2 && (strings.HasSuffix(key, ".torrents") || strings.HasSuffix(key, ".archived") || strings.HasSuffix(key, ".runs") || strings.HasSuffix(key, ".statistic")) {
+		return p.readDisplayData(ctx, instanceID, key)
+	}
 	return p.readValue(ctx, instanceID, "data", key)
 }
 func (p *PluginStore) Config(ctx context.Context, instance string) (PluginStoredValue, error) {
-	observed, sealed, err := p.readOriginalBaseConfigRow(ctx, p.store.DB, instance)
+	observed, sealed, err := p.readOriginalBaseConfigRow(ctx, p.store.reader(), instance)
 	if err != nil {
 		return PluginStoredValue{}, err
 	}

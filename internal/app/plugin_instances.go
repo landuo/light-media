@@ -455,7 +455,7 @@ func (a *App) pluginCloneHTTP(w http.ResponseWriter, r *http.Request, source str
 
 func (p *PluginStore) presentInstance(ctx context.Context, in PluginInstallation, manifest plugins.Manifest) (pluginCard, error) {
 	card := pluginCard{Manifest: manifest, InstanceID: in.InstanceID, Installed: true}
-	metadata, err := p.instanceMetadata(ctx, p.store.DB, in.InstanceID)
+	metadata, err := p.instanceMetadata(ctx, p.store.reader(), in.InstanceID)
 	if err != nil {
 		return card, err
 	}

@@ -129,6 +129,31 @@ func TestAutomaticSeasonPackCreatesOneIntentForOnlyItsProvenMissingEpisodes(t *t
 		t.Fatal("reserved pack was created twice", len(again))
 	}
 }
+func TestOrdinarySubscriptionChecksKnownEpisodesWithLongerManualTotal(t *testing.T) {
+	a, s, adds := automaticPackApp(t, []string{"测试剧集 S01E03 1080p.mkv"}, false)
+	s.StartEpisode, s.TotalEpisodes, s.ManualTotalEpisode = 3, 5, true
+	ctx := context.Background()
+	if err := a.Store.Put(ctx, "subscription", s.ID, s); err != nil {
+		t.Fatal(err)
+	}
+	runAutomaticPackCheck(t, a, s)
+	var intent Intent
+	rows, err := a.Store.List(ctx, "intent", 10, 0)
+	if err != nil || len(rows) != 1 || json.Unmarshal(rows[0], &intent) != nil || !reflect.DeepEqual(intent.Episodes, []int{3}) {
+		t.Fatalf("expected one intent for the known missing episode: count=%d, episodes=%v, err=%v", len(rows), intent.Episodes, err)
+	}
+	reorgRunJob(t, a, reorgJob(t, a, "download", intent.ID))
+	if adds.Load() != 1 {
+		t.Fatalf("downloader received %d submissions, want 1", adds.Load())
+	}
+	// Only episodes 4 and 5 remain after reserving 3. An empty search target
+	// would expand to the entire season; the subscription must instead wait.
+	runAutomaticPackCheck(t, a, s)
+	if err = a.Store.Get(ctx, "subscription", s.ID, &s); err != nil || s.State != "active" || s.TotalEpisodes != 5 || s.LackEpisode == nil || *s.LackEpisode != 2 || !strings.Contains(s.LastReason, "元数据") {
+		t.Fatalf("unlisted episodes lost: total=%d, lack=%v, reason=%q, err=%v", s.TotalEpisodes, s.LackEpisode, s.LastReason, err)
+	}
+}
+
 func TestAutomaticSeasonPackUnsafeFilesRequireManualReviewWithoutIntent(t *testing.T) {
 	cases := []struct {
 		name     string

@@ -110,8 +110,8 @@ func TestOriginalBrushQBSourceLoginSelection(t *testing.T) {
 
 func TestActivityTimeProjectionRejectsInvalidCountersPerTorrent(t *testing.T) {
 	raw := json.RawMessage(`[{"hash":"0123456789abcdef0123456789abcdef01234567","time_active":"14000","seeding_time":false},{"hash":"1123456789abcdef0123456789abcdef01234567","time_active":0,"seeding_time":0}]`)
-	hashes := []string{"0123456789abcdef0123456789abcdef01234567", "1123456789abcdef0123456789abcdef01234567"}
-	rows, err := originalDownloaderTaskProjectionFields("qbittorrent", hashes, raw, originalDownloaderFields{activityTime: true})
+	selection := originalDownloaderTaskSelection{daemonOrder: true, includeActivityTime: true}
+	rows, err := selection.project("qbittorrent", raw, false, false)
 	if err != nil || len(rows) != 2 {
 		t.Fatalf("rows %v: %v", rows, err)
 	}

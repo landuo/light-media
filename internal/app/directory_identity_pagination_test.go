@@ -118,6 +118,41 @@ func TestDirectoryFileIdentityUsesTVSeasonReleaseYear(t *testing.T) {
 			if file := got.Files[0]; file.Season != 4 || len(file.Episodes) != 1 || file.Episodes[0] != 21 {
 				t.Fatalf("release numbering changed: %+v", file)
 			}
+			if len(tc.direct) == 0 {
+				post := "Friends.S04E21.1997.2160p.WEB-DL.mkv"
+				got, err = a.directoryFileIdentity(context.Background(), DirectoryRule{MediaType: "tv"}, importScanFile{Path: filepath.Join(source, post), Parsed: media.Parse(post)})
+				if err != nil || got.TMDBID != tc.want {
+					t.Fatalf("post-episode season year: id=%d err=%v", got.TMDBID, err)
+				}
+			}
 		})
+	}
+}
+
+func TestDirectoryFileIdentityPostEpisodeYear(t *testing.T) {
+	a, source, _ := importTestApp(t)
+	series := catalog.Media{ID: 101172, MediaType: "tv", Title: "吞噬星空", OriginalTitle: "吞噬星空", Year: 2020}
+	compilation := catalog.Media{ID: 292492, MediaType: "tv", Title: "吞噬星空 合集篇", OriginalTitle: "吞噬星空 合集篇", Year: 2023}
+	page := catalog.Page{Page: 1, TotalPages: 1, TotalResults: 2, Results: []catalog.Media{compilation, series}}
+	importCache(t, a, "directory-identify:tv:Swallowed Star", page)
+	for _, tc := range []struct {
+		tail string
+		want int64
+	}{
+		{"2020.2160p.TX.WEB-DL.H.265.DDP2.0-HHWEB", series.ID},
+		{"2160p.TX.WEB-DL.H.265.DDP2.0-HHWEB", 0},
+		{"2160p.TX.WEB-DL.2020", 0},
+	} {
+		name := "Swallowed.Star.S01E251." + tc.tail + ".mkv"
+		got, err := a.directoryFileIdentity(context.Background(), DirectoryRule{MediaType: "mixed"}, importScanFile{Path: filepath.Join(source, name), Parsed: media.Parse(name)})
+		if tc.want == 0 {
+			if err == nil || got.TMDBID != 0 {
+				t.Fatalf("ambiguous title accepted: %s, %+v", name, got)
+			}
+			continue
+		}
+		if err != nil || got.TMDBID != tc.want || got.Files[0].Season != 1 || len(got.Files[0].Episodes) != 1 || got.Files[0].Episodes[0] != 251 {
+			t.Fatalf("wrong release identity: %s, %+v, %v", name, got, err)
+		}
 	}
 }

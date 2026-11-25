@@ -49,12 +49,13 @@ type metadata struct {
 }
 type model struct {
 	Language, Name, Key string
+	Indices             []uint16
 	Weights             []byte
 	Norm                float64
 }
 
-var dataOnce sync.Once
-var dataError error
+var loadRegistry = sync.OnceValue(readRegistry)
+var loadModels = sync.OnceValue(readModels)
 var meta metadata
 var byName map[string]EncodingInfo
 var aliases map[string]string
@@ -74,8 +75,7 @@ func inflate(b []byte) ([]byte, error) {
 	defer r.Close()
 	return io.ReadAll(r)
 }
-func loadData() error { dataOnce.Do(func() { dataError = loadAll() }); return dataError }
-func loadAll() error {
+func readRegistry() error {
 	b, e := assets.ReadFile("reference/generated/registry.json")
 	if e != nil {
 		return e
@@ -116,7 +116,15 @@ func loadAll() error {
 			aliases[strings.ToLower(a)] = v.Name
 		}
 	}
-	b, e = assets.ReadFile("models/idf.bin")
+	return nil
+}
+
+// Only detection needs the statistical weights. Declared encodings use the registry alone.
+func readModels() error {
+	if e := loadRegistry(); e != nil {
+		return e
+	}
+	b, e := assets.ReadFile("models/idf.bin")
 	if e != nil {
 		return e
 	}
@@ -167,17 +175,33 @@ func loadAll() error {
 		}
 		models[i] = model{Language: p[0], Name: p[1], Key: key, Norm: norm}
 	}
-	blob, e := inflate(b[off:])
+	reader, e := zlib.NewReader(bytes.NewReader(b[off:]))
 	if e != nil {
 		return e
 	}
-	if len(blob) != n*65536 {
-		return fmt.Errorf("invalid model payload")
-	}
+	defer reader.Close()
+	// Over 97% of weights are zero. Retain only nonzero entries and inflate one
+	// model at a time, so first detection also fits on the low-memory host.
+	row := make([]byte, 65536)
 	modelIndex = map[string][]int{}
 	for i := range models {
-		models[i].Weights = blob[i*65536 : (i+1)*65536]
-		modelIndex[models[i].Name] = append(modelIndex[models[i].Name], i)
+		if _, e = io.ReadFull(reader, row); e != nil {
+			return e
+		}
+		m := &models[i]
+		count := len(row) - bytes.Count(row, []byte{0})
+		m.Indices = make([]uint16, 0, count)
+		m.Weights = make([]byte, 0, count)
+		for index, weight := range row {
+			if weight != 0 {
+				m.Indices = append(m.Indices, uint16(index))
+				m.Weights = append(m.Weights, weight)
+			}
+		}
+		modelIndex[m.Name] = append(modelIndex[m.Name], i)
+	}
+	if _, e = io.ReadFull(reader, row[:1]); e != io.EOF {
+		return fmt.Errorf("invalid model payload or checksum")
 	}
 	// Python preserves insertion order; aliases only fill absent canonical keys.
 	for _, m := range models {
@@ -276,7 +300,7 @@ func lookup(name string) string {
 	return ""
 }
 func Lookup(name string) (string, error) {
-	if e := loadData(); e != nil {
+	if e := loadRegistry(); e != nil {
 		return "", e
 	}
 	v := lookup(name)
@@ -326,8 +350,8 @@ func modelScore(p *profile, m model) float64 {
 		return 0
 	}
 	var dot int64
-	for _, i := range p.Nonzero {
-		dot += int64(m.Weights[i]) * p.Freq[i]
+	for j, i := range m.Indices {
+		dot += int64(m.Weights[j]) * p.Freq[i]
 	}
 	return float64(dot) / (m.Norm * p.Norm)
 }

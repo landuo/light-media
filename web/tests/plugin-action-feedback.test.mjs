@@ -60,6 +60,7 @@ function fixture(data, { status = 200, envelopeError, marketFetch, installedCard
     if (name === '../features/plugin-project') return pluginProject;
     if (name === '../features/plugin-organization') return { ...sourceOrganization, organizationGrid: () => [] };
     if (name.startsWith('vuetify/') || name.endsWith('.vue') || name === 'vuedraggable') return {};
+    if (name === '../assets/plugin-utilities.css') return {};
     throw new Error('Unexpected component import ' + name);
   }, module.exports);
   const scope = vue.effectScope();

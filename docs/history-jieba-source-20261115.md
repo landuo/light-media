@@ -15,7 +15,9 @@
 - sdist SHA256：`71d33d4f84f7fa826da3806501bf19ac3e496432d71f75fd4a9c5f1c656c67b3`，下载后核对 PyPI 元数据一致。
 - 上游 LICENSE：MIT，Copyright (c) 2013 Sun Junyi；[随包完整保留](<../internal/historywords/LICENSE.jieba-next>)。
 - 原始 `jieba_next/dict.txt`：5,071,852 bytes，SHA256 `7197c3211ddd98962b036cdf40324d1ea2bfaa12bd028e68faa70111a88e12a8`。
-- [嵌入词典](<../internal/historywords/dict.txt.gz>)：原始字节 gzip level 9、mtime=0，1,904,875 bytes，SHA256 `81f61aa0c811ac4bfaadfb23d9d8b9f38ffc9fc8330c2245c300b4fc1e2ebb11`。不删词、不改频率；默认词频总和 **60,101,967**。
+- [上游词典压缩副本](<../internal/historywords/dict.txt.gz>)：原始字节 gzip level 9、mtime=0，1,904,875 bytes，SHA256 `81f61aa0c811ac4bfaadfb23d9d8b9f38ffc9fc8330c2245c300b4fc1e2ebb11`。不删词、不改频率；默认词频总和 **60,101,967**。
+
+2026-11-24 起，服务读取由这份固定词典生成的只读索引。运行 `go generate ./internal/historywords` 可重建 5,840,929 字节的 `dict.idx`。生成器按 UTF-8 字节序排列词条，单独记录原词典累计词频；测试逐个核对 349,045 个不同词的最终频率及总和。服务启动时只解析索引头，词条随查询按需映射。压缩副本用于生成及测试。
 
 sdist 中以下源码和词典均与只读参考环境安装内容逐字节一致：
 

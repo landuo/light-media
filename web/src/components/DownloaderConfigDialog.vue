@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../assets/plugin-utilities.css';
 import { computed, ref } from 'vue';
 import { useDisplay } from 'vuetify';
 import { VThemeProvider } from 'vuetify/components/VThemeProvider';
@@ -168,5 +169,3 @@ const hostRules = [
   padding: 16px 24px;
 }
 </style>
-
-<style src="../assets/plugin-utilities.css"></style>

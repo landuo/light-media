@@ -345,6 +345,17 @@ func (a *App) originalHostSiteAccounts(ctx context.Context, scope originalBaseCa
 }
 
 func (a *App) originalHostSiteAccountsMode(ctx context.Context, scope originalBaseCallScope, in plugins.SiteAccountHostRequestV1, source bool) (json.RawMessage, error) {
+	raw, err := a.siteAccountProjection(ctx, in, source)
+	if err != nil {
+		return nil, err
+	}
+	if err := scope.validate(ctx); err != nil {
+		return nil, err
+	}
+	return raw, nil
+}
+
+func (a *App) siteAccountProjection(ctx context.Context, in plugins.SiteAccountHostRequestV1, source bool) (json.RawMessage, error) {
 	if !source && in.Date != "" {
 		if _, err := time.Parse("2006-01-02", in.Date); err != nil {
 			return nil, bad("INVALID_PLUGIN_VALUE", "账户日期须为YYYY-MM-DD")
@@ -353,19 +364,36 @@ func (a *App) originalHostSiteAccountsMode(ctx context.Context, scope originalBa
 	if in.Date != "" && in.Latest {
 		return nil, bad("INVALID_PLUGIN_VALUE", "账户日期与最新选择不能同时指定")
 	}
+	settings := a.settingsSnapshot()
 	configured := []SiteConfig{}
-	for _, s := range a.Settings().Sites {
+	for _, s := range settings.Sites {
 		if in.ID == "" || s.ID == in.ID {
 			configured = append(configured, s)
 		}
 	}
 	out := plugins.SiteAccountHostResultV1{SchemaVersion: 1, Items: []plugins.SiteAccountHostRowV1{}}
-	tx, err := a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	tx, err := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
-	view, err := a.siteAccountViewTx(ctx, tx, configured)
+	var version int64
+	cacheable := source && in.ID == "" && (in.Latest || in.Date != "")
+	if cacheable {
+		version, err = siteDisplayVersion(ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		if cached := a.latestSourceAccounts.Load(); in.Latest && cached != nil && cached.settings == settings && cached.version == version {
+			return append(json.RawMessage(nil), cached.data...), nil
+		}
+		if in.Date != "" {
+			if data := a.datedSourceAccounts.get(in.Date, version, settings); data != nil {
+				return data, nil
+			}
+		}
+	}
+	view, err := a.sourceAccountDisplayView(ctx, tx, settings, configured, in.Latest, in.Date)
 	if err != nil {
 		return nil, err
 	}
@@ -476,10 +504,15 @@ func (a *App) originalHostSiteAccountsMode(ctx context.Context, scope originalBa
 	if err = tx.Commit(); err != nil {
 		return nil, err
 	}
-	if err = scope.validate(ctx); err != nil {
-		return nil, err
+	raw, err := json.Marshal(out)
+	if err == nil && cacheable && len(raw) <= 256<<10 {
+		if in.Latest {
+			a.latestSourceAccounts.Store(&sourceAccountDisplay{version: version, settings: settings, data: append(json.RawMessage(nil), raw...)})
+		} else {
+			a.datedSourceAccounts.put(in.Date, version, settings, raw)
+		}
 	}
-	return json.Marshal(out)
+	return raw, err
 }
 
 // This keeps SiteOper.success's original denominator (before trimming the

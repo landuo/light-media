@@ -13,6 +13,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -153,12 +154,12 @@ func (c *IYUUClient) ListTorrents(ctx context.Context, includeActivityTime bool)
 
 func (c *IYUUClient) torrents(ctx context.Context, hashes []string, completed, includeActivityTime bool) (json.RawMessage, error) {
 	ctx = mutationReadOnly(ctx)
+	hashes = slices.Clone(hashes)
 	for i, h := range hashes {
 		v, e := c.client.validHash(h)
 		if e != nil {
 			return nil, e
 		}
-		hashes = append([]string{}, hashes...)
 		hashes[i] = v
 	}
 	if e := c.client.nativeLock(ctx); e != nil {
@@ -177,12 +178,23 @@ func (c *IYUUClient) torrents(ctx context.Context, hashes []string, completed, i
 		if e != nil {
 			return nil, e
 		}
+		if !completed {
+			// Only the shape is required on this path. Avoid materializing every
+			// unrequested field and nested extension in the daemon response.
+			var rows []*struct{}
+			if json.Unmarshal(raw, &rows) != nil || rows == nil {
+				return nil, failure("iyuu_torrents", "invalid_object_list")
+			}
+			for _, row := range rows {
+				if row == nil {
+					return nil, failure("iyuu_torrents", "invalid_object_list")
+				}
+			}
+			return raw, nil
+		}
 		rows, e := nativeObjectList(raw, "iyuu_torrents")
 		if e != nil {
 			return nil, e
-		}
-		if !completed {
-			return raw, nil
 		}
 		return iyuuCompletedQB(rows)
 	}

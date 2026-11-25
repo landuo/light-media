@@ -294,6 +294,9 @@ func validGroup(value string) bool {
 // Rank applies explicit preferences after hard filtering. Resolution preference
 // takes priority, then release group; unknown labels simply earn no preference.
 func Rank(resource sites.Resource, policy Policy) int {
+	if len(policy.PreferredResolutions) == 0 && len(policy.PreferredGroups) == 0 {
+		return 0
+	}
 	if len(resource.Title) > 4096 || len(resource.Subtitle) > 4096 || len(policy.PreferredGroups) > 32 || len(policy.PreferredResolutions) > 16 {
 		return 0
 	}

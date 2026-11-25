@@ -23,6 +23,7 @@ func cloneStrings(in []string) []string {
 }
 func NewMetaInfoParser(env MetaInfoEnvironment) (*MetaInfoParser, error) {
 	options := env.Options
+	options.patterns = &configuredPatterns{}
 	for _, list := range [][]string{options.CustomWords, options.ReleaseGroups, options.Customization, options.MediaExts} {
 		for _, value := range list {
 			if !utf8.ValidString(value) {

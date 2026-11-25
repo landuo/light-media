@@ -26,7 +26,7 @@ func attribute(n *html.Node, key string) string {
 }
 
 func hasClass(n *html.Node, class string) bool {
-	for _, v := range strings.Fields(attribute(n, "class")) {
+	for v := range strings.FieldsSeq(attribute(n, "class")) {
 		if v == class {
 			return true
 		}
@@ -51,6 +51,18 @@ func find(n *html.Node, fn func(*html.Node) bool) []*html.Node {
 	return out
 }
 
+func findFirst(n *html.Node, match func(*html.Node) bool) *html.Node {
+	if n.Type == html.ElementNode && match(n) {
+		return n
+	}
+	for child := n.FirstChild; child != nil; child = child.NextSibling {
+		if found := findFirst(child, match); found != nil {
+			return found
+		}
+	}
+	return nil
+}
+
 func text(n *html.Node) string {
 	var b strings.Builder
 	var visit func(*html.Node)
@@ -59,37 +71,23 @@ func text(n *html.Node) string {
 			return
 		}
 		if ch.Type == html.TextNode {
-			b.WriteString(ch.Data)
-			b.WriteByte(' ')
+			for field := range strings.FieldsSeq(ch.Data) {
+				if b.Len() != 0 {
+					b.WriteByte(' ')
+				}
+				b.WriteString(field)
+			}
 		}
 		for c := ch.FirstChild; c != nil; c = c.NextSibling {
 			visit(c)
 		}
 	}
 	visit(n)
-	return strings.Join(strings.Fields(b.String()), " ")
+	return b.String()
 }
 
 func firstClass(n *html.Node, class string) *html.Node {
-	all := find(n, func(ch *html.Node) bool { return hasClass(ch, class) })
-	if len(all) == 0 {
-		return nil
-	}
-	return all[0]
-}
-
-func hasLoginChallenge(b []byte) bool {
-	s := strings.ToLower(string(b))
-	// The passive Cloudflare JS Detection asset is also injected into valid,
-	// authenticated pages (including PTTime). It is not a challenge form.
-	// Ignore only that asset path; interactive challenge markers still fail.
-	s = strings.ReplaceAll(s, "/cdn-cgi/challenge-platform/scripts/jsd/main.js", "")
-	for _, marker := range []string{"cf-chl-", "challenge-platform", "just a moment...", "g-recaptcha", "h-captcha", "turnstile"} {
-		if strings.Contains(s, marker) {
-			return true
-		}
-	}
-	return false
+	return findFirst(n, func(ch *html.Node) bool { return hasClass(ch, class) })
 }
 
 func pageDOM(b []byte) (*html.Node, error) {
@@ -100,19 +98,19 @@ func pageDOM(b []byte) (*html.Node, error) {
 	if err != nil {
 		return nil, errors.New("site_invalid_html")
 	}
-	if len(find(doc, func(n *html.Node) bool {
+	if findFirst(doc, func(n *html.Node) bool {
 		return n.Data == "input" && strings.EqualFold(attribute(n, "type"), "password")
-	})) > 0 {
+	}) != nil {
 		return nil, errors.New("site_authentication_failed")
 	}
-	loggedIn := false
-	for _, a := range find(doc, func(n *html.Node) bool { return n.Data == "a" }) {
-		u, err := url.Parse(attribute(a, "href"))
-		if err == nil && (strings.HasSuffix(u.Path, "/logout.php") || u.Path == "logout.php" || u.Path == "logout") {
-			loggedIn = true
+	logout := findFirst(doc, func(a *html.Node) bool {
+		if a.Data != "a" {
+			return false
 		}
-	}
-	if !loggedIn {
+		u, err := url.Parse(attribute(a, "href"))
+		return err == nil && (strings.HasSuffix(u.Path, "/logout.php") || u.Path == "logout.php" || u.Path == "logout")
+	})
+	if logout == nil {
 		return nil, errors.New("site_authentication_or_template_changed")
 	}
 	return doc, nil
@@ -225,24 +223,23 @@ func (c *Client) parseHTML(b []byte, pageURL *url.URL, page int) (SearchResult, 
 	}
 	// Follow only a proven same-origin next-page link. HTML page sizes vary by
 	// user preference, so a full row count alone cannot establish another page.
-	for _, a := range find(doc, func(n *html.Node) bool { return n.Data == "a" }) {
+	search := pageURL.Query().Get("search")
+	out.HasMore = findFirst(doc, func(a *html.Node) bool {
+		if a.Data != "a" {
+			return false
+		}
 		u, err := url.Parse(attribute(a, "href"))
 		if err != nil {
-			continue
+			return false
 		}
 		u = pageURL.ResolveReference(u)
 		if !sameOrigin(u, c.base) || u.Path != pageURL.Path {
-			continue
+			return false
 		}
 		q := u.Query()
 		next, err := strconv.Atoi(q.Get("page"))
-		if err != nil || next != page {
-			continue
-		}
-		if q.Get("search") == pageURL.Query().Get("search") {
-			out.HasMore = true
-		}
-	}
+		return err == nil && next == page && q.Get("search") == search
+	}) != nil
 	return out, rowError
 }
 
@@ -562,6 +559,7 @@ var passkeyPattern = regexp.MustCompile(`^[A-Za-z0-9_-]{16,128}$`)
 var resolutionPattern = regexp.MustCompile(`(?i)(?:^|[^A-Za-z0-9])(4320p|2160p|1080p|1080i|720p|576p|480p|4k|8k)(?:[^A-Za-z0-9]|$)`)
 var codecPattern = regexp.MustCompile(`(?i)(?:^|[^A-Za-z0-9])(x265|h[ ._-]?265|hevc|x264|h[ ._-]?264|avc|av1|vc[ ._-]?1)(?:[^A-Za-z0-9]|$)`)
 var sourcePattern = regexp.MustCompile(`(?i)(?:^|[^A-Za-z0-9])(web[ ._-]?dl|webrip|blu[ ._-]?ray|bdrip|hdtv|remux|dvd)(?:[^A-Za-z0-9]|$)`)
+var releaseTokenSeparators = strings.NewReplacer(".", "", "_", "", "-", "", " ", "")
 
 func classify(r *Resource) {
 	s := r.Title + " " + r.Subtitle
@@ -575,7 +573,7 @@ func classify(r *Resource) {
 		}
 	}
 	if m := codecPattern.FindStringSubmatch(s); len(m) > 1 {
-		r.Codec = strings.NewReplacer(".", "", "_", "", "-", "", " ", "").Replace(strings.ToLower(m[1]))
+		r.Codec = releaseTokenSeparators.Replace(strings.ToLower(m[1]))
 		switch r.Codec {
 		case "x265", "h265", "hevc":
 			r.Codec = "HEVC"
@@ -586,7 +584,7 @@ func classify(r *Resource) {
 		}
 	}
 	if m := sourcePattern.FindStringSubmatch(s); len(m) > 1 {
-		r.Source = strings.NewReplacer(".", "", "_", "", "-", "", " ", "").Replace(strings.ToUpper(m[1]))
+		r.Source = releaseTokenSeparators.Replace(strings.ToUpper(m[1]))
 		if r.Source == "WEBDL" {
 			r.Source = "WEB-DL"
 		}

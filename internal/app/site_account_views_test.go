@@ -9,9 +9,11 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 
+	"light-media/internal/plugins"
 	"light-media/internal/sites"
 )
 
@@ -43,6 +45,97 @@ func ownedRecordAccount(t *testing.T, a *App, site SiteConfig, s siteSnapshot) {
 	}
 	if err = tx.Commit(); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestSiteAccountBoundedViewsPreserveHistorySelection(t *testing.T) {
+	a := newTestApp(t)
+	ctx := t.Context()
+	site := parallelSearchSite("account-selection", "http://127.0.0.1:9911")
+	upload := int64(7)
+	ownedRecordAccount(t, a, site, ownedAccountObservation(t, a, site, "2026-10-18", "08:00:00", "", &upload))
+	latest := ownedAccountObservation(t, a, site, "2026-10-19", "08:00:00", "", &upload)
+	ownedRecordAccount(t, a, site, latest)
+	ownedRecordAccount(t, a, site, ownedAccountObservation(t, a, site, "2026-10-20", "08:00:00", "later failure", nil))
+	// A last refresh may refer to an earlier date. It cannot hide a newer day
+	// in the daily history. Stale credentials must also be skipped.
+	ownedRecordAccount(t, a, site, ownedAccountObservation(t, a, site, "2026-10-18", "10:00:00", "", &upload))
+	stale := ownedAccountObservation(t, a, site, "2026-10-21", "08:00:00", "", &upload)
+	stale.ConfigKey = "previous-credentials"
+	if err := a.Store.Put(ctx, "site_stats_history", site.ID+":"+stale.Day, stale); err != nil {
+		t.Fatal(err)
+	}
+	tx, err := a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tx.Rollback()
+	full, err := a.siteAccountViewTx(ctx, tx, []SiteConfig{site})
+	if err != nil {
+		t.Fatal(err)
+	}
+	current, err := a.readSiteAccountViewTx(ctx, tx, []SiteConfig{site}, siteAccountViewScope{latestOnly: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := full.latest(site.ID)
+	if len(want) != 1 || want[0].Header.Day != latest.Day || !reflect.DeepEqual(current.latest(site.ID), want) {
+		t.Fatal("latest lookup changed historical selection")
+	}
+	day, err := a.readSiteAccountViewTx(ctx, tx, []SiteConfig{site}, siteAccountViewScope{day: "2026-10-20"})
+	if err != nil || len(day.Rows) != 1 || day.Rows[0].Header.Good || day.Rows[0].Header.Day != "2026-10-20" {
+		t.Fatalf("same-day lookup lost a failed observation: %v", err)
+	}
+}
+
+func BenchmarkSiteAccountLatest180Days(b *testing.B) {
+	ctx := b.Context()
+	a, err := New(Options{DataDir: b.TempDir(), SafeMode: true})
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.Cleanup(func() { _ = a.Close() })
+	site := parallelSearchSite("account-growth", "http://127.0.0.1:9911")
+	configKey := a.managedSiteKey(site)
+	start := time.Date(2026, 1, 1, 8, 0, 0, 0, time.UTC)
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		b.Fatal(err)
+	}
+	for i := range 180 {
+		at := start.AddDate(0, 0, i)
+		day := at.Format("2006-01-02")
+		snapshot := siteSnapshot{SiteID: site.ID, ConfigKey: configKey, Day: day,
+			Connection: managedConnection{Status: "ok", CheckedAt: at.Format(time.RFC3339)},
+			Stats:      &sites.UserStats{Username: strings.Repeat("fixture", 256)}}
+		if err := a.Store.putSiteAccountSnapshotTx(ctx, tx, "site_stats_history", site.ID+":"+day, snapshot); err != nil {
+			tx.Rollback()
+			b.Fatal(err)
+		}
+	}
+	if err := tx.Commit(); err != nil {
+		b.Fatal(err)
+	}
+	want := start.AddDate(0, 0, 179).Format("2006-01-02")
+	for _, latestOnly := range []bool{false, true} {
+		name := "full"
+		if latestOnly {
+			name = "latest"
+		}
+		b.Run(name, func(b *testing.B) {
+			b.ReportAllocs()
+			for b.Loop() {
+				tx, err := a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+				if err != nil {
+					b.Fatal(err)
+				}
+				view, err := a.readSiteAccountViewTx(ctx, tx, []SiteConfig{site}, siteAccountViewScope{latestOnly: latestOnly})
+				tx.Rollback()
+				if latest := view.latest(site.ID); err != nil || len(latest) != 1 || latest[0].Header.Day != want {
+					b.Fatalf("latest result differs: %v", err)
+				}
+			}
+		})
 	}
 }
 
@@ -261,5 +354,81 @@ func TestSiteAccountImportedProjectionPreservesFractionsNullAndJSON(t *testing.T
 	stats := actual.Stats
 	if stats["username"] != nil || stats["level"] != nil || stats["downloaded"] != 0.25 || stats["uploaded"] != 1125899906842624.5 || stats["seeding_bytes"] != 1234.75 || !reflect.DeepEqual(stats["seeding_info"], []any{[]any{float64(2), float64(1024)}}) || !reflect.DeepEqual(stats["message_unread_contents"], []any{}) {
 		t.Fatal("site management normalized original account fields")
+	}
+}
+
+func TestLatestSourceAccountViewChecksPermissionAndCommittedVersion(t *testing.T) {
+	a := newTestApp(t)
+	ctx := t.Context()
+	site := parallelSearchSite("cached-account", "http://127.0.0.1:9911")
+	settings := a.Settings()
+	settings.Sites = []SiteConfig{site}
+	if err := a.saveSettings(ctx, settings); err != nil {
+		t.Fatal(err)
+	}
+	in := plugins.SiteAccountHostRequestV1{Latest: true}
+	latest := func() json.RawMessage {
+		t.Helper()
+		raw, err := a.originalHostSiteAccountsMode(ctx, sourceSitesScope(), in, true)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return raw
+	}
+	raw := latest()
+	if len(raw) == 0 || a.latestSourceAccounts.Load() == nil {
+		t.Fatal("latest result not stored")
+	}
+	raw[0] = 'X'
+	if !json.Valid(latest()) {
+		t.Fatal("cached bytes were modified by a caller")
+	}
+	denied := errors.New("no longer authorized")
+	scope := originalBaseCallScope{validate: func(context.Context) error { return denied }}
+	if raw, err := a.originalHostSiteAccountsMode(ctx, scope, in, true); !errors.Is(err, denied) || raw != nil {
+		t.Fatal("cached read skipped the live scope")
+	}
+	up := int64(71)
+	ownedRecordAccount(t, a, site, ownedAccountObservation(t, a, site, "2026-10-19", "08:00:00", "", &up))
+	if raw = latest(); !bytes.Contains(raw, []byte("2026-10-19")) {
+		t.Fatal("did not observe new account snapshot")
+	}
+}
+
+func TestNativeLatestCandidatesRetainDomainsAndSameDayFailures(t *testing.T) {
+	a := newTestApp(t)
+	aSite := parallelSearchSite("owned-a", "http://127.0.0.1:9911")
+	bSite := parallelSearchSite("owned-b", "http://127.0.0.1:9912")
+	c := a.Settings()
+	c.Sites = []SiteConfig{aSite, bSite}
+	if err := a.saveSettings(t.Context(), c); err != nil {
+		t.Fatal(err)
+	}
+	up := int64(123)
+	write := func(site SiteConfig, domain, day, problem string) {
+		obs := ownedAccountObservation(t, a, site, day, "08:00:00", problem, &up)
+		obs.Domain = domain
+		ownedRecordAccount(t, a, site, obs)
+	}
+	write(aSite, "other.test", "2026-10-12", "")
+	write(aSite, "shared.test", "2026-10-13", "")
+	write(aSite, "shared.test", "2026-10-14", "failed")
+	write(bSite, "shared.test", "2026-10-14", "")
+	request := plugins.SiteAccountHostRequestV1{Latest: true}
+	for i := 0; i < 2; i++ {
+		raw, err := a.siteAccountProjection(t.Context(), request, true)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if bytes.Count(raw, []byte(`"domain":"shared.test"`)) != 2 || bytes.Count(raw, []byte(`"domain":"other.test"`)) != 1 || bytes.Contains(raw, []byte("2026-10-13")) {
+			t.Fatalf("lost a domain or same-day row: %s", raw)
+		}
+		// Unrelated changes invalidate the dashboard but can reuse native candidates.
+		a.latestSourceAccounts.Store(nil)
+	}
+	write(bSite, "shared.test", "2026-10-15", "")
+	raw, err := a.siteAccountProjection(t.Context(), request, true)
+	if err != nil || bytes.Contains(raw, []byte("2026-10-14")) || !bytes.Contains(raw, []byte("2026-10-15")) {
+		t.Fatal(string(raw), err)
 	}
 }

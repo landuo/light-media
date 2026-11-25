@@ -20,6 +20,11 @@ type siteAccountView struct {
 	Rank    map[int64]int
 }
 
+type siteAccountViewScope struct {
+	latestOnly bool
+	day        string
+}
+
 func (a *App) recordSiteAccountObservationTx(ctx context.Context, tx *sql.Tx, site SiteConfig, snapshot siteSnapshot) error {
 	return a.recordSiteAccountObservationTxMode(ctx, tx, site, snapshot, false)
 }
@@ -40,7 +45,7 @@ func (a *App) recordSiteAccountObservationTxMode(ctx context.Context, tx *sql.Tx
 	if err = a.Store.putSiteAccountSnapshotTx(ctx, tx, "site_connection", site.ID, snapshot); err != nil {
 		return err
 	}
-	view, err := a.siteAccountViewTx(ctx, tx, []SiteConfig{site})
+	view, err := a.readSiteAccountViewTx(ctx, tx, []SiteConfig{site}, siteAccountViewScope{day: data.UpdatedDay})
 	if err != nil {
 		return err
 	}
@@ -77,22 +82,24 @@ func (a *App) recordSiteAccountObservationTxMode(ctx context.Context, tx *sql.Tx
 }
 
 func (a *App) siteAccountViewTx(ctx context.Context, tx *sql.Tx, sites []SiteConfig) (siteAccountView, error) {
+	return a.readSiteAccountViewTx(ctx, tx, sites, siteAccountViewScope{})
+}
+
+func (a *App) readSiteAccountViewTx(ctx context.Context, tx *sql.Tx, sites []SiteConfig, scope siteAccountViewScope) (siteAccountView, error) {
 	v := siteAccountView{Sites: map[string]SiteConfig{}, Rank: map[int64]int{}}
 	legacy := map[string]string{}
 	for _, site := range sites {
 		v.Sites[site.ID] = site
 	}
 	if a.pluginStore != nil {
-		proof, err := a.pluginStore.sourceAccountProofTx(ctx, tx)
+		archive, err := a.siteArchiveInSnapshot(ctx, tx)
 		if err != nil {
 			return v, err
 		}
-		if proof != nil {
-			b := proof.Binding
-			if err = sourceAccountHeadersTx(ctx, tx, b); err != nil {
-				return v, err
-			}
-			v.Binding = &b
+		if archive.proof != nil {
+			b := &archive.proof.Binding
+			v.Binding = b
+			v.Rank = archive.rank
 			for _, bind := range b.Sites {
 				site, exists := v.Sites[bind.SiteID]
 				if !exists {
@@ -108,21 +115,22 @@ func (a *App) siteAccountViewTx(ctx context.Context, tx *sql.Tx, sites []SiteCon
 				}
 			}
 			for _, h := range b.Rows {
+				if scope.day != "" && h.Day != scope.day {
+					continue
+				}
 				v.Rows = append(v.Rows, accountObservation{Header: h, SiteID: legacy[h.Domain]})
 			}
-			ids, err := sourceAccountLatestIDsTx(ctx, tx, b.SourceFingerprint)
-			if err != nil {
-				return v, err
-			}
-			for i, id := range ids {
-				v.Rank[id] = i
-			}
+
 		}
 	}
 	first := map[string]int{}
+	latestGoodDay := map[string]string{}
 	for i, o := range v.Rows {
 		if o.SiteID == "" {
 			continue
+		}
+		if scope.latestOnly && o.Header.Good {
+			latestGoodDay[o.SiteID] = max(latestGoodDay[o.SiteID], o.Header.Day)
 		}
 		key := o.SiteID + ":" + o.Header.Day
 		if _, exists := first[key]; !exists {
@@ -130,24 +138,51 @@ func (a *App) siteAccountViewTx(ctx context.Context, tx *sql.Tx, sites []SiteCon
 		}
 	}
 	for _, site := range sites {
-		rows, err := tx.QueryContext(ctx, `SELECT id,rowid,payload FROM site_statistic_event WHERE substr(id,1,?)=? ORDER BY id`, len(site.ID)+1, site.ID+":")
+		prefix := site.ID + ":"
+		configKey := a.managedSiteKey(site)
+		appendNative := func(s *siteSnapshot, data statistic.Data, order int64) {
+			key := prefix + data.UpdatedDay
+			if i, exists := first[key]; exists {
+				// A failure cannot replace an existing observation for the day.
+				if data.Error == "" && data.UpdatedTime >= v.Rows[i].Header.Time {
+					v.Rows[i].Native = s
+					v.Rows[i].Header.Time, v.Rows[i].Header.Good = data.UpdatedTime, true
+				}
+			} else {
+				first[key] = len(v.Rows)
+				v.Rows = append(v.Rows, accountObservation{SiteID: site.ID, Header: sourceAccountHeader{Domain: data.Domain, Day: data.UpdatedDay, Time: data.UpdatedTime, Good: data.Error == ""}, Native: s, Order: order})
+			}
+		}
+		query := `SELECT id,rowid,payload FROM site_statistic_event WHERE id>=? AND id<? ORDER BY id`
+		args := []any{prefix, site.ID + ";"}
+		if scope.day != "" {
+			query = `SELECT id,rowid,payload FROM site_statistic_event WHERE id=?`
+			args = []any{prefix + scope.day}
+		} else if scope.latestOnly {
+			// The key ends with a YYYY-MM-DD day. Read newest first so the most
+			// recent good observation bounds how much history we must decrypt.
+			query += " DESC"
+		}
+		rows, err := tx.QueryContext(ctx, query, args...)
 		if err != nil {
 			return v, err
 		}
-		var history []siteSnapshot
-		orders := map[string]int64{}
+		oldestKey := prefix + latestGoodDay[site.ID]
 		for rows.Next() {
 			var key string
 			var order int64
-			var raw []byte
+			var raw sql.RawBytes
 			var s siteSnapshot
 			if err = rows.Scan(&key, &order, &raw); err != nil {
+				break
+			}
+			if scope.latestOnly && key < oldestKey {
 				break
 			}
 			if err = a.Store.openSiteAccountSnapshot("site_stats_history", key, raw, &s); err != nil {
 				break
 			}
-			if s.ConfigKey != a.managedSiteKey(site) {
+			if s.ConfigKey != configKey {
 				continue
 			}
 			data, e := statisticData(s, site)
@@ -155,12 +190,14 @@ func (a *App) siteAccountViewTx(ctx context.Context, tx *sql.Tx, sites []SiteCon
 				err = e
 				break
 			}
-			if s.SiteID != "" && s.SiteID != site.ID || key != site.ID+":"+data.UpdatedDay {
+			if s.SiteID != "" && s.SiteID != site.ID || key != prefix+data.UpdatedDay {
 				err = invalidSiteAccountSnapshot()
 				break
 			}
-			history = append(history, s)
-			orders[data.UpdatedDay] = order
+			appendNative(&s, data, order)
+			if scope.latestOnly && v.Rows[first[key]].Header.Good {
+				oldestKey = key
+			}
 		}
 		if err == nil {
 			err = rows.Err()
@@ -177,40 +214,20 @@ func (a *App) siteAccountViewTx(ctx context.Context, tx *sql.Tx, sites []SiteCon
 			if err = a.Store.openSiteAccountSnapshot("site_stats_latest", site.ID, raw, &s); err != nil {
 				return v, err
 			}
-			if s.ConfigKey == a.managedSiteKey(site) {
+			if s.ConfigKey == configKey {
 				if s.SiteID != "" && s.SiteID != site.ID {
 					return v, invalidSiteAccountSnapshot()
 				}
-				history = append(history, s)
 				data, e := statisticData(s, site)
 				if e != nil {
 					return v, e
 				}
-				if _, exists := orders[data.UpdatedDay]; !exists {
-					orders[data.UpdatedDay] = order
+				if scope.day == "" || data.UpdatedDay == scope.day {
+					appendNative(&s, data, order)
 				}
 			}
 		} else if !errors.Is(err, sql.ErrNoRows) {
 			return v, err
-		}
-		for _, s := range history {
-			data, err := statisticData(s, site)
-			if err != nil {
-				return v, err
-			}
-			copy := s
-			key := site.ID + ":" + data.UpdatedDay
-			if i, exists := first[key]; exists {
-				// Failures never replace an existing day, including its first
-				// failed attempt. A successful refresh updates that first row.
-				if data.Error == "" && data.UpdatedTime >= v.Rows[i].Header.Time {
-					v.Rows[i].Native = &copy
-					v.Rows[i].Header.Time, v.Rows[i].Header.Good = data.UpdatedTime, true
-				}
-			} else {
-				first[key] = len(v.Rows)
-				v.Rows = append(v.Rows, accountObservation{SiteID: site.ID, Header: sourceAccountHeader{Domain: data.Domain, Day: data.UpdatedDay, Time: data.UpdatedTime, Good: data.Error == ""}, Native: &copy, Order: orders[data.UpdatedDay]})
-			}
 		}
 	}
 	// Date queries in the source use database row order before their name-based

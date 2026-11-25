@@ -599,54 +599,18 @@ func (a *App) browserMutationReferences(ctx context.Context, path string, protec
 // Read one reference snapshot per guarded batch, not the entire media catalog
 // for every torrent file. Callers must rebuild it for each confirmation/dispatch
 // and retain their mutation locks; this is deliberately not a global cache.
+// Compare against prefix + "/" without allocating a new string for every
+// candidate/reference pair. Equality and alias handling remain at the caller.
+func hasSlashDelimitedPrefix(path, prefix string) bool {
+	return len(path) > len(prefix) && path[len(prefix)] == '/' && strings.HasPrefix(path, prefix)
+}
+
 func (a *App) browserMutationReferenceCheck(ctx context.Context, protectReferences bool) (func(string) error, error) {
-	query := `SELECT 'asset' AS kind,payload FROM library_asset UNION ALL SELECT 'managed_file' AS kind,payload FROM managed_file UNION ALL SELECT 'import_plan' AS kind,payload FROM import_plan INDEXED BY import_plan_state WHERE json_extract(payload,'$.state') IN ('queued','running')`
-	if !protectReferences {
-		query = `SELECT 'import_plan' AS kind,payload FROM import_plan INDEXED BY import_plan_state WHERE json_extract(payload,'$.state') IN ('queued','running')`
-	}
-	rows, e := a.Store.reader().QueryContext(ctx, query)
+	refs, plans, e := a.Store.mutationReferences(ctx, protectReferences)
 	if e != nil {
 		return nil, e
 	}
-	defer rows.Close()
-	assets := []Asset{}
-	states := map[string]string{}
-	plans := []ImportPlan{}
-	managed := []managedFile{}
-	for rows.Next() {
-		var kind string
-		var raw []byte
-		if e = rows.Scan(&kind, &raw); e != nil {
-			return nil, e
-		}
-		switch kind {
-		case "asset":
-			var asset Asset
-			if e = json.Unmarshal(raw, &asset); e != nil {
-				return nil, e
-			}
-			states[asset.ID] = asset.State
-			if asset.State == "removed" || asset.State == "superseded" {
-				continue
-			}
-			assets = append(assets, asset)
-		case "managed_file":
-			var file managedFile
-			if e = json.Unmarshal(raw, &file); e != nil {
-				return nil, e
-			}
-			managed = append(managed, file)
-		case "import_plan":
-			var plan ImportPlan
-			if e = json.Unmarshal(raw, &plan); e != nil {
-				return nil, e
-			}
-			plans = append(plans, plan)
-		}
-	}
-	if e = rows.Err(); e != nil {
-		return nil, e
-	}
+	assets, managed, states := refs.assets, refs.managed, refs.states
 	identities := map[string]mountedDirectoryID{}
 	identityErrors := map[string]error{}
 	identity := func(dir string) (mountedDirectoryID, error) {
@@ -735,7 +699,7 @@ func (a *App) browserMutationReferenceCheck(ctx context.Context, protectReferenc
 				return false
 			}
 			refClean := cleanOf(referenced)
-			if pathClean == refClean || strings.HasPrefix(pathClean, refClean+"/") || strings.HasPrefix(refClean, pathClean+"/") {
+			if pathClean == refClean || hasSlashDelimitedPrefix(pathClean, refClean) || hasSlashDelimitedPrefix(refClean, pathClean) {
 				return true
 			}
 			if candidateAliasFree(pathClean) {
@@ -768,7 +732,7 @@ func (a *App) browserMutationReferenceCheck(ctx context.Context, protectReferenc
 			// Show NFOs and season/show images are shared by episodes rather than
 			// owned by one asset. Keep them protected while their show is in use.
 			for _, asset := range assets {
-				if asset.RootID == file.RootID && mediaKey(asset.Media) == file.MediaKey && within(filepath.Dir(file.Path), asset.Path) {
+				if asset.RootID == file.RootID && asset.MediaKey == file.MediaKey && within(filepath.Dir(file.Path), asset.Path) {
 					return bad("FILE_IN_USE", "文件属于仍在使用的影视元数据，请通过整理历史操作")
 				}
 			}

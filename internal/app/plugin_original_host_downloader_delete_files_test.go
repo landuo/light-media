@@ -131,6 +131,7 @@ func TestHostDownloaderDeleteFilesActualSDKOwnedAndFailures(t *testing.T) {
 			}))
 			defer server.Close()
 			a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "owned", Kind: "qbittorrent", BaseURL: server.URL}}}
+			a.invalidateSettings()
 			var out plugins.DownloaderDeleteFilesV1
 			err := hostDownloaderCall(t, object, "delete_files", plugins.DownloaderDeleteFilesRequestV1{DownloaderID: "owned", Hashes: []string{hash}}, &out)
 			rejected := mode == "unowned" || mode == "outside_root" || mode == "symlink" || mode == "hardlink" || mode == "shared_task" || mode == "shared_metadata_unknown" || mode == "snapshot_changed" || mode == "reference_added"
@@ -257,6 +258,7 @@ func TestHostDownloaderDeleteFilesTransmissionDialectSource(t *testing.T) {
 			}))
 			defer server.Close()
 			a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "owned", Kind: "transmission", BaseURL: server.URL}}}
+			a.invalidateSettings()
 			var out plugins.DownloaderDeleteFilesV1
 			if err := hostDownloaderCall(t, object, "delete_files", plugins.DownloaderDeleteFilesRequestV1{DownloaderID: "owned", Hashes: []string{hash}}, &out); err != nil || !out.DaemonApplied || !out.BookkeepingCompleted || writes.Load() != 1 {
 				t.Fatal(out, err, writes.Load())

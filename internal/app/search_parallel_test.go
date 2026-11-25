@@ -49,6 +49,7 @@ func TestKeywordSearchStreamsFastSiteBeforeSlowSiteCompletes(t *testing.T) {
 	}))
 	defer fast.Close()
 	a.config.Sites = []SiteConfig{parallelSearchSite("slow", slow.URL), parallelSearchSite("fast", fast.URL)}
+	a.invalidateSettings()
 	cookie := setupTestAdmin(t, a)
 	server := httptest.NewServer(a.Handler())
 	defer server.Close()
@@ -132,6 +133,7 @@ func TestManualKeywordSearchStartsAllSitesBeforeAnyCompletes(t *testing.T) {
 			for index := range siteCount {
 				a.config.Sites = append(a.config.Sites, parallelSearchSite("site-"+strconv.Itoa(index), server.URL))
 			}
+			a.invalidateSettings()
 			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 			defer cancel()
 			if mode == "stream" {
@@ -157,6 +159,7 @@ func TestMediaSearchKeepsPartialResourcesAndCacheHintsAcrossConcurrentSites(t *t
 	failed := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { http.Error(w, "unavailable", 503) }))
 	defer failed.Close()
 	a.config.Sites = []SiteConfig{parallelSearchSite("partial", partial.URL), parallelSearchSite("failed", failed.URL)}
+	a.invalidateSettings()
 	var snapshots []SearchOutput
 	ctx := context.WithValue(context.Background(), searchProgressKey{}, func(out SearchOutput) { snapshots = append(snapshots, out) })
 	out, err := a.search(ctx, SearchRequest{MediaType: m.MediaType, TMDBID: m.ID, Query: "frozen-fixture-title", Page: 2}, false)
@@ -198,6 +201,7 @@ func TestCancellingParallelSearchStopsInFlightRequestsAndPreservesCompletedResul
 	}))
 	defer fast.Close()
 	a.config.Sites = []SiteConfig{parallelSearchSite("pending", server.URL), parallelSearchSite("completed", fast.URL)}
+	a.invalidateSettings()
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	ctx = context.WithValue(ctx, searchProgressKey{}, func(progress SearchOutput) {
@@ -237,6 +241,7 @@ func TestConcurrentSearchPreservesPerSiteSerialization(t *testing.T) {
 	}))
 	defer server.Close()
 	a.config.Sites = []SiteConfig{parallelSearchSite("same", server.URL)}
+	a.invalidateSettings()
 	results := make(chan error, 2)
 	go func() {
 		_, err := a.searchResources(context.Background(), SearchRequest{Query: "first"})

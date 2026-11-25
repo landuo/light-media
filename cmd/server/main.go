@@ -57,7 +57,21 @@ func debugAddress(dataDir string) string {
 	return strings.TrimSpace(string(raw))
 }
 
+// Budget the Go runtime, not RSS: native SQLite allocations, mapped code,
+// and separate plugin processes sit outside this limit. Leave a wide GOGC
+// growth window below the soft budget; avoid collecting on a short timer.
+// Go parses explicit environment overrides before main (including "off").
+func configureMemoryDefaults() {
+	if os.Getenv("GOGC") == "" {
+		debug.SetGCPercent(200)
+	}
+	if os.Getenv("GOMEMLIMIT") == "" {
+		debug.SetMemoryLimit(56 << 20)
+	}
+}
+
 func main() {
+	configureExecutableReadAhead()
 	var addr, dir string
 	var bootstrap, safe bool
 	flag.StringVar(&addr, "listen", "127.0.0.1:3120", "HTTP listen address")
@@ -70,26 +84,7 @@ func main() {
 		fatal("invalid_data_directory")
 	}
 	startDebugListener(debugAddress(absolute))
-	// Two knobs pull in opposite directions: a tight GOMEMLIMIT keeps the reserve
-	// small but makes the collector run constantly (measured 0.65 GC/s at 64MiB),
-	// while a loose one stops the churn but lets the reserve grow. The service
-	// holds under 7 MB of live objects, so the collector is told to run rarely and
-	// the space is reclaimed by the periodic debug.FreeOSMemory in the scheduler
-	// instead of by GC pressure. Peaks are allowed; a permanently high resident
-	// set is not.
-	// The brush plugin polls sites continuously, so the process allocates on the
-	// order of 13 MB/s even though its live set stays near 25 MB. At GOGC=100 that
-	// means a collection every ~2 s, which is the churn the operator objected to.
-	// A 2x live-set target absorbs the transient allocation instead of collecting
-	// it: peaks stay near the accepted 150 MB envelope and the collector settles
-	// to ~0.25 GC/s. Pinned rather than inherited, so a stale container GOGC cannot
-	// reintroduce the churn.
-	debug.SetGCPercent(200)
-	// A 128MiB ceiling is what made the collector run every ~1.2 s once the live
-	// set grew past 80 MB: the runtime throttles allocation long before GOGC would
-	// trigger. The peaking behaviour is acceptable, the constant collection is not,
-	// so the ceiling is raised here as well.
-	debug.SetMemoryLimit(256 << 20)
+	configureMemoryDefaults()
 	if bootstrap {
 		if e = app.Bootstrap(absolute, os.Stdin); e != nil {
 			fatal(e.Error())

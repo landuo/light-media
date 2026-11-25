@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../assets/plugin-utilities.css';
 import { ref, shallowRef, markRaw, watch, onUnmounted, type Component } from 'vue';
 import { VAlert } from 'vuetify/components/VAlert';
 import { VSkeletonLoader } from 'vuetify/components/VSkeletonLoader';
@@ -61,5 +62,3 @@ onUnmounted(() => {
     </section>
   </VThemeProvider>
 </template>
-
-<style src="../assets/plugin-utilities.css"></style>

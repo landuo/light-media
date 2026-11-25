@@ -77,8 +77,14 @@ func (p *PluginStore) subscriptionAddReceipt(ctx context.Context, q subscription
 	}
 	return out, nil
 }
-func (a *App) guardUISubscriptionAddMutationTx(ctx context.Context, tx *sql.Tx, origin *sourceSubscriptionOrigin, inputSHA string) error {
+func (a *App) commitUISubscriptionSaveTx(ctx context.Context, tx *sql.Tx, origin *sourceSubscriptionOrigin, inputSHA string, saved Subscription, existing bool) error {
 	scope, ok := ctx.Value(subscriptionAddExecutionKey{}).(*subscriptionAddExecution)
+	if !ok && origin == nil {
+		return nil
+	}
+	if origin != nil && origin.SourceAddID == "" {
+		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "消息来源尚未适配新的标准模块")
+	}
 	if !ok || scope == nil || scope.a != a || origin == nil || origin.SourceAddID != scope.Identity.ID || origin.Version != 1 || !validSubscriptionAddOrigin(*origin) {
 		return subscriptionAddEvidenceError()
 	}
@@ -96,26 +102,16 @@ func (a *App) guardUISubscriptionAddMutationTx(ctx context.Context, tx *sql.Tx, 
 	if e = tx.QueryRowContext(ctx, `SELECT state,generation FROM jobs WHERE id=?`, scope.Job.ID).Scan(&state, &generation); e != nil || state != "running" || generation != scope.Job.Generation {
 		return subscriptionAddEvidenceError()
 	}
-	return nil
-}
-func (a *App) commitUISubscriptionSaveTx(ctx context.Context, tx *sql.Tx, inputSHA string, saved Subscription, existing bool) error {
-	scope, ok := ctx.Value(subscriptionAddExecutionKey{}).(*subscriptionAddExecution)
-	if !ok {
-		return nil
-	}
-	if scope == nil || scope.a != a {
-		return subscriptionAddEvidenceError()
-	}
-	r, e := a.pluginStore.subscriptionAddReceipt(ctx, tx, scope.Identity, true)
-	if e != nil {
-		return e
-	}
-	if e = a.guardUISubscriptionAddMutationTx(ctx, tx, &r.Input.Origin, inputSHA); e != nil {
-		return e
-	}
 	r.Existing = existing
 	r.Saved = &saved
 	r.Stage = "saved"
+	if scope.queueAfterSave {
+		// Publish the continuation and the actual subscription in one commit.
+		// The guard above verified the running generation under this same writer.
+		if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='queued',generation=generation+1,lease_until=0,updated_at=? WHERE id=?`, now(), scope.Job.ID); e != nil {
+			return e
+		}
+	}
 	return a.writeQualitySealedTx(ctx, tx, "subscription_add", r.Identity.ID, r)
 }
 func (a *App) admitUISubscriptionAdd(ctx context.Context, input subscriptionAddInput) (subscriptionAddIdentity, Job, error) {
@@ -230,6 +226,10 @@ func (a *App) runUISubscriptionAdd(ctx context.Context, j Job, key string) error
 }
 
 func (a *App) createUISubscription(ctx context.Context, in SubscriptionRequest, username string) (Subscription, error) {
+	return a.submitWebSubscription(ctx, in, username, false)
+}
+
+func (a *App) submitWebSubscription(ctx context.Context, in SubscriptionRequest, username string, acknowledgeSave bool) (Subscription, error) {
 	ctx, end, e := a.beginSubscriptionStatistics(ctx)
 	if e != nil {
 		return Subscription{}, e
@@ -239,7 +239,33 @@ func (a *App) createUISubscription(ctx context.Context, in SubscriptionRequest, 
 	if e != nil {
 		return Subscription{}, e
 	}
-	return a.executeNewSubscriptionAdd(ctx, input, "网页新增订阅原始业务流程")
+	if !acknowledgeSave {
+		return a.executeNewSubscriptionAdd(ctx, input, "网页新增订阅原始业务流程")
+	}
+	identity, job, err := a.admitUISubscriptionAdd(ctx, input)
+	if err != nil {
+		return Subscription{}, err
+	}
+	scope := &subscriptionAddExecution{a: a, Identity: identity, Job: job, queueAfterSave: true}
+	input.Request.source = &input.Origin
+	input.Request.source.SourceAddID = identity.ID
+	var saved Subscription
+	if err = a.jobCancelled(ctx, job); err == nil {
+		saved, err = a.saveSubscription(context.WithValue(ctx, subscriptionAddExecutionKey{}, scope), "", input.Request)
+	}
+	if err != nil {
+		_, finishErr := a.finishJob(context.WithoutCancel(ctx), job, "failed", pluginErrorCodeInternal(err), "订阅未确认保存", 0)
+		if finishErr != nil {
+			return Subscription{}, finishErr
+		}
+		return Subscription{}, err
+	}
+	// The queue row is already durable even if the client has disconnected.
+	select {
+	case a.jobWake <- struct{}{}:
+	default:
+	}
+	return saved, nil
 }
 
 func (a *App) executeNewSubscriptionAdd(ctx context.Context, input subscriptionAddInput, label string) (Subscription, error) {

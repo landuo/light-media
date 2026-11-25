@@ -3,6 +3,7 @@ package app
 import (
 	"os"
 	"path/filepath"
+	"syscall"
 	"testing"
 )
 
@@ -26,6 +27,38 @@ func TestSharedBindAliasesUseDirectoryIdentityWithoutUserMappings(t *testing.T) 
 		if got != test.want || ok != test.relevant {
 			t.Fatalf("physical alias %s: got %q,%v want %q,%v", test.candidate, got, ok, test.want, test.relevant)
 		}
+	}
+}
+
+func TestDirectoryIdentityReflectsReplacementAtSamePath(t *testing.T) {
+	base, err := filepath.EvalSymlinks(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(base, "release")
+	probe := func() mountedDirectoryID {
+		t.Helper()
+		if err := os.Mkdir(path, 0700); err != nil {
+			t.Fatal(err)
+		}
+		info, err := os.Stat(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		st := info.Sys().(*syscall.Stat_t)
+		want := mountedDirectoryID{Device: uint64(st.Dev), Inode: uint64(st.Ino)}
+		got, err := mountedDirectoryIdentity(path)
+		if err != nil || got != want {
+			t.Fatalf("directory identity = %+v, %v; want %+v", got, err, want)
+		}
+		return got
+	}
+	before := probe()
+	if err := os.Rename(path, path+".old"); err != nil {
+		t.Fatal(err)
+	}
+	if after := probe(); after == before {
+		t.Fatalf("reused stale identity %+v", before)
 	}
 }
 

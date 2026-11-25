@@ -160,25 +160,7 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 		if err != nil {
 			return nil, err
 		}
-		var rows []map[string]json.RawMessage
-		if json.Unmarshal(body, &rows) != nil || rows == nil {
-			return nil, bad("DOWNLOADER_INVALID_RESPONSE", "下载器列表响应无效")
-		}
-		key := "hash"
-		if kind == "transmission" {
-			key = "hashString"
-		}
-		hashes := []string{}
-		for _, row := range rows {
-			var hash string
-			if json.Unmarshal(row[key], &hash) != nil || !plugins.DownloaderTaskHashValid(hash) {
-				return nil, bad("DOWNLOADER_INVALID_RESPONSE", "下载器任务Hash无效")
-			}
-			hashes = append(hashes, strings.ToLower(hash))
-		}
-		tasks, err := originalDownloaderTaskProjectionFields(kind, hashes, body, originalDownloaderFields{
-			brushTrackers: originalBrushSourceScope(ctx, scope), activityTime: request.IncludeActivityTime,
-		})
+		tasks, err := (originalDownloaderTaskSelection{daemonOrder: true, includeActivityTime: request.IncludeActivityTime}).project(kind, body, false, originalBrushSourceScope(ctx, scope))
 		if err != nil {
 			return nil, err
 		}
@@ -336,40 +318,8 @@ func (a *App) originalHostDownloaderFilteredOutcome(ctx context.Context, scope o
 		}
 		return nil, err
 	}
-	var rows []map[string]json.RawMessage
-	if json.Unmarshal(body, &rows) != nil || rows == nil {
-		return nil, bad("DOWNLOADER_INVALID_RESPONSE", "已完成任务响应无效")
-	}
-	// Preserve daemon order for enumeration, as get_completed_torrents does.
-	// Projection's exact list is derived only after the fixed completion filter.
-	selected := map[string]bool{}
-	for _, hash := range hashes {
-		selected[hash] = true
-	}
-	projectionHashes := []string{}
-	filteredRows := []map[string]json.RawMessage{}
-	key := "hash"
-	if kind == "transmission" {
-		key = "hashString"
-	}
-	for _, row := range rows {
-		var hash string
-		if json.Unmarshal(row[key], &hash) != nil || !plugins.DownloaderTaskHashValid(hash) {
-			return nil, bad("DOWNLOADER_INVALID_RESPONSE", "已完成任务 Hash 无效")
-		}
-		hash = strings.ToLower(hash)
-		if hashes != nil && !selected[hash] {
-			continue
-		}
-		projectionHashes = append(projectionHashes, hash)
-		filteredRows = append(filteredRows, row)
-	}
-	body, err = json.Marshal(filteredRows)
-	if err == nil {
-		out.Tasks, err = originalDownloaderTaskProjectionFields(kind, projectionHashes, body, originalDownloaderFields{
-			qbPack: includeQBPackFields, brushTrackers: originalBrushSourceScope(ctx, scope),
-		})
-	}
+	selection := originalDownloaderTaskSelection{hashes: hashes, daemonOrder: true}
+	out.Tasks, err = selection.project(kind, body, includeQBPackFields, originalBrushSourceScope(ctx, scope))
 	if err != nil {
 		return nil, err
 	}

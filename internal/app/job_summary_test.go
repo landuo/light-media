@@ -29,6 +29,36 @@ func summaryJob(t *testing.T, a *App, kind string, payload any, workflow string)
 	return job
 }
 
+func TestQueueSharesSubjectWithoutSharingActivity(t *testing.T) {
+	a := newTestApp(t)
+	ctx := context.Background()
+	summaryRecord(t, a, "subscription", "shared-sub", Subscription{
+		ID: "shared-sub", Media: catalog.Media{Title: "共同订阅", MediaType: "movie"},
+	})
+	for _, activity := range []string{"第一次检查", "第二次检查"} {
+		job := summaryJob(t, a, "subscription", map[string]string{"id": "shared-sub"}, "")
+		a.event(ctx, job, "INFO", "subscriptions", "searching", activity)
+		if _, err := a.Store.DB.ExecContext(ctx, "UPDATE jobs SET state='succeeded' WHERE id=?", job.ID); err != nil {
+			t.Fatal(err)
+		}
+		job.State = "succeeded"
+		a.indexRefresh(job)
+	}
+	list, err := a.jobQueue(ctx)
+	if err != nil || len(list) != 2 {
+		t.Fatalf("job list: rows=%d err=%v", len(list), err)
+	}
+	for _, row := range list {
+		detail, err := a.jobView(ctx, row.Job)
+		if err != nil || !reflect.DeepEqual(row.Summary, detail.Summary) || !strings.Contains(row.Summary.Subject, "共同订阅") {
+			t.Fatalf("shared subject differs from detail: %+v err=%v", row.Summary, err)
+		}
+	}
+	if list[0].Summary.Activity == list[1].Summary.Activity {
+		t.Fatal("distinct jobs reused the same latest activity")
+	}
+}
+
 func TestJobSummaryResolvesEveryWorkerKind(t *testing.T) {
 	a := newTestApp(t)
 	base := t.TempDir()
@@ -37,6 +67,7 @@ func TestJobSummaryResolvesEveryWorkerKind(t *testing.T) {
 	identity := catalog.Media{ID: 7654321, MediaType: "tv", Title: "队列测试剧集", Year: 2024}
 	a.config.Downloaders = []DownloaderConfig{{Name: "测试下载器", Config: download.Config{ID: "summary-qb", Kind: "qb", BaseURL: "https://downloader.invalid"}}}
 	a.config.Roots = []Root{{ID: "summary-root", Name: "测试影视目录", Path: filepath.Join(base, "library"), Kind: "mixed"}}
+	a.invalidateSettings()
 	asset := Asset{ID: "summary-asset", Media: identity, Season: 3, Episodes: []int{2}, Path: target, SourcePath: source, RootID: "summary-root", State: "present"}
 	summaryRecord(t, a, "asset", asset.ID, asset)
 	summaryRecord(t, a, "native_download", "summary-native", NativeDownload{ID: "summary-native", ResourceTitle: "Queue.Show.S03E02.1080p.WEB-DL", Media: &identity, DownloaderID: "summary-qb", DownloadPath: filepath.Dir(source)})
@@ -193,6 +224,7 @@ func TestJobSummaryProjectionDoesNotExposePrivateRecordFields(t *testing.T) {
 	const overview = "synthetic-private-whole-media-object"
 	url := "https://fixture.invalid/download?api_key=" + key
 	a.config.Downloaders = []DownloaderConfig{{Name: "安全下载器", Config: download.Config{ID: "safe-qb", Kind: "qb", BaseURL: url, Password: password}}}
+	a.invalidateSettings()
 	media := catalog.Media{ID: 99991, MediaType: "movie", Title: "安全摘要测试", Year: 2024, Overview: overview}
 	summaryRecord(t, a, "native_download", "private-native", NativeDownload{ID: "private-native", ResourceTitle: "安全资源 " + url, Media: &media, DownloaderID: "safe-qb", DownloadPath: "/downloads", DownloaderSnapshot: snapshot, MaterialRef: material})
 	summaryRecord(t, a, "native_download", "private-unrecognized-native", NativeDownload{ID: "private-unrecognized-native", ResourceTitle: "安全资源 " + url, DownloaderID: "safe-qb", DownloadPath: "/downloads", DownloaderSnapshot: snapshot, MaterialRef: material})

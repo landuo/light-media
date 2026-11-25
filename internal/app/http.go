@@ -14,7 +14,9 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"runtime/metrics"
 	"runtime/pprof"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -129,7 +131,7 @@ func (a *App) Handler() http.Handler {
 func (a *App) handler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
-		if e := a.Store.DB.PingContext(r.Context()); e != nil {
+		if e := a.Store.reader().PingContext(r.Context()); e != nil {
 			http.Error(w, "database unavailable", 503)
 			return
 		}
@@ -142,15 +144,30 @@ func (a *App) handler() http.Handler {
 		if kernel := processMemory(); kernel != nil {
 			payload["process_memory"] = kernel
 		}
+		// HeapAlloc includes garbage awaiting collection. Use the live heap from
+		// the last mark cycle to distinguish retained objects from allocation churn.
+		samples := []metrics.Sample{{Name: "/gc/heap/live:bytes"}, {Name: "/gc/gomemlimit:bytes"}, {Name: "/gc/gogc:percent"}}
+		metrics.Read(samples)
 		payload["memory"] = map[string]any{
-			"heap_alloc":    mem.HeapAlloc,
-			"heap_inuse":    mem.HeapInuse,
-			"heap_idle":     mem.HeapIdle,
-			"heap_released": mem.HeapReleased,
-			"stack_inuse":   mem.StackInuse,
-			"sys":           mem.Sys,
-			"num_gc":        mem.NumGC,
-			"goroutines":    runtime.NumGoroutine(),
+			"heap_live":       samples[0].Value.Uint64(),
+			"go_memory_limit": samples[1].Value.Uint64(),
+			"gogc":            samples[2].Value.Uint64(),
+			"heap_alloc":      mem.HeapAlloc,
+			"heap_inuse":      mem.HeapInuse,
+			"heap_idle":       mem.HeapIdle,
+			"heap_released":   mem.HeapReleased,
+			"stack_inuse":     mem.StackInuse,
+			"sys":             mem.Sys,
+			"num_gc":          mem.NumGC,
+			"num_forced_gc":   mem.NumForcedGC,
+			"total_alloc":     mem.TotalAlloc,
+			"next_gc":         mem.NextGC,
+			"goroutines":      runtime.NumGoroutine(),
+		}
+		// Trend sampling must not cause the directory/queue workload being measured.
+		if r.URL.Query().Get("view") == "memory" {
+			writeJSON(w, r, payload)
+			return
 		}
 		if failure := a.pluginLoadFailure.Load(); failure != nil {
 			payload["plugin_load_failure"] = *failure
@@ -180,27 +197,10 @@ func (a *App) handler() http.Handler {
 			if !rule.Enabled {
 				continue
 			}
-			files, err := a.listDirectoryFiles(r.Context(), rule.ID)
-			if err != nil {
-				continue
+			summary, err := a.directoryHealth(r.Context(), rule.ID)
+			if err == nil {
+				stuck[rule.Name] = summary
 			}
-			counts := map[string]int{}
-			pending := []map[string]any{}
-			for _, f := range files {
-				counts[f.State]++
-				if f.State == "needs_review" || f.State == "error" || f.State == "observing" || f.State == "baseline" {
-					if len(pending) < 5 {
-						reason := f.Reason
-						if len([]rune(reason)) > 80 {
-							reason = string([]rune(reason)[:80])
-						}
-						pending = append(pending, map[string]any{
-							"file": filepath.Base(f.Path), "state": f.State, "reason": reason,
-						})
-					}
-				}
-			}
-			stuck[rule.Name] = map[string]any{"counts": counts, "pending": pending}
 		}
 		if len(stuck) > 0 {
 			payload["directory_states"] = stuck
@@ -247,8 +247,14 @@ func (a *App) handler() http.Handler {
 			active, due := 0, 0
 			earliest := ""
 			now := time.Now()
+			reasons := []map[string]any{}
 			for _, item := range raw {
-				var sub Subscription
+				var sub struct {
+					ID         string `json:"id"`
+					State      string `json:"state"`
+					NextCheck  string `json:"next_check"`
+					LastReason string `json:"last_reason"`
+				}
 				if json.Unmarshal(item, &sub) != nil || sub.State != "active" {
 					continue
 				}
@@ -256,29 +262,20 @@ func (a *App) handler() http.Handler {
 				next, err := time.Parse(time.RFC3339Nano, sub.NextCheck)
 				if err != nil || !next.After(now) {
 					due++
-					continue
+				} else if formatted := next.Format(time.RFC3339); earliest == "" || formatted < earliest {
+					earliest = formatted
 				}
-				if earliest == "" || next.Format(time.RFC3339) < earliest {
-					earliest = next.Format(time.RFC3339)
+				if sub.LastReason != "" {
+					reason := []rune(sub.LastReason)
+					if len(reason) > 90 {
+						reason = reason[:90]
+					}
+					id := sub.ID
+					if len(id) > 8 {
+						id = id[:8]
+					}
+					reasons = append(reasons, map[string]any{"id": id, "reason": string(reason)})
 				}
-			}
-			// Reasons are the only way to tell a silent filter from a failed
-			// check; ids are shortened and titles are never included.
-			reasons := []map[string]any{}
-			for _, item := range raw {
-				var sub Subscription
-				if json.Unmarshal(item, &sub) != nil || sub.State != "active" || sub.LastReason == "" {
-					continue
-				}
-				reason := sub.LastReason
-				if len([]rune(reason)) > 90 {
-					reason = string([]rune(reason)[:90])
-				}
-				id := sub.ID
-				if len(id) > 8 {
-					id = id[:8]
-				}
-				reasons = append(reasons, map[string]any{"id": id, "reason": reason})
 			}
 			payload["subscriptions"] = map[string]any{"active": active, "due": due, "next_check": earliest, "reasons": reasons}
 		}
@@ -320,14 +317,14 @@ func (a *App) handler() http.Handler {
 					a.writeError(w, r, context.DeadlineExceeded)
 					return
 				}
-				if a.serveOriginalPluginFrontend(w, r) || a.serveOriginalAuthFrontendDescriptor(w, r) {
+				if a.serveOriginalPluginFrontend(w, r, false) || a.serveOriginalAuthFrontendDescriptor(w, r) {
 					return
 				}
 				a.writeError(w, r, &APIError{"UNAUTHORIZED", "请先登录", 401})
 				return
 			}
 		}
-		if a.serveOriginalPluginFrontend(w, r) {
+		if a.serveOriginalPluginFrontend(w, r, true) {
 			return
 		}
 		mux.ServeHTTP(w, r)
@@ -364,7 +361,12 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		var hasAdmin bool
 		hasAdmin, e = a.hasAdminContext(ctx)
 		if e == nil {
-			out = map[string]any{"setup_required": !hasAdmin, "authenticated": a.authenticated(r)}
+			authenticated := a.authenticated(r)
+			status := map[string]any{"setup_required": !hasAdmin, "authenticated": authenticated}
+			if authenticated {
+				status["starting"] = a.startupPending.Load()
+			}
+			out = status
 			e = ctx.Err()
 		}
 	case p == "auth/providers" && method == http.MethodGet:
@@ -384,6 +386,8 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		// Readiness is independent of full statistics and settings. The normal
 		// session gate still runs before this endpoint, including during startup.
 		out = map[string]any{"starting": a.startupPending.Load()}
+	case p == "status" && method == "GET" && r.URL.Query().Get("view") == "navigation":
+		out, e = a.navigationStatus(ctx)
 	case p == "status" && method == "GET":
 		out = a.status(ctx)
 		e = ctx.Err()
@@ -541,6 +545,20 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		// growth question cannot be answered from MemStats alone. ?rate=1 samples
 		// every allocation, which is the only way to see objects below the 512 KB
 		// default; it is expensive and meant for a single diagnostic request.
+		// The legacy text envelope can be much larger than the live heap after
+		// JSON escaping. Stream Go's compressed profile directly for routine
+		// comparisons; leave sampling and collection policy untouched.
+		if r.URL.Query().Get("format") == "resident" {
+			out, e = residentClasses()
+			break
+		}
+		if r.URL.Query().Get("format") == "pprof" {
+			w.Header().Set("Content-Type", "application/octet-stream")
+			w.Header().Set("Cache-Control", "no-store")
+			w.Header().Set("Content-Disposition", `attachment; filename="heap.pb.gz"`)
+			_ = pprof.Lookup("heap").WriteTo(w, 0)
+			return
+		}
 		previous := runtime.MemProfileRate
 		if raw := r.URL.Query().Get("rate"); raw != "" {
 			if rate, err := strconv.Atoi(raw); err == nil && rate > 0 {
@@ -604,6 +622,8 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		if e == nil {
 			out, e = a.confirmDownload(ctx, in.PreviewID, in.AcceptExtra)
 		}
+	case p == "downloads" && method == "GET" && r.URL.Query().Get("view") == "cards":
+		out, e = a.downloadCards(ctx, r.URL.Query().Get("downloader_id"))
 	case p == "downloads" && method == "GET":
 		out, e = a.downloadList(ctx, r.URL.Query().Get("downloader_id"))
 	case strings.HasPrefix(p, "downloads/native/") && method == "GET":
@@ -638,6 +658,9 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		out = map[string]bool{"accepted": e == nil}
 	case p == "subscriptions" && method == "GET":
 		out, e = a.subscriptionList(ctx)
+	case p == "subscriptions/matching" && method == "GET":
+		id, _ := strconv.ParseInt(r.URL.Query().Get("tmdb_id"), 10, 64)
+		out, e = a.matchingSubscriptions(ctx, r.URL.Query().Get("media_type"), id)
 	case p == "subscriptions" && method == "POST":
 		var in SubscriptionRequest
 		e = decodeSubscriptionBody(w, r, &in)
@@ -646,7 +669,14 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 			var username string
 			e = a.Store.reader().QueryRowContext(ctx, `SELECT username FROM admin WHERE id=1`).Scan(&username)
 			if e == nil {
-				saved, e = a.createUISubscription(ctx, in, username)
+				if r.Header.Get("Prefer") == "respond-async" {
+					saved, e = a.submitWebSubscription(ctx, in, username, true)
+					if e == nil {
+						w.Header().Set("Preference-Applied", "respond-async")
+					}
+				} else {
+					saved, e = a.createUISubscription(ctx, in, username)
+				}
 			}
 			if e == nil {
 				out, e = a.subscriptionEditorValue(ctx, saved)
@@ -817,6 +847,27 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, r, out)
 }
 func atoi(s string) int { v, _ := strconv.Atoi(s); return v }
+func (a *App) navigationStatus(ctx context.Context) (map[string]any, error) {
+	var active int
+	var hasUnread bool
+	err := a.Store.reader().QueryRowContext(ctx, `SELECT
+ (SELECT COUNT(*) FROM jobs WHERE state IN ('queued','running')),
+ EXISTS(SELECT 1 FROM message WHERE record_kind='notification' AND read=0)`).Scan(&active, &hasUnread)
+	if err != nil {
+		return nil, err
+	}
+	return map[string]any{"starting": a.startupPending.Load(), "counts": map[string]int{"active_jobs": active}, "has_unread": hasUnread, "logging": a.loggingStatus()}, nil
+}
+func (a *App) loggingStatus() map[string]string {
+	a.logMu.Lock()
+	logErr := a.logError
+	a.logMu.Unlock()
+	logStatus := "ok"
+	if logErr != "" {
+		logStatus = "failed"
+	}
+	return map[string]string{"status": logStatus, "error": logErr}
+}
 func (a *App) status(ctx context.Context) map[string]any {
 	counts := map[string]int{}
 	for _, k := range []string{"subscription", "intent", "asset", "import_plan"} {
@@ -836,14 +887,7 @@ func (a *App) status(ctx context.Context) map[string]any {
 	a.controlMu.Lock()
 	state, n := a.control, a.activeWrites
 	a.controlMu.Unlock()
-	a.logMu.Lock()
-	logErr := a.logError
-	a.logMu.Unlock()
-	logStatus := "ok"
-	if logErr != "" {
-		logStatus = "failed"
-	}
-	return map[string]any{"logging": map[string]string{"status": logStatus, "error": logErr}, "control": state, "active_writes": n, "counts": counts, "version": appVersion, "time": now(), "starting": a.startupPending.Load()}
+	return map[string]any{"logging": a.loggingStatus(), "control": state, "active_writes": n, "counts": counts, "version": appVersion, "time": now(), "starting": a.startupPending.Load()}
 }
 func (a *App) publicSettings() map[string]any {
 	out, _ := a.publicSettingsContext(context.Background())
@@ -854,10 +898,13 @@ func (a *App) publicSettingsContext(ctx context.Context) (map[string]any, error)
 		return nil, err
 	}
 	c := a.Settings()
+	c.Sites = slices.Clone(c.Sites)
+	c.Downloaders = slices.Clone(c.Downloaders)
 	secretState := map[string]any{"tmdb": c.TMDB.APIKey != "" || c.TMDB.AccessToken != "", "fnos": c.FNOS.Password != "", "api_token": c.APIToken != ""}
 	secretState["proxy_host"] = c.ProxyHost != ""
 	secretState["github_token"], secretState["repo_github_token"] = c.GitHubToken != "", c.RepoGitHubToken != ""
 	proxyEndpoint := networkproxy.Endpoint(c.ProxyHost)
+	c.ProxyHost, c.GitHubToken, c.RepoGitHubToken = "", "", ""
 	c.ClearProxyHost = false
 	c.APIToken = ""
 	// Public settings describe whether credentials exist, never their values.
@@ -867,10 +914,12 @@ func (a *App) publicSettingsContext(ctx context.Context) (map[string]any, error)
 	siteState := map[string]bool{}
 	for i := range c.Sites {
 		siteState[c.Sites[i].ID] = c.Sites[i].Cookie != "" || c.Sites[i].APIKey != ""
+		hideSiteSecrets(&c.Sites[i])
 	}
 	downState := map[string]bool{}
 	for i := range c.Downloaders {
 		downState[c.Downloaders[i].ID] = c.Downloaders[i].Password != "" || c.Downloaders[i].APIKey != ""
+		c.Downloaders[i].Password, c.Downloaders[i].APIKey = "", ""
 		c.Downloaders[i].ClearAPIKey = false
 	}
 	secretState["sites"], secretState["downloaders"] = siteState, downState
@@ -907,7 +956,7 @@ func (a *App) publicSettingsContext(ctx context.Context) (map[string]any, error)
 	// Keep the stored nullable preference distinct from the effective value.
 	// Unrelated settings saves must not turn an inherited source flag into an
 	// explicit user choice merely because the UI displayed it.
-	policy, err := a.sourceSiteMessagePolicy(ctx, c)
+	policy, err := a.readSourceSiteMessagePolicy(ctx, c, a.Store.bootstrapReader())
 	if ctx.Err() != nil {
 		return nil, ctx.Err()
 	}
@@ -1251,7 +1300,11 @@ func (a *App) catalogAPI(r *http.Request, action string) (any, error) {
 		if q.Has("episode_group") {
 			group = q.Get("episode_group")
 		}
-		s, e = a.originalCatalogSeason(ctx, int64(atoi(q.Get("id"))), atoi(q.Get("season")), group)
+		if q.Get("view") == "display" && group == nil {
+			s, e = a.catalogSeasonDisplay(ctx, int64(atoi(q.Get("id"))), atoi(q.Get("season")))
+		} else {
+			s, e = a.originalCatalogSeason(ctx, int64(atoi(q.Get("id"))), atoi(q.Get("season")), group)
+		}
 		result = s
 	case "person":
 		var p json.RawMessage
@@ -1290,9 +1343,11 @@ func (a *App) dropSubscriptionSeasonCache(ctx context.Context, s Subscription) {
 	if s.Media.ID == 0 {
 		return
 	}
-	key := fmt.Sprintf("season:%d:%d", s.Media.ID, s.Season)
-	if err := a.Store.Delete(ctx, "cache", key); err != nil && !errors.Is(err, sql.ErrNoRows) {
-		a.log("WARN", "catalog", "season_cache_drop_failed", "清理季缓存失败："+key, "", "")
+	for _, prefix := range []string{"season", "display-season"} {
+		key := fmt.Sprintf("%s:%d:%d", prefix, s.Media.ID, s.Season)
+		if err := a.Store.Delete(ctx, "cache", key); err != nil && !errors.Is(err, sql.ErrNoRows) {
+			a.log("WARN", "catalog", "season_cache_drop_failed", "清理季缓存失败："+key, "", "")
+		}
 	}
 }
 

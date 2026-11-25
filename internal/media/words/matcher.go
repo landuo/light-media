@@ -11,6 +11,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
 
 	"github.com/dlclark/regexp2/v2"
 	"light-media/internal/pyregex"
@@ -228,6 +229,18 @@ func replacement(re *regexp2.Regexp, value string) ([]replacementPart, error) {
 }
 
 func (m *Matcher) replace(title, pattern, value string) (string, bool, error) {
+	// These rules have neither regex operators nor replacement escapes. Avoid
+	// keeping a compiled Unicode search table for every literal in the list.
+	if pattern != "" && !strings.ContainsAny(pattern, `\.^$|?*+()[]{}`) && !strings.Contains(value, `\`) && utf8.ValidString(pattern) && utf8.ValidString(title) && utf8.ValidString(value) {
+		count := strings.Count(title, pattern)
+		if count == 0 {
+			return title, false, nil
+		}
+		if int64(len(title))+int64(count)*int64(len(value)-len(pattern)) > 64<<10 {
+			return title, false, errRecognitionLimit
+		}
+		return strings.ReplaceAll(title, pattern, value), true, nil
+	}
 	re, err := m.compile(pattern)
 	if err != nil {
 		return title, false, err

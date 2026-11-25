@@ -95,7 +95,7 @@ func TestSubscriptionStatsActualCoreCompletionHTTPAsyncColdAndLostACK(t *testing
 				if e != nil {
 					t.Fatal(e)
 				}
-				if _, e = a.Store.DB.Exec(`UPDATE systemconfig SET payload=? WHERE uid='main'`, badSettings); e != nil {
+				if _, e = a.Store.DB.Exec(`UPDATE plugin_record SET payload=? WHERE kind='source_statistics_settings' AND id='main'`, badSettings); e != nil {
 					t.Fatal(e)
 				}
 			}
@@ -400,7 +400,7 @@ func TestSubscriptionStatsSealedProxyEnvironmentAndJobGeneration(t *testing.T) {
 	defer server.Close()
 	subscriptionStatsInstallSettings(t, a, server.URL, true)
 	var sealed []byte
-	if e := a.Store.DB.QueryRow(`SELECT payload FROM systemconfig WHERE uid='main'`).Scan(&sealed); e != nil {
+	if e := a.Store.DB.QueryRow(`SELECT payload FROM plugin_record WHERE kind='source_statistics_settings' AND id='main'`).Scan(&sealed); e != nil {
 		t.Fatal(e)
 	}
 	raw, e := a.pluginStore.unseal("source_statistics_settings", "system", "main", sealed)
@@ -417,7 +417,7 @@ func TestSubscriptionStatsSealedProxyEnvironmentAndJobGeneration(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	if _, e = a.Store.DB.Exec(`UPDATE systemconfig SET payload=? WHERE uid='main'`, sealed); e != nil {
+	if _, e = a.Store.DB.Exec(`UPDATE plugin_record SET payload=? WHERE kind='source_statistics_settings' AND id='main'`, sealed); e != nil {
 		t.Fatal(e)
 	}
 	if e = a.safeRun(ctx, complete); e != nil {

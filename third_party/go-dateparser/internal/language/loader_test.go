@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/markusmobius/go-dateparser/internal/data"
 	"github.com/markusmobius/go-dateparser/internal/strutil"
 	"github.com/stretchr/testify/assert"
 )
@@ -13,7 +14,12 @@ import (
 func TestGetLocales_DefaultCachePreservesOrderAndOwnership(t *testing.T) {
 	for _, givenOrder := range []bool{false, true} {
 		for _, allowConflicting := range []bool{false, true} {
-			expected, err := getLocalesUncached(nil, nil, "", givenOrder, allowConflicting)
+			names, err := getLocaleNames(nil, nil, "", givenOrder, allowConflicting)
+			var expected []*data.LocaleData
+			for _, name := range names {
+				value, _ := data.GetLocaleData(name)
+				expected = append(expected, value)
+			}
 			assert.NoError(t, err)
 			for _, region := range []string{"", "   "} {
 				actual, err := GetLocales(nil, nil, region, givenOrder, allowConflicting)

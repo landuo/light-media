@@ -30,6 +30,7 @@ function fixture(name, api = async () => []) {
       if (path === '../features/system-messages')
         return { systemMessageRelativeTime: (value) => value };
       if (path.startsWith('vuetify/') || path.endsWith('.vue')) return {};
+      if (path === '../assets/plugin-utilities.css') return {};
       throw Error(path);
     },
     mod.exports,

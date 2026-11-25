@@ -39,6 +39,18 @@ type MappingResult struct {
 // are stored separately; calling it with standard numbers is not supported.
 // Known targets are authoritative metadata, not proof of broadcast/availability.
 func Resolve(mediaID string, original Numbering, source Source, rules []MappingRule, known []Episode, correction []Episode) MappingResult {
+	knownSet := map[Episode]bool{}
+	for _, ep := range known {
+		if ep.Season > 0 && ep.Episode > 0 {
+			knownSet[ep] = true
+		}
+	}
+	return ResolveWithMembership(mediaID, original, source, rules, func(ep Episode) bool { return knownSet[ep] }, correction)
+}
+
+// ResolveWithMembership uses the caller's authoritative episode index.
+// Search decisions already have a validated single-season index.
+func ResolveWithMembership(mediaID string, original Numbering, source Source, rules []MappingRule, contains func(Episode) bool, correction []Episode) MappingResult {
 	r := MappingResult{Status: NeedsReview, Original: original}
 	fail := func(reason string) MappingResult { r.Reason = reason; return r }
 	if mediaID == "" {
@@ -47,16 +59,10 @@ func Resolve(mediaID string, original Numbering, source Source, rules []MappingR
 	if len(original.Episodes) == 0 {
 		return fail("missing_original_numbering")
 	}
-	knownSet := map[Episode]bool{}
-	for _, ep := range known {
-		if ep.Season > 0 && ep.Episode > 0 {
-			knownSet[ep] = true
-		}
-	}
 	finish := func(target []Episode) MappingResult {
 		seen := map[Episode]bool{}
 		for _, ep := range target {
-			if !knownSet[ep] {
+			if !contains(ep) {
 				return fail("unknown_target_episode")
 			}
 			if seen[ep] {

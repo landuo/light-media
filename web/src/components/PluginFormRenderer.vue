@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../assets/plugin-utilities.css';
 import { h, ref, reactive, watchEffect, getCurrentInstance, defineAsyncComponent, type Component } from 'vue';
 import * as VuetifyComponents from 'vuetify/components';
 import { VForm } from 'vuetify/components/VForm';
@@ -180,5 +181,3 @@ function reportError(error: unknown) {
 <template>
   <component :is="render(node)" /><VAlert v-if="renderError" type="error">{{ renderError }}</VAlert>
 </template>
-
-<style src="../assets/plugin-utilities.css"></style>

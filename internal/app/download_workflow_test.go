@@ -83,6 +83,7 @@ func workflowConfigure(t *testing.T, a *App, siteURL, downloaderURL string) {
 	a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "fixture-qb", Kind: "qb", BaseURL: downloaderURL}, DownloadPath: "/downloads"}}
 	a.config.DefaultDownloader = "fixture-qb"
 	a.config.DefaultRoot = "root"
+	a.invalidateSettings()
 }
 
 func TestDownloadFreshPromotionExpiresAfterConfirmation(t *testing.T) {
