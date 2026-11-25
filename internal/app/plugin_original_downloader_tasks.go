@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"light-media/internal/plugins"
@@ -91,7 +92,7 @@ func (a *App) originalDownloaderTasksOutcome(ctx context.Context, scope original
 		}
 		return nil, err
 	}
-	out.Tasks, err = originalDownloaderTaskProjectionForBrush(kind, hashes, body, false, originalBrushSourceScope(ctx, scope))
+	out.Tasks, err = originalDownloaderTaskProjectionFields(kind, hashes, body, originalDownloaderFields{brushTrackers: originalBrushSourceScope(ctx, scope)})
 	if err != nil {
 		return nil, err
 	}
@@ -122,10 +123,16 @@ func originalDownloaderTaskProjection(kind string, hashes []string, raw json.Raw
 }
 
 func originalDownloaderTaskProjectionWithOptions(kind string, hashes []string, raw json.RawMessage, includeQBPackFields bool) ([]plugins.DownloaderTaskV1, error) {
-	return originalDownloaderTaskProjectionForBrush(kind, hashes, raw, includeQBPackFields, false)
+	return originalDownloaderTaskProjectionFields(kind, hashes, raw, originalDownloaderFields{qbPack: includeQBPackFields})
 }
 
-func originalDownloaderTaskProjectionForBrush(kind string, hashes []string, raw json.RawMessage, includeQBPackFields, includeBrushTrackers bool) ([]plugins.DownloaderTaskV1, error) {
+type originalDownloaderFields struct {
+	qbPack        bool
+	brushTrackers bool
+	activityTime  bool
+}
+
+func originalDownloaderTaskProjectionFields(kind string, hashes []string, raw json.RawMessage, fields originalDownloaderFields) ([]plugins.DownloaderTaskV1, error) {
 	invalid := func() error { return bad("DOWNLOADER_INVALID_RESPONSE", "下载器任务响应无效") }
 	var rows []map[string]json.RawMessage
 	if json.Unmarshal(raw, &rows) != nil || rows == nil {
@@ -157,10 +164,25 @@ func originalDownloaderTaskProjectionForBrush(kind string, hashes []string, raw 
 		numeric := originalQBTaskNumericFields
 		if kind == "transmission" {
 			numeric = originalTRTaskNumericFields
-		} else if !includeQBPackFields {
+		} else if !fields.qbPack {
 			// Older workers reject unknown fields in a resource response.
 			delete(row, "completed")
 			delete(row, "availability")
+		}
+		// Older SDKs strictly decode responses. Expose the optional native
+		// clock only on request; a missing or invalid clock disables only
+		// the time-based rule for this torrent, not its other checks.
+		clock := "time_active"
+		if kind == "transmission" {
+			clock = "secondsDownloading"
+		}
+		if !fields.activityTime {
+			delete(row, clock)
+		} else {
+			omitInvalidActivityCounter(row, clock)
+			if kind == "qbittorrent" {
+				omitInvalidActivityCounter(row, "seeding_time")
+			}
 		}
 		// Credentials may appear in any tracker URL segment. Only the actual
 		// Brush worker needs the tracker origin for tracker-to-site grouping.
@@ -169,7 +191,7 @@ func originalDownloaderTaskProjectionForBrush(kind string, hashes []string, raw 
 			trackerKey = "trackerList"
 		}
 		var tracker string
-		if includeBrushTrackers {
+		if fields.brushTrackers {
 			_ = json.Unmarshal(row[trackerKey], &tracker)
 			tracker = originalBrushTrackerOrigins(tracker)
 		}
@@ -210,6 +232,14 @@ func originalDownloaderTaskProjectionForBrush(kind string, hashes []string, raw 
 		}
 	}
 	return out, nil
+}
+
+func omitInvalidActivityCounter(row map[string]json.RawMessage, key string) {
+	if raw, ok := row[key]; ok {
+		if _, err := strconv.ParseUint(string(raw), 10, 63); err != nil {
+			delete(row, key)
+		}
+	}
 }
 
 func originalBrushTrackerOrigins(value string) string {

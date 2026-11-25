@@ -185,7 +185,8 @@ func (r DownloaderControlRequestV1) Validate() error {
 // capability from exact Tasks and fixed Completed; no arbitrary daemon RPC or
 // caller-provided native filter is accepted.
 type DownloaderListRequestV1 struct {
-	DownloaderID string `json:"downloader_id"`
+	DownloaderID        string `json:"downloader_id"`
+	IncludeActivityTime bool   `json:"include_activity_time,omitempty"`
 }
 
 func (d Downloaders) List(ctx context.Context, request DownloaderListRequestV1) (DownloaderTasksV1, error) {

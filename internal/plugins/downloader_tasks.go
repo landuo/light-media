@@ -94,32 +94,34 @@ type QBittorrentTaskInfoV1 struct {
 	AddedOn      *json.Number `json:"added_on,omitempty"`
 	CompletionOn *json.Number `json:"completion_on,omitempty"`
 	LastActivity *json.Number `json:"last_activity,omitempty"`
+	TimeActive   *json.Number `json:"time_active,omitempty"`
 	SeedingTime  *json.Number `json:"seeding_time,omitempty"`
 	ETA          *json.Number `json:"eta,omitempty"`
 	Tracker      string       `json:"tracker,omitempty"` // BrushFlow only, origin without credentials or path.
 }
 
 type TransmissionTaskInfoV1 struct {
-	ID              *json.Number `json:"id,omitempty"`
-	Name            *string      `json:"name,omitempty"`
-	Status          *json.Number `json:"status,omitempty"`
-	Labels          *[]string    `json:"labels,omitempty"`
-	DownloadDir     *string      `json:"downloadDir,omitempty"`
-	TotalSize       *json.Number `json:"totalSize,omitempty"`
-	PercentDone     *json.Number `json:"percentDone,omitempty"`
-	LeftUntilDone   *json.Number `json:"leftUntilDone,omitempty"`
-	DownloadedEver  *json.Number `json:"downloadedEver,omitempty"`
-	UploadedEver    *json.Number `json:"uploadedEver,omitempty"`
-	UploadRatio     *json.Number `json:"uploadRatio,omitempty"`
-	RateDownload    *json.Number `json:"rateDownload,omitempty"`
-	RateUpload      *json.Number `json:"rateUpload,omitempty"`
-	AddedDate       *json.Number `json:"addedDate,omitempty"`
-	DoneDate        *json.Number `json:"doneDate,omitempty"`
-	ActivityDate    *json.Number `json:"activityDate,omitempty"`
-	QueuePosition   *json.Number `json:"queuePosition,omitempty"`
-	RecheckProgress *json.Number `json:"recheckProgress,omitempty"`
-	Error           *json.Number `json:"error,omitempty"`
-	TrackerList     string       `json:"trackerList,omitempty"` // BrushFlow only, origins in source order.
+	ID                 *json.Number `json:"id,omitempty"`
+	Name               *string      `json:"name,omitempty"`
+	Status             *json.Number `json:"status,omitempty"`
+	Labels             *[]string    `json:"labels,omitempty"`
+	DownloadDir        *string      `json:"downloadDir,omitempty"`
+	TotalSize          *json.Number `json:"totalSize,omitempty"`
+	PercentDone        *json.Number `json:"percentDone,omitempty"`
+	LeftUntilDone      *json.Number `json:"leftUntilDone,omitempty"`
+	DownloadedEver     *json.Number `json:"downloadedEver,omitempty"`
+	UploadedEver       *json.Number `json:"uploadedEver,omitempty"`
+	UploadRatio        *json.Number `json:"uploadRatio,omitempty"`
+	RateDownload       *json.Number `json:"rateDownload,omitempty"`
+	RateUpload         *json.Number `json:"rateUpload,omitempty"`
+	AddedDate          *json.Number `json:"addedDate,omitempty"`
+	DoneDate           *json.Number `json:"doneDate,omitempty"`
+	ActivityDate       *json.Number `json:"activityDate,omitempty"`
+	SecondsDownloading *json.Number `json:"secondsDownloading,omitempty"`
+	QueuePosition      *json.Number `json:"queuePosition,omitempty"`
+	RecheckProgress    *json.Number `json:"recheckProgress,omitempty"`
+	Error              *json.Number `json:"error,omitempty"`
+	TrackerList        string       `json:"trackerList,omitempty"` // BrushFlow only, origins in source order.
 }
 
 // Downloaders must be constructed from the current invocation's HostCaller,

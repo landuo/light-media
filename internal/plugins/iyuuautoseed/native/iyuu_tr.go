@@ -8,8 +8,11 @@ import (
 	"strings"
 )
 
-func (c *Client) iyuuTRTorrents(ctx context.Context, hashes []string) (json.RawMessage, error) {
+func (c *Client) iyuuTRTorrents(ctx context.Context, hashes []string, includeActivityTime bool) (json.RawMessage, error) {
 	fields := append([]string(nil), nativeTRFields...)
+	if includeActivityTime {
+		fields = append(fields, "secondsDownloading")
+	}
 	if c.trDialect == "jsonrpc" {
 		for i, f := range fields {
 			for modern, original := range nativeTRKeys {

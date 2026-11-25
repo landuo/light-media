@@ -144,6 +144,14 @@ func (c *IYUUClient) Close() { c.client.http.CloseIdleConnections() }
 // or the fixed completed filter can select daemon objects. qB's installed
 // library uses POST torrents/info, unlike the main download page's GET reader.
 func (c *IYUUClient) Torrents(ctx context.Context, hashes []string, completed bool) (json.RawMessage, error) {
+	return c.torrents(ctx, hashes, completed, false)
+}
+
+func (c *IYUUClient) ListTorrents(ctx context.Context, includeActivityTime bool) (json.RawMessage, error) {
+	return c.torrents(ctx, nil, false, includeActivityTime)
+}
+
+func (c *IYUUClient) torrents(ctx context.Context, hashes []string, completed, includeActivityTime bool) (json.RawMessage, error) {
 	ctx = mutationReadOnly(ctx)
 	for i, h := range hashes {
 		v, e := c.client.validHash(h)
@@ -181,7 +189,7 @@ func (c *IYUUClient) Torrents(ctx context.Context, hashes []string, completed bo
 	if e := c.client.trConnect(ctx); e != nil {
 		return nil, e
 	}
-	raw, e := c.client.iyuuTRTorrents(ctx, hashes)
+	raw, e := c.client.iyuuTRTorrents(ctx, hashes, includeActivityTime)
 	if e != nil {
 		return nil, e
 	}

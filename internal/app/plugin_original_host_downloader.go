@@ -153,7 +153,7 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 			return nil, err
 		}
 		defer client.Close()
-		body, err := client.Torrents(ctx, nil, false)
+		body, err := client.ListTorrents(ctx, request.IncludeActivityTime)
 		if current := guard(ctx); current != nil {
 			return nil, current
 		}
@@ -176,7 +176,9 @@ func (a *App) originalHostDownloaderResource(ctx context.Context, scope original
 			}
 			hashes = append(hashes, strings.ToLower(hash))
 		}
-		tasks, err := originalDownloaderTaskProjectionForBrush(kind, hashes, body, false, originalBrushSourceScope(ctx, scope))
+		tasks, err := originalDownloaderTaskProjectionFields(kind, hashes, body, originalDownloaderFields{
+			brushTrackers: originalBrushSourceScope(ctx, scope), activityTime: request.IncludeActivityTime,
+		})
 		if err != nil {
 			return nil, err
 		}
@@ -364,7 +366,9 @@ func (a *App) originalHostDownloaderFilteredOutcome(ctx context.Context, scope o
 	}
 	body, err = json.Marshal(filteredRows)
 	if err == nil {
-		out.Tasks, err = originalDownloaderTaskProjectionForBrush(kind, projectionHashes, body, includeQBPackFields, originalBrushSourceScope(ctx, scope))
+		out.Tasks, err = originalDownloaderTaskProjectionFields(kind, projectionHashes, body, originalDownloaderFields{
+			qbPack: includeQBPackFields, brushTrackers: originalBrushSourceScope(ctx, scope),
+		})
 	}
 	if err != nil {
 		return nil, err
