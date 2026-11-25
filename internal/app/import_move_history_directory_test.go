@@ -79,7 +79,11 @@ func TestImportMoveDirectoryHistoryDeletesOnlyFrozenEmptySource(t *testing.T) {
 			_, err := a.deleteTransferHistory(t.Context(), item, historyDeleteRequest{Confirm: true, FileID: item.executionFileID(), DeleteSource: true, DeleteTarget: deleteTarget})
 			blocked := branch == "new-file" || branch == "wrong-receipt"
 			if blocked {
-				if fileCode(err) != "FILE_SNAPSHOT_CHANGED" {
+				want := "FILE_SNAPSHOT_CHANGED"
+				if branch == "wrong-receipt" {
+					want = "HISTORY_TARGET_UNMANAGED"
+				}
+				if fileCode(err) != want {
 					t.Fatal("changed source or mismatched publication proof lost its original guard", err)
 				}
 				if _, e := os.Stat(item.Source); e != nil {
@@ -100,7 +104,7 @@ func TestImportMoveDirectoryHistoryDeletesOnlyFrozenEmptySource(t *testing.T) {
 				}
 			}
 			video := filepath.Join(item.Target, "BDMV", "STREAM", "00001.m2ts")
-			if deleteTarget && !blocked {
+			if deleteTarget && branch != "wrong-receipt" {
 				if _, err := os.Lstat(item.Target); !os.IsNotExist(err) {
 					t.Fatal("both selection retained target", err)
 				}

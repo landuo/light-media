@@ -1107,7 +1107,7 @@ func (a *App) importCompleteIntent(ctx context.Context, tx *sql.Tx, plan ImportP
 	for _, scope := range scopes {
 		for _, episode := range scope.Episodes {
 			var count int
-			err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots s JOIN library_asset r AND r.id=s.asset_id WHERE s.media_key=? AND s.season=? AND s.episode=? AND json_extract(r.payload,'$.state') IN ('present','external')`, mediaKey(intent.Media), scope.Season, episode).Scan(&count)
+			err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots s JOIN library_asset r ON r.id=s.asset_id WHERE s.media_key=? AND s.season=? AND s.episode=? AND json_extract(r.payload,'$.state') IN ('present','external')`, mediaKey(intent.Media), scope.Season, episode).Scan(&count)
 			if err != nil {
 				return err
 			}

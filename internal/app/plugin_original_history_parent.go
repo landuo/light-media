@@ -35,6 +35,7 @@ func (a *App) completeHistoricalParentCleanup(ctx context.Context, item transfer
 	a.importMu.Lock()
 	defer a.importMu.Unlock()
 	var file assetRemovalFile
+	var absent bool
 	key := item.executionFileID() + "/target"
 	if source {
 		var receipt historySourceRemoval
@@ -45,7 +46,7 @@ func (a *App) completeHistoricalParentCleanup(ctx context.Context, item transfer
 		if err != nil {
 			return err
 		}
-		file, key = receipt.File, item.executionFileID()+"/source"
+		file, key, absent = receipt.File, item.executionFileID()+"/source", receipt.State == "absent"
 	} else {
 		var receipt historyTargetRemoval
 		err := a.Store.Get(ctx, "history_target_removal", item.executionFileID(), &receipt)
@@ -55,9 +56,18 @@ func (a *App) completeHistoricalParentCleanup(ctx context.Context, item transfer
 		if err != nil {
 			return err
 		}
-		file = receipt.File
+		file, absent = receipt.File, receipt.State == "absent"
 	}
-	if !file.Deleted {
+	if absent {
+		if file.SharedDirectory != nil || a.originalMetadataAllowed(file.Path) != nil {
+			return nil
+		}
+		if _, err := os.Lstat(file.Path); err == nil {
+			return nil // A later file at this path was never selected for deletion.
+		} else if !errors.Is(err, os.ErrNotExist) {
+			return err
+		}
+	} else if !file.Deleted {
 		return nil
 	}
 	if file.SharedDirectory != nil {
@@ -77,8 +87,12 @@ func (a *App) completeHistoricalParentCleanup(ctx context.Context, item transfer
 		initial = operation.Items[0].OriginalFileItem
 	}
 	if initial == nil {
+		kind := "file"
+		if file.Snapshot.Directory != "" {
+			kind = "dir"
+		}
 		var err error
-		initial, err = plugins.NewModuleFileItem(map[string]any{"path": file.Path, "storage": "local", "type": "file"})
+		initial, err = plugins.NewModuleFileItem(map[string]any{"path": file.Path, "storage": "local", "type": kind})
 		if err != nil {
 			return err
 		}
@@ -146,6 +160,44 @@ func (a *App) originalHistoryNativeAnyFiles(ctx context.Context, item map[string
 	return false, nil
 }
 
+// StorageChain uses the closest configured download or library directory, even
+// if automatic monitoring for that directory is disabled. Browser access roots
+// authorize filesystem access separately.
+func historyAssociatedDirectory(settings Settings, selectedPath string) string {
+	var closest string
+	for _, rule := range settings.Directories {
+		source, _ := directorySourceWithSettings(settings, rule)
+		for _, candidate := range []string{source, ruleLibraryPath(settings, rule)} {
+			if within(candidate, selectedPath) {
+				candidate = filepath.Clean(candidate)
+				if len(candidate) > len(closest) {
+					closest = candidate
+				}
+			}
+		}
+	}
+	return closest
+}
+
+func (a *App) historyCanPruneDirectory(ctx context.Context, item map[string]any, associated string, extensions []string) (bool, error) {
+	if within(sourceText(item["path"]), associated) {
+		return false, nil
+	}
+	if associated == "" {
+		listed, err := a.originalMetadataStorage(ctx, "list_files", map[string]any{"fileitem": item, "recursion": false}, func() (any, error) {
+			return a.originalMetadataNativeList(ctx, item)
+		})
+		if err != nil || originalModuleResultTruthy(listed) {
+			return false, err
+		}
+	}
+	raw, err := a.originalMetadataStorage(ctx, "any_files", map[string]any{"fileitem": item, "extensions": extensions}, func() (any, error) {
+		return a.originalHistoryNativeAnyFiles(ctx, item, extensions)
+	})
+	// Python's is False excludes values such as None, zero and an empty list.
+	return bytes.Equal(bytes.TrimSpace(raw), []byte("false")), err
+}
+
 func (a *App) originalHistoryCleanupParents(ctx context.Context, key, original string, initial json.RawMessage, parentOnly ...bool) error {
 	var state historyParentCleanup
 	var sealed []byte
@@ -200,6 +252,7 @@ func (a *App) originalHistoryCleanupParents(ctx context.Context, key, original s
 	if err := save(); err != nil {
 		return err
 	}
+	associated := historyAssociatedDirectory(a.Settings(), original)
 	for !state.Completed {
 		rootPresent := false
 		for _, root := range a.browserRoots() {
@@ -220,18 +273,25 @@ func (a *App) originalHistoryCleanupParents(ctx context.Context, key, original s
 		if !importPath(path) || sourceText(item["storage"]) != "local" || sourceText(item["type"]) != "dir" || !within(state.Root, path) || !(within(path, original) || path == original) {
 			return bad("REVIEW_HISTORY_DELETE", "存储插件返回的父目录与已确认文件不一致")
 		}
-		if state.Operation == nil {
-			raw, err := a.originalMetadataStorage(ctx, "any_files", map[string]any{"fileitem": state.Current, "extensions": state.Extensions}, func() (any, error) {
-				return a.originalHistoryNativeAnyFiles(ctx, item, state.Extensions)
-			})
+		checkDirectory := state.Operation == nil
+		if op := state.Operation; op != nil && !op.Items[0].Done && !op.Items[0].SourceModuleStarted {
+			// Before dispatch an old receipt still has to meet today's directory
+			// rules. A missing source may already have been moved to quarantine.
+			_, sourceErr := os.Lstat(path)
+			_, movedErr := os.Lstat(op.Items[0].Target)
+			checkDirectory = sourceErr == nil && errors.Is(movedErr, os.ErrNotExist)
+		}
+		if checkDirectory {
+			prune, err := a.historyCanPruneDirectory(ctx, item, associated, state.Extensions)
 			if err != nil {
 				return err
 			}
-			// Python's `is not False` stops even for 0, [], None or a tuple.
-			if !bytes.Equal(bytes.TrimSpace(raw), []byte("false")) {
+			if !prune {
 				state.Completed = true
 				return save()
 			}
+		}
+		if state.Operation == nil {
 			// StorageChain starts a directory cleanup at the directory itself,
 			// even after deleting its Blu-ray tree. Preserve the ordinary
 			// any_files -> delete_file -> get_parent_item calls for that now
@@ -272,22 +332,17 @@ func (a *App) originalHistoryCleanupParents(ctx context.Context, key, original s
 				}
 				continue
 			}
-			if err := a.guardBrowserDownloaderSources(ctx, []string{path}); err != nil {
-				if ctx.Err() != nil {
-					return ctx.Err()
-				}
-				// The selected file already has a deletion receipt. Pruning
-				// its parent is optional, and an unverified directory stays put.
-				state.Completed = true
-				if err := save(); err != nil {
-					return err
-				}
-				a.log("INFO", "history", "parent_retained", "已保留父目录："+err.Error(), "", "")
-				return nil
-			}
 			manifest, err := browserManifest(ctx, path)
 			if err != nil {
 				return err
+			}
+			for _, entry := range manifest {
+				if entry.Path == original {
+					// A file recreated after the selected path disappeared may
+					// have an extension that any_files does not recognize.
+					state.Completed = true
+					return save()
+				}
 			}
 			parent, err := browserStat(filepath.Dir(path))
 			if err != nil {

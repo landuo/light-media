@@ -102,7 +102,7 @@ func (a *App) originalHostHistoryResource(ctx context.Context, scope originalBas
 		if in.ID == "" || len(in.ID) > 128 {
 			return nil, bad("INVALID_PLUGIN_VALUE", "删除整理历史须指定准确ID")
 		}
-		item, err := a.transferHistoryItem(ctx, in.ID)
+		item, err := a.transferHistoryDeleteSelection(ctx, in.ID)
 		if errors.Is(err, sql.ErrNoRows) {
 			return json.Marshal(plugins.HostMutationV1{SchemaVersion: 1})
 		}

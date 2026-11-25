@@ -33,6 +33,10 @@ func TestOriginalHistorySoftlinkDeleteActualSDK(t *testing.T) {
 	}
 	for _, sample := range cases {
 		t.Run(sample.name, func(t *testing.T) {
+			if sample.cold || sample.unknown {
+				// The same external SDK installation must start on both boots.
+				t.Setenv("LIGHT_MEDIA_PLUGIN_BUILTIN", "off")
+			}
 			a, object, plan, config := originalTransferModuleFixture(t, "softlink", "")
 			ctx := t.Context()
 			config["modules"].(map[string]string)["transfer"] = "module_execute"
@@ -136,7 +140,13 @@ func TestOriginalHistorySoftlinkDeleteActualSDK(t *testing.T) {
 				}
 			}
 			if sample.unknown {
-				if _, err = a.Store.DB.Exec(`CREATE TRIGGER soft_delete_return_fail BEFORE UPDATE ON history_target_receipt WHEN NEW.record_kind='history_target_removal' AND COALESCE(json_extract(OLD.payload,'$.File.source_operation'),'')!='' BEGIN SELECT RAISE(FAIL,'provider returned but result not committed'); END`); err != nil {
+				// The projection also updates the row without changing its sealed operation.
+				// Fail only when the dispatched operation is replaced by its returned result.
+				if _, err = a.Store.DB.Exec(`CREATE TRIGGER soft_delete_return_fail BEFORE UPDATE OF payload ON history_target_receipt
+					WHEN NEW.record_kind='history_target_removal'
+					 AND COALESCE(json_extract(OLD.payload,'$.File.source_operation'),'')!=''
+					 AND json_extract(NEW.payload,'$.File.source_operation') != json_extract(OLD.payload,'$.File.source_operation')
+					BEGIN SELECT RAISE(FAIL,'provider returned but result not committed'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
@@ -199,7 +209,7 @@ func TestOriginalHistorySoftlinkDeleteActualSDK(t *testing.T) {
 				}
 				var journal historySoftlinkDeleteOperation
 				sealed, e := base64.StdEncoding.DecodeString(removal.File.SourceOperation)
-				if e != nil || a.Store.Unseal(sealed, &journal) != nil || journal.SoftlinkDelete == nil || journal.SoftlinkDelete.Returned != sample.cold {
+				if e != nil || a.Store.Unseal(sealed, &journal) != nil || len(journal.Items) != 1 || !journal.Items[0].SourceModuleStarted || journal.SoftlinkDelete == nil || journal.SoftlinkDelete.Returned != sample.cold {
 					t.Fatal("actual sealed return phase", journal, e)
 				}
 				trigger := "soft_delete_final_fail"
@@ -222,6 +232,9 @@ func TestOriginalHistorySoftlinkDeleteActualSDK(t *testing.T) {
 					t.Fatal(err)
 				}
 				object = originalBaseSDKLoaded(t, a, ownedModuleID)
+				if restarted := ownedModuleRead(t, object); restarted.PID <= 0 || restarted.PID == before.PID || restarted.Calls["module_storage_delete"] != 0 {
+					t.Fatal("fresh external SDK session", restarted.PID, restarted.Calls)
+				}
 				err = remove()
 				if sample.unknown && fileCode(err) != "REVIEW_HISTORY_DELETE" || sample.cold && err != nil {
 					t.Fatal("cold result phase recovery", err)

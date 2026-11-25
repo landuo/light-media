@@ -189,7 +189,9 @@ func TestOriginalHistorySourceDeleteCommitFailureColdRecovery(t *testing.T) {
 func TestOriginalHistoryTargetParentCleanupHiddenFailureColdRecovery(t *testing.T) {
 	a, item := historyRemovalFixture(t)
 	ctx := context.Background()
-	if err := a.saveSettings(ctx, a.Settings()); err != nil {
+	settings := a.Settings()
+	settings.Directories = []DirectoryRule{{ID: "media", Name: "媒体目录", SourcePath: filepath.Dir(item.Source), LibraryPath: settings.Roots[0].Path, RootID: "root", MediaType: "movie", Mode: "hardlink", MonitorType: "none", Enabled: true}}
+	if err := a.saveSettings(ctx, settings); err != nil {
 		t.Fatal(err)
 	}
 	nfo := strings.TrimSuffix(item.Target, filepath.Ext(item.Target)) + ".nfo"

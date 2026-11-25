@@ -38,8 +38,8 @@ func auxiliaryHistoryRemovalFixture(t *testing.T, kind string) (*App, transferHi
 	if err := a.runImport(ctx, job, plan.ID, nil); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := a.Store.DB.Exec(`UPDATE jobs SET state='succeeded' WHERE id=?`, job.ID); err != nil {
-		t.Fatal(err)
+	if ok, err := a.finishJob(ctx, job, "succeeded", "", "", 0); err != nil || !ok {
+		t.Fatalf("fixture job did not finish: %v", err)
 	}
 	page, err := a.transferHistory(ctx, httptest.NewRequest("GET", "/api/history/transfers", nil))
 	if err != nil {
@@ -180,7 +180,7 @@ func TestAuxiliaryHistoryTargetChangeAndColdDeletionRecovery(t *testing.T) {
 	}
 }
 
-func TestAuxiliaryHistorySourceUsedByAnotherActualQueuedPlan(t *testing.T) {
+func TestAuxiliaryHistoryDeletionChecksActivePlanForSameSource(t *testing.T) {
 	for _, state := range []string{"queued", "running", "retry_wait", "waiting_paused"} {
 		t.Run(state, func(t *testing.T) {
 			a, item, _ := auxiliaryHistoryRemovalFixture(t, "subtitle")
@@ -225,13 +225,18 @@ func TestAuxiliaryHistorySourceUsedByAnotherActualQueuedPlan(t *testing.T) {
 				t.Fatal(err)
 			}
 			_, err = a.deleteTransferHistory(ctx, item, historyDeleteRequest{Confirm: true, DeleteSource: true, DeleteTarget: true, FileID: item.executionFileID()})
-			if fileCode(err) != "FILE_IN_USE" {
-				t.Fatal("another active auxiliary consumer must retain both files", state, err)
+			active := state == "queued" || state == "running"
+			if active && fileCode(err) != "FILE_IN_USE" || !active && err != nil {
+				t.Fatalf("other plan in %s, expected active=%t: %v", state, active, err)
 			}
-			for _, path := range []string{item.Source, item.Target, other} {
-				if _, err := os.Stat(path); err != nil {
-					t.Fatal("active source or target was deleted", path, err)
+			for _, selected := range []string{item.Source, item.Target} {
+				_, err := os.Stat(selected)
+				if active && err != nil || !active && !os.IsNotExist(err) {
+					t.Fatalf("selected file %s, expected retained=%t: %v", selected, active, err)
 				}
+			}
+			if _, err := os.Stat(other); err != nil {
+				t.Fatalf("the other plan's independent source was affected: %v", err)
 			}
 		})
 	}

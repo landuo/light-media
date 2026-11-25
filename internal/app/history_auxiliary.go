@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -23,15 +22,6 @@ func (a *App) historyPlannedFile(ctx context.Context, plan ImportPlan, item tran
 			return file, auxiliaryMaterialKind(file.MaterialKind), plan.ID + "/" + file.ID, nil
 		}
 	}
-	var key string
-	var raw []byte
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT id,payload FROM plugin_original_callback WHERE json_extract(payload,'$.plan_id')=? AND json_extract(payload,'$.file.id')=?`, plan.ID, item.executionFileID()).Scan(&key, &raw); err != nil {
-		return PlanFile{}, false, "", err
-	}
-	var callback originalTransferCallback
-	if json.Unmarshal(raw, &callback) != nil || callback.PlanID != plan.ID || callback.File.ID != item.executionFileID() || callback.File.Source != item.Source || callback.File.Target != item.Target || callback.File.ParentFileID != callback.ParentFileID {
-		return PlanFile{}, false, "", coreDeleteInvalid()
-	}
 	var meta importMetadata
 	if err := a.Store.Get(ctx, "import_meta", plan.ID, &meta); err != nil {
 		return PlanFile{}, false, "", err
@@ -40,12 +30,26 @@ func (a *App) historyPlannedFile(ctx context.Context, plan ImportPlan, item tran
 		return PlanFile{}, false, "", err
 	}
 	for _, parent := range plan.Files {
-		if parent.ID != callback.ParentFileID {
-			continue
-		}
 		for index, side := range meta.Sidecars[parent.ID] {
-			if key != fmt.Sprintf("%s/%s/side-%d", plan.ID, parent.ID, index) || side.Source != item.Source {
+			if side.Source != item.Source {
 				continue
+			}
+			// The original producer saved this exact callback key, including
+			// for records that predate the history row's callback_id field.
+			key := qualitySidecarKey(plan, parent, index)
+			var callback originalTransferCallback
+			err := a.Store.Get(ctx, "original_transfer_callback", key, &callback)
+			if errors.Is(err, sql.ErrNoRows) {
+				continue
+			}
+			if err != nil {
+				return PlanFile{}, false, "", err
+			}
+			if callback.File.ID != item.executionFileID() {
+				continue
+			}
+			if callback.PlanID != plan.ID || callback.ParentFileID != parent.ID || callback.File.ParentFileID != parent.ID || callback.File.Source != item.Source || callback.File.Target != item.Target {
+				return PlanFile{}, false, "", coreDeleteInvalid()
 			}
 			file := originalTransferSideFile(parent, side, index)
 			file.ID, file.ParentFileID, file.AssetID = callback.File.ID, parent.ID, parent.AssetID
@@ -130,7 +134,7 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 			// asset-removal preview. Adopt only that selected quarantine entry;
 			// never resume its other subtitle/audio files as a group.
 			var raw []byte
-			err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM removal_preview WHERE json_extract(payload,'$.asset_id')=? AND json_extract(payload,'$.state')='deleting' ORDER BY updated_at DESC LIMIT 1`, file.AssetID).Scan(&raw)
+			err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM removal_preview WHERE asset_id=? AND state='deleting' ORDER BY updated_at DESC LIMIT 1`, file.AssetID).Scan(&raw)
 			if err != nil && !errors.Is(err, sql.ErrNoRows) {
 				return err
 			}
@@ -154,7 +158,8 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 				}
 			}
 			if !found {
-				return nil
+				receipt.State = "absent"
+				return a.finishHistoricalTargetRemoval(ctx, item, receipt, owned, ownedErr == nil, asset, auxiliary)
 			}
 		}
 		if err := a.Store.Put(ctx, "history_target_removal", item.executionFileID(), receipt); err != nil {
@@ -166,7 +171,7 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 	if receipt.HistoryID != item.executionFileID() || receipt.PlanID != plan.ID || receipt.ReceiptKey != key || receipt.AssetID != file.AssetID || receipt.RootID != plan.RootID || receipt.SourceSnapshot != published.SourceSnapshot || receipt.File.Path != file.Target || receipt.File.Snapshot != published.StageSnapshot || !sameLifecycleSoftlinkProof(receipt.File.Softlink, published.Softlink, receipt.File.SharedDirectory, published.SharedDirectory) {
 		return bad("HISTORY_TARGET_CHANGED", "关联目标删除收据不一致")
 	}
-	if receipt.State == "completed" && receipt.File.Deleted {
+	if receipt.State == "completed" && receipt.File.Deleted || receipt.State == "absent" {
 		// Parent cleanup may already have removed this directory. Resume its
 		// own receipt without reopening or repeating the completed file write.
 		return nil
@@ -250,12 +255,17 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 	if err := parent.Sync(); err != nil {
 		return err
 	}
+	receipt.State, receipt.File.Deleted = "completed", true
+	return a.finishHistoricalTargetRemoval(ctx, item, receipt, owned, ownedErr == nil, asset, auxiliary)
+}
+
+func (a *App) finishHistoricalTargetRemoval(ctx context.Context, item transferHistoryItem, receipt historyTargetRemoval, owned managedFile, hasOwner bool, asset Asset, auxiliary bool) error {
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
-	if ownedErr == nil {
+	if hasOwner {
 		var currentRaw []byte
 		var current managedFile
 		if err := tx.QueryRowContext(ctx, `SELECT payload FROM managed_file WHERE id=?`, tokenHash(item.Target)).Scan(&currentRaw); err != nil || json.Unmarshal(currentRaw, &current) != nil || !reflect.DeepEqual(current, owned) {
@@ -279,7 +289,11 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 			return bad("HISTORY_TARGET_CHANGED", "删除期间目标资产归属已变化")
 		}
 		current.State, current.FNOSState = "removed", "needs_attention"
-		current.Error = "视频文件已由用户从整理历史移除；其他关联文件保留"
+		if receipt.State == "absent" {
+			current.Error = "整理历史中的媒体库文件已经缺失"
+		} else {
+			current.Error = "视频文件已由用户从整理历史移除；其他关联文件保留"
+		}
 		if err := txPut(ctx, tx, "asset", current.ID, current); err != nil {
 			return err
 		}
@@ -287,7 +301,6 @@ func (a *App) removeHistoricalPublishedTarget(ctx context.Context, item transfer
 			return err
 		}
 	}
-	receipt.State, receipt.File.Deleted = "completed", true
 	if err := txPut(ctx, tx, "history_target_removal", item.executionFileID(), receipt); err != nil {
 		return err
 	}

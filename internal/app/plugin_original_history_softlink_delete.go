@@ -1,7 +1,6 @@
 package app
 
 import (
-	"bytes"
 	"context"
 	"database/sql"
 	"encoding/base64"
@@ -198,11 +197,11 @@ func (a *App) originalHistorySoftlinkDelete(ctx context.Context, file *assetRemo
 				if err != nil {
 					return err
 				}
-				result, err := a.originalMetadataStorage(ctx, "any_files", map[string]any{"fileitem": item, "extensions": extensions}, func() (any, error) { return a.originalHistoryNativeAnyFiles(ctx, fields, extensions) })
+				prune, err := a.historyCanPruneDirectory(ctx, fields, historyAssociatedDirectory(a.Settings(), file.Path), extensions)
 				if err != nil {
 					return err
 				}
-				file.DirectoryRetained = !bytes.Equal(bytes.TrimSpace(result), []byte("false"))
+				file.DirectoryRetained = !prune
 				if file.DirectoryRetained {
 					return persist()
 				}

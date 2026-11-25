@@ -100,12 +100,16 @@ func (row transferHistoryMPRow) item() transferHistoryItem {
 	return item
 }
 
-func (a *App) scanTransferHistoryMP(row interface{ Scan(...any) error }) (transferHistoryItem, error) {
-	var value transferHistoryMPRow
-	if err := row.Scan(&value.ID, &value.Src, &value.SrcFileItem, &value.Dest,
+func (value *transferHistoryMPRow) scanFields() []any {
+	return []any{&value.ID, &value.Src, &value.SrcFileItem, &value.Dest,
 		&value.Mode, &value.Type, &value.Category, &value.Title, &value.Year, &value.TMDBID,
 		&value.MediaSource, &value.MediaID, &value.Seasons, &value.Episodes, &value.Status,
-		&value.Errmsg, &value.Date, &value.EpisodeGroup); err != nil {
+		&value.Errmsg, &value.Date, &value.EpisodeGroup}
+}
+
+func (a *App) scanTransferHistoryMP(row interface{ Scan(...any) error }) (transferHistoryItem, error) {
+	var value transferHistoryMPRow
+	if err := row.Scan(value.scanFields()...); err != nil {
 		return transferHistoryItem{}, err
 	}
 	return value.item(), nil

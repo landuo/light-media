@@ -10,6 +10,64 @@ import (
 	"testing"
 )
 
+func historyParentTestRule(source string) DirectoryRule {
+	return DirectoryRule{ID: "downloads", Name: "Downloads", MediaType: "mixed", Mode: "hardlink", MonitorType: "none", SourcePath: source}
+}
+
+func TestHistoryAssociatedDirectoryUsesDeepestConfiguredPath(t *testing.T) {
+	settings := Settings{
+		AllowedRoots: []string{"/media"},
+		Roots:        []Root{{ID: "legacy", Path: "/media/library"}},
+		Directories: []DirectoryRule{
+			{SourcePath: "/media/downloads/incoming", LibraryPath: "/media/library/TV"},
+			{SourcePath: "/media/downloads", RootID: "legacy"},
+		},
+	}
+	for input, want := range map[string]string{
+		"/media/downloads/incoming/episode":     "/media/downloads/incoming",
+		"/media/downloads/incoming-old/episode": "/media/downloads",
+		"/media/library/TV/episode":             "/media/library/TV",
+		"/media/library/film":                   "/media/library",
+		"/media/other/episode":                  "",
+	} {
+		if got := historyAssociatedDirectory(settings, input); got != want {
+			t.Errorf("directory for %s: got %q, want %q", input, got, want)
+		}
+	}
+}
+
+func TestHistoryParentCleanupKeepsRecreatedPath(t *testing.T) {
+	a, _, _ := ownedModuleFixture(t, true)
+	ctx := t.Context()
+	root := t.TempDir()
+	settings := a.Settings()
+	settings.AllowedRoots = []string{root}
+	settings.Directories = []DirectoryRule{historyParentTestRule(root)}
+	if err := a.saveSettings(ctx, settings); err != nil {
+		t.Fatal(err)
+	}
+	old := filepath.Join(root, "Season", "episode.nfo")
+	importWrite(t, old, []byte("first"))
+	item, err := originalLocalFileItem(old)
+	if err != nil {
+		t.Fatal(err)
+	}
+	raw, err := json.Marshal(item)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Remove(old); err != nil {
+		t.Fatal(err)
+	}
+	importWrite(t, old, []byte("replacement"))
+	if err := a.originalHistoryCleanupParents(ctx, "replaced", old, raw); err != nil {
+		t.Fatal(err)
+	}
+	if b, err := os.ReadFile(old); err != nil || string(b) != "replacement" {
+		t.Fatalf("recreated file: %s, %v", b, err)
+	}
+}
+
 func TestOriginalHistoryParentCleanupFixedSource(t *testing.T) {
 	raw, err := os.ReadFile("../../testdata/standard-module-host/history-parent-source-oracle.json")
 	var oracle struct {
@@ -24,10 +82,7 @@ func TestOriginalHistoryParentCleanupFixedSource(t *testing.T) {
 		t.Fatal("fixed StorageChain source cases", err)
 	}
 	for _, sample := range oracle.Cases {
-		// History already requires a configured native root and local storage.
-		// Source no-associated/unsupported None branches remain separate source
-		// observations, not claimed as reachable host execution here.
-		if sample.Name == "no-associated-nonmedia" || sample.Name == "none-any-files" || sample.Name == "false-file-delete" {
+		if sample.Name == "none-any-files" || sample.Name == "false-file-delete" {
 			continue
 		}
 		t.Run(sample.Name, func(t *testing.T) {
@@ -36,6 +91,9 @@ func TestOriginalHistoryParentCleanupFixedSource(t *testing.T) {
 			root := t.TempDir()
 			settings := a.Settings()
 			settings.AllowedRoots = []string{root}
+			if sample.Name != "no-associated-nonmedia" {
+				settings.Directories = []DirectoryRule{historyParentTestRule(root)}
+			}
 			if sample.Name == "explicit-empty-extensions" {
 				settings.RMTMediaExt, settings.RMTSubExt, settings.RMTAudioExt, settings.DownloadTmpExt = json.RawMessage(`[]`), json.RawMessage(`[]`), json.RawMessage(`[]`), json.RawMessage(`[]`)
 			}
@@ -132,6 +190,7 @@ func TestOriginalHistoryParentCleanupActualSDKDirectory(t *testing.T) {
 			root := t.TempDir()
 			settings := a.Settings()
 			settings.AllowedRoots = []string{root}
+			settings.Directories = []DirectoryRule{historyParentTestRule(root)}
 			if err := a.saveSettings(ctx, settings); err != nil {
 				t.Fatal(err)
 			}

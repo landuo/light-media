@@ -192,6 +192,13 @@ func (a *App) publishHistoryDownloadFileDeleted(ctx context.Context, item transf
 	if prior != 0 {
 		return coreDeleteReview()
 	}
+	// downloadfiles projects its queryable columns from the JSON record.
+	// Match MP's delete_by_fullpath before publishing DownloadFileDeleted.
+	if _, err = tx.ExecContext(ctx, `UPDATE downloadfiles
+ SET payload=json_set(payload, '$.state', 0), updated_at=?
+ WHERE fullpath=? AND state=1`, now(), removal.File.Path); err != nil {
+		return err
+	}
 	if _, err = tx.ExecContext(ctx, recordInsertSQL("history_download_file_event", recordTableForKind("history_download_file_event")), fact.ID, sealed, now()); err != nil {
 		return err
 	}
@@ -395,7 +402,7 @@ func (a *App) writeCoreDownloadRemoval(ctx context.Context, tx *sql.Tx, r coreDo
 func (a *App) readCoreDownloadRemoval(ctx context.Context, q pluginRemoveLinkJournalReader, key string) (coreDownloadRemoval, error) {
 	var r coreDownloadRemoval
 	var sealed, rootSealed []byte
-	if err := q.QueryRowContext(ctx, `SELECT payload FROM download_removal_root WHERE id=?`, key).Scan(&sealed); err != nil {
+	if err := q.QueryRowContext(ctx, `SELECT payload FROM download_removal_receipt WHERE id=?`, key).Scan(&sealed); err != nil {
 		return r, coreDeleteReview()
 	}
 	if err := q.QueryRowContext(ctx, `SELECT payload FROM download_removal_root WHERE id=?`, key).Scan(&rootSealed); err != nil {

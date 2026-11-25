@@ -9,6 +9,9 @@ import (
 	"time"
 )
 
+// Older callbacks and URLs use the execution file ID stored inside the FileItem.
+const transferHistoryFileIDExpr = `CASE WHEN json_valid(src_fileitem) THEN json_extract(src_fileitem,'$.file_id') END`
+
 // MoviePilot keeps one transferhistory row per source: add_force deletes the
 // previous row for src and inserts a new one, so every completed attempt gets a
 // new ID. This table is the target of the single-table refactor and is written
@@ -48,6 +51,8 @@ CREATE TABLE IF NOT EXISTS transferhistory (
  episode_group TEXT
 );
 CREATE INDEX IF NOT EXISTS ix_transfer_history_src ON transferhistory(src);
+CREATE INDEX IF NOT EXISTS ix_transfer_history_file_id ON transferhistory((` + transferHistoryFileIDExpr + `),id DESC)
+ WHERE (` + transferHistoryFileIDExpr + `) IS NOT NULL;
 CREATE INDEX IF NOT EXISTS ix_transfer_history_title ON transferhistory(title);
 CREATE INDEX IF NOT EXISTS ix_transfer_history_tmdbid ON transferhistory(tmdbid);
 CREATE INDEX IF NOT EXISTS ix_transfer_history_download_hash ON transferhistory(download_hash);

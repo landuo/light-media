@@ -153,8 +153,9 @@ func TestHistoryUpsertDeleteNeverResumesPreviousExecutionSourceReceipt(t *testin
 	if err = a.Store.Get(ctx, "history_source_removal", first.executionFileID(), &actual); err != nil || !reflect.DeepEqual(actual, previous) {
 		t.Fatal("previous execution receipt was altered", actual, err)
 	}
-	if err = a.Store.Get(ctx, "history_source_removal", latest.executionFileID(), &actual); err == nil {
-		t.Fatal("nonexistent latest source unexpectedly created a removal receipt")
+	actual = historySourceRemoval{}
+	if err = a.Store.Get(ctx, "history_source_removal", latest.executionFileID(), &actual); err != nil || actual.HistoryID != latest.executionFileID() || actual.State != "absent" || actual.File.Quarantine != "" || actual.File.Deleted {
+		t.Fatal("the latest execution must record only the observed absence", actual, err)
 	}
 }
 

@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
@@ -12,7 +13,8 @@ import (
 )
 
 type transferHistoryItem struct {
-	mpRecord             bool          `json:"-"`
+	mpRecord             bool `json:"-"`
+	deleteFiles          *historyStoredFileSelection
 	ID                   string        `json:"id"`
 	FileID               string        `json:"file_id"`
 	ResourceSource       string        `json:"-"`
@@ -183,19 +185,23 @@ func (a *App) transferHistoryAPI(r *http.Request, p string) (any, error) {
 		return a.transferHistory(r.Context(), r)
 	}
 	if len(parts) >= 2 && parts[0] == "transfers" {
+		if len(parts) == 2 && r.Method == http.MethodDelete {
+			item, err := a.transferHistoryDeleteSelection(r.Context(), parts[1])
+			if err != nil {
+				return nil, err
+			}
+			var in historyDeleteRequest
+			if err := decodeBody(nil, r, &in); err != nil {
+				return nil, err
+			}
+			return a.deleteTransferHistory(r.Context(), item, in)
+		}
 		item, e := a.transferHistoryItem(r.Context(), parts[1])
 		if e != nil {
 			return nil, e
 		}
 		if len(parts) == 2 && r.Method == "GET" {
 			return item, nil
-		}
-		if len(parts) == 2 && r.Method == "DELETE" {
-			var in historyDeleteRequest
-			if e = decodeBody(nil, r, &in); e != nil {
-				return nil, e
-			}
-			return a.deleteTransferHistory(r.Context(), item, in)
 		}
 		if len(parts) == 3 && parts[2] == "retry" && r.Method == "POST" {
 			var in struct {
@@ -285,7 +291,7 @@ func (a *App) transferHistoryResolveID(ctx context.Context, id string) (transfer
 	if found {
 		return item, nil
 	}
-	item, err = a.scanTransferHistoryMP(a.Store.reader().QueryRowContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory WHERE json_extract(src_fileitem,'$.file_id')=? ORDER BY id DESC LIMIT 1`, id))
+	item, err = a.scanTransferHistoryMP(a.Store.reader().QueryRowContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory WHERE `+transferHistoryFileIDExpr+`=? ORDER BY id DESC LIMIT 1`, id))
 	return item, err
 }
 
@@ -296,6 +302,63 @@ func (a *App) transferHistoryItem(ctx context.Context, id string) (transferHisto
 	}
 	a.transferHistoryCapabilities(ctx, &item)
 	return item, nil
+}
+
+type historyStoredFileSelection struct {
+	source, target bool
+}
+
+// A numeric selection is the primary key from the history page. Only this
+// operation needs the presence of both stored FileItems.
+func (a *App) transferHistoryDeleteSelection(ctx context.Context, id string) (transferHistoryItem, error) {
+	where := "id=?"
+	if !isMPHistoryID(id) {
+		where = transferHistoryFileIDExpr + "=? ORDER BY id DESC LIMIT 1"
+	}
+	var row transferHistoryMPRow
+	var dest []byte
+	fields := append(row.scanFields(), &dest)
+	if err := a.Store.reader().QueryRowContext(ctx, `SELECT `+transferHistoryMPColumns+`,dest_fileitem FROM transferhistory WHERE `+where, id).Scan(fields...); err != nil {
+		return transferHistoryItem{}, err
+	}
+	item := row.item()
+	item.deleteFiles = &historyStoredFileSelection{source: historyHasFileItem(row.SrcFileItem), target: historyHasFileItem(dest)}
+	return item, nil
+}
+
+func historyHasFileItem(raw []byte) bool {
+	// Treat malformed nonempty storage data as present: a missing binding
+	// must fail closed, rather than quietly completing a requested deletion.
+	return len(raw) > 0 && (!json.Valid(raw) || originalBaseJSONTruthy(raw))
+}
+
+func (a *App) finishHistoryRowDeletion(ctx context.Context, item transferHistoryItem, in historyDeleteRequest) error {
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	// Reorganizing the same source creates a new row. It must survive even if
+	// that publication happened while storage was processing the old deletion.
+	result, err := tx.ExecContext(ctx, `DELETE FROM transferhistory WHERE id=? AND src=?
+AND COALESCE(`+transferHistoryFileIDExpr+`, '')=?`, item.ID, item.Source, item.FileID)
+	if err != nil {
+		return err
+	}
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return bad("HISTORY_CHANGED", "整理记录已更新，请刷新后重新确认删除")
+	}
+	if err = txPut(ctx, tx, "transfer_history_hidden", item.ID, map[string]any{
+		"at": now(), "plan_id": item.PlanID, "delete_source": in.DeleteSource, "delete_target": in.DeleteTarget,
+		"file_id": item.executionFileID(), "execution_key": item.ExecutionKey,
+	}); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 // Both stable history IDs and execution aliases appear in attempts. Resolve
@@ -330,7 +393,7 @@ func (a *App) transferHistorySelections(ctx context.Context, ids []string) ([]tr
 }
 
 func (a *App) transferHistoryPlanFile(ctx context.Context, planID, fileID string) (transferHistoryItem, error) {
-	item, err := a.scanTransferHistoryMP(a.Store.reader().QueryRowContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory WHERE json_extract(src_fileitem,'$.plan_id')=? AND json_extract(src_fileitem,'$.file_id')=? ORDER BY id DESC LIMIT 1`, planID, fileID))
+	item, err := a.scanTransferHistoryMP(a.Store.reader().QueryRowContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory WHERE `+transferHistoryFileIDExpr+`=? AND json_extract(src_fileitem,'$.plan_id')=? ORDER BY id DESC LIMIT 1`, fileID, planID))
 	if err == nil {
 		return item, nil
 	}
@@ -339,7 +402,7 @@ func (a *App) transferHistoryPlanFile(ctx context.Context, planID, fileID string
 
 // Queue controls address an exact execution, never a stable-history redirect.
 func (a *App) transferHistoryExecution(ctx context.Context, fileID string) (transferHistoryItem, error) {
-	item, err := a.scanTransferHistoryMP(a.Store.reader().QueryRowContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory WHERE json_extract(src_fileitem,'$.file_id')=? ORDER BY id DESC LIMIT 1`, fileID))
+	item, err := a.scanTransferHistoryMP(a.Store.reader().QueryRowContext(ctx, `SELECT `+transferHistoryMPColumns+` FROM transferhistory WHERE `+transferHistoryFileIDExpr+`=? ORDER BY id DESC LIMIT 1`, fileID))
 	return item, err
 }
 func (a *App) transferHistoryCapabilities(ctx context.Context, item *transferHistoryItem) {

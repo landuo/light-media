@@ -137,6 +137,7 @@ func (d *coreDeleteDaemon) handle(t *testing.T) http.Handler {
 
 func coreHistoryAccepted(t *testing.T, a *App, item transferHistoryItem, d DownloaderConfig) {
 	t.Helper()
+	a.invalidateSettings()
 	ctx := context.Background()
 	var plan ImportPlan
 	if e := a.Store.Get(ctx, "import_plan", item.PlanID, &plan); e != nil {
@@ -338,8 +339,9 @@ func TestCoreDownloadFileDeletedUnknownEvidenceAndConfigGuard(t *testing.T) {
 			switch kind {
 			case "config-drift":
 				a.config.Downloaders[0].BaseURL += "/changed"
+				a.invalidateSettings()
 			case "receipt":
-				_, _ = a.Store.DB.Exec(`DELETE FROM download_removal_root WHERE id=?`, r.ID)
+				_, _ = a.Store.DB.Exec(`DELETE FROM download_removal_receipt WHERE id=?`, r.ID)
 			case "root":
 				_, _ = a.Store.DB.Exec(`DELETE FROM download_removal_root WHERE id=?`, r.ID)
 			case "source":
@@ -477,6 +479,7 @@ func TestCoreDownloadFileDeletedActualAddImportHistoryChain(t *testing.T) {
 	workflowConfigure(t, a, site.URL, qb.URL)
 	a.config.Downloaders[0].DownloadPath = source
 	a.config.Directories = []DirectoryRule{{ID: "owned-core-source", Name: "自有整链目录", SourcePath: source, LibraryPath: a.Settings().Roots[0].Path, RootID: "root", MediaType: "movie", Mode: "hardlink", MonitorType: "downloader", Enabled: true}}
+	a.invalidateSettings()
 	preview, e := a.previewDownload(ctx, PreviewRequest{SearchRequest: SearchRequest{MediaType: m.MediaType, TMDBID: m.ID}, SiteID: "fixture-site", ResourceID: "101", DownloadPath: source}, false)
 	if e != nil {
 		t.Fatal(e)
@@ -492,7 +495,9 @@ func TestCoreDownloadFileDeletedActualAddImportHistoryChain(t *testing.T) {
 	if e = a.safeRun(ctx, j); e != nil {
 		t.Fatal(e)
 	}
-	_, _ = a.Store.DB.Exec(`UPDATE jobs SET state='succeeded' WHERE id=?`, j.ID)
+	if ok, err := a.finishJob(ctx, j, "succeeded", "", "", 0); err != nil || !ok {
+		t.Fatalf("fixture job did not finish: %v", err)
+	}
 	importWrite(t, filepath.Join(source, filename), bytes.Repeat([]byte{'v'}, 1024))
 	if e = a.pollDownloads(ctx); e != nil {
 		t.Fatal(e)
@@ -510,7 +515,9 @@ func TestCoreDownloadFileDeletedActualAddImportHistoryChain(t *testing.T) {
 	if e = a.safeRun(ctx, importJob); e != nil {
 		t.Fatal(e)
 	}
-	_, _ = a.Store.DB.Exec(`UPDATE jobs SET state='succeeded' WHERE id=?`, importJob.ID)
+	if ok, err := a.finishJob(ctx, importJob, "succeeded", "", "", 0); err != nil || !ok {
+		t.Fatalf("fixture job did not finish: %v", err)
+	}
 	var plan ImportPlan
 	_ = a.Store.Get(ctx, "import_plan", in.ImportPlanID, &plan)
 	if len(plan.Files) != 1 {
@@ -556,12 +563,12 @@ func TestCoreDownloadFileDeletedOldPairRollbackCannotReplay(t *testing.T) {
 	j := coreDeleteJob(t, a)
 	r := coreDeleteRecord(t, a, j)
 	var receipt, root []byte
-	_ = a.Store.DB.QueryRow(`SELECT payload FROM download_removal_root WHERE id=?`, r.ID).Scan(&receipt)
+	_ = a.Store.DB.QueryRow(`SELECT payload FROM download_removal_receipt WHERE id=?`, r.ID).Scan(&receipt)
 	_ = a.Store.DB.QueryRow(`SELECT payload FROM download_removal_root WHERE id=?`, r.ID).Scan(&root)
 	if e := a.safeRun(context.Background(), j); pluginErrorCode(e) != "CORE_DOWNLOAD_DELETE_REVIEW" {
 		t.Fatal(e)
 	}
-	_, _ = a.Store.DB.Exec(`UPDATE download_removal_root SET payload=? WHERE id=?`, receipt, r.ID)
+	_, _ = a.Store.DB.Exec(`UPDATE download_removal_receipt SET payload=? WHERE id=?`, receipt, r.ID)
 	_, _ = a.Store.DB.Exec(`UPDATE download_removal_root SET payload=? WHERE id=?`, root, r.ID)
 	if e := a.safeRun(context.Background(), j); e == nil {
 		t.Fatal("rolled-back planned pair accepted")
@@ -611,6 +618,7 @@ func TestCoreDownloadFileDeletedQueuedSecondSourceCannotReplayUnknownHash(t *tes
 	d := DownloaderConfig{Config: download.Config{ID: "owned", Kind: "qb", BaseURL: server.URL}}
 	a.config.Downloaders = []DownloaderConfig{d}
 	a.config.DefaultDownloader = d.ID
+	a.invalidateSettings()
 	in := Intent{ID: "core-owned-accepted", WorkflowID: "core-owned-workflow", Media: m, RootID: "root", DownloaderID: d.ID, DownloaderSnapshot: downloaderSnapshot(d), Hash: coreFileHash, State: "accepted", Purpose: "core_download", SiteID: "core-owned-site"}
 	if e := a.acceptDownload(ctx, in, Job{ID: "job_owned_accepted"}); e != nil {
 		t.Fatal(e)
@@ -633,7 +641,9 @@ func TestCoreDownloadFileDeletedQueuedSecondSourceCannotReplayUnknownHash(t *tes
 	if e = a.safeRun(ctx, j); e != nil {
 		t.Fatal(e)
 	}
-	_, _ = a.Store.DB.Exec(`UPDATE jobs SET state='succeeded' WHERE id=?`, j.ID)
+	if ok, err := a.finishJob(ctx, j, "succeeded", "", "", 0); err != nil || !ok {
+		t.Fatalf("fixture job did not finish: %v", err)
+	}
 	for _, f := range plan.Files {
 		item, e := a.transferHistoryItem(ctx, f.ID)
 		if e != nil {

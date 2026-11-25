@@ -1,7 +1,6 @@
 package app
 
 import (
-	"bytes"
 	"context"
 	"encoding/base64"
 	"encoding/json"
@@ -60,6 +59,15 @@ func (a *App) originalHistoryStorageDelete(ctx context.Context, file *assetRemov
 			operation = browserOperation{}
 		} else if operation.Items[0].SourceModuleStarted {
 			return bad("REVIEW_HISTORY_DELETE", "文件删除扩展已调用，结果尚未确认，未重复调用")
+		} else if file.DirectoryParentOnly {
+			// Ordinary-directory cleanup prepared by an earlier version must
+			// re-evaluate its current directory policy before a first dispatch.
+			if _, err := os.Lstat(operation.Items[0].Target); errors.Is(err, os.ErrNotExist) {
+				if current, err := snapshotTransferPath(file.Path); err != nil || current != file.Snapshot {
+					return bad("FILE_SNAPSHOT_CHANGED", "待删除目录在恢复前发生变化")
+				}
+				operation = browserOperation{}
+			}
 		}
 	}
 	if operation.ID == "" {
@@ -118,13 +126,11 @@ func (a *App) originalHistoryStorageDelete(ctx context.Context, file *assetRemov
 				if err != nil {
 					return err
 				}
-				result, err := a.originalMetadataStorage(ctx, "any_files", map[string]any{"fileitem": item, "extensions": extensions}, func() (any, error) {
-					return a.originalHistoryNativeAnyFiles(ctx, fields, extensions)
-				})
+				prune, err := a.historyCanPruneDirectory(ctx, fields, historyAssociatedDirectory(a.Settings(), file.Path), extensions)
 				if err != nil {
 					return err
 				}
-				file.DirectoryRetained = !bytes.Equal(bytes.TrimSpace(result), []byte("false"))
+				file.DirectoryRetained = !prune
 				if file.DirectoryRetained {
 					return persist()
 				}
