@@ -34,16 +34,14 @@ type inProcessSession struct {
 	handler    InProcessHandler
 	concurrent bool
 
-	mu            sync.Mutex
-	stopRequested atomic.Bool
-	stopped       bool
-	terminal      error
-	stopDone      chan struct{}
-	draining      bool
-	rootCtx       context.Context
-	rootCancel    context.CancelFunc
-	hostCalls     atomic.Int64
-	inflight      sync.WaitGroup
+	mu         sync.Mutex
+	terminal   error
+	stopDone   chan struct{}
+	draining   bool
+	rootCtx    context.Context
+	rootCancel context.CancelFunc
+	hostCalls  atomic.Int64
+	inflight   sync.WaitGroup
 }
 
 // NewInProcess starts a builtin plugin session. The returned Session is
@@ -73,7 +71,7 @@ func (s *inProcessSession) hostBridge(host HostHandler) HostCaller {
 }
 
 func (s *inProcessSession) validate(method string, payload json.RawMessage) error {
-	if s == nil || s.stopRequested.Load() {
+	if s == nil {
 		return failure("session_closed")
 	}
 	if !methodPattern.MatchString(method) || method == "handshake" || method == "stop" || strings.HasPrefix(method, "transport.") {
@@ -88,10 +86,20 @@ func (s *inProcessSession) validate(method string, payload json.RawMessage) erro
 	return nil
 }
 
+// Admission and the final stop fence share a lock. Reserve the call before
+// launching any goroutine, so a successful StartCall is included in the join.
+func (s *inProcessSession) admit(reserved bool) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.stopDone != nil || s.terminal != nil || s.draining && !reserved {
+		return failure("session_closed")
+	}
+	s.inflight.Add(1)
+	return nil
+}
+
 func (s *inProcessSession) invoke(ctx context.Context, method string, payload json.RawMessage, host HostHandler) (out RunResult, err error) {
 	owned := append(json.RawMessage(nil), payload...)
-	s.inflight.Add(1)
-	defer s.inflight.Done()
 	defer func() {
 		if r := recover(); r != nil {
 			// A builtin panic must not take the host down. The wire process
@@ -99,7 +107,7 @@ func (s *inProcessSession) invoke(ctx context.Context, method string, payload js
 			// for this session and surfaces as the call's error.
 			err = failure("worker_failed")
 			out.Result = nil
-			s.failLocked(err)
+			s.fail(err)
 		}
 	}()
 	raw, callErr := s.handler(ctx, method, owned, s.hostBridge(host))
@@ -111,15 +119,10 @@ func (s *inProcessSession) invoke(ctx context.Context, method string, payload js
 	return out, callErr
 }
 
-func (s *inProcessSession) failLocked(err error) {
-	s.stopRequested.Store(true)
+func (s *inProcessSession) fail(err error) {
 	s.mu.Lock()
 	if s.terminal == nil {
 		s.terminal = err
-	}
-	if s.stopDone != nil {
-		close(s.stopDone)
-		s.stopDone = nil
 	}
 	s.mu.Unlock()
 	s.rootCancel()
@@ -148,6 +151,10 @@ func (s *inProcessSession) CallWithOptions(ctx context.Context, method string, p
 		callCtx, cancel = context.WithTimeout(ctx, options.Timeout)
 		defer cancel()
 	}
+	if err := s.admit(false); err != nil {
+		return RunResult{}, err
+	}
+	defer s.inflight.Done()
 	return s.invoke(callCtx, method, payload, host)
 }
 
@@ -171,9 +178,13 @@ func (s *inProcessSession) StartCallWithAdmission(admissionCtx, ctx context.Cont
 	if options.CallerDeadlineOnly && options.Timeout != 0 {
 		return nil, failure("invalid_limits")
 	}
+	if err := s.admit(false); err != nil {
+		return nil, err
+	}
 	callCtx, cancel := context.WithCancel(ctx)
 	pending := &PendingCall{done: make(chan struct{}), cancel: cancel}
 	go func() {
+		defer s.inflight.Done()
 		pending.result, pending.err = s.invoke(callCtx, method, payload, host)
 		cancel()
 		close(pending.done)
@@ -189,40 +200,16 @@ func (s *inProcessSession) BeginShutdown(ctx context.Context) error {
 		return failure("concurrent_session_unsupported")
 	}
 	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.terminal != nil {
+		return s.terminal
+	}
 	if s.stopDone != nil {
-		done := s.stopDone
-		s.mu.Unlock()
-		select {
-		case <-done:
-			s.mu.Lock()
-			err := s.terminal
-			s.mu.Unlock()
-			return err
-		case <-ctx.Done():
-			return failure("execution_canceled")
-		}
+		return failure("session_closed")
 	}
-	if s.stopped || s.terminal != nil {
-		err := s.terminal
-		s.mu.Unlock()
-		if err == nil {
-			err = failure("session_closed")
-		}
-		return err
-	}
+	// Acknowledge the ordinary admission fence immediately. Cleanup calls
+	// can be what releases handlers that are still running.
 	s.draining = true
-	s.stopRequested.Store(true)
-	s.stopDone = make(chan struct{})
-	drained := s.stopDone
-	s.mu.Unlock()
-	// Fence applied: ordinary admission is refused and the root context
-	// cancels handler-side phases the way the worker's shutdown ACK did.
-	go func() {
-		s.inflight.Wait()
-		s.mu.Lock()
-		close(drained)
-		s.mu.Unlock()
-	}()
 	return nil
 }
 
@@ -235,6 +222,10 @@ func (s *inProcessSession) cleanupMethod(ctx context.Context, method string, pay
 	}
 	// The cleanup lane deliberately bypasses the drain fence: fresh caller
 	// authority on a reserved lane, exactly like the wire client.
+	if err := s.admit(true); err != nil {
+		return RunResult{}, err
+	}
+	defer s.inflight.Done()
 	return s.invoke(ctx, method, payload, host)
 }
 
@@ -268,46 +259,16 @@ func (s *inProcessSession) CloseTransport(ctx context.Context) error {
 	}
 	// No transport exists to close; retire the object without running any
 	// lifecycle method, mirroring the wire's transport-only fence.
-	s.mu.Lock()
-	if s.stopDone != nil {
-		done := s.stopDone
-		s.mu.Unlock()
-		select {
-		case <-done:
-			return nil
-		case <-ctx.Done():
-			return failure("execution_canceled")
-		}
-	}
-	if s.stopped {
-		err := s.terminal
-		s.mu.Unlock()
-		return err
-	}
-	s.stopRequested.Store(true)
-	s.stopped = true
-	done := make(chan struct{})
-	s.mu.Unlock()
-	go func() {
-		s.inflight.Wait()
-		s.mu.Lock()
-		s.rootCancel()
-		close(done)
-		s.mu.Unlock()
-	}()
-	select {
-	case <-done:
-		return nil
-	case <-ctx.Done():
-		return failure("execution_canceled")
-	}
+	return s.finish(ctx, nil, false)
 }
 
 func (s *inProcessSession) CleanupContext(parentHostCtx context.Context) (context.Context, error) {
 	if !s.SupportsCleanupContinuations() {
 		return nil, failure("cleanup_continuation_unsupported")
 	}
-	if parentHostCtx == nil || parentHostCtx.Err() != nil || !s.draining || s.stopped {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if parentHostCtx == nil || parentHostCtx.Err() != nil || !s.draining || s.stopDone != nil || s.terminal != nil {
 		return nil, failure("cleanup_call_closed")
 	}
 	return s.rootCtx, nil
@@ -325,9 +286,13 @@ func (s *inProcessSession) StartCleanupContinuationWithAdmission(parentHostCtx c
 	}
 	// The continuation inherits the draining root's lifetime; cancellation
 	// revokes only this call, as the wire's bounded handoff slots did.
+	if err := s.admit(true); err != nil {
+		return nil, err
+	}
 	callCtx, cancel := context.WithCancel(context.WithValue(s.rootCtx, cleanupInvocationKey{}, true))
 	pending := &PendingCall{done: make(chan struct{}), cancel: cancel}
 	go func() {
+		defer s.inflight.Done()
 		pending.result, pending.err = s.invoke(callCtx, method, payload, host)
 		cancel()
 		close(pending.done)
@@ -343,56 +308,40 @@ func (s *inProcessSession) StopWithHost(ctx context.Context, host HostHandler) e
 	if ctx == nil {
 		return failure("invalid_invocation")
 	}
+	return s.finish(ctx, host, true)
+}
+
+// Stop and transport retirement share one final join. Once stopDone is set
+// under mu, no lane can add a call to inflight, including reserved cleanup.
+func (s *inProcessSession) finish(ctx context.Context, host HostHandler, runStop bool) error {
 	s.mu.Lock()
-	if s.stopDone != nil {
-		done := s.stopDone
-		s.mu.Unlock()
-		select {
-		case <-done:
-			s.mu.Lock()
-			err := s.terminal
-			s.stopDone = nil
-			s.mu.Unlock()
-			return err
-		case <-ctx.Done():
-			s.mu.Unlock()
-			return failure("execution_canceled")
+	if s.stopDone == nil {
+		s.stopDone = make(chan struct{})
+		if runStop {
+			// Stop joins a failed handler as well; report failures from this
+			// final lifecycle phase, not a panic already returned to its caller.
+			s.terminal = nil
 		}
+		go func() {
+			if runStop && slices.Contains(s.manifest.Methods, "stop") {
+				stopCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+				_, _ = s.invoke(stopCtx, "stop", json.RawMessage(`{}`), host)
+				cancel()
+			}
+			s.rootCancel()
+			s.inflight.Wait()
+			close(s.stopDone)
+		}()
 	}
-	if s.stopped {
-		err := s.terminal
-		s.mu.Unlock()
-		return err
-	}
-	s.stopped = true
-	s.stopRequested.Store(true)
-	done := make(chan struct{})
-	s.terminal = nil
+	done := s.stopDone
 	s.mu.Unlock()
-	// Final lifecycle call with fresh authority, then a single join.
-	if slices.Contains(s.manifest.Methods, "stop") {
-		stopCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
-		_, _ = s.invoke(stopCtx, "stop", json.RawMessage(`{}`), host)
-		cancel()
-	}
-	go func() {
-		s.inflight.Wait()
-		s.mu.Lock()
-		s.rootCancel()
-		close(done)
-		s.mu.Unlock()
-	}()
 	select {
 	case <-done:
 		s.mu.Lock()
-		s.stopDone = nil
 		err := s.terminal
 		s.mu.Unlock()
 		return err
 	case <-ctx.Done():
-		s.mu.Lock()
-		s.stopDone = done
-		s.mu.Unlock()
 		return failure("execution_canceled")
 	}
 }
