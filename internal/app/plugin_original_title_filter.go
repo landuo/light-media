@@ -89,6 +89,10 @@ func (a *App) originalTitleFilterResources(ctx context.Context, filter priorityF
 	if err != nil {
 		return out, err
 	}
+	return a.titleFilterWithGroups(ctx, filter, out, groups)
+}
+
+func (a *App) titleFilterWithGroups(ctx context.Context, filter priorityFilter, out SearchOutput, groups []originalPluginModuleGroup) (SearchOutput, error) {
 	if !originalModuleGroupsHaveMethod(groups, "filter_torrents") {
 		return filter.applyNative(ctx, a, out)
 	}

@@ -43,6 +43,7 @@ func installResourceBrowseSite(t *testing.T, a *App, origin string) SiteConfig {
 	site := SiteConfig{Config: sites.Config{ID: "owned-resource-site", Kind: "ubits", Name: "Owned resource site", BaseURL: origin, Cookie: "owned-site-cookie", UserAgent: "Owned-UA", Timeout: 15}, SiteOptions: SiteOptions{Domain: "127.0.0.1", Priority: 1}, Enabled: true}
 	a.cfgMu.Lock()
 	a.config.Sites = []SiteConfig{site}
+	a.invalidateSettings()
 	a.cfgMu.Unlock()
 	if err := a.bootstrapNativeSiteIdentities(context.Background()); err != nil {
 		t.Fatal(err)

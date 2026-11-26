@@ -33,6 +33,7 @@ type originalResourceBatchSearch struct {
 	once            sync.Once
 	groups          []originalPluginModuleGroup
 	directNative    bool
+	discoveryErr    error
 	results         map[string]originalResourceSiteResult
 	fallbackResults map[string]originalResourceSiteResult
 	err             error
@@ -47,9 +48,9 @@ func (op *originalResourceBatchSearch) attach(ctx context.Context, configs []Sit
 	if method == "" {
 		method = "async_batch_search_torrents"
 	}
-	groups, err := op.app.originalPluginModules(ctx, "")
+	groups, err := op.app.originalPluginModulesForMethod(ctx, "", method)
 	if err != nil {
-		op.err = err
+		op.discoveryErr = err
 		return
 	}
 	op.groups = groups
@@ -57,8 +58,8 @@ func (op *originalResourceBatchSearch) attach(ctx context.Context, configs []Sit
 }
 
 func (op *originalResourceBatchSearch) site(ctx context.Context, config SiteConfig) (sites.SearchResult, error) {
-	if op.err != nil {
-		return sites.SearchResult{Page: op.page, Resources: []sites.Resource{}}, op.err
+	if op.discoveryErr != nil {
+		return sites.SearchResult{Page: op.page, Resources: []sites.Resource{}}, op.discoveryErr
 	}
 	if op.directNative {
 		return op.native(ctx, config, op.page)
@@ -124,7 +125,7 @@ func (op *originalResourceBatchSearch) dispatch(configs []SiteConfig, page int) 
 	}
 	if groups == nil {
 		var err error
-		groups, err = op.app.originalPluginModules(op.ctx, "")
+		groups, err = op.app.originalPluginModulesForMethod(op.ctx, "", method)
 		if err != nil {
 			return nil, false, err
 		}

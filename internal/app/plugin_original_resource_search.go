@@ -25,7 +25,7 @@ func (a *App) originalBrowseSiteResources(ctx context.Context, site SiteConfig, 
 }
 
 func (a *App) originalSiteTorrentModule(ctx context.Context, site SiteConfig, method string, sourceKwargs map[string]any, page int, native func() (sites.SearchResult, error)) (sites.SearchResult, error) {
-	groups, err := a.originalPluginModules(ctx, "")
+	groups, err := a.originalPluginModulesForMethod(ctx, "", method)
 	if err != nil {
 		return sites.SearchResult{}, err
 	}

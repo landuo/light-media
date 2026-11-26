@@ -14,6 +14,8 @@ import (
 // Keyword search applies resource filters without inventing a TMDB identity.
 // Directory organization performs the separate media recognition step.
 func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutput, error) {
+	ctx, stop := context.WithTimeout(ctx, interactiveSearchBudget)
+	defer stop()
 	ctx, err := a.ensureResourceRecognition(ctx)
 	if err != nil {
 		return SearchOutput{}, err
@@ -42,41 +44,82 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 		})
 		return fetched, err
 	}
-	if _, streaming := ctx.Value(searchProgressKey{}).(func(SearchOutput)); !streaming {
+	_, streaming := ctx.Value(searchProgressKey{}).(func(SearchOutput))
+	if !streaming {
 		in.resourceBatch = &originalResourceBatchSearch{app: a, keyword: in.Query, page: in.Page, native: fetch}
-		// Bound the request the user is waiting on; partial site results and
-		// per-site timeout statuses are returned instead of a hard failure.
-		var cancel context.CancelFunc
-		ctx, cancel = context.WithTimeout(ctx, interactiveSearchBudget)
-		defer cancel()
 	}
-	out, err = a.searchSites(ctx, in, out, false, func(siteCtx context.Context, config SiteConfig) siteSearchOutput {
+	ctx = withKeywordSiteUsage(ctx)
+	out, err = a.searchKeywordSites(ctx, in, out, func(siteCtx context.Context, config SiteConfig, emit func([]Candidate)) siteSearchOutput {
 		var result sites.SearchResult
 		native := func(page int) (sites.SearchResult, error) {
 			return fetch(siteCtx, config, page)
 		}
 		var err error
-		if _, streaming := siteCtx.Value(searchProgressKey{}).(func(SearchOutput)); streaming {
+		published := 0
+		page := keywordCandidatePage{emit: emit, seen: make(map[keywordResourceID]struct{})}
+		if streaming {
+			// Only nonterminal pages need a separate progress event. The final
+			// page (including a partial parse on error) goes through the terminal
+			// event, preserving its real site status and elapsed time.
+			siteCtx = context.WithValue(siteCtx, originalResourcePageProgressKey{}, originalResourcePageProgress(func(_ SiteConfig, accumulated sites.SearchResult, finished bool) {
+				if !finished && len(accumulated.Resources) > published {
+					if candidates := page.evaluate(siteCtx, a, in.Policy, accumulated.Resources[published:]); len(candidates) != 0 {
+						emit(candidates)
+					}
+					published = len(accumulated.Resources)
+				}
+			}))
 			result, err = a.originalStreamResourceSite(siteCtx, config, in.Query, in.Page, native)
 		} else {
 			result, err = in.resourceBatch.site(siteCtx, config)
 		}
-		found := siteSearchOutput{status: a.searchStatus(siteCtx, config.ID, len(result.Resources), err, 0), candidates: []Candidate{}}
-		for _, resource := range result.Resources {
-			season, episodes := a.resourceNumberingSuggestionContext(siteCtx, resource.Title)
-			choice := decision.EvaluateResourceContext(siteCtx, resource, decision.NativePolicy(decisionPolicy(in.Policy)))
-			if choice.Accepted {
-				choice.Reasons = append(choice.Reasons, "media_identity_required")
-			}
-			found.candidates = append(found.candidates, Candidate{Resource: resource, Accepted: choice.Accepted, NeedsConfirmation: choice.Accepted, Reasons: choice.Reasons, Season: season, Episodes: episodes})
-		}
-		return found
+		candidates := page.evaluate(siteCtx, a, in.Policy, result.Resources[published:])
+		return siteSearchOutput{status: a.searchStatus(siteCtx, config.ID, page.total, err, 0), candidates: candidates}
 	})
 	if err != nil {
 		return out, err
 	}
 	a.log("INFO", "sites", "keyword_search_completed", "关键词搜索完成，资源筛选规则已应用；影视身份由整理流程单独识别", out.WorkflowID, "")
 	return out, nil
+}
+
+type keywordResourceID struct{ site, id string }
+
+type keywordCandidatePage struct {
+	seen  map[keywordResourceID]struct{}
+	emit  func([]Candidate)
+	total int
+}
+
+func (page *keywordCandidatePage) evaluate(ctx context.Context, a *App, policy Policy, resources []sites.Resource) []Candidate {
+	// Keep most of a large result page if its last titles take us past the deadline.
+	const batchSize = 16
+	candidates := make([]Candidate, 0, min(batchSize, len(resources)))
+	native := decision.NativePolicy(decisionPolicy(policy))
+	for _, resource := range resources {
+		if ctx.Err() != nil {
+			break
+		}
+		if resource.ID != "" {
+			key := keywordResourceID{resource.SiteID, resource.ID}
+			if _, duplicate := page.seen[key]; duplicate {
+				continue
+			}
+			page.seen[key] = struct{}{}
+		}
+		if len(candidates) == batchSize {
+			page.emit(candidates)
+			candidates = make([]Candidate, 0, batchSize)
+		}
+		season, episodes := a.resourceNumberingSuggestionContext(ctx, resource.Title)
+		choice := decision.EvaluateResourceContext(ctx, resource, native)
+		if choice.Accepted {
+			choice.Reasons = append(choice.Reasons, "media_identity_required")
+		}
+		candidates = append(candidates, Candidate{Resource: resource, Accepted: choice.Accepted, NeedsConfirmation: choice.Accepted, Reasons: choice.Reasons, Season: season, Episodes: episodes})
+		page.total++
+	}
+	return candidates
 }
 
 // The site card opens that site's recent torrents. Empty queries are allowed

@@ -21,6 +21,24 @@ const siteSearchTimeout = 45 * time.Second
 // are not blocking a request.
 const interactiveSearchBudget = 15 * time.Second
 
+func selectedSearchSites(selectedIDs []string, settings Settings) []SiteConfig {
+	selected := map[string]bool{}
+	if len(selectedIDs) == 0 {
+		selectedIDs = settings.IndexerSites
+	}
+	for _, key := range selectedIDs {
+		selected[key] = true
+	}
+	configs := []SiteConfig{}
+	for _, config := range settings.Sites {
+		if config.Enabled && (len(selected) == 0 || selected[config.ID]) {
+			configs = append(configs, config)
+		}
+	}
+	sort.SliceStable(configs, func(i, j int) bool { return configs[i].Priority < configs[j].Priority })
+	return configs
+}
+
 type siteSearchOutput struct {
 	status     SiteStatus
 	candidates []Candidate
@@ -42,21 +60,7 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 		return out, err
 	}
 	additional := snapshotAdditionalFilter(in.Policy.FilterParams)
-	selected := map[string]bool{}
-	selectedIDs := in.SiteIDs
-	if len(selectedIDs) == 0 {
-		selectedIDs = settings.IndexerSites
-	}
-	for _, key := range selectedIDs {
-		selected[key] = true
-	}
-	configs := []SiteConfig{}
-	for _, config := range settings.Sites {
-		if config.Enabled && (len(selected) == 0 || selected[config.ID]) {
-			configs = append(configs, config)
-		}
-	}
-	sort.SliceStable(configs, func(i, j int) bool { return configs[i].Priority < configs[j].Priority })
+	configs := selectedSearchSites(in.SiteIDs, settings)
 	status := "searching"
 	var slots chan struct{}
 	if auto {
@@ -94,18 +98,8 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 			}
 			found := siteSearchOutput{status: status, candidates: []Candidate{}}
 			for _, resource := range result.Resources {
-				var candidate Candidate
-				if in.priorityTarget != nil {
-					choice := a.evaluateResourceContext(progressCtx, resource, *in.priorityTarget, decision.NativePolicy(decisionPolicy(in.Policy)))
-					candidate = Candidate{Resource: resource, Accepted: choice.Accepted, NeedsConfirmation: choice.NeedsConfirmation, Reasons: choice.Reasons, Season: choice.Season, Episodes: choice.Episodes}
-				} else {
-					choice := decision.EvaluateResourceContext(progressCtx, resource, decision.NativePolicy(decisionPolicy(in.Policy)))
-					if choice.Accepted {
-						choice.Reasons = append(choice.Reasons, "media_identity_required")
-					}
-					season, episodes := a.resourceNumberingSuggestionContext(progressCtx, resource.Title)
-					candidate = Candidate{Resource: resource, Accepted: choice.Accepted, NeedsConfirmation: choice.Accepted, Reasons: choice.Reasons, Season: season, Episodes: episodes}
-				}
+				choice := a.evaluateResourceContext(progressCtx, resource, *in.priorityTarget, decision.NativePolicy(decisionPolicy(in.Policy)))
+				candidate := Candidate{Resource: resource, Accepted: choice.Accepted, NeedsConfirmation: choice.NeedsConfirmation, Reasons: choice.Reasons, Season: choice.Season, Episodes: choice.Episodes}
 				found.candidates = append(found.candidates, candidate)
 			}
 			select {
@@ -113,9 +107,6 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 			case <-progressCtx.Done():
 			}
 		}))
-	}
-	if in.resourceBatch != nil {
-		in.resourceBatch.attach(ctx, configs)
 	}
 	if in.mediaModuleSearch != nil {
 		in.mediaModuleSearch.ctx, in.mediaModuleSearch.configs = ctx, append([]SiteConfig(nil), configs...)
@@ -246,7 +237,7 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 }
 
 func sortSearchCandidates(candidates []Candidate, policy Policy) {
-	if len(candidates) < 2 {
+	if len(candidates) == 0 {
 		return
 	}
 	rankPolicy := decisionPolicy(policy)
@@ -254,21 +245,24 @@ func sortSearchCandidates(candidates []Candidate, policy Policy) {
 		candidates[i].sortRank = decision.Rank(candidates[i].Resource, rankPolicy)
 	}
 	sort.SliceStable(candidates, func(i, j int) bool {
-		if candidates[i].Accepted != candidates[j].Accepted {
-			return candidates[i].Accepted
-		}
-		if left, right := priorityrules.PriorityKey(candidates[i].Resource.PriorityOrder), priorityrules.PriorityKey(candidates[j].Resource.PriorityOrder); left != right {
-			return left > right
-		}
-		left, right := candidates[i].sortRank, candidates[j].sortRank
-		if left != right {
-			return left > right
-		}
-		if candidates[i].Resource.Free != candidates[j].Resource.Free {
-			return candidates[i].Resource.Free
-		}
-		return candidates[i].Resource.Seeders > candidates[j].Resource.Seeders
+		return searchCandidateBefore(&candidates[i], &candidates[j])
 	})
+}
+
+func searchCandidateBefore(left, right *Candidate) bool {
+	if left.Accepted != right.Accepted {
+		return left.Accepted
+	}
+	if left, right := priorityrules.PriorityKey(left.Resource.PriorityOrder), priorityrules.PriorityKey(right.Resource.PriorityOrder); left != right {
+		return left > right
+	}
+	if left.sortRank != right.sortRank {
+		return left.sortRank > right.sortRank
+	}
+	if left.Resource.Free != right.Resource.Free {
+		return left.Resource.Free
+	}
+	return left.Resource.Seeders > right.Resource.Seeders
 }
 
 func (a *App) searchStatus(ctx context.Context, key string, count int, err error, successfulQueries int) SiteStatus {

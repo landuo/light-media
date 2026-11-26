@@ -68,9 +68,8 @@ func (a *App) originalResourceSiteSearchPagesMedia(ctx context.Context, method s
 		}
 		finished := !more || new(big.Int).Add(offset, big.NewInt(1)).Cmp(pages) >= 0
 		if publish, present := ctx.Value(originalResourcePageProgressKey{}).(originalResourcePageProgress); present {
-			snapshot := out
-			snapshot.Resources = append([]sites.Resource{}, out.Resources...)
-			publish(site, snapshot, finished)
+			// The callback consumes the page synchronously before the next append.
+			publish(site, out, finished)
 		}
 		if finished {
 			break
@@ -111,27 +110,26 @@ func ResourceSearchPagesEnvironment(lookup func(string) (string, bool)) (*big.In
 
 func (a *App) originalResourceSearchContinues(ctx context.Context, site SiteConfig, keyword string, count int) (bool, error) {
 	const method = "get_search_page_size"
-	groups, err := a.originalPluginModules(ctx, "")
+	groups, err := a.originalPluginModulesForMethod(ctx, "", method)
 	if err != nil {
 		return false, err
 	}
-	// The two existing native protocols use the fixed default100 (ordinary
-	// SiteSpider.default_result_num and MTorrentSpider._size). Other source
-	// parser business systems are not invented to supply unrelated metadata.
-	result := json.RawMessage(`100`)
-	if originalModuleGroupsHaveMethod(groups, method) {
-		sourceSite, err := a.originalResourceSiteFields(ctx, site)
-		if err != nil {
-			return false, err
-		}
-		kwargs, _ := json.Marshal(map[string]any{"site": sourceSite, "keyword": keyword})
-		result, err = a.invokeOriginalPluginModuleGroups(ctx, method, nil, json.RawMessage(`[]`), kwargs, nil, groups)
-		if err != nil {
-			return false, err
-		}
-		if originalModuleResultEmpty(result) {
-			result = json.RawMessage(`100`)
-		}
+	// Both native site protocols use a page size of 100.
+	const nativePageSize = 100
+	if !originalModuleGroupsHaveMethod(groups, method) {
+		return count >= nativePageSize, nil
+	}
+	sourceSite, err := a.originalResourceSiteFields(ctx, site)
+	if err != nil {
+		return false, err
+	}
+	kwargs, _ := json.Marshal(map[string]any{"site": sourceSite, "keyword": keyword})
+	result, err := a.invokeOriginalPluginModuleGroups(ctx, method, nil, json.RawMessage(`[]`), kwargs, nil, groups)
+	if err != nil {
+		return false, err
+	}
+	if originalModuleResultEmpty(result) {
+		return count >= nativePageSize, nil
 	}
 	value, err := decodeSourceJSON(result)
 	if err != nil {

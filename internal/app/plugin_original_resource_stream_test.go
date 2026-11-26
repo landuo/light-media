@@ -211,18 +211,16 @@ func TestOriginalResourceStreamPageCapacityActualSDKSource(t *testing.T) {
 func TestOriginalResourceStreamActualHTTPHostSDK(t *testing.T) {
 	t.Setenv("SEARCH_RESOURCE_PAGES", "2")
 	reference := readResourceStreamOracle(t)
-	wantCount, wantPages, wantPlugin := 0, 0, 0
+	wantPages := 0
 	for _, frame := range reference.Production.Frames {
 		if frame.Type == "append" {
 			wantPages++
-			wantCount += len(frame.Items)
-			for _, row := range frame.Items {
-				if row["title"] == "Owned plugin resource" {
-					wantPlugin++
-				}
-			}
 		}
 	}
+	// Both native pages contain the same two fixture IDs; the worker also
+	// returns the same plugin resource for both pages. Search each page, but
+	// present each site/ID just once.
+	const wantCount, wantPlugin = 3, 1
 	a, cookie, object := ownedModuleFixture(t, true)
 	browse := readResourceBrowseOracle(t)
 	html, err := os.ReadFile("../sites/testdata/ubits-search.sanitized.html")
@@ -276,7 +274,7 @@ func TestOriginalResourceStreamActualHTTPHostSDK(t *testing.T) {
 			}
 		}
 	}
-	if wantCount == 0 || len(complete.Candidates) != wantCount || len(complete.Sites) != 1 || complete.Sites[0].ID != site.ID || complete.Sites[0].Status != "ok" || int(nativeCalls.Load()) != wantPages {
+	if len(complete.Candidates) != wantCount || len(complete.Sites) != 1 || complete.Sites[0].ID != site.ID || complete.Sites[0].Status != "ok" || int(nativeCalls.Load()) != wantPages {
 		t.Fatal("actual source page-capacity loop did not reach streamed host", len(complete.Candidates), nativeCalls.Load())
 	}
 	plugins := 0
@@ -286,7 +284,7 @@ func TestOriginalResourceStreamActualHTTPHostSDK(t *testing.T) {
 		}
 	}
 	if plugins != wantPlugin || strings.Contains(string(raw), "owned-plugin-secret") || strings.Contains(string(raw), "owned-private-material") || strings.Contains(string(raw), "enclosure") {
-		t.Fatal("actual worker model/public privacy or page multiplicity differs")
+		t.Fatal("actual worker privacy or unique resource count differs")
 	}
 	after := ownedModuleRead(t, object)
 	if after.Calls["module_execute"]-before.Calls["module_execute"] != wantPages || after.Calls["module_page_size"]-before.Calls["module_page_size"] != wantPages || after.Calls["get_state"]-before.Calls["get_state"] != wantPages*2 {

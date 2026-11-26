@@ -370,10 +370,11 @@ type Candidate struct {
 	Episodes                 []int          `json:"episodes"`
 }
 type SearchOutput struct {
-	Candidates []Candidate  `json:"candidates"`
-	Sites      []SiteStatus `json:"sites"`
-	WorkflowID string       `json:"workflow_id"`
-	CachedAt   string       `json:"cached_at"`
+	keywordFilterPending bool
+	Candidates           []Candidate  `json:"candidates"`
+	Sites                []SiteStatus `json:"sites"`
+	WorkflowID           string       `json:"workflow_id"`
+	CachedAt             string       `json:"cached_at"`
 }
 type SiteStatus struct {
 	ID        string `json:"id"`

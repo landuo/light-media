@@ -216,18 +216,7 @@ func (a *App) withSiteCooldown(ctx context.Context, s SiteConfig, auto, ordinary
 		if a.managedSiteKey(current) != a.managedSiteKey(s) {
 			return bad("SITE_CHANGED", "站点设置已变化，请重新发起请求")
 		}
-		tx, e := a.Store.DB.BeginTx(requestCtx, nil)
-		if e != nil {
-			return e
-		}
-		defer tx.Rollback()
-		if _, e = tx.ExecContext(requestCtx, `INSERT INTO site_usage VALUES(?,?)`, s.ID, time.Now().Unix()); e != nil {
-			return e
-		}
-		if _, e = tx.ExecContext(requestCtx, `DELETE FROM site_usage WHERE ts<?`, time.Now().Add(-48*time.Hour).Unix()); e != nil {
-			return e
-		}
-		return tx.Commit()
+		return a.Store.recordSiteRequest(requestCtx, s.ID)
 	})
 	e = fn(client)
 	if ordinaryCooldown && e != nil && (strings.Contains(e.Error(), "site_rate_limited") || strings.Contains(e.Error(), "site_authentication_failed") || strings.Contains(e.Error(), "site_forbidden_or_challenge")) {

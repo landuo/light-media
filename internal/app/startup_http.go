@@ -93,11 +93,15 @@ func nativeDisplayRequest(r *http.Request) bool {
 
 func nativeDisplayDeadline(next http.Handler, budget time.Duration) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !nativeDisplayRequest(r) {
+		requestBudget := budget
+		if r.Method == http.MethodPost && r.URL.Path == "/api/search/resources" {
+			// Include admission and authentication in the keyword search deadline.
+			requestBudget = interactiveSearchBudget
+		} else if !nativeDisplayRequest(r) {
 			next.ServeHTTP(w, r)
 			return
 		}
-		ctx, cancel := context.WithTimeout(r.Context(), budget)
+		ctx, cancel := context.WithTimeout(r.Context(), requestBudget)
 		defer cancel()
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})

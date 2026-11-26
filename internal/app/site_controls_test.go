@@ -59,6 +59,7 @@ func TestSiteRequestLimitBlocksNetworkWithoutRecordingRequest(t *testing.T) {
 	a.cfgMu.Lock()
 	a.config.Sites = []SiteConfig{site}
 	a.cfgMu.Unlock()
+	a.invalidateSettings()
 	if _, err := a.Store.DB.Exec(`INSERT INTO site_usage VALUES(?,?)`, site.ID, time.Now().Unix()); err != nil {
 		t.Fatal(err)
 	}
@@ -88,6 +89,7 @@ func TestAutomaticSiteSearchAllowsHeavyRecentUsage(t *testing.T) {
 	defer server.Close()
 	site := SiteConfig{Config: sites.Config{ID: "busy-site", Kind: "ubits", Name: "Synthetic", BaseURL: server.URL, Cookie: "synthetic-cookie"}, Enabled: true}
 	a.config.Sites = []SiteConfig{site}
+	a.invalidateSettings()
 	if _, err := a.Store.DB.Exec(`WITH RECURSIVE requests(n) AS (VALUES(1) UNION ALL SELECT n+1 FROM requests WHERE n<610)
 		INSERT INTO site_usage SELECT ?, ? FROM requests`, site.ID, time.Now().Add(-time.Hour).Unix()); err != nil {
 		t.Fatal(err)
@@ -180,6 +182,59 @@ func TestMoviePilotExtraSecretsAreRedacted(t *testing.T) {
 	for _, value := range []string{"synthetic-authorization", "synthetic-rss", "synthetic-note"} {
 		if strings.Contains(got, value) {
 			t.Fatal("imported site secret leaked into diagnostics")
+		}
+	}
+}
+
+func TestKeywordSiteUsageSharesDurableRegistrationAndSkipsCancelledSite(t *testing.T) {
+	a := newTestApp(t)
+	ctx, stop := context.WithTimeout(context.Background(), 3*time.Second)
+	defer stop()
+	ctx = withKeywordSiteUsage(ctx)
+	cancelCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+	// Hold the ordinary writer, as another site or a background job might.
+	writer, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer writer.Rollback()
+	registered := make(chan error, 2)
+	cancelled := make(chan error, 1)
+	go func() { registered <- a.Store.recordSiteRequest(ctx, "one") }()
+	go func() { registered <- a.Store.recordSiteRequest(ctx, "two") }()
+	go func() { cancelled <- a.Store.recordSiteRequest(cancelCtx, "cancelled") }()
+	batch := ctx.Value(keywordSiteUsageKey{}).(*keywordSiteUsage)
+	for {
+		batch.mu.Lock()
+		ready := batch.pending != nil && len(batch.pending.requests) == 3
+		batch.mu.Unlock()
+		if ready {
+			break
+		}
+		if ctx.Err() != nil {
+			t.Fatal("concurrent site reservations never joined a single commit")
+		}
+		time.Sleep(time.Millisecond)
+	}
+	cancel()
+	if err = <-cancelled; !errors.Is(err, context.Canceled) {
+		t.Fatal("cancelled site did not return before writer was available", err)
+	}
+	if err = writer.Rollback(); err != nil {
+		t.Fatal(err)
+	}
+	for range 2 {
+		if err := <-registered; err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, id := range []string{"one", "two", "cancelled"} {
+		// Enabling a limit after the search must still count earlier visits.
+		cfg := SiteConfig{Config: sites.Config{ID: id}, SiteOptions: SiteOptions{LimitCount: 1, LimitInterval: 60}}
+		delay, err := a.siteRequestDelay(ctx, cfg, time.Now())
+		if err != nil || (delay > 0) != (id != "cancelled") {
+			t.Fatalf("unexpected persisted request count for %q: delay=%v err=%v", id, delay, err)
 		}
 	}
 }

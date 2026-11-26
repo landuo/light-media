@@ -67,6 +67,7 @@ func TestOriginalTitleFilterActualHTTPHostSDKAndPrivacy(t *testing.T) {
 		}
 		a.cfgMu.Lock()
 		a.config.PriorityRules = configuration
+		a.invalidateSettings()
 		a.cfgMu.Unlock()
 	}
 	for _, mode := range []string{"copy_equal", "alias_core_mutation", "mutate_then_fail"} {
