@@ -11,6 +11,7 @@ import (
 type nativeTransferExtensionRuntime struct {
 	mu          sync.Mutex
 	constructor *fileextensions.Snapshot
+	classifier  *transferextensions.Classifier
 }
 
 // The native transfer instance is constructed at first actual transfer use.
@@ -23,21 +24,43 @@ func (a *App) transferFileExtensions(ctx context.Context) (fileextensions.Snapsh
 	r := &a.transferExtensions
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	if r.constructor == nil {
-		s, e := a.sourceFileExtensions(ctx)
-		if e != nil {
-			return fileextensions.Snapshot{}, e
-		}
-		r.constructor = &s
+	if e := a.initTransferExtensionConstructor(ctx, r); e != nil {
+		return fileextensions.Snapshot{}, e
 	}
 	return fileextensions.Resolve(r.constructor.Inputs)
 }
-func (a *App) transferMediaClassifier(ctx context.Context) (transferextensions.Classifier, error) {
-	s, e := a.transferFileExtensions(ctx)
-	if e != nil {
-		return transferextensions.Classifier{}, e
+
+// r.mu protects the original instance's constructor and its immutable classifier.
+// Live handler settings are still read independently at their original call sites.
+func (a *App) initTransferExtensionConstructor(ctx context.Context, r *nativeTransferExtensionRuntime) error {
+	if r.constructor == nil {
+		s, err := a.sourceFileExtensions(ctx)
+		if err != nil {
+			return err
+		}
+		r.constructor = &s
 	}
-	return transferextensions.New(s)
+	return nil
+}
+
+func (a *App) transferMediaClassifier(ctx context.Context) (transferextensions.Classifier, error) {
+	if err := ctx.Err(); err != nil {
+		return transferextensions.Classifier{}, err
+	}
+	r := &a.transferExtensions
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if r.classifier == nil {
+		if err := a.initTransferExtensionConstructor(ctx, r); err != nil {
+			return transferextensions.Classifier{}, err
+		}
+		c, err := transferextensions.New(*r.constructor)
+		if err != nil {
+			return transferextensions.Classifier{}, err
+		}
+		r.classifier = &c
+	}
+	return *r.classifier, nil
 }
 
 // transfer_media's nested predicates and latest candidates read settings at the

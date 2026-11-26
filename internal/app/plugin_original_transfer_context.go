@@ -216,16 +216,9 @@ func (a *App) originalTransferNativeRename(ctx context.Context, identity catalog
 		extension = "." + extension
 	}
 	input := noticetemplate.ContextInput{Meta: sourceMap(meta), Media: mediaFields, FileExtension: extension}
-	for _, episode := range episodes {
-		raw, err := json.Marshal(episode)
-		if err != nil {
-			return "", err
-		}
-		value, err := decodeSourceJSON(raw)
-		if err != nil {
-			return "", err
-		}
-		input.Episodes = append(input.Episodes, sourceMap(value))
+	input.Episodes, err = transferNamingEpisodeRows(ctx, episodes)
+	if err != nil {
+		return "", err
 	}
 	variables, err := noticetemplate.BuildContext(input)
 	if err != nil {

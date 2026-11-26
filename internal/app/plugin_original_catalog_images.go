@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"sort"
 
@@ -99,16 +100,16 @@ func (a *App) originalObtainCatalogImagesMethod(ctx context.Context, method stri
 	var list []json.RawMessage
 	if originalModuleResultEmpty(result) || json.Unmarshal(result, &list) == nil && !bytes.Equal(bytes.TrimSpace(result), []byte(`null`)) {
 		updated, nativeErr := native(state.model)
-		if len(updated) > 0 && !bytes.Equal(updated, state.model) {
-			state.model, err = originalLiveMediaImagesJSON(updated)
-			if err != nil {
-				return nil, err
-			}
+		// The native TMDB image handler mutates only the three image paths
+		// in an already-normalized model. Its type and computed descriptors
+		// are unchanged. Plugin snapshots are normalized in returned().
+		if len(updated) > 0 {
+			state.model = updated
 		}
 		if inputs != nil && nativeErr == nil && len(raw)+len(state.model) <= 512<<10 {
 			inputs.imageInput, inputs.imageOutput, inputs.imageDomain = raw, state.model, domain
 		}
-		if nativeErr != nil {
+		if nativeErr != nil && !errors.Is(nativeErr, errTMDBImagesUnavailable) {
 			a.reportOriginalPluginExecutionError(ctx, "system", "TheMovieDb发生了错误", map[string]any{"type": "module", "module_id": "TheMovieDbModule", "module_name": "TheMovieDb", "module_method": method}, nativeErr)
 		}
 	}
@@ -125,7 +126,10 @@ func originalApplyTMDBImagesDomain(model, images json.RawMessage, domain string)
 	if err != nil || sourceMap(value) == nil {
 		return model, originalMediaImagesInvalid()
 	}
-	fields := sourceMap(value)
+	return applyTMDBImageFields(model, sourceMap(value), images, domain)
+}
+
+func applyTMDBImageFields(model json.RawMessage, fields map[string]any, images json.RawMessage, domain string) (json.RawMessage, error) {
 	imageValue, err := decodeSourceJSON(images)
 	if err != nil {
 		return model, err
@@ -217,6 +221,10 @@ func originalCatalogImageNumber(value any) (float64, error) {
 	return 0, fmt.Errorf("invalid source image score")
 }
 
+// TmdbApi suppresses a failed image fetch and keeps the original model. Tell
+// the outer chain that this fallback is ineligible for request-local reuse.
+var errTMDBImagesUnavailable = errors.New("TMDB image response unavailable")
+
 func originalCatalogTMDBImages(raw json.RawMessage, recognizeSource string, provider func(kind string, id any, originalLanguage any) (json.RawMessage, error), domains ...string) (json.RawMessage, error) {
 	value, err := decodeSourceJSON(raw)
 	if err != nil || sourceMap(value) == nil {
@@ -237,13 +245,13 @@ func originalCatalogTMDBImages(raw json.RawMessage, recognizeSource string, prov
 	images, err := provider(kind, fields["tmdb_id"], fields["original_language"])
 	// The fixed TmdbApi image helper catches provider exceptions and returns{}.
 	if err != nil || len(images) == 0 {
-		return raw, nil
+		return raw, errTMDBImagesUnavailable
 	}
 	domain := ""
 	if len(domains) > 0 {
 		domain = domains[0]
 	}
-	return originalApplyTMDBImagesDomain(raw, images, domain)
+	return applyTMDBImageFields(raw, fields, images, domain)
 }
 
 func originalPublicCatalogMedia(raw json.RawMessage) (json.RawMessage, error) {

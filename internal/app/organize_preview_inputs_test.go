@@ -76,3 +76,26 @@ func TestManualPreviewPluginMediaUpdatesNamingAndIdentity(t *testing.T) {
 		}
 	}
 }
+
+func TestManualPreviewDoesNotReuseNativeEpisodeRowsForModuleOverride(t *testing.T) {
+	first := catalog.Episode{EpisodeNumber: 1, Name: "Pilot", GuestStars: []catalog.CastMember{{Name: "Guest"}}}
+	forRange := []catalog.Episode{first}
+	cached := &manualPreviewSeason{season: catalog.Season{Episodes: forRange}}
+	ctx := context.WithValue(t.Context(), manualPreviewSeasonKey{}, cached)
+	for i, episodes := range [][]catalog.Episode{forRange, forRange, {{EpisodeNumber: 9, Name: "Plugin title"}}} {
+		module, err := transferModuleEpisodeRows(ctx, episodes)
+		if err != nil {
+			t.Fatal(err)
+		}
+		names, err := transferNamingEpisodeRows(ctx, episodes)
+		if err != nil || len(names) != 1 || names[0]["name"] != episodes[0].Name {
+			t.Fatalf("selection %d used a different naming row: %v, %v", i, names, err)
+		}
+		if !strings.Contains(string(module), episodes[0].Name) {
+			t.Fatalf("selection %d used a different module episode: %s", i, module)
+		}
+		if i < 2 && (!strings.Contains(string(module), "Guest") || len(names[0]["guest_stars"].([]any)) != 1) {
+			t.Fatalf("lost raw guest metadata: %s, %v", module, names)
+		}
+	}
+}

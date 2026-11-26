@@ -66,13 +66,6 @@ func (a *App) queueSelectedManualFiles(ctx context.Context, in manualOrganizeReq
 			selections = append(selections, selection{path, nil})
 		}
 	}
-	var limit []int
-	if format != nil && in.EpisodeDetail != "" {
-		limit, err = organizeEpisodeRange(in.EpisodeDetail)
-		if err != nil {
-			return out, err
-		}
-	}
 	batch := id("scrape_batch_")
 	listings := make(map[string][]map[string]any)
 	var admissions []organizeAdmission
@@ -101,6 +94,17 @@ func (a *App) queueSelectedManualFiles(ctx context.Context, in manualOrganizeReq
 		scoped := in
 		if selected.history != nil && scoped.FromHistory {
 			scoped.inheritHistoryIdentity(*selected.history)
+		}
+		var limit []int
+		if format != nil && scoped.EpisodeDetail != "" {
+			limit, e = organizeEpisodeRange(scoped.EpisodeDetail)
+			if e != nil {
+				if selected.history == nil {
+					return out, e
+				}
+				fail(selected.path, e)
+				continue
+			}
 		}
 		scan, e := a.manualOrganizeScan(ctx, path, scoped)
 		if e != nil {

@@ -12,6 +12,7 @@ import (
 	"errors"
 	"io"
 	"strings"
+	"sync"
 
 	jinjaexec "light-media/internal/jinja/exec"
 )
@@ -65,15 +66,24 @@ func decode(raw []byte) (any, error) {
 	}
 	return v, nil
 }
+
+type extensionDefaults struct {
+	SourceSHA string                     `json:"source_sha256"`
+	Values    map[string]json.RawMessage `json:"values"`
+}
+
+var embeddedDefaults = sync.OnceValues(func() (extensionDefaults, error) {
+	var d extensionDefaults
+	err := json.Unmarshal(defaultData, &d)
+	return d, err
+})
+
 func Resolve(in Inputs) (Snapshot, error) {
 	if in.Namespace == "" || in.SourceID == "" || !in.EnvironmentKnown || !in.ConfigurationKnown {
 		return Snapshot{}, ErrDependency
 	}
-	var defaults struct {
-		SourceSHA string                     `json:"source_sha256"`
-		Values    map[string]json.RawMessage `json:"values"`
-	}
-	if e := json.Unmarshal(defaultData, &defaults); e != nil {
+	defaults, e := embeddedDefaults()
+	if e != nil {
 		return Snapshot{}, e
 	}
 	out := Snapshot{Version: 1, Inputs: Inputs{in.Namespace, in.SourceID, true, true, map[string]string{}, map[string]json.RawMessage{}}, DefaultSourceSHA: defaults.SourceSHA, Fields: map[string]Field{}}
@@ -107,6 +117,14 @@ func Resolve(in Inputs) (Snapshot, error) {
 // ResolveSettingsJSONList applies the fixed Settings list conversion with the
 // caller's actual field factory default, including explicit empty lists.
 func ResolveSettingsJSONList(raw, defaultRaw json.RawMessage) (json.RawMessage, error) {
+	list, err := settingsList(raw, defaultRaw)
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(list)
+}
+
+func settingsList(raw, defaultRaw json.RawMessage) ([]any, error) {
 	value, e := decode(raw)
 	if e != nil {
 		return nil, ErrSourceValidation
@@ -135,22 +153,17 @@ func ResolveSettingsJSONList(raw, defaultRaw json.RawMessage) (json.RawMessage, 
 	if !ok {
 		return nil, ErrSourceValidation
 	}
-	return json.Marshal(list)
+	return list, nil
 }
 
 // ResolveSettingsList is the existing string-only filesystem classifier view.
 // Source settings readers use ResolveSettingsJSONList to retain arbitrary JSON
 // list members; no classifier behavior or membership normalization changes.
 func ResolveSettingsList(raw, defaultRaw json.RawMessage) ([]string, error) {
-	normalized, err := ResolveSettingsJSONList(raw, defaultRaw)
+	list, err := settingsList(raw, defaultRaw)
 	if err != nil {
 		return nil, err
 	}
-	value, err := decode(normalized)
-	if err != nil {
-		return nil, ErrSourceValidation
-	}
-	list := value.([]any)
 	values := make([]string, 0, len(list))
 	for _, v := range list {
 		s, ok := v.(string)
@@ -182,11 +195,21 @@ func (s Snapshot) Contains(key, lowercaseExtension string) bool {
 	return false
 }
 func (s Snapshot) Valid() bool {
+	_, ok := s.ValidatedCopy()
+	return ok
+}
+
+// ValidatedCopy reconstructs a private snapshot from the recorded inputs and
+// checks it against the supplied evidence, including field order and values.
+func (s Snapshot) ValidatedCopy() (Snapshot, bool) {
 	actual, e := Resolve(s.Inputs)
 	if e != nil {
-		return false
+		return Snapshot{}, false
 	}
 	a, _ := json.Marshal(actual)
 	b, _ := json.Marshal(s)
-	return bytes.Equal(a, b)
+	if !bytes.Equal(a, b) {
+		return Snapshot{}, false
+	}
+	return actual, true
 }

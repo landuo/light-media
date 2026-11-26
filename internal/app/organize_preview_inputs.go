@@ -101,6 +101,68 @@ func (a *App) nativeTransferTMDBInformation(ctx context.Context, identity catalo
 	return info, err
 }
 
+// The native season cache owns its episode slice until another season is
+// selected. Plugins and episode groups provide independent slices and must
+// always use their own result, even for the same series and season number.
+func nativePreviewEpisodeSet(ctx context.Context, episodes []catalog.Episode) *manualPreviewSeason {
+	cache, _ := ctx.Value(manualPreviewSeasonKey{}).(*manualPreviewSeason)
+	if cache == nil || len(episodes) == 0 || len(cache.season.Episodes) != len(episodes) || &episodes[0] != &cache.season.Episodes[0] {
+		return nil
+	}
+	return cache
+}
+
+func transferModuleEpisodeRows(ctx context.Context, episodes []catalog.Episode) (json.RawMessage, error) {
+	cached := nativePreviewEpisodeSet(ctx, episodes)
+	if cached != nil && cached.moduleEpisodes != nil {
+		return cached.moduleEpisodes, nil
+	}
+	rows := make([]map[string]any, 0, len(episodes))
+	for _, episode := range episodes {
+		raw := episode.OriginalEpisode
+		if len(raw) == 0 {
+			raw, _ = json.Marshal(episode)
+		}
+		row, err := originalCatalogEpisodeProjection(raw)
+		if err != nil {
+			return nil, err
+		}
+		rows = append(rows, row)
+	}
+	encoded, err := json.Marshal(rows)
+	if cached != nil && err == nil && len(encoded) <= 128<<10 {
+		cached.moduleEpisodes = encoded
+	}
+	return encoded, err
+}
+
+// TemplateHelper's raw episode objects include source fields and guests; keep
+// the complete objects available to a rename hook on any episode.
+func transferNamingEpisodeRows(ctx context.Context, episodes []catalog.Episode) ([]map[string]any, error) {
+	cached := nativePreviewEpisodeSet(ctx, episodes)
+	if cached != nil && cached.namingEpisodes != nil {
+		return cached.namingEpisodes, nil
+	}
+	var rows []map[string]any
+	total := 0
+	for _, episode := range episodes {
+		raw, err := json.Marshal(episode)
+		if err != nil {
+			return nil, err
+		}
+		value, err := decodeSourceJSON(raw)
+		if err != nil {
+			return nil, err
+		}
+		total += len(raw)
+		rows = append(rows, sourceMap(value))
+	}
+	if cached != nil && total <= 128<<10 {
+		cached.namingEpisodes = rows
+	}
+	return rows, nil
+}
+
 type manualPreviewNFO struct {
 	media     *importInferredMedia
 	numbering *media.Numbering

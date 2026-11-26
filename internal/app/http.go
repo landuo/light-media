@@ -1389,9 +1389,11 @@ func (a *App) season(ctx context.Context, tmdb int64, n int) (catalog.Season, er
 
 type manualPreviewSeasonKey struct{}
 type manualPreviewSeason struct {
-	series int64
-	number int
-	season catalog.Season
+	series         int64
+	number         int
+	season         catalog.Season
+	moduleEpisodes json.RawMessage
+	namingEpisodes []map[string]any
 }
 
 func (a *App) nativeSeason(ctx context.Context, tmdb int64, n int) (catalog.Season, error) {

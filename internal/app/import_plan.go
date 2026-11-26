@@ -830,19 +830,10 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					meta.OriginalTransfer = map[string]originalTransferFileContext{}
 				}
 				if season, exists := seasons[file.presentationFile().Season]; !providerImport && exists {
-					rows := make([]map[string]any, 0, len(season.Episodes))
-					for _, episode := range season.Episodes {
-						raw := episode.OriginalEpisode
-						if len(raw) == 0 {
-							raw, _ = json.Marshal(episode)
-						}
-						row, e := originalCatalogEpisodeProjection(raw)
-						if e != nil {
-							return plan, e
-						}
-						rows = append(rows, row)
+					original.Episodes, e = transferModuleEpisodeRows(ctx, season.Episodes)
+					if e != nil {
+						return plan, e
 					}
-					original.Episodes, _ = json.Marshal(rows)
 				}
 				meta.OriginalTransfer[file.ID] = original
 				if renaming && !modulePreview {

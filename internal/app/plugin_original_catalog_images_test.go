@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -150,5 +151,45 @@ func TestOriginalCatalogDetailHTTPActuallyCallsRecognizeThenImages(t *testing.T)
 	response = callTest(t, a.Handler(), "GET", "/api/catalog/detail?kind=movie&id=120", "", cookie, "")
 	if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &body) != nil || body.Data.ID != 121 {
 		t.Fatal("read-only catalog incorrectly rejected a resolved plugin identity", response.Code)
+	}
+}
+
+func TestTransferPreviewDoesNotReuseFailedTMDBImages(t *testing.T) {
+	a, _, _ := importTestApp(t)
+	ctx := context.WithValue(t.Context(), manualPreviewInputsKey{}, &manualPreviewInputs{})
+	raw := json.RawMessage(`{"type":"电视剧","source":"themoviedb","tmdb_id":106379,"title":"Fallout","tmdb_info":{"kept":true}}`)
+	calls := 0
+	preview := func() (map[string]json.RawMessage, error) {
+		result, err := a.originalObtainCatalogImagesMethod(ctx, "obtain_images", raw, func(model json.RawMessage) (json.RawMessage, error) {
+			return originalCatalogTMDBImages(model, "themoviedb", func(string, any, any) (json.RawMessage, error) {
+				calls++
+				if calls == 1 {
+					return nil, context.DeadlineExceeded
+				}
+				return json.RawMessage(`{"posters":[{"file_path":"/fallout.jpg"}]}`), nil
+			})
+		})
+		if err != nil {
+			return nil, err
+		}
+		var fields map[string]json.RawMessage
+		err = json.Unmarshal(result, &fields)
+		return fields, err
+	}
+	for n := 1; n <= 3; n++ {
+		fields, err := preview()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if n == 1 {
+			if calls != 1 || originalModuleResultTruthy(fields["poster_path"]) {
+				t.Fatal(calls, string(fields["poster_path"]))
+			}
+		} else if calls != 2 || !strings.Contains(string(fields["poster_path"]), "fallout.jpg") {
+			t.Fatalf("failed image response suppressed a retry on episode %d: %d %s", n, calls, fields["poster_path"])
+		}
+		if string(fields["tmdb_info"]) != `{"kept":true}` || string(fields["title_year"]) != `"Fallout"` {
+			t.Fatalf("wrong live model: %s %s", fields["tmdb_info"], fields["title_year"])
+		}
 	}
 }

@@ -23,13 +23,9 @@ type File struct {
 type Classifier struct{ snapshot fileextensions.Snapshot }
 
 func New(snapshot fileextensions.Snapshot) (Classifier, error) {
-	if !snapshot.Valid() {
+	cloned, ok := snapshot.ValidatedCopy()
+	if !ok {
 		return Classifier{}, ErrDependency
-	}
-	// Resolve clones all observed lists and bytes; callers cannot mutate decisions.
-	cloned, e := fileextensions.Resolve(snapshot.Inputs)
-	if e != nil {
-		return Classifier{}, e
 	}
 	return Classifier{cloned}, nil
 }

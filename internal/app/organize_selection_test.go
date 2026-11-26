@@ -218,3 +218,47 @@ func TestInteractiveFileBatchAtomicRetryAndRestart(t *testing.T) {
 		t.Fatal(rows, err)
 	}
 }
+
+func TestDirectHistoryAdmissionUsesTheInheritedEpisodeRange(t *testing.T) {
+	a, source, target := importTestApp(t)
+	ctx := t.Context()
+	media := importFixture(t, a, "tv")
+	importCache(t, a, "season:123:1", catalog.Season{SeriesID: 123, SeasonNumber: 1, Episodes: []catalog.Episode{{ID: 101, SeasonNumber: 1, EpisodeNumber: 1}, {ID: 102, SeasonNumber: 1, EpisodeNumber: 2}}})
+	history, _ := historyParityPlan(t, a, source, target, "identity", "Old identity", "failed", "error", "Show.E01.mkv")
+	history.Media = media
+	history.Files[0].Season, history.Files[0].Episodes = 1, []int{1, 2}
+	if err := a.Store.Put(ctx, "import_plan", history.ID, history); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.Store.DB.Exec(`DELETE FROM transferhistory WHERE src=?`, history.Files[0].Source); err != nil {
+		t.Fatal(err)
+	}
+	mpTx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = writeTransferHistoryMPTx(ctx, mpTx, transferHistoryMPInput{Plan: history, File: history.Files[0], Job: Job{ID: "identity-history-job"}, Success: false}); err != nil {
+		mpTx.Rollback()
+		t.Fatal(err)
+	}
+	if err = mpTx.Commit(); err != nil {
+		t.Fatal(err)
+	}
+	request := manualOrganizeRequest{Interactive: true, HistoryIDs: []string{history.Files[0].ID}, FromHistory: true, EpisodeFormat: "Show.E{ep}.mkv", EpisodeDetail: "7", Mode: "hardlink", TargetPath: target, Scraping: importFlag(false)}
+	request.Preview = true
+	preview, e := a.manualOrganize(ctx, request)
+	if e != nil || len(preview.Items) != 1 || preview.Items[0].Status != "ready" {
+		t.Fatal("preview", preview, e)
+	}
+	request.Preview = false
+	request.FromHistory = false
+	skipped, e := a.queueSelectedManualFiles(ctx, request)
+	if e != nil || len(skipped.Items) != 1 || skipped.Items[0].Status != "skipped" {
+		t.Fatal("explicit range", skipped, e)
+	}
+	request.FromHistory = true
+	out, e := a.queueSelectedManualFiles(ctx, request)
+	if e != nil || out.Submitted != 1 || len(out.Items) != 1 || out.Items[0].JobID == "" {
+		t.Fatal("queue", out, e)
+	}
+}
