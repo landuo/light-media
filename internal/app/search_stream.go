@@ -39,11 +39,9 @@ func (a *App) streamSearch(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	controller := http.NewResponseController(w)
 	send := func(event string, data any) {
-		until := time.Now().Add(15 * time.Second)
-		if deadline, ok := ctx.Deadline(); ok && deadline.Before(until) {
-			until = deadline
-		}
-		_ = controller.SetWriteDeadline(until)
+		// Bound a stalled socket independently of the collection deadline.
+		// A frame already on the wire must be allowed to finish.
+		_ = controller.SetWriteDeadline(time.Now().Add(interactiveSearchBudget))
 		defer controller.SetWriteDeadline(time.Time{})
 		if _, err := io.WriteString(w, "event: "+event+"\ndata: "); err != nil {
 			cancel()
@@ -61,10 +59,23 @@ func (a *App) streamSearch(w http.ResponseWriter, r *http.Request) {
 			cancel()
 		}
 	}
-	progress := func(out SearchOutput) { send("progress", out) }
+	keyword := strings.HasSuffix(r.URL.Path, "/search/resources")
+	compact := keyword && r.Header.Get("X-Light-Media-Search-Stream") == "incremental"
+	var encoder keywordStreamEncoder
+	sendResult := func(event string, out SearchOutput) {
+		if ctx.Err() == context.Canceled {
+			return // a disconnect or previous write failed
+		}
+		if compact {
+			send(event, encoder.frame(out))
+		} else {
+			send(event, out)
+		}
+	}
+	progress := func(out SearchOutput) { sendResult("progress", out) }
 	var result SearchOutput
 	var e error
-	if strings.HasSuffix(r.URL.Path, "/search/resources") {
+	if keyword {
 		deadline, ok := ctx.Deadline()
 		if !ok {
 			deadline = time.Now().Add(interactiveSearchBudget)
@@ -93,7 +104,7 @@ func (a *App) streamSearch(w http.ResponseWriter, r *http.Request) {
 		send("error", map[string]any{"code": code, "message": message, "request_id": w.Header().Get("X-Request-ID")})
 		return
 	}
-	send("complete", result)
+	sendResult("complete", result)
 }
 
 // Leave time inside the caller's 15 seconds to encode and flush the final
@@ -139,6 +150,7 @@ func streamKeywordResults(ctx context.Context, deadline time.Time, progress func
 	var resume <-chan time.Time
 	var notifications <-chan struct{} = ready
 	var displayed *SearchOutput
+collect:
 	for {
 		select {
 		case result := <-finished:
@@ -147,7 +159,10 @@ func streamKeywordResults(ctx context.Context, deadline time.Time, progress func
 		}
 		select {
 		case <-ctx.Done():
-			return SearchOutput{}, ctx.Err()
+			if !errors.Is(ctx.Err(), context.DeadlineExceeded) {
+				return SearchOutput{}, ctx.Err()
+			}
+			break collect
 		case result := <-finished:
 			return result.output, result.err
 		case <-resume:
@@ -162,30 +177,34 @@ func streamKeywordResults(ctx context.Context, deadline time.Time, progress func
 				}
 			}
 		case <-cutoff.C:
-			select {
-			case result := <-finished:
-				return result.output, result.err
-			default:
-			}
-			frame := latest.Load()
-			if frame == nil {
-				return SearchOutput{}, bad("SEARCH_TIMEOUT", "搜索准备超时，请重试")
-			}
-			if frame.keywordFilterPending {
-				return SearchOutput{}, bad("SEARCH_FILTER_TIMEOUT", "已收到站点结果，搜索筛选未在时限内完成")
-			}
-			out := *frame
-			out.Sites = append([]SiteStatus(nil), frame.Sites...)
-			for i, site := range out.Sites {
-				if site.Status != "searching" && site.Status != "queued" {
-					continue
-				}
-				out.Sites[i].Status, out.Sites[i].Message = "timeout", "搜索超时，已完成的结果保留"
-				if site.Count > 0 {
-					out.Sites[i].Status = "partial"
-				}
-			}
-			return out, nil
+			break collect
 		}
 	}
+	select {
+	case result := <-finished:
+		return result.output, result.err
+	default:
+		return keywordCutoffResult(latest.Load())
+	}
+}
+
+func keywordCutoffResult(frame *SearchOutput) (SearchOutput, error) {
+	if frame == nil {
+		return SearchOutput{}, bad("SEARCH_TIMEOUT", "搜索准备超时，请重试")
+	}
+	if frame.keywordFilterPending {
+		return SearchOutput{}, bad("SEARCH_FILTER_TIMEOUT", "已收到站点结果，搜索筛选未在时限内完成")
+	}
+	out := *frame
+	out.Sites = append([]SiteStatus(nil), frame.Sites...)
+	for i, site := range out.Sites {
+		if site.Status != "searching" && site.Status != "queued" {
+			continue
+		}
+		out.Sites[i].Status, out.Sites[i].Message = "timeout", "搜索超时，已完成的结果保留"
+		if site.Count > 0 {
+			out.Sites[i].Status = "partial"
+		}
+	}
+	return out, nil
 }

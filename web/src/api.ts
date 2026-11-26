@@ -162,6 +162,44 @@ export function organizeStream(body: Any, progress: (frame: any) => void, signal
   return postProgressStream('/files/organize', body, progress, signal);
 }
 
+// Candidate indexes belong to one POST response. Progress snapshots share
+// the same candidate objects, including when sites finish and the order changes.
+function keywordSearchDecoder(requestId: string) {
+  const registry: Any[] = [];
+  let ordered: Any[] = [];
+  let lastSequence = 0;
+  let workflow: string | undefined;
+  return (frame: Any) => {
+    if (Array.isArray(frame?.candidates)) return frame;
+    const invalid = () => new APIError('stream_interrupted', '资源搜索进度不完整，已收到的结果可供查看', requestId);
+    if (!frame || !Array.isArray(frame.sites)) throw invalid();
+    const { sequence, candidates_added: added, candidate_order: order, ...snapshot } = frame;
+    if (workflow !== undefined && workflow !== snapshot.workflow_id) throw invalid();
+    workflow = snapshot.workflow_id;
+    if (sequence !== undefined) {
+      if (!Number.isSafeInteger(sequence) || sequence < 1) throw invalid();
+      if (sequence <= lastSequence) return;
+      if (sequence !== lastSequence + 1) throw invalid();
+      lastSequence = sequence;
+    }
+    if (added != null) {
+      if (!Array.isArray(added)) throw invalid();
+      for (const candidate of added) {
+        if (!candidate?.resource) throw invalid();
+        registry.push(candidate);
+      }
+    }
+    if (order != null) {
+      if (!Array.isArray(order)) throw invalid();
+      ordered = order.map((index) => {
+        if (!Number.isSafeInteger(index) || index < 0 || index >= registry.length) throw invalid();
+        return registry[index]!;
+      });
+    }
+    return { ...snapshot, candidates: ordered };
+  };
+}
+
 async function postProgressStream(
   path: string,
   body: Any,
@@ -169,13 +207,18 @@ async function postProgressStream(
   signal: AbortSignal,
 ): Promise<any> {
   const organize = path === '/files/organize';
+  const keyword = path === '/search/resources';
   const operation = organize ? '整理' : '资源搜索';
   ui.busy++;
   try {
     const response = await fetch(apiURL(path), {
       method: 'POST',
       credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'text/event-stream',
+        ...(keyword ? { 'X-Light-Media-Search-Stream': 'incremental' } : {}),
+      },
       body: JSON.stringify(body),
       signal,
     });
@@ -202,6 +245,7 @@ async function postProgressStream(
     }
     if (!response.body)
       throw new APIError('stream_unavailable', '服务未返回' + operation + '数据流', requestId);
+    const decodeKeyword = keyword ? keywordSearchDecoder(requestId) : undefined;
     const reader = response.body.getReader(),
       decoder = new TextDecoder();
     let buffer = '',
@@ -228,12 +272,12 @@ async function postProgressStream(
           value.request_id || requestId,
         );
       }
-      if (event === 'progress') {
-        progress(value.data || value);
-      }
-      if (event === 'complete') {
-        complete = value.data || value;
-        if (!organize) progress(complete);
+      if (event === 'progress' || event === 'complete') {
+        const payload = value.data || value;
+        const snapshot = decodeKeyword ? decodeKeyword(payload) : payload;
+        if (snapshot === undefined) return;
+        if (event === 'complete') complete = snapshot;
+        if (event === 'progress' || !organize) progress(snapshot);
       }
     }
     try {
@@ -246,8 +290,8 @@ async function postProgressStream(
           const frame = buffer.slice(0, end);
           buffer = buffer.slice(end + 2);
           consume(frame);
+          if (complete !== undefined) return complete;
         }
-        if (complete !== undefined) return complete;
         if (buffer.length > 8 * 1024 * 1024)
           throw new APIError('stream_limit', operation + '响应超过限制', requestId);
         if (chunk.done) {

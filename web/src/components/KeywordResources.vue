@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VTextField } from 'vuetify/components/VTextField';
-import { ref, computed, onActivated, onMounted, onUnmounted } from 'vue';
+import { ref, shallowRef, computed, onActivated, onMounted, onUnmounted } from 'vue';
 import {
   api,
   action,
@@ -44,7 +44,7 @@ const props = defineProps<{ route: string }>(),
   params = new URLSearchParams(props.route.split('?')[1]);
 const query = ref(params.get('query') || ''),
   page = ref(1),
-  output = ref<any>(null),
+  output = shallowRef<any>(null),
   error = ref(''),
   loading = ref(false),
   initialized = ref(false),
@@ -155,10 +155,9 @@ async function search() {
     }),
   );
   try {
-    const r = await keywordResourceSearch(request.value, c.signal, (value) => {
+    await keywordResourceSearch(request.value, c.signal, (value) => {
       if (controller === c) output.value = value;
     });
-    if (controller === c) output.value = r;
   } catch (e) {
     if (controller === c && !disposed) {
       output.value = interruptedSearch(

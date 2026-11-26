@@ -128,6 +128,7 @@ func (a *App) searchKeywordSites(ctx context.Context, in SearchRequest, out Sear
 				pluginPages[update.index] = nil
 			}
 		} else {
+			assignKeywordSlots(update.candidates, len(out.Candidates))
 			out.Candidates = mergeKeywordCandidates(out.Candidates, update.candidates)
 		}
 		return nil
@@ -174,6 +175,7 @@ func (a *App) searchKeywordSites(ctx context.Context, in SearchRequest, out Sear
 		}
 		out.Candidates = result.Candidates
 		sortSearchCandidates(out.Candidates, in.Policy)
+		assignKeywordSlots(out.Candidates, 0)
 	}
 	out.keywordFilterPending = false
 	return out, nil

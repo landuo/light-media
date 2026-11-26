@@ -17,6 +17,17 @@ defineProps<{
   hasCandidates: boolean;
   loading: boolean;
 }>();
+// Keep existing card props stable when another site's results change the
+// surrounding groups or their order. Changed candidates have new identities.
+const cardGroups = new WeakMap<Candidate, Candidate[]>();
+function cardCandidates(group: Candidate[]) {
+  const first = group[0]!;
+  const previous = cardGroups.get(first);
+  if (previous?.length === group.length && group.every((item, i) => previous[i] === item))
+    return previous;
+  cardGroups.set(first, group);
+  return group;
+}
 const view = defineModel<string>('view', { required: true });
 defineEmits<{
   download: [candidate: Candidate];
@@ -30,7 +41,7 @@ defineEmits<{
     <ResourceCard
       v-for="group in groups"
       :key="candidateKey(group[0]!)"
-      :candidates="group"
+      :candidates="cardCandidates(group)"
       :names="names"
       :downloads="downloads"
       :selected="selected"
@@ -45,7 +56,7 @@ defineEmits<{
       v-for="candidate in results"
       :key="candidateKey(candidate)"
       layout="list"
-      :candidates="[candidate]"
+      :candidates="cardCandidates([candidate])"
       :names="names"
       :downloads="downloads"
       :selected="selected"
