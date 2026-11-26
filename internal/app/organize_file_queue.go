@@ -26,6 +26,7 @@ type organizeFileWork struct {
 }
 
 type organizeFilePayload struct {
+	Enumerated          bool                    `json:"enumerated,omitempty"`
 	Manual              *manualOrganizeRequest  `json:"manual_request,omitempty"`
 	Directory           *directoryImportGuard   `json:"directory,omitempty"`
 	HistoryID           string                  `json:"history_id,omitempty"`
@@ -66,23 +67,9 @@ func (a *App) enqueueOrganizeFiles(ctx context.Context, parent Job, files []impo
 			out.Failed++
 			continue
 		}
-		candidate := organizeFilePayload{
-			ID: tokenHash(parent.ID + "\x00" + file.Path), File: file, Snapshot: stamp,
-			MetadataPath: file.originalMetadataPath, Item: file.originalItem,
-			DirectoryPlanned: file.originalDirectoryPlanned, MaterialKind: file.materialKind,
-			Title: file.Parsed.Title, BatchID: batchID,
-		}
-		if file.queueHistory != nil {
-			candidate.HistoryID, candidate.HistoryExecutionKey, candidate.HistorySource = file.queueHistory.ID, file.queueHistory.ExecutionKey, file.queueHistory.ResourceSource
-		}
-		if file.originalResolvedMeta != nil {
-			candidate.Meta, err = file.originalResolvedMeta.EncodeState()
-			if err != nil {
-				return out, err
-			}
-			if name := file.originalResolvedMeta.Name(); name != "" {
-				candidate.Title = name
-			}
+		candidate, err := frozenOrganizeFile(file, stamp, tokenHash(parent.ID+"\x00"+file.Path), batchID)
+		if err != nil {
+			return out, err
 		}
 		for _, path := range []string{filepath.Dir(file.Path), filepath.Dir(file.originalMetadataPath)} {
 			if entries, ok := file.originalDirectoryListings[path]; ok {
@@ -138,6 +125,29 @@ func (a *App) enqueueOrganizeFiles(ctx context.Context, parent Job, files []impo
 	return out, nil
 }
 
+func frozenOrganizeFile(file importScanFile, stamp importSnapshot, key, batchID string) (organizeFilePayload, error) {
+	candidate := organizeFilePayload{
+		ID: key, File: file, Snapshot: stamp,
+		MetadataPath: file.originalMetadataPath, Item: file.originalItem,
+		DirectoryPlanned: file.originalDirectoryPlanned, MaterialKind: file.materialKind,
+		Title: file.Parsed.Title, BatchID: batchID,
+	}
+	if file.queueHistory != nil {
+		candidate.HistoryID, candidate.HistoryExecutionKey, candidate.HistorySource = file.queueHistory.ID, file.queueHistory.ExecutionKey, file.queueHistory.ResourceSource
+	}
+	if file.originalResolvedMeta != nil {
+		var err error
+		candidate.Meta, err = file.originalResolvedMeta.EncodeState()
+		if err != nil {
+			return candidate, err
+		}
+		if name := file.originalResolvedMeta.Name(); name != "" {
+			candidate.Title = name
+		}
+	}
+	return candidate, nil
+}
+
 func organizeListingKey(batchID, path string) string {
 	return tokenHash(batchID + "\x00" + path)
 }
@@ -183,7 +193,14 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 	}
 	var parent organizePreparationPayload
 	if item.Manual != nil {
-		if job.ParentJobID != "" || item.Directory != nil || len(item.Manual.Paths) != 1 || item.Manual.Paths[0] != item.File.Path || len(item.Manual.HistoryIDs) != 0 {
+		validSelection := len(item.Manual.Paths) == 1 && item.Manual.Paths[0] == item.File.Path && len(item.Manual.HistoryIDs) == 0
+		if item.Enumerated && item.HistoryID != "" {
+			validSelection = len(item.Manual.Paths) == 0 && len(item.Manual.HistoryIDs) == 1 && item.Manual.HistoryIDs[0] == item.HistoryID
+		} else if item.Enumerated && !validSelection && len(item.Manual.Paths) == 1 && len(item.Manual.HistoryIDs) == 0 {
+			actual, err := a.resolveSoftlinkReorganizeSource(ctx, item.Manual.Paths[0])
+			validSelection = err == nil && actual == item.File.Path
+		}
+		if job.ParentJobID != "" || item.Directory != nil || !validSelection {
 			return bad("INVALID_JOB", "手动整理任务与提交的源文件不匹配")
 		}
 		parent.Request = *item.Manual
@@ -206,16 +223,20 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 			return bad("INVALID_JOB", "目录整理文件识别数据无效")
 		}
 	}
+	listingID := job.ParentJobID
+	if item.Enumerated {
+		listingID = item.BatchID
+	}
 	file.originalDirectoryListings = map[string][]map[string]any{}
 	for _, path := range []string{filepath.Dir(file.Path), filepath.Dir(file.originalMetadataPath)} {
-		if job.ParentJobID == "" {
+		if listingID == "" {
 			break // Standalone files have no stored directory listing.
 		}
 		if _, seen := file.originalDirectoryListings[path]; seen {
 			continue
 		}
 		var listing json.RawMessage
-		err := a.Store.Get(ctx, "organize_file_listing", organizeListingKey(job.ParentJobID, path), &listing)
+		err := a.Store.Get(ctx, "organize_file_listing", organizeListingKey(listingID, path), &listing)
 		if errors.Is(err, sql.ErrNoRows) {
 			continue
 		}
@@ -281,7 +302,7 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 	if item.Directory != nil {
 		return a.runDirectoryOrganizeFile(ctx, item, file, &known, fail)
 	}
-	if item.HistoryID != "" || item.Manual != nil {
+	if !item.Enumerated && (item.HistoryID != "" || item.Manual != nil) {
 		if item.HistoryID != "" {
 			parent.Request.HistoryIDs = []string{item.HistoryID}
 			parent.Request.Paths = nil

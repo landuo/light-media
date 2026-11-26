@@ -353,6 +353,11 @@ func (a *App) nextQueueDelay(ctx context.Context) time.Duration {
 }
 
 func (a *App) runClaimedJob(ctx context.Context, j Job) {
+	if j.Kind == "import" || j.Kind == "organize_file" {
+		defer a.organizeLive.copies.Delete(j.ID)
+		a.organizeLive.changed(j.ID)
+		defer a.organizeLive.changed(j.ID)
+	}
 	if j.importRun != nil {
 		defer j.importRun.release()
 	}
@@ -498,6 +503,9 @@ func organizeJobState(j Job) map[string]string {
 
 func (a *App) jobAPI(w http.ResponseWriter, r *http.Request, p string) (any, error) {
 	parts := strings.Split(p, "/")
+	if len(parts) == 2 && parts[1] == "cancel" && r.Method == http.MethodPost {
+		defer a.organizeLive.changed(parts[0])
+	}
 	if len(parts) > 2 || parts[0] == "" {
 		return nil, bad("INVALID_JOB", "任务ID无效")
 	}

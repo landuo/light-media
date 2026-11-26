@@ -3,8 +3,6 @@ package app
 import (
 	"context"
 
-	"encoding/json"
-
 	"path/filepath"
 
 	"light-media/internal/transferextensions"
@@ -65,14 +63,10 @@ func (a *App) queueInteractiveOrganizeFile(ctx context.Context, in manualOrganiz
 	// Background and foreground only differ in how the caller waits. A retry
 	// with changed options must never bind to the earlier operation.
 	in.Background = false
-	raw, err := json.Marshal(struct {
-		Request manualOrganizeRequest
-		Stamp   importSnapshot
-	}{in, stamp})
+	key, err := interactiveOrganizeFileKey(in, stamp)
 	if err != nil {
 		return out, true, err
 	}
-	key := tokenHash(string(raw))
 	parsed := a.parseMediaNameContext(ctx, filepath.Base(path))
 	phase("durable_acceptance")
 	payload := organizeFilePayload{ID: key, File: importScanFile{Path: path, Size: stamp.Size, Parsed: parsed}, Snapshot: stamp, Title: parsed.Title, BatchID: id("scrape_batch_"), Manual: &in}

@@ -389,8 +389,10 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 		}
 		progress := &atomic.Int64{}
 		a.organizeProgress.Store(file.ID, progress)
+		a.organizeLive.copies.Store(job.ID, organizeLiveCopy{source: file.Source, size: file.Size, bytes: progress})
 		fileCtx := context.WithValue(ctx, organizeProgressKey{}, organizeCopyProgress{Source: file.Source, Bytes: progress})
 		err := a.runImportFileSelection(fileCtx, job, planID, []string{file.ID})
+		a.organizeLive.copies.Delete(job.ID)
 		a.organizeProgress.Delete(file.ID)
 		if err != nil {
 			if organizeFileInterrupted(err) || ctx.Err() != nil {

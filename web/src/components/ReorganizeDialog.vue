@@ -4,7 +4,7 @@ import { VTextField } from 'vuetify/components/VTextField';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VTooltip } from 'vuetify/components/VTooltip';
 import { computed, nextTick, onMounted, onUnmounted, ref, useId, watch } from 'vue';
-import { api, errorText, image, label, toast, ui } from '../api';
+import { api, errorText, image, label, organizeStream, toast, ui } from '../api';
 import { boundedRead } from '../features/bounded-read';
 import FileManagerIcon from './FileManagerIcon.vue';
 import DirectoryPathPicker from './DirectoryPathPicker.vue';
@@ -281,8 +281,7 @@ const failedRows = computed(() =>
   previewRows.value.filter((item) => item.status === 'failed' || item.status === 'blocked'),
 );
 let alive = true;
-let sleepTimer: ReturnType<typeof setTimeout> | undefined;
-let wake: (() => void) | undefined;
+let organizeRead: AbortController | undefined;
 
 function close() {
   emit('close');
@@ -412,12 +411,25 @@ async function preview() {
     previewBusy.value = false;
   }
 }
-function waitForPoll() {
-  return new Promise<void>((resolve) => {
-    wake = resolve;
-    sleepTimer = setTimeout(resolve, 1000);
-  });
+function showOrganizeProgress(frame: {
+  stage: string;
+  current?: string;
+  completed: number;
+  total: number;
+  percent?: number;
+}) {
+  if (!alive) return;
+  completed.value = frame.completed;
+  totalJobs.value = frame.total;
+  const file = frame.current?.split('/').pop() || '';
+  if (frame.stage === 'preparing') progress.value = '正在读取所选文件…';
+  else if (frame.stage === 'recognizing') progress.value = '正在识别 ' + file;
+  else if (frame.stage === 'transferring')
+    progress.value =
+      '正在整理 ' + file + (frame.percent == null ? '' : ' · ' + frame.percent + '%');
+  else progress.value = frame.total === frame.completed ? '正在读取整理结果…' : '等待整理';
 }
+
 async function organize(background: boolean) {
   if (busy.value || previewBusy.value || recommendBusy.value) return;
   busy.value = true;
@@ -426,135 +438,64 @@ async function organize(background: boolean) {
   result.value = null;
   completed.value = 0;
   totalJobs.value = 0;
-  progress.value = '正在处理 ...';
+  progress.value = '正在读取所选文件…';
+  organizeRead = new AbortController();
   try {
-    let response = await api<OrganizeResponse>('/files/organize', payload(false, background));
+    const form = payload(false, background);
+    const response: OrganizeResponse = background
+      ? await api('/files/organize', form)
+      : await organizeStream(form, showOrganizeProgress, organizeRead.signal);
     if (!alive) return;
-    if (background && response.preparation_job_id) {
-      if (props.historyIds?.length) {
-        toast(`已提交 ${props.historyIds.length} 条整理记录，正在后台准备`);
-        emit('done', response.preparation_job_id);
-      } else {
-        toast('目录已提交，正在后台准备整理');
-        emit('done');
-      }
-      return;
-    }
-    if (response.preparation_job_id) {
-      const preparation =
-        '/jobs/' + encodeURIComponent(response.preparation_job_id) + '?view=organize';
-      progress.value = '正在识别所选文件…';
-      while (alive) {
-        const detail = await api(preparation);
-        if (!alive) return;
-        const job = detail.job || detail;
-        if (detail.preparation) {
-          response = detail.preparation;
-          break;
-        }
-        if (['failed', 'cancelled', 'needs_review', 'succeeded', 'done'].includes(job.state)) {
-          throw new Error(job.error_message || '未能取得整理准备清单');
-        }
-        await waitForPoll();
-      }
-      if (!alive) return;
-    }
     result.value = response;
+    const items = response.items || [];
+    const accepted = new Set(
+      items.filter((row) => row.status === 'queued' && row.job_id).map((row) => row.job_id),
+    ).size;
     if (
-      !response.submitted &&
-      response.items?.length &&
-      response.items.every((item) => item.status === 'skipped')
+      response.failed ||
+      items.some((row) => row.status === 'failed' || row.status === 'blocked')
     ) {
-      error.value = '没有符合整理条件的文件';
       previewVisible.value = true;
-      return;
-    }
-    const jobs = [
-      ...new Set((response.items || []).map((item) => item.job_id).filter(Boolean)),
-    ] as string[];
-    totalJobs.value = jobs.length;
-    if (background) {
-      if (response.failed) {
-        error.value = `${response.submitted || 0} 项已加入整理队列，${response.failed} 项失败`;
-        previewVisible.value = true;
-      } else {
-        toast('已加入整理队列');
-        emit('done');
-      }
-      return;
-    }
-    const pending = new Set(jobs);
-    const failures: string[] = [];
-    while (alive && pending.size) {
-      for (const id of [...pending]) {
-        const detail = await api('/jobs/' + encodeURIComponent(id) + '?view=organize');
-        if (!alive) return;
-        const job = detail.job || detail;
-        const actualItems = detail.transfer?.items;
-        if (Array.isArray(actualItems) && actualItems.length) {
-          const first = response.items.findIndex((item) => item.job_id === id);
-          if (first >= 0) {
-            const remaining = response.items.filter((item) => item.job_id !== id);
-            remaining.splice(first, 0, ...actualItems);
-            response.items = remaining;
-          }
-        }
-        if (['succeeded', 'done', 'failed', 'cancelled', 'needs_review'].includes(job.state)) {
-          pending.delete(id);
-          completed.value++;
-          if (job.state === 'cancelled' && job.error_code === 'ORGANIZE_FILE_SKIPPED') {
-            response.items = response.items.map((item) =>
-              item.job_id === id ? { ...item, status: 'skipped', reason: job.error_message } : item,
-            );
-          } else if (['failed', 'cancelled', 'needs_review'].includes(job.state)) {
-            const message =
-              job.error_message || (job.state === 'cancelled' ? '整理任务已取消' : '整理失败');
-            failures.push(message);
-            if (!Array.isArray(actualItems) || !actualItems.length)
-              response.items = response.items.map((item) =>
-                item.job_id === id ? { ...item, status: 'failed', error: message } : item,
-              );
-          }
-        }
-        response.total = response.items.length;
-        response.failed = response.items.filter((item) =>
-          ['failed', 'blocked'].includes(item.status || ''),
-        ).length;
-        result.value = { ...response, items: [...response.items] };
-        progress.value =
-          job.state === 'queued'
-            ? job.error_message || '任务稍后重试'
-            : `正在整理 ${completed.value} / ${totalJobs.value}`;
-      }
-      if (pending.size) await waitForPoll();
-    }
-    if (!alive) return;
-    if (response.failed || failures.length) {
+      const reasons = [
+        ...new Set(
+          items
+            .filter((row) => row.status === 'failed' || row.status === 'blocked')
+            .map((row) => row.error || row.reason)
+            .filter(Boolean),
+        ),
+      ];
       error.value =
-        [
-          ...new Set([
-            ...response.items.map((item) => item.error || '').filter(Boolean),
-            ...failures,
-          ]),
-        ].join('；') || '部分文件整理失败';
-      previewVisible.value = true;
-    } else if (
-      response.items?.length &&
-      response.items.every((item) => item.status === 'skipped')
-    ) {
+        (background ? `已入队 ${accepted} 项，失败 ${response.failed} 项。` : '') +
+        (reasons.join('；') || '部分文件整理失败');
+    } else if (!items.length || items.every((row) => row.status === 'skipped')) {
       error.value = '没有符合整理条件的文件';
       previewVisible.value = true;
-    } else if (!response.total && !response.submitted) error.value = '没有找到符合条件的文件';
-    else {
+    } else if (background) {
+      if (
+        !accepted ||
+        accepted !== response.submitted ||
+        items.some((row) => row.status !== 'skipped' && (row.status !== 'queued' || !row.job_id))
+      ) {
+        error.value = '未取得全部文件的入队确认，请查看整理队列';
+        return;
+      }
+      toast(`已加入整理队列（${accepted} 项）`);
+      emit('done');
+    } else if (items.every((row) => row.status === 'success' || row.status === 'skipped')) {
       toast('整理完成');
       emit('done');
+    } else {
+      error.value = '未取得全部文件的最终结果，请查看整理历史';
+      previewVisible.value = true;
     }
   } catch (e) {
     if (alive) error.value = errorText(e);
   } finally {
+    organizeRead = undefined;
     busy.value = false;
     progress.value = '';
-    if (alive && totalJobs.value && error.value) emit('historyChanged');
+    if (alive && (totalJobs.value || result.value?.submitted) && error.value)
+      emit('historyChanged');
   }
 }
 async function search() {
@@ -610,8 +551,7 @@ onUnmounted(() => {
   recommendRead.abort();
   episodeGroupRead?.abort();
   if (episodeGroupTimer) clearTimeout(episodeGroupTimer);
-  if (sleepTimer) clearTimeout(sleepTimer);
-  wake?.();
+  organizeRead?.abort();
 });
 </script>
 
@@ -901,7 +841,9 @@ onUnmounted(() => {
         <div v-if="busy" class="organize-progress" role="status">
           <span class="spinner"></span>
           <div>
-            <strong>{{ progress || '正在处理 ...' }}</strong
+            <strong
+              >{{ progress || '正在处理 ...'
+              }}<template v-if="totalJobs"> · {{ completed }} / {{ totalJobs }}</template></strong
             ><progress v-if="totalJobs" :value="completed" :max="totalJobs"></progress
             ><small>关闭窗口后，已提交的整理任务会继续执行。</small>
           </div>

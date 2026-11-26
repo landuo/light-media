@@ -102,7 +102,7 @@ func TestInteractiveOrganizeReturnsPreviewAndPublishesAcceptedFile(t *testing.T)
 	}
 }
 
-func TestInteractiveOrganizePreparationReturnsEachFileAndSkip(t *testing.T) {
+func TestInteractiveOrganizeReturnsEachFileAndSkip(t *testing.T) {
 	a, source, target := importTestApp(t)
 	cookie := setupTestAdmin(t, a)
 	episode := filepath.Join(source, "Show.E07.mkv")
@@ -124,30 +124,6 @@ func TestInteractiveOrganizePreparationReturnsEachFileAndSkip(t *testing.T) {
 		}
 		return out.Data
 	}
-	run := func(id string) manualOrganizeOutput {
-		t.Helper()
-		if ok, err := a.deliverOrganizeInbox(t.Context()); err != nil || !ok {
-			t.Fatal("durable prepare handoff", ok, err)
-		}
-		job, err := a.claim(t.Context())
-		if err != nil || job.ID != id || job.Kind != "organize_prepare" {
-			t.Fatalf("claim: %s, %v", job.ID, err)
-		}
-		a.runClaimedJob(t.Context(), job)
-		response := callTest(t, a.Handler(), http.MethodGet, "/api/jobs/"+id+"?view=organize", "", cookie, "")
-		var out struct {
-			Data struct {
-				Job         Job
-				Preparation *manualOrganizeOutput
-				Decisions   json.RawMessage
-				Events      json.RawMessage
-			}
-		}
-		if err = json.Unmarshal(response.Body.Bytes(), &out); err != nil || response.Code != http.StatusOK || out.Data.Preparation == nil || out.Data.Job.ID != job.ID || len(out.Data.Decisions)+len(out.Data.Events) > 0 {
-			t.Fatalf("prepare results: %d %s %v", response.Code, response.Body, err)
-		}
-		return *out.Data.Preparation
-	}
 	skips := form
 	skips.Paths = []string{excluded}
 	if out := submit(skips); out.Submitted != 0 || out.Failed != 0 || len(out.Items) != 1 || out.Items[0].Status != "skipped" || out.PreparationJobID != "" {
@@ -155,22 +131,12 @@ func TestInteractiveOrganizePreparationReturnsEachFileAndSkip(t *testing.T) {
 	}
 	missing := form
 	missing.Paths, missing.HistoryIDs = nil, []string{"100000", "100001"}
-	missingID := submit(missing).PreparationJobID
-	if result := run(missingID); result.Failed != 2 || result.Submitted != 0 || len(result.Items) != 2 {
+	if result := submit(missing); result.PreparationJobID != "" || result.Failed != 2 || result.Submitted != 0 || len(result.Items) != 2 {
 		t.Fatalf("missing history: %+v", result)
 	}
-	parentID := submit(form).PreparationJobID
-	if parentID == "" || submit(form).PreparationJobID != parentID {
-		t.Fatal("repeated selection did not resume the existing preparation")
-	}
-	out := run(parentID)
-	// A completed preparation still owns this selection while a child runs,
-	// including when the active-subject index is rebuilt after restart.
-	if err := a.restoreOrganizeSubjects(t.Context()); err != nil {
-		t.Fatal(err)
-	}
-	if repeated := submit(form); repeated.PreparationJobID != parentID {
-		t.Fatalf("active child lost its parent claim: %+v", repeated)
+	out := submit(form)
+	if out.PreparationJobID != "" {
+		t.Fatalf("returned preparation instead of file jobs: %+v", out)
 	}
 	if out.Total != 2 || out.Submitted != 1 || out.Failed != 0 {
 		t.Fatalf("multi preparation: %+v", out)
@@ -189,12 +155,27 @@ func TestInteractiveOrganizePreparationReturnsEachFileAndSkip(t *testing.T) {
 			t.Fatalf("unknown %+v", item)
 		}
 	}
+	again := submit(form)
+	if again.Submitted != out.Submitted || len(again.Items) != 2 || again.Items[1].JobID != out.Items[1].JobID {
+		t.Fatalf("resubmission changed the selected job: %+v %+v", out, again)
+	}
+	if _, err := a.deliverOrganizeInbox(t.Context()); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.restoreOrganizeSubjects(t.Context()); err != nil {
+		t.Fatal(err)
+	}
+	if repeat := submit(form); repeat.Items[1].JobID != out.Items[1].JobID {
+		t.Fatalf("retry lost delivered job: %+v", repeat)
+	}
 	folder := form
 	folder.EpisodeFormat = ""
 	folder.Paths = []string{source}
-	if out := submit(folder); out.PreparationJobID == "" || out.Submitted != 0 {
-		t.Fatalf("folder did not return durable preparation: %+v", out)
+	result := submit(folder)
+	if result.PreparationJobID != "" || result.Submitted != 1 || result.Failed != 1 {
+		t.Fatalf("folder did not expose active conflict and its independent new job: %+v", result)
 	}
+
 }
 
 func TestOrganizeInboxReplaysAcrossBothCommitBoundaries(t *testing.T) {

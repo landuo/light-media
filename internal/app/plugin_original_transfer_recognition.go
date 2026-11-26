@@ -103,7 +103,7 @@ func (a *App) originalManualTransferIdentity(ctx context.Context, request Import
 	if err != nil {
 		return request, err
 	}
-	identity, err := originalCatalogMediaProjection(recognized)
+	identity, err := transferRecognizedMedia(ctx, recognized)
 	if err != nil {
 		return request, err
 	}

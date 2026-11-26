@@ -450,6 +450,9 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		if e == nil {
 			return
 		}
+	case p == "files/organize" && method == "POST" && strings.Contains(r.Header.Get("Accept"), "text/event-stream"):
+		a.streamOrganize(w, r)
+		return
 	case strings.HasPrefix(p, "files/"):
 		out, e = a.fileManagerAPI(r, strings.TrimPrefix(p, "files/"))
 	case strings.HasPrefix(p, "history/"):
@@ -1367,7 +1370,7 @@ func (a *App) dropSubscriptionSeasonCache(ctx context.Context, s Subscription) {
 }
 
 func (a *App) season(ctx context.Context, tmdb int64, n int) (catalog.Season, error) {
-	groups, err := a.originalPluginModules(ctx, "")
+	groups, err := a.originalPluginModulesForMethod(ctx, "", "tmdb_episodes")
 	if err != nil {
 		return catalog.Season{}, err
 	}

@@ -204,17 +204,10 @@ func (a *App) fileManagerAPI(r *http.Request, p string) (any, error) {
 		if in.Interactive && in.Preview && in.audit != nil {
 			in.audit.displayPreview = true
 		}
-		if in.Interactive && !in.Preview && len(in.Paths) == 1 && len(in.HistoryIDs) == 0 {
-			out, handled, err := a.queueInteractiveOrganizeFile(ctx, in)
-			if handled {
-				return out, err
-			}
+		if in.Interactive && !in.Preview {
+			return a.queueSelectedManualFiles(ctx, in)
 		}
-		if (in.Background || in.Interactive) && !in.Preview {
-			if in.Interactive && !in.Background && a.paused() {
-				return nil, &APIError{"AUTOMATION_PAUSED", "自动化已暂停，请先恢复", 409}
-			}
-			in.Background = true
+		if in.Background && !in.Preview {
 			return a.submitManualOrganize(ctx, in)
 		}
 		return a.manualOrganize(ctx, in)

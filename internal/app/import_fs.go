@@ -121,17 +121,24 @@ func importOpen(name string) (*os.File, error) {
 		return nil, err
 	}
 	defer parent.Close()
+	file, _, err := importRegularAt(parent, name)
+	return file, err
+}
+
+// The caller opened this file's exact parent through importDir. Keep the
+// guarded file descriptor and the stat from that descriptor together.
+func importRegularAt(parent *os.File, name string) (*os.File, os.FileInfo, error) {
 	fd, err := unix.Openat(int(parent.Fd()), filepath.Base(name), unix.O_RDONLY|unix.O_NOFOLLOW|unix.O_NONBLOCK|unix.O_CLOEXEC, 0)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	file := os.NewFile(uintptr(fd), name)
 	info, err := file.Stat()
 	if err != nil || !info.Mode().IsRegular() {
 		file.Close()
-		return nil, bad("INVALID_FILE", "源文件不是普通文件或包含符号链接")
+		return nil, nil, bad("INVALID_FILE", "源文件不是普通文件或包含符号链接")
 	}
-	return file, nil
+	return file, info, nil
 }
 
 func snapshotPath(name string) (importSnapshot, error) {

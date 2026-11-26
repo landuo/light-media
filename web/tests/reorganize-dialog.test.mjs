@@ -35,6 +35,10 @@ function openDialog(t, initial = {}, options = {}) {
       if (options.api) return options.api(path, body, requests.length);
       return { items: [], total: 0, submitted: 0, failed: 0 };
     },
+    organizeStream: async (body, progress, signal) => {
+      requests.push({ path: '/files/organize', body });
+      return options.stream(body, progress, signal);
+    },
     label: (value) => value,
     errorText: (error) => error.message,
     image: (path) => path,
@@ -266,20 +270,9 @@ test('pinned per-task failure keeps successful siblings and updates the rendered
     t,
     {},
     {
-      api: async (path) => {
-        if (path === '/files/organize')
-          return {
-            items: [{ source: items[0].source, job_id: 'actual-group-job', status: 'queued' }],
-            total: 1,
-            submitted: 1,
-            failed: 0,
-          };
-        if (path === '/jobs/actual-group-job?view=organize')
-          return {
-            job: { state: 'failed', error_message: 'owned rejection' },
-            transfer: { items, total: 3, failed: sample.failed },
-          };
-        throw new Error('unexpected request ' + path);
+      stream: async (_, onProgress) => {
+        onProgress({ stage: 'transferring', total: 1, completed: 0, current: items[0].source });
+        return { items, total: 3, submitted: 1, failed: sample.failed };
       },
     },
   );
@@ -300,7 +293,7 @@ test('pinned per-task failure keeps successful siblings and updates the rendered
     1,
     'only the rejected subtitle has a row error',
   );
-  assert.equal(dialog.requests.length, 2, 'one submission and actual job poll');
+  assert.equal(dialog.requests.length, 1, 'one foreground progress stream');
   assert.deepEqual(
     dialog.events,
     [['historyChanged']],
@@ -308,57 +301,86 @@ test('pinned per-task failure keeps successful siblings and updates the rendered
   );
 });
 
-test('queuing history closes the dialog as soon as background preparation is accepted', async (t) => {
-  const dialog = openDialog(
-    t,
-    {},
-    {
-      historyIds: ['first-history', 'second-history'],
-      api: async () => ({ preparation_job_id: 'history-preparation' }),
-    },
-  );
-  await dialog.organize(true);
-  assert.equal(dialog.requests.length, 1);
-  assert.equal(dialog.requests[0].path, '/files/organize');
-  assert.equal(dialog.requests[0].body.background, true);
-  assert.deepEqual(dialog.requests[0].body.history_ids, ['first-history', 'second-history']);
-  assert.deepEqual(dialog.events, [['done', 'history-preparation']]);
-  assert.deepEqual(dialog.toasts, ['已提交 2 条整理记录，正在后台准备']);
-  assert.ok(!dialog.nodes().some((node) => node.props?.class === 'organize-progress'));
+test('history queue confirmation requires each selected job', async (t) => {
+  for (const valid of [false, true]) {
+    const items = ['first', 'second'].map((id) => ({ source: id, status: 'queued', job_id: id }));
+    const dialog = openDialog(
+      t,
+      {},
+      {
+        historyIds: ['first', 'second'],
+        api: async () =>
+          valid
+            ? { items, total: 2, submitted: 2, failed: 0 }
+            : { preparation_job_id: 'preparing', items: [], total: 0, submitted: 0, failed: 0 },
+      },
+    );
+    await dialog.organize(true);
+    assert.deepEqual(dialog.requests[0].body.history_ids, ['first', 'second']);
+    assert.deepEqual(dialog.toasts, valid ? ['已加入整理队列（2 项）'] : []);
+    assert.deepEqual(dialog.events, valid ? [['done']] : []);
+  }
 });
 
-test('immediate directory organize waits for the prepared transfer to actually finish', async (t) => {
+test('immediate organize displays live progress and waits for the terminal result', async (t) => {
+  let finish;
+  const wait = new Promise((resolve) => {
+    finish = resolve;
+  });
   const dialog = openDialog(
     t,
     {},
     {
-      api: async (path, body) => {
-        if (path === '/files/organize') {
-          assert.equal(body.interactive, true);
-          return { preparation_job_id: 'preparing' };
-        }
-        assert.deepEqual(dialog.events, []);
-        if (path === '/jobs/preparing?view=organize')
-          return {
-            job: { state: 'succeeded' },
-            preparation: {
-              total: 1,
-              submitted: 1,
-              failed: 0,
-              items: [{ source: 'Fallout.mkv', status: 'queued', job_id: 'transfer' }],
-            },
-          };
-        assert.equal(path, '/jobs/transfer?view=organize');
-        return { job: { state: 'succeeded' } };
+      stream: async (body, onProgress) => {
+        assert.equal(body.background, false);
+        onProgress({
+          stage: 'transferring',
+          current: '/src/Fallout.S02E02.mkv',
+          total: 8,
+          completed: 1,
+          percent: 22,
+        });
+        await wait;
+        return {
+          items: [{ source: '/src/Fallout.S02E02.mkv', status: 'success', job_id: 'transfer' }],
+          submitted: 1,
+          total: 1,
+          failed: 0,
+        };
+      },
+    },
+  );
+  const run = dialog.organize();
+  await vue.nextTick();
+  assert.match(
+    renderedText(dialog.nodes().find((n) => n.props?.class === 'organize-progress')),
+    /Fallout.S02E02.mkv.*22%.*1 \/ 8/,
+  );
+  assert.deepEqual(dialog.toasts, []);
+  assert.deepEqual(dialog.events, []);
+  finish();
+  await run;
+  assert.deepEqual(dialog.toasts, ['整理完成']);
+  assert.deepEqual(dialog.events, [['done']]);
+  assert.equal(dialog.requests.length, 1);
+});
+
+test('a lost progress stream never reports success or replays submission', async (t) => {
+  const dialog = openDialog(
+    t,
+    {},
+    {
+      stream: async (_, onProgress) => {
+        onProgress({ stage: 'queued', total: 8, completed: 0 });
+        throw new Error('连接中断');
       },
     },
   );
   await dialog.organize();
-  assert.deepEqual(dialog.events, [['done']]);
-  assert.deepEqual(dialog.toasts, ['整理完成']);
-  assert.equal(dialog.requests.length, 3);
+  assert.equal(dialog.requests.length, 1);
+  assert.deepEqual(dialog.toasts, []);
+  assert.deepEqual(dialog.events, [['historyChanged']]);
 });
-
 test('softlink is a real independent manual method and preserves target/switches', async (t) => {
   const dialog = openDialog(t);
   await dialog.select(0, 'local');

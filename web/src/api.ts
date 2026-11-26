@@ -155,6 +155,21 @@ export async function searchStream(
   signal: AbortSignal,
   path: '/search' | '/search/resources' = '/search',
 ): Promise<any> {
+  return postProgressStream(path, body, progress, signal);
+}
+
+export function organizeStream(body: Any, progress: (frame: any) => void, signal: AbortSignal) {
+  return postProgressStream('/files/organize', body, progress, signal);
+}
+
+async function postProgressStream(
+  path: string,
+  body: Any,
+  progress: (frame: any) => void,
+  signal: AbortSignal,
+): Promise<any> {
+  const organize = path === '/files/organize';
+  const operation = organize ? '整理' : '资源搜索';
   ui.busy++;
   try {
     const response = await fetch(apiURL(path), {
@@ -171,16 +186,22 @@ export async function searchStream(
         if (response.status === 401 && typeof window !== 'undefined')
           window.dispatchEvent(new Event('session-expired'));
         throw new APIError(
-          j.error?.code || 'search_failed',
-          j.error?.message || '资源搜索失败',
+          j.error?.code || (organize ? 'organize_failed' : 'search_failed'),
+          j.error?.message || operation + '失败',
           j.request_id || requestId,
         );
       }
+      if (organize)
+        throw new APIError(
+          'stream_unavailable',
+          '服务未返回整理执行结果，请核对整理队列',
+          requestId,
+        );
       progress(j.data);
       return j.data;
     }
     if (!response.body)
-      throw new APIError('stream_unavailable', '服务未返回资源搜索数据流', requestId);
+      throw new APIError('stream_unavailable', '服务未返回' + operation + '数据流', requestId);
     const reader = response.body.getReader(),
       decoder = new TextDecoder();
     let buffer = '',
@@ -197,13 +218,13 @@ export async function searchStream(
       try {
         value = JSON.parse(data.join('\n'));
       } catch {
-        throw new APIError('invalid_response', '资源搜索返回了无效数据', requestId);
+        throw new APIError('invalid_response', operation + '返回了无效数据', requestId);
       }
       if (event === 'error') {
         const err = value.error || value;
         throw new APIError(
-          err.code || 'search_failed',
-          err.message || '资源搜索失败',
+          err.code || (organize ? 'organize_failed' : 'search_failed'),
+          err.message || operation + '失败',
           value.request_id || requestId,
         );
       }
@@ -212,7 +233,7 @@ export async function searchStream(
       }
       if (event === 'complete') {
         complete = value.data || value;
-        progress(complete);
+        if (!organize) progress(complete);
       }
     }
     try {
@@ -228,7 +249,7 @@ export async function searchStream(
         }
         if (complete !== undefined) return complete;
         if (buffer.length > 8 * 1024 * 1024)
-          throw new APIError('stream_limit', '资源搜索响应超过限制', requestId);
+          throw new APIError('stream_limit', operation + '响应超过限制', requestId);
         if (chunk.done) {
           if (buffer.trim()) consume(buffer);
           break;
@@ -237,7 +258,9 @@ export async function searchStream(
       if (complete !== undefined) return complete;
       throw new APIError(
         'stream_interrupted',
-        '资源搜索连接中断，已返回部分结果可供查看',
+        organize
+          ? '进度连接中断，请在整理队列或历史中查看最终结果'
+          : '资源搜索连接中断，已返回部分结果可供查看',
         requestId,
       );
     } finally {

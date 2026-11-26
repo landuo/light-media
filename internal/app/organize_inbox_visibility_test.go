@@ -61,7 +61,12 @@ func TestOrganizeInboxVisibleAndCancellableBeforeHandoff(t *testing.T) {
 		t.Fatal(single)
 	}
 	file := single.Items[0].JobID
-	prep := submit([]string{source}).PreparationJobID
+	// A pre-upgrade preparation may still coexist with new per-file rows.
+	legacy, err := a.submitManualOrganize(t.Context(), manualOrganizeRequest{Interactive: true, Background: true, Paths: []string{source}, TargetPath: target, Mode: "hardlink"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	prep := legacy.PreparationJobID
 	if prep == "" {
 		t.Fatal("missing preparation")
 	}

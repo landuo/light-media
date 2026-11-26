@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"slices"
 	"sync"
 	"syscall"
 	"time"
@@ -54,7 +55,10 @@ func openOrganizeInbox(dir string) (*organizeInbox, error) {
 	_, err = db.Exec(`PRAGMA journal_mode=WAL;
 	CREATE TABLE IF NOT EXISTS request(id TEXT PRIMARY KEY, kind TEXT NOT NULL, subject TEXT NOT NULL, request_key TEXT NOT NULL, job BLOB NOT NULL, state TEXT NOT NULL);
 	CREATE UNIQUE INDEX IF NOT EXISTS active_subject ON request(kind,subject) WHERE state='queued';
-	CREATE TABLE IF NOT EXISTS audit(id TEXT PRIMARY KEY, request_id TEXT NOT NULL);`)
+	CREATE TABLE IF NOT EXISTS audit(id TEXT PRIMARY KEY, request_id TEXT NOT NULL);
+ CREATE TABLE IF NOT EXISTS file_batch(id TEXT PRIMARY KEY, listings BLOB NOT NULL);
+ CREATE TABLE IF NOT EXISTS batch_member(job_id TEXT PRIMARY KEY, batch_id TEXT NOT NULL);
+ CREATE INDEX IF NOT EXISTS batch_members ON batch_member(batch_id);`)
 	if err != nil {
 		db.Close()
 		return nil, err
@@ -87,97 +91,148 @@ func activeInteractiveJob(ctx context.Context, q organizeRowReader, kind, subjec
 	return
 }
 
-// Never hold the inbox connection during a main-DB lookup. A concurrent
-// transfer may have committed between the two reads, so recheck the inbox
-// and the registration version before creating a fresh durable ID.
-func (a *App) organizeAdmissionTx(ctx context.Context, kind, subject string, phase func(string)) (*sql.Tx, string, string, error) {
+type organizeAdmission struct {
+	kind, subject, key string
+	payload            any
+	id, activeKey      string
+}
+
+type checkedOrganizeOwner struct {
+	id, key string
+	version uint64
+}
+
+// The active subject index avoids a main-database read for new sources.
+// Recheck all inbox claims together after any authoritative lookup, so a
+// concurrent batch cannot acquire part of the selection during admission.
+func (a *App) organizeAdmissionsTx(ctx context.Context, requests []organizeAdmission, phase func(string)) (*sql.Tx, error) {
 	inbox := a.organizeInbox
-	var mainID, mainKey string
-	var checkedVersion uint64
-	var verified bool
+	checked := make(map[string]checkedOrganizeOwner)
 	for {
 		phase("inbox_wait")
 		tx, err := inbox.db.BeginTx(ctx, nil)
 		if err != nil {
-			return nil, "", "", err
+			return nil, err
 		}
+		var lookups []int
+		versions := make(map[int]uint64)
 		phase("inbox_lookup")
-		var id, key string
-		err = tx.QueryRowContext(ctx, "SELECT id,request_key FROM request WHERE kind=? AND subject=? AND state='queued'", kind, subject).Scan(&id, &key)
-		if err == nil {
-			return tx, id, key, nil
+		for i := range requests {
+			r := &requests[i]
+			r.id, r.activeKey = "", ""
+			err = tx.QueryRowContext(ctx, "SELECT id,request_key FROM request WHERE kind=? AND subject=? AND state='queued'", r.kind, r.subject).Scan(&r.id, &r.activeKey)
+			if err == nil {
+				continue
+			}
+			if !errors.Is(err, sql.ErrNoRows) {
+				tx.Rollback()
+				return nil, err
+			}
+			maybe, version := inbox.subjects.lookup(r.subject)
+			if !maybe {
+				continue
+			}
+			if c, ok := checked[r.subject]; ok && c.version == version {
+				r.id, r.activeKey = c.id, c.key
+				continue
+			}
+			lookups = append(lookups, i)
+			versions[i] = version
 		}
-		if !errors.Is(err, sql.ErrNoRows) {
-			tx.Rollback()
-			return nil, "", "", err
-		}
-		maybe, version := inbox.subjects.lookup(subject)
-		if !maybe {
-			return tx, "", "", nil
-		}
-		if verified && version == checkedVersion {
-			return tx, mainID, mainKey, nil
+		if len(lookups) == 0 {
+			return tx, nil
 		}
 		tx.Rollback()
 		phase("existing_reader_wait")
 		reader, err := a.Store.reader().Conn(ctx)
 		if err != nil {
-			return nil, "", "", err
+			return nil, err
 		}
 		phase("existing_lookup")
-		mainID, mainKey, err = activeInteractiveJob(ctx, reader, kind, subject)
-		reader.Close()
-		if err != nil && !errors.Is(err, sql.ErrNoRows) {
-			return nil, "", "", err
+		for _, i := range lookups {
+			r := requests[i]
+			id, key, e := activeInteractiveJob(ctx, reader, r.kind, r.subject)
+			if e != nil && !errors.Is(e, sql.ErrNoRows) {
+				reader.Close()
+				return nil, e
+			}
+			checked[r.subject] = checkedOrganizeOwner{id, key, versions[i]}
 		}
-		verified, checkedVersion = true, version
+		reader.Close()
 	}
 }
 
 func (a *App) acceptOrganize(ctx context.Context, kind, subject, key string, payload any, audit *organizeRequestAudit) (string, error) {
-	phase := a.performanceStages(ctx, "organize_accept", "inbox_wait")
-	defer phase("")
-	inbox := a.organizeInbox
-	tx, jobID, activeKey, err := a.organizeAdmissionTx(ctx, kind, subject, phase)
-	if err != nil {
+	requests := []organizeAdmission{{kind: kind, subject: subject, key: key, payload: payload}}
+	if err := a.acceptOrganizeBatch(ctx, requests, "", nil, audit); err != nil {
 		return "", err
 	}
-	defer tx.Rollback()
-	if jobID != "" && activeKey != key {
-		return "", bad("JOB_EXISTS", "该源文件已有其他整理任务正在等待或执行")
+	return requests[0].id, nil
+}
+
+func (a *App) acceptOrganizeBatch(ctx context.Context, requests []organizeAdmission, batch string, listings map[string][]map[string]any, audit *organizeRequestAudit) error {
+	phase := a.performanceStages(ctx, "organize_accept", "inbox_wait")
+	defer phase("")
+	tx, err := a.organizeAdmissionsTx(ctx, requests, phase)
+	if err != nil {
+		return err
 	}
-	if jobID == "" {
-		phase("request_insert")
-		body, err := json.Marshal(payload)
-		if err != nil {
-			return "", err
+	defer tx.Rollback()
+	phase("request_insert")
+	trace, _ := ctx.Value(jobTraceKey{}).(jobTrace)
+	wf, stamp := id("wf_"), now()
+	created := false
+	for i := range requests {
+		r := &requests[i]
+		if r.id != "" {
+			if batch == "" && r.activeKey != r.key {
+				return bad("JOB_EXISTS", "该源文件已有其他整理任务正在等待或执行")
+			}
+			continue
 		}
-		jobID = id("job_")
-		trace, _ := ctx.Value(jobTraceKey{}).(jobTrace)
-		stamp := now()
-		job := Job{ID: jobID, Kind: kind, Payload: body, RequestID: trace.Request, WorkflowID: id("wf_"), State: "queued", CreatedAt: stamp, UpdatedAt: stamp, RunAt: time.Now().Unix()}
+		body, err := json.Marshal(r.payload)
+		if err != nil {
+			return err
+		}
+		r.id, r.activeKey = id("job_"), r.key
+		job := Job{ID: r.id, Kind: r.kind, Payload: body, RequestID: trace.Request, WorkflowID: wf, State: "queued", CreatedAt: stamp, UpdatedAt: stamp, RunAt: time.Now().Unix()}
 		raw, err := json.Marshal(job)
 		if err != nil {
-			return "", err
+			return err
 		}
-		if _, err = tx.ExecContext(ctx, "INSERT INTO request(id,kind,subject,request_key,job,state) VALUES(?,?,?,?,?,'queued')", jobID, kind, subject, key, raw); err != nil {
-			return "", err
+		if _, err = tx.ExecContext(ctx, "INSERT INTO request(id,kind,subject,request_key,job,state) VALUES(?,?,?,?,?,'queued')", r.id, r.kind, r.subject, r.key, raw); err != nil {
+			return err
+		}
+		if batch != "" {
+			if _, err = tx.ExecContext(ctx, "INSERT INTO batch_member(job_id,batch_id) VALUES(?,?)", r.id, batch); err != nil {
+				return err
+			}
+		}
+		created = true
+	}
+	if batch != "" && created {
+		raw, err := json.Marshal(listings)
+		if err != nil {
+			return err
+		}
+		if _, err = tx.ExecContext(ctx, "INSERT INTO file_batch(id,listings) VALUES(?,?)", batch, raw); err != nil {
+			return err
 		}
 	}
 	if audit != nil {
 		if _, err = tx.ExecContext(ctx, "INSERT INTO audit(id,request_id) VALUES(?,?)", audit.id, audit.request); err != nil {
-			return "", err
+			return err
 		}
 	}
 	phase("durable_commit")
 	if err = tx.Commit(); err != nil {
-		return "", err
+		return err
 	}
 	if audit != nil {
 		audit.committed = true
 	}
-	inbox.signal()
-	return jobID, nil
+	a.organizeInbox.signal()
+	return nil
 }
 
 type inboxJobScanner interface{ Scan(...any) error }
@@ -216,12 +271,12 @@ func (a *App) pendingOrganizeJobs(ctx context.Context) ([]Job, error) {
 	return jobs, rows.Err()
 }
 
-func (inbox *organizeInbox) handoff(id string) *sync.Mutex {
+func (inbox *organizeInbox) handoffSlot(id string) int {
 	var slot byte
 	if len(id) > 0 {
 		slot = id[len(id)-1]
 	}
-	return &inbox.handoffs[int(slot)%len(inbox.handoffs)]
+	return int(slot) % len(inbox.handoffs)
 }
 func (a *App) cancelPendingOrganizeJob(ctx context.Context, id string) (bool, error) {
 	return a.changePendingOrganizeState(ctx, id, "queued", "cancelled")
@@ -233,7 +288,7 @@ func (a *App) retryPendingOrganizeJob(ctx context.Context, id string) (bool, err
 
 func (a *App) changePendingOrganizeState(ctx context.Context, id, from, to string) (bool, error) {
 	inbox := a.organizeInbox
-	lock := inbox.handoff(id)
+	lock := &inbox.handoffs[inbox.handoffSlot(id)]
 	lock.Lock()
 	defer lock.Unlock()
 	var kind, subject string
@@ -346,17 +401,69 @@ func (a *App) deliverOrganizeInbox(ctx context.Context) (bool, error) {
 			return false, err
 		}
 	}
-	lock := inbox.handoff(jobID)
-	lock.Lock()
-	defer lock.Unlock()
-	var kind string
+	jobIDs := []string{}
+	var batch string
 	if jobID != "" {
-		job, err := a.pendingOrganizeJob(ctx, jobID)
+		err = inbox.db.QueryRowContext(ctx, "SELECT batch_id FROM batch_member WHERE job_id=?", jobID).Scan(&batch)
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
+			return false, err
+		}
+		if batch == "" {
+			jobIDs = append(jobIDs, jobID)
+		} else {
+			members, err := inbox.db.QueryContext(ctx, "SELECT job_id FROM batch_member WHERE batch_id=? ORDER BY rowid", batch)
+			if err != nil {
+				return false, err
+			}
+			for members.Next() {
+				var member string
+				if err = members.Scan(&member); err != nil {
+					members.Close()
+					return false, err
+				}
+				jobIDs = append(jobIDs, member)
+			}
+			err = members.Err()
+			members.Close()
+			if err != nil {
+				return false, err
+			}
+		}
+	}
+	// A batch becomes visible to the main worker in a single commit. Lock each
+	// handoff stripe once in stable order; cancellation uses the same stripes.
+	var slots []int
+	for _, member := range jobIDs {
+		slots = append(slots, inbox.handoffSlot(member))
+	}
+	slices.Sort(slots)
+	for _, slot := range slices.Compact(slots) {
+		inbox.handoffs[slot].Lock()
+		defer inbox.handoffs[slot].Unlock()
+	}
+	if batch != "" {
+		var raw []byte
+		if err = inbox.db.QueryRowContext(ctx, "SELECT listings FROM file_batch WHERE id=?", batch).Scan(&raw); err != nil {
+			return false, err
+		}
+		var listings map[string]json.RawMessage
+		if err = json.Unmarshal(raw, &listings); err != nil {
+			return false, err
+		}
+		for path, entries := range listings {
+			if err = txPut(ctx, tx, "organize_file_listing", organizeListingKey(batch, path), entries); err != nil {
+				return false, err
+			}
+		}
+	}
+	var kind string
+	for _, member := range jobIDs {
+		job, err := a.pendingOrganizeJob(ctx, member)
 		if err != nil {
 			return false, err
 		}
 		phase("materialize")
-		exists := false
+		var exists bool
 		if err = tx.QueryRowContext(ctx, "SELECT EXISTS(SELECT 1 FROM jobs WHERE id=?)", job.ID).Scan(&exists); err != nil {
 			return false, err
 		}
@@ -386,7 +493,17 @@ func (a *App) deliverOrganizeInbox(ctx context.Context) (bool, error) {
 		return false, err
 	}
 	defer done.Rollback()
-	if jobID != "" {
+	if batch != "" {
+		if _, err = done.ExecContext(ctx, "DELETE FROM request WHERE id IN (SELECT job_id FROM batch_member WHERE batch_id=?)", batch); err != nil {
+			return false, err
+		}
+		if _, err = done.ExecContext(ctx, "DELETE FROM batch_member WHERE batch_id=?", batch); err != nil {
+			return false, err
+		}
+		if _, err = done.ExecContext(ctx, "DELETE FROM file_batch WHERE id=?", batch); err != nil {
+			return false, err
+		}
+	} else if jobID != "" {
 		if _, err = done.ExecContext(ctx, "DELETE FROM request WHERE id=?", jobID); err != nil {
 			return false, err
 		}

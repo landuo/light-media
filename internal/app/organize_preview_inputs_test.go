@@ -58,3 +58,21 @@ func TestManualPreviewRecognizesSeasonFilesAndRereadsChangedEvidence(t *testing.
 		t.Fatalf("new preview reused prior NFO or sibling numbering: %+v", items)
 	}
 }
+
+func TestManualPreviewPluginMediaUpdatesNamingAndIdentity(t *testing.T) {
+	ctx := context.WithValue(t.Context(), manualPreviewInputsKey{}, &manualPreviewInputs{})
+	for _, value := range []struct {
+		title string
+		id    string
+	}{{"Pilot", "142"}, {"Reclassified episode", "821"}, {"Pilot", "142"}} {
+		raw := []byte(`{"source":"themoviedb","type":"电视剧","tmdb_id":` + value.id + `,"title":"` + value.title + `","poster_path":"/original/poster"}`)
+		view, err := transferRecognizedMedia(ctx, raw)
+		if err != nil || view.Title != value.title || view.SourceID != value.id {
+			t.Fatalf("identity for %s: %+v %v", value.title, view, err)
+		}
+		fields, err := transferNamingMedia(ctx, raw)
+		if err != nil || fields["title"] != value.title || fields["poster"] != "/w500/poster" {
+			t.Fatalf("naming for %s: %+v %v", value.title, fields, err)
+		}
+	}
+}

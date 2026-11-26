@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"encoding/json"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -167,6 +168,41 @@ func (a *App) originalManualStorageScan(ctx context.Context, path string, in man
 			return nil, err
 		}
 	}
+	// The collector already groups siblings by directory. Validate every
+	// regular file against the same guarded parent, opening at most one
+	// directory at a time; the executable plan revalidates the full paths.
+	var parent *os.File
+	defer func() {
+		if parent != nil {
+			parent.Close()
+		}
+	}()
+	sourceSnapshot := func(path string, ordinary bool) (importSnapshot, error) {
+		if !directory || !ordinary {
+			return snapshotTransferPath(path)
+		}
+		if !importPath(path) {
+			return importSnapshot{}, bad("INVALID_PATH", "文件路径无效")
+		}
+		dir := filepath.Dir(path)
+		if parent == nil || parent.Name() != dir {
+			if parent != nil {
+				parent.Close()
+			}
+			var err error
+			parent, err = importDir(dir, false)
+			if err != nil {
+				return importSnapshot{}, err
+			}
+		}
+		file, info, err := importRegularAt(parent, path)
+		if err != nil {
+			// A storage module may have described a physical disc as a file.
+			return snapshotTransferPath(path)
+		}
+		file.Close()
+		return snapshot(info)
+	}
 	for _, candidate := range candidates {
 		item := candidate.Item
 		path := strings.TrimSuffix(sourceText(item["path"]), "/")
@@ -181,7 +217,7 @@ func (a *App) originalManualStorageScan(ctx context.Context, path string, in man
 		// The publication layer still requires a real guarded source snapshot.
 		// A directory candidate is retained as a unit by the collector; it must
 		// never silently become a collection of unrelated STREAM video tasks.
-		stamp, err := snapshotTransferPath(path)
+		stamp, err := sourceSnapshot(path, !candidate.Bluray && sourceText(item["type"]) == "file")
 		if err != nil {
 			return nil, err
 		}
@@ -193,7 +229,7 @@ func (a *App) originalManualStorageScan(ctx context.Context, path string, in man
 		if inherited[path] != "" {
 			metadataPath = inherited[path]
 		}
-		file := importScanFile{Path: path, Size: stamp.Size, Parsed: a.parseMediaName(filepath.Base(metadataPath)), originalItem: frozen, originalDirectoryListings: listings, originalDirectoryPlanned: directory, originalMetadataPath: metadataPath}
+		file := importScanFile{Path: path, Size: stamp.Size, Snapshot: &stamp, Parsed: a.parseMediaNameContext(ctx, filepath.Base(metadataPath)), originalItem: frozen, originalDirectoryListings: listings, originalDirectoryPlanned: directory, originalMetadataPath: metadataPath}
 		if directory {
 			meta := metas[metadataPath]
 			if meta == nil {

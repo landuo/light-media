@@ -207,23 +207,13 @@ func (a *App) originalTransferNativeRename(ctx context.Context, identity catalog
 	if err != nil {
 		return "", err
 	}
-	media, err := decodeSourceJSON(source.Media)
+	mediaFields, err := transferNamingMedia(ctx, source.Media)
 	if err != nil {
 		return "", err
 	}
 	extension := sourceText(itemFields["extension"])
 	if extension != "" {
 		extension = "." + extension
-	}
-	mediaFields := sourceMap(media)
-	if mediaFields != nil {
-		// The source TemplateHelper uses image getters. MediaInfo.to_dict
-		// retains the paths, while the naming context needs the getter results.
-		for _, name := range []string{"poster", "backdrop"} {
-			if _, present := mediaFields[name]; !present {
-				mediaFields[name] = strings.ReplaceAll(sourceText(mediaFields[name+"_path"]), "original", "w500")
-			}
-		}
 	}
 	input := noticetemplate.ContextInput{Meta: sourceMap(meta), Media: mediaFields, FileExtension: extension}
 	for _, episode := range episodes {

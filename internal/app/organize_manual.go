@@ -1162,6 +1162,7 @@ func historySearchPattern(value string) string {
 
 func (a *App) cancelOrganizeQueueFile(ctx context.Context, key string) (any, error) {
 	if strings.HasPrefix(key, "job_") {
+		defer a.organizeLive.changed(key)
 		if cancelled, err := a.cancelPendingOrganizeJob(ctx, key); err != nil || cancelled {
 			return map[string]bool{"cancelled": cancelled}, err
 		}

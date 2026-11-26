@@ -32,6 +32,9 @@ type manualPreviewInputs struct {
 	imageDomain             string
 	projectionInput         json.RawMessage
 	projection              sourceMediaInformation
+	recognized              catalog.ExploreMedia
+	namingInput             json.RawMessage
+	namingMedia             map[string]any
 }
 
 // Plugins can produce a different MediaInfo for each episode. Compare their
@@ -46,6 +49,44 @@ func (a *App) transferRecognitionProjection(ctx context.Context, identity catalo
 		inputs.projectionInput, inputs.projection = raw, out
 	}
 	return out, err
+}
+
+// The recognize/obtain_images hooks still run per file. Only reuse decoding
+// when their complete result matches, including fields supplied by plugins.
+func transferRecognizedMedia(ctx context.Context, raw json.RawMessage) (catalog.ExploreMedia, error) {
+	inputs, _ := ctx.Value(manualPreviewInputsKey{}).(*manualPreviewInputs)
+	if inputs != nil && len(raw) != 0 && bytes.Equal(raw, inputs.recognized.OriginalMedia) {
+		return inputs.recognized, nil
+	}
+	identity, err := originalCatalogMediaProjection(raw)
+	if inputs != nil && err == nil && len(raw) <= 256<<10 {
+		inputs.recognized = identity
+	}
+	return identity, err
+}
+
+func transferNamingMedia(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
+	inputs, _ := ctx.Value(manualPreviewInputsKey{}).(*manualPreviewInputs)
+	if inputs != nil && inputs.namingMedia != nil && bytes.Equal(raw, inputs.namingInput) {
+		return inputs.namingMedia, nil
+	}
+	value, err := decodeSourceJSON(raw)
+	if err != nil {
+		return nil, err
+	}
+	fields := sourceMap(value)
+	// TemplateHelper uses the image getters; MediaInfo.to_dict retains paths.
+	if fields != nil {
+		for _, name := range []string{"poster", "backdrop"} {
+			if _, present := fields[name]; !present {
+				fields[name] = strings.ReplaceAll(sourceText(fields[name+"_path"]), "original", "w500")
+			}
+		}
+		if inputs != nil && len(raw) <= 256<<10 {
+			inputs.namingInput, inputs.namingMedia = raw, fields
+		}
+	}
+	return fields, nil
 }
 
 func (a *App) nativeTransferTMDBInformation(ctx context.Context, identity catalog.Media) (sourceMediaInformation, error) {

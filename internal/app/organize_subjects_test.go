@@ -62,8 +62,10 @@ func TestOrganizeNewSelectionsBypassBusyMainReaders(t *testing.T) {
 	if readers.Stats().WaitCount == waits {
 		t.Fatal("existing source did not reach authoritative reader")
 	}
-	for _, selection := range []string{path, source} {
-		form := manualOrganizeRequest{Interactive: true, Paths: []string{selection}, TargetPath: target, Mode: "hardlink"}
+	// A single new source does not need the saturated reader. Selecting
+	// a directory now enumerates its members, including existing claims.
+	{
+		form := manualOrganizeRequest{Interactive: true, Paths: []string{path}, TargetPath: target, Mode: "hardlink"}
 		body, err := json.Marshal(form)
 		if err != nil {
 			t.Fatal(err)
