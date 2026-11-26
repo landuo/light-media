@@ -192,19 +192,26 @@ func (a *App) sourceRecognizeTMDBCore(ctx context.Context, input catalog.Media) 
 	if e != nil {
 		return sourceMediaInformation{}, e
 	}
+	return a.projectTMDBSourceInformation(raw, media, policy)
+}
+
+func (a *App) projectTMDBSourceInformation(raw json.RawMessage, media catalog.Media, policy mediaCategoryPolicy) (sourceMediaInformation, error) {
 	category, e := policy.categoryWithError(media)
 	if e != nil {
 		return sourceMediaInformation{}, e
 	}
-	projection, e := sourceTMDBMediaInfo(raw, input.MediaType, a.Settings().TMDBImageDomain, category)
+	projection, e := sourceTMDBMediaInfo(raw, media.MediaType, a.settingsSnapshot().TMDBImageDomain, category)
 	if e != nil {
 		return sourceMediaInformation{}, e
 	}
-	projected, e := decodeSourceJSON(projection)
-	if e != nil {
+	var titles struct {
+		Title    any `json:"title"`
+		Original any `json:"original_title"`
+	}
+	if e = json.Unmarshal(projection, &titles); e != nil {
 		return sourceMediaInformation{}, e
 	}
-	media.Title, media.OriginalTitle = sourceText(sourceMap(projected)["title"]), sourceText(sourceMap(projected)["original_title"])
+	media.Title, media.OriginalTitle = sourceText(titles.Title), sourceText(titles.Original)
 	return sourceMediaInformation{ProviderInfo: raw, MediaInfo: projection, Media: media}, nil
 }
 

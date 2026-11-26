@@ -130,7 +130,7 @@ func (a *App) originalTransferContextWithMedia(ctx context.Context, identity cat
 		return out, err
 	}
 	if len(resolved) == 0 {
-		media, err := a.sourceRecognizeTMDBMedia(ctx, identity)
+		media, err := a.recognizeTransferTMDBMedia(ctx, identity)
 		if err != nil {
 			return out, err
 		}

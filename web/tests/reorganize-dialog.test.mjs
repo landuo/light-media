@@ -274,7 +274,7 @@ test('pinned per-task failure keeps successful siblings and updates the rendered
             submitted: 1,
             failed: 0,
           };
-        if (path === '/jobs/actual-group-job')
+        if (path === '/jobs/actual-group-job?view=organize')
           return {
             job: { state: 'failed', error_message: 'owned rejection' },
             transfer: { items, total: 3, failed: sample.failed },
@@ -325,6 +325,38 @@ test('queuing history closes the dialog as soon as background preparation is acc
   assert.deepEqual(dialog.events, [['done', 'history-preparation']]);
   assert.deepEqual(dialog.toasts, ['已提交 2 条整理记录，正在后台准备']);
   assert.ok(!dialog.nodes().some((node) => node.props?.class === 'organize-progress'));
+});
+
+test('immediate directory organize waits for the prepared transfer to actually finish', async (t) => {
+  const dialog = openDialog(
+    t,
+    {},
+    {
+      api: async (path, body) => {
+        if (path === '/files/organize') {
+          assert.equal(body.interactive, true);
+          return { preparation_job_id: 'preparing' };
+        }
+        assert.deepEqual(dialog.events, []);
+        if (path === '/jobs/preparing?view=organize')
+          return {
+            job: { state: 'succeeded' },
+            preparation: {
+              total: 1,
+              submitted: 1,
+              failed: 0,
+              items: [{ source: 'Fallout.mkv', status: 'queued', job_id: 'transfer' }],
+            },
+          };
+        assert.equal(path, '/jobs/transfer?view=organize');
+        return { job: { state: 'succeeded' } };
+      },
+    },
+  );
+  await dialog.organize();
+  assert.deepEqual(dialog.events, [['done']]);
+  assert.deepEqual(dialog.toasts, ['整理完成']);
+  assert.equal(dialog.requests.length, 3);
 });
 
 test('softlink is a real independent manual method and preserves target/switches', async (t) => {

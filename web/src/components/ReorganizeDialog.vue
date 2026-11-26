@@ -390,6 +390,7 @@ function payload(preview: boolean, background = false) {
     ...(scraping.value == null ? {} : { scraping: scraping.value }),
     ...(typeFolder.value == null ? {} : { library_type_folder: typeFolder.value }),
     ...(props.historyIds?.length ? { from_history: fromHistory.value } : {}),
+    interactive: true,
     preview,
     background,
   };
@@ -427,9 +428,9 @@ async function organize(background: boolean) {
   totalJobs.value = 0;
   progress.value = '正在处理 ...';
   try {
-    const response = await api<OrganizeResponse>('/files/organize', payload(false, background));
+    let response = await api<OrganizeResponse>('/files/organize', payload(false, background));
     if (!alive) return;
-    if (response.preparation_job_id) {
+    if (background && response.preparation_job_id) {
       if (props.historyIds?.length) {
         toast(`已提交 ${props.historyIds.length} 条整理记录，正在后台准备`);
         emit('done', response.preparation_job_id);
@@ -438,6 +439,25 @@ async function organize(background: boolean) {
         emit('done');
       }
       return;
+    }
+    if (response.preparation_job_id) {
+      const preparation =
+        '/jobs/' + encodeURIComponent(response.preparation_job_id) + '?view=organize';
+      progress.value = '正在识别所选文件…';
+      while (alive) {
+        const detail = await api(preparation);
+        if (!alive) return;
+        const job = detail.job || detail;
+        if (detail.preparation) {
+          response = detail.preparation;
+          break;
+        }
+        if (['failed', 'cancelled', 'needs_review', 'succeeded', 'done'].includes(job.state)) {
+          throw new Error(job.error_message || '未能取得整理准备清单');
+        }
+        await waitForPoll();
+      }
+      if (!alive) return;
     }
     result.value = response;
     if (
@@ -467,7 +487,7 @@ async function organize(background: boolean) {
     const failures: string[] = [];
     while (alive && pending.size) {
       for (const id of [...pending]) {
-        const detail = await api('/jobs/' + encodeURIComponent(id));
+        const detail = await api('/jobs/' + encodeURIComponent(id) + '?view=organize');
         if (!alive) return;
         const job = detail.job || detail;
         const actualItems = detail.transfer?.items;
@@ -482,7 +502,11 @@ async function organize(background: boolean) {
         if (['succeeded', 'done', 'failed', 'cancelled', 'needs_review'].includes(job.state)) {
           pending.delete(id);
           completed.value++;
-          if (['failed', 'cancelled', 'needs_review'].includes(job.state)) {
+          if (job.state === 'cancelled' && job.error_code === 'ORGANIZE_FILE_SKIPPED') {
+            response.items = response.items.map((item) =>
+              item.job_id === id ? { ...item, status: 'skipped', reason: job.error_message } : item,
+            );
+          } else if (['failed', 'cancelled', 'needs_review'].includes(job.state)) {
             const message =
               job.error_message || (job.state === 'cancelled' ? '整理任务已取消' : '整理失败');
             failures.push(message);
@@ -513,6 +537,12 @@ async function organize(background: boolean) {
             ...failures,
           ]),
         ].join('；') || '部分文件整理失败';
+      previewVisible.value = true;
+    } else if (
+      response.items?.length &&
+      response.items.every((item) => item.status === 'skipped')
+    ) {
+      error.value = '没有符合整理条件的文件';
       previewVisible.value = true;
     } else if (!response.total && !response.submitted) error.value = '没有找到符合条件的文件';
     else {

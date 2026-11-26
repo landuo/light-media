@@ -20,6 +20,7 @@ func TestManualTVTransferRecognitionUsesMoviePilotMatcher(t *testing.T) {
 		id, season, episode                     int
 		legacy                                  map[string]catalog.Page
 		searchResults                           string
+		wantSearches                            int
 	}{
 		{
 			file: "[老友记 第四季].Friends.1997.S04E21.2160p.MAX.WEB-DL.DoVi.HDR10.H265.10bit.DDP5.1-UBWEB.mkv",
@@ -31,6 +32,7 @@ func TestManualTVTransferRecognitionUsesMoviePilotMatcher(t *testing.T) {
 				"Friends":      {Page: 1, TotalPages: 6},
 			},
 			searchResults: `[{"id":1668,"name":"老友记","original_name":"Friends","first_air_date":"1994-09-22"}]`,
+			wantSearches:  1,
 		},
 		{
 			file: "Fallout.S02E01.2160p.BluRay.DoVi.x265.10bit.Atmos.TrueHD7.1-WiKi.mkv",
@@ -81,7 +83,7 @@ func TestManualTVTransferRecognitionUsesMoviePilotMatcher(t *testing.T) {
 			got, err := a.prepareManualImport(context.Background(), ImportRequest{
 				Manual: true, TargetPath: target, MediaType: "tv", Files: []ImportFileRequest{{Path: path}},
 			})
-			if err != nil || got.TMDBID != int64(sample.id) || searches != 1 {
+			if err != nil || got.TMDBID != int64(sample.id) || searches != sample.wantSearches {
 				t.Fatalf("MoviePilot recognition picked %d after %d searches: %v", got.TMDBID, searches, err)
 			}
 			f := got.Files[0]

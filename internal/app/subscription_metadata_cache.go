@@ -4,51 +4,52 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"light-media/internal/catalog"
 	"time"
+
+	"light-media/internal/catalog"
 )
 
 // Reuse only trusted provider bytes. Category policy and image domain are live
 // settings, so never reuse the derived MediaInfo or compact Media projection.
-func (a *App) cachedSubscriptionSourceInformation(ctx context.Context, input catalog.Media) (sourceMediaInformation, error) {
-	var cached struct {
-		At   time.Time              `json:"at"`
-		Data sourceMediaInformation `json:"data"`
-	}
+func (a *App) cachedTMDBSourceInformation(ctx context.Context, input catalog.Media) (sourceMediaInformation, error) {
 	key := fmt.Sprintf("source-detail:%s:%d", input.MediaType, input.ID)
+	var cached struct {
+		At   time.Time                              `json:"at"`
+		Data struct{ ProviderInfo json.RawMessage } `json:"data"`
+	}
+	fetch := func() (sourceMediaInformation, error) {
+		full, err := a.sourceRecognizeTMDBCore(ctx, input)
+		if err == nil {
+			// Caching is optional; a validated upstream result remains usable.
+			_ = a.Store.Put(ctx, "cache", key, struct {
+				At   time.Time              `json:"at"`
+				Data sourceMediaInformation `json:"data"`
+			}{time.Now().UTC(), full})
+		}
+		return full, err
+	}
 	if a.Store.Get(ctx, "cache", key, &cached) != nil || time.Since(cached.At) >= 24*time.Hour {
-		return a.sourceRecognizeTMDBCore(ctx, input)
+		return fetch()
 	}
 	policy, err := a.currentMediaCategoryPolicy()
 	if err != nil {
 		return sourceMediaInformation{}, err
 	}
 	fields := policy.extraFields(input.MediaType)
-	var provider map[string]json.RawMessage
-	if json.Unmarshal(cached.Data.ProviderInfo, &provider) != nil {
-		return a.sourceRecognizeTMDBCore(ctx, input)
-	}
-	for _, field := range fields {
-		if _, ok := provider[field]; !ok {
-			return a.sourceRecognizeTMDBCore(ctx, input)
+	if len(fields) != 0 {
+		var provider map[string]json.RawMessage
+		if json.Unmarshal(cached.Data.ProviderInfo, &provider) != nil {
+			return fetch()
+		}
+		for _, field := range fields {
+			if _, ok := provider[field]; !ok {
+				return fetch()
+			}
 		}
 	}
 	media, err := a.catalog().ProjectSourceInformation(input.MediaType, input.ID, cached.Data.ProviderInfo, fields)
 	if err != nil {
-		return a.sourceRecognizeTMDBCore(ctx, input)
+		return fetch()
 	}
-	category, err := policy.categoryWithError(media)
-	if err != nil {
-		return sourceMediaInformation{}, err
-	}
-	projection, err := sourceTMDBMediaInfo(cached.Data.ProviderInfo, input.MediaType, a.Settings().TMDBImageDomain, category)
-	if err != nil {
-		return sourceMediaInformation{}, err
-	}
-	projected, err := decodeSourceJSON(projection)
-	if err != nil {
-		return sourceMediaInformation{}, err
-	}
-	media.Title, media.OriginalTitle = sourceText(sourceMap(projected)["title"]), sourceText(sourceMap(projected)["original_title"])
-	return sourceMediaInformation{ProviderInfo: cached.Data.ProviderInfo, MediaInfo: projection, Media: media}, nil
+	return a.projectTMDBSourceInformation(cached.Data.ProviderInfo, media, policy)
 }

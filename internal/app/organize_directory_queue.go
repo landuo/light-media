@@ -52,7 +52,11 @@ func (a *App) enqueueDirectoryOrganizeFile(ctx context.Context, guard directoryI
 	if err = txPut(ctx, tx, "directory_file", observed.ID, observed); err != nil {
 		return err
 	}
-	return tx.Commit()
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+	a.wakeQueuedJob(job.Kind)
+	return nil
 }
 
 func (a *App) runDirectoryOrganizeFile(ctx context.Context, payload organizeFilePayload, file importScanFile, known *ImportPlan, fail func(error) error) error {

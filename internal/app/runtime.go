@@ -96,7 +96,7 @@ type App struct {
 	subscriptionStats               subscriptionStatsRuntime
 	recognitionMu                   sync.Mutex
 	recognitionMatcher              atomic.Pointer[words.Matcher]
-	directoryFileMu                 sync.Mutex
+	directoryFileMu                 [32]sync.Mutex
 	jobDisplayCache                 atomic.Pointer[jobQueueDisplay]
 	historyPageCache                atomic.Pointer[historyPageDisplay]
 	brushInventoryCache             atomic.Pointer[brushSiteDisplay]
@@ -405,6 +405,8 @@ func (a *App) Start(parent context.Context) {
 	go func() { defer a.wg.Done(); a.jobWorker(ctx, subscriptionJobs) }()
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.scheduler(ctx) }()
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.watchDirectoryEvents(ctx) }()
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.subscriptionScheduler(ctx) }()
 	a.wg.Add(1)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 )
 
@@ -29,10 +30,25 @@ func (a *App) enqueueOrganizePreparation(ctx context.Context, in manualOrganizeR
 	if err != nil {
 		return out, err
 	}
-	job, err := a.enqueue(ctx, "organize_prepare", organizePreparationPayload{ID: tokenHash(string(raw)), Request: in}, id("wf_"))
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return out, err
 	}
+	defer tx.Rollback()
+	job, err := a.enqueueTx(ctx, tx, "organize_prepare", organizePreparationPayload{ID: tokenHash(string(raw)), Request: in}, id("wf_"))
+	if err != nil {
+		return out, err
+	}
+	// A normal HTTP submission is already durable when the dialog starts polling.
+	if in.Interactive {
+		err = in.audit.commit(ctx, tx)
+	} else {
+		err = tx.Commit()
+	}
+	if err != nil {
+		return out, err
+	}
+	a.wakeQueuedJob(job.Kind)
 	out.PreparationJobID = job.ID
 	return out, nil
 }
@@ -45,20 +61,24 @@ func (a *App) runOrganizePreparation(ctx context.Context, job Job) error {
 	if err := a.jobCancelled(ctx, job); err != nil {
 		return err
 	}
-	var committed bool
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM organize_listing WHERE id=?)`, job.ID).Scan(&committed); err != nil || committed {
-		return err
-	}
-	ctx = context.WithValue(ctx, organizePreparationKey{}, job)
 	var out manualOrganizeOutput
-	var err error
-	if len(payload.Request.HistoryIDs) > 0 {
-		out, err = a.prepareOrganizeHistory(ctx, job, payload.Request)
-	} else {
-		out, err = a.manualOrganize(ctx, payload.Request)
-	}
-	if err != nil {
+	err := a.Store.Get(ctx, "organize_file_listing", job.ID, &out)
+	switch {
+	case errors.Is(err, sql.ErrNoRows):
+		ctx = context.WithValue(ctx, organizePreparationKey{}, job)
+		if len(payload.Request.HistoryIDs) > 0 {
+			out, err = a.prepareOrganizeHistory(ctx, job, payload.Request)
+		} else {
+			out, err = a.manualOrganize(ctx, payload.Request)
+		}
+		if err != nil {
+			return err
+		}
+	case err != nil:
 		return err
+	case out.Items == nil:
+		// Older committed preparations only stored an empty completion marker.
+		return nil
 	}
 	if out.Submitted == 0 && out.Failed > 0 {
 		for _, item := range out.Items {
@@ -67,7 +87,7 @@ func (a *App) runOrganizePreparation(ctx context.Context, job Job) error {
 			}
 		}
 	}
-	if out.Submitted == 0 && out.Total > 0 {
+	if !payload.Request.Interactive && out.Submitted == 0 && out.Total > 0 {
 		return bad("REVIEW_ORGANIZE_PREPARATION", "未找到符合整理条件的文件")
 	}
 	for _, item := range out.Items {
@@ -130,4 +150,26 @@ func guardOrganizePreparation(ctx context.Context, tx *sql.Tx) error {
 		return bad("JOB_CANCELLED", "整理准备已取消")
 	}
 	return nil
+}
+
+// The dialog polls just the live state, the prepared file IDs and transfer
+// receipts. General job details expose the same data beside the workflow log.
+func (a *App) organizeJobResult(ctx context.Context, j Job, result map[string]any) (map[string]any, error) {
+	if j.Kind == "organize_prepare" {
+		var preparation manualOrganizeOutput
+		err := a.Store.Get(ctx, "organize_file_listing", j.ID, &preparation)
+		if err == nil && preparation.Items != nil {
+			result["preparation"] = preparation
+		} else if err != nil && !errors.Is(err, sql.ErrNoRows) {
+			return nil, err
+		}
+	}
+	if j.Kind == "import" {
+		transfer, err := a.originalTransferJobResult(ctx, j)
+		if err != nil {
+			return nil, err
+		}
+		result["transfer"] = transfer
+	}
+	return result, nil
 }

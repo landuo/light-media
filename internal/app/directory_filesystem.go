@@ -120,10 +120,24 @@ func (a *App) pollDirectoryFiles(ctx context.Context) error {
 	}
 	return first
 }
-func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (result error) {
-	a.directoryFileMu.Lock()
-	defer a.directoryFileMu.Unlock()
+func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) error {
+	return a.inspectDirectoryFiles(ctx, rule, nil)
+}
+
+// A nil event batch is the periodic reconciliation, including startup baselines
+// and missing observations. Native events only inspect the changed paths.
+func (a *App) inspectDirectoryFiles(ctx context.Context, rule DirectoryRule, events []directoryWatchEvent) (result error) {
+	// A slow downloader or large sweep on another rule must not hold up a
+	// close-write on this root. Overlapping rules still use the same ordered
+	// ownership check and the atomic source deduplication at enqueue.
+	digest := sha256.Sum256([]byte(rule.ID))
+	lock := &a.directoryFileMu[int(digest[0])%len(a.directoryFileMu)]
+	lock.Lock()
+	defer lock.Unlock()
 	defer func() {
+		if events != nil {
+			return
+		}
 		message := ""
 		if result != nil {
 			message = a.clean(result.Error())
@@ -145,6 +159,9 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 	}
 	if current.MonitorType != "monitor" && current.MonitorType != "downloader" {
 		return bad("DIRECTORY_MONITOR_TYPE", "该规则不是目录监听")
+	}
+	if events != nil && (current.MonitorType != "monitor" || directoryFingerprint(rule) != directoryFingerprint(current)) {
+		return nil
 	}
 	rule = current
 	source, e := a.directorySource(rule)
@@ -170,30 +187,49 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		return baselineErr
 	}
 	initial := baseline.Fingerprint != fingerprint
-	allObserved, stored, e := a.directoryObservations(ctx, rule.ID)
-	if e != nil {
-		return e
-	}
+	var files []importScanFile
+	closed := map[string]bool{}
+	var allObserved map[string]DirectoryObservedFile
+	var stored map[string]map[string]directoryDownloadFile
 	fingerprints := baseline.Tasks
-	if initial {
-		fingerprints = map[string]string{}
-		stored = map[string]map[string]directoryDownloadFile{}
-	}
-	unchanged := func(path string, stamp importSnapshot) bool {
-		existing, ok := allObserved[path]
-		if !ok {
-			return false
+	if events == nil {
+		allObserved, stored, e = a.directoryObservations(ctx, rule.ID)
+		if e != nil {
+			return e
 		}
-		return existing.RuleFingerprint == fingerprint && existing.State != directoryInspectionPending && existing.State != "needs_review" && existing.State != "error" && sameDirectorySnapshot(existing.Snapshot, stamp)
+		unchanged := func(path string, stamp importSnapshot) bool {
+			existing, ok := allObserved[path]
+			return ok && existing.RuleFingerprint == fingerprint && existing.State != directoryInspectionPending && existing.State != "needs_review" && existing.State != "error" && sameDirectorySnapshot(existing.Snapshot, stamp)
+		}
+		raw, err := a.scanImportFiles(ctx, source, true, inspectFailed, unchanged, true)
+		if err != nil {
+			return err
+		}
+		scan := raw.(map[string]any)
+		files = scan["files"].([]importScanFile)
+		if truncated, _ := scan["truncated"].(bool); truncated {
+			return bad("DIRECTORY_SCAN_LIMIT", "监听目录超过2000个视频或扫描上限，请拆分目录；本轮未执行整理")
+		}
+	} else {
+		for _, event := range events {
+			// A later rename at the same path replaces the inode that closed.
+			closed[event.path] = event.closed
+		}
+		files, e = a.directoryEventCandidates(ctx, source, events)
+		if e != nil || len(files) == 0 {
+			return e
+		}
+		// Reuse the verified downloader mapping on its next live inventory
+		// check. Do not enumerate the monitored filesystem for an event.
+		if s := a.settingsSnapshot(); len(s.Downloaders) > 0 {
+			allObserved, stored, e = a.directoryObservations(ctx, rule.ID)
+			if e != nil {
+				return e
+			}
+		}
 	}
-	raw, e := a.scanImportFiles(ctx, source, true, inspectFailed, unchanged, true)
-	if e != nil {
-		return e
-	}
-	scan := raw.(map[string]any)
-	files := scan["files"].([]importScanFile)
-	if truncated, _ := scan["truncated"].(bool); truncated {
-		return bad("DIRECTORY_SCAN_LIMIT", "监听目录超过2000个视频或扫描上限，请拆分目录；本轮未执行整理")
+	if initial {
+		fingerprints, stored = nil, nil
 	}
 	downloads, taskFingerprints, e := a.directoryDownloadFiles(ctx, rule, source, fingerprints, stored)
 	if e != nil {
@@ -212,6 +248,9 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 	// scanner does the same below. Drop the old rows so the disc is scanned as a
 	// unit instead of replaying an m2ts fragment that can never be identified.
 	for path, observed := range allObserved {
+		if events != nil {
+			break
+		}
 		if !strings.Contains(strings.ToLower(filepath.ToSlash(path)), "/bdmv/stream/") {
 			continue
 		}
@@ -321,7 +360,7 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 			f.EvidenceFingerprint != evidence
 		if fresh || changed || retryIdentity {
 			f = DirectoryObservedFile{ID: key, DirectoryID: rule.ID, Path: file.Path, State: "observing", Reason: "等待文件至少60秒保持稳定", Snapshot: stamp, StableSince: time.Now().UnixNano(), RuleFingerprint: fingerprint, EvidenceFingerprint: evidence}
-			if fresh && initial && !rule.IncludeExisting {
+			if fresh && initial && events == nil && !rule.IncludeExisting {
 				f.State = "baseline"
 				f.Reason = "启用监听时已存在，已跳过；需要时从文件管理手动整理"
 			}
@@ -373,9 +412,13 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 		terminal := f.State == "complete" || f.State == "baseline" || f.State == "imported" || f.State == "queued" || f.State == "cancelled" || f.State == "needs_review" || f.State == "error"
 		owner, hasOwner := downloads[file.Path]
-		downloadReady := rule.MonitorType == "downloader" && hasOwner && owner.Complete && owner.Size == stamp.Size && stamp.Size > 0
-		stable := !fresh && !changed && time.Since(time.Unix(0, f.StableSince)) >= directoryStableTime
-		if !terminal && (downloadReady || stable) {
+		downloadReady := (rule.MonitorType == "downloader" || events != nil && stamp.Directory != "") && hasOwner && owner.Complete && owner.Size == stamp.Size && stamp.Size > 0
+		stable := events == nil && !fresh && !changed && time.Since(time.Unix(0, f.StableSince)) >= directoryStableTime
+		if stable && !terminal && !downloadReady && stamp.Size > 0 && stamp.Directory == "" {
+			stable = directoryFileReady(file.Path, true)
+		}
+		eventReady := events != nil && file.Snapshot != nil && *file.Snapshot == stamp && stamp.Size > 0 && stamp.Directory == "" && !terminal && directoryFileReady(file.Path, closed[file.Path])
+		if !terminal && (downloadReady || stable || eventReady) {
 			// A finished managed download that has no plan yet must be organized
 			// here: nothing in this build advances download history to
 			// "imported", so parking it in "tracking" would wait forever.
@@ -432,9 +475,12 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 						}
 					}
 				}
+				f.OwnerHash, f.OwnerSize = owner.OwnerHash, owner.Size
 				if e = a.enqueueDirectoryOrganizeFile(ctx, guard, file, &f); e != nil {
 					return e
 				}
+				// Enqueue committed the complete observation with the job.
+				continue
 			}
 		}
 		if owner, ok := downloads[file.Path]; ok {
@@ -470,7 +516,7 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 	if err := a.touchDirectoryObservations(ctx, heartbeatIDs, observedStamp); err != nil {
 		return err
 	}
-	if inspectionError != nil {
+	if inspectionError != nil || events != nil {
 		return inspectionError
 	}
 	// An observation whose source is gone has nothing left to describe. The

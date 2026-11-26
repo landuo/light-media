@@ -12,6 +12,7 @@ import (
 func promoteOrganizeFileTx(ctx context.Context, tx *sql.Tx, work organizeFileWork, planID string, fileIDs []string, state, code, reason string) (Job, error) {
 	payload, err := json.Marshal(struct {
 		ID                      string   `json:"id"`
+		InteractiveKey          string   `json:"interactive_key,omitempty"`
 		FileIDs                 []string `json:"file_ids"`
 		ParentJobID             string   `json:"_parent_job_id,omitempty"`
 		RequestID               string   `json:"_request_id,omitempty"`
@@ -19,6 +20,7 @@ func promoteOrganizeFileTx(ctx context.Context, tx *sql.Tx, work organizeFileWor
 		ManualPreparationFailed bool     `json:"manual_preparation_failed,omitempty"`
 	}{
 		ID:                      planID,
+		InteractiveKey:          work.InteractiveKey,
 		FileIDs:                 fileIDs,
 		ParentJobID:             work.Job.ParentJobID,
 		RequestID:               work.Job.RequestID,

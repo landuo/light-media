@@ -11,19 +11,29 @@ import (
 // Roots remain an internal identity for existing plans and assets. A physical
 // target does not require a media-server library GUID or a separate setup step.
 func physicalTarget(c *Settings, path, kind string) (string, error) {
-	path = cleanDirectoryInput(path)
-	if err := safeRoot(path); err != nil {
+	root, existing, err := physicalTargetRoot(c.Roots, path, kind)
+	if err != nil {
 		return "", err
 	}
-	for _, root := range c.Roots {
+	if !existing {
+		c.Roots = append(c.Roots, root)
+	}
+	return root.ID, nil
+}
+
+func physicalTargetRoot(roots []Root, path, kind string) (Root, bool, error) {
+	path = cleanDirectoryInput(path)
+	if err := safeRoot(path); err != nil {
+		return Root{}, false, err
+	}
+	for _, root := range roots {
 		if root.Path == path && (root.Kind == kind || root.Kind == "mixed") {
-			return root.ID, nil
+			return root, true, nil
 		}
 	}
 	sum := sha256.Sum256([]byte(path + "\x00" + kind))
 	key := "path_" + hex.EncodeToString(sum[:12])
-	c.Roots = append(c.Roots, Root{ID: key, Name: filepath.Base(path), Path: path, Kind: kind})
-	return key, nil
+	return Root{ID: key, Name: filepath.Base(path), Path: path, Kind: kind}, false, nil
 }
 
 func (a *App) ensureImportTarget(ctx context.Context, path, kind string, files []ImportFileRequest, manual ...bool) (string, error) {

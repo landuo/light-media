@@ -36,6 +36,7 @@ type ImportFileRequest struct {
 }
 
 type ImportRequest struct {
+	displayPreview            bool // The interactive dialog displays the result without executing this plan ID.
 	audit                     *organizeRequestAudit
 	originalDirectoryPlanned  bool
 	originalDirectoryProvider bool
@@ -226,7 +227,7 @@ func (a *App) scanImportFiles(ctx context.Context, directory string, recursive b
 						}
 					}
 				} else if matched, _ := classifier.Media(transferextensions.PathFile(name)); matched {
-					locked, err := snapshotPath(name)
+					file, err := a.scanImportVideo(name, unchanged)
 					if err != nil {
 						if inspectFailed == nil {
 							return err
@@ -235,16 +236,6 @@ func (a *App) scanImportFiles(ctx context.Context, directory string, recursive b
 							return err
 						}
 						continue
-					}
-					file := importScanFile{Path: name, Size: locked.Size, Snapshot: &locked}
-					if unchanged == nil || !unchanged(name, locked) {
-						file.Parsed = a.parseMediaName(entry.Name())
-						file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(name)
-						if file.InferredMedia != nil {
-							file.IdentitySource = "nfo"
-						}
-					} else {
-						file.Unchanged = true
 					}
 					files = append(files, file)
 				}
@@ -262,6 +253,24 @@ func (a *App) scanImportFiles(ctx context.Context, directory string, recursive b
 	}
 	sort.Slice(files, func(i, j int) bool { return files[i].Path < files[j].Path })
 	return map[string]any{"files": files, "truncated": truncated}, nil
+}
+
+func (a *App) scanImportVideo(path string, unchanged func(string, importSnapshot) bool) (importScanFile, error) {
+	stamp, err := snapshotPath(path)
+	if err != nil {
+		return importScanFile{}, err
+	}
+	file := importScanFile{Path: path, Size: stamp.Size, Snapshot: &stamp}
+	if unchanged != nil && unchanged(path, stamp) {
+		file.Unchanged = true
+		return file, nil
+	}
+	file.Parsed = a.parseMediaName(filepath.Base(path))
+	file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(path)
+	if file.InferredMedia != nil {
+		file.IdentitySource = "nfo"
+	}
+	return file, nil
 }
 
 // adoptDownloadedIntent lets a manual organize take over reservations left by
@@ -296,15 +305,16 @@ func (a *App) adoptDownloadedIntent(ctx context.Context, owner string, plan *Imp
 	return true, nil
 }
 
+const managedVideoByInodeSQL = `SELECT payload FROM managed_file WHERE json_extract(payload,'$.kind')='video'
+		AND json_extract(payload,'$.snapshot.device')=? AND json_extract(payload,'$.snapshot.inode')=?
+		LIMIT 1`
+
 func (a *App) managedFileByInode(ctx context.Context, device, inode uint64) (managedFile, bool) {
 	if device == 0 || inode == 0 {
 		return managedFile{}, false
 	}
 	var raw []byte
-	err := a.Store.reader().QueryRowContext(ctx, `SELECT payload FROM managed_file WHERE 1=1
-		AND json_extract(payload,'$.kind')='video'
-		AND json_extract(payload,'$.snapshot.device')=? AND json_extract(payload,'$.snapshot.inode')=?
-		LIMIT 1`, device, inode).Scan(&raw)
+	err := a.Store.reader().QueryRowContext(ctx, managedVideoByInodeSQL, device, inode).Scan(&raw)
 	if err != nil {
 		return managedFile{}, false
 	}
@@ -374,15 +384,23 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	if (!providerImport && !validMedia(request.MediaType, request.TMDBID)) || len(request.Files) == 0 || len(request.Files) > 2000 || (request.Mode != "hardlink" && request.Mode != "copy" && request.Mode != "auto" && request.Mode != "move" && request.Mode != "softlink") || len(request.Mappings) > 100 {
 		return plan, bad("INVALID_IMPORT", "请选择明确影视身份、1–2000 个源文件及有效整理方式")
 	}
-	if request.TargetPath != "" {
-		phase("target_configuration")
-		rootID, err := a.ensureImportTarget(ctx, request.TargetPath, request.MediaType, request.Files, request.Manual)
-		if err != nil {
-			return plan, err
+	var root Root
+	var err error
+	if request.displayPreview && request.TargetPath != "" {
+		// An arbitrary manual destination need only become a configured root
+		// when a transfer is actually planned for execution.
+		root, _, err = physicalTargetRoot(a.settingsSnapshot().Roots, request.TargetPath, request.MediaType)
+		request.RootID = root.ID
+	} else {
+		if request.TargetPath != "" {
+			phase("target_configuration")
+			request.RootID, err = a.ensureImportTarget(ctx, request.TargetPath, request.MediaType, request.Files, request.Manual)
+			if err != nil {
+				return plan, err
+			}
 		}
-		request.RootID = rootID
+		root, err = a.importRoot(request.RootID)
 	}
-	root, err := a.importRoot(request.RootID)
 	if err != nil {
 		return plan, err
 	}
@@ -451,7 +469,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		complete, e := a.originalRecognitionProjection(catalog.Media{ID: request.TMDBID, MediaType: request.MediaType}, request.originalResolvedMedia)
 		identity, originalMedia, err = complete.Media, complete.MediaInfo, e
 	} else if a.originalTransferHasHandlers() {
-		complete, e := a.sourceRecognizeTMDBMedia(ctx, catalog.Media{ID: request.TMDBID, MediaType: request.MediaType})
+		complete, e := a.recognizeTransferTMDBMedia(ctx, catalog.Media{ID: request.TMDBID, MediaType: request.MediaType})
 		identity, originalMedia, err = complete.Media, complete.MediaInfo, e
 	} else {
 		identity, err = a.media(ctx, request.MediaType, request.TMDBID)
@@ -570,7 +588,8 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				file.MaterialKind = "audio"
 			}
 		}
-		if !a.importSourceAllowed(file.Source, request.Manual) || !video && file.MaterialKind == "" || seenSources[file.Source] {
+		sourceAllowed := a.importSourceAllowed(file.Source, request.Manual)
+		if !sourceAllowed || !video && file.MaterialKind == "" || seenSources[file.Source] {
 			block("源路径未获允许、不是视频或重复选择")
 		} else if !request.Manual {
 			for _, configured := range a.Settings().Roots {
@@ -580,8 +599,12 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			}
 		}
 		seenSources[file.Source] = true
-		if a.importSourceAllowed(file.Source, request.Manual) {
-			if inferred, _, _ := a.importNFOEvidence(importNFOAnchor(file.Source, class.Bluray)); inferred != nil && (inferred.Type != identity.MediaType || inferred.ID != identity.ID) {
+		var inferred *importInferredMedia
+		var numbering *media.Numbering
+		var nfoReason string
+		if sourceAllowed {
+			inferred, numbering, nfoReason = a.importNFOEvidence(importNFOAnchor(file.Source, class.Bluray))
+			if inferred != nil && (inferred.Type != identity.MediaType || inferred.ID != identity.ID) {
 				plan.Warnings = append(plan.Warnings, "源 NFO 身份与本次明确选择不同；本计划按你选择的 TMDB 身份整理，请核对后确认。")
 			}
 		}
@@ -608,7 +631,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		} else if file.Status == "ready" && file.DirectoryDigest == "" {
 			explicitSeason := requested.SeasonExplicit
 			nfoEpisodeID := requested.SourceEpisodeID
-			if inferred, numbering, reason := a.importNFOEvidence(file.Source); !providerImport && reason == "" && inferred != nil && inferred.Type == "tv" && inferred.ID == identity.ID && numbering != nil && numbering.Season != nil && len(numbering.Episodes) == 1 && len(file.Episodes) == 0 {
+			if !providerImport && nfoReason == "" && inferred != nil && inferred.Type == "tv" && inferred.ID == identity.ID && numbering != nil && numbering.Season != nil && len(numbering.Episodes) == 1 && len(file.Episodes) == 0 {
 				if !explicitSeason && file.Season == 0 || file.Season == *numbering.Season {
 					file.Season = *numbering.Season
 					file.Episodes = append([]int(nil), numbering.Episodes...)
@@ -1037,6 +1060,10 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				plan.Files[index].Reason = "媒体库可用空间不足，请释放空间后重新预览"
 			}
 		}
+	}
+	if request.displayPreview {
+		plan.ID = ""
+		return plan, nil
 	}
 	phase("writer_wait")
 	tx, err := a.Store.DB.BeginTx(ctx, nil)

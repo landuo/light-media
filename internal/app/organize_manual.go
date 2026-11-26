@@ -23,6 +23,7 @@ import (
 // Manual organization is one operation shared by files and transfer history.
 // Preview uses the same preparation path without submitting a transfer job.
 type manualOrganizeRequest struct {
+	Interactive           bool `json:"interactive,omitempty"`
 	audit                 *organizeRequestAudit
 	originalRetry         bool
 	originalRetryAttempt  *originalTransferRetryAttempt
@@ -102,6 +103,15 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 	format, err := normalizeManualOrganize(&in)
 	if err != nil {
 		return out, err
+	}
+	if in.Interactive && in.Preview {
+		ctx, err = a.ensureResourceRecognition(ctx)
+		if err != nil {
+			return out, err
+		}
+		if ctx.Value(manualPreviewSeasonKey{}) == nil {
+			ctx = context.WithValue(ctx, manualPreviewSeasonKey{}, &manualPreviewSeason{})
+		}
 	}
 	if len(in.HistoryIDs) > 1 {
 		return a.manualOrganizeHistoryBatch(ctx, in)
@@ -352,23 +362,13 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			}
 		}
 		files = slices.DeleteFunc(files, func(file importScanFile) bool {
-			if !file.originalDirectoryPlanned && file.materialKind == "" && in.MinFilesize > 0 && file.Size <= in.MinFilesize*1024*1024 {
-				return true
+			reason := manualOrganizeSkip(file, in.MinFilesize, format, limit)
+			if reason != "" && in.Interactive {
+				out.Items = append(out.Items, manualOrganizeItem{Source: file.Path, Status: "skipped", Error: reason})
 			}
-			if format == nil {
-				return false
-			}
-			match := format.FindStringSubmatch(manualOrganizeFileName(file))
-			if match == nil {
-				return true
-			}
-			if len(limit) > 0 {
-				episodes, e := organizeEpisodeRange(match[format.SubexpIndex("ep")])
-				return e == nil && (episodes[0] < limit[0] || episodes[0] > limit[len(limit)-1])
-			}
-			return false
+			return reason != ""
 		})
-		if len(files) == 0 && out.Submitted == 0 && out.Failed == 0 {
+		if !in.Interactive && len(files) == 0 && out.Submitted == 0 && out.Failed == 0 {
 			return out, bad("REVIEW_ORGANIZE_PREPARATION", "未找到符合整理条件的文件")
 		}
 		return a.enqueueOrganizeFiles(ctx, preparation, files, prepared, out)
@@ -586,6 +586,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		}
 		if err == nil {
 			request.originalModulePreview = in.Preview
+			request.displayPreview = in.Interactive && in.Preview
 			if in.Preview {
 				request.audit = finalAudit
 			}
@@ -672,6 +673,27 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 	}
 	out.Total = len(out.Items)
 	return out, nil
+}
+
+// Apply the same selection filters before a file worker is scheduled. Malformed
+// matched episode numbers still go through the ordinary per-file error path.
+func manualOrganizeSkip(file importScanFile, minSize int64, format *regexp.Regexp, limit []int) string {
+	if !file.originalDirectoryPlanned && file.materialKind == "" && minSize > 0 && file.Size <= minSize*1024*1024 {
+		return "小于最小文件大小"
+	}
+	if format != nil {
+		match := format.FindStringSubmatch(manualOrganizeFileName(file))
+		if match == nil {
+			return "不符合指定的集数定位"
+		}
+		if len(limit) > 0 {
+			episodes, err := organizeEpisodeRange(match[format.SubexpIndex("ep")])
+			if err == nil && (episodes[0] < limit[0] || episodes[0] > limit[len(limit)-1]) {
+				return "不在指定集数范围内"
+			}
+		}
+	}
+	return ""
 }
 
 func manualOrganizeFileName(file importScanFile) string {

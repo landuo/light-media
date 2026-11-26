@@ -110,7 +110,10 @@ func TestManualOrganizeDirectoryQueuePreparesAndReplays(t *testing.T) {
 	if _, err = a.Store.DB.Exec(`UPDATE jobs SET run_at=? WHERE json_extract(payload,'$._parent_job_id')=? AND kind='organize_file'`, time.Now().Add(time.Hour).Unix(), parent.ID); err != nil {
 		t.Fatal(err)
 	}
-	settings := a.Settings()
+	// Use the normal persisted configuration on restart, as a deployed service does.
+	if err := a.saveSettings(ctx, a.Settings()); err != nil {
+		t.Fatal(err)
+	}
 	if err := a.Close(); err != nil {
 		t.Fatal(err)
 	}
@@ -119,7 +122,9 @@ func TestManualOrganizeDirectoryQueuePreparesAndReplays(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer reopened.Close()
-	reopened.config = settings
+	if !reopened.sourceAllowed(selected) {
+		t.Fatal("restarted app did not load the saved source root")
+	}
 	originalHostMediaInstallOwnedTransport(t, reopened, metadataFixture)
 	recovered, err := reopened.claim(ctx)
 	if err != nil || recovered.ID != parent.ID || recovered.Generation <= parent.Generation {

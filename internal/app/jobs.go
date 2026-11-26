@@ -65,6 +65,9 @@ func (a *App) enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload an
 		}
 		e = tx.QueryRowContext(ctx, query+` LIMIT 1`, args...).Scan(&found)
 		if e == nil {
+			if preparation, ok := payload.(organizePreparationPayload); ok && preparation.Request.Interactive {
+				return Job{ID: found, Kind: kind}, nil
+			}
 			return Job{}, bad("JOB_EXISTS", "已有该对象的任务正在等待或执行")
 		}
 		if !errors.Is(e, sql.ErrNoRows) {
@@ -359,7 +362,7 @@ func (a *App) runClaimedJob(ctx context.Context, j Job) {
 		// Two cases ask for their own delay; everything else fails outright and
 		// waits for the next scheduled cycle, which is what a periodic schedule
 		// already provides. No attempt counter, no exponential backoff.
-		if code == "DIRECTORY_HISTORY_DELETED" || code == "DIRECTORY_SOURCE_GONE" {
+		if code == "DIRECTORY_HISTORY_DELETED" || code == "DIRECTORY_SOURCE_GONE" || code == "ORGANIZE_FILE_SKIPPED" {
 			state = "cancelled"
 		} else if code == "PLUGIN_REFRESH_PENDING" {
 			state = "queued"
@@ -481,6 +484,11 @@ func (a *App) jobAPI(w http.ResponseWriter, r *http.Request, p string) (any, err
 		return nil, e
 	}
 	if len(parts) == 1 && r.Method == "GET" {
+		if r.URL.Query().Get("view") == "organize" {
+			result := map[string]any{"job": map[string]string{"id": j.ID, "kind": j.Kind, "state": j.State, "error_code": j.ErrorCode, "error_message": j.ErrorMessage}}
+			return a.organizeJobResult(r.Context(), j, result)
+		}
+
 		rows, e := a.Store.reader().QueryContext(r.Context(), `SELECT seq,time,workflow_id,job_id,level,module,event,message FROM events WHERE job_id=? ORDER BY seq LIMIT 1000`, j.ID)
 		if e != nil {
 			return nil, e
@@ -508,14 +516,7 @@ func (a *App) jobAPI(w http.ResponseWriter, r *http.Request, p string) (any, err
 			return nil, e
 		}
 		result := map[string]any{"job": view, "events": events, "decisions": decisions}
-		if j.Kind == "import" {
-			transfer, err := a.originalTransferJobResult(r.Context(), j)
-			if err != nil {
-				return nil, err
-			}
-			result["transfer"] = transfer
-		}
-		return result, nil
+		return a.organizeJobResult(r.Context(), j, result)
 	}
 	if len(parts) == 2 && r.Method == "POST" {
 		var result sql.Result

@@ -138,6 +138,8 @@ func (a *App) auditRequest(ctx context.Context, operation, request string, statu
 		if audit.committed && status == http.StatusOK {
 			return
 		}
+		finish := a.performanceStages(ctx, "organize_request", "audit_write")
+		defer finish("")
 		key = audit.id // Reuse the row even following an uncertain commit.
 	} else {
 		key = id("audit_")

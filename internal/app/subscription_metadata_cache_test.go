@@ -48,11 +48,30 @@ func TestSubscriptionCreateReusesServerDetailNotBrowserCopy(t *testing.T) {
 	if _, err := a.reloadMediaCategoryPolicy(); err != nil {
 		t.Fatal(err)
 	}
-	got, err = a.cachedSubscriptionSourceInformation(ctx, catalog.Media{ID: 123, MediaType: "tv"})
+	got, err = a.cachedTMDBSourceInformation(ctx, catalog.Media{ID: 123, MediaType: "tv"})
 	if err != nil || calls != 1 || !strings.Contains(string(got.MediaInfo), "Running") {
 		t.Fatalf("live policy extra field: calls=%d info=%s err=%v", calls, got.MediaInfo, err)
 	}
 
+}
+
+func TestTransferReusesFullSeriesMetadataAcrossEpisodes(t *testing.T) {
+	a := newTestApp(t)
+	const raw = `{"id":123,"name":"测试剧集","original_name":"Test Show","first_air_date":"2024-01-01","original_language":"zh","origin_country":["CN"],"genres":[],"credits":{"cast":[],"crew":[]},"external_ids":{},"alternative_titles":{"results":[]},"translations":{"translations":[]},"seasons":[]}`
+	calls := 0
+	installMetadataFixture(t, a, "transfer-metadata", []string{"/3/tv/123"}, func(*http.Request) (*http.Response, error) {
+		calls++
+		return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(raw))}, nil
+	})
+	for range 2 {
+		info, err := a.recognizeTransferTMDBMedia(t.Context(), catalog.Media{ID: 123, MediaType: "tv"})
+		if err != nil || info.Media.ID != 123 || info.Media.Title != "测试剧集" || len(info.MediaInfo) == 0 {
+			t.Fatalf("series metadata: %s, %v", info.Media.Title, err)
+		}
+	}
+	if calls != 1 {
+		t.Fatalf("provider reads for the same series: %d", calls)
+	}
 }
 
 func TestSeasonPickerColdRequestOmitsUnrelatedAppendices(t *testing.T) {

@@ -23,6 +23,7 @@ func originalHostMediaInstallOwnedTransport(t *testing.T, a *App, respond func(*
 	a.cfgMu.Lock()
 	a.config = settings
 	a.cfgMu.Unlock()
+	a.invalidateSettings()
 	proxy, err := a.proxyConfig()
 	if err != nil {
 		t.Fatal(err)

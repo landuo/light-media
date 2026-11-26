@@ -1369,8 +1369,25 @@ func (a *App) season(ctx context.Context, tmdb int64, n int) (catalog.Season, er
 	return originalCatalogSeasonProjection(view, rows)
 }
 
+type manualPreviewSeasonKey struct{}
+type manualPreviewSeason struct {
+	series int64
+	number int
+	season catalog.Season
+}
+
 func (a *App) nativeSeason(ctx context.Context, tmdb int64, n int) (catalog.Season, error) {
+	// Directory previews validate and name each episode separately. Keep the
+	// last native season within this selection; even a large mixed folder
+	// retains one season. Module hooks still run independently for each file.
+	cache, _ := ctx.Value(manualPreviewSeasonKey{}).(*manualPreviewSeason)
+	if cache != nil && tmdb > 0 && cache.series == tmdb && cache.number == n {
+		return cache.season, nil
+	}
 	var s catalog.Season
 	_, e := a.cached(ctx, fmt.Sprintf("season:%d:%d", tmdb, n), 12*time.Hour, &s, func() (any, error) { return a.catalog().Season(ctx, tmdb, n) })
+	if e == nil && cache != nil {
+		*cache = manualPreviewSeason{series: tmdb, number: n, season: s}
+	}
 	return s, e
 }

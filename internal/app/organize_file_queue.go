@@ -16,6 +16,7 @@ import (
 type organizeFileKey struct{}
 
 type organizeFileWork struct {
+	InteractiveKey       string
 	DirectoryObservation bool
 	Job                  Job
 	File                 importScanFile
@@ -25,6 +26,7 @@ type organizeFileWork struct {
 }
 
 type organizeFilePayload struct {
+	Manual              *manualOrganizeRequest  `json:"manual_request,omitempty"`
 	Directory           *directoryImportGuard   `json:"directory,omitempty"`
 	HistoryID           string                  `json:"history_id,omitempty"`
 	HistoryExecutionKey string                  `json:"history_execution_key,omitempty"`
@@ -89,10 +91,6 @@ func (a *App) enqueueOrganizeFiles(ctx context.Context, parent Job, files []impo
 		}
 		candidates = append(candidates, candidate)
 	}
-	if len(candidates) == 0 {
-		out.Total = len(out.Items)
-		return out, nil
-	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return out, err
@@ -101,38 +99,38 @@ func (a *App) enqueueOrganizeFiles(ctx context.Context, parent Job, files []impo
 	if err = guardOrganizePreparation(ctx, tx); err != nil {
 		return out, err
 	}
-	if err = txPut(ctx, tx, "organize_file_listing", parent.ID, struct{}{}); err != nil {
-		return out, err
-	}
 	for path, entries := range listings {
 		if err = txPut(ctx, tx, "organize_file_listing", organizeListingKey(parent.ID, path), entries); err != nil {
 			return out, err
 		}
 	}
-	if err = txPut(ctx, tx, "original_scrape_batch", batchID, originalScrapeBatch{ID: batchID, Closed: true}); err != nil {
-		return out, err
+	if len(candidates) > 0 {
+		if err = txPut(ctx, tx, "original_scrape_batch", batchID, originalScrapeBatch{ID: batchID, Closed: true}); err != nil {
+			return out, err
+		}
 	}
-	queued := 0
 	for _, candidate := range candidates {
 		existing, err := activeOrganizeSourceTx(ctx, tx, candidate.File.Path)
 		if err != nil {
 			return out, err
 		}
-		if existing != "" {
-			out.Items = append(out.Items, manualOrganizeItem{Source: candidate.File.Path, Status: "queued", JobID: existing})
-			out.Submitted++
-			continue
+		if existing == "" {
+			job, err := a.enqueueTx(ctx, tx, "organize_file", candidate, parent.WorkflowID)
+			if err != nil {
+				return out, err
+			}
+			existing = job.ID
 		}
-		if _, err = a.enqueueTx(ctx, tx, "organize_file", candidate, parent.WorkflowID); err != nil {
-			return out, err
-		}
-		queued++
+		out.Items = append(out.Items, manualOrganizeItem{Source: candidate.File.Path, Status: "queued", JobID: existing})
+		out.Submitted++
+	}
+	out.Total = len(out.Items)
+	if err = txPut(ctx, tx, "organize_file_listing", parent.ID, out); err != nil {
+		return out, err
 	}
 	if err = tx.Commit(); err != nil {
 		return out, err
 	}
-	out.Submitted += queued
-	out.Total = len(out.Items) + queued
 	select {
 	case a.jobWake <- struct{}{}:
 	default:
@@ -174,7 +172,7 @@ func (a *App) cancelOrganizeFile(ctx context.Context, job Job) (any, error) {
 
 func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 	var item organizeFilePayload
-	if err := json.Unmarshal(job.Payload, &item); err != nil || item.File.Path == "" || (job.ParentJobID == "" && item.Directory == nil) || item.BatchID == "" {
+	if err := json.Unmarshal(job.Payload, &item); err != nil || item.File.Path == "" || (job.ParentJobID == "" && item.Directory == nil && item.Manual == nil) || item.BatchID == "" {
 		return bad("INVALID_JOB", "目录整理文件参数无效")
 	}
 	if item.Directory != nil {
@@ -184,7 +182,12 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 		}
 	}
 	var parent organizePreparationPayload
-	if item.Directory == nil {
+	if item.Manual != nil {
+		if job.ParentJobID != "" || item.Directory != nil || len(item.Manual.Paths) != 1 || item.Manual.Paths[0] != item.File.Path || len(item.Manual.HistoryIDs) != 0 {
+			return bad("INVALID_JOB", "手动整理任务与提交的源文件不匹配")
+		}
+		parent.Request = *item.Manual
+	} else if item.Directory == nil {
 		var rawRequest []byte
 		if err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM jobs WHERE id=? AND kind='organize_prepare'`, job.ParentJobID).Scan(&rawRequest); err != nil {
 			return err
@@ -205,6 +208,9 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 	}
 	file.originalDirectoryListings = map[string][]map[string]any{}
 	for _, path := range []string{filepath.Dir(file.Path), filepath.Dir(file.originalMetadataPath)} {
+		if job.ParentJobID == "" {
+			break // Standalone files have no stored directory listing.
+		}
 		if _, seen := file.originalDirectoryListings[path]; seen {
 			continue
 		}
@@ -224,7 +230,11 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 		}
 		file.originalDirectoryListings[path] = entries
 	}
-	ctx = context.WithValue(ctx, organizeFileKey{}, organizeFileWork{DirectoryObservation: item.Directory != nil, Job: job, File: file, Stamp: item.Snapshot, BatchID: item.BatchID, HistorySource: item.HistorySource})
+	work := organizeFileWork{DirectoryObservation: item.Directory != nil, Job: job, File: file, Stamp: item.Snapshot, BatchID: item.BatchID, HistorySource: item.HistorySource}
+	if item.Manual != nil {
+		work.InteractiveKey = item.ID
+	}
+	ctx = context.WithValue(ctx, organizeFileKey{}, work)
 	ctx = context.WithValue(ctx, originalScrapeBatchKey{}, item.BatchID)
 	known := ImportPlan{Files: []PlanFile{{Source: file.Path}}}
 	known.Media.Title, known.Media.Year = file.Parsed.Title, file.Parsed.Year
@@ -271,9 +281,11 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 	if item.Directory != nil {
 		return a.runDirectoryOrganizeFile(ctx, item, file, &known, fail)
 	}
-	if item.HistoryID != "" {
-		parent.Request.HistoryIDs = []string{item.HistoryID}
-		parent.Request.Paths = nil
+	if item.HistoryID != "" || item.Manual != nil {
+		if item.HistoryID != "" {
+			parent.Request.HistoryIDs = []string{item.HistoryID}
+			parent.Request.Paths = nil
+		}
 		// Auxiliary material and plugin metadata are resolved by this file's
 		// worker; a corrupt history or failed provider cannot stop other files.
 		scan, err := a.manualOrganizeScan(ctx, file.Path, parent.Request)
@@ -282,10 +294,14 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 		}
 		files := scan.(map[string]any)["files"].([]importScanFile)
 		if len(files) != 1 || files[0].Path != file.Path {
-			return fail(bad("REVIEW_ORGANIZE_HISTORY", "历史记录不再对应一个文件"))
+			if item.HistoryID != "" {
+				return fail(bad("REVIEW_ORGANIZE_HISTORY", "所选整理历史不再对应同一源文件"))
+			}
+			return fail(bad("REVIEW_ORGANIZE_SELECTION", "所选源路径未对应一个可整理的文件"))
 		}
 		file = files[0]
-		ctx = context.WithValue(ctx, organizeFileKey{}, organizeFileWork{DirectoryObservation: item.Directory != nil, Job: job, File: file, Stamp: item.Snapshot, BatchID: item.BatchID, HistorySource: item.HistorySource})
+		work.File = file
+		ctx = context.WithValue(ctx, organizeFileKey{}, work)
 	}
 	out, err := a.manualOrganize(ctx, parent.Request)
 	if err != nil {
@@ -294,7 +310,21 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 		}
 		return fail(err)
 	}
+	for _, item := range out.Items {
+		if item.Status == "failed" && item.JobID == "" {
+			// A rejected history cleanup deliberately leaves its previous success
+			// intact. The selected queue item must still report that rejection.
+			code := item.ErrorCode
+			if code == "" {
+				code = "REVIEW_ORGANIZE_SELECTION"
+			}
+			return bad(code, item.Error)
+		}
+	}
 	if out.Submitted == 0 && out.Failed == 0 {
+		if parent.Request.Interactive && len(out.Items) == 1 && out.Items[0].Status == "skipped" {
+			return bad("ORGANIZE_FILE_SKIPPED", out.Items[0].Error)
+		}
 		return fail(bad("REVIEW_ORGANIZE_SELECTION", "文件不符合本次整理条件"))
 	}
 	return nil

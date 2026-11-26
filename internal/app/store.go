@@ -131,6 +131,7 @@ func OpenStore(dir string) (*Store, error) {
  CREATE INDEX IF NOT EXISTS jobs_due ON jobs(state,run_at);
  CREATE INDEX IF NOT EXISTS jobs_retention ON jobs(state,updated_at) WHERE state IN ('succeeded','cancelled');
  CREATE INDEX IF NOT EXISTS jobs_subject ON jobs(kind,json_extract(payload,'$.id'),created_at);
+ CREATE INDEX IF NOT EXISTS jobs_organize_parent ON jobs(json_extract(payload,'$._parent_job_id'),state) WHERE kind IN ('organize_file','import');
  CREATE INDEX IF NOT EXISTS jobs_pending_scrape_batch ON jobs(json_extract(payload,'$.original_scrape_batch')) WHERE ` + pendingScrapeJobs + `;
  CREATE TABLE IF NOT EXISTS events(seq INTEGER PRIMARY KEY AUTOINCREMENT,time TEXT NOT NULL,workflow_id TEXT NOT NULL,job_id TEXT NOT NULL,level TEXT NOT NULL,module TEXT NOT NULL,event TEXT NOT NULL,message TEXT NOT NULL);
  CREATE INDEX IF NOT EXISTS events_job ON events(job_id,seq);

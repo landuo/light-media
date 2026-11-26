@@ -52,9 +52,7 @@ func (a *App) originalCatalogTMDBDetail(ctx context.Context, kind string, id int
 				return nil, e
 			}
 			language := sourceText(originalLanguage)
-			key := "detail-images:zh:" + imageKind + ":" + strconv.FormatInt(parsed, 10) + ":" + language
-			result := a.cachedRead(ctx, key, 24*time.Hour, func() (any, error) { return a.catalog().SourceImages(ctx, imageKind, parsed, "zh", language) })
-			return result.data, result.err
+			return a.cachedTMDBImages(ctx, imageKind, parsed, language)
 		}, a.Settings().TMDBImageDomain)
 	})
 	if err != nil {
@@ -81,4 +79,12 @@ func (a *App) originalCatalogTMDBDetail(ctx context.Context, kind string, id int
 	}
 	result.Media = items[0]
 	return result, nil
+}
+
+func (a *App) cachedTMDBImages(ctx context.Context, kind string, id int64, language string) (json.RawMessage, error) {
+	key := "detail-images:zh:" + kind + ":" + strconv.FormatInt(id, 10) + ":" + language
+	result := a.cachedRead(ctx, key, 24*time.Hour, func() (any, error) {
+		return a.catalog().SourceImages(ctx, kind, id, "zh", language)
+	})
+	return result.data, result.err
 }

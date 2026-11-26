@@ -89,7 +89,7 @@ func (a *App) originalManualTransferIdentity(ctx context.Context, request Import
 			}
 			return a.originalHostMediaRecognizeTMDB(ctx, kwargs)
 		}
-		full, err := a.sourceRecognizeTMDBCore(ctx, catalog.Media{ID: native.TMDBID, MediaType: native.MediaType})
+		full, err := a.cachedTMDBSourceInformation(ctx, catalog.Media{ID: native.TMDBID, MediaType: native.MediaType})
 		return full.MediaInfo, err
 	})
 	if err != nil {
@@ -160,7 +160,13 @@ func (a *App) originalTransferObtainImages(ctx context.Context, recognized json.
 			if e != nil {
 				return nil, e
 			}
-			return a.catalog().SourceImages(ctx, kind, parsed, "zh", sourceText(language))
+			return a.cachedTMDBImages(ctx, kind, parsed, sourceText(language))
 		}, a.Settings().TMDBImageDomain)
+	})
+}
+
+func (a *App) recognizeTransferTMDBMedia(ctx context.Context, input catalog.Media) (sourceMediaInformation, error) {
+	return a.originalRecognizeTMDBMedia(ctx, input, func() (sourceMediaInformation, error) {
+		return a.cachedTMDBSourceInformation(ctx, input)
 	})
 }
