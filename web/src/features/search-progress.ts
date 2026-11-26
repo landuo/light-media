@@ -23,14 +23,17 @@ export function searchPending(status: string) {
 }
 export function interruptedSearch(output: any, siteIDs: string[], status = 'cancelled') {
   const previous = output?.sites || [];
+  const received = status === 'timeout'
+    ? new Set((output?.candidates || []).map((c: any) => c.resource.site_id))
+    : undefined;
   return {
     ...output,
     candidates: output?.candidates || [],
     sites: siteIDs.map((id) => {
       const site = previous.find((s: any) => s.id === id);
-      return !site || pending.has(site.status)
-        ? { ...site, id, status, count: site?.count || 0 }
-        : site;
+      if (site && !pending.has(site.status)) return site;
+      const count = site?.count || 0;
+      return { ...site, id, status: received?.has(id) ? 'partial' : status, count };
     }),
   };
 }

@@ -38,3 +38,29 @@ test('connection interruption never presents unfinished sites as successful or e
   assert.equal(searchPending('cancelled'), false);
   assert.equal(siteElapsed({ elapsed_ms: 2300 }), ' · 2.3 秒');
 });
+
+test('local deadline marks unfinished sites based on candidates already visible', () => {
+  const done = { id: 'fast', status: 'ok', count: 1 };
+  const err = { id: 'failed', status: 'failed', message: 'site error' };
+  const candidates = [{ resource: { site_id: 'page', id: '1' } }];
+  const snapshot = interruptedSearch(
+    {
+      candidates,
+      sites: [
+        done,
+        err,
+        { id: 'page', status: 'searching', count: 1 },
+        { id: 'unfiltered', status: 'searching', count: 10 },
+      ],
+    },
+    ['fast', 'failed', 'page', 'unfiltered', 'slow'],
+    'timeout',
+  );
+  assert.strictEqual(snapshot.candidates, candidates);
+  assert.strictEqual(snapshot.sites[0], done);
+  assert.strictEqual(snapshot.sites[1], err);
+  assert.deepEqual(
+    snapshot.sites.map((s) => s.status),
+    ['ok', 'failed', 'partial', 'timeout', 'timeout'],
+  );
+});

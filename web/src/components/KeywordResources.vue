@@ -3,6 +3,7 @@ import { VTextField } from 'vuetify/components/VTextField';
 import { ref, shallowRef, computed, onActivated, onMounted, onUnmounted } from 'vue';
 import {
   api,
+  APIError,
   action,
   ui,
   emptyPolicy,
@@ -47,6 +48,7 @@ const query = ref(params.get('query') || ''),
   output = shallowRef<any>(null),
   error = ref(''),
   loading = ref(false),
+  receivedFinalResult = ref(false),
   initialized = ref(false),
   selectedSites = ref<string[]>([]),
   policy = ref(emptyPolicy()),
@@ -143,6 +145,7 @@ async function search() {
   const c = new AbortController();
   controller = c;
   loading.value = true;
+  receivedFinalResult.value = false;
   output.value = null;
   selected.value = [];
   error.value = '';
@@ -158,12 +161,14 @@ async function search() {
     await keywordResourceSearch(request.value, c.signal, (value) => {
       if (controller === c) output.value = value;
     });
+    if (controller === c) receivedFinalResult.value = true;
   } catch (e) {
     if (controller === c && !disposed) {
+      const waitExpired = e instanceof APIError && e.code === 'search_wait_timeout';
       output.value = interruptedSearch(
         output.value,
         request.value?.site_ids || [],
-        c.signal.aborted ? 'cancelled' : 'interrupted',
+        c.signal.aborted ? 'cancelled' : waitExpired ? 'timeout' : 'interrupted',
       );
       if (c.signal.aborted) toast('已停止搜索，完成的站点结果已保留');
       else error.value = errorText(e);
@@ -321,6 +326,7 @@ onUnmounted(() => {
       <button class="small" @click="selected = []">取消选择</button>
     </div>
     <ResourceSearchResults
+      v-if="loading || candidates.length || receivedFinalResult"
       :view="view"
       :groups="groups"
       :results="filtered"

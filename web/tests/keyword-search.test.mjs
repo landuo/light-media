@@ -24,7 +24,8 @@ test('keyword resource search sends an abortable authenticated request without i
     { candidates: [], sites: [] },
   );
   assert.equal(captured.path, '/api/search/resources');
-  assert.equal(captured.options.signal, control.signal);
+  assert.ok(captured.options.signal instanceof AbortSignal);
+  assert.equal(captured.options.signal.aborted, false);
   assert.equal(captured.options.credentials, 'same-origin');
   assert.equal(captured.options.headers.Accept, 'text/event-stream');
   assert.equal(JSON.parse(captured.options.body).tmdb_id, undefined);
@@ -89,4 +90,79 @@ test('release title is only a suggested catalog query, never an automatically se
   );
   assert.equal(resourceTitleQuery('Synthetic Show S02E05 1080p'), 'Synthetic Show');
   assert.equal(resourceTitleQuery('[GROUP] 2025 1080p', 'fallback title'), 'fallback title');
+});
+
+test('browser keyword deadline preserves complete frames even when the transport never closes', async (t) => {
+  for (const scenario of ['timeout', 'unconfirmed filter', 'no frame', 'cancel', 'complete']) {
+    await t.test(scenario, async (t) => {
+      t.mock.timers.enable({ apis: ['setTimeout'] });
+      const original = globalThis.fetch;
+      const user = new AbortController();
+      const opened = Promise.withResolvers();
+      const published = Promise.withResolvers();
+      const snapshots = [];
+      let connection, network;
+      const initial = {
+        sites: [{ id: 'fast', status: 'searching', count: 2 }],
+        candidates:
+          scenario === 'unconfirmed filter' ? [] : [{ resource: { site_id: 'fast', id: '1' } }],
+      };
+      const send = (event, snapshot) =>
+        connection.enqueue(
+          new TextEncoder().encode(`event: ${event}\ndata: ${JSON.stringify(snapshot)}\n\n`),
+        );
+      globalThis.fetch = async (_url, options) => {
+        network = options.signal;
+        const body = new ReadableStream({
+          start(controller) {
+            connection = controller;
+            if (scenario !== 'no frame') send('progress', initial);
+          },
+          // A delayed TCP/proxy close must not hold the screen in loading state.
+          cancel() {
+            return new Promise(() => {});
+          },
+        });
+        opened.resolve();
+        return new Response(body, { headers: { 'Content-Type': 'text/event-stream' } });
+      };
+      t.after(() => {
+        globalThis.fetch = original;
+      });
+      const search = keywordResourceSearch({ query: 'synthetic' }, user.signal, (frame) => {
+        snapshots.push(frame);
+        published.resolve();
+      });
+      await (scenario === 'no frame' ? opened.promise : published.promise);
+      t.mock.timers.tick(14999);
+      assert.equal(network.aborted, false);
+      if (scenario === 'complete') {
+        const final = { ...initial, sites: [{ id: 'fast', status: 'ok', count: 1 }] };
+        send('complete', final);
+        assert.deepEqual(await search, final);
+        t.mock.timers.tick(30000);
+        assert.equal(network.aborted, false, 'the real final frame cleared its timer');
+        assert.equal(snapshots.length, 2);
+      } else if (scenario === 'cancel') {
+        user.abort();
+        await assert.rejects(search, (error) => error.name === 'AbortError');
+        t.mock.timers.tick(1);
+        assert.equal(network.reason, user.signal.reason);
+        assert.deepEqual(snapshots, [initial]);
+      } else {
+        t.mock.timers.tick(1);
+        await assert.rejects(search, (error) => {
+          assert.equal(error.code, 'search_wait_timeout');
+          assert.match(
+            error.message,
+            scenario === 'timeout' ? /已保留 1 个资源/ : /尚未收到可展示的结果/,
+          );
+          return true;
+        });
+        assert.equal(user.signal.aborted, false);
+        assert.deepEqual(snapshots, scenario === 'no frame' ? [] : [initial]);
+      }
+      assert.equal(ui.busy, 0);
+    });
+  }
 });

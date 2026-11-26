@@ -248,6 +248,13 @@ async function postProgressStream(
     const decodeKeyword = keyword ? keywordSearchDecoder(requestId) : undefined;
     const reader = response.body.getReader(),
       decoder = new TextDecoder();
+    // Cancel a pending read even if a proxy keeps the response open. A complete
+    // frame ends the search independently of transport cleanup.
+    const stopReading = () => { void reader.cancel().catch(() => {}); };
+    if (keyword) {
+      signal.addEventListener('abort', stopReading, { once: true });
+      if (signal.aborted) stopReading();
+    }
     let buffer = '',
       complete: any;
     function consume(frame: string) {
@@ -283,6 +290,7 @@ async function postProgressStream(
     try {
       while (true) {
         const chunk = await reader.read();
+        if (keyword && signal.aborted) throw signal.reason;
         buffer += decoder.decode(chunk.value || new Uint8Array(), { stream: !chunk.done });
         buffer = buffer.replace(/\r\n/g, '\n');
         let end: number;
@@ -308,7 +316,12 @@ async function postProgressStream(
         requestId,
       );
     } finally {
-      await reader.cancel().catch(() => {});
+      if (keyword) {
+        signal.removeEventListener('abort', stopReading);
+        stopReading();
+      } else {
+        await reader.cancel().catch(() => {});
+      }
     }
   } finally {
     ui.busy--;

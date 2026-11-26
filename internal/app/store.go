@@ -141,6 +141,7 @@ func OpenStore(dir string) (*Store, error) {
  CREATE INDEX IF NOT EXISTS asset_slots_owner ON asset_slots(asset_id);
  CREATE TABLE IF NOT EXISTS site_usage(site_id TEXT NOT NULL,ts INTEGER NOT NULL);
  CREATE INDEX IF NOT EXISTS site_usage_window ON site_usage(site_id,ts);
+ CREATE INDEX IF NOT EXISTS site_usage_expiry ON site_usage(ts);
  CREATE TABLE IF NOT EXISTS quota(site_id TEXT NOT NULL,day TEXT NOT NULL,used INTEGER NOT NULL,PRIMARY KEY(site_id,day));
  INSERT OR IGNORE INTO migrations VALUES(1,strftime('%Y-%m-%dT%H:%M:%fZ','now'));
  `

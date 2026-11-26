@@ -1,10 +1,25 @@
-import { searchStream } from '../api.ts';
+import { APIError, searchStream } from '../api.ts';
+import { boundedRead } from './bounded-read.ts';
 export async function keywordResourceSearch(
   body: Record<string, any>,
   signal: AbortSignal,
   progress: (value: any) => void = () => {},
 ) {
-  return searchStream(body, progress, signal, '/search/resources');
+  let shown = 0;
+  return boundedRead(async (transport) => {
+    try {
+      return await searchStream(body, (value) => {
+        shown = value.candidates?.length || 0;
+        progress(value);
+      }, transport, '/search/resources');
+    } catch (error) {
+      if (transport.aborted && !signal.aborted) {
+        const detail = shown ? `已保留 ${shown} 个资源` : '尚未收到可展示的结果';
+        throw new APIError('search_wait_timeout', `等待已满 15 秒，${detail}，未收到最终搜索结果。`, '');
+      }
+      throw error;
+    }
+  }, signal, 15000);
 }
 export function resourceTitleQuery(title: string, fallback = '') {
   const clean = title
