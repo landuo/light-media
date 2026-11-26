@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"net/http"
 	"strings"
@@ -107,8 +108,41 @@ func (a *App) notificationAPI(r *http.Request, p string) (any, error) {
 	}
 	return a.openNotification(record)
 }
+func requestAuditRecord(operation, request string, status int) map[string]any {
+	return map[string]any{"time": now(), "actor": "admin", "operation": operation, "request_id": request, "http_status": status}
+}
+
+type organizeAuditKey struct{}
+
+// This state belongs to one HTTP request and is never serialized into a job.
+type organizeRequestAudit struct {
+	id, request string
+	committed   bool
+}
+
+func (audit *organizeRequestAudit) commit(ctx context.Context, tx *sql.Tx) error {
+	if audit == nil {
+		return tx.Commit()
+	}
+	// Auditing is best effort. A failed INSERT still allows SQLite to commit
+	// the business records and the HTTP middleware to retry the audit row.
+	auditErr := txPut(ctx, tx, "audit", audit.id, requestAuditRecord("POST.files", audit.request, http.StatusOK))
+	err := tx.Commit()
+	audit.committed = err == nil && auditErr == nil
+	return err
+}
+
 func (a *App) auditRequest(ctx context.Context, operation, request string, status int) {
-	_ = a.Store.Put(ctx, "audit", id("audit_"), map[string]any{"time": now(), "actor": "admin", "operation": operation, "request_id": request, "http_status": status})
+	var key string
+	if audit, _ := ctx.Value(organizeAuditKey{}).(*organizeRequestAudit); audit != nil && audit.request == request && operation == "POST.files" {
+		if audit.committed && status == http.StatusOK {
+			return
+		}
+		key = audit.id // Reuse the row even following an uncertain commit.
+	} else {
+		key = id("audit_")
+	}
+	_ = a.Store.Put(ctx, "audit", key, requestAuditRecord(operation, request, status))
 }
 func (a *App) decisionRecords(ctx context.Context, wf string) ([]json.RawMessage, error) {
 	rows, e := a.Store.reader().QueryContext(ctx, `SELECT payload FROM decision_log WHERE json_extract(payload,'$.workflow_id')=? ORDER BY updated_at LIMIT 10`, wf)

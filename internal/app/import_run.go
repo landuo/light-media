@@ -71,6 +71,10 @@ type managedFile struct {
 }
 
 func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string) (Job, error) {
+	return a.executeImportWithAudit(ctx, planID, fileIDs, nil)
+}
+
+func (a *App) executeImportWithAudit(ctx context.Context, planID string, fileIDs []string, audit *organizeRequestAudit) (Job, error) {
 	phase := a.performanceStages(ctx, "import_submit", "download_guard")
 	defer phase("")
 	if err := a.guardDownloadReviewPlan(ctx, planID); err != nil {
@@ -224,7 +228,7 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		return Job{}, err
 	}
 	phase("commit")
-	if err = tx.Commit(); err != nil {
+	if err = audit.commit(ctx, tx); err != nil {
 		return Job{}, err
 	}
 	a.wakeQueuedJob(job.Kind)

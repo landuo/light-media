@@ -201,6 +201,9 @@ func (a *App) fileManagerAPI(r *http.Request, p string) (any, error) {
 		if in.Background && !in.Preview {
 			return a.submitManualOrganize(ctx, in)
 		}
+		if len(in.Paths) == 1 && len(in.HistoryIDs) == 0 && !in.Background {
+			in.audit, _ = ctx.Value(organizeAuditKey{}).(*organizeRequestAudit)
+		}
 		return a.manualOrganize(ctx, in)
 	case p == "recognize" && r.Method == "POST":
 		var in struct {

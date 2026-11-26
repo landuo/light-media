@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"net/http"
 	"strings"
 	"time"
@@ -44,6 +45,10 @@ func (a *App) requestLogged(next http.Handler) http.Handler {
 			w.Header().Set("X-Request-ID", id("req_"))
 		}
 		r = r.WithContext(a.traceContext(r.Context(), "", "", w.Header().Get("X-Request-ID")))
+		if r.Method == http.MethodPost && r.URL.Path == "/api/files/organize" {
+			audit := &organizeRequestAudit{id: id("audit_"), request: w.Header().Get("X-Request-ID")}
+			r = r.WithContext(context.WithValue(r.Context(), organizeAuditKey{}, audit))
+		}
 		start := time.Now()
 		capture := &statusWriter{ResponseWriter: w}
 		next.ServeHTTP(capture, r)

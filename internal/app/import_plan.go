@@ -36,6 +36,7 @@ type ImportFileRequest struct {
 }
 
 type ImportRequest struct {
+	audit                     *organizeRequestAudit
 	originalDirectoryPlanned  bool
 	originalDirectoryProvider bool
 	originalDirectoryListings map[string][]map[string]any
@@ -1056,7 +1057,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	if err = a.saveNativeDirectoryAuthorizationTx(ctx, tx, plan, meta, request.directorySelection); err != nil {
 		return plan, err
 	}
-	return plan, tx.Commit()
+	return plan, request.audit.commit(ctx, tx)
 }
 
 func importEpisodes(episodes []int) []int {

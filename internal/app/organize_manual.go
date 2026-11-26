@@ -23,6 +23,7 @@ import (
 // Manual organization is one operation shared by files and transfer history.
 // Preview uses the same preparation path without submitting a transfer job.
 type manualOrganizeRequest struct {
+	audit                 *organizeRequestAudit
 	originalRetry         bool
 	originalRetryAttempt  *originalTransferRetryAttempt
 	originalResolvedMedia json.RawMessage
@@ -387,6 +388,12 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		}()
 	}
 	phase("plan_and_submit")
+	// Once a single direct file commits, only response formatting remains.
+	// Batches can still fail on later items or while closing their scrape batch.
+	finalAudit := in.audit
+	if len(files) != 1 || len(in.Paths) != 1 || in.Paths[0] != files[0].Path || len(out.Items) != 0 {
+		finalAudit = nil
+	}
 	for _, file := range files {
 		err = nil
 		if prepared[file.Path] {
@@ -579,6 +586,9 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		}
 		if err == nil {
 			request.originalModulePreview = in.Preview
+			if in.Preview {
+				request.audit = finalAudit
+			}
 			plan, err = a.previewImport(ctx, request)
 		}
 		if err != nil {
@@ -647,7 +657,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 					continue
 				}
 			}
-			job, e := a.executeImport(executeCtx, plan.ID, nil)
+			job, e := a.executeImportWithAudit(executeCtx, plan.ID, nil, finalAudit)
 			if e != nil {
 				if e = fail(file.Path, e, plan); e != nil {
 					return out, e
