@@ -5,7 +5,7 @@ import "path/filepath"
 // The directory list is an ordered rule list, as in MoviePilot. A file belongs
 // to the first active rule accepting its path and media type, even when another
 // watcher also sees that file through an overlapping bind mount.
-func (a *App) directoryRuleOwnsFile(rule DirectoryRule, file importScanFile) bool {
+func directoryRuleOwnsFile(settings *Settings, rule DirectoryRule, file importScanFile, identity func(string) (mountedDirectoryID, error)) bool {
 	kind := ""
 	if file.InferredMedia != nil {
 		kind = file.InferredMedia.Type
@@ -23,15 +23,15 @@ func (a *App) directoryRuleOwnsFile(rule DirectoryRule, file importScanFile) boo
 	// first pass existed here, so a movie that landed under a TV rule reported
 	// "此下载目录未配置启用的整理规则" instead of being organized at all.
 	active := []DirectoryRule{}
-	for _, other := range a.Settings().Directories {
+	for _, other := range settings.Directories {
 		if !other.Enabled || other.MonitorType == "none" || other.RootID == "" {
 			continue
 		}
-		source, err := a.directorySource(other)
+		source, err := directorySourceWithSettings(*settings, other)
 		if err != nil {
 			continue
 		}
-		mapped, relevant := sharedDirectoryPath(source, filepath.Dir(file.Path))
+		mapped, relevant := sharedDirectoryPathWithIdentity(source, filepath.Dir(file.Path), identity)
 		if relevant && within(source, filepath.Join(mapped, filepath.Base(file.Path))) {
 			active = append(active, other)
 		}
@@ -53,5 +53,4 @@ func (a *App) directoryRuleOwnsFile(rule DirectoryRule, file importScanFile) boo
 	}
 	// Fall through to the first covering rule, like the original's last loop.
 	return active[0].ID == rule.ID
-	return false
 }

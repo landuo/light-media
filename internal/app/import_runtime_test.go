@@ -342,3 +342,32 @@ func TestImportExclusionRechecksAtomicallyBeforeQueue(t *testing.T) {
 		t.Fatal("reservation escaped failed transaction")
 	}
 }
+
+func TestImportQueueTransitionsPreservePlanFiles(t *testing.T) {
+	a, source, _ := importTestApp(t)
+	importFixture(t, a, "movie")
+	path := filepath.Join(source, "Test Film (2024).mkv")
+	importWrite(t, path, []byte("synthetic movie"))
+	ctx := t.Context()
+	plan, err := a.previewImport(ctx, ImportRequest{RootID: "root", MediaType: "movie", TMDBID: 123, Mode: "hardlink", Files: []ImportFileRequest{{Path: path}}})
+	if err != nil || len(plan.Files) != 1 {
+		t.Fatalf("preview: %v, %v", plan, err)
+	}
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER protect_unchanged_file BEFORE DELETE ON import_plan_file BEGIN SELECT RAISE(ABORT,'rewrote unchanged plan file'); END`); err != nil {
+		t.Fatal(err)
+	}
+	job := overwriteStart(t, a, plan)
+	check := func(state string) {
+		t.Helper()
+		var projected, payload, src string
+		err := a.Store.DB.QueryRow(`SELECT p.state,json_extract(p.payload,'$.state'),f.source FROM import_plan p JOIN import_plan_file f ON f.plan_id=p.id WHERE p.id=?`, plan.ID).Scan(&projected, &payload, &src)
+		if err != nil || projected != state || payload != state || src != path {
+			t.Fatalf("%s: projected=%q payload=%q source=%q err=%v", state, projected, payload, src, err)
+		}
+	}
+	check("queued")
+	if err := a.startImportRun(ctx, job, &plan, []int{0}); err != nil {
+		t.Fatal(err)
+	}
+	check("running")
+}

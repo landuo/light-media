@@ -126,25 +126,33 @@ func (a *App) transitionOriginalTransferTargetAt(ctx context.Context, job Job, p
 		return bad("REVIEW_PLUGIN_TRANSFER_TARGET", "插件改变了洗版目标，请先核对原资产与实际覆盖收据")
 	}
 	proposed := before
-	proposed.Files = append([]PlanFile(nil), before.Files...)
 	proposedMeta := actualMeta
-	if sideIndex < 0 {
-		proposed.Files[index].Target = receipt.Target
-	} else {
-		proposedMeta.Sidecars = make(map[string][]importSidecar, len(actualMeta.Sidecars))
-		for key, sides := range actualMeta.Sidecars {
-			proposedMeta.Sidecars[key] = append([]importSidecar(nil), sides...)
+	if receipt.Target == file.Target {
+		// Native naming commonly confirms the preview. Its receipt advances,
+		// but the plan, child file rows and authenticated selection stay valid.
+		if err = a.requireNativeDirectoryAuthorizationTx(ctx, tx, before, actualMeta); err != nil {
+			return err
 		}
-		proposedMeta.Sidecars[before.Files[index].ID][sideIndex].Target = receipt.Target
-	}
-	if err = a.transitionNativeDirectoryAuthorizationTx(ctx, tx, before, actualMeta, proposed, proposedMeta); err != nil {
-		return err
-	}
-	if err = txPut(ctx, tx, "import_plan", plan.ID, proposed); err != nil {
-		return err
-	}
-	if sideIndex >= 0 {
-		if err = txPut(ctx, tx, "import_meta", plan.ID, proposedMeta); err != nil {
+	} else {
+		if sideIndex < 0 {
+			proposed.Files = append([]PlanFile(nil), before.Files...)
+			proposed.Files[index].Target = receipt.Target
+		} else {
+			proposedMeta.Sidecars = make(map[string][]importSidecar, len(actualMeta.Sidecars))
+			for key, sides := range actualMeta.Sidecars {
+				proposedMeta.Sidecars[key] = append([]importSidecar(nil), sides...)
+			}
+			proposedMeta.Sidecars[before.Files[index].ID][sideIndex].Target = receipt.Target
+		}
+		if err = a.transitionNativeDirectoryAuthorizationTx(ctx, tx, before, actualMeta, proposed, proposedMeta); err != nil {
+			return err
+		}
+		if sideIndex < 0 {
+			err = txPut(ctx, tx, "import_plan", plan.ID, proposed)
+		} else {
+			err = txPut(ctx, tx, "import_meta", plan.ID, proposedMeta)
+		}
+		if err != nil {
 			return err
 		}
 	}

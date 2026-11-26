@@ -314,7 +314,7 @@ var nativeTables = []recordTable{
 	{name: "import_receipt", cols: []recordColumn{{"target", "$.target", "TEXT", ""}, {"state", "$.state", "TEXT", ""}, {"plan_id", "$.plan_id", "TEXT", ""}},
 		idx: []string{`CREATE INDEX IF NOT EXISTS import_receipt_target ON import_receipt(target)`, `CREATE INDEX IF NOT EXISTS import_receipt_state ON import_receipt(state)`, `CREATE INDEX IF NOT EXISTS import_receipt_plan ON import_receipt(plan_id)`}},
 	{name: "import_receipt_member", cols: []recordColumn{{"receipt_id", "$.receipt_id", "TEXT", ""}, {"asset_id", "$.asset_id", "TEXT", ""}},
-		idx: []string{`CREATE INDEX IF NOT EXISTS import_receipt_member_asset ON import_receipt_member(asset_id)`}},
+		idx: []string{`CREATE INDEX IF NOT EXISTS import_receipt_member_asset ON import_receipt_member(asset_id)`, `CREATE INDEX IF NOT EXISTS import_receipt_member_receipt ON import_receipt_member(receipt_id)`}},
 	{name: "import_meta", cols: []recordColumn{{"plan_id", "$.plan_id", "TEXT", ""}, {"committed_at", "$.committed_at", "TEXT", ""}},
 		idx: []string{`CREATE INDEX IF NOT EXISTS import_meta_plan ON import_meta(plan_id)`}},
 	{name: "managed_file", cols: []recordColumn{{"asset_id", "$.asset_id", "TEXT", ""}, {"path", "$.path", "TEXT", ""}, {"root_id", "$.root_id", "TEXT", ""}, {"sha256", "$.sha256", "TEXT", ""}, {"media_key", "$.media_key", "TEXT", ""}},

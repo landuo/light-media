@@ -267,16 +267,7 @@ func (a *App) originalHostDownloaderProtectSharedFiles(ctx context.Context, scop
 	// Every candidate file is compared against the selected paths. Reuse the
 	// mount identity across the whole scan instead of stat-ing the same
 	// ancestors again for each pair.
-	identities := map[string]mountedDirectoryID{}
-	identityErrors := map[string]error{}
-	identity := func(dir string) (mountedDirectoryID, error) {
-		if value, ok := identities[dir]; ok {
-			return value, identityErrors[dir]
-		}
-		value, err := mountedDirectoryIdentity(dir)
-		identities[dir], identityErrors[dir] = value, err
-		return value, err
-	}
+	identity := cachedMountedDirectoryIdentity()
 	cleanPaths := map[string]string{}
 	cleanOf := func(p string) string {
 		if value, ok := cleanPaths[p]; ok {

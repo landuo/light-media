@@ -55,11 +55,10 @@ func (a *App) startImportRun(ctx context.Context, job Job, plan *ImportPlan, sel
 				}
 			}
 			if skip != nil {
-				plan.State = "cancelled"
 				if _, err = tx.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id=?`, plan.ID); err != nil {
 					return err
 				}
-				if err = txPut(ctx, tx, "import_plan", plan.ID, *plan); err != nil {
+				if err = updateImportPlanState(ctx, tx, plan, "cancelled"); err != nil {
 					return err
 				}
 				if err = tx.Commit(); err != nil {
@@ -80,11 +79,28 @@ func (a *App) startImportRun(ctx context.Context, job Job, plan *ImportPlan, sel
 			return err
 		}
 	}
-	plan.State = "running"
-	if err := txPut(ctx, tx, "import_plan", plan.ID, *plan); err != nil {
+	if err := updateImportPlanState(ctx, tx, plan, "running"); err != nil {
 		return err
 	}
 	return tx.Commit()
+}
+
+// A queue transition changes only the parent. File projections were recorded
+// with the preview and remain valid until a transfer changes a file.
+func updateImportPlanState(ctx context.Context, tx *sql.Tx, plan *ImportPlan, state string) error {
+	result, err := tx.ExecContext(ctx, `UPDATE import_plan SET payload=CAST(json_set(payload,'$.state',?) AS BLOB),updated_at=? WHERE id=?`, state, now(), plan.ID)
+	if err != nil {
+		return err
+	}
+	n, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if n == 0 {
+		return sql.ErrNoRows
+	}
+	plan.State = state
+	return nil
 }
 
 // A new local execution may take over an abandoned slot for the exact same

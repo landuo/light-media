@@ -260,18 +260,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			paths[i] = resolved
 		}
 	}
-	if !in.Preview && !isFileJob && (preparation.ID == "" || len(in.HistoryIDs) > 0) {
-		batchID := id("scrape_batch_")
-		if err := a.Store.Put(ctx, "original_scrape_batch", batchID, originalScrapeBatch{ID: batchID}); err != nil {
-			return out, err
-		}
-		ctx = context.WithValue(ctx, originalScrapeBatchKey{}, batchID)
-		defer func() {
-			closeCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-			defer cancel()
-			returnErr = errors.Join(returnErr, a.closeOriginalScrapeBatch(closeCtx, batchID, true))
-		}()
-	}
+
 	fail := func(source string, e error, known ...ImportPlan) error {
 		if isFileJob && (ctx.Err() != nil || organizeFileInterrupted(e)) {
 			return e
@@ -382,6 +371,20 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			return out, bad("REVIEW_ORGANIZE_PREPARATION", "未找到符合整理条件的文件")
 		}
 		return a.enqueueOrganizeFiles(ctx, preparation, files, prepared, out)
+	}
+	// executeImport creates a closed scrape batch in the queue transaction for
+	// a single job. Only multiple candidates need an open shared batch.
+	if !in.Preview && !isFileJob && len(files) > 1 {
+		batchID := id("scrape_batch_")
+		if err := a.Store.Put(ctx, "original_scrape_batch", batchID, originalScrapeBatch{ID: batchID}); err != nil {
+			return out, err
+		}
+		ctx = context.WithValue(ctx, originalScrapeBatchKey{}, batchID)
+		defer func() {
+			closeCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			returnErr = errors.Join(returnErr, a.closeOriginalScrapeBatch(closeCtx, batchID, true))
+		}()
 	}
 	phase("plan_and_submit")
 	for _, file := range files {
@@ -966,8 +969,8 @@ type organizeQueuePreparation struct {
 const organizeQueueJobsSQL = `SELECT ` + jobColumns + ` FROM jobs
  WHERE id IN (
  SELECT id FROM jobs INDEXED BY jobs_due WHERE kind IN ('import','organize_prepare','organize_file') AND state IN ` + activeOrganizeStates + `
- UNION SELECT json_extract(payload,'$.job') FROM organize_queue_member INDEXED BY organize_queue_group
- WHERE json_extract(payload,'$.group') IN (` + liveOrganizeGroups + `))
+ UNION SELECT job_id FROM organize_queue_member INDEXED BY organize_queue_group
+ WHERE group_id IN (` + liveOrganizeGroups + `))
  AND kind IN ('import','organize_prepare','organize_file') AND state!='cancelled'
  AND (kind!='organize_prepare' OR NOT EXISTS(SELECT 1 FROM organize_listing WHERE organize_listing.id=jobs.id))
  ORDER BY created_at DESC, id`

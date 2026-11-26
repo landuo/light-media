@@ -320,10 +320,29 @@ func (s *Store) Put(ctx context.Context, kind, key string, value any) error {
 		_, e = s.DB.ExecContext(ctx, `INSERT INTO plugin_record(kind,id,payload,updated_at) VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, key, b, at)
 		return e
 	}
-	if _, e = s.DB.ExecContext(ctx, recordInsertSQL(kind, t), key, b, at); e != nil {
-		return e
+	return s.writeRecord(ctx, kind, func(q execer) error {
+		if _, err := q.ExecContext(ctx, recordInsertSQL(kind, t), key, b, at); err != nil {
+			return err
+		}
+		return recordChildren(ctx, q, kind, key, b, at)
+	})
+}
+
+// Plans and publication receipts have indexed child rows. Publish both views
+// together, including when a directory contains many members.
+func (s *Store) writeRecord(ctx context.Context, kind string, write func(execer) error) error {
+	if kind != "import_plan" && kind != "import_receipt" {
+		return write(s.DB)
 	}
-	return recordChildren(ctx, s.DB, kind, key, b, at)
+	tx, err := s.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	if err := write(tx); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 func (s *Store) Get(ctx context.Context, kind, key string, dst any) error {
 	if kind == "cache" && len(key) <= 512 {
@@ -369,10 +388,12 @@ func (s *Store) Delete(ctx context.Context, kind, key string) error {
 		_, e := s.DB.ExecContext(ctx, `DELETE FROM plugin_record WHERE kind=? AND id=?`, kind, key)
 		return e
 	}
-	if _, e := s.DB.ExecContext(ctx, `DELETE FROM `+t.name+` WHERE `+recordKeyColumn(t)+`=?`, key); e != nil {
-		return e
-	}
-	return recordChildrenDelete(ctx, s.DB, kind, key)
+	return s.writeRecord(ctx, kind, func(q execer) error {
+		if _, err := q.ExecContext(ctx, `DELETE FROM `+t.name+` WHERE `+recordKeyColumn(t)+`=?`, key); err != nil {
+			return err
+		}
+		return recordChildrenDelete(ctx, q, kind, key)
+	})
 }
 func (s *Store) listRecordPayloads(ctx context.Context, query string, args ...any) ([]json.RawMessage, error) {
 	rows, e := s.reader().QueryContext(ctx, query, args...)

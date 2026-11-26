@@ -72,3 +72,40 @@ func TestHealthMemoryView(t *testing.T) {
 		}
 	}
 }
+
+func TestDirectoryHeartbeatUpdatesOnlyExistingOlderObservations(t *testing.T) {
+	a := newTestApp(t)
+	ctx := t.Context()
+	const before = "2026-01-01T00:00:00Z"
+	const at = "2026-01-01T00:05:00Z"
+	const later = "2026-01-01T01:00:00Z"
+	var ids []string
+	for i := range 66 {
+		id := fmt.Sprintf("heartbeat-%d", i)
+		ids = append(ids, id)
+		if i == 65 {
+			continue // removed before the batch was flushed
+		}
+		f := DirectoryObservedFile{ID: id, State: "imported", PlanID: "completed-plan", LastSeen: before}
+		if i == 0 {
+			f.LastSeen = later
+		}
+		if err := a.Store.Put(ctx, "directory_file", id, f); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if _, err := a.Store.DB.ExecContext(ctx, "UPDATE directory_file SET updated_at=? WHERE state='imported'", later); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.touchDirectoryObservations(ctx, ids, at); err != nil {
+		t.Fatal(err)
+	}
+	var advanced, newer, changed, resurrected int
+	err := a.Store.DB.QueryRowContext(ctx, `SELECT count(*) FILTER (WHERE last_seen=?),
+		count(*) FILTER (WHERE last_seen=?),
+		count(*) FILTER (WHERE state!='imported' OR json_extract(payload,'$.plan_id')!='completed-plan' OR updated_at<=?),
+		count(*) FILTER (WHERE id=?) FROM directory_file`, at, later, at, ids[65]).Scan(&advanced, &newer, &changed, &resurrected)
+	if err != nil || advanced != 64 || newer != 1 || changed != 0 || resurrected != 0 {
+		t.Fatalf("heartbeat advanced=%d newer=%d changed=%d resurrected=%d: %v", advanced, newer, changed, resurrected, err)
+	}
+}

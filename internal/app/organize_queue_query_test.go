@@ -26,7 +26,7 @@ func TestOrganizeQueueSeeksActiveGroupsAndKeepsUnfinishedBatch(t *testing.T) {
 			t.Fatal(err)
 		}
 		if row.group != "" {
-			member := organizeQueueMember{Job: row.id, Group: row.group, File: row.id, Source: "/fixture/" + row.id, Meta: "meta", Media: "media"}
+			member := organizeQueueMember{Job: row.id, Group: row.group, File: row.id, Source: "/fixture/" + row.id, Meta: "show\x001", Media: "tv:123\x001"}
 			if err := a.Store.Put(ctx, "organize_queue_member", row.id, member); err != nil {
 				t.Fatal(err)
 			}
@@ -58,7 +58,7 @@ func TestOrganizeQueueSeeksActiveGroupsAndKeepsUnfinishedBatch(t *testing.T) {
 			t.Fatal(err)
 		}
 		defer tx.Rollback()
-		for _, input := range [][2]string{{"meta", ""}, {"", "media"}} {
+		for _, input := range [][2]string{{"show\x001", ""}, {"", "tv:123\x001"}} {
 			var group string
 			err := tx.QueryRowContext(ctx, matchingOrganizeGroups, input[0], input[1]).Scan(&group)
 			if group != wantGroup || err != nil && !errors.Is(err, sql.ErrNoRows) {
@@ -77,24 +77,39 @@ func TestOrganizeQueueSeeksActiveGroupsAndKeepsUnfinishedBatch(t *testing.T) {
 	}
 	assertIDs([]string{"prepare"})
 	assertSubmission("", "")
-	rows, err := a.Store.reader().QueryContext(ctx, "EXPLAIN QUERY PLAN "+liveOrganizeGroups)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer rows.Close()
-	plan := ""
-	for rows.Next() {
-		var id, parent, unused int
-		var detail string
-		if err := rows.Scan(&id, &parent, &unused, &detail); err != nil {
+	for _, query := range []struct {
+		sql     string
+		args    []any
+		indexes []string
+	}{
+		{liveOrganizeGroups, nil, []string{"jobs_due (state=?)", "organize_queue_job (job_id=?)"}},
+		{matchingOrganizeGroups, []any{"show\x001", "tv:123\x001"}, []string{"organize_queue_meta (meta=?)", "organize_queue_media (media_key=?)", "organize_queue_group (group_id=?)"}},
+	} {
+		rows, err := a.Store.reader().QueryContext(ctx, "EXPLAIN QUERY PLAN "+query.sql, query.args...)
+		if err != nil {
 			t.Fatal(err)
 		}
-		plan += detail + "\n"
-	}
-	if err := rows.Err(); err != nil {
-		t.Fatal(err)
-	}
-	if !strings.Contains(plan, "SEARCH j USING INDEX jobs_due (state=?)") || !strings.Contains(plan, "SEARCH m USING INDEX organize_queue_job (<expr>=?)") {
-		t.Fatalf("queue scans archived membership:\n%s", plan)
+		var details []string
+		for rows.Next() {
+			var id, parent, unused int
+			var detail string
+			if err := rows.Scan(&id, &parent, &unused, &detail); err != nil {
+				rows.Close()
+				t.Fatal(err)
+			}
+			details = append(details, detail)
+		}
+		err = rows.Err()
+		rows.Close()
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, index := range query.indexes {
+			if !slices.ContainsFunc(details, func(detail string) bool {
+				return strings.HasPrefix(detail, "SEARCH ") && strings.Contains(detail, index)
+			}) {
+				t.Fatalf("missing indexed seek %s in plan:\n%s", index, strings.Join(details, "\n"))
+			}
+		}
 	}
 }

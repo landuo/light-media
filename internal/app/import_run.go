@@ -198,8 +198,7 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		}
 	}
 	phase("persist_queue")
-	plan.State = "queued"
-	if err = txPut(ctx, tx, "import_plan", plan.ID, plan); err != nil {
+	if err = updateImportPlanState(ctx, tx, &plan, "queued"); err != nil {
 		return Job{}, err
 	}
 	batchID, _ := ctx.Value(originalScrapeBatchKey{}).(string)

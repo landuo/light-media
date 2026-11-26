@@ -363,10 +363,6 @@ func TestDirectoryMonitorKeepsCompletedPacksMovingWhenOneFileDisappears(t *testi
 	a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "qb", Kind: "qb", BaseURL: qb.URL}, DownloadPath: "/downloads", Mappings: []PathMapping{{From: "/downloads", To: source}}}}
 	rule := DirectoryRule{ID: "packs", RootID: "root", MediaType: "tv", Mode: "hardlink", Scraping: importFlag(false), MonitorType: "downloader", DownloaderID: "qb", DownloadPath: "/downloads", Enabled: true, IncludeExisting: true}
 	a.config.Directories = []DirectoryRule{rule}
-	directoryPoll(t, a, rule)
-	for _, name := range files {
-		directoryAge(t, a, rule, filepath.Join(source, name))
-	}
 	disappear.Store(true)
 	directoryPoll(t, a, rule)
 	verifyHardlink := func(name string) {
@@ -404,8 +400,6 @@ func TestDirectoryMonitorKeepsCompletedPacksMovingWhenOneFileDisappears(t *testi
 	if err := os.Rename(missing+".moving", missing); err != nil {
 		t.Fatal(err)
 	}
-	directoryPoll(t, a, rule)
-	directoryAge(t, a, rule, missing)
 	directoryPoll(t, a, rule)
 	verifyHardlink(files[0])
 }
@@ -543,10 +537,8 @@ func TestDirectoryDownloaderRequiresUnorganizedCompleteFile(t *testing.T) {
 		t.Fatalf("complete local file: write=%v close=%v", writeErr, closeErr)
 	}
 	directoryPoll(t, a, rule)
-	directoryAge(t, a, rule, p)
-	directoryPoll(t, a, rule)
 	if f := directoryObservation(t, a, rule, p); f.State != "queued" || f.JobID == "" {
-		t.Fatalf("complete seed excluded: %+v", f)
+		t.Fatalf("verified download was not queued on first observation: %+v", f)
 	}
 }
 

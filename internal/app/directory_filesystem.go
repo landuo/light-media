@@ -11,7 +11,6 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"reflect"
 	"regexp"
 	"slices"
 	"strconv"
@@ -221,6 +220,11 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 		delete(allObserved, path)
 	}
+	settings := a.settingsSnapshot()
+	identity := cachedMountedDirectoryIdentity()
+	observedAt := time.Now().UTC()
+	observedStamp := observedAt.Format(time.RFC3339Nano)
+	var heartbeatIDs []string
 	for _, file := range files {
 		// A Blu-ray is organized as one unit: promote a STREAM member to the disc
 		// root so it is recognized by the disc's name instead of an m2ts fragment.
@@ -258,7 +262,7 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 				}
 			}
 		}
-		if !a.directoryRuleOwnsFile(rule, file) {
+		if !directoryRuleOwnsFile(settings, rule, file, identity) {
 			key := directoryFileID(rule.ID, file.Path)
 			existing, seen := allObserved[file.Path]
 			if !seen || existing.State == directoryInspectionPending {
@@ -322,8 +326,8 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 				f.Reason = "启用监听时已存在，已跳过；需要时从文件管理手动整理"
 			}
 		}
-		if last, err := time.Parse(time.RFC3339, f.LastSeen); err != nil || time.Since(last) >= 5*time.Minute {
-			f.LastSeen = now()
+		if last, err := time.Parse(time.RFC3339, f.LastSeen); err != nil || observedAt.Sub(last) >= 5*time.Minute {
+			f.LastSeen = observedStamp
 		}
 		if f.JobID != "" && f.PlanID == "" {
 			var kind, state, planID string
@@ -368,7 +372,10 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 			}
 		}
 		terminal := f.State == "complete" || f.State == "baseline" || f.State == "imported" || f.State == "queued" || f.State == "cancelled" || f.State == "needs_review" || f.State == "error"
-		if !terminal && !fresh && !changed && time.Since(time.Unix(0, f.StableSince)) >= directoryStableTime {
+		owner, hasOwner := downloads[file.Path]
+		downloadReady := rule.MonitorType == "downloader" && hasOwner && owner.Complete && owner.Size == stamp.Size && stamp.Size > 0
+		stable := !fresh && !changed && time.Since(time.Unix(0, f.StableSince)) >= directoryStableTime
+		if !terminal && (downloadReady || stable) {
 			// A finished managed download that has no plan yet must be organized
 			// here: nothing in this build advances download history to
 			// "imported", so parking it in "tracking" would wait forever.
@@ -376,7 +383,6 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 			// file that sits complete in a monitored directory is organized no
 			// matter which client produced it. The download record only adds the
 			// media identity used for recognition, and the ownership hash.
-			owner, hasOwner := downloads[file.Path]
 			if hasOwner && (!owner.Complete || owner.Size != stamp.Size) {
 				f.State, f.Reason = "downloading", "等待下载器确认文件已完整下载"
 			} else if !hasOwner && rule.MonitorType == "downloader" {
@@ -436,7 +442,15 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		} else {
 			f.OwnerHash, f.OwnerSize = "", 0
 		}
-		if !reflect.DeepEqual(before, f) {
+		if before.LastSeen != f.LastSeen {
+			prior := before
+			prior.LastSeen = f.LastSeen
+			if prior == f {
+				heartbeatIDs = append(heartbeatIDs, f.ID)
+				continue
+			}
+		}
+		if before != f {
 			// The pass reads every observation up front, so a row can change
 			// while this loop runs (the startup reconcile releases stranded
 			// rows). Writing this copy back whole would silently revert that
@@ -452,6 +466,9 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 				return e
 			}
 		}
+	}
+	if err := a.touchDirectoryObservations(ctx, heartbeatIDs, observedStamp); err != nil {
+		return err
 	}
 	if inspectionError != nil {
 		return inspectionError
@@ -469,6 +486,24 @@ func (a *App) pollDirectoryFileRule(ctx context.Context, rule DirectoryRule) (re
 		}
 	}
 	return a.Store.Put(ctx, "directory_file_state", rule.ID, directoryBaseline{Fingerprint: fingerprint, LastScan: now(), Tasks: taskFingerprints})
+}
+
+// Refresh only the heartbeat on the current row. A concurrent source deletion
+// or job completion must not be overwritten by the earlier scan snapshot.
+func (a *App) touchDirectoryObservations(ctx context.Context, ids []string, at string) error {
+	for group := range slices.Chunk(ids, 64) {
+		keys, err := json.Marshal(group)
+		if err != nil {
+			return err
+		}
+		_, err = a.Store.DB.ExecContext(ctx, `UPDATE directory_file SET payload=CAST(json_set(payload,'$.last_seen',?1) AS BLOB),
+ updated_at=CASE WHEN julianday(updated_at)>julianday(?1) THEN updated_at ELSE ?1 END
+WHERE id IN (SELECT value FROM json_each(?2)) AND (julianday(last_seen) IS NULL OR julianday(last_seen)<julianday(?1))`, at, string(keys))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (a *App) recordDirectoryInspectionFailure(ctx context.Context, rule DirectoryRule, fingerprint, path string, cause error) error {
@@ -544,7 +579,7 @@ func (a *App) guardDirectoryFilePlan(ctx context.Context, planID string) error {
 		return err
 	}
 	for _, file := range plan.Files {
-		if !a.directoryRuleOwnsFile(rule, importScanFile{Path: file.Source, InferredMedia: &importInferredMedia{Type: plan.Media.MediaType}}) {
+		if !directoryRuleOwnsFile(a.settingsSnapshot(), rule, importScanFile{Path: file.Source, InferredMedia: &importInferredMedia{Type: plan.Media.MediaType}}, mountedDirectoryIdentity) {
 			return bad("DIRECTORY_RULE_CHANGED", "目录规则优先级已改变，停止旧整理计划")
 		}
 	}
