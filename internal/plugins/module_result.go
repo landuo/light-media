@@ -34,6 +34,9 @@ func ModuleResultTuple(values ...any) (json.RawMessage, error) {
 // DecodeModuleResultTuple accepts only the exact envelope emitted above. Extra
 // keys, null, scalar values and ordinary arrays remain ordinary module data.
 func DecodeModuleResultTuple(raw json.RawMessage) ([]json.RawMessage, bool) {
+	if !possibleModuleEnvelope(raw, ModuleTupleKey) {
+		return nil, false
+	}
 	var object map[string]json.RawMessage
 	if json.Unmarshal(raw, &object) != nil || len(object) != 1 {
 		return nil, false
@@ -47,4 +50,21 @@ func DecodeModuleResultTuple(raw json.RawMessage) ([]json.RawMessage, bool) {
 		return nil, false
 	}
 	return items, true
+}
+
+// An exact single-key envelope must begin with its reserved key. Avoid
+// decoding large, ordinary MediaInfo objects just to discover their type.
+// Escaped keys still go through the full JSON decoder.
+func possibleModuleEnvelope(raw json.RawMessage, key string) bool {
+	object := bytes.TrimSpace(raw)
+	if len(object) < 2 || object[0] != '{' {
+		return false
+	}
+	first := bytes.TrimSpace(object[1:])
+	if len(first) < 2 || first[0] != '"' {
+		return false
+	}
+	name := first[1:]
+	end := bytes.IndexAny(name, `"\`)
+	return end >= 0 && (name[end] == '\\' || string(name[:end]) == key)
 }

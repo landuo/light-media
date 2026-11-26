@@ -95,9 +95,12 @@ func (a *App) enqueueAcceptedTx(ctx context.Context, tx *sql.Tx, kind string, pa
 	}
 	if e == nil {
 		phase("queue_group")
-		e = registerOrganizeQueueTx(ctx, tx, j)
+		e = a.registerOrganizeQueueTx(ctx, tx, j)
 	}
 	if e == nil {
+		if kind == "organize_prepare" && a.organizeInbox != nil {
+			a.organizeInbox.subjects.add(identity.ID)
+		}
 		// Registered now so a waiter wakes immediately after commit; the claim
 		// confirms against the row, so an aborted transaction is harmless.
 		a.indexEnqueue(j)

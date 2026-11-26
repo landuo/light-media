@@ -66,23 +66,47 @@ func (a *App) originalObtainCatalogImagesMethod(ctx context.Context, method stri
 	if method != "obtain_images" && method != "async_obtain_images" {
 		return nil, originalMediaImagesInvalid()
 	}
+	var groups []originalPluginModuleGroup
+	var err error
+	inputs, _ := ctx.Value(manualPreviewInputsKey{}).(*manualPreviewInputs)
+	domain := ""
+	if inputs != nil {
+		groups, err = a.originalPluginModulesForMethod(ctx, "", method)
+		if err != nil {
+			return nil, err
+		}
+		if originalModuleGroupsHaveMethod(groups, method) {
+			inputs = nil // live image callbacks must run for every file
+		} else {
+			domain = a.settingsSnapshot().TMDBImageDomain
+			if inputs.imageOutput != nil && inputs.imageDomain == domain && bytes.Equal(raw, inputs.imageInput) {
+				return inputs.imageOutput, nil
+			}
+		}
+	}
 	state, err := newOriginalMediaImagesState(raw)
 	if err != nil {
 		return nil, err
 	}
-	kwargs, _ := json.Marshal(map[string]json.RawMessage{"mediainfo": state.model})
-	result, err := a.invokeOriginalPluginModules(context.WithValue(ctx, originalMediaImagesStateKey{}, state), method, nil, json.RawMessage(`[]`), kwargs)
-	if err != nil {
-		return nil, err
+	var result json.RawMessage
+	if inputs == nil {
+		kwargs, _ := json.Marshal(map[string]json.RawMessage{"mediainfo": state.model})
+		result, err = a.invokeOriginalPluginModuleGroups(context.WithValue(ctx, originalMediaImagesStateKey{}, state), method, nil, json.RawMessage(`[]`), kwargs, nil, groups)
+		if err != nil {
+			return nil, err
+		}
 	}
 	var list []json.RawMessage
 	if originalModuleResultEmpty(result) || json.Unmarshal(result, &list) == nil && !bytes.Equal(bytes.TrimSpace(result), []byte(`null`)) {
 		updated, nativeErr := native(state.model)
-		if len(updated) > 0 {
+		if len(updated) > 0 && !bytes.Equal(updated, state.model) {
 			state.model, err = originalLiveMediaImagesJSON(updated)
 			if err != nil {
 				return nil, err
 			}
+		}
+		if inputs != nil && nativeErr == nil && len(raw)+len(state.model) <= 512<<10 {
+			inputs.imageInput, inputs.imageOutput, inputs.imageDomain = raw, state.model, domain
 		}
 		if nativeErr != nil {
 			a.reportOriginalPluginExecutionError(ctx, "system", "TheMovieDb发生了错误", map[string]any{"type": "module", "module_id": "TheMovieDbModule", "module_name": "TheMovieDb", "module_method": method}, nativeErr)

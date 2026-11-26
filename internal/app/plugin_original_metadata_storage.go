@@ -37,7 +37,7 @@ func (a *App) originalMetadataStorageGroups(ctx context.Context, method string, 
 	// DTO for a worker when a plugin actually registered this method.
 	var err error
 	if groups == nil {
-		groups, err = a.originalPluginModules(ctx, "")
+		groups, err = a.originalPluginModulesForMethod(ctx, "", method)
 		if err != nil {
 			return nil, err
 		}

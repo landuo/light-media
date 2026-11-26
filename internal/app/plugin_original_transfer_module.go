@@ -42,7 +42,7 @@ func (a *App) originalTransferModulePublish(ctx context.Context, plan ImportPlan
 		if receipt.State != "planned" {
 			return native()
 		}
-		groups, err = a.originalPluginModules(ctx, "")
+		groups, err = a.originalPluginModulesForMethod(ctx, "", "transfer")
 		if err != nil {
 			return receipt, err
 		}

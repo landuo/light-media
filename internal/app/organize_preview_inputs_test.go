@@ -1,9 +1,11 @@
 package app
 
 import (
+	"context"
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"light-media/internal/catalog"
 )
@@ -23,9 +25,9 @@ func TestManualPreviewRecognizesSeasonFilesAndRereadsChangedEvidence(t *testing.
 	importWrite(t, first, []byte("first"))
 	importWrite(t, second, []byte("second"))
 	request := manualOrganizeRequest{Interactive: true, Preview: true, Paths: []string{pack}, TargetPath: target, Mode: "hardlink", Scraping: importFlag(false)}
-	run := func() map[string]manualOrganizeItem {
+	run := func(ctx context.Context) map[string]manualOrganizeItem {
 		t.Helper()
-		out, err := a.manualOrganize(t.Context(), request)
+		out, err := a.manualOrganize(ctx, request)
 		if err != nil || len(out.Items) != 2 {
 			t.Fatal(out, err)
 		}
@@ -35,14 +37,23 @@ func TestManualPreviewRecognizesSeasonFilesAndRereadsChangedEvidence(t *testing.
 		}
 		return items
 	}
-	items := run()
+	// A cached, display-only preview must not wait for the primary writer.
+	writer, err := a.Store.DB.Conn(t.Context())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer writer.Close()
+	ctx, cancel := context.WithTimeout(t.Context(), 3*time.Second)
+	defer cancel()
+	items := run(ctx)
+	writer.Close()
 	for path, ep := range map[string]string{first: "S02E01", second: "S02E02"} {
 		if item := items[path]; item.Status != "ready" || item.Media.ID != 123 || !strings.Contains(item.Target, ep) {
 			t.Fatalf("unexpected episode target: %+v", item)
 		}
 	}
 	importWrite(t, strings.TrimSuffix(first, ".mkv")+".nfo", []byte("<invalid document"))
-	items = run()
+	items = run(t.Context())
 	if items[first].Status != "failed" || items[second].Status != "ready" {
 		t.Fatalf("new preview reused prior NFO or sibling numbering: %+v", items)
 	}

@@ -76,3 +76,54 @@ func TestBuiltinStartupPublishesMenusAndCards(t *testing.T) {
 		t.Fatal("installed cards must list the loaded builtin classes")
 	}
 }
+
+func TestBuiltinModuleDiscoveryPreservesDynamicLarkBindings(t *testing.T) {
+	a := newTestApp(t)
+	a.pluginBuiltinDisabled = false
+	ctx := context.Background()
+	catalog, err := builtinCatalogLoad()
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := catalog["LarkMessager"].manifest
+	raw, err := json.Marshal(m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = a.pluginStore.Install(ctx, PluginInstallation{PluginID: m.PluginID, InstanceID: m.PluginID, Version: m.Version, ManifestSchemaVersion: m.SchemaVersion, Manifest: raw, DesiredEnabled: true}); err != nil {
+		t.Fatal(err)
+	}
+	retainedStoreSaveConfig(t, a, m.PluginID, map[string]any{"enabled": true, "app_id": "test", "app_secret": "test"})
+	object, err := a.reloadOriginalPlugin(ctx, m.PluginID)
+	if err != nil || object == nil || !object.builtin.Load() {
+		t.Fatal("load compiled Lark", err)
+	}
+	a.wg.Wait()
+	used := object.lastUsed.Load()
+	for _, method := range []string{"get_file_item", "recognize_media", "obtain_images", "tmdb_episodes", "transfer"} {
+		groups, err := a.originalPluginModulesForMethod(ctx, "", method)
+		if err != nil || len(groups) != 0 || object.lastUsed.Load() != used {
+			t.Fatalf("%s touched the message worker: %v, %v", method, groups, err)
+		}
+	}
+	for _, method := range []string{"", "post_message"} {
+		groups, err := a.originalPluginModulesForMethod(ctx, "", method)
+		if err != nil || len(groups) != 1 || !originalModuleGroupsHaveMethod(groups, "post_message") {
+			t.Fatalf("lost live message binding for %q: %v, %v", method, groups, err)
+		}
+	}
+	retainedStoreSaveConfig(t, a, m.PluginID, map[string]any{"enabled": false})
+	if _, err = a.reloadOriginalPlugin(ctx, m.PluginID); err != nil {
+		t.Fatal(err)
+	}
+	groups, err := a.originalPluginModulesForMethod(ctx, "", "post_message")
+	if err != nil || len(groups) != 0 {
+		t.Fatal("stale enabled message binding", groups, err)
+	}
+	// A rollback worker or clone may implement a different get_module, even
+	// with the same plugin ID and manifest. Its declarations are always live.
+	external := &originalPluginInstance{manifest: m, external: true}
+	if !external.mayDeclareModule("recognize_media") {
+		t.Fatal("external worker was mistaken for the compiled class")
+	}
+}

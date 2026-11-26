@@ -471,7 +471,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		complete, e := originalChatProviderSearchInformation(request.originalResolvedMedia, &provider, request.MediaType)
 		identity, originalMedia, err = complete.Media, complete.MediaInfo, e
 	} else if len(request.originalResolvedMedia) > 0 {
-		complete, e := a.originalRecognitionProjection(catalog.Media{ID: request.TMDBID, MediaType: request.MediaType}, request.originalResolvedMedia)
+		complete, e := a.transferRecognitionProjection(ctx, catalog.Media{ID: request.TMDBID, MediaType: request.MediaType}, request.originalResolvedMedia)
 		identity, originalMedia, err = complete.Media, complete.MediaInfo, e
 	} else if a.originalTransferHasHandlers() {
 		complete, e := a.recognizeTransferTMDBMedia(ctx, catalog.Media{ID: request.TMDBID, MediaType: request.MediaType})
@@ -502,6 +502,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		Category string `json:"category"`
 	}
 	_ = json.Unmarshal(originalMedia, &classified)
+	recognizedCategory := classified.Category
 	if request.originalDownloadCategory != "" {
 		classified.Category = request.originalDownloadCategory
 	}
@@ -811,8 +812,10 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				if e != nil {
 					return plan, e
 				}
-				if e = original.setCategory(plan.Category); e != nil {
-					return plan, e
+				if len(originalMedia) == 0 || plan.Category != recognizedCategory {
+					if e = original.setCategory(plan.Category); e != nil {
+						return plan, e
+					}
 				}
 				if (request.Mode == "move" || request.Mode == "softlink") && original.Item == nil {
 					original.Item, e = originalLocalFileItem(file.Source)

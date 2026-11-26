@@ -9,7 +9,7 @@ import (
 
 // Keep the visible file job through recognition and import. The generation
 // check lets cancellation win before reservations or a failure record commit.
-func promoteOrganizeFileTx(ctx context.Context, tx *sql.Tx, work organizeFileWork, planID string, fileIDs []string, state, code, reason string) (Job, error) {
+func (a *App) promoteOrganizeFileTx(ctx context.Context, tx *sql.Tx, work organizeFileWork, planID string, fileIDs []string, state, code, reason string) (Job, error) {
 	payload, err := json.Marshal(struct {
 		ID                      string   `json:"id"`
 		InteractiveKey          string   `json:"interactive_key,omitempty"`
@@ -43,7 +43,7 @@ func promoteOrganizeFileTx(ctx context.Context, tx *sql.Tx, work organizeFileWor
 		return Job{}, bad("JOB_CANCELLED", "整理文件任务已取消或已由其他执行接管")
 	}
 	if err == nil {
-		err = registerOrganizeQueueTx(ctx, tx, job)
+		err = a.registerOrganizeQueueTx(ctx, tx, job)
 	}
 	if err != nil || state != "queued" {
 		return job, err

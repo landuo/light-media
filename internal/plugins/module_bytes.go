@@ -19,6 +19,9 @@ func ModuleResultBytes(value []byte) (json.RawMessage, error) {
 }
 
 func DecodeModuleResultBytes(raw json.RawMessage) ([]byte, bool) {
+	if !possibleModuleEnvelope(raw, ModuleBytesKey) {
+		return nil, false
+	}
 	var object map[string]json.RawMessage
 	if json.Unmarshal(raw, &object) != nil || len(object) != 1 {
 		return nil, false

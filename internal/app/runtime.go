@@ -346,6 +346,12 @@ func New(opts Options) (*App, error) {
 	// empty on a cold process; a later failed/empty reload retains these maps.
 	_, _ = a.currentMediaCategoryPolicy()
 	a.organizeInbox, e = openOrganizeInbox(a.Dir)
+	if e == nil {
+		e = a.restoreOrganizeSubjects(context.Background())
+		if e != nil {
+			_ = a.organizeInbox.db.Close()
+		}
+	}
 	if e != nil {
 		a.logs.close()
 		_ = s.Close()

@@ -122,7 +122,7 @@ var builtinClasses = []builtinPlugin{
 			return plugin.Handle(ctx, method, raw, sdkBridge(host))
 		}
 	}},
-	{pluginID: "LarkMessager", concurrent: true, manifest: func() any { return larkmessager.Manifest() }, newHandler: func() plugins.InProcessHandler {
+	{pluginID: larkmessager.PluginID, concurrent: true, manifest: func() any { return larkmessager.Manifest() }, newHandler: func() plugins.InProcessHandler {
 		plugin := larkmessager.NewWorker()
 		return func(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
 			return plugin.Handle(ctx, method, raw, sdkBridge(host))
@@ -206,6 +206,12 @@ var builtinClasses = []builtinPlugin{
 			return plugin.Handle(ctx, method, raw, sdkBridge(host))
 		}
 	}},
+}
+
+// External workers can bind arbitrary module names to their SDK methods.
+// Only the actual in-process Lark worker has the linked declaration below.
+func (object *originalPluginInstance) mayDeclareModule(method string) bool {
+	return method == "" || !object.builtin.Load() || object.manifest.PluginID != larkmessager.PluginID || larkmessager.MayProvideModule(method)
 }
 
 // pluginAcquisitionClosed reports that this deployment ships its plugins in

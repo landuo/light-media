@@ -407,6 +407,10 @@ func (a *App) originalBaseUpdateConfigLocked(ctx context.Context, target string,
 }
 
 func originalBaseJSONTruthy(raw json.RawMessage) bool {
+	object := bytes.TrimSpace(raw)
+	if len(object) >= 2 && (object[0] == '{' || object[0] == '[') && json.Valid(object) {
+		return len(bytes.TrimSpace(object[1:len(object)-1])) > 0
+	}
 	var v any
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.UseNumber()

@@ -18,8 +18,9 @@ import (
 // Promotion is repeatable after a crash: the main job and audit commit first,
 // then the corresponding inbox receipts are removed.
 type organizeInbox struct {
-	db   *sql.DB
-	wake chan struct{}
+	subjects organizeSubjects
+	db       *sql.DB
+	wake     chan struct{}
 	// Serialize cancellation with the handoff of the same job, without holding
 	// the inbox writer while the main database waits for disk.
 	handoffs [32]sync.Mutex
@@ -86,24 +87,62 @@ func activeInteractiveJob(ctx context.Context, q organizeRowReader, kind, subjec
 	return
 }
 
+// Never hold the inbox connection during a main-DB lookup. A concurrent
+// transfer may have committed between the two reads, so recheck the inbox
+// and the registration version before creating a fresh durable ID.
+func (a *App) organizeAdmissionTx(ctx context.Context, kind, subject string, phase func(string)) (*sql.Tx, string, string, error) {
+	inbox := a.organizeInbox
+	var mainID, mainKey string
+	var checkedVersion uint64
+	var verified bool
+	for {
+		phase("inbox_wait")
+		tx, err := inbox.db.BeginTx(ctx, nil)
+		if err != nil {
+			return nil, "", "", err
+		}
+		phase("inbox_lookup")
+		var id, key string
+		err = tx.QueryRowContext(ctx, "SELECT id,request_key FROM request WHERE kind=? AND subject=? AND state='queued'", kind, subject).Scan(&id, &key)
+		if err == nil {
+			return tx, id, key, nil
+		}
+		if !errors.Is(err, sql.ErrNoRows) {
+			tx.Rollback()
+			return nil, "", "", err
+		}
+		maybe, version := inbox.subjects.lookup(subject)
+		if !maybe {
+			return tx, "", "", nil
+		}
+		if verified && version == checkedVersion {
+			return tx, mainID, mainKey, nil
+		}
+		tx.Rollback()
+		phase("existing_reader_wait")
+		reader, err := a.Store.reader().Conn(ctx)
+		if err != nil {
+			return nil, "", "", err
+		}
+		phase("existing_lookup")
+		mainID, mainKey, err = activeInteractiveJob(ctx, reader, kind, subject)
+		reader.Close()
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
+			return nil, "", "", err
+		}
+		verified, checkedVersion = true, version
+	}
+}
+
 func (a *App) acceptOrganize(ctx context.Context, kind, subject, key string, payload any, audit *organizeRequestAudit) (string, error) {
 	phase := a.performanceStages(ctx, "organize_accept", "inbox_wait")
 	defer phase("")
 	inbox := a.organizeInbox
-	tx, err := inbox.db.BeginTx(ctx, nil)
+	tx, jobID, activeKey, err := a.organizeAdmissionTx(ctx, kind, subject, phase)
 	if err != nil {
 		return "", err
 	}
 	defer tx.Rollback()
-	phase("deduplicate")
-	var jobID, activeKey string
-	err = tx.QueryRowContext(ctx, "SELECT id,request_key FROM request WHERE kind=? AND subject=? AND state='queued'", kind, subject).Scan(&jobID, &activeKey)
-	if errors.Is(err, sql.ErrNoRows) {
-		jobID, activeKey, err = activeInteractiveJob(ctx, a.Store.reader(), kind, subject)
-	}
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		return "", err
-	}
 	if jobID != "" && activeKey != key {
 		return "", bad("JOB_EXISTS", "该源文件已有其他整理任务正在等待或执行")
 	}
@@ -197,13 +236,8 @@ func (a *App) changePendingOrganizeState(ctx context.Context, id, from, to strin
 	lock := inbox.handoff(id)
 	lock.Lock()
 	defer lock.Unlock()
-	tx, err := inbox.db.BeginTx(ctx, nil)
-	if err != nil {
-		return false, err
-	}
-	defer tx.Rollback()
 	var kind, subject string
-	err = tx.QueryRowContext(ctx, "SELECT kind,subject FROM request WHERE id=? AND state=?", id, from).Scan(&kind, &subject)
+	err := inbox.db.QueryRowContext(ctx, "SELECT kind,subject FROM request WHERE id=? AND state=?", id, from).Scan(&kind, &subject)
 	if errors.Is(err, sql.ErrNoRows) {
 		return false, nil
 	}
@@ -216,6 +250,11 @@ func (a *App) changePendingOrganizeState(ctx context.Context, id, from, to strin
 	if err = a.Store.reader().QueryRowContext(ctx, "SELECT EXISTS(SELECT 1 FROM jobs WHERE id=?)", id).Scan(&delivered); err != nil || delivered {
 		return false, err
 	}
+	tx, err := inbox.db.BeginTx(ctx, nil)
+	if err != nil {
+		return false, err
+	}
+	defer tx.Rollback()
 	if to == "queued" {
 		var competing bool
 		if err = tx.QueryRowContext(ctx, "SELECT EXISTS(SELECT 1 FROM request WHERE kind=? AND subject=? AND state='queued')", kind, subject).Scan(&competing); err != nil {
@@ -301,6 +340,12 @@ func (a *App) deliverOrganizeInbox(ctx context.Context) (bool, error) {
 		return false, err
 	}
 	defer tx.Rollback()
+	if inbox.subjects.needsRefresh() {
+		phase("refresh_subjects")
+		if err = inbox.subjects.restore(ctx, tx); err != nil {
+			return false, err
+		}
+	}
 	lock := inbox.handoff(jobID)
 	lock.Lock()
 	defer lock.Unlock()

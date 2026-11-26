@@ -220,7 +220,7 @@ func (a *App) executeImportWithAudit(ctx context.Context, planID string, fileIDs
 		if len(fileIDs) == 0 && len(selected) == 1 {
 			fileIDs = []string{plan.Files[selected[0]].ID}
 		}
-		job, err = promoteOrganizeFileTx(ctx, tx, work, plan.ID, fileIDs, "queued", "", "")
+		job, err = a.promoteOrganizeFileTx(ctx, tx, work, plan.ID, fileIDs, "queued", "", "")
 	} else {
 		job, err = a.enqueueTx(ctx, tx, "import", map[string]any{"id": plan.ID, "file_ids": fileIDs, "original_scrape_batch": batchID}, plan.WorkflowID)
 	}

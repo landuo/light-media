@@ -160,7 +160,7 @@ func (a *App) catalogSeasonDisplay(ctx context.Context, id int64, season int) (c
 	if !validMedia("tv", id) || season < 0 || season > 1000 {
 		return catalog.Season{}, bad("INVALID_MEDIA", "请选择明确的剧集和季")
 	}
-	groups, err := a.originalPluginModules(ctx, "")
+	groups, err := a.originalPluginModulesForMethod(ctx, "", "async_tmdb_episodes")
 	if err != nil {
 		return catalog.Season{}, err
 	}

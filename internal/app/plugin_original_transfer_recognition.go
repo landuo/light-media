@@ -51,6 +51,8 @@ func (a *App) originalManualTransferIdentity(ctx context.Context, request Import
 	initialName, initialYear := meta.Name(), meta.Text("year")
 	phase("recognize_media")
 	recognized, err := a.originalCatalogRecognizeByMetaMethod(ctx, "recognize_media", meta, func(current *releasemeta.MetaObject) (json.RawMessage, error) {
+		nativePhase := a.performanceStages(ctx, "transfer_native_identity", "parse_recognition")
+		defer nativePhase("")
 		source := request.originalRecognitionSource
 		if source == "" {
 			source = a.effectiveRecognitionSource()
@@ -70,6 +72,7 @@ func (a *App) originalManualTransferIdentity(ctx context.Context, request Import
 		if current.Name() != initialName || current.Text("year") != initialYear {
 			return a.originalMetadataRecognizeNative(ctx, current)
 		}
+		nativePhase("directory_lookup")
 		native, err := a.directoryFileIdentity(ctx, DirectoryRule{MediaType: "mixed", Mode: request.Mode}, scanned)
 		if err != nil {
 			if !manualTVRecognitionFallback(request, file, scanned, err) {
@@ -85,6 +88,7 @@ func (a *App) originalManualTransferIdentity(ctx context.Context, request Import
 			}
 			return a.originalHostMediaRecognizeTMDB(ctx, kwargs)
 		}
+		nativePhase("tmdb_detail")
 		full, err := a.nativeTransferTMDBInformation(ctx, catalog.Media{ID: native.TMDBID, MediaType: native.MediaType})
 		return full.MediaInfo, err
 	})

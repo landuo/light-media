@@ -170,8 +170,9 @@ func (a *App) originalDirectoryMetaBuilder(ctx context.Context, in manualOrganiz
 	if err != nil {
 		return nil, err
 	}
+	parsePath := parser.SiblingPathParser()
 	return func(path string) (*releasemeta.MetaObject, error) {
-		meta, err := parser.ParsePath(path, nil)
+		meta, err := parsePath(path)
 		if err != nil || meta == nil {
 			return meta, err
 		}

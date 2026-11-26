@@ -10,7 +10,7 @@ import (
 )
 
 func (a *App) assetOriginalNFO(ctx context.Context, path string, identity catalog.Media, episode *catalog.Episode) ([]byte, error) {
-	groups, err := a.originalPluginModules(ctx, "")
+	groups, err := a.originalPluginModulesForMethod(ctx, "", "metadata_nfo")
 	if err != nil {
 		return nil, err
 	}

@@ -70,6 +70,9 @@ func (a *App) retryOriginalScrapeJob(ctx context.Context, job Job) (sql.Result, 
 			}
 		}
 	}
+	if err = a.rememberRetriedOrganize(ctx, tx, job); err != nil {
+		return nil, err
+	}
 	result, err := tx.ExecContext(ctx, `UPDATE jobs SET payload=?,state='queued',attempt=0,generation=generation+1,run_at=?,error_code='',error_message='',updated_at=? WHERE id=? AND generation=? AND state=?`, payload, time.Now().Unix(), now(), job.ID, job.Generation, job.State)
 	if err != nil {
 		return nil, err

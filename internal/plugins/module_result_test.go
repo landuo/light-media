@@ -5,6 +5,15 @@ import (
 	"testing"
 )
 
+func TestModuleEnvelopeEscapedKeys(t *testing.T) {
+	if items, ok := DecodeModuleResultTuple(json.RawMessage(`{ "\u005f_plugin_module_tuple": [1] }`)); !ok || len(items) != 1 {
+		t.Fatal("escaped tuple key was lost")
+	}
+	if data, ok := DecodeModuleResultBytes(json.RawMessage(`{ "_\u005fplugin_module_bytes": "YQ==" }`)); !ok || string(data) != "a" {
+		t.Fatal("escaped bytes key was lost")
+	}
+}
+
 func TestModuleTuplePreservesExplicitTypeAndValues(t *testing.T) {
 	for _, values := range [][]any{nil, {nil, nil}, {false, 0, "", json.RawMessage(`9007199254740993123456789`)}} {
 		raw, err := ModuleResultTuple(values...)

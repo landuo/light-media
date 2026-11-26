@@ -4,6 +4,7 @@ import (
 	"context"
 	_ "embed"
 	"encoding/json"
+	"slices"
 	"strings"
 	"sync"
 	"time"
@@ -171,6 +172,10 @@ func (p *Plugin) snapshot() (ConfigState, *Client, uint64) {
 }
 
 var moduleNames = []string{"message_parser", "post_message", "post_medias_message", "post_torrents_message", "edit_message", "mark_message_processing_started", "mark_message_processing_finished"}
+
+// MayProvideModule is the static upper bound for get_module. Enabled state is
+// still resolved by the running worker for every matching call.
+func MayProvideModule(name string) bool { return slices.Contains(moduleNames, name) }
 
 func (p *Plugin) Modules() []string {
 	s, c, _ := p.snapshot()

@@ -16,7 +16,7 @@ import (
 // StorageChain.list_files also belongs to the real file-browser entry point.
 // The existing metadata caller alone cannot stand in for this host operation.
 func (a *App) originalBrowserStorageList(ctx context.Context, path string, classifier transferextensions.Classifier) ([]browserEntry, bool, bool, error) {
-	groups, err := a.originalPluginModules(ctx, "")
+	groups, err := a.originalPluginModulesForMethod(ctx, "", "list_files")
 	if err != nil {
 		return nil, false, true, err
 	}

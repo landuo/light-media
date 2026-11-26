@@ -56,7 +56,7 @@ func activeOrganizeSourceTx(ctx context.Context, tx *sql.Tx, source string) (str
 // Persist MP's meta -> media group relationship alongside the durable queue.
 // Completed/failed members remain visible while any related member is active;
 // a later submission starts a new group after the previous one has ended.
-func registerOrganizeQueueTx(ctx context.Context, tx *sql.Tx, job Job) error {
+func (a *App) registerOrganizeQueueTx(ctx context.Context, tx *sql.Tx, job Job) error {
 	if job.Kind != "organize_file" && job.Kind != "import" {
 		return nil
 	}
@@ -153,6 +153,9 @@ func registerOrganizeQueueTx(ctx context.Context, tx *sql.Tx, job Job) error {
 		if err := txPut(ctx, tx, "organize_queue_member", key, member); err != nil {
 			return err
 		}
+		if a.organizeInbox != nil {
+			a.organizeInbox.subjects.add(member.Source)
+		}
 	}
 	return nil
 }
@@ -171,7 +174,7 @@ func (a *App) seedOrganizeQueue(ctx context.Context) error {
 	}
 	defer tx.Rollback()
 	for _, job := range jobs {
-		if err := registerOrganizeQueueTx(ctx, tx, job); err != nil {
+		if err := a.registerOrganizeQueueTx(ctx, tx, job); err != nil {
 			return err
 		}
 	}

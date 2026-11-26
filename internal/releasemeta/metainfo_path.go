@@ -14,6 +14,23 @@ var chineseSeasonEpisodeStem = regexp.MustCompile(`[第共]\s*[0-9一二三四�
 // ParsePath ports the pinned MetaInfoPath entry and Rust build_meta_path. The
 // path is lexical: this parser does not inspect, authorize or resolve files.
 func (p *MetaInfoParser) ParsePath(value string, localWords *[]string) (*MetaObject, error) {
+	return p.parsePath(value, localWords, nil)
+}
+
+type parentTitle struct {
+	name string
+	meta *MetaObject
+}
+
+// SiblingPathParser parses one sequential selection with the parser's global
+// words. Only the last parent and grandparent are retained. File names and
+// their mutable result fields are always independent.
+func (p *MetaInfoParser) SiblingPathParser() func(string) (*MetaObject, error) {
+	var parents [2]parentTitle
+	return func(value string) (*MetaObject, error) { return p.parsePath(value, nil, &parents) }
+}
+
+func (p *MetaInfoParser) parsePath(value string, localWords *[]string, parents *[2]parentTitle) (*MetaObject, error) {
 	if p == nil {
 		return nil, errors.New("metainfo_parser_nil")
 	}
@@ -48,11 +65,23 @@ func (p *MetaInfoParser) ParsePath(value string, localWords *[]string) (*MetaObj
 			file.Set(key, nil)
 		}
 	}
-	for _, name := range []string{parent, grandparent} {
-		dir, err := p.ParseTitle(name, nil, localWords)
-		if err != nil {
-			return nil, err
+	for index, name := range []string{parent, grandparent} {
+		var dir *MetaObject
+		if parents != nil && parents[index].name == name {
+			dir = parents[index].meta
 		}
+		if dir == nil {
+			dir, err = p.ParseTitle(name, nil, localWords)
+			if err != nil {
+				return nil, err
+			}
+			if parents != nil {
+				parents[index] = parentTitle{name: name, meta: dir}
+			}
+		}
+		if parents != nil {
+			dir = dir.DeepCopy()
+		} // Merge can lend mutable values to its result.
 		if file.Text("type") == "电视剧" || dir.Text("type") != "电视剧" {
 			if rust {
 				file.MergeRust(dir)

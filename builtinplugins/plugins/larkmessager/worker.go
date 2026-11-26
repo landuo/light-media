@@ -9,6 +9,7 @@ import (
 	sdk "light-media/builtinplugins/internal/sdk"
 )
 
+const PluginID = "LarkMessager"
 const messageSource = "Lark"
 
 var httpAPIs = []sdk.HTTPAPI{
@@ -22,7 +23,7 @@ var httpAPIs = []sdk.HTTPAPI{
 func Manifest() sdk.Manifest {
 	methods := []string{"init", "get_state", "get_form", "get_page", "get_render_mode", "get_api", "get_module", "http", "message_action", "resolve_recipients", "stop_service", "close", "stop"}
 	return sdk.Manifest{
-		SchemaVersion: 1, PluginID: "LarkMessager", Name: "Lark 应用消息通知",
+		SchemaVersion: 1, PluginID: PluginID, Name: "Lark 应用消息通知",
 		Description: "基于国际版飞书 Lark 开放平台应用的通知与消息交互插件，支持文本、卡片消息发送及消息回调交互。",
 		Icon:        "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/main/icons/FeiShu_A.png",
 		Version:     "1.0.0", Author: "ui-beam-9", AuthorURL: "https://github.com/ui-beam-9",

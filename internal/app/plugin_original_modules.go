@@ -21,13 +21,17 @@ type originalPluginModuleGroup struct {
 }
 
 func (a *App) originalPluginModules(ctx context.Context, pid string) ([]originalPluginModuleGroup, error) {
+	return a.originalPluginModulesForMethod(ctx, pid, "")
+}
+
+func (a *App) originalPluginModulesForMethod(ctx context.Context, pid, method string) ([]originalPluginModuleGroup, error) {
 	groups := []originalPluginModuleGroup{}
 	for _, object := range a.originalLoadedPluginSnapshot() {
 		if err := ctx.Err(); err != nil {
 			return nil, err
 		}
 		id := object.installation.InstanceID
-		if pid != "" && pid != id || !slices.Contains(object.manifest.Methods, "get_module") {
+		if pid != "" && pid != id || !slices.Contains(object.manifest.Methods, "get_module") || !object.mayDeclareModule(method) {
 			continue
 		}
 		enabled, err := object.getState(ctx)
@@ -101,7 +105,7 @@ func (a *App) invokeOriginalPluginModuleGroupsWithTitleFilter(ctx context.Contex
 		return result, err
 	}
 	if groups == nil {
-		groups, err = a.originalPluginModules(ctx, "")
+		groups, err = a.originalPluginModulesForMethod(ctx, "", method)
 		if err != nil {
 			return result, err
 		}

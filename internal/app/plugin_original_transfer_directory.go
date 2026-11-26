@@ -129,6 +129,11 @@ func (a *App) originalManualStorageScan(ctx context.Context, path string, in man
 		return nil, err
 	}
 	phase("inspect_sources")
+	if len(candidates) > 1 || len(in.Paths) > 1 {
+		if inputs, _ := ctx.Value(manualPreviewInputsKey{}).(*manualPreviewInputs); inputs != nil && inputs.nfoDirectories == nil {
+			inputs.nfoDirectories = make(map[string]map[string]bool)
+		}
+	}
 	classifier, err := a.transferMediaClassifier(ctx)
 	if err != nil {
 		return nil, err

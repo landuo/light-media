@@ -164,6 +164,14 @@ func TestInteractiveOrganizePreparationReturnsEachFileAndSkip(t *testing.T) {
 		t.Fatal("repeated selection did not resume the existing preparation")
 	}
 	out := run(parentID)
+	// A completed preparation still owns this selection while a child runs,
+	// including when the active-subject index is rebuilt after restart.
+	if err := a.restoreOrganizeSubjects(t.Context()); err != nil {
+		t.Fatal(err)
+	}
+	if repeated := submit(form); repeated.PreparationJobID != parentID {
+		t.Fatalf("active child lost its parent claim: %+v", repeated)
+	}
 	if out.Total != 2 || out.Submitted != 1 || out.Failed != 0 {
 		t.Fatalf("multi preparation: %+v", out)
 	}
