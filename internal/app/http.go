@@ -56,7 +56,22 @@ func decodeBodyWithLimit(w http.ResponseWriter, r *http.Request, v any, limit in
 func writeJSON(w http.ResponseWriter, r *http.Request, data any) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Cache-Control", "no-store")
-	_ = json.NewEncoder(w).Encode(map[string]any{"data": data, "request_id": w.Header().Get("X-Request-ID")})
+	result := map[string]any{"data": data, "request_id": w.Header().Get("X-Request-ID")}
+	if audit, _ := r.Context().Value(organizeAuditKey{}).(*organizeRequestAudit); audit != nil && audit.displayPreview {
+		// Let a browser show the complete read-only result while the request
+		// handler finishes its audit. Submissions still commit before replying.
+		body, err := json.Marshal(result)
+		if err != nil {
+			http.Error(w, "无法编码预览结果", http.StatusInternalServerError)
+			return
+		}
+		body = append(body, '\n')
+		w.Header().Set("Content-Length", strconv.Itoa(len(body)))
+		_, _ = w.Write(body)
+		_ = http.NewResponseController(w).Flush()
+		return
+	}
+	_ = json.NewEncoder(w).Encode(result)
 }
 func (a *App) writeError(w http.ResponseWriter, r *http.Request, e error) {
 	out := &APIError{Code: "INTERNAL_ERROR", Message: "操作失败，请查看关联日志", Status: 500}

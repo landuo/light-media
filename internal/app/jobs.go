@@ -13,6 +13,12 @@ import (
 )
 
 func (a *App) enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload any, wf string) (Job, error) {
+	return a.enqueueAcceptedTx(ctx, tx, kind, payload, wf, nil)
+}
+
+func (a *App) enqueueAcceptedTx(ctx context.Context, tx *sql.Tx, kind string, payload any, wf string, accepted *Job) (Job, error) {
+	phase := a.performanceStages(ctx, "job_enqueue", "identity")
+	defer phase("")
 	if kind == "import" {
 		if err := guardOrganizePreparation(ctx, tx); err != nil {
 			return Job{}, err
@@ -44,7 +50,7 @@ func (a *App) enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload an
 		ID string `json:"id"`
 	}
 	_ = json.Unmarshal(b, &identity)
-	if identity.ID != "" && kind != "import" && kind != "organize_prepare" && a.subjectBusy(kind, identity.ID) {
+	if accepted == nil && identity.ID != "" && kind != "import" && kind != "organize_prepare" && a.subjectBusy(kind, identity.ID) {
 		// The pending set lives in memory, so this refusal no longer costs a
 		// query inside the caller's transaction.
 		return Job{}, bad("JOB_EXISTS", "已有该对象的任务正在等待或执行")
@@ -74,13 +80,21 @@ func (a *App) enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload an
 			return Job{}, e
 		}
 	}
-	j := Job{ID: id("job_"), WorkflowID: wf, Kind: kind, State: "queued", Payload: b, RunAt: time.Now().Unix(), CreatedAt: now(), UpdatedAt: now()}
+	phase("job_insert")
+	j := Job{WorkflowID: wf, Kind: kind, State: "queued", Payload: b, RunAt: time.Now().Unix(), CreatedAt: now(), UpdatedAt: now()}
+	if accepted != nil {
+		j.ID, j.CreatedAt, j.RunAt = accepted.ID, accepted.CreatedAt, accepted.RunAt
+	} else {
+		j.ID = id("job_")
+	}
 	readJobTrace(&j)
 	_, e = tx.ExecContext(ctx, `INSERT INTO jobs(id,workflow_id,kind,state,payload,run_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)`, j.ID, wf, kind, j.State, b, j.RunAt, j.CreatedAt, j.UpdatedAt)
 	if e == nil {
+		phase("event_insert")
 		_, e = tx.ExecContext(ctx, `INSERT INTO events(time,workflow_id,job_id,level,module,event,message) VALUES(?,?,?,?,?,?,?)`, now(), wf, j.ID, "INFO", kind, "queued", "任务已加入队列")
 	}
 	if e == nil {
+		phase("queue_group")
 		e = registerOrganizeQueueTx(ctx, tx, j)
 	}
 	if e == nil {
@@ -474,18 +488,61 @@ func (a *App) jobCancelled(ctx context.Context, j Job) error {
 	}
 	return nil
 }
+
+func organizeJobState(j Job) map[string]string {
+	return map[string]string{"id": j.ID, "kind": j.Kind, "state": j.State, "error_code": j.ErrorCode, "error_message": j.ErrorMessage}
+}
+
 func (a *App) jobAPI(w http.ResponseWriter, r *http.Request, p string) (any, error) {
 	parts := strings.Split(p, "/")
 	if len(parts) > 2 || parts[0] == "" {
 		return nil, bad("INVALID_JOB", "任务ID无效")
 	}
+	ctx := r.Context()
+	if len(parts) == 2 && r.Method == http.MethodPost {
+		var changed bool
+		var err error
+		switch parts[1] {
+		case "cancel":
+			changed, err = a.cancelPendingOrganizeJob(ctx, parts[0])
+		case "retry":
+			changed, err = a.retryPendingOrganizeJob(ctx, parts[0])
+		}
+		if err != nil || changed {
+			return map[string]bool{"accepted": changed}, err
+		}
+	}
+	// In that order, a handoff cannot leave the job missing from both reads.
+	pending, err := a.pendingOrganizeJob(ctx, parts[0])
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return nil, err
+	}
 	j, e := scanJob(a.Store.reader().QueryRowContext(r.Context(), `SELECT `+jobColumns+` FROM jobs WHERE id=?`, parts[0]))
+	if errors.Is(e, sql.ErrNoRows) && pending.ID != "" {
+		if len(parts) == 1 && r.Method == http.MethodGet {
+			if r.URL.Query().Get("view") == "organize" {
+				return map[string]any{"job": organizeJobState(pending)}, nil
+			}
+			settings := a.settingsSnapshot()
+			view, err := summarizeJob(pending, jobSummaryInput{}, *settings, settingsRedactions(*settings))
+			if err != nil {
+				return nil, err
+			}
+			return map[string]any{"job": view, "events": []Event{}, "decisions": []json.RawMessage{}}, nil
+		}
+		if len(parts) == 2 && r.Method == http.MethodPost && parts[1] == "cancel" && pending.State == "cancelled" {
+			return nil, bad("JOB_TERMINAL", "该任务已结束")
+		}
+		if len(parts) == 2 && r.Method == http.MethodPost && parts[1] == "retry" && pending.State == "queued" {
+			return nil, bad("JOB_NOT_RETRYABLE", "只能重试失败、取消或待核对的任务")
+		}
+	}
 	if e != nil {
 		return nil, e
 	}
 	if len(parts) == 1 && r.Method == "GET" {
 		if r.URL.Query().Get("view") == "organize" {
-			result := map[string]any{"job": map[string]string{"id": j.ID, "kind": j.Kind, "state": j.State, "error_code": j.ErrorCode, "error_message": j.ErrorMessage}}
+			result := map[string]any{"job": organizeJobState(j)}
 			return a.organizeJobResult(r.Context(), j, result)
 		}
 

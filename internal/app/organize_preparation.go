@@ -30,25 +30,16 @@ func (a *App) enqueueOrganizePreparation(ctx context.Context, in manualOrganizeR
 	if err != nil {
 		return out, err
 	}
-	tx, err := a.Store.DB.BeginTx(ctx, nil)
-	if err != nil {
-		return out, err
-	}
-	defer tx.Rollback()
-	job, err := a.enqueueTx(ctx, tx, "organize_prepare", organizePreparationPayload{ID: tokenHash(string(raw)), Request: in}, id("wf_"))
-	if err != nil {
-		return out, err
-	}
-	// A normal HTTP submission is already durable when the dialog starts polling.
+	key := tokenHash(string(raw))
+	payload := organizePreparationPayload{ID: key, Request: in}
 	if in.Interactive {
-		err = in.audit.commit(ctx, tx)
-	} else {
-		err = tx.Commit()
+		out.PreparationJobID, err = a.acceptOrganize(ctx, "organize_prepare", key, key, payload, in.audit)
+		return out, err
 	}
+	job, err := a.enqueue(ctx, "organize_prepare", payload, id("wf_"))
 	if err != nil {
 		return out, err
 	}
-	a.wakeQueuedJob(job.Kind)
 	out.PreparationJobID = job.ID
 	return out, nil
 }

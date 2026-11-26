@@ -16,24 +16,19 @@ import (
 // Keep existing native identity checks first, then use MoviePilot's TV
 // matcher when the strict directory lookup cannot identify the file.
 func (a *App) originalManualTransferIdentity(ctx context.Context, request ImportRequest, file ImportFileRequest, scanned importScanFile) (ImportRequest, error) {
-	options, err := a.globalRecognitionOptions(ctx)
-	if err != nil {
-		return request, err
-	}
-	parser, err := releasemeta.NewMetaInfoParser(releasemeta.MetaInfoEnvironment{Options: options})
-	if err != nil {
-		return request, err
-	}
+	phase := a.performanceStages(ctx, "transfer_identify", "parse_path")
+	defer phase("")
 	path := file.Path
 	if file.originalMetadataPath != "" {
 		path = file.originalMetadataPath
 	}
 	meta := file.originalResolvedMeta.DeepCopy()
 	if meta == nil {
-		meta, err = parser.ParsePath(path, nil)
-	}
-	if err != nil {
-		return request, err
+		var err error
+		meta, err = a.originalTransferPathMeta(ctx, path)
+		if err != nil {
+			return request, err
+		}
 	}
 	if file.SeasonExplicit || file.Season != 0 {
 		meta.Set("begin_season", file.Season)
@@ -54,6 +49,7 @@ func (a *App) originalManualTransferIdentity(ctx context.Context, request Import
 		meta.Set("type", "电视剧")
 	}
 	initialName, initialYear := meta.Name(), meta.Text("year")
+	phase("recognize_media")
 	recognized, err := a.originalCatalogRecognizeByMetaMethod(ctx, "recognize_media", meta, func(current *releasemeta.MetaObject) (json.RawMessage, error) {
 		source := request.originalRecognitionSource
 		if source == "" {
@@ -89,7 +85,7 @@ func (a *App) originalManualTransferIdentity(ctx context.Context, request Import
 			}
 			return a.originalHostMediaRecognizeTMDB(ctx, kwargs)
 		}
-		full, err := a.cachedTMDBSourceInformation(ctx, catalog.Media{ID: native.TMDBID, MediaType: native.MediaType})
+		full, err := a.nativeTransferTMDBInformation(ctx, catalog.Media{ID: native.TMDBID, MediaType: native.MediaType})
 		return full.MediaInfo, err
 	})
 	if err != nil {
@@ -98,6 +94,7 @@ func (a *App) originalManualTransferIdentity(ctx context.Context, request Import
 	if !originalModuleResultTruthy(recognized) {
 		return request, originalRecognitionMissing()
 	}
+	phase("obtain_images")
 	recognized, err = a.originalTransferObtainImages(ctx, recognized)
 	if err != nil {
 		return request, err
@@ -167,6 +164,6 @@ func (a *App) originalTransferObtainImages(ctx context.Context, recognized json.
 
 func (a *App) recognizeTransferTMDBMedia(ctx context.Context, input catalog.Media) (sourceMediaInformation, error) {
 	return a.originalRecognizeTMDBMedia(ctx, input, func() (sourceMediaInformation, error) {
-		return a.cachedTMDBSourceInformation(ctx, input)
+		return a.nativeTransferTMDBInformation(ctx, input)
 	})
 }

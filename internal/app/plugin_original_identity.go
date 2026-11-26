@@ -15,6 +15,12 @@ func (a *App) originalLoadedPluginSnapshot() []*originalPluginInstance {
 }
 
 func (p *originalPluginInstance) originalDisplayName(ctx context.Context) (string, error) {
+	if err := ctx.Err(); err != nil {
+		return "", err
+	}
+	if p.manifestDisplayName && originalObjectStillLoaded(p) {
+		return p.manifest.Name, nil
+	}
 	metadata, err := p.app.pluginStore.instanceMetadata(ctx, p.app.Store.reader(), p.installation.InstanceID)
 	if err != nil {
 		return "", err

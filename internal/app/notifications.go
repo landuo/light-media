@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type Notification struct {
@@ -116,8 +117,9 @@ type organizeAuditKey struct{}
 
 // This state belongs to one HTTP request and is never serialized into a job.
 type organizeRequestAudit struct {
-	id, request string
-	committed   bool
+	id, request    string
+	committed      bool
+	displayPreview bool
 }
 
 func (audit *organizeRequestAudit) commit(ctx context.Context, tx *sql.Tx) error {
@@ -137,6 +139,13 @@ func (a *App) auditRequest(ctx context.Context, operation, request string, statu
 	if audit, _ := ctx.Value(organizeAuditKey{}).(*organizeRequestAudit); audit != nil && audit.request == request && operation == "POST.files" {
 		if audit.committed && status == http.StatusOK {
 			return
+		}
+		if audit.displayPreview {
+			// The fully encoded preview has already been delivered. A client
+			// navigating away must not cancel its audit write.
+			var cancel context.CancelFunc
+			ctx, cancel = context.WithTimeout(context.WithoutCancel(ctx), 30*time.Second)
+			defer cancel()
 		}
 		finish := a.performanceStages(ctx, "organize_request", "audit_write")
 		defer finish("")

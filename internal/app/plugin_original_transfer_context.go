@@ -72,11 +72,7 @@ func (a *App) originalTransferContext(ctx context.Context, identity catalog.Medi
 }
 
 func (a *App) originalTransferPathMeta(ctx context.Context, path string) (*releasemeta.MetaObject, error) {
-	options, err := a.globalRecognitionOptions(ctx)
-	if err != nil {
-		return nil, err
-	}
-	parser, err := releasemeta.NewMetaInfoParser(releasemeta.MetaInfoEnvironment{Options: options})
+	parser, err := a.transferMetaParser(ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -21,6 +21,7 @@ type originalPluginInstance struct {
 	app                   *App
 	installation          PluginInstallation
 	manifest              plugins.Manifest
+	manifestDisplayName   bool // verified non-clone at class import
 	methodMu              sync.Mutex
 	stopping              atomic.Bool
 	configMu              sync.RWMutex
@@ -185,12 +186,13 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 // Startup imports the full fixed class list before any initializer. Preparing
 // these finite objects does not publish classes or run business initializers.
 func (a *App) prepareOriginalPluginObject(ctx context.Context, in PluginInstallation, implementation pluginImplementation) (*originalPluginInstance, originalPluginClass, error) {
-	meta, err := a.pluginStore.instanceMetadata(ctx, a.Store.DB, in.InstanceID)
+	meta, err := a.pluginStore.instanceMetadata(ctx, a.Store.reader(), in.InstanceID)
 	if err != nil {
 		return nil, originalPluginClass{}, err
 	}
 	class := originalPluginClass{installation: in, isClone: meta.SourceInstanceID != "", external: implementation.External}
 	object := &originalPluginInstance{app: a, installation: in, manifest: implementation.Manifest, external: implementation.External, hostContract: implementation.HostContract, frontendReader: implementation.frontendReader}
+	object.manifestDisplayName = !class.isClone
 	object.setFrontendPackageHash(implementation.PackageSHA256)
 	return object, class, nil
 }

@@ -2,9 +2,9 @@ package app
 
 import (
 	"context"
-	"database/sql"
+
 	"encoding/json"
-	"errors"
+
 	"path/filepath"
 
 	"light-media/internal/transferextensions"
@@ -74,40 +74,12 @@ func (a *App) queueInteractiveOrganizeFile(ctx context.Context, in manualOrganiz
 	}
 	key := tokenHash(string(raw))
 	parsed := a.parseMediaNameContext(ctx, filepath.Base(path))
-	phase("writer_wait")
-	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	phase("durable_acceptance")
+	payload := organizeFilePayload{ID: key, File: importScanFile{Path: path, Size: stamp.Size, Parsed: parsed}, Snapshot: stamp, Title: parsed.Title, BatchID: id("scrape_batch_"), Manual: &in}
+	jobID, err := a.acceptOrganize(ctx, "organize_file", path, key, payload, in.audit)
 	if err != nil {
 		return out, true, err
 	}
-	defer tx.Rollback()
-	phase("active_job")
-	var jobID, activeKey string
-	err = tx.QueryRowContext(ctx, `SELECT j.id,COALESCE(CASE j.kind WHEN 'organize_file' THEN json_extract(j.payload,'$.id') ELSE json_extract(j.payload,'$.interactive_key') END,'')
-		FROM organize_queue_member m JOIN jobs j ON j.id=m.job_id WHERE m.source=? AND j.state IN `+activeOrganizeStates+` LIMIT 1`, path).Scan(&jobID, &activeKey)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		return out, true, err
-	}
-	if jobID != "" && activeKey != key {
-		return out, true, bad("JOB_EXISTS", "该源文件已有其他整理任务正在等待或执行")
-	}
-	if jobID == "" {
-		phase("enqueue")
-		batchID := id("scrape_batch_")
-		if err = txPut(ctx, tx, "original_scrape_batch", batchID, originalScrapeBatch{ID: batchID, Closed: true}); err != nil {
-			return out, true, err
-		}
-		payload := organizeFilePayload{ID: key, File: importScanFile{Path: path, Size: stamp.Size, Parsed: parsed}, Snapshot: stamp, Title: parsed.Title, BatchID: batchID, Manual: &in}
-		job, err := a.enqueueTx(ctx, tx, "organize_file", payload, id("wf_"))
-		if err != nil {
-			return out, true, err
-		}
-		jobID = job.ID
-	}
-	phase("commit")
-	if err = in.audit.commit(ctx, tx); err != nil {
-		return out, true, err
-	}
-	a.wakeQueuedJob("organize_file")
 	out = manualOrganizeOutput{Items: []manualOrganizeItem{{Source: path, Status: "queued", JobID: jobID}}, Total: 1, Submitted: 1}
 	return out, true, nil
 }

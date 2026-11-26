@@ -27,6 +27,7 @@ import (
 )
 
 type App struct {
+	organizeInbox                    *organizeInbox
 	organizeProgress                 sync.Map // file ID -> actual native copied bytes; no per-chunk database writes.
 	originalFNOSRefresh              originalFNOSRefreshRuntime
 	originalPluginTemporary          originalPluginTemporaryState
@@ -344,6 +345,12 @@ func New(opts Options) (*App, error) {
 	// Match the original CategoryHelper process lifetime. Syntax failures start
 	// empty on a cold process; a later failed/empty reload retains these maps.
 	_, _ = a.currentMediaCategoryPolicy()
+	a.organizeInbox, e = openOrganizeInbox(a.Dir)
+	if e != nil {
+		a.logs.close()
+		_ = s.Close()
+		return nil, e
+	}
 	return a, nil
 }
 func (a *App) Start(parent context.Context) {
@@ -359,6 +366,8 @@ func (a *App) Start(parent context.Context) {
 	if err := a.loadJobIndex(ctx); err != nil {
 		a.log("WARN", "jobs", "index_load_failed", "无法装入待执行任务，调度将退回表查询", "", "")
 	}
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.drainOrganizeInbox(ctx) }()
 	// One pass per start releases source files a restart could have baselined.
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.runDirectoryStartupReconcile(ctx) }()
@@ -490,7 +499,11 @@ func (a *App) Close() error {
 		a.log("ERROR", "plugins", "temp_cleanup_failed", fmt.Sprintf("清理插件共享临时目录失败，继续关闭服务: %v", err), "", "")
 	}
 	a.logs.close()
-	return a.Store.Close()
+	var inboxErr error
+	if a.organizeInbox != nil {
+		inboxErr = a.organizeInbox.db.Close()
+	}
+	return errors.Join(inboxErr, a.Store.Close())
 }
 func (a *App) Settings() Settings { return *a.settingsSnapshot() }
 

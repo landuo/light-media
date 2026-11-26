@@ -37,8 +37,11 @@ func TestInteractiveOrganizeReturnsPreviewAndPublishesAcceptedFile(t *testing.T)
 			t.Fatal(err)
 		}
 		if want == 200 {
-			var audits int
-			if err := a.Store.DB.QueryRow(`SELECT count(*) FROM audit_log WHERE json_extract(payload,'$.request_id')=? AND json_extract(payload,'$.http_status')=200`, resp.Header().Get("X-Request-ID")).Scan(&audits); err != nil || audits != 1 {
+			var pending, audits int
+			if err := a.organizeInbox.db.QueryRow("SELECT count(*) FROM audit WHERE request_id=?", resp.Header().Get("X-Request-ID")).Scan(&pending); err != nil {
+				t.Fatal(err)
+			}
+			if err := a.Store.DB.QueryRow(`SELECT count(*) FROM audit_log WHERE json_extract(payload,'$.request_id')=? AND json_extract(payload,'$.http_status')=200`, resp.Header().Get("X-Request-ID")).Scan(&audits); err != nil || audits+pending != 1 {
 				t.Fatal("request audit", audits, err)
 			}
 		}
@@ -76,6 +79,9 @@ func TestInteractiveOrganizeReturnsPreviewAndPublishesAcceptedFile(t *testing.T)
 			t.Fatal(kind, job, err)
 		}
 		a.runClaimedJob(t.Context(), job)
+	}
+	if ok, err := a.deliverOrganizeInbox(t.Context()); err != nil || !ok {
+		t.Fatal("durable handoff", ok, err)
 	}
 	run("organize_file")
 	if retry := call(request, 200); retry.Items[0].JobID != jobID {
@@ -120,6 +126,9 @@ func TestInteractiveOrganizePreparationReturnsEachFileAndSkip(t *testing.T) {
 	}
 	run := func(id string) manualOrganizeOutput {
 		t.Helper()
+		if ok, err := a.deliverOrganizeInbox(t.Context()); err != nil || !ok {
+			t.Fatal("durable prepare handoff", ok, err)
+		}
 		job, err := a.claim(t.Context())
 		if err != nil || job.ID != id || job.Kind != "organize_prepare" {
 			t.Fatalf("claim: %s, %v", job.ID, err)
@@ -177,5 +186,131 @@ func TestInteractiveOrganizePreparationReturnsEachFileAndSkip(t *testing.T) {
 	folder.Paths = []string{source}
 	if out := submit(folder); out.PreparationJobID == "" || out.Submitted != 0 {
 		t.Fatalf("folder did not return durable preparation: %+v", out)
+	}
+}
+
+func TestOrganizeInboxReplaysAcrossBothCommitBoundaries(t *testing.T) {
+	a, src, target := importTestApp(t)
+	ctx := t.Context()
+	if err := a.saveSettings(ctx, a.Settings()); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(src, "Fallout.S02E07.mkv")
+	importWrite(t, path, []byte("independent test media"))
+	form := manualOrganizeRequest{Interactive: true, Paths: []string{path}, TargetPath: target, Mode: "hardlink", audit: &organizeRequestAudit{id: "audit_fixture_1", request: "req_fixture_1"}}
+	main, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer main.Rollback()
+	// Holding the production writer must not prevent a durable admission or
+	// an equivalent retry. Conflicting selections cannot acquire the source.
+	out, handled, err := a.queueInteractiveOrganizeFile(ctx, form)
+	if err != nil || !handled || len(out.Items) != 1 {
+		t.Fatal(out, handled, err)
+	}
+	jobID := out.Items[0].JobID
+	form.audit = &organizeRequestAudit{id: "audit_fixture_2", request: "req_fixture_2"}
+	again, _, err := a.queueInteractiveOrganizeFile(ctx, form)
+	if err != nil || again.Items[0].JobID != jobID {
+		t.Fatal(again, err)
+	}
+	// Concurrent HTTP retries must share one stable ID, even while the main
+	// writer is unavailable and the new job exists only in the inbox.
+	type reply struct {
+		id  string
+		err error
+	}
+	replies := make(chan reply, 6)
+	for range cap(replies) {
+		request := form
+		request.audit = nil
+		go func() {
+			accepted, _, err := a.queueInteractiveOrganizeFile(ctx, request)
+			var id string
+			if len(accepted.Items) == 1 {
+				id = accepted.Items[0].JobID
+			}
+			replies <- reply{id, err}
+		}()
+	}
+	for range cap(replies) {
+		if r := <-replies; r.err != nil || r.id != jobID {
+			t.Fatal(r)
+		}
+	}
+	form.Mode = "copy"
+	if _, _, err = a.queueInteractiveOrganizeFile(ctx, form); err == nil {
+		t.Fatal("incompatible form accepted")
+	}
+	if err = main.Rollback(); err != nil {
+		t.Fatal(err)
+	}
+	reopen := func(app *App) *App {
+		t.Helper()
+		if err := app.Close(); err != nil {
+			t.Fatal(err)
+		}
+		resumed, err := New(Options{DataDir: app.Dir})
+		if err != nil {
+			t.Fatal(err)
+		}
+		return resumed
+	}
+	a = reopen(a)
+	if job, err := a.pendingOrganizeJob(ctx, jobID); err != nil || job.State != "queued" {
+		t.Fatal(job, err)
+	}
+	// Crash/failure before main commit: no half-written job, data, or audit.
+	if _, err = a.Store.DB.Exec(`CREATE TRIGGER reject_inbox_audit BEFORE INSERT ON audit_log BEGIN SELECT RAISE(ABORT,'fixture writer interrupted'); END`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = a.deliverOrganizeInbox(ctx); err == nil {
+		t.Fatal("failed main transaction acknowledged")
+	}
+	if _, err = a.Store.DB.Exec("DROP TRIGGER reject_inbox_audit"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = a.pendingOrganizeJob(ctx, jobID); err != nil {
+		t.Fatal("inbox lost after main rollback", err)
+	}
+	var n int
+	if err = a.Store.DB.QueryRow("SELECT COUNT(*) FROM jobs WHERE id=?", jobID).Scan(&n); err != nil || n != 0 {
+		t.Fatal("main rollback", n, err)
+	}
+	// Crash after main commit but before retiring the receipt. Replay must keep
+	// the very same main job and audit rows even after they reached a terminal state.
+	if _, err = a.organizeInbox.db.Exec(`CREATE TRIGGER hold_receipt BEFORE DELETE ON request BEGIN SELECT RAISE(ABORT,'fixture interruption after main commit'); END`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = a.deliverOrganizeInbox(ctx); err == nil {
+		t.Fatal("failed receipt retirement was lost")
+	}
+	if _, err = a.Store.DB.Exec("UPDATE jobs SET state='succeeded' WHERE id=?", jobID); err != nil {
+		t.Fatal(err)
+	}
+	a = reopen(a)
+	defer a.Close()
+	if changed, err := a.cancelPendingOrganizeJob(ctx, jobID); err != nil || changed {
+		t.Fatal("stale receipt accepted cancellation", changed, err)
+	}
+	if _, err = a.organizeInbox.db.Exec("DROP TRIGGER hold_receipt"); err != nil {
+		t.Fatal(err)
+	}
+	if ok, err := a.deliverOrganizeInbox(ctx); err != nil || !ok {
+		t.Fatal(ok, err)
+	}
+	if ok, err := a.deliverOrganizeInbox(ctx); err != nil || ok {
+		t.Fatal(ok, err)
+	}
+	var state string
+	if err = a.Store.DB.QueryRow("SELECT state FROM jobs WHERE id=?", jobID).Scan(&state); err != nil || state != "succeeded" {
+		t.Fatal(state, err)
+	}
+	if err = a.Store.DB.QueryRow("SELECT count(*) FROM jobs WHERE kind='organize_file'").Scan(&n); err != nil || n != 1 {
+		t.Fatal("duplicate file transfer", n, err)
+	}
+	if err = a.Store.DB.QueryRow("SELECT count(*) FROM audit_log WHERE id IN ('audit_fixture_1','audit_fixture_2')").Scan(&n); err != nil || n != 2 {
+		t.Fatal("audit count", n, err)
 	}
 }

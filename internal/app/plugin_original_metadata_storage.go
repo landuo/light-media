@@ -18,14 +18,6 @@ func (a *App) originalMetadataStorage(ctx context.Context, method string, kwargs
 }
 
 func (a *App) originalMetadataStorageGroups(ctx context.Context, method string, kwargs map[string]any, native func() (any, error), groups []originalPluginModuleGroup) (json.RawMessage, error) {
-	encoded, err := json.Marshal(kwargs)
-	if err != nil {
-		return nil, err
-	}
-	result, err := a.invokeOriginalPluginModuleGroups(ctx, method, nil, json.RawMessage(`[]`), encoded, nil, groups)
-	if err != nil {
-		return nil, err
-	}
 	core := func() (json.RawMessage, error) {
 		value, err := native()
 		var guard *APIError
@@ -40,6 +32,29 @@ func (a *App) originalMetadataStorageGroups(ctx context.Context, method string, 
 			return nil, err
 		}
 		return json.Marshal(value)
+	}
+	// Discover live providers once per call. Only serialize a complete media
+	// DTO for a worker when a plugin actually registered this method.
+	var err error
+	if groups == nil {
+		groups, err = a.originalPluginModules(ctx, "")
+		if err != nil {
+			return nil, err
+		}
+	}
+	if err = ctx.Err(); err != nil {
+		return nil, err
+	}
+	if !originalModuleGroupsHaveMethod(groups, method) {
+		return core()
+	}
+	encoded, err := json.Marshal(kwargs)
+	if err != nil {
+		return nil, err
+	}
+	result, err := a.invokeOriginalPluginModuleGroups(ctx, method, nil, json.RawMessage(`[]`), encoded, nil, groups)
+	if err != nil {
+		return nil, err
 	}
 	if originalModuleResultEmpty(result) {
 		return core()

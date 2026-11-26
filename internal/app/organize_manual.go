@@ -112,6 +112,9 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		if ctx.Value(manualPreviewSeasonKey{}) == nil {
 			ctx = context.WithValue(ctx, manualPreviewSeasonKey{}, &manualPreviewSeason{})
 		}
+		if ctx.Value(manualPreviewInputsKey{}) == nil {
+			ctx = context.WithValue(ctx, manualPreviewInputsKey{}, &manualPreviewInputs{nfos: make(map[string]manualPreviewNFO)})
+		}
 	}
 	if len(in.HistoryIDs) > 1 {
 		return a.manualOrganizeHistoryBatch(ctx, in)
@@ -1007,6 +1010,62 @@ const organizeQueueJobsSQL = `SELECT ` + jobColumns + ` FROM jobs
  AND (kind!='organize_prepare' OR NOT EXISTS(SELECT 1 FROM organize_listing WHERE organize_listing.id=jobs.id))
  ORDER BY created_at DESC, id`
 
+// Main jobs take precedence over the inbox snapshot, including jobs that
+// already finished and therefore should be absent from the queue.
+func (a *App) visibleOrganizeJobs(ctx context.Context) ([]Job, error) {
+	pending, err := a.pendingOrganizeJobs(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if len(pending) == 0 {
+		return a.queryJobs(ctx, organizeQueueJobsSQL)
+	}
+	byID := make(map[string]Job, len(pending))
+	ids := make([]string, 0, len(pending))
+	for _, job := range pending {
+		byID[job.ID] = job
+		ids = append(ids, job.ID)
+	}
+	raw, err := json.Marshal(ids)
+	if err != nil {
+		return nil, err
+	}
+	// Both arms read the same SQLite snapshot during a concurrent handoff.
+	rows, err := a.Store.reader().QueryContext(ctx, `WITH visible AS (`+organizeQueueJobsSQL+`)
+	 SELECT `+jobColumns+`,1 FROM visible UNION ALL
+	 SELECT `+jobColumns+`,0 FROM jobs WHERE id IN (SELECT value FROM json_each(?))`, string(raw))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var jobs []Job
+	for rows.Next() {
+		var visible bool
+		job, err := scanJobRow(rows, &visible)
+		if err != nil {
+			return nil, err
+		}
+		delete(byID, job.ID)
+		if visible {
+			readJobTrace(&job)
+			jobs = append(jobs, job)
+		}
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	for _, job := range byID {
+		jobs = append(jobs, job)
+	}
+	slices.SortFunc(jobs, func(a, b Job) int {
+		if a.CreatedAt != b.CreatedAt {
+			return strings.Compare(b.CreatedAt, a.CreatedAt)
+		}
+		return strings.Compare(a.ID, b.ID)
+	})
+	return jobs, nil
+}
+
 func (a *App) organizeQueue(ctx context.Context) (any, error) {
 	phase := a.performanceStages(ctx, "organize_queue", "seed_legacy")
 	defer phase("")
@@ -1014,7 +1073,7 @@ func (a *App) organizeQueue(ctx context.Context) (any, error) {
 		return nil, err
 	}
 	phase("active_jobs")
-	jobs, e := a.queryJobs(ctx, organizeQueueJobsSQL)
+	jobs, e := a.visibleOrganizeJobs(ctx)
 	if e != nil {
 		return nil, e
 	}
@@ -1103,7 +1162,10 @@ func historySearchPattern(value string) string {
 
 func (a *App) cancelOrganizeQueueFile(ctx context.Context, key string) (any, error) {
 	if strings.HasPrefix(key, "job_") {
-		job, err := scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=? AND kind IN ('organize_file','import')`, key))
+		if cancelled, err := a.cancelPendingOrganizeJob(ctx, key); err != nil || cancelled {
+			return map[string]bool{"cancelled": cancelled}, err
+		}
+		job, err := scanJob(a.Store.reader().QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE id=? AND kind IN ('organize_file','import')`, key))
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, bad("QUEUE_FILE_FINISHED", "此文件整理任务已经结束")
 		}

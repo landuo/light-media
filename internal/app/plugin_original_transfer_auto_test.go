@@ -137,9 +137,10 @@ func TestOriginalAutomaticManualRecognitionActualSDK(t *testing.T) {
 			if e := a.initOriginalLoadedPlugin(ctx, object.installation.InstanceID); e != nil {
 				t.Fatal(e)
 			}
-			for _, preview := range []bool{true, false} {
+			for _, entry := range []struct{ preview, interactive bool }{{true, false}, {true, true}, {false, false}} {
+				preview := entry.preview
 				before := ownedModuleRead(t, object)
-				out, e := a.manualOrganize(ctx, manualOrganizeRequest{Paths: []string{path}, TargetPath: a.Settings().Roots[0].Path, Mode: "hardlink", Scraping: importFlag(false), Preview: preview})
+				out, e := a.manualOrganize(ctx, manualOrganizeRequest{Paths: []string{path}, TargetPath: a.Settings().Roots[0].Path, Mode: "hardlink", Scraping: importFlag(false), Preview: preview, Interactive: entry.interactive})
 				if e != nil || len(out.Items) != 1 {
 					t.Fatal(out, e)
 				}

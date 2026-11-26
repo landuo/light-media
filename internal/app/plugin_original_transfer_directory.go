@@ -122,10 +122,13 @@ var originalTransferBlurayStream = regexp.MustCompile(`(?i)BDMV[/\\]STREAM`)
 type originalTransferDirectoryListingsKey struct{}
 
 func (a *App) originalManualStorageScan(ctx context.Context, path string, in manualOrganizeRequest) (any, error) {
+	phase := a.performanceStages(ctx, "organize_scan", "storage_candidates")
+	defer phase("")
 	candidates, listings, err := a.originalTransferCandidates(ctx, path)
 	if err != nil {
 		return nil, err
 	}
+	phase("inspect_sources")
 	classifier, err := a.transferMediaClassifier(ctx)
 	if err != nil {
 		return nil, err
@@ -201,7 +204,7 @@ func (a *App) originalManualStorageScan(ctx context.Context, path string, in man
 		} else if classifier.Audio(class) {
 			file.materialKind = "audio"
 		}
-		file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(importNFOAnchor(metadataPath, candidate.Bluray))
+		file.InferredMedia, file.Numbering, file.IdentityReason = a.transferNFOEvidence(ctx, importNFOAnchor(metadataPath, candidate.Bluray))
 		if file.InferredMedia != nil {
 			file.IdentitySource = "nfo"
 		}

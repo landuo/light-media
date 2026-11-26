@@ -162,11 +162,7 @@ func originalDirectoryAllowed(item originalTransferCandidate, classifier transfe
 }
 
 func (a *App) originalDirectoryMetaBuilder(ctx context.Context, in manualOrganizeRequest) (func(string) (*releasemeta.MetaObject, error), error) {
-	options, err := a.globalRecognitionOptions(ctx)
-	if err != nil {
-		return nil, err
-	}
-	parser, err := releasemeta.NewMetaInfoParser(releasemeta.MetaInfoEnvironment{Options: options})
+	parser, err := a.transferMetaParser(ctx)
 	if err != nil {
 		return nil, err
 	}

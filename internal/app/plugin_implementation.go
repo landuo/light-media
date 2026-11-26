@@ -63,7 +63,7 @@ func (a *App) pluginPackageRoot() string { return filepath.Join(a.Dir, "plugin-p
 // resolvePluginImplementation is shared by lifecycle and execution. A present
 // but invalid artifact is an error, never a reason to silently run other code.
 func (a *App) resolvePluginImplementation(ctx context.Context, in PluginInstallation) (pluginImplementation, error) {
-	metadata, metadataErr := a.pluginStore.instanceMetadata(ctx, a.Store.DB, in.InstanceID)
+	metadata, metadataErr := a.pluginStore.instanceMetadata(ctx, a.Store.reader(), in.InstanceID)
 	if metadataErr != nil {
 		return pluginImplementation{}, metadataErr
 	}

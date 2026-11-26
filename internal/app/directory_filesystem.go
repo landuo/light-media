@@ -1011,10 +1011,20 @@ func (a *App) directoryTitleMatches(ctx context.Context, kind string, year int, 
 			if number > 1 {
 				key += fmt.Sprintf(":page:%d", number)
 			}
+			inputs, _ := ctx.Value(manualPreviewInputsKey{}).(*manualPreviewInputs)
 			var page catalog.Page
-			at, err := a.cached(ctx, key, 24*time.Hour, &page, func() (any, error) { return a.catalog().Search(ctx, query, kind, number) })
-			if err != nil {
-				return nil, err
+			var at time.Time
+			if inputs != nil && inputs.pageKey == key && time.Since(inputs.pageAt) < 24*time.Hour {
+				page, at = inputs.page, inputs.pageAt
+			} else {
+				var err error
+				at, err = a.cached(ctx, key, 24*time.Hour, &page, func() (any, error) { return a.catalog().Search(ctx, query, kind, number) })
+				if err != nil {
+					return nil, err
+				}
+				if inputs != nil && len(page.Results) <= 32 {
+					inputs.page, inputs.pageKey, inputs.pageAt = page, key, at
+				}
 			}
 			if preferTVPremiere && number == 1 && page.Page == 1 && page.TotalPages >= 1 && time.Since(at) < 24*time.Hour {
 				if m := directoryFirstTVTitle(page.Results, query, year); m != nil {

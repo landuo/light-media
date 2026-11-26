@@ -201,6 +201,9 @@ func (a *App) fileManagerAPI(r *http.Request, p string) (any, error) {
 		if in.Interactive || len(in.Paths) == 1 && len(in.HistoryIDs) == 0 {
 			in.audit, _ = ctx.Value(organizeAuditKey{}).(*organizeRequestAudit)
 		}
+		if in.Interactive && in.Preview && in.audit != nil {
+			in.audit.displayPreview = true
+		}
 		if in.Interactive && !in.Preview && len(in.Paths) == 1 && len(in.HistoryIDs) == 0 {
 			out, handled, err := a.queueInteractiveOrganizeFile(ctx, in)
 			if handled {

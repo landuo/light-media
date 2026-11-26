@@ -85,6 +85,6 @@ func (a *App) manualOrganizeScan(ctx context.Context, path string, supplied ...m
 		return nil, err
 	}
 	file := importScanFile{Path: path, Size: stamp.Size, Parsed: a.parseMediaName(filepath.Base(metadataPath)), originalMetadataPath: metadataPath, materialKind: kind}
-	file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(metadataPath)
+	file.InferredMedia, file.Numbering, file.IdentityReason = a.transferNFOEvidence(ctx, metadataPath)
 	return map[string]any{"files": []importScanFile{file}, "truncated": false}, nil
 }

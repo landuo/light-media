@@ -34,14 +34,12 @@ const activeOrganizeGroup = `EXISTS(
  AND active.id=member.job_id AND active.state IN ` + activeOrganizeStates + `
 )`
 
-const matchingOrganizeGroups = `WITH matches(group_id) AS (
- SELECT group_id FROM organize_queue_member INDEXED BY organize_queue_meta
- WHERE ?1!='' AND meta=?1
- UNION
- SELECT group_id FROM organize_queue_member INDEXED BY organize_queue_media
- WHERE ?2!='' AND media_key=?2
-)
-SELECT m.group_id FROM matches m WHERE ` + activeOrganizeGroup
+// Only a live group can acquire another member. Seeking meta or media within
+// these groups avoids visiting every previous season with the same title.
+const matchingOrganizeGroups = `WITH active(group_id) AS MATERIALIZED (` + liveOrganizeGroups + `)
+ SELECT group_id FROM active
+ WHERE EXISTS(SELECT 1 FROM organize_queue_member m INDEXED BY organize_queue_meta WHERE ?1!='' AND meta=?1 AND m.group_id=active.group_id)
+ OR EXISTS(SELECT 1 FROM organize_queue_member m INDEXED BY organize_queue_media WHERE ?2!='' AND media_key=?2 AND m.group_id=active.group_id)`
 
 func activeOrganizeSourceTx(ctx context.Context, tx *sql.Tx, source string) (string, error) {
 	var job string

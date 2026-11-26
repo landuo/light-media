@@ -372,9 +372,14 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			request.Files[0].Path = resolved
 		}
 	}
-	request, prepareErr = a.prepareManualImport(ctx, request)
-	if prepareErr != nil {
-		return plan, prepareErr
+	// The dialog already selected and validated this explicit destination
+	// while resolving the file's episode. A display-only preview can reuse
+	// that decision; a softlink or history-provider resolution may change it.
+	if !request.displayPreview || request.directorySelection == nil || request.TargetPath == "" || request.Mode == "softlink" || request.originalHistoryProvider {
+		request, prepareErr = a.prepareManualImport(ctx, request)
+		if prepareErr != nil {
+			return plan, prepareErr
+		}
 	}
 	providerImport := request.providerImport()
 	if request.EpisodeGroup != "" && (providerImport || request.MediaType != "tv") {
@@ -555,7 +560,10 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	seenSources, seenTargets, seenSlots := map[string]bool{}, map[string]bool{}, map[string]bool{}
 	seenSourceInodes := map[string]bool{}
 	phase("file_plans")
+	filePhase := a.performanceStages(ctx, "organize_file_preview", "")
+	defer filePhase("")
 	for _, requested := range request.Files {
+		filePhase("source_snapshot")
 		file := PlanFile{ID: id("file_"), Source: requested.Path, Season: requested.Season, Episodes: append([]int(nil), requested.Episodes...), Part: strings.TrimSpace(requested.Part), Status: "ready"}
 		if len(request.Files) == 1 {
 			file.HistorySource = request.HistorySource
@@ -603,7 +611,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		var numbering *media.Numbering
 		var nfoReason string
 		if sourceAllowed {
-			inferred, numbering, nfoReason = a.importNFOEvidence(importNFOAnchor(file.Source, class.Bluray))
+			inferred, numbering, nfoReason = a.transferNFOEvidence(ctx, importNFOAnchor(file.Source, class.Bluray))
 			if inferred != nil && (inferred.Type != identity.MediaType || inferred.ID != identity.ID) {
 				plan.Warnings = append(plan.Warnings, "源 NFO 身份与本次明确选择不同；本计划按你选择的 TMDB 身份整理，请核对后确认。")
 			}
@@ -625,6 +633,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				}
 			}
 		}
+		filePhase("episode_information")
 		if request.MediaType == "movie" {
 			file.Season = 0
 			file.Episodes = nil
@@ -749,6 +758,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		}
 		if file.Status == "ready" {
 			title := importName(identity.Title)
+			filePhase("naming_context")
 			folder := title
 			if identity.Year > 0 {
 				folder = fmt.Sprintf("%s (%d)", title, identity.Year)
@@ -848,6 +858,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				}
 			}
 			if modulePreview {
+				filePhase("module_preview")
 				file.Method = request.Mode
 				if file.Method == "auto" {
 					file.Method = "hardlink"
@@ -871,6 +882,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				if file.MaterialKind != "" || request.originalDirectoryPlanned || request.originalSingleHistory {
 					continue
 				}
+				filePhase("related_files")
 				related, e := a.originalTransferRelatedPreview(ctx, plan, file, &meta, request.directorySelection, baseDir, episodes)
 				if e != nil {
 					return plan, e
@@ -878,6 +890,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				plan.Files = append(plan.Files, related...)
 				continue
 			}
+			filePhase("target_and_slots")
 			inPlace := reorganize != nil && file.Target == reorganize.Asset.Path && (request.Mode == "softlink") == (reorganize.Video.Softlink != nil)
 			// A hardlink already owned by this library is not a new transfer.
 			// Match its original source as well as device/inode. A different
@@ -1048,6 +1061,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		}
 		plan.Files = append(plan.Files, file)
 	}
+	filePhase("")
 	if meta.DownloadRetry != nil {
 		plan.IntentID = meta.DownloadRetry.IntentID
 	}
