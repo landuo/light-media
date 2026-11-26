@@ -17,6 +17,16 @@ make build
 
 打开 `http://127.0.0.1:3120`，首次创建管理员。构建前端需要 Node；已构建程序启动时无需 Node。Docker 构建及挂载示例见 `Dockerfile` 和 `compose.yaml`，运行用户需具备配置盘与媒体目录的权限。
 
+在使用 cgroup v2 和 systemd cgroup 驱动的 Linux NAS 上，从仓库根目录执行以下命令。前两行在首次安装或更新 `lightmedia.slice` 时执行。
+
+```sh
+sudo install -m 0644 deploy/systemd/lightmedia.slice /etc/systemd/system/lightmedia.slice
+sudo systemctl daemon-reload
+docker compose up -d
+```
+
+Compose 将光影放入 `lightmedia.slice`。该组的内存软阈值为 170 MB（170,000,000 字节），容器硬上限为 512 MiB。容器启动和重建时会自动使用这组设置。可用 `systemctl show lightmedia.slice -p MemoryHigh` 查看配置值，用 `cat /sys/fs/cgroup/lightmedia.slice/memory.high` 查看内核按页对齐后的生效值。
+
 内置插件随光影一起编译和升级。只需检出本仓库，在根目录执行 `make build` 即可构建前端、主程序和全部内置插件。业务源码位于 `builtinplugins/plugins/`，共享 SDK 位于 `builtinplugins/internal/sdk/`，两者使用根目录的 `go.mod`。修改插件后可运行 `go test ./builtinplugins/...`，主程序和插件一起提交到本仓库。
 
 首次配置入口：

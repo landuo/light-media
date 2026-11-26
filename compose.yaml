@@ -16,6 +16,8 @@ services:
       LIGHT_MEDIA_MEDIA_ROOTS: /media:/vol2/1000/media
       # The host defaults to 56 MiB of Go-managed memory and GOGC=200.
       # Set GOMEMLIMIT / GOGC here only for an explicit runtime override.
+    # Host unit: deploy/systemd/lightmedia.slice (MemoryHigh=170000000 bytes).
+    cgroup_parent: lightmedia.slice
     mem_limit: 512m
     cpus: 1.0
     read_only: true
