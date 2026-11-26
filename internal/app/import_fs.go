@@ -78,6 +78,11 @@ func importDir(name string, create bool) (*os.File, error) {
 	if !importPath(name) {
 		return nil, bad("INVALID_PATH", "目录必须是规范的绝对路径")
 	}
+	if !create {
+		if dir, supported, err := openGuardedDirectory(name); supported {
+			return dir, err
+		}
+	}
 	fd, err := unix.Open("/", unix.O_RDONLY|unix.O_DIRECTORY|unix.O_CLOEXEC, 0)
 	if err != nil {
 		return nil, err

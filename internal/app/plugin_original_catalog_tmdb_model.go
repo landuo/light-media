@@ -35,7 +35,7 @@ func sourceTMDBMediaModel(raw json.RawMessage, kind, domain, category string) (j
 	delete(m, "recognize_cache_hit") // class default, absent from vars until assigned
 	m["source"], m["tmdb_info"], m["type"], m["tmdb_id"] = "themoviedb", info, mediaType, info["id"]
 	if !sourceSubscriptionTruth(m["tmdb_id"]) {
-		return mustCleanSeedJSON(m), nil
+		return json.Marshal(m)
 	}
 	if external := sourceMap(info["external_ids"]); len(external) > 0 {
 		m["tvdb_id"], m["imdb_id"] = external["tvdb_id"], external["imdb_id"]
@@ -129,5 +129,5 @@ func sourceTMDBMediaModel(raw json.RawMessage, kind, domain, category string) (j
 	if info["recognize_cache_hit"] == true {
 		m["recognize_cache_hit"] = true
 	}
-	return mustCleanSeedJSON(m), nil
+	return json.Marshal(m)
 }

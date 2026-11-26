@@ -28,6 +28,15 @@ func originalLocalFileItem(path string) (*plugins.ModuleFileItem, error) {
 }
 
 func originalLocalFileItemFromStat(path string, stat os.FileInfo) *plugins.ModuleFileItem {
+	fields := originalLocalFileItemFields(path, stat)
+	encoded := &plugins.ModuleFileItem{Fields: map[string]json.RawMessage{}}
+	for key, value := range fields {
+		encoded.Fields[key], _ = json.Marshal(value)
+	}
+	return encoded
+}
+
+func originalLocalFileItemFields(path string, stat os.FileInfo) map[string]any {
 	fields := map[string]any{}
 	for _, key := range []string{"type", "name", "basename", "extension", "size", "modify_time", "fileid", "parent_fileid", "thumbnail", "pickcode", "drive_id", "url"} {
 		fields[key] = nil
@@ -49,9 +58,5 @@ func originalLocalFileItemFromStat(path string, stat os.FileInfo) *plugins.Modul
 		fields["type"], fields["path"] = "dir", path+"/"
 		fields["extension"], fields["size"] = nil, nil
 	}
-	encoded := &plugins.ModuleFileItem{Fields: map[string]json.RawMessage{}}
-	for key, value := range fields {
-		encoded.Fields[key], _ = json.Marshal(value)
-	}
-	return encoded
+	return fields
 }

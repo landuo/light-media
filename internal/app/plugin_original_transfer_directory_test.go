@@ -81,7 +81,7 @@ func TestOriginalTransferDirectoryCollectorFixedSourceActualSDK(t *testing.T) {
 			if err := a.initOriginalLoadedPlugin(ctx, object.installation.InstanceID); err != nil {
 				t.Fatal(err)
 			}
-			actual, _, err := a.originalTransferCandidates(ctx, sourceText(initial["path"]))
+			actual, _, err := a.originalTransferCandidates(ctx, sourceText(initial["path"]), make(map[string]importSnapshot))
 			if (err != nil) != (sample.Exception != nil) {
 				t.Fatal("source exception branch", err, sample.Exception)
 			}
@@ -163,5 +163,41 @@ func TestOriginalTransferDirectoryUsesStorageHost(t *testing.T) {
 	}
 	if got := ownedModuleRead(t, object).Calls["module_storage_tree"]; got != 1 {
 		t.Fatal("actual get_file_item call", got)
+	}
+}
+
+func TestLocalSeasonDirectoryMatchesStorageAndRefreshesEvidence(t *testing.T) {
+	a, source, _ := importTestApp(t)
+	dir := filepath.Join(source, "Fallout")
+	paths := []string{filepath.Join(dir, "Fallout.S02E02.mkv"), filepath.Join(dir, "Fallout.S02E01.mkv")}
+	for _, path := range paths {
+		importWrite(t, path, []byte("video"))
+	}
+	ctx := t.Context()
+	want, listing, err := a.originalTransferCandidates(ctx, dir, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	now := make(map[string]importSnapshot)
+	actual, observedListing, err := a.originalTransferCandidates(ctx, dir, now)
+	if err != nil || !reflect.DeepEqual(want, actual) || !reflect.DeepEqual(listing, observedListing) || len(now) != 2 {
+		t.Fatalf("native FileItems, order or snapshots differ: %v, %v", err, now)
+	}
+	for _, path := range paths {
+		info, err := os.Lstat(path)
+		if err != nil || !now[path].matches(info) {
+			t.Fatal("wrong snapshot", path, err)
+		}
+	}
+	if err := os.Remove(paths[0]); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(paths[1], paths[0]); err != nil {
+		t.Fatal(err)
+	}
+	captured := make(map[string]importSnapshot)
+	items, _, err := a.originalTransferCandidates(ctx, dir, captured)
+	if err != nil || len(captured) != 0 || len(items) != 1 || sourceText(items[0].Item["path"]) != paths[1] {
+		t.Fatal("changed entry or unowned link admitted", err, items)
 	}
 }

@@ -25,6 +25,7 @@ import (
 type manualOrganizeRequest struct {
 	Interactive           bool `json:"interactive,omitempty"`
 	audit                 *organizeRequestAudit
+	previewHistory        *transferHistoryItem
 	originalRetry         bool
 	originalRetryAttempt  *originalTransferRetryAttempt
 	originalResolvedMedia json.RawMessage
@@ -157,6 +158,8 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 			var item transferHistoryItem
 			item, err = a.originalCurrentTransferRetry(ctx, *in.originalRetryAttempt, false)
 			selected = []transferHistoryItem{item}
+		} else if in.Preview && in.previewHistory != nil && len(in.HistoryIDs) == 1 && in.HistoryIDs[0] == in.previewHistory.ID {
+			selected = []transferHistoryItem{*in.previewHistory}
 		} else {
 			selected, err = a.transferHistoryItemsForOrganize(ctx, in.HistoryIDs)
 			if preparation.ID != "" && errors.Is(err, sql.ErrNoRows) {
@@ -1001,12 +1004,12 @@ type organizeQueuePreparation struct {
 	HistoryCount int      `json:"history_count,omitempty"`
 }
 
-const organizeQueueJobsSQL = `SELECT ` + jobColumns + ` FROM jobs
- WHERE id IN (
+const organizeQueueJobsSQL = `WITH visible_ids(job_key) AS MATERIALIZED (
  SELECT id FROM jobs INDEXED BY jobs_due WHERE kind IN ('import','organize_prepare','organize_file') AND state IN ` + activeOrganizeStates + `
  UNION SELECT job_id FROM organize_queue_member INDEXED BY organize_queue_group
  WHERE group_id IN (` + liveOrganizeGroups + `))
- AND kind IN ('import','organize_prepare','organize_file') AND state!='cancelled'
+ SELECT ` + jobColumns + ` FROM visible_ids CROSS JOIN jobs ON jobs.id=visible_ids.job_key
+ WHERE kind IN ('import','organize_prepare','organize_file') AND state!='cancelled'
  AND (kind!='organize_prepare' OR NOT EXISTS(SELECT 1 FROM organize_listing WHERE organize_listing.id=jobs.id))
  ORDER BY created_at DESC, id`
 

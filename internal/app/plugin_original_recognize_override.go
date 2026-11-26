@@ -218,7 +218,11 @@ func (a *App) originalRecognitionProjection(input catalog.Media, result json.Raw
 	for key, value := range fields {
 		full[key] = value
 	}
-	return sourceMediaInformation{ProviderInfo: provider, MediaInfo: mustCleanSeedJSON(full), Media: media}, nil
+	model, err := json.Marshal(full)
+	if err != nil {
+		return invalid()
+	}
+	return sourceMediaInformation{ProviderInfo: provider, MediaInfo: model, Media: media}, nil
 }
 
 func sourceNumberString(value any) string {

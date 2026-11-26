@@ -84,6 +84,8 @@ func TestOrganizeQueueSeeksActiveGroupsAndKeepsUnfinishedBatch(t *testing.T) {
 	}{
 		{managedVideoByInodeSQL, []any{123, 456}, []string{"managed_file_video_inode"}},
 		{`SELECT 1 FROM jobs WHERE kind IN ('organize_file','import') AND state IN ` + activeOrganizeStates + ` AND json_extract(payload,'$._parent_job_id')=?`, []any{"prepare"}, []string{"jobs_organize_parent"}},
+		{activeOrganizeFilesSQL, []any{`["/fixture/completed-peer"]`}, []string{"organize_queue_source (source=?)", "sqlite_autoindex_jobs_1 (id=?)"}},
+		{organizeQueueJobsSQL, nil, []string{"sqlite_autoindex_jobs_1 (id=?)", "jobs_due (state=?)"}},
 		{liveOrganizeGroups, nil, []string{"jobs_due (state=?)", "organize_queue_job (job_id=?)"}},
 		{matchingOrganizeGroups, []any{"show\x001", "tv:123\x001"}, []string{"organize_queue_meta (meta=? AND group_id=?)", "organize_queue_media (media_key=? AND group_id=?)", "jobs_due (state=?)"}},
 	} {

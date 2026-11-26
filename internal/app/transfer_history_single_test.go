@@ -90,3 +90,23 @@ func TestMPTransferHistorySingleTableRealImportTarget(t *testing.T) {
 		t.Fatalf("actual MP history total=%d items=%+v err=%v", total, items, err)
 	}
 }
+
+func TestMPTransferHistorySelectionMatchesSingleReads(t *testing.T) {
+	a := newTestApp(t)
+	ctx := t.Context()
+	for i, key := range []string{"old", "2", "old", "99"} {
+		if _, err := a.Store.DB.Exec("INSERT INTO transferhistory(id,src,src_fileitem,date) VALUES(?,?,json_object('file_id',?),?)", i+1, key, key, now()); err != nil {
+			t.Fatal(err)
+		}
+	}
+	keys := []string{"2", "old", "0002", "missing", "99", "2", "+1"}
+	items, err := a.transferHistorySelections(ctx, keys)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for i, want := range []string{"2", "3", "2", "", "4", "2", "1"} {
+		if items[i].ID != want {
+			t.Errorf("selection %s got %q want %q", keys[i], items[i].ID, want)
+		}
+	}
+}

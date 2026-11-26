@@ -4,6 +4,10 @@ import (
 	"errors"
 	"sort"
 	"strings"
+	"sync"
+
+	"github.com/dlclark/regexp2/v2"
+	"light-media/internal/pyregex"
 )
 
 func matchTeam(title string, options Options) (string, error) {
@@ -13,6 +17,14 @@ func matchTeam(title string, options Options) (string, error) {
 	}
 	return *value, err
 }
+
+const releaseTeamPrefix = `(?<=[-@\[￡【&])(?:(?:`
+const releaseTeamSuffix = `))(?=$|[@.\s\]\[】&])`
+
+// The installed group expression never varies between parser instances.
+var builtinReleaseTeam = sync.OnceValues(func() (*regexp2.Regexp, error) {
+	return pyregex.Compile(releaseTeamPrefix+builtinGroups+releaseTeamSuffix, true)
+})
 
 // Rust Option<String> distinguishes a nullable-expression match Some("") from
 // no match. Its anime wrapper uses Option::or, not a string-truthiness fallback.
@@ -26,7 +38,16 @@ func matchTeamOption(title string, options Options) (*string, error) {
 			groups += "|" + value
 		}
 	}
-	re, err := options.patterns.compile(`(?<=[-@\[￡【&])(?:(?:`+groups+`))(?=$|[@.\s\]\[】&])`, true)
+	var re *regexp2.Regexp
+	var err error
+	if groups == builtinGroups {
+		if !strings.ContainsAny(title, "-@[￡【&") {
+			return nil, nil
+		}
+		re, err = builtinReleaseTeam()
+	} else {
+		re, err = options.patterns.compile(releaseTeamPrefix+groups+releaseTeamSuffix, true)
+	}
 	if err != nil {
 		if options.SourceMode == "rust" {
 			return nil, nil

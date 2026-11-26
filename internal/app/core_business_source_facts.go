@@ -580,7 +580,7 @@ func sourceTMDBMediaInfoLocale(raw json.RawMessage, kind, domain, category, loca
 			fields[target] = strings.ReplaceAll(path, "original", "w500")
 		}
 	}
-	return mustCleanSeedJSON(fields), nil
+	return json.Marshal(fields)
 }
 
 func sourceJSONType(value any) string {

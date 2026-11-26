@@ -25,7 +25,7 @@ func TestDirectoryPreviewNFOKeepsOriginalEvidenceAndGuards(t *testing.T) {
 	check := func(path string, wantID int64, wantError string) {
 		t.Helper()
 		inputs := &manualPreviewInputs{nfoDirectories: make(map[string]map[string]bool)}
-		m, _, reason := a.readImportNFOEvidence(path, inputs.readNFO)
+		m, _, reason := a.readImportNFOEvidence(path, inputs.readNFO, &inputs.seriesNFO)
 		if reason != wantError || wantID != 0 && (m == nil || m.ID != wantID) || wantID == 0 && m != nil {
 			t.Fatalf("%s: %+v %q", path, m, reason)
 		}

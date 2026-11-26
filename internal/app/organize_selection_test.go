@@ -188,6 +188,19 @@ func TestInteractiveFileBatchAtomicRetryAndRestart(t *testing.T) {
 	if _, err := a.deliverOrganizeInbox(ctx); err != nil {
 		t.Fatal(err)
 	}
+	// Every source is now owned by the main queue. Resubmitting a mixed
+	// selection must preserve those IDs and enqueue only the new file.
+	extra := filepath.Join(source, "Show.S01E03.mkv")
+	importWrite(t, extra, []byte("fixture"))
+	mixed := form
+	mixed.Paths = append(append([]string(nil), paths...), extra)
+	again, err := a.queueSelectedManualFiles(ctx, mixed)
+	if err != nil || again.Submitted != 3 || again.Items[0].JobID != jobs[0].ID || again.Items[1].JobID != jobs[1].ID || again.Items[2].JobID == "" {
+		t.Fatalf("mixed ownership: %+v %v", again, err)
+	}
+	if _, err := a.deliverOrganizeInbox(ctx); err != nil {
+		t.Fatal(err)
+	}
 	// A crash after the main commit can leave every receipt present.
 	if _, err := a.organizeInbox.db.Exec("INSERT INTO file_batch VALUES(?,?)", group, listing); err != nil {
 		t.Fatal(err)
@@ -211,7 +224,7 @@ func TestInteractiveFileBatchAtomicRetryAndRestart(t *testing.T) {
 	if _, err := a.deliverOrganizeInbox(ctx); err != nil {
 		t.Fatal(err)
 	}
-	if err := a.Store.DB.QueryRow("SELECT count(*) FROM jobs WHERE kind IN ('organize_file','organize_prepare')").Scan(&rows); err != nil || rows != 2 {
+	if err := a.Store.DB.QueryRow("SELECT count(*) FROM jobs WHERE kind IN ('organize_file','organize_prepare')").Scan(&rows); err != nil || rows != 3 {
 		t.Fatal(rows, err)
 	}
 	if err := a.organizeInbox.db.QueryRow("SELECT (SELECT count(*) FROM request)+(SELECT count(*) FROM batch_member)+(SELECT count(*) FROM file_batch)").Scan(&rows); err != nil || rows != 0 {
@@ -260,5 +273,35 @@ func TestDirectHistoryAdmissionUsesTheInheritedEpisodeRange(t *testing.T) {
 	out, e := a.queueSelectedManualFiles(ctx, request)
 	if e != nil || out.Submitted != 1 || len(out.Items) != 1 || out.Items[0].JobID == "" {
 		t.Fatal("queue", out, e)
+	}
+}
+
+func TestInteractiveAdmissionRollsBackEarlierChunks(t *testing.T) {
+	a := newTestApp(t)
+	ctx := t.Context()
+	const count = 73
+	requests := make([]organizeAdmission, count)
+	for i := range requests {
+		key := fmt.Sprintf("ep-%02d", i)
+		requests[i] = organizeAdmission{kind: "organize_file", subject: key, key: key, payload: map[string]string{"id": key}}
+	}
+	if _, err := a.organizeInbox.db.Exec(`CREATE TRIGGER fail_last BEFORE INSERT ON request WHEN NEW.subject='ep-72' BEGIN SELECT RAISE(ABORT,'last chunk'); END`); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.acceptOrganizeBatch(ctx, requests, "fixture", nil, nil); err == nil {
+		t.Fatal("accepted failed batch")
+	}
+	var n int
+	if err := a.organizeInbox.db.QueryRow(`SELECT (SELECT count(*) FROM request)+(SELECT count(*) FROM batch_member)+(SELECT count(*) FROM file_batch)`).Scan(&n); err != nil || n != 0 {
+		t.Fatal(n, err)
+	}
+	if _, err := a.organizeInbox.db.Exec("DROP TRIGGER fail_last"); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.acceptOrganizeBatch(ctx, requests, "fixture", nil, nil); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.organizeInbox.db.QueryRow(`SELECT count(*) FROM request r JOIN batch_member m ON m.job_id=r.id WHERE m.batch_id='fixture' AND json_extract(r.job,'$.payload.id')=r.subject`).Scan(&n); err != nil || n != count {
+		t.Fatal(n, err)
 	}
 }

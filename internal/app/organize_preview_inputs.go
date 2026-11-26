@@ -24,6 +24,7 @@ type manualPreviewInputs struct {
 	nfoDirectories          map[string]map[string]bool
 	parser                  *releasemeta.MetaInfoParser
 	nfos                    map[string]manualPreviewNFO
+	seriesNFO               importSeriesNFOResult
 	pageKey                 string
 	pageAt                  time.Time
 	page                    catalog.Page
@@ -199,7 +200,7 @@ func (a *App) transferNFOEvidence(ctx context.Context, anchor string) (*importIn
 	if e, ok := inputs.nfos[anchor]; ok {
 		return e.media, e.numbering, e.reason
 	}
-	identity, numbering, reason := a.readImportNFOEvidence(anchor, inputs.readNFO)
+	identity, numbering, reason := a.readImportNFOEvidence(anchor, inputs.readNFO, &inputs.seriesNFO)
 	if len(inputs.nfos) >= 64 {
 		clear(inputs.nfos)
 	}

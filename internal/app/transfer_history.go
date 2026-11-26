@@ -384,16 +384,51 @@ func (a *App) transferHistoryItemsForOrganize(ctx context.Context, ids []string)
 // Preserve the requested positions so a stale selection cannot suppress its peers.
 func (a *App) transferHistorySelections(ctx context.Context, ids []string) ([]transferHistoryItem, error) {
 	items := make([]transferHistoryItem, len(ids))
-	for i, id := range ids {
-		item, err := a.transferHistoryResolveID(ctx, id)
+	if len(ids) == 1 {
+		item, err := a.transferHistoryResolveID(ctx, ids[0])
 		if errors.Is(err, sql.ErrNoRows) {
-			continue
+			return items, nil
 		}
-		if err != nil {
+		items[0] = item
+		return items, err
+	}
+	type selectedID struct {
+		Key    string `json:"key"`
+		Number int64  `json:"number"`
+	}
+	keys := make([]selectedID, len(ids))
+	for i, id := range ids {
+		keys[i].Key = id
+		if n, err := strconv.ParseInt(id, 10, 64); err == nil && n > 0 {
+			keys[i].Number = n
+		}
+	}
+	raw, err := json.Marshal(keys)
+	if err != nil {
+		return nil, err
+	}
+	// Resolve each requested position with the same primary-key precedence as
+	// transferHistoryResolveID, then seek only the winning row.
+	rows, err := a.Store.reader().QueryContext(ctx, `WITH selected(pos,history_key) AS MATERIALIZED (SELECT wanted.key,COALESCE(
+   (SELECT id FROM transferhistory WHERE id=json_extract(wanted.value,'$.number') AND id>0),
+   (SELECT id FROM transferhistory WHERE `+transferHistoryFileIDExpr+`=json_extract(wanted.value,'$.key') ORDER BY id DESC LIMIT 1)) FROM json_each(?) wanted)
+ SELECT pos,`+transferHistoryMPColumns+` FROM selected CROSS JOIN transferhistory h ON h.id=history_key`, string(raw))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var pos int
+		var row transferHistoryMPRow
+		if err := rows.Scan(append([]any{&pos}, row.scanFields()...)...); err != nil {
 			return nil, err
 		}
-		items[i] = item
+		items[pos] = row.item()
 	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return items, nil
 }
 

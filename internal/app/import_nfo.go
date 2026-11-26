@@ -11,12 +11,19 @@ import (
 // NFOs are evidence offered to the user, not authority to replace the explicitly
 // selected media. The normal preview still checks all episode IDs with TMDB.
 func (a *App) importNFOEvidence(video string) (*importInferredMedia, *media.Numbering, string) {
-	return a.readImportNFOEvidence(video, readAssetNFO)
+	return a.readImportNFOEvidence(video, readAssetNFO, nil)
 }
 
 type nfoReader func(string) (assetLocalNFO, int64, error)
 
-func (a *App) readImportNFOEvidence(video string, readNFO nfoReader) (*importInferredMedia, *media.Numbering, string) {
+type importSeriesNFOResult struct {
+	dir   string
+	value assetLocalNFO
+	id    int64
+	found bool
+}
+
+func (a *App) readImportNFOEvidence(video string, readNFO nfoReader, series *importSeriesNFOResult) (*importInferredMedia, *media.Numbering, string) {
 	nfoName := strings.TrimSuffix(video, filepath.Ext(video)) + ".nfo"
 	nfo, identifier, err := readNFO(nfoName)
 	if os.IsNotExist(err) {
@@ -27,7 +34,7 @@ func (a *App) readImportNFOEvidence(video string, readNFO nfoReader) (*importInf
 		case "movie":
 			return &importInferredMedia{Type: "movie", MediaType: "movie", ID: identifier, Title: nfo.Title, Year: nfo.Year}, nil, ""
 		case "episodedetails":
-			series, seriesID, found := a.importSeriesNFO(video, readNFO)
+			series, seriesID, found := a.importSeriesNFO(filepath.Dir(video), readNFO, series)
 			if !found {
 				return nil, nil, "episode_nfo_without_confirmed_parent_tvshow"
 			}
@@ -48,14 +55,22 @@ func (a *App) readImportNFOEvidence(video string, readNFO nfoReader) (*importInf
 	if !os.IsNotExist(err) {
 		return nil, nil, "invalid_or_conflicting_nfo"
 	}
-	if series, seriesID, found := a.importSeriesNFO(video, readNFO); found {
+	if series, seriesID, found := a.importSeriesNFO(filepath.Dir(video), readNFO, series); found {
 		return &importInferredMedia{Type: "tv", MediaType: "tv", ID: seriesID, Title: series.Title, Year: series.Year}, a.parseMediaName(filepath.Base(video)).Original, ""
 	}
 	return nil, nil, ""
 }
 
-func (a *App) importSeriesNFO(video string, readNFO nfoReader) (assetLocalNFO, int64, bool) {
-	parent := filepath.Dir(video)
+// Every sibling resolves the same tvshow.nfo from the same authorized
+// ancestors. Keep the most recent result only for the current selection.
+func (a *App) importSeriesNFO(parent string, readNFO nfoReader, cached *importSeriesNFOResult) (value assetLocalNFO, id int64, found bool) {
+	if cached != nil {
+		if cached.dir == parent {
+			return cached.value, cached.id, cached.found
+		}
+		dir := parent
+		defer func() { *cached = importSeriesNFOResult{dir, value, id, found} }()
+	}
 	for depth := 0; depth < 4; depth++ {
 		candidate := filepath.Join(parent, "tvshow.nfo")
 		if !a.importSourceAllowed(candidate, true) {

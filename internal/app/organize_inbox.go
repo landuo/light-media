@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -83,7 +84,7 @@ type organizeRowReader interface {
 func activeInteractiveJob(ctx context.Context, q organizeRowReader, kind, subject string) (id, key string, err error) {
 	if kind == "organize_file" {
 		err = q.QueryRowContext(ctx, `SELECT j.id,COALESCE(CASE j.kind WHEN 'organize_file' THEN json_extract(j.payload,'$.id') ELSE json_extract(j.payload,'$.interactive_key') END,'')
-			FROM organize_queue_member m JOIN jobs j ON j.id=m.job_id WHERE m.source=? AND j.state IN `+activeOrganizeStates+` LIMIT 1`, subject).Scan(&id, &key)
+			FROM organize_queue_member m INDEXED BY organize_queue_source CROSS JOIN jobs j ON j.id=m.job_id WHERE m.source=? AND j.state IN `+activeOrganizeStates+` LIMIT 1`, subject).Scan(&id, &key)
 	} else {
 		key = subject
 		err = q.QueryRowContext(ctx, `SELECT id FROM jobs WHERE kind='organize_prepare' AND json_extract(payload,'$.id')=? AND (state IN `+activeOrganizeStates+` OR EXISTS(SELECT 1 FROM jobs child WHERE child.kind IN ('organize_file','import') AND child.state IN `+activeOrganizeStates+` AND json_extract(child.payload,'$._parent_job_id')=jobs.id)) LIMIT 1`, subject).Scan(&id)
@@ -97,6 +98,28 @@ type organizeAdmission struct {
 	id, activeKey      string
 }
 
+const activeOrganizeFilesSQL = `SELECT m.source,j.id,COALESCE(CASE j.kind WHEN 'organize_file' THEN json_extract(j.payload,'$.id') ELSE json_extract(j.payload,'$.interactive_key') END,'')
+ FROM json_each(?) wanted CROSS JOIN organize_queue_member m INDEXED BY organize_queue_source ON m.source=wanted.value
+ CROSS JOIN jobs j ON j.id=m.job_id WHERE j.state IN ` + activeOrganizeStates
+
+type organizeOwner struct{ id, key string }
+
+func readOrganizeOwners(rows *sql.Rows) (map[string]organizeOwner, error) {
+	defer rows.Close()
+	owners := make(map[string]organizeOwner)
+	for rows.Next() {
+		var source string
+		var owner organizeOwner
+		if err := rows.Scan(&source, &owner.id, &owner.key); err != nil {
+			return nil, err
+		}
+		if _, ok := owners[source]; !ok {
+			owners[source] = owner
+		}
+	}
+	return owners, rows.Err()
+}
+
 type checkedOrganizeOwner struct {
 	id, key string
 	version uint64
@@ -108,6 +131,19 @@ type checkedOrganizeOwner struct {
 func (a *App) organizeAdmissionsTx(ctx context.Context, requests []organizeAdmission, phase func(string)) (*sql.Tx, error) {
 	inbox := a.organizeInbox
 	checked := make(map[string]checkedOrganizeOwner)
+	if len(requests) == 0 {
+		return inbox.db.BeginTx(ctx, nil)
+	}
+	// Each admission batch has one job kind.
+	sources := make([]string, len(requests))
+	for i, r := range requests {
+		sources[i] = r.subject
+	}
+	selectedJSON, err := json.Marshal(sources)
+	if err != nil {
+		return nil, err
+	}
+
 	for {
 		phase("inbox_wait")
 		tx, err := inbox.db.BeginTx(ctx, nil)
@@ -117,16 +153,22 @@ func (a *App) organizeAdmissionsTx(ctx context.Context, requests []organizeAdmis
 		var lookups []int
 		versions := make(map[int]uint64)
 		phase("inbox_lookup")
+		rows, err := tx.QueryContext(ctx, `SELECT subject,id,request_key FROM request WHERE kind=? AND state='queued' AND subject IN (SELECT value FROM json_each(?))`, requests[0].kind, string(selectedJSON))
+		if err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+		owners, err := readOrganizeOwners(rows)
+		if err != nil {
+			tx.Rollback()
+			return nil, err
+		}
 		for i := range requests {
 			r := &requests[i]
-			r.id, r.activeKey = "", ""
-			err = tx.QueryRowContext(ctx, "SELECT id,request_key FROM request WHERE kind=? AND subject=? AND state='queued'", r.kind, r.subject).Scan(&r.id, &r.activeKey)
-			if err == nil {
+			owner := owners[r.subject]
+			r.id, r.activeKey = owner.id, owner.key
+			if r.id != "" {
 				continue
-			}
-			if !errors.Is(err, sql.ErrNoRows) {
-				tx.Rollback()
-				return nil, err
 			}
 			maybe, version := inbox.subjects.lookup(r.subject)
 			if !maybe {
@@ -149,7 +191,8 @@ func (a *App) organizeAdmissionsTx(ctx context.Context, requests []organizeAdmis
 			return nil, err
 		}
 		phase("existing_lookup")
-		for _, i := range lookups {
+		if len(lookups) == 1 {
+			i := lookups[0]
 			r := requests[i]
 			id, key, e := activeInteractiveJob(ctx, reader, r.kind, r.subject)
 			if e != nil && !errors.Is(e, sql.ErrNoRows) {
@@ -157,6 +200,31 @@ func (a *App) organizeAdmissionsTx(ctx context.Context, requests []organizeAdmis
 				return nil, e
 			}
 			checked[r.subject] = checkedOrganizeOwner{id, key, versions[i]}
+		} else {
+			sources := make([]string, len(lookups))
+			for j, i := range lookups {
+				sources[j] = requests[i].subject
+			}
+			raw, e := json.Marshal(sources)
+			if e != nil {
+				reader.Close()
+				return nil, e
+			}
+			rows, e := reader.QueryContext(ctx, activeOrganizeFilesSQL, string(raw))
+			if e != nil {
+				reader.Close()
+				return nil, e
+			}
+			owners, e := readOrganizeOwners(rows)
+			if e != nil {
+				reader.Close()
+				return nil, e
+			}
+			for _, i := range lookups {
+				source := requests[i].subject
+				owner := owners[source]
+				checked[source] = checkedOrganizeOwner{owner.id, owner.key, versions[i]}
+			}
 		}
 		reader.Close()
 	}
@@ -182,29 +250,43 @@ func (a *App) acceptOrganizeBatch(ctx context.Context, requests []organizeAdmiss
 	trace, _ := ctx.Value(jobTraceKey{}).(jobTrace)
 	wf, stamp := id("wf_"), now()
 	created := false
-	for i := range requests {
-		r := &requests[i]
-		if r.id != "" {
-			if batch == "" && r.activeKey != r.key {
-				return bad("JOB_EXISTS", "该源文件已有其他整理任务正在等待或执行")
+	// Keep the whole selection atomic while bounding both the bind count and
+	// the number of serialized file plans retained per INSERT.
+	const chunkSize = 64
+	for chunk := range slices.Chunk(requests, chunkSize) {
+		var requestArgs, memberArgs []any
+		for i := range chunk {
+			r := &chunk[i]
+			if r.id != "" {
+				if batch == "" && r.activeKey != r.key {
+					return bad("JOB_EXISTS", "该源文件已有其他整理任务正在等待或执行")
+				}
+				continue
 			}
+			r.id, r.activeKey = id("job_"), r.key
+			job := struct {
+				Job
+				Payload any `json:"payload"`
+			}{Job: Job{ID: r.id, Kind: r.kind, RequestID: trace.Request, WorkflowID: wf, State: "queued", CreatedAt: stamp, UpdatedAt: stamp, RunAt: time.Now().Unix()}, Payload: r.payload}
+			raw, err := json.Marshal(job)
+			if err != nil {
+				return err
+			}
+			requestArgs = append(requestArgs, r.id, r.kind, r.subject, r.key, raw)
+			if batch != "" {
+				memberArgs = append(memberArgs, r.id, batch)
+			}
+		}
+		if len(requestArgs) == 0 {
 			continue
 		}
-		body, err := json.Marshal(r.payload)
-		if err != nil {
+		values := strings.TrimSuffix(strings.Repeat("(?,?,?,?,?,'queued'),", len(requestArgs)/5), ",")
+		if _, err := tx.ExecContext(ctx, "INSERT INTO request(id,kind,subject,request_key,job,state) VALUES "+values, requestArgs...); err != nil {
 			return err
 		}
-		r.id, r.activeKey = id("job_"), r.key
-		job := Job{ID: r.id, Kind: r.kind, Payload: body, RequestID: trace.Request, WorkflowID: wf, State: "queued", CreatedAt: stamp, UpdatedAt: stamp, RunAt: time.Now().Unix()}
-		raw, err := json.Marshal(job)
-		if err != nil {
-			return err
-		}
-		if _, err = tx.ExecContext(ctx, "INSERT INTO request(id,kind,subject,request_key,job,state) VALUES(?,?,?,?,?,'queued')", r.id, r.kind, r.subject, r.key, raw); err != nil {
-			return err
-		}
-		if batch != "" {
-			if _, err = tx.ExecContext(ctx, "INSERT INTO batch_member(job_id,batch_id) VALUES(?,?)", r.id, batch); err != nil {
+		if len(memberArgs) > 0 {
+			values := strings.TrimSuffix(strings.Repeat("(?,?),", len(memberArgs)/2), ",")
+			if _, err := tx.ExecContext(ctx, "INSERT INTO batch_member(job_id,batch_id) VALUES "+values, memberArgs...); err != nil {
 				return err
 			}
 		}

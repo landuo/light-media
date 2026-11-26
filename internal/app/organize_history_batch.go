@@ -67,6 +67,9 @@ func (a *App) manualOrganizeHistoryBatch(ctx context.Context, in manualOrganizeR
 		seen[history.ResourceSource] = true
 		request := in
 		request.HistoryIDs = []string{history.ID}
+		if in.Preview {
+			request.previewHistory = &history
+		}
 		result, err := a.manualOrganize(ctx, request)
 		out.Items = append(out.Items, result.Items...)
 		out.Submitted += result.Submitted

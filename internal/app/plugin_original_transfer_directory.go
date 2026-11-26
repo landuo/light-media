@@ -3,9 +3,11 @@ package app
 import (
 	"context"
 	"encoding/json"
+	"io"
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"light-media/internal/plugins"
@@ -20,7 +22,7 @@ type originalTransferCandidate struct {
 // The pinned collector refreshes the selected item once, lists each directory
 // through StorageChain, and passes child DTOs directly into recursion. It does
 // not refresh every child or sort the provider's order.
-func (a *App) originalTransferCandidates(ctx context.Context, path string) ([]originalTransferCandidate, map[string][]map[string]any, error) {
+func (a *App) originalTransferCandidates(ctx context.Context, path string, stamps map[string]importSnapshot) ([]originalTransferCandidate, map[string][]map[string]any, error) {
 	if !a.importSourceAllowed(path, true) || browserInternal(path) {
 		return nil, nil, bad("INVALID_SOURCE", "选择的文件不在允许目录内")
 	}
@@ -67,7 +69,20 @@ func (a *App) originalTransferCandidates(ctx context.Context, path string) ([]or
 			result = append(result, originalTransferCandidate{item, false})
 			return nil
 		}
-		raw, err := a.originalMetadataStorage(ctx, "list_files", map[string]any{"fileitem": item, "recursion": false}, func() (any, error) { return a.originalMetadataNativeList(ctx, item) })
+		groups, err := a.originalPluginModulesForMethod(ctx, "", "list_files")
+		if err != nil {
+			return err
+		}
+		if stamps != nil && !originalModuleGroupsHaveMethod(groups, "list_files") {
+			if rows, ok := a.localVideoDirectory(ctx, current, stamps); ok {
+				listings[current] = rows
+				for _, row := range rows {
+					result = append(result, originalTransferCandidate{Item: row})
+				}
+				return nil
+			}
+		}
+		raw, err := a.originalMetadataStorageGroups(ctx, "list_files", map[string]any{"fileitem": item, "recursion": false}, func() (any, error) { return a.originalMetadataNativeList(ctx, item) }, groups)
 		if err != nil {
 			return err
 		}
@@ -118,6 +133,66 @@ func (a *App) originalTransferCandidates(ctx context.Context, path string) ([]or
 	return result, listings, nil
 }
 
+// Common flat video folders need neither recursive storage DTO serialization
+// nor a second file open. Keep discs, links, extras, hidden entries and errors
+// on the regular provider path. No partially read directory is accepted.
+func (a *App) localVideoDirectory(ctx context.Context, path string, stamps map[string]importSnapshot) ([]map[string]any, bool) {
+	if a.originalMetadataAllowed(path) != nil {
+		return nil, false
+	}
+	dir, err := importDir(path, false)
+	if err != nil {
+		return nil, false
+	}
+	defer dir.Close()
+	entries, err := dir.ReadDir(129)
+	if err != nil || len(entries) == 0 || len(entries) > 128 {
+		return nil, false
+	}
+	if _, err = dir.ReadDir(1); err != io.EOF {
+		return nil, false
+	}
+	for _, entry := range entries {
+		if !entry.Type().IsRegular() || !isVideo(entry.Name()) || strings.HasPrefix(entry.Name(), ".") {
+			return nil, false
+		}
+	}
+	rows := make([]map[string]any, 0, len(entries))
+	observed := make([]importSnapshot, 0, len(entries))
+	for _, entry := range entries {
+		child := filepath.Join(path, entry.Name())
+		if ctx.Err() != nil || !importPath(child) {
+			return nil, false
+		}
+		f, info, err := importRegularAt(dir, child)
+		if err != nil {
+			return nil, false
+		}
+		f.Close()
+		stamp, err := snapshot(info)
+		if err != nil {
+			return nil, false
+		}
+		fields := originalLocalFileItemFields(child, info)
+		// Exactly the values yielded by the normal JSON storage chain.
+		fields["size"] = json.Number(strconv.FormatInt(info.Size(), 10))
+		mtime, _ := json.Marshal(fields["modify_time"])
+		fields["modify_time"] = json.Number(mtime)
+		rows = append(rows, fields)
+		observed = append(observed, stamp)
+	}
+	if inputs, _ := ctx.Value(manualPreviewInputsKey{}).(*manualPreviewInputs); inputs != nil {
+		if inputs.nfoDirectories == nil || len(inputs.nfoDirectories) >= 8 {
+			inputs.nfoDirectories = make(map[string]map[string]bool)
+		}
+		inputs.nfoDirectories[path] = map[string]bool{} // Completely enumerated, all entries are videos.
+	}
+	for i, row := range rows {
+		stamps[sourceText(row["path"])] = observed[i]
+	}
+	return rows, true
+}
+
 var originalTransferBlurayStream = regexp.MustCompile(`(?i)BDMV[/\\]STREAM`)
 
 type originalTransferDirectoryListingsKey struct{}
@@ -125,7 +200,8 @@ type originalTransferDirectoryListingsKey struct{}
 func (a *App) originalManualStorageScan(ctx context.Context, path string, in manualOrganizeRequest) (any, error) {
 	phase := a.performanceStages(ctx, "organize_scan", "storage_candidates")
 	defer phase("")
-	candidates, listings, err := a.originalTransferCandidates(ctx, path)
+	stamps := make(map[string]importSnapshot)
+	candidates, listings, err := a.originalTransferCandidates(ctx, path, stamps)
 	if err != nil {
 		return nil, err
 	}
@@ -178,6 +254,9 @@ func (a *App) originalManualStorageScan(ctx context.Context, path string, in man
 		}
 	}()
 	sourceSnapshot := func(path string, ordinary bool) (importSnapshot, error) {
+		if stamp, ok := stamps[path]; ordinary && ok {
+			return stamp, nil
+		}
 		if !directory || !ordinary {
 			return snapshotTransferPath(path)
 		}
