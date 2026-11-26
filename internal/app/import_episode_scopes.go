@@ -17,11 +17,17 @@ func canonicalScopes(season int, episodes []int, scopes []canonicalEpisodeScope)
 	}
 	return []canonicalEpisodeScope{{Season: season, Episodes: episodes}}
 }
-func canonicalSlots(scopes []canonicalEpisodeScope) []canonicalEpisodeSlot {
+func canonicalSlots(scopes []canonicalEpisodeScope, includeUnnumbered bool) []canonicalEpisodeSlot {
 	var slots []canonicalEpisodeSlot
 	seen := map[canonicalEpisodeSlot]bool{}
 	for _, scope := range scopes {
-		for _, episode := range importEpisodes(scope.Episodes) {
+		episodes := scope.Episodes
+		if includeUnnumbered {
+			// Whole movies and item-level exclusions use an episode-zero key.
+			// A season-only disc establishes no episode inventory.
+			episodes = importEpisodes(episodes)
+		}
+		for _, episode := range episodes {
 			slot := canonicalEpisodeSlot{scope.Season, episode}
 			if !seen[slot] {
 				slots = append(slots, slot)
@@ -63,11 +69,11 @@ func (file PlanFile) inventoryScopes() []canonicalEpisodeScope {
 func (asset Asset) inventoryScopes() []canonicalEpisodeScope {
 	return canonicalScopes(asset.Season, asset.Episodes, asset.EpisodeScopes)
 }
-func (file PlanFile) inventorySlots() []canonicalEpisodeSlot {
-	return canonicalSlots(file.inventoryScopes())
+func (file PlanFile) inventorySlots(mediaType string) []canonicalEpisodeSlot {
+	return canonicalSlots(file.inventoryScopes(), mediaType == "movie")
 }
 func (asset Asset) inventorySlots() []canonicalEpisodeSlot {
-	return canonicalSlots(asset.inventoryScopes())
+	return canonicalSlots(asset.inventoryScopes(), asset.Media.MediaType == "movie")
 }
 func (asset Asset) coversEpisode(season, episode int) bool {
 	for _, slot := range asset.inventorySlots() {

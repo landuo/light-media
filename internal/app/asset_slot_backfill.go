@@ -45,6 +45,13 @@ func backfillAssetSlots(ctx context.Context, db *sql.DB) error {
 			}
 			continue
 		}
+		// Older plans assigned a movie-like E0 slot to season-only TV discs.
+		// Leave every real episode slot and the movie sentinel intact.
+		if asset.Media.MediaType == "tv" && len(asset.Episodes) == 0 && len(asset.EpisodeScopes) == 0 {
+			if _, err = tx.ExecContext(ctx, "DELETE FROM asset_slots WHERE asset_id=? AND episode=0", asset.ID); err != nil {
+				return err
+			}
+		}
 		// Assets imported before the episode fields were persisted carry no
 		// number, so their slots could never be derived. Read it from the file
 		// name the way the scanner does.

@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"slices"
+	"strings"
 
 	"golang.org/x/sys/unix"
 )
@@ -158,7 +159,8 @@ func qualityFileOldAssets(p *qualityDownloadSnapshot, file PlanFile) []qualityAs
 		return nil
 	}
 	ids := map[string]bool{}
-	for _, slot := range file.inventorySlots() {
+	kind, _, _ := strings.Cut(p.MediaKey, ":")
+	for _, slot := range file.inventorySlots(kind) {
 		if slot.Season != p.Season {
 			continue
 		}
@@ -178,7 +180,7 @@ func qualityTargetOwner(p *qualityDownloadSnapshot, file PlanFile) (*qualityAsse
 	for _, frozen := range qualityFileOldAssets(p, file) {
 		if frozen.Asset.Path == file.Target {
 			for _, slot := range frozen.Asset.inventorySlots() {
-				if !slices.Contains(file.inventorySlots(), slot) {
+				if !slices.Contains(file.inventorySlots(frozen.Asset.Media.MediaType), slot) {
 					return nil, bad("QUALITY_PARTIAL_PATH_CONFLICT", "原视频还承载未替换剧集，不能原位替换")
 				}
 			}
@@ -196,7 +198,7 @@ func (a *App) saveQualityImportProofTx(ctx context.Context, tx *sql.Tx, plan Imp
 		if f.Status != "ready" && f.Status != "already_imported" {
 			continue
 		}
-		for _, slot := range f.inventorySlots() {
+		for _, slot := range f.inventorySlots(plan.Media.MediaType) {
 			if slot.Season != p.Season || !slices.Contains(importEpisodes(p.Episodes), slot.Episode) {
 				return bad("QUALITY_IMPORT_CONTEXT_CHANGED", "洗版整理超出实际下载选集")
 			}
@@ -274,14 +276,14 @@ func (a *App) guardQualityImportFile(ctx context.Context, q qualityReader, plan 
 		if p.Overwrite == nil {
 			return bad("QUALITY_IMPORT_CONTEXT_CHANGED", "洗版实际下载季号或目录覆盖证明缺失")
 		}
-		for _, slot := range file.inventorySlots() {
+		for _, slot := range file.inventorySlots(plan.Media.MediaType) {
 			if slot.Season != p.Download.Season || !slices.Contains(importEpisodes(p.Download.Episodes), slot.Episode) {
 				return bad("QUALITY_IMPORT_CONTEXT_CHANGED", "洗版整理超出实际接收范围")
 			}
 		}
 		return a.guardQualitySidecars(ctx, q, plan, file, p)
 	}
-	for _, slot := range file.inventorySlots() {
+	for _, slot := range file.inventorySlots(plan.Media.MediaType) {
 		if slot.Season != p.Download.Season {
 			return bad("QUALITY_IMPORT_CONTEXT_CHANGED", "洗版整理超出实际接收范围")
 		}
@@ -468,7 +470,7 @@ func (a *App) commitQualityReplacementTx(ctx context.Context, tx *sql.Tx, plan I
 	cleanup := qualityCleanup{Version: 2, ID: plan.ID + "/" + file.ID, NewAsset: asset.ID, NewPath: asset.Path, NewRoot: asset.RootID, NewSnapshot: newFiles[0].Snapshot, NewFiles: append([]managedFile(nil), newFiles...), State: "pending", Files: []managedFile{}, OldAssets: []string{}, RootPaths: map[string]string{plan.RootID: p.RootPath}}
 	for _, old := range qualityFileOldAssets(&p.Download, file) {
 		cleanup.RootPaths[old.Asset.RootID] = old.RootPath
-		for _, slot := range file.inventorySlots() {
+		for _, slot := range file.inventorySlots(plan.Media.MediaType) {
 			if _, e = tx.ExecContext(ctx, `DELETE FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id=?`, mediaKey(plan.Media), slot.Season, slot.Episode, old.Asset.ID); e != nil {
 				return e
 			}

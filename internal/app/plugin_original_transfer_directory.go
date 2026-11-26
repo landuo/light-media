@@ -219,7 +219,7 @@ func (a *App) originalManualStorageScan(ctx context.Context, path string, in man
 	inherited := map[string]string{}
 	metas := map[string]*releasemeta.MetaObject{}
 	directory := len(listings) > 0
-	var buildMeta func(string) (*releasemeta.MetaObject, error)
+	var buildMeta func(string, bool) (*releasemeta.MetaObject, error)
 	if directory {
 		format, e := organizeEpisodeTemplate(in.EpisodeFormat)
 		if e != nil {
@@ -236,7 +236,7 @@ func (a *App) originalManualStorageScan(ctx context.Context, path string, in man
 			return nil, e
 		}
 		candidates, inherited, err = originalPlanTransferDirectory(allowed, classifier, true, func(path string) (*releasemeta.MetaObject, error) {
-			meta, e := buildMeta(path)
+			meta, e := buildMeta(path, false)
 			metas[path] = meta
 			return meta, e
 		})
@@ -312,7 +312,7 @@ func (a *App) originalManualStorageScan(ctx context.Context, path string, in man
 		if directory {
 			meta := metas[metadataPath]
 			if meta == nil {
-				meta, err = buildMeta(metadataPath)
+				meta, err = buildMeta(metadataPath, candidate.Bluray)
 				if err != nil {
 					return nil, err
 				}

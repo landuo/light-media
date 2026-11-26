@@ -25,7 +25,11 @@ func (a *App) originalManualTransferIdentity(ctx context.Context, request Import
 	meta := file.originalResolvedMeta.DeepCopy()
 	if meta == nil {
 		var err error
-		meta, err = a.originalTransferPathMeta(ctx, path)
+		if scanned.isOriginalDisc() {
+			meta, err = a.originalDiscPathMeta(ctx, path)
+		} else {
+			meta, err = a.originalTransferPathMeta(ctx, path)
+		}
 		if err != nil {
 			return request, err
 		}

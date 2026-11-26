@@ -175,7 +175,7 @@ func (a *App) importJobScope(ctx context.Context, job Job, native bool) *importA
 			return run
 		}
 		run.extraTargets[file.Target] = auxiliaryMaterialKind(file.MaterialKind)
-		for _, slot := range file.inventorySlots() {
+		for _, slot := range file.inventorySlots(plan.Media.MediaType) {
 			run.slots[importSlot{mediaKey(plan.Media), slot.Season, slot.Episode}] = struct{}{}
 		}
 		if base, ok := meta.OriginalNamingBases[file.ID]; ok {
@@ -256,7 +256,7 @@ func (run *importAdmission) covers(plan ImportPlan, meta importMetadata, indices
 		if file.DirectoryDigest != "" || !hasFile(file.Source, file.Target) {
 			return false
 		}
-		for _, slot := range file.inventorySlots() {
+		for _, slot := range file.inventorySlots(plan.Media.MediaType) {
 			if _, ok := run.slots[importSlot{mediaKey(plan.Media), slot.Season, slot.Episode}]; !ok {
 				return false
 			}

@@ -99,3 +99,36 @@ func TestBlurayDiscPreviewRecognizesReleaseWithoutExplicitIdentity(t *testing.T)
 		t.Fatalf("ambiguous disc matched automatically: %+v, %v", request, err)
 	}
 }
+
+func TestNestedSeasonDiscPreviewUsesReleaseNameAndKeepsPhysicalDisc(t *testing.T) {
+	a, source, library := importTestApp(t)
+	show := catalog.Media{ID: 106379, MediaType: "tv", Title: "辐射", OriginalTitle: "Fallout", Year: 2024}
+	importCache(t, a, "directory-identify:tv:Fallout", catalog.Page{Page: 1, TotalPages: 1, TotalResults: 1, Results: []catalog.Media{show}})
+	importCache(t, a, "media:tv:106379", show)
+	installMetadataFixture(t, a, "season-discs", []string{"/3/tv/106379", "/3/tv/106379/images"}, func(r *http.Request) (*http.Response, error) {
+		body := `{"id":106379,"name":"辐射","original_name":"Fallout","first_air_date":"2024-04-10","genres":[],"credits":{"cast":[],"crew":[]},"external_ids":{}}`
+		if strings.HasSuffix(r.URL.Path, "/images") {
+			body = `{"id":106379,"backdrops":[],"posters":[],"logos":[]}`
+		}
+		return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(body))}, nil
+	})
+	release := filepath.Join(source, "电视剧", "Fallout.S01.2160p.UHD.Blu-ray.HEVC.Atmos.TrueHD7.1-DiY@HDHome")
+	for _, name := range []string{"Disc 1", "Disc 2", "Disc 3"} {
+		importWrite(t, filepath.Join(release, name, "BDMV", "STREAM", "00001.m2ts"), []byte(name))
+	}
+	for _, provider := range []string{"", "themoviedb"} {
+		req := manualOrganizeRequest{Paths: []string{release}, TargetPath: library, Mode: "hardlink", MediaSource: provider, Preview: true, Interactive: true}
+		out, err := a.manualOrganize(t.Context(), req)
+		if err != nil || len(out.Items) != 3 || out.Failed != 0 || out.Submitted != 0 {
+			t.Fatalf("provider %q: %+v, %v", provider, out, err)
+		}
+		seen := map[string]bool{}
+		for _, item := range out.Items {
+			name := filepath.Base(item.Source)
+			if seen[item.Target] || item.Status != "ready" || item.Media.ID != show.ID || filepath.Dir(item.Source) != release || item.Target != filepath.Join(library, "辐射 (2024)", "Season 1", name) {
+				t.Fatalf("provider %q: incorrect disc projection: %+v", provider, item)
+			}
+			seen[item.Target] = true
+		}
+	}
+}

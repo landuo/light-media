@@ -292,7 +292,7 @@ func (a *App) adoptDownloadedIntent(ctx context.Context, owner string, plan *Imp
 		return false, nil
 	}
 	overlap := false
-	for _, slot := range file.inventorySlots() {
+	for _, slot := range file.inventorySlots(plan.Media.MediaType) {
 		if intent.Season == slot.Season && slices.Contains(intent.Episodes, slot.Episode) {
 			overlap = true
 			break
@@ -896,7 +896,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					// program leaves the row behind, and treating that as a completed
 					// import made every re-organize answer already_imported — no history
 					// row, no copy, nothing in the library.
-					if a.Store.Get(ctx, "asset", owner.AssetID, &existing) == nil && existing.State == "present" && existing.RootID == root.ID && existing.SourcePath == file.Source && mediaKey(existing.Media) == mediaKey(identity) && sameCanonicalSlots(existing.inventorySlots(), file.inventorySlots()) {
+					if a.Store.Get(ctx, "asset", owner.AssetID, &existing) == nil && existing.State == "present" && existing.RootID == root.ID && existing.SourcePath == file.Source && mediaKey(existing.Media) == mediaKey(identity) && sameCanonicalSlots(existing.inventorySlots(), file.inventorySlots(plan.Media.MediaType)) {
 						if _, statErr := os.Stat(existing.Path); statErr == nil || !errors.Is(statErr, fs.ErrNotExist) {
 							file.Status = "already_imported"
 							file.AssetID = existing.ID
@@ -952,7 +952,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					var ownership managedFile
 					ownershipErr := a.Store.Get(ctx, "managed_file", tokenHash(file.Target), &ownership)
 					actual, targetErr := snapshotOwnedTransferPath(file.Target, ownership.Snapshot, ownership.Softlink, true, ownership.SharedDirectory)
-					if request.Mode != "move" && request.Mode != "softlink" && e == nil && mediaKey(existing.Media) == mediaKey(identity) && sameCanonicalSlots(existing.inventorySlots(), file.inventorySlots()) && existing.RootID == root.ID && existing.SourcePath == file.Source && (existing.State == "present" || existing.State == "external") && ownershipErr == nil && ownership.RootID == root.ID && ownership.Kind == "video" && ownership.AssetID == existing.ID && ownership.SourceSnapshot == planSnapshot(file) && targetErr == nil && ownership.Snapshot == actual {
+					if request.Mode != "move" && request.Mode != "softlink" && e == nil && mediaKey(existing.Media) == mediaKey(identity) && sameCanonicalSlots(existing.inventorySlots(), file.inventorySlots(plan.Media.MediaType)) && existing.RootID == root.ID && existing.SourcePath == file.Source && (existing.State == "present" || existing.State == "external") && ownershipErr == nil && ownership.RootID == root.ID && ownership.Kind == "video" && ownership.AssetID == existing.ID && ownership.SourceSnapshot == planSnapshot(file) && targetErr == nil && ownership.Snapshot == actual {
 						file.Status = "already_imported"
 						file.AssetID = existing.ID
 					} else {
@@ -965,7 +965,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				block("无法检查目标冲突")
 			}
 			if file.Status == "ready" && file.MaterialKind == "" {
-				for _, canonical := range file.inventorySlots() {
+				for _, canonical := range file.inventorySlots(plan.Media.MediaType) {
 					slot := fmt.Sprintf("%d:%d", canonical.Season, canonical.Episode)
 					if seenSlots[slot] {
 						block("同一季集被多次选择")

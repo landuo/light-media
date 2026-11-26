@@ -303,7 +303,7 @@ func (a *App) registerLibraryAsset(ctx context.Context, in LibraryRegisterReques
 		if sameEpisodes && len(in.Episodes) == 1 {
 			sameEpisodes = prior.Episodes[0] == in.Episodes[0]
 		}
-		if prior.Media.MediaType != in.MediaType || prior.Media.ID != in.TMDBID || prior.Season != in.Season || !sameEpisodes || !sameCanonicalSlots(prior.inventorySlots(), canonicalSlots(canonicalScopes(in.Season, in.Episodes, nil))) || prior.State == "removed" || prior.State == "missing_confirmed" {
+		if prior.Media.MediaType != in.MediaType || prior.Media.ID != in.TMDBID || prior.Season != in.Season || !sameEpisodes || !sameCanonicalSlots(prior.inventorySlots(), canonicalSlots(canonicalScopes(in.Season, in.Episodes, nil), in.MediaType == "movie")) || prior.State == "removed" || prior.State == "missing_confirmed" {
 			return empty, bad("LIBRARY_ALREADY_REGISTERED", "此候选已登记，不能通过旧确认覆盖既有身份")
 		}
 		return prior, nil

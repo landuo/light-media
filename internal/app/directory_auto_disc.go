@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -74,12 +75,44 @@ func importNFOAnchor(path string, disc bool) string {
 	return filepath.Join(path, filepath.Base(path)+".mkv")
 }
 
+var ordinalDiscName = regexp.MustCompile(`(?i)^(?:disc|disk|dvd|cd)[ ._-]*[0-9]{1,3}$`)
+
+// A numbered Blu-ray folder can sit immediately below the named TV season
+// release. Parse that one component on its own so a generic "Season 1" or a
+// library/category ancestor cannot supply the show's title.
+func parseTransferDiscMeta(path string, parse func(string) (*releasemeta.MetaObject, error)) (*releasemeta.MetaObject, error) {
+	name := filepath.Base(path)
+	if ordinalDiscName.MatchString(name) {
+		release, err := parse(filepath.Base(filepath.Dir(path)))
+		if err != nil {
+			return nil, err
+		}
+		first, last := release.Number("begin_season"), release.Number("end_season")
+		if release.Name() != "" && release.Text("type") == "电视剧" && first != nil && (last == nil || first.Cmp(last) == 0) {
+			// A box can advertise the entire season's range on its cover.
+			// It does not establish which episodes are on an individual disc.
+			release.Set("begin_episode", nil)
+			release.Set("end_episode", nil)
+			release.Set("total_episode", nil)
+			release.Set("part", name)
+			return release, nil
+		}
+	}
+	return parse(path)
+}
+
+func (a *App) originalDiscPathMeta(ctx context.Context, path string) (*releasemeta.MetaObject, error) {
+	return parseTransferDiscMeta(path, func(p string) (*releasemeta.MetaObject, error) {
+		return a.originalTransferPathMeta(ctx, p)
+	})
+}
+
 // A disc's release name has no video extension. Use the same path metadata
 // that MoviePilot passes to recognition, including its configured title words.
 func (a *App) discReleaseIdentity(ctx context.Context, path string, meta *releasemeta.MetaObject) (media.ParseResult, error) {
 	if meta == nil {
 		var err error
-		meta, err = a.originalTransferPathMeta(ctx, path)
+		meta, err = a.originalDiscPathMeta(ctx, path)
 		if err != nil {
 			return media.ParseResult{}, err
 		}

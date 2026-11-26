@@ -51,7 +51,7 @@ func (a *App) guardDirectoryOverwriteInventory(ctx context.Context, op directory
 		if len(asset.EpisodeScopes) == 0 && len(file.EpisodeScopes) == 0 {
 			continue
 		}
-		if key != mediaKey(asset.Media) || !canonicalSlotsContain(file.inventorySlots(), asset.inventorySlots()) {
+		if key != mediaKey(asset.Media) || !canonicalSlotsContain(file.inventorySlots(asset.Media.MediaType), asset.inventorySlots()) {
 			return bad("QUALITY_PARTIAL_PATH_CONFLICT", "原文件还承载未替换季集，保留原文件")
 		}
 	}

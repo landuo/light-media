@@ -257,7 +257,7 @@ func (a *App) ordinaryCompletionBasisWithExistence(ctx context.Context, q qualit
 				return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "外部库存缺少可核对的来源影视身份")
 			} else if asset.IdentitySource == "manual" {
 				var proof libraryIdentity
-				if e = qualityRecord(ctx, q, "asset_identity", asset.ID, &proof); e != nil || proof.AssetID != asset.ID || proof.Path != asset.Path || proof.RootPath != root.Path || proof.RootID != root.ID || proof.Snapshot != stamp || proof.MediaType != s.Media.MediaType || proof.TMDBID != s.Media.ID || proof.Season != asset.Season || !equalQualityEpisodes(importEpisodes(proof.Episodes), importEpisodes(asset.Episodes)) || !sameCanonicalSlots(canonicalSlots(canonicalScopes(proof.Season, proof.Episodes, proof.EpisodeScopes)), asset.inventorySlots()) || proof.Source != "manual" || proof.ConfirmedAt != asset.IdentityConfirmedAt {
+				if e = qualityRecord(ctx, q, "asset_identity", asset.ID, &proof); e != nil || proof.AssetID != asset.ID || proof.Path != asset.Path || proof.RootPath != root.Path || proof.RootID != root.ID || proof.Snapshot != stamp || proof.MediaType != s.Media.MediaType || proof.TMDBID != s.Media.ID || proof.Season != asset.Season || !equalQualityEpisodes(importEpisodes(proof.Episodes), importEpisodes(asset.Episodes)) || !sameCanonicalSlots(canonicalSlots(canonicalScopes(proof.Season, proof.Episodes, proof.EpisodeScopes), proof.MediaType == "movie"), asset.inventorySlots()) || proof.Source != "manual" || proof.ConfirmedAt != asset.IdentityConfirmedAt {
 					return nil, false, bad("SUBSCRIPTION_INVENTORY_UNCONFIRMED", "人工登记的库存身份或文件指纹已变化")
 				}
 				entry.Registration = &proof
@@ -336,7 +336,7 @@ func (p *PluginStore) validateOrdinaryCompletionInput(ctx context.Context, q sub
 			return completionEvidenceError()
 		} else if asset.IdentitySource == "manual" {
 			proof := entry.Registration
-			if video != nil || entry.NFO != nil || proof == nil || proof.AssetID != asset.ID || proof.Path != asset.Path || proof.RootPath != entry.RootPath || proof.RootID != asset.RootID || proof.Snapshot != entry.Snapshot || proof.MediaType != s.Media.MediaType || proof.TMDBID != s.Media.ID || proof.Season != asset.Season || !equalQualityEpisodes(importEpisodes(proof.Episodes), importEpisodes(asset.Episodes)) || !sameCanonicalSlots(canonicalSlots(canonicalScopes(proof.Season, proof.Episodes, proof.EpisodeScopes)), asset.inventorySlots()) || proof.Source != "manual" || proof.ConfirmedAt != asset.IdentityConfirmedAt {
+			if video != nil || entry.NFO != nil || proof == nil || proof.AssetID != asset.ID || proof.Path != asset.Path || proof.RootPath != entry.RootPath || proof.RootID != asset.RootID || proof.Snapshot != entry.Snapshot || proof.MediaType != s.Media.MediaType || proof.TMDBID != s.Media.ID || proof.Season != asset.Season || !equalQualityEpisodes(importEpisodes(proof.Episodes), importEpisodes(asset.Episodes)) || !sameCanonicalSlots(canonicalSlots(canonicalScopes(proof.Season, proof.Episodes, proof.EpisodeScopes), proof.MediaType == "movie"), asset.inventorySlots()) || proof.Source != "manual" || proof.ConfirmedAt != asset.IdentityConfirmedAt {
 				return completionEvidenceError()
 			}
 		} else if video != nil || entry.Registration != nil || entry.NFO == nil || entry.NFO.ID != s.Media.ID || entry.NFO.MediaType != s.Media.MediaType || s.Media.MediaType == "tv" && (entry.Numbering == nil || entry.Numbering.Season == nil || *entry.Numbering.Season != s.Season || !equalQualityEpisodes(entry.Numbering.Episodes, asset.Episodes)) {

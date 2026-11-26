@@ -180,8 +180,7 @@ func applyImportEpisodeGroup(file *PlanFile, group catalogEpisodeGroupResponse) 
 		file.EpisodeScopes = nil
 		if len(scopes) == 0 {
 			// A disc without an explicit episode range has presentation metadata,
-			// not evidence for every episode in this group. Preserve the existing
-			// unknown-content inventory slot, rather than claiming a whole season.
+			// but only an explicit range establishes canonical inventory.
 			file.Season, file.Episodes = 0, nil
 		} else {
 			file.Season, file.Episodes = scopes[0].Season, append([]int(nil), scopes[0].Episodes...)

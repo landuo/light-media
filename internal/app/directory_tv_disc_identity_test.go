@@ -56,7 +56,11 @@ func TestDirectoryTVDiscPreservesVerifiedSeasonWithoutInventingEpisodes(t *testi
 		t.Fatalf("verified download identity and named disc: %+v, %v", r, err)
 	}
 
-	unknown := disc(filepath.Join(source, "电视剧", "Fallout.S01.2160p.UHD.Blu-ray.HEVC.Atmos.TrueHD7.1-DiY@HDHome", "Disc 3"))
+	nested := disc(filepath.Join(source, "电视剧", "Test.Film.2024.S01E01-E08.2160p.UHD.Blu-ray", "Disc 2"))
+	if r, err := a.directoryFileIdentity(ctx, rule, nested); err != nil || r.TMDBID != show.ID || !r.Files[0].SeasonExplicit || r.Files[0].Season != 1 || len(r.Files[0].Episodes) != 0 {
+		t.Fatalf("season pack episode range leaked into the disc: %+v %v", r, err)
+	}
+	unknown := disc(filepath.Join(source, "电视剧", "Season 1", "Disc 3"))
 	if r, err := a.directoryFileIdentity(ctx, rule, unknown); err == nil || !strings.Contains(err.Error(), "季号") || r.TMDBID != 0 {
 		t.Fatalf("anonymous disc inherited unrelated title: %+v %v", r, err)
 	}

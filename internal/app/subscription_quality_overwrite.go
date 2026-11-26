@@ -53,7 +53,7 @@ func (a *App) preflightQualityDirectoryOverwrite(ctx context.Context, plan Impor
 			if er := a.Store.Get(ctx, "asset", old.Owner.AssetID, &asset); er != nil || asset.RootID != old.Owner.RootID || old.Owner.Kind == "video" && asset.Path != old.Path {
 				return bad("REVIEW_OVERWRITE_OWNER", "原文件的受管资产无法核对，未开始替换")
 			}
-			if mediaKey(asset.Media) != mediaKey(plan.Media) || !canonicalSlotsContain(file.inventorySlots(), asset.inventorySlots()) {
+			if mediaKey(asset.Media) != mediaKey(plan.Media) || !canonicalSlotsContain(file.inventorySlots(plan.Media.MediaType), asset.inventorySlots()) {
 				return bad("QUALITY_PARTIAL_PATH_CONFLICT", "原文件还承载未替换季集，保留原文件")
 			}
 		}

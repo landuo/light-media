@@ -41,7 +41,7 @@ func TestOrganizeEpisodeGroupCrossSeasonFileInventoryAndHistory(t *testing.T) {
 		t.Fatalf("cross-season preview: %+v %v", plan, err)
 	}
 	expected := []canonicalEpisodeSlot{{4, 16}, {0, 2}}
-	if !sameCanonicalSlots(plan.Files[0].inventorySlots(), expected) || len(plan.Files[0].EpisodeScopes) != 2 {
+	if !sameCanonicalSlots(plan.Files[0].inventorySlots(plan.Media.MediaType), expected) || len(plan.Files[0].EpisodeScopes) != 2 {
 		t.Fatalf("lost canonical scope: %+v", plan.Files[0])
 	}
 	if !strings.Contains(plan.Files[0].Target, "S01E01-E02") {
@@ -150,11 +150,11 @@ func TestOrganizeEpisodeGroupBlurayInventory(t *testing.T) {
 				t.Fatal(err)
 			}
 			file := plan.Files[0]
-			expected := []canonicalEpisodeSlot{{0, 0}}
+			var expected []canonicalEpisodeSlot
 			if explicit {
 				expected = []canonicalEpisodeSlot{{4, 16}, {0, 2}}
 			}
-			if file.DirectoryDigest == "" || file.GroupNumbering == nil || file.GroupNumbering.Season != 1 || !sameCanonicalSlots(file.inventorySlots(), expected) {
+			if file.DirectoryDigest == "" || file.GroupNumbering == nil || file.GroupNumbering.Season != 1 || !sameCanonicalSlots(file.inventorySlots(plan.Media.MediaType), expected) {
 				t.Fatalf("disc scope: %+v", file)
 			}
 			request.Preview = false
@@ -207,10 +207,10 @@ func TestOrganizeEpisodeGroupBlurayInventory(t *testing.T) {
 
 func TestOrganizeEpisodeGroupCanonicalScopeCompatibility(t *testing.T) {
 	ordinary := PlanFile{Season: 2, Episodes: []int{1, 2}}
-	if !sameCanonicalSlots(ordinary.inventorySlots(), []canonicalEpisodeSlot{{2, 1}, {2, 2}}) || ordinary.EpisodeScopes != nil {
+	if !sameCanonicalSlots(ordinary.inventorySlots("tv"), []canonicalEpisodeSlot{{2, 1}, {2, 2}}) || ordinary.EpisodeScopes != nil {
 		t.Fatal("ordinary single-season shape changed")
 	}
-	if !sameCanonicalSlots((PlanFile{}).inventorySlots(), []canonicalEpisodeSlot{{0, 0}}) {
-		t.Fatal("unknown/movie slot changed")
+	if !sameCanonicalSlots((PlanFile{}).inventorySlots("movie"), []canonicalEpisodeSlot{{0, 0}}) {
+		t.Fatal("movie slot changed")
 	}
 }

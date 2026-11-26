@@ -33,7 +33,7 @@ func (a *App) qualitySidecarOwner(ctx context.Context, q qualityReader, p *quali
 			return nil, bad("QUALITY_SIDECAR_UNMANAGED", "已有字幕归属或路径无法核对")
 		}
 		for _, slot := range old.Asset.inventorySlots() {
-			if !slices.Contains(file.inventorySlots(), slot) {
+			if !slices.Contains(file.inventorySlots(old.Asset.Media.MediaType), slot) {
 				return nil, bad("QUALITY_PARTIAL_PATH_CONFLICT", "原字幕还服务于未替换剧集，不能原位替换")
 			}
 		}

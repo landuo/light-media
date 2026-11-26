@@ -52,7 +52,7 @@ func findDownloadImportRetry(ctx context.Context, q qualityReader, owner string,
 	if old.IntentID != owner || old.RootID != plan.RootID || mediaKey(old.Media) != mediaKey(plan.Media) {
 		return nil, nil
 	}
-	for _, slot := range file.inventorySlots() {
+	for _, slot := range file.inventorySlots(plan.Media.MediaType) {
 		var reserved string
 		err := q.QueryRowContext(ctx, `SELECT intent_id FROM reservations WHERE media_key=? AND season=? AND episode=?`, mediaKey(plan.Media), slot.Season, slot.Episode).Scan(&reserved)
 		if errors.Is(err, sql.ErrNoRows) {

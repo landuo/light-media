@@ -306,7 +306,7 @@ func (a *App) importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, fi
 	if plan.IntentID != "" {
 		owner = plan.IntentID
 	}
-	for _, slot := range file.inventorySlots() {
+	for _, slot := range file.inventorySlots(plan.Media.MediaType) {
 		var count int
 		if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=?`, mediaKey(plan.Media), slot.Season, slot.Episode, plan.ReorganizeAssetID).Scan(&count); err != nil {
 			return err
@@ -346,7 +346,7 @@ func (a *App) importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, fi
 }
 
 func importExcludedTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, file PlanFile) error {
-	for _, slot := range file.inventorySlots() {
+	for _, slot := range canonicalSlots(file.inventoryScopes(), true) {
 		var raw []byte
 		err := tx.QueryRowContext(ctx, `SELECT payload FROM media_exclusion WHERE id=?`, fmt.Sprintf("%s:%d:%d", mediaKey(plan.Media), slot.Season, slot.Episode)).Scan(&raw)
 		if errors.Is(err, sql.ErrNoRows) {
@@ -852,7 +852,7 @@ func (a *App) runImportFileSelection(ctx context.Context, job Job, planID string
 					return err
 				}
 				cleanupKeys = append(cleanupKeys, plan.ID+"/"+file.ID)
-				for _, slot := range file.inventorySlots() {
+				for _, slot := range file.inventorySlots(plan.Media.MediaType) {
 					var other string
 					err = tx.QueryRowContext(ctx, `SELECT asset_id FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=? LIMIT 1`, mediaKey(plan.Media), slot.Season, slot.Episode, assetID).Scan(&other)
 					if err == nil {

@@ -161,7 +161,7 @@ func originalDirectoryAllowed(item originalTransferCandidate, classifier transfe
 	return media && (minMB == 0 || size > float64(minMB)*1024*1024)
 }
 
-func (a *App) originalDirectoryMetaBuilder(ctx context.Context, in manualOrganizeRequest) (func(string) (*releasemeta.MetaObject, error), error) {
+func (a *App) originalDirectoryMetaBuilder(ctx context.Context, in manualOrganizeRequest) (func(string, bool) (*releasemeta.MetaObject, error), error) {
 	parser, err := a.transferMetaParser(ctx)
 	if err != nil {
 		return nil, err
@@ -171,8 +171,14 @@ func (a *App) originalDirectoryMetaBuilder(ctx context.Context, in manualOrganiz
 		return nil, err
 	}
 	parsePath := parser.SiblingPathParser()
-	return func(path string) (*releasemeta.MetaObject, error) {
-		meta, err := parsePath(path)
+	return func(path string, disc bool) (*releasemeta.MetaObject, error) {
+		var meta *releasemeta.MetaObject
+		var err error
+		if disc {
+			meta, err = parseTransferDiscMeta(path, parsePath)
+		} else {
+			meta, err = parsePath(path)
+		}
 		if err != nil || meta == nil {
 			return meta, err
 		}

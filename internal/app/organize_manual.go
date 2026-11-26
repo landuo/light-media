@@ -976,7 +976,7 @@ func (a *App) recognizeBrowserFile(ctx context.Context, path string) (any, error
 		}
 		return map[string]any{"media": asset.Media, "parsed": a.parseMediaName(filepath.Base(path)), "season": asset.Season, "episodes": asset.Episodes}, nil
 	}
-	scan, e := a.browserScan(ctx, []string{path}, true)
+	scan, e := a.scanBrowserSelection(ctx, []string{path}, true, true)
 	if e != nil {
 		return nil, e
 	}

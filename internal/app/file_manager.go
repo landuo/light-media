@@ -405,6 +405,10 @@ func browserListResult(root browserRoot, path, sorting, order string, entries []
 	return map[string]any{"root": root, "path": path, "parent": parent, "items": entries, "truncated": truncated}
 }
 func (a *App) browserScan(ctx context.Context, paths []string, recursive bool) (any, error) {
+	return a.scanBrowserSelection(ctx, paths, recursive, false)
+}
+
+func (a *App) scanBrowserSelection(ctx context.Context, paths []string, recursive, recognizeDisc bool) (any, error) {
 	if len(paths) == 0 || len(paths) > 200 {
 		return nil, bad("INVALID_SELECTION", "请选择 1–200 个文件或目录")
 	}
@@ -428,7 +432,7 @@ func (a *App) browserScan(ctx context.Context, paths []string, recursive bool) (
 			return nil, e
 		}
 		if os.FileMode(stamp.Mode).IsDir() {
-			collected, limited, e := a.browserCollectFiles(ctx, path, recursive)
+			collected, limited, e := a.browserCollectFiles(ctx, path, recursive, recognizeDisc)
 			if e != nil {
 				return nil, e
 			}
@@ -456,7 +460,30 @@ func (a *App) browserScan(ctx context.Context, paths []string, recursive bool) (
 	return map[string]any{"files": files, "truncated": truncated}, nil
 }
 
-func (a *App) browserCollectFiles(ctx context.Context, path string, recursive bool) ([]importScanFile, bool, error) {
+func (a *App) browserCollectFiles(ctx context.Context, path string, recursive, recognizeDisc bool) ([]importScanFile, bool, error) {
+	if recognizeDisc {
+		disc, err := a.originalTransferIsBluray(ctx, map[string]any{"storage": "local", "type": "dir", "path": path})
+		if err != nil {
+			return nil, false, err
+		}
+		if disc {
+			item, err := originalLocalFileItem(path)
+			if err != nil {
+				return nil, false, err
+			}
+			meta, err := a.originalDiscPathMeta(ctx, path)
+			if err != nil {
+				return nil, false, err
+			}
+			parsed, err := a.discReleaseIdentity(ctx, path, meta)
+			if err != nil {
+				return nil, false, err
+			}
+			file := importScanFile{Path: path, Parsed: parsed, originalItem: item, originalResolvedMeta: meta}
+			file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(importNFOAnchor(path, true))
+			return []importScanFile{file}, false, nil
+		}
+	}
 	classifier, e := a.transferMediaClassifier(ctx)
 	if e != nil {
 		return nil, false, e

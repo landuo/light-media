@@ -125,7 +125,7 @@ func canReplaceFailedImportReservation(ctx context.Context, q qualityReader, own
 func failedImportSourceUnpublished(ctx context.Context, q qualityReader, old ImportPlan, file PlanFile, season, episode int, allowSourceHardlink bool) (bool, error) {
 	var retryable PlanFile
 	for _, previous := range old.Files {
-		if previous.MaterialKind != "" || !slices.Contains(previous.inventorySlots(), canonicalEpisodeSlot{season, episode}) {
+		if previous.MaterialKind != "" || !slices.Contains(previous.inventorySlots(old.Media.MediaType), canonicalEpisodeSlot{season, episode}) {
 			continue
 		}
 		if retryable.ID != "" || previous.Status != "error" || previous.Source != file.Source || planSnapshot(previous) != planSnapshot(file) || previous.DirectoryDigest != "" || !importPath(previous.Target) || previous.Target == previous.Source {

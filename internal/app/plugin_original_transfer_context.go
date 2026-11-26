@@ -94,7 +94,11 @@ func (a *App) originalTransferContextWithMedia(ctx context.Context, identity cat
 	}
 	if meta == nil {
 		var err error
-		meta, err = a.originalTransferPathMeta(ctx, file.Source)
+		if file.DirectoryDigest != "" {
+			meta, err = a.originalDiscPathMeta(ctx, file.Source)
+		} else {
+			meta, err = a.originalTransferPathMeta(ctx, file.Source)
+		}
 		if err != nil {
 			return out, err
 		}
@@ -163,7 +167,11 @@ func (a *App) originalTVImportTarget(ctx context.Context, identity catalog.Media
 	year := any(identity.Year)
 	part := file.Part
 	if identity.Year <= 0 || part == "" {
-		parsed, err := a.originalTransferPathMeta(ctx, metadataPath)
+		parse := a.originalTransferPathMeta
+		if file.DirectoryDigest != "" {
+			parse = a.originalDiscPathMeta
+		}
+		parsed, err := parse(ctx, metadataPath)
 		if err != nil {
 			return "", err
 		}

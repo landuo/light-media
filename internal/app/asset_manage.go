@@ -387,7 +387,7 @@ func (a *App) removeAssetLocked(ctx context.Context, assetID, previewID string, 
 		}
 	}
 	if len(preserveExclusions) == 0 || !preserveExclusions[0] {
-		for _, slot := range asset.inventorySlots() {
+		for _, slot := range canonicalSlots(asset.inventoryScopes(), true) {
 			key := fmt.Sprintf("%s:%d:%d", mediaKey(asset.Media), slot.Season, slot.Episode)
 			if err = txPut(ctx, tx, "exclusion", key, map[string]any{"blocked": exclude, "reason": "user_removed", "at": now()}); err != nil {
 				return err
@@ -576,7 +576,7 @@ func (a *App) resolveMissingAsset(ctx context.Context, asset Asset, action strin
 	}
 	defer tx.Rollback()
 	blocked := action == "confirm_missing"
-	for _, slot := range asset.inventorySlots() {
+	for _, slot := range canonicalSlots(asset.inventoryScopes(), true) {
 		key := fmt.Sprintf("%s:%d:%d", mediaKey(asset.Media), slot.Season, slot.Episode)
 		if err = txPut(ctx, tx, "exclusion", key, map[string]any{"blocked": blocked, "reason": action, "at": now()}); err != nil {
 			return err
