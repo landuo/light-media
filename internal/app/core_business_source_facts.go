@@ -560,19 +560,10 @@ func sourceTMDBMediaInfoLocale(raw json.RawMessage, kind, domain, category, loca
 	if !sourceSubscriptionTruth(info["id"]) {
 		return nil, bad("SOURCE_MEDIA_PROJECTION_UNSUPPORTED", "原TMDB媒体详情缺少身份")
 	}
-	encoded, e := json.Marshal(info)
+	fields, e := sourceTMDBModelFields(info, kind, domain, category)
 	if e != nil {
 		return nil, e
 	}
-	model, e := sourceTMDBMediaModel(encoded, kind, domain, category)
-	if e != nil {
-		return nil, e
-	}
-	value, e = decodeSourceJSON(model)
-	if e != nil {
-		return nil, e
-	}
-	fields := sourceMap(value)
 	fields["recognize_cache_hit"] = false
 	fields["poster"], fields["backdrop"] = "", ""
 	for target, source := range map[string]string{"poster": "poster_path", "backdrop": "backdrop_path"} {

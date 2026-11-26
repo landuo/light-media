@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 	"unicode/utf8"
 
@@ -23,6 +24,7 @@ type manualPreviewInputsKey struct{}
 type manualPreviewInputs struct {
 	nfoDirectories          map[string]map[string]bool
 	parser                  *releasemeta.MetaInfoParser
+	siblingMeta             func(string) (*releasemeta.MetaObject, error)
 	nfos                    map[string]manualPreviewNFO
 	seriesNFO               importSeriesNFOResult
 	pageKey                 string
@@ -170,6 +172,26 @@ type manualPreviewNFO struct {
 	reason    string
 }
 
+// Only pure filename parsing is shared between requests. Filesystem evidence
+// and storage/recognition plugin calls keep their normal request lifetime.
+type manualRecognitionParser struct {
+	mu      sync.Mutex
+	current *releasemeta.MetaInfoParser
+}
+
+func (cache *manualRecognitionParser) get(options releasemeta.Options) (*releasemeta.MetaInfoParser, error) {
+	cache.mu.Lock()
+	defer cache.mu.Unlock()
+	if cache.current.SameOptions(options) {
+		return cache.current, nil
+	}
+	parser, err := releasemeta.NewMetaInfoParser(releasemeta.MetaInfoEnvironment{Options: options, ReuseConfiguredRules: true})
+	if err == nil {
+		cache.current = parser
+	}
+	return parser, err
+}
+
 func (a *App) transferMetaParser(ctx context.Context) (*releasemeta.MetaInfoParser, error) {
 	inputs, _ := ctx.Value(manualPreviewInputsKey{}).(*manualPreviewInputs)
 	if inputs != nil && inputs.parser != nil {
@@ -185,7 +207,7 @@ func (a *App) transferMetaParser(ctx context.Context) (*releasemeta.MetaInfoPars
 			return nil, err
 		}
 	}
-	parser, err := releasemeta.NewMetaInfoParser(releasemeta.MetaInfoEnvironment{Options: options})
+	parser, err := a.manualParser.get(options)
 	if err == nil && inputs != nil {
 		inputs.parser = parser
 	}

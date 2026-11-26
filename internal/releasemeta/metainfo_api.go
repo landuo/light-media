@@ -2,8 +2,10 @@ package releasemeta
 
 import (
 	"errors"
-	"light-media/internal/releasemeta/pinyin"
+	"slices"
 	"unicode/utf8"
+
+	"light-media/internal/releasemeta/pinyin"
 )
 
 // MetaInfoEnvironment is one frozen source configuration frame. A nil platform map uses
@@ -12,6 +14,8 @@ import (
 type MetaInfoEnvironment struct {
 	Options            Options
 	StreamingPlatforms map[string]string
+	// Reusable parsers can retain more compiled rules from one configuration.
+	ReuseConfiguredRules bool
 }
 type MetaInfoParser struct{ environment metaInfoEnvironment }
 
@@ -24,6 +28,9 @@ func cloneStrings(in []string) []string {
 func NewMetaInfoParser(env MetaInfoEnvironment) (*MetaInfoParser, error) {
 	options := env.Options
 	options.patterns = &configuredPatterns{}
+	if env.ReuseConfiguredRules {
+		options.patterns.limit = min(512, max(64, len(options.CustomWords)))
+	}
 	for _, list := range [][]string{options.CustomWords, options.ReleaseGroups, options.Customization, options.MediaExts} {
 		for _, value := range list {
 			if !utf8.ValidString(value) {
@@ -80,4 +87,14 @@ func (p *MetaInfoParser) ParseTitle(title string, subtitle *string, localWords *
 		local = &copy
 	}
 	return parseFullTitle(title, sub, local, p.environment)
+}
+
+// SameOptions compares the frozen source inputs, including absent versus empty lists.
+func (p *MetaInfoParser) SameOptions(o Options) bool {
+	if p == nil {
+		return false
+	}
+	frozen := p.environment.Defaults
+	equal := func(a, b []string) bool { return (a == nil) == (b == nil) && slices.Equal(a, b) }
+	return o.SourceMode == frozen.SourceMode && equal(o.CustomWords, frozen.CustomWords) && equal(o.ReleaseGroups, frozen.ReleaseGroups) && equal(o.Customization, frozen.Customization) && equal(o.MediaExts, frozen.MediaExts)
 }

@@ -76,6 +76,12 @@ func (a *App) originalTransferPathMeta(ctx context.Context, path string) (*relea
 	if err != nil {
 		return nil, err
 	}
+	if inputs, _ := ctx.Value(manualPreviewInputsKey{}).(*manualPreviewInputs); inputs != nil {
+		if inputs.siblingMeta == nil {
+			inputs.siblingMeta = parser.SiblingPathParser()
+		}
+		return inputs.siblingMeta(path)
+	}
 	return parser.ParsePath(path, nil)
 }
 

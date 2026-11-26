@@ -27,6 +27,7 @@ import (
 )
 
 type App struct {
+	manualParser                     manualRecognitionParser
 	organizeLive                     organizeLive
 	organizeInbox                    *organizeInbox
 	organizeProgress                 sync.Map // file ID -> actual native copied bytes; no per-chunk database writes.

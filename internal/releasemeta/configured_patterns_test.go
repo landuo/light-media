@@ -66,3 +66,20 @@ func BenchmarkRepeatedSubscriptionTitles(b *testing.B) {
 		}
 	}
 }
+
+func TestRustWordLiteralAndRegexpMatches(t *testing.T) {
+	for _, c := range []struct {
+		title, pattern, replacement, want string
+		applied                           bool
+	}{
+		{"剧集剧集", "剧集", "新", "新新", true}, {"ab", "ab", "ab", "ab", true}, {"a+b", "a+b", "x", "a+b", false},
+		{"Fallout", "辽", "x", "Fallout", false}, {"aa", "a", `\0x`, "axax", true}, {"a0", "(.)0", `\1`, "a", true},
+		{"a", "", "_", "_a_", true}, {"[abc", "[", "x", "[abc", false},
+	} {
+		var cache configuredPatterns
+		got, hit := cache.replaceRustWord(c.title, c.pattern, c.replacement)
+		if got != c.want || hit != c.applied {
+			t.Errorf("%q %q %q got %q %v", c.title, c.pattern, c.replacement, got, hit)
+		}
+	}
+}

@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 	"unicode"
+	"unicode/utf8"
 
 	"github.com/dlclark/regexp2/v2"
 )
@@ -68,6 +69,15 @@ func prepareRustWords(title string, list []string, patterns *configuredPatterns)
 }
 
 func (patterns *configuredPatterns) replaceRustWord(title, pattern, replacement string) (string, bool) {
+	// An unescaped literal has identical match positions in both implementations.
+	if pattern != "" && !strings.ContainsAny(pattern, `\.^$|?*+()[]{}`) && utf8.ValidString(pattern) && utf8.ValidString(title) && utf8.ValidString(replacement) {
+		if !strings.Contains(title, pattern) {
+			return title, false
+		}
+		if !strings.Contains(replacement, `\`) {
+			return strings.ReplaceAll(title, pattern, replacement), true
+		}
+	}
 	re, err := patterns.compile(pattern, false)
 	if err != nil {
 		return title, false

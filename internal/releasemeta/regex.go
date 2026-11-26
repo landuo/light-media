@@ -17,6 +17,8 @@ type configuredPatternKey struct {
 // Scoped to one frozen parser. Concurrent titles reuse its programs, and
 // dropping the parser releases the user-supplied rules. Overflow still matches.
 type configuredPatterns struct {
+	limit    int
+	bytes    int
 	mu       sync.Mutex
 	programs map[configuredPatternKey]*regexp2.Regexp
 }
@@ -38,11 +40,20 @@ func (c *configuredPatterns) compile(pattern string, ignoreCase bool) (*regexp2.
 	}
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	if len(c.programs) < 64 {
+	limit := c.limit
+	if limit == 0 {
+		limit = 64
+	}
+	// Bound the extra storage of a long-lived configuration containing large patterns.
+	if len(c.programs) < limit && (c.limit == 0 || c.bytes+len(pattern) <= 96<<10) {
 		if c.programs == nil {
 			c.programs = make(map[configuredPatternKey]*regexp2.Regexp)
 		}
+		if existing := c.programs[key]; existing != nil {
+			return existing, nil
+		}
 		c.programs[key] = re
+		c.bytes += len(pattern)
 	}
 	return re, nil
 }

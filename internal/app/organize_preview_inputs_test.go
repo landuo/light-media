@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"light-media/internal/releasemeta"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -97,5 +98,39 @@ func TestManualPreviewDoesNotReuseNativeEpisodeRowsForModuleOverride(t *testing.
 		if i < 2 && (!strings.Contains(string(module), "Guest") || len(names[0]["guest_stars"].([]any)) != 1) {
 			t.Fatalf("lost raw guest metadata: %s, %v", module, names)
 		}
+	}
+}
+
+func TestReusableManualParserChangesWithRecognitionRules(t *testing.T) {
+	var cache manualRecognitionParser
+	opts := releasemeta.Options{SourceMode: "rust", CustomWords: []string{"Raw => Alpha"}, MediaExts: []string{".mkv"}}
+	first, err := cache.get(opts)
+	if err != nil {
+		t.Fatal(err)
+	}
+	same, err := cache.get(opts)
+	if err != nil || first != same {
+		t.Fatal("lost unchanged parser", err)
+	}
+	opts.CustomWords[0] = "Raw => Bravo"
+	next, err := cache.get(opts)
+	if err != nil || next == first {
+		t.Fatal("old parser retained after word change", err)
+	}
+	for p, want := range map[*releasemeta.MetaInfoParser]string{first: "Alpha", next: "Bravo"} {
+		meta, err := p.ParseTitle("Raw.S02E01.mkv", nil, nil)
+		if err != nil || !strings.Contains(meta.Name(), want) {
+			t.Fatalf("wanted %s, got %+v %v", want, meta, err)
+		}
+	}
+	opts.MediaExts = nil
+	absent, err := cache.get(opts)
+	if err != nil {
+		t.Fatal(err)
+	}
+	opts.MediaExts = []string{}
+	empty, err := cache.get(opts)
+	if err != nil || empty == absent {
+		t.Fatal("absent and empty extensions share parser", err)
 	}
 }

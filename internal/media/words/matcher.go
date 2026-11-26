@@ -6,6 +6,7 @@ import (
 	"container/list"
 	"errors"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -38,6 +39,10 @@ type Result struct {
 	Failed  int
 	Limited bool
 }
+
+// MatchesRules only compares the immutable rules. Compiled programs can be
+// reused by concurrent requests with the same frozen recognition settings.
+func (m *Matcher) MatchesRules(rules []string) bool { return m != nil && slices.Equal(m.words, rules) }
 
 func New(rules []string) (*Matcher, error) {
 	total := 0

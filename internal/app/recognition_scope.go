@@ -60,6 +60,9 @@ func (a *App) ensureResourceRecognition(ctx context.Context) (context.Context, e
 	if err != nil {
 		return ctx, err
 	}
+	if matcher := a.recognitionMatcher.Load(); matcher.MatchesRules(options.CustomWords) {
+		return context.WithValue(ctx, resourceRecognitionKey{}, resourceRecognition{options: options, matcher: matcher}), nil
+	}
 	return withResourceRecognition(ctx, options)
 }
 

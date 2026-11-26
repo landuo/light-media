@@ -13,7 +13,16 @@ func sourceTMDBMediaModel(raw json.RawMessage, kind, domain, category string) (j
 	if e != nil || sourceMap(value) == nil || kind != "movie" && kind != "tv" {
 		return nil, originalCatalogMediaInvalid()
 	}
-	info := sourceMap(value)
+	fields, e := sourceTMDBModelFields(sourceMap(value), kind, domain, category)
+	if e != nil {
+		return nil, e
+	}
+	return json.Marshal(fields)
+}
+
+// The caller owns this decoded provider map. The MediaInfo constructor moves
+// episode_groups out of tmdb_info, as it does for a decoded JSON input.
+func sourceTMDBModelFields(info map[string]any, kind, domain, category string) (map[string]any, error) {
 	mediaType, titleKey, originalKey, dateKey := "电影", "title", "original_title", "release_date"
 	if kind == "tv" {
 		mediaType, titleKey, originalKey, dateKey = "电视剧", "name", "original_name", "first_air_date"
@@ -35,7 +44,7 @@ func sourceTMDBMediaModel(raw json.RawMessage, kind, domain, category string) (j
 	delete(m, "recognize_cache_hit") // class default, absent from vars until assigned
 	m["source"], m["tmdb_info"], m["type"], m["tmdb_id"] = "themoviedb", info, mediaType, info["id"]
 	if !sourceSubscriptionTruth(m["tmdb_id"]) {
-		return json.Marshal(m)
+		return m, nil
 	}
 	if external := sourceMap(info["external_ids"]); len(external) > 0 {
 		m["tvdb_id"], m["imdb_id"] = external["tvdb_id"], external["imdb_id"]
@@ -129,5 +138,5 @@ func sourceTMDBMediaModel(raw json.RawMessage, kind, domain, category string) (j
 	if info["recognize_cache_hit"] == true {
 		m["recognize_cache_hit"] = true
 	}
-	return json.Marshal(m)
+	return m, nil
 }
