@@ -293,13 +293,6 @@ func (a *App) originalManualStorageScan(ctx context.Context, path string, in man
 		if !media && !candidate.Bluray && !(directory && classifier.Extra(class)) {
 			continue
 		}
-		// The publication layer still requires a real guarded source snapshot.
-		// A directory candidate is retained as a unit by the collector; it must
-		// never silently become a collection of unrelated STREAM video tasks.
-		stamp, err := sourceSnapshot(path, !candidate.Bluray && sourceText(item["type"]) == "file")
-		if err != nil {
-			return nil, err
-		}
 		frozen, err := originalTransferFrozenItem(item)
 		if err != nil {
 			return nil, err
@@ -308,7 +301,22 @@ func (a *App) originalManualStorageScan(ctx context.Context, path string, in man
 		if inherited[path] != "" {
 			metadataPath = inherited[path]
 		}
-		file := importScanFile{Path: path, Size: stamp.Size, Snapshot: &stamp, Parsed: a.parseMediaNameContext(ctx, filepath.Base(metadataPath)), originalItem: frozen, originalDirectoryListings: listings, originalDirectoryPlanned: directory, originalMetadataPath: metadataPath}
+		file := importScanFile{Path: path, Parsed: a.parseMediaNameContext(ctx, filepath.Base(metadataPath)), originalItem: frozen, originalDirectoryListings: listings, originalDirectoryPlanned: directory, originalMetadataPath: metadataPath}
+		if in.Interactive && in.Preview && directory && candidate.Bluray && class.Type == "dir" {
+			// The display plan measures and validates every member before rendering
+			// the target. Guard the selected root here without walking the disc twice.
+			dir, err := importDir(path, false)
+			if err != nil {
+				return nil, err
+			}
+			dir.Close()
+		} else {
+			stamp, err := sourceSnapshot(path, !candidate.Bluray && class.Type == "file")
+			if err != nil {
+				return nil, err
+			}
+			file.Size, file.Snapshot = stamp.Size, &stamp
+		}
 		if directory {
 			meta := metas[metadataPath]
 			if meta == nil {

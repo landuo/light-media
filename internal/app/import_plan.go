@@ -618,7 +618,22 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			}
 		}
 		if file.Status == "ready" {
-			locked, e := snapshotTransferPath(file.Source)
+			var locked importSnapshot
+			var e error
+			if request.displayPreview && request.originalDirectoryPlanned && class.Bluray {
+				// Disc member validation was deferred by the display-only collector.
+				// A root which changed into a file is no longer the selected disc.
+				locked, _, e = snapshotOriginalDirectory(file.Source)
+				if e != nil {
+					var apiErr *APIError
+					if errors.As(e, &apiErr) {
+						return plan, apiErr
+					}
+					return plan, bad("INVALID_FILE", "蓝光原盘成员不可访问、包含符号链接或不是普通文件")
+				}
+			} else {
+				locked, e = snapshotTransferPath(file.Source)
+			}
 			if e != nil {
 				block("源文件不可访问、包含符号链接或不是普通文件")
 			} else {

@@ -39,6 +39,20 @@ func snapshotTransferPath(path string) (importSnapshot, error) {
 	return stamp, err
 }
 
+// The walker already holds this entry's exact parent and checks that it is
+// still bound to the same path after collecting its members.
+func originalDirectoryMemberSnapshot(parent *os.File, name string) (importSnapshot, error) {
+	if !importPath(name) {
+		return importSnapshot{}, bad("INVALID_PATH", "文件路径无效")
+	}
+	file, info, err := importRegularAt(parent, name)
+	if err != nil {
+		return importSnapshot{}, err
+	}
+	defer file.Close()
+	return snapshot(info)
+}
+
 func snapshotOriginalDirectory(path string) (importSnapshot, []originalDirectoryEntry, error) {
 	entries := []originalDirectoryEntry{}
 	var size int64
@@ -78,7 +92,7 @@ func snapshotOriginalDirectory(path string) (importSnapshot, []originalDirectory
 			if entry.Directory {
 				entry.Snapshot, err = walk(name, depth+1)
 			} else {
-				entry.Snapshot, err = snapshotPath(name)
+				entry.Snapshot, err = originalDirectoryMemberSnapshot(dir, name)
 				size += entry.Snapshot.Size
 			}
 			if err != nil {
