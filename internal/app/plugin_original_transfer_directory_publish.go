@@ -206,8 +206,11 @@ func (a *App) publishOriginalDirectory(ctx context.Context, key string, file Pla
 	} else {
 		var actual importSnapshot
 		actual, entries, err = snapshotOriginalDirectory(file.Source)
-		if err != nil || actual != locked {
-			return receipt, bad("REVIEW_SOURCE_CHANGED", "目录内容与冻结快照不一致")
+		if err != nil || actual.Device != locked.Device || actual.Inode != locked.Inode {
+			return receipt, bad("REVIEW_SOURCE_CHANGED", "无法核对原盘来源，或原盘目录已被替换")
+		}
+		if actual != locked {
+			return receipt, a.changedDiscSource("蓝光原盘内容在生成整理计划后发生变化", entries)
 		}
 		if pair := originalTransferStorageFromContext(ctx); file.Method == "move" && pair != nil && pair.Source != nil && receipt.State == "planned" {
 			receipt.DirectoryStorageMove = &importDirectoryStorageMoveState{InstanceID: pair.Source.definition.InstanceID, Key: pair.Source.definition.Key, Entries: entries}
@@ -317,9 +320,12 @@ func (a *App) publishOriginalDirectory(ctx context.Context, key string, file Pla
 			if receipt.DirectoryStorageMove != nil {
 				return guardDirectoryStorageMoveRoot(receipt)
 			}
-			current, e := snapshotTransferPath(file.Source)
-			if e != nil || current != locked {
-				return bad("REVIEW_SOURCE_CHANGED", "目录整理期间源内容发生变化")
+			current, members, e := snapshotOriginalDirectory(file.Source)
+			if e != nil || current.Device != locked.Device || current.Inode != locked.Inode {
+				return bad("REVIEW_SOURCE_CHANGED", "整理期间无法核对原盘来源，或原盘目录已被替换")
+			}
+			if current != locked {
+				return a.changedDiscSource("整理期间蓝光原盘内容发生变化", members)
 			}
 			return nil
 		}

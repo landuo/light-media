@@ -54,15 +54,16 @@ type manualOrganizeRequest struct {
 	Background            bool     `json:"background"`
 }
 type manualOrganizeItem struct {
-	Source    string        `json:"source"`
-	Target    string        `json:"target,omitempty"`
-	Status    string        `json:"status"`
-	Error     string        `json:"error,omitempty"`
-	ErrorCode string        `json:"error_code,omitempty"`
-	Media     catalog.Media `json:"media"`
-	Mode      string        `json:"mode,omitempty"`
-	PlanID    string        `json:"plan_id,omitempty"`
-	JobID     string        `json:"job_id,omitempty"`
+	TemporaryFiles int           `json:"temporary_files,omitempty"`
+	Source         string        `json:"source"`
+	Target         string        `json:"target,omitempty"`
+	Status         string        `json:"status"`
+	Error          string        `json:"error,omitempty"`
+	ErrorCode      string        `json:"error_code,omitempty"`
+	Media          catalog.Media `json:"media"`
+	Mode           string        `json:"mode,omitempty"`
+	PlanID         string        `json:"plan_id,omitempty"`
+	JobID          string        `json:"job_id,omitempty"`
 }
 type manualOrganizeOutput struct {
 	Items            []manualOrganizeItem `json:"items"`
@@ -607,7 +608,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (out
 		}
 		if in.Preview {
 			for _, p := range plan.Files {
-				item := manualOrganizeItem{Source: p.Source, Target: p.Target, Status: "ready", Media: plan.Media, Mode: plan.Mode, PlanID: plan.ID}
+				item := manualOrganizeItem{Source: p.Source, Target: p.Target, Status: "ready", Media: plan.Media, Mode: plan.Mode, PlanID: plan.ID, TemporaryFiles: p.previewTemporaryFiles}
 				if p.Status == "blocked" {
 					item.Status = "failed"
 					item.Error = p.Reason

@@ -10,6 +10,7 @@ import FileManagerIcon from './FileManagerIcon.vue';
 import DirectoryPathPicker from './DirectoryPathPicker.vue';
 
 type OrganizeResultItem = {
+  temporary_files?: number;
   source: string;
   target?: string;
   status?: string;
@@ -807,6 +808,9 @@ onUnmounted(() => {
               </p>
               <p v-if="row.target">
                 整理后 <span>{{ row.target }}</span>
+              </p>
+              <p v-if="resultIsPreview && row.temporary_files">
+                盘内有 {{ row.temporary_files }} 个带下载临时后缀的文件，手动整理会一并处理。如果仍在下载，可等下载完成后再整理。
               </p>
               <small v-if="row.mode">{{ label(row.mode) }}</small>
               <p v-if="row.error || row.reason" class="preview-failure">

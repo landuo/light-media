@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -12,9 +13,38 @@ import (
 	"light-media/internal/transferextensions"
 )
 
-// Only the automatic monitor opts into disc-root grouping. Its ordinary scanner
-// and browser callers keep their existing file selection behavior. A recognized
-// disc with an unfinished member or no media stream is skipped as a whole.
+// Both the monitor and the manual preview interpret temporary extensions from
+// the same configured list. Only the monitor uses their presence to defer work.
+func (a *App) countDiscTemporaryFiles(entries []originalDirectoryEntry) (int, error) {
+	suffixes, err := a.downloadTemporaryExtensions()
+	if err != nil {
+		return 0, err
+	}
+	count := 0
+	for _, entry := range entries {
+		if entry.Directory {
+			continue
+		}
+		ext := filepath.Ext(entry.Path)
+		for _, suffix := range suffixes {
+			if strings.EqualFold(ext, suffix) {
+				count++
+				break
+			}
+		}
+	}
+	return count, nil
+}
+
+// A temporary suffix can also belong to an unselected torrent member. Report
+// it as context only after a real change to the same disc has been confirmed.
+func (a *App) changedDiscSource(message string, entries []originalDirectoryEntry) error {
+	if n, err := a.countDiscTemporaryFiles(entries); err == nil && n > 0 {
+		return bad("REVIEW_SOURCE_CHANGED", fmt.Sprintf("%s，盘内有 %d 个下载临时文件。请在所需文件下载完成后重新整理", message, n))
+	}
+	return bad("REVIEW_SOURCE_CHANGED", message+"，请确认源文件已稳定，再重新整理")
+}
+
 func (a *App) automaticDiscCandidate(ctx context.Context, path string, classifier transferextensions.Classifier, unchanged func(string, importSnapshot) bool) (*importScanFile, bool, error) {
 	disc, err := a.originalTransferIsBluray(ctx, map[string]any{"storage": "local", "type": "dir", "path": path})
 	if err != nil || !disc {
@@ -24,8 +54,8 @@ func (a *App) automaticDiscCandidate(ctx context.Context, path string, classifie
 	if err != nil {
 		return nil, true, err
 	}
-	temporary, err := a.downloadTemporaryExtensions()
-	if err != nil {
+	temporary, err := a.countDiscTemporaryFiles(entries)
+	if err != nil || temporary > 0 {
 		return nil, true, err
 	}
 	hasStream := false
@@ -33,16 +63,13 @@ func (a *App) automaticDiscCandidate(ctx context.Context, path string, classifie
 		if entry.Directory {
 			continue
 		}
-		ext := filepath.Ext(entry.Path)
-		for _, suffix := range temporary {
-			if strings.EqualFold(ext, suffix) {
-				return nil, true, nil
-			}
-		}
-		if !hasStream && strings.HasPrefix(strings.ToLower(filepath.ToSlash(entry.Path)), "bdmv/stream/") {
+		if strings.HasPrefix(strings.ToLower(filepath.ToSlash(entry.Path)), "bdmv/stream/") {
 			hasStream, err = classifier.Media(transferextensions.PathFile(entry.Path))
 			if err != nil {
 				return nil, true, err
+			}
+			if hasStream {
+				break
 			}
 		}
 	}

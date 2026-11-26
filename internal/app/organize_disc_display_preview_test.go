@@ -84,3 +84,54 @@ func TestInteractiveDiscPreviewValidatesMembersWhenPlanning(t *testing.T) {
 		t.Fatalf("preview wrote library files: %v %v", children, err)
 	}
 }
+
+func TestDiscTemporaryNamesAppearOnlyInTheirPreviewAndAllowManualTransfer(t *testing.T) {
+	a, source, library := importTestApp(t)
+	ctx := t.Context()
+	tv := importFixture(t, a, "tv")
+	organizeGroupFixture(t, a)
+	t.Setenv("DOWNLOAD_TMPEXT", `[".!qb",".workpiece"]`)
+	release := filepath.Join(source, "Fallout.S01.2160p.UHD.Blu-ray")
+	disc := filepath.Join(release, "Disc 3")
+	for _, path := range []string{
+		"Disc 1/BDMV/STREAM/00001.m2ts",
+		"Disc 3/BDMV/STREAM/00001.m2ts",
+		"Disc 3/BDMV/STREAM/00002.m2ts.!qB",
+		"Disc 3/BDMV/index.bdmv.WORKPIECE",
+		"Disc 3/BDMV/notes.part",
+		"Disc 3/BDMV/folder.!qb/notes.txt",
+	} {
+		importWrite(t, filepath.Join(release, path), []byte(path))
+	}
+	season := 1
+	request := manualOrganizeRequest{Paths: []string{release}, TargetPath: library, MediaType: "tv", TMDBID: tv.ID, Season: &season, Mode: "hardlink", Scraping: importFlag(false), Interactive: true, Preview: true}
+	out, err := a.manualOrganize(ctx, request)
+	if err != nil || out.Failed != 0 || out.Submitted != 0 || len(out.Items) != 2 {
+		t.Fatalf("preview: %+v, %v", out, err)
+	}
+	for _, item := range out.Items {
+		want := 0
+		if item.Source == disc {
+			want = 2
+		}
+		if item.Status != "ready" || item.TemporaryFiles != want || item.Media.ID != tv.ID {
+			t.Fatalf("%s: expected %d temporary names, got %+v", item.Source, want, item)
+		}
+	}
+
+	// The operator can explicitly transfer a stable selection with such names.
+	request.Paths = []string{disc}
+	request.Preview, request.Interactive = false, false
+	out, err = a.manualOrganize(ctx, request)
+	if err != nil || out.Failed != 0 || out.Submitted != 1 || len(out.Items) != 1 {
+		t.Fatalf("manual transfer: %+v, %v", out, err)
+	}
+	_, job := historyUpsertAttempt(t, a, out.Items[0].JobID)
+	runEpisodeGroupJob(t, a, job)
+	member := "BDMV/STREAM/00002.m2ts.!qB"
+	src, srcErr := os.Stat(filepath.Join(disc, member))
+	dst, dstErr := os.Stat(filepath.Join(out.Items[0].Target, member))
+	if srcErr != nil || dstErr != nil || !os.SameFile(src, dst) {
+		t.Fatalf("explicit transfer did not hardlink its selected member: %v %v", srcErr, dstErr)
+	}
+}

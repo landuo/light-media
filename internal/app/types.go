@@ -281,6 +281,7 @@ type Asset struct {
 	MissingSeenAt       string                  `json:"missing_seen_at"`
 }
 type PlanFile struct {
+	previewTemporaryFiles   int                     // Informational, for the interactive disc preview only.
 	EpisodeScopes           []canonicalEpisodeScope `json:"episode_scopes,omitempty"`
 	GroupNumbering          *importGroupNumbering   `json:"group_numbering,omitempty"`
 	DirectoryDigest         string                  `json:"directory_digest,omitempty"`

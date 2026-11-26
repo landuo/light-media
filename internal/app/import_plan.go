@@ -623,7 +623,8 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			if request.displayPreview && request.originalDirectoryPlanned && class.Bluray {
 				// Disc member validation was deferred by the display-only collector.
 				// A root which changed into a file is no longer the selected disc.
-				locked, _, e = snapshotOriginalDirectory(file.Source)
+				var entries []originalDirectoryEntry
+				locked, entries, e = snapshotOriginalDirectory(file.Source)
 				if e != nil {
 					var apiErr *APIError
 					if errors.As(e, &apiErr) {
@@ -631,6 +632,9 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					}
 					return plan, bad("INVALID_FILE", "蓝光原盘成员不可访问、包含符号链接或不是普通文件")
 				}
+				// Manual transfers include these members. The preview can flag them
+				// from this same walk without changing admission or snapshot identity.
+				file.previewTemporaryFiles, _ = a.countDiscTemporaryFiles(entries)
 			} else {
 				locked, e = snapshotTransferPath(file.Source)
 			}

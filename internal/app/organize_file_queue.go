@@ -288,16 +288,33 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 		}
 	}
 	if !a.importSourceAllowed(file.Path, true) || browserInternal(file.Path) {
-		return fail(bad("REVIEW_SOURCE_CHANGED", "源文件不在允许目录内"))
+		return fail(bad("INVALID_SOURCE", "源路径不在当前允许整理的目录内，请检查目录设置"))
 	}
-	stamp, err := snapshotTransferPath(file.Path)
+	disc := item.Snapshot.Directory != "" || file.isOriginalDisc()
+	var stamp importSnapshot
+	var entries []originalDirectoryEntry
+	var err error
+	if disc && item.Directory == nil {
+		stamp, entries, err = snapshotOriginalDirectory(file.Path)
+	} else {
+		stamp, err = snapshotTransferPath(file.Path)
+	}
 	if item.Directory != nil && (errors.Is(err, os.ErrNotExist) || err == nil && stamp != item.Snapshot) {
 		// This automatic event no longer describes a file to organize. The
 		// monitor will observe the replacement separately, if one exists.
 		return bad("DIRECTORY_SOURCE_GONE", "自动整理的源文件已移除或更换，已跳过")
 	}
-	if err != nil || stamp != item.Snapshot {
-		return fail(bad("REVIEW_SOURCE_CHANGED", "源文件已移除、发生变化或不在允许目录内"))
+	if err != nil {
+		return fail(queuedSourceReadError(file.Path, disc, err))
+	}
+	if stamp != item.Snapshot {
+		if disc {
+			if stamp.Device != item.Snapshot.Device || stamp.Inode != item.Snapshot.Inode {
+				return fail(bad("REVIEW_SOURCE_CHANGED", "入队时选择的蓝光原盘目录已被替换，请重新选择目录"))
+			}
+			return fail(a.changedDiscSource("蓝光原盘内容在入队后发生变化", entries))
+		}
+		return fail(bad("REVIEW_SOURCE_CHANGED", "源文件在入队后发生变化，请重新选择文件整理"))
 	}
 	if item.Directory != nil {
 		return a.runDirectoryOrganizeFile(ctx, item, file, &known, fail)
@@ -349,6 +366,29 @@ func (a *App) runOrganizeFile(ctx context.Context, job Job) error {
 		return fail(bad("REVIEW_ORGANIZE_SELECTION", "文件不符合本次整理条件"))
 	}
 	return nil
+}
+
+func queuedSourceReadError(path string, disc bool, err error) error {
+	if errors.Is(err, os.ErrNotExist) {
+		if disc {
+			// A disappearing child during a recursive walk is not evidence
+			// that the selected disc root was removed.
+			if _, statErr := os.Lstat(path); statErr == nil {
+				return bad("REVIEW_SOURCE_CHANGED", "蓝光原盘成员在检查时发生变化，请确认下载完成，再重新整理")
+			} else if !errors.Is(statErr, os.ErrNotExist) {
+				return bad("INVALID_FILE", "无法读取所选蓝光原盘，请检查源目录和读取权限")
+			}
+		}
+		return bad("TRANSFER_SOURCE_MISSING", "入队时选择的源路径已不存在，请检查下载目录")
+	}
+	if errors.Is(err, os.ErrPermission) {
+		return bad("INVALID_FILE", "无法读取所选源文件或目录，请检查读取权限")
+	}
+	var api *APIError
+	if errors.As(err, &api) {
+		return api
+	}
+	return bad("INVALID_FILE", "无法读取所选源文件或目录，请检查文件类型和读取权限")
 }
 
 func organizeFileInterrupted(err error) bool {

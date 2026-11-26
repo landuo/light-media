@@ -471,6 +471,29 @@ function renderedText(node) {
   return renderedText(node.children);
 }
 
+test('disc previews explain temporary members only on the affected disc', async (t) => {
+  const dialog = openDialog(
+    t,
+    {},
+    {
+      api: async () => ({
+        items: [
+          { source: '/source/Disc 1', status: 'ready' },
+          { source: '/source/Disc 3', status: 'ready', temporary_files: 4 },
+        ],
+        total: 2,
+        submitted: 0,
+        failed: 0,
+      }),
+    },
+  );
+  await dialog.preview();
+  const rows = dialog.nodes().filter((node) => node.props?.class === 'preview-file');
+  assert.equal(rows.length, 2);
+  assert.doesNotMatch(renderedText(rows[0]), /临时后缀/);
+  assert.match(renderedText(rows[1]), /4 个带下载临时后缀的文件，手动整理会一并处理/);
+});
+
 test('preview remains an action and every later click requests current form values again', async (t) => {
   const dialog = openDialog(
     t,
