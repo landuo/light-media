@@ -63,37 +63,43 @@ func (a *App) notifyFailed(ctx context.Context, j Job, message string) {
 	_ = a.Store.Put(ctx, "notification", n.ID, n)
 }
 
-const notificationOrderIndex = `CREATE INDEX IF NOT EXISTS notification_time_uid ON message(updated_at DESC,uid) WHERE record_kind='notification'`
-const notificationListSQL = `SELECT payload FROM message INDEXED BY notification_time_uid WHERE record_kind='notification' ORDER BY updated_at DESC,uid LIMIT ?`
-const notificationUnreadSQL = `SELECT COUNT(*) FROM message INDEXED BY notification_unread WHERE record_kind='notification' AND read=0`
+const notificationOrderIndex = `CREATE INDEX IF NOT EXISTS notification_read_time_uid ON message(read,updated_at DESC,uid) WHERE record_kind='notification'`
+const notificationUnreadSQL = `SELECT COUNT(*) FROM message INDEXED BY notification_read_time_uid WHERE record_kind='notification' AND read=0`
+const notificationListSQL = `SELECT payload,(` + notificationUnreadSQL + `) FROM message INDEXED BY notification_read_time_uid
+ WHERE record_kind='notification' ORDER BY read ASC NULLS LAST,updated_at DESC,uid LIMIT ?`
 
 func (a *App) notifications(ctx context.Context) (any, error) {
-	// The literal kind allows SQLite to select the notification-only ordering
-	// index. Pin this dedicated read to its startup-created index: SQLite can
-	// otherwise prefer the primary key and sort the entire history before LIMIT.
-	// Other record kinds may contain encrypted, non-JSON payloads.
-	items, e := a.Store.listRecordPayloads(ctx, notificationListSQL, 100)
-	if e != nil {
-		return nil, e
+	// The scalar count and the ordered page share one SQLite snapshot. A
+	// notification arriving during a poll cannot produce a badge without a row.
+	rows, err := a.Store.reader().QueryContext(ctx, notificationListSQL, 100)
+	if err != nil {
+		return nil, err
 	}
-	for i, raw := range items {
+	defer rows.Close()
+	items := []json.RawMessage{}
+	var unread int
+	for rows.Next() {
+		var raw []byte
+		if err := rows.Scan(&raw, &unread); err != nil {
+			return nil, err
+		}
 		var record notificationRecord
-		if e = json.Unmarshal(raw, &record); e != nil {
-			return nil, e
+		if err := json.Unmarshal(raw, &record); err != nil {
+			return nil, err
 		}
 		n, err := a.openNotification(record)
 		if err != nil {
 			return nil, err
 		}
-		items[i], e = json.Marshal(n)
-		if e != nil {
-			return nil, e
+		content, err := json.Marshal(n)
+		if err != nil {
+			return nil, err
 		}
+		items = append(items, content)
 	}
-	var unread int
-	e = a.Store.reader().QueryRowContext(ctx, notificationUnreadSQL).Scan(&unread)
-	return map[string]any{"items": items, "unread": unread}, e
+	return map[string]any{"items": items, "unread": unread}, rows.Err()
 }
+
 func (a *App) notificationAPI(r *http.Request, p string) (any, error) {
 	if p == "read-all" && r.Method == http.MethodPost {
 		// Keep history order, encrypted content and non-notification messages intact.

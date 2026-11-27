@@ -148,6 +148,73 @@ test('failed bulk read keeps the panel and unread items for retry', async () => 
   h.close();
 });
 
+test('opening a bell lit only by a background task immediately selects the task tab', async () => {
+  const list = deferred();
+  const h = mount({
+    '/status?view=navigation': { has_unread: true },
+    '/notifications': list.promise,
+  });
+  await h.app.bootstrap();
+  await flush();
+  assert.equal(h.app.hasUnreadTasks.value, true);
+  const opening = h.app.toggleNotifications();
+  assert.equal(h.app.notificationTab.value, 'tasks');
+  assert.equal(h.app.notificationsLoading.value, true);
+  list.resolve({ unread: 1, items: [{ id: 'task', title: '后台通知', read: false }] });
+  await opening;
+  assert.equal(h.app.notifications.value.items[0].id, 'task');
+  assert.equal(h.app.notificationsLoading.value, false);
+  await h.app.toggleNotifications();
+  assert.equal(h.requests.filter((r) => r === '/notifications').length, 1);
+  h.close();
+});
+
+test('a late task count selects the unread tab unless the reader selected a tab first', async () => {
+  for (const manual of [false, true]) {
+    const list = deferred();
+    const h = mount({ '/notifications': list.promise });
+    await h.app.bootstrap();
+    const opening = h.app.toggleNotifications();
+    if (manual) h.app.selectNotificationTab('system');
+    list.resolve({ unread: 1, items: [{ id: 'one', read: false }] });
+    await opening;
+    assert.equal(h.app.notificationTab.value, manual ? 'system' : 'tasks');
+    h.close();
+  }
+});
+
+test('an unread system message opens its tab even when there are also unread tasks', async () => {
+  const h = mount({ '/notifications': { unread: 2, items: [{ id: 'one' }, { id: 'two' }] } });
+  await h.app.bootstrap();
+  h.app.systemMessages.value = { items: [{ id: 1, read: false }], hasNew: true };
+  h.app.hasUnreadTasks.value = true;
+  await h.app.toggleNotifications();
+  assert.equal(h.app.notificationTab.value, 'system');
+  h.close();
+});
+
+test('notification history errors retain the unread badge until a successful retry', async () => {
+  let fail = true;
+  const h = mount({
+    '/status?view=navigation': { has_unread: true },
+    '/notifications': () => {
+      if (fail) throw Error('history read failed');
+      return { unread: 0, items: [] };
+    },
+  });
+  await h.app.bootstrap();
+  await flush();
+  await h.app.toggleNotifications();
+  assert.match(h.app.notificationError.value, /history read failed/);
+  assert.equal(h.app.notificationsLoading.value, false);
+  assert.equal(h.app.hasUnreadTasks.value, true);
+  fail = false;
+  await h.app.loadNotifications();
+  assert.equal(h.app.notificationError.value, '');
+  assert.equal(h.app.hasUnreadTasks.value, false);
+  h.close();
+});
+
 test('slow settings and statistics do not block independent browsing or plugin startup', async () => {
   const settings = deferred(),
     stats = deferred();

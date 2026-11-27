@@ -142,14 +142,54 @@ function systemMessageRelativeTime(date: string | null, _renderTick: number) {
 let authGeneration = 0;
 let notificationRead = 0;
 const hasUnreadTasks = ref(false);
+const notificationsLoading = ref(false);
+const notificationError = ref('');
+let notificationTabChosen = false;
+function chooseNotificationTab() {
+  if (systemMessages.value.hasNew) return 'system';
+  if (hasUnreadTasks.value) return 'tasks';
+  if (
+    !systemMessages.value.items.length &&
+    (notifications.value.items.length || notificationError.value)
+  ) return 'tasks';
+  return 'system';
+}
+function selectNotificationTab(tab: 'system' | 'tasks') {
+  notificationTabChosen = true;
+  notificationTab.value = tab;
+}
+async function toggleNotifications() {
+  notificationsOpen.value = !notificationsOpen.value;
+  if (!notificationsOpen.value) return;
+  notificationTabChosen = false;
+  notificationTab.value = chooseNotificationTab();
+  await loadNotifications();
+}
 async function loadNotifications() {
   const request = ++notificationRead;
-  notificationTime.value = Date.now();
   const generation = authGeneration;
-  const result = await api('/notifications', undefined, 'GET', undefined, true);
-  if (generation === authGeneration && request === notificationRead && auth.value?.authenticated) {
+  const current = () =>
+    generation === authGeneration && request === notificationRead && auth.value?.authenticated;
+  notificationTime.value = Date.now();
+  notificationsLoading.value = true;
+  notificationError.value = '';
+  try {
+    const result = await readSession('/notifications', true);
+    if (!current()) return false;
+    if (!Array.isArray(result?.items) || !Number.isSafeInteger(result.unread) || result.unread < 0)
+      throw new Error('后台通知响应无效');
     notifications.value = result;
     hasUnreadTasks.value = result.unread > 0;
+    return true;
+  } catch (e) {
+    if (current()) notificationError.value = errorText(e);
+    return false;
+  } finally {
+    if (current()) {
+      notificationsLoading.value = false;
+      if (notificationsOpen.value && !notificationTabChosen)
+        notificationTab.value = chooseNotificationTab();
+    }
   }
 }
 const markingNotificationsRead = ref(false);
@@ -163,8 +203,8 @@ async function readAllNotifications() {
       await api('/notifications/read-all', {});
       if (generation !== authGeneration) return;
       systemMessageFeed.markAllRead(through);
-      await loadNotifications();
-      if (generation === authGeneration) notificationsOpen.value = false;
+      if ((await loadNotifications()) && generation === authGeneration)
+        notificationsOpen.value = false;
     });
   } finally {
     if (generation === authGeneration) markingNotificationsRead.value = false;
@@ -298,6 +338,8 @@ function expired() {
   authGeneration++;
   systemMessageFeed.setAuthenticated(false);
   markingNotificationsRead.value = false;
+  notificationsLoading.value = false;
+  notificationError.value = '';
   hasUnreadTasks.value = false;
   notifications.value = { items: [], unread: 0 };
   notificationsOpen.value = false;
@@ -389,6 +431,11 @@ async function logout() {
   expired();
   await action(() => api('/auth/logout', {}));
 }
+function refreshVisibleNotifications() {
+  if (document.hidden || !businessReady.value) return;
+  if (!notificationsOpen.value) void loadStatus();
+  else if (!notificationsLoading.value) void loadNotifications();
+}
 let stopInterfaceMode = () => {};
 onMounted(() => {
   stopInterfaceMode = observeInterfaceEnvironment();
@@ -396,6 +443,7 @@ onMounted(() => {
   window.addEventListener('hashchange', change);
   window.addEventListener('session-expired', expired);
   window.addEventListener('keydown', searchShortcut);
+  document.addEventListener('visibilitychange', refreshVisibleNotifications);
   bootstrap();
 });
 onUnmounted(() => {
@@ -406,6 +454,7 @@ onUnmounted(() => {
   window.removeEventListener('hashchange', change);
   window.removeEventListener('session-expired', expired);
   window.removeEventListener('keydown', searchShortcut);
+  document.removeEventListener('visibilitychange', refreshVisibleNotifications);
 });
 </script>
 <template>
@@ -549,10 +598,7 @@ onUnmounted(() => {
             class="bell-button"
             aria-label="通知中心"
             :aria-expanded="notificationsOpen"
-            @click="
-              notificationsOpen = !notificationsOpen;
-              loadNotifications().catch(() => {});
-            "
+            @click="toggleNotifications"
           >
             <AppIcon name="bell" /><span
               v-if="systemMessages.hasNew || hasUnreadTasks"
@@ -613,7 +659,7 @@ onUnmounted(() => {
             role="tab"
             :aria-selected="notificationTab === 'system'"
             aria-controls="system-message-list"
-            @click="notificationTab = 'system'"
+            @click="selectNotificationTab('system')"
           >
             系统消息<span
               v-if="systemMessages.hasNew"
@@ -626,11 +672,15 @@ onUnmounted(() => {
             role="tab"
             :aria-selected="notificationTab === 'tasks'"
             aria-controls="task-notification-list"
-            @click="notificationTab = 'tasks'"
+            @click="selectNotificationTab('tasks')"
           >
-            后台任务<span v-if="notifications.unread" class="badge">{{
+            后台任务<span v-if="hasUnreadTasks && notifications.unread" class="badge">{{
               notifications.unread
-            }}</span>
+            }}</span><span
+              v-else-if="hasUnreadTasks"
+              class="tab-unread-dot"
+              aria-label="有未读后台通知"
+            ></span>
           </button>
         </div>
         <div
@@ -657,7 +707,7 @@ onUnmounted(() => {
           </article>
           <div v-if="!systemMessages.items.length" class="empty-state">
             <VIcon icon="mdi-bell-sleep-outline" size="40" />
-            <p>暂无通知</p>
+            <p>暂无系统消息</p>
           </div>
         </div>
         <div
@@ -666,13 +716,19 @@ onUnmounted(() => {
           class="notification-list-container"
           role="tabpanel"
           aria-labelledby="task-notification-tab"
+          :aria-busy="notificationsLoading"
         >
+          <div v-if="notificationError" class="service-alert" role="alert">
+            读取后台通知失败：{{ notificationError }}
+            <button class="small" @click="loadNotifications()">重试</button>
+          </div>
+          <p v-else-if="notificationsLoading" class="muted" role="status">正在读取后台通知…</p>
           <article
             v-for="n in notifications.items || []"
             :key="n.id"
             :class="['notification-item', { unread: !n.read && !n.read_at }]"
           >
-            <strong>{{ n.title || '后台任务失败' }}</strong>
+            <strong>{{ n.title || '后台通知' }}</strong>
             <p>{{ n.message || n.error_message }}</p>
             <small>{{ date(n.created_at || n.time) }}</small>
             <div class="button-row">
@@ -683,9 +739,11 @@ onUnmounted(() => {
               </button>
             </div>
           </article>
-          <div v-if="!notifications.items?.length" class="empty-state">
-            <h3>暂时没有后台失败通知</h3>
-            <p>后台任务失败后会在这里持续保留，便于你回来处理。</p>
+          <div
+            v-if="!notificationsLoading && !notificationError && !notifications.items.length"
+            class="empty-state"
+          >
+            <h3>暂无后台通知</h3>
           </div>
         </div>
       </section>

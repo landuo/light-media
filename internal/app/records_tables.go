@@ -128,6 +128,7 @@ var mpTables = map[string]recordTable{
 			`CREATE INDEX IF NOT EXISTS notification_unread ON message(read)`,
 			`CREATE INDEX IF NOT EXISTS notification_display_order ON message(updated_at DESC,id)`,
 			notificationOrderIndex,
+			`DROP INDEX IF EXISTS notification_time_uid`,
 		}},
 	"subscribe": {name: "subscribe", mp: true, ddl: `CREATE TABLE IF NOT EXISTS subscribe(
  id INTEGER PRIMARY KEY AUTOINCREMENT, uid TEXT NOT NULL UNIQUE,

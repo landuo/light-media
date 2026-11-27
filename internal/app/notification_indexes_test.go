@@ -15,8 +15,8 @@ func assertNotificationQueryPlans(t *testing.T, s *Store) {
 		query, index string
 		args         []any
 	}{
-		{notificationListSQL, "notification_time_uid", []any{100}},
-		{notificationUnreadSQL, "notification_unread", nil},
+		{notificationListSQL, "notification_read_time_uid", []any{100}},
+		{notificationUnreadSQL, "notification_read_time_uid", nil},
 	} {
 		rows, err := s.reader().QueryContext(t.Context(), "EXPLAIN QUERY PLAN "+tc.query, tc.args...)
 		if err != nil {
@@ -49,7 +49,9 @@ func TestNotificationIndexesUpgradeEncryptedStoreAndReadState(t *testing.T) {
 		t.Fatal(err)
 	}
 	ctx := context.Background()
-	if _, err = s.DB.ExecContext(ctx, `DROP INDEX notification_time_uid; DROP INDEX notification_unread; INSERT INTO plugin_record VALUES('encrypted-fixture','main',x'FFFEFD','2020')`); err != nil {
+	if _, err = s.DB.ExecContext(ctx, `DROP INDEX notification_read_time_uid;
+ CREATE INDEX notification_time_uid ON message(updated_at DESC,uid) WHERE record_kind='notification';
+ DROP INDEX notification_unread; INSERT INTO plugin_record VALUES('encrypted-fixture','main',x'FFFEFD','2020')`); err != nil {
 		t.Fatal(err)
 	}
 	for _, id := range []string{"b", "a"} {
@@ -95,6 +97,40 @@ func TestNotificationIndexesUpgradeEncryptedStoreAndReadState(t *testing.T) {
 	raw, err = a.notifications(ctx)
 	if err != nil || raw.(map[string]any)["unread"] != 0 {
 		t.Fatalf("delete index stale: %v %v", raw, err)
+	}
+}
+
+func TestNotificationListIncludesOldUnreadBeforeRecentReadHistory(t *testing.T) {
+	a := newTestApp(t)
+	cookie := setupTestAdmin(t, a)
+	if _, err := a.Store.DB.ExecContext(t.Context(), `WITH RECURSIVE n(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM n WHERE x<104)
+ INSERT INTO message(record_kind,uid,payload,updated_at)
+ SELECT 'notification','n'||x,json_object('id','n'||x,'read',json(CASE WHEN x=1 THEN 'false' ELSE 'true' END)),printf('%03d',x) FROM n`); err != nil {
+		t.Fatal(err)
+	}
+	assertNotificationQueryPlans(t, a.Store)
+	for _, wantUnread := range []int{1, 0} {
+		res := callTest(t, a.Handler(), "GET", "/api/notifications", "", cookie, "")
+		var page struct {
+			Data struct {
+				Items  []Notification
+				Unread int
+			}
+		}
+		if err := json.Unmarshal(res.Body.Bytes(), &page); err != nil || res.Code != 200 || page.Data.Unread != wantUnread || len(page.Data.Items) != 100 {
+			t.Fatalf("unexpected notifications response: status=%d unread=%d len=%d err=%v", res.Code, page.Data.Unread, len(page.Data.Items), err)
+		}
+		items := page.Data.Items
+		if wantUnread == 1 {
+			if items[0].Read || items[0].ID != "n1" || items[1].ID != "n104" || items[99].ID != "n6" {
+				t.Fatal("old unread notification missing or read history out of order")
+			}
+			if ack := callTest(t, a.Handler(), "POST", "/api/notifications/read-all", "{}", cookie, ""); ack.Code != 200 {
+				t.Fatal(ack.Code)
+			}
+		} else if !items[0].Read || items[0].ID != "n104" || items[99].ID != "n5" {
+			t.Fatal("all-read history no longer in chronological order")
+		}
 	}
 }
 
@@ -147,7 +183,7 @@ func TestNotificationPollIndexedLargeHistory(t *testing.T) {
 	ctx := t.Context()
 	// Populate a previously deployed database before adding the indexes, so
 	// startup migration cost is measured separately from the indexed poll.
-	if _, err := a.Store.DB.ExecContext(ctx, `DROP INDEX notification_time_uid; DROP INDEX notification_unread;
+	if _, err := a.Store.DB.ExecContext(ctx, `DROP INDEX notification_read_time_uid; DROP INDEX notification_unread;
  WITH RECURSIVE n(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM n WHERE x<100000)
  INSERT INTO message(record_kind,uid,payload,updated_at) SELECT 'notification','notice-'||x,json_object('id','notice-'||x,'read',json('false'),'message',printf('%0500d',0)),printf('%020d',x) FROM n`); err != nil {
 		t.Fatal(err)
