@@ -29,7 +29,22 @@ func (a *App) logSite(s SiteStatus, wf string) {
 	if s.Status == "failed" || s.Status == "partial" || s.Status == "timeout" {
 		level = "WARN"
 	}
-	a.writeLog(map[string]any{"id": id("log_"), "time": now(), "level": level, "module": "sites", "event": "search_result", "message": a.clean(fmt.Sprintf("站点结果：%s，%d个候选，耗时%dms，%s", s.Status, s.Count, s.ElapsedMS, s.Message)), "site_id": s.ID, "workflow_id": wf})
+	name := s.ID
+	for _, site := range a.settingsSnapshot().Sites {
+		if site.ID == s.ID && site.Name != "" {
+			name = site.Name
+			break
+		}
+	}
+	result := map[string]string{"ok": "完成", "empty": "未找到资源", "failed": "失败", "timeout": "超时", "cancelled": "已停止", "partial": "返回部分结果"}[s.Status]
+	if result == "" {
+		result = s.Status
+	}
+	message := fmt.Sprintf("搜索站点「%s」%s，找到 %d 个候选资源", name, result, s.Count)
+	if s.Message != "" {
+		message += "。" + s.Message
+	}
+	a.writeLog(map[string]any{"id": id("log_"), "time": now(), "level": level, "module": "sites", "event": "search_result", "message": message, "duration_ms": s.ElapsedMS, "site_id": s.ID, "workflow_id": wf})
 }
 func (a *App) saveDecision(ctx context.Context, out SearchOutput, m catalog.Media) {
 	candidates := out.Candidates

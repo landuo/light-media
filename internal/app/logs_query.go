@@ -444,7 +444,7 @@ func (a *App) queryLogs(ctx context.Context, q map[string]string) (logPage, erro
 				page.Gap = true
 				continue
 			}
-			if len(fastNeedle) > 0 && !bytes.Contains(b, []byte(`\u`)) && !bytes.Contains(bytes.ToLower(b), fastNeedle) {
+			if len(fastNeedle) > 0 && !bytes.Contains(b, []byte(`\u`)) && !bytes.Contains(bytes.ToLower(b), fastNeedle) && !bytes.Contains(b, []byte("外部接口请求")) {
 				continue
 			}
 			var v map[string]any
@@ -452,6 +452,7 @@ func (a *App) queryLogs(ctx context.Context, q map[string]string) (logPage, erro
 				page.Gap = true
 				continue
 			}
+			describeApplicationLog(v)
 			t, _ := v["time"].(string)
 			if !fromTime.IsZero() && t != "" {
 				if ts, parseErr := time.Parse(time.RFC3339Nano, t); parseErr == nil {

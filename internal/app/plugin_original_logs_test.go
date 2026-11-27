@@ -221,6 +221,9 @@ func TestOriginalInstanceLogActualSDKCloneHistoryStreamAndExports(t *testing.T) 
 	if plain.Code != 200 || !strings.Contains(plain.Body.String(), "owned source only") || strings.Contains(plain.Body.String(), "owned sibling") {
 		t.Fatal("actual worker text export mixed siblings")
 	}
+	if !strings.Contains(plain.Body.String(), instance+" · 调用 write - owned source only") {
+		t.Fatal("plugin export lost the instance or operation responsible for the message")
+	}
 	archive := callTest(t, a.Handler(), "GET", "/api/plugins/"+instance+"/logs/download", "", cookie, "")
 	z, err := zip.NewReader(bytes.NewReader(archive.Body.Bytes()), int64(archive.Body.Len()))
 	if archive.Code != 200 || err != nil || len(z.File) != 1 {

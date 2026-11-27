@@ -58,11 +58,11 @@ func (a *App) originalHostMediaResource(ctx context.Context, scope originalBaseC
 	if err != nil {
 		var serviceError *fnos.ServiceError
 		if errors.As(err, &serviceError) {
-			a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "media_server_"+serviceError.Code, serviceError.Error())
+			a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "media_server_"+serviceError.Code, pluginHostLogActions[method]+"失败："+serviceError.Error())
 		} else {
 			var api *APIError
 			if errors.As(err, &api) {
-				a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "media_host_"+api.Code, "媒体宿主调用失败："+api.Code)
+				a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "media_host_"+api.Code, pluginHostLogActions[method]+"失败："+api.Message+" ["+api.Code+"]")
 			}
 		}
 		return nil, err
@@ -179,7 +179,7 @@ func (a *App) originalHostMediaRefresh(ctx context.Context, scope originalBaseCa
 		}
 		var source *fnos.ServiceError
 		if errors.As(err, &source) {
-			a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "media_server_"+source.Code, source.Error())
+			a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "media_server_"+source.Code, "刷新媒体库失败："+source.Error())
 			value := false
 			result.Result = &value
 			return result, nil

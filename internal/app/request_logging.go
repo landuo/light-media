@@ -9,7 +9,8 @@ import (
 
 type statusWriter struct {
 	http.ResponseWriter
-	status int
+	status    int
+	errorCode string
 }
 
 func (w *statusWriter) Unwrap() http.ResponseWriter { return w.ResponseWriter }
@@ -56,18 +57,13 @@ func (a *App) requestLogged(next http.Handler) http.Handler {
 		if status == 0 {
 			status = 200
 		}
-		module := strings.Split(strings.TrimPrefix(r.URL.Path, "/api/"), "/")[0]
-		if strings.HasPrefix(r.URL.Path, "/api/v1/plugin/") || strings.HasPrefix(r.URL.Path, "/api/v2/plugin/") {
-			module = "plugins"
+		method := r.Method
+		switch method {
+		case "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS":
+		default:
+			method = "OTHER"
 		}
-		allowed := map[string]bool{"auth": true, "ready": true, "status": true, "settings": true, "catalog": true, "search": true, "downloads": true, "subscriptions": true, "calendar": true, "schedule": true, "import": true, "assets": true, "jobs": true, "logs": true, "fnos": true, "backups": true, "restore": true, "control": true, "notifications": true, "audit": true}
-		allowed["frontend-errors"] = true
-		for _, name := range []string{"files", "history", "sites", "downloaders", "plugins"} {
-			allowed[name] = true
-		}
-		if !allowed[module] {
-			module = "unknown"
-		}
+		module, action := requestLogAction(r.URL.Path, method)
 		level := "DEBUG"
 		if r.Method != "GET" {
 			level = "INFO"
@@ -76,8 +72,12 @@ func (a *App) requestLogged(next http.Handler) http.Handler {
 			level = "WARN"
 		}
 		if r.Method != "GET" && status < 400 && module != "auth" && module != "logs" && module != "frontend-errors" {
-			a.auditRequest(r.Context(), r.Method+"."+module, capture.Header().Get("X-Request-ID"), status)
+			a.auditRequest(r.Context(), method+"."+module, capture.Header().Get("X-Request-ID"), status)
 		}
-		a.writeLog(map[string]any{"id": id("log_"), "time": now(), "level": level, "module": "http." + module, "event": "request_completed", "message": "API 请求处理完成", "request_id": capture.Header().Get("X-Request-ID"), "method": r.Method, "http_status": status, "duration_ms": time.Since(start).Milliseconds(), "app_version": appVersion})
+		entry := map[string]any{"id": id("log_"), "time": now(), "level": level, "module": "http." + module, "event": "request_completed", "message": requestLogOutcome(action, status), "request_id": capture.Header().Get("X-Request-ID"), "method": method, "http_status": status, "duration_ms": time.Since(start).Milliseconds(), "app_version": appVersion}
+		if capture.errorCode != "" {
+			entry["error_code"] = capture.errorCode
+		}
+		a.writeLog(entry)
 	})
 }

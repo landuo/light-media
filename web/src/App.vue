@@ -152,9 +152,23 @@ async function loadNotifications() {
     hasUnreadTasks.value = result.unread > 0;
   }
 }
-function readAllSystemMessages() {
-  systemMessageFeed.markAllRead();
-  notificationsOpen.value = false;
+const markingNotificationsRead = ref(false);
+async function readAllNotifications() {
+  if (markingNotificationsRead.value) return;
+  markingNotificationsRead.value = true;
+  const generation = authGeneration;
+  const through = systemMessages.value.items[0]?.id ?? 0;
+  try {
+    await action(async () => {
+      await api('/notifications/read-all', {});
+      if (generation !== authGeneration) return;
+      systemMessageFeed.markAllRead(through);
+      await loadNotifications();
+      if (generation === authGeneration) notificationsOpen.value = false;
+    });
+  } finally {
+    if (generation === authGeneration) markingNotificationsRead.value = false;
+  }
 }
 async function readNotification(n: any, jump = false) {
   const generation = authGeneration;
@@ -283,6 +297,7 @@ function expired() {
   abortPluginAPIRequests();
   authGeneration++;
   systemMessageFeed.setAuthenticated(false);
+  markingNotificationsRead.value = false;
   hasUnreadTasks.value = false;
   notifications.value = { items: [], unread: 0 };
   notificationsOpen.value = false;
@@ -580,13 +595,12 @@ onUnmounted(() => {
           <h3>通知中心</h3>
           <div class="button-row">
             <button
-              v-if="notificationTab === 'system'"
-              class="icon-button"
-              title="全部已读"
-              aria-label="系统消息全部已读"
-              @click="readAllSystemMessages"
+              class="small"
+              :disabled="markingNotificationsRead || (!systemMessages.hasNew && !hasUnreadTasks)"
+              @click="readAllNotifications"
             >
-              <VIcon icon="mdi-email-check-outline" size="20" />
+              <VIcon icon="mdi-email-check-outline" size="18" />
+              全部已读
             </button>
             <button class="icon-button" aria-label="关闭通知" @click="notificationsOpen = false">
               <AppIcon name="close" />

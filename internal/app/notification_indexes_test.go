@@ -97,6 +97,48 @@ func TestNotificationIndexesUpgradeEncryptedStoreAndReadState(t *testing.T) {
 		t.Fatalf("delete index stale: %v %v", raw, err)
 	}
 }
+
+func TestNotificationReadAllAcrossPages(t *testing.T) {
+	a := newTestApp(t)
+	cookie := setupTestAdmin(t, a)
+	ctx := t.Context()
+	if _, err := a.Store.DB.ExecContext(ctx, `WITH RECURSIVE n(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM n WHERE x<101)
+ INSERT INTO message(record_kind,uid,payload,updated_at) SELECT 'notification','n'||x,json_object('id','n'||x,'read',json('false')),'original' FROM n`); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.saveProtectedNotification(ctx, Notification{ID: "protected", Title: "任务完成"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.Store.Put(ctx, "message", "other", Notification{ID: "other"}); err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []int{102, 0} {
+		response := callTest(t, a.Handler(), "POST", "/api/notifications/read-all", "{}", cookie, "")
+		var ack struct{ Data struct{ Updated int } }
+		if err := json.Unmarshal(response.Body.Bytes(), &ack); err != nil || response.Code != 200 || ack.Data.Updated != want {
+			t.Fatalf("mark-all returned %s", response.Body.String())
+		}
+	}
+	var record notificationRecord
+	if err := a.Store.Get(ctx, "notification", "protected", &record); err != nil {
+		t.Fatal(err)
+	}
+	if n, err := a.openNotification(record); err != nil || !n.Read || n.Title != "任务完成" || len(record.ProtectedContent) == 0 {
+		t.Fatalf("protected content or read state changed: %+v %v", n, err)
+	}
+	var same int
+	if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM message WHERE (read=1 AND updated_at='original') OR (uid='other' AND read=0)`).Scan(&same); err != nil || same != 102 {
+		t.Fatalf("history ordering or unrelated message was changed: %d %v", same, err)
+	}
+	if err := a.Store.Put(ctx, "notification", "new", Notification{ID: "new"}); err != nil {
+		t.Fatal(err)
+	}
+	page, err := a.notifications(ctx)
+	if err != nil || page.(map[string]any)["unread"] != 1 {
+		t.Fatalf("new notification must start unread: %v", err)
+	}
+}
+
 func TestNotificationPollIndexedLargeHistory(t *testing.T) {
 	if testing.Short() {
 		t.Skip("large synthetic history")

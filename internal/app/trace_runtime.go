@@ -25,7 +25,7 @@ func (w traceWriter) Write(b []byte) (int, error) {
 		entry["level"] = "DEBUG"
 	}
 	entry["id"] = id("log_")
-	entry["message"] = "外部接口请求"
+	entry["message"] = externalLogMessage(entry)
 	kind, _ := entry["target_kind"].(string)
 	entry["module"] = "external." + kind
 	if kind == "" {

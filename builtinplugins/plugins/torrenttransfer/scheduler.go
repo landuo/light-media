@@ -135,7 +135,7 @@ func (p *Plugin) runSchedulerPhase(ctx context.Context, id, cycle uint64, host p
 		}
 	}
 	var workers sync.WaitGroup
-	run := func(method string) {
+	run := func(method, action string) {
 		workers.Add(1)
 		go func() {
 			defer workers.Done()
@@ -144,15 +144,15 @@ func (p *Plugin) runSchedulerPhase(ctx context.Context, id, cycle uint64, host p
 			}
 			_, e := p.Handle(ctx, method, nil, host)
 			if e != nil {
-				_ = (plugins.Logger{Host: host}).Log(ctx, plugins.LogError, "定时任务执行失败")
+				_ = (plugins.Logger{Host: host}).Log(ctx, plugins.LogError, action+"失败："+e.Error())
 			}
 		}()
 	}
 	if runOnce {
-		run("transfer")
+		run("transfer", "定时转移种子")
 	}
 	if runCheck {
-		run("check_recheck")
+		run("check_recheck", "检查种子校验状态")
 	}
 	workers.Wait()
 	// A date-only source scheduler remains running after consuming its job.

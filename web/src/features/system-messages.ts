@@ -240,11 +240,11 @@ export function createSystemMessageFeed(
   return {
     setAuthenticated,
     destroy,
-    markAllRead() {
-      publish({
-        items: state.items.map((item) => ({ ...item, read: true })),
-        hasNew: false,
-      });
+    markAllRead(through = nextID) {
+      const items = state.items.map((item) =>
+        item.id <= through && !item.read ? { ...item, read: true } : item,
+      );
+      publish({ items, hasNew: items.some((item) => !item.read) });
     },
   };
 }

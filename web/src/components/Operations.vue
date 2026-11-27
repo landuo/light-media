@@ -20,6 +20,22 @@ import {
 import DownloadReview from './DownloadReview.vue';
 import AppIcon from './AppIcon.vue';
 import { jobQueueInfo } from '../features/job-queue';
+function logDetails(entry: Record<string, any>) {
+  const parts = [];
+  if (entry.method) parts.push(entry.method);
+  const status = entry.http_status ?? entry.status_code;
+  if (status > 0) parts.push(`HTTP ${status}`);
+  if (entry.duration_ms != null && entry.event !== 'network_test')
+    parts.push(`${entry.duration_ms} ms`);
+  if (entry.error_code && entry.error_code !== 'none') parts.push(`错误码 ${entry.error_code}`);
+  if (entry.plugin_instance_id) parts.push(`插件 ${entry.plugin_instance_id}`);
+  if (entry.site_id) parts.push(`站点 ${entry.site_id}`);
+  if (entry.page) parts.push(`页面 ${entry.page}`);
+  if (entry.job_id) parts.push(`任务 ${entry.job_id}`);
+  if (entry.workflow_id) parts.push(`流程 ${entry.workflow_id}`);
+  if (entry.request_id) parts.push(`请求 ${entry.request_id}`);
+  return parts.join(' · ');
+}
 const props = defineProps<{ view: string; initialJob?: string }>(),
   data = ref<any>(null),
   loading = ref(false),
@@ -1036,17 +1052,11 @@ onUnmounted(() => {
       >
         <time>{{ date(entry.time) }}</time
         ><b>{{ entry.level }}</b
-        ><span class="log-module">{{ entry.module }}</span
-        ><span
-          >{{ entry.message || entry.event
-          }}<small v-if="entry.duration_ms !== undefined"
-            >HTTP {{ entry.status_code || entry.http_status || entry.status || '—' }} ·
-            {{ entry.duration_ms }} ms</small
-          ><small v-if="entry.job_id || entry.workflow_id || entry.request_id"
-            >任务 {{ entry.job_id || '—' }} · 流程 {{ entry.workflow_id || '—' }} · 请求
-            {{ entry.request_id || '—' }}</small
-          ></span
-        >
+        ><span class="log-module">{{ entry.module }}</span>
+        <span>
+          {{ entry.message || entry.event }}
+          <small>{{ logDetails(entry) }}</small>
+        </span>
       </div>
       <div v-if="!data?.entries?.length && !loading" class="empty-state">
         <h3>当前筛选没有日志</h3>

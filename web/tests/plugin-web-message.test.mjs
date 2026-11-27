@@ -137,7 +137,7 @@ for (const sample of oracle.histories)
   });
 test('fixed message shortcut URL keeps raw query semantics and menu closes before dialog opens', (t) => {
   for (const c of oracle.shortcuts)
-    assert.equal(message.pluginMessageShortcut(c.url), c.open, c.url);
+    assert.equal(message.shortcutFromURL(c.url) === 'message', c.open, c.url);
   const f = fixture('ShortcutTools');
   t.after(f.stop);
   f.state.menu.value = true;

@@ -76,6 +76,12 @@ func EndpointContext(ctx context.Context, service, endpoint string) context.Cont
 		}
 	} else if service == "metadata" {
 		switch {
+		case strings.HasPrefix(p, "/3/search/"):
+			operation = "metadata_search"
+		case strings.HasPrefix(p, "/3/discover/"), strings.HasPrefix(p, "/3/trending/"):
+			operation = "metadata_discover"
+		case strings.HasPrefix(p, "/3/person/"):
+			operation = "metadata_person"
 		case strings.Contains(p, "/episode/"):
 			operation = "metadata_episode"
 		case strings.HasPrefix(p, "/3/movie/"):
@@ -84,7 +90,15 @@ func EndpointContext(ctx context.Context, service, endpoint string) context.Cont
 			operation = "metadata_tv"
 		}
 	} else if service == "integration" || service == "material" {
-		for suffix, label := range map[string]string{"/api/v2/auth/login": "qb_login", "/api/v2/app/version": "qb_version", "/api/v2/app/webapiVersion": "qb_api_version", "/api/v2/app/preferences": "qb_preferences", "/api/v2/torrents/info": "qb_torrents", "/api/v2/torrents/files": "qb_files", "/transmission/rpc": "transmission_rpc", "/api/member/profile": "mteam_profile", "/api/torrent/search": "site_search", "/api/torrent/genDlToken": "material_token", "/torrents.php": "site_search", "/index.php": "site_check", "/download.php": "material_fetch"} {
+		for suffix, label := range map[string]string{
+			"/api/v2/auth/login": "qb_login", "/api/v2/app/version": "qb_version", "/api/v2/app/webapiVersion": "qb_api_version", "/api/v2/app/preferences": "qb_preferences",
+			"/api/v2/torrents/info": "qb_torrents", "/api/v2/torrents/files": "qb_files", "/api/v2/torrents/trackers": "qb_trackers", "/api/v2/torrents/add": "qb_add",
+			"/api/v2/torrents/start": "qb_start", "/api/v2/torrents/resume": "qb_start", "/api/v2/torrents/setForceStart": "qb_force_start",
+			"/api/v2/torrents/stop": "qb_stop", "/api/v2/torrents/pause": "qb_stop", "/api/v2/torrents/recheck": "qb_recheck", "/api/v2/torrents/delete": "qb_delete",
+			"/api/v2/torrents/addTags": "qb_tag", "/api/v2/torrents/filePrio": "qb_file_priority", "/api/v2/torrents/setLocation": "qb_location",
+			"/transmission/rpc": "transmission_rpc", "/api/member/profile": "mteam_profile", "/api/torrent/search": "site_search",
+			"/api/torrent/genDlToken": "material_token", "/torrents.php": "site_search", "/index.php": "site_check", "/download.php": "material_fetch",
+		} {
 			if strings.HasSuffix(p, suffix) {
 				operation = label
 				break

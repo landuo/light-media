@@ -78,11 +78,42 @@ func pluginProjectionText(entry map[string]any) string {
 		at = time.Now()
 	}
 	module, _ := entry["module"].(string)
+	if operation, _ := entry["operation"].(string); operation != "" {
+		if instance, _ := entry["plugin_instance_id"].(string); instance != "" {
+			label := pluginLogOperations[operation]
+			if label == "" {
+				label = "调用 " + operation
+			}
+			module = instance + " · " + label
+		}
+	}
 	message, _ := entry["message"].(string)
 	// Source caller_name is adapted to the actual Go module attribution; no
 	// Python filename/stack is fabricated. Host timestamp remains authoritative.
 	return fmt.Sprintf("【%s】%s - %s - %s", level, at.Local().Format("2006-01-02 15:04:05,000"), module, message)
 }
+
+var pluginLogOperations = map[string]string{
+	"init":              "初始化",
+	"stop":              "停止插件",
+	"get_state":         "读取运行状态",
+	"http":              "处理接口请求",
+	"get_form":          "读取配置表单",
+	"get_page":          "加载插件页面",
+	"get_dashboard":     "加载仪表板",
+	"get_service":       "读取定时服务",
+	"private_scheduler": "执行定时任务",
+	"post_notice":       "发送通知",
+	"brush":             "执行刷流",
+	"cleanup_tags":      "清理刷流标签",
+	"promotion_expiry":  "检查促销到期",
+	"auto_seed":         "自动辅种",
+	"sign_in":           "站点签到",
+	"signin_continue":   "继续站点签到",
+	"transfer_continue": "继续转移种子",
+	"check_recheck":     "检查种子校验状态",
+}
+
 func (l *runtimeLogger) writePluginProjection(raw []byte) error {
 	var entry map[string]any
 	if json.Unmarshal(raw, &entry) != nil {

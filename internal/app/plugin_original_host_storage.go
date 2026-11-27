@@ -44,9 +44,9 @@ func (a *App) originalHostStorageResource(ctx context.Context, scope originalBas
 	if err != nil {
 		var api *APIError
 		if errors.As(err, &api) {
-			a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "storage_host_"+api.Code, "存储宿主调用失败："+api.Code)
+			a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "storage_host_"+api.Code, pluginHostLogActions[method]+"失败："+api.Message+" ["+api.Code+"]")
 		} else if !errors.Is(err, context.Canceled) && !errors.Is(err, context.DeadlineExceeded) {
-			a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "storage_host_failed", "存储宿主文件操作失败")
+			a.writeOriginalPluginCallLog(scope.object, scope.installation, scope.logCall, "ERROR", "storage_host_failed", pluginHostLogActions[method]+"失败："+err.Error())
 		}
 	}
 	return result, err

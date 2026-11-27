@@ -15,6 +15,18 @@ type originalPluginLogCall struct {
 	phase string
 }
 
+var pluginHostLogActions = map[string]string{
+	plugins.MediaServersListCapability:          "读取媒体服务器列表",
+	plugins.MediaServersRefreshCapability:       "刷新媒体服务器",
+	plugins.MediaServerLibraryRefreshCapability: "刷新媒体库",
+	plugins.MediaRecognizeCapability:            "识别影视",
+	plugins.StorageExistsCapability:             "检查文件是否存在",
+	plugins.StorageListCapability:               "列出目录内容",
+	plugins.StorageDeleteCapability:             "删除文件",
+	plugins.StorageLocalReadGrantCapability:     "申请读取本地文件",
+	originalScrapeCleanRemoveCapability:         "清理刮削文件",
+}
+
 func (a *App) pluginOriginalLogHost(ctx context.Context, scope originalBaseCallScope, raw json.RawMessage) (json.RawMessage, error) {
 	if scope.validate == nil || scope.logCall.id == "" || scope.logCall.phase == "" {
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件日志缺少实际调用范围")

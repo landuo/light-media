@@ -41,7 +41,7 @@ var jobTypeLabels = map[string]string{
 	"subscription_acquisition_receipt": "登记已接收下载",
 	"scrape":                           "刮削元数据", "fnos_sync": "飞牛入库核对",
 	"subscription": "检查订阅", "library_scan": "核对媒体目录", "asset_check": "检查媒体文件",
-	"site_refresh": "刷新站点数据", "download_file_deleted": "处理源文件删除通知",
+	"lark_message": "处理飞书消息", "site_refresh": "刷新站点数据", "download_file_deleted": "处理源文件删除通知",
 }
 
 type jobSummaryInput struct {

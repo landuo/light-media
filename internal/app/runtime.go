@@ -729,7 +729,7 @@ func (a *App) setControl(ctx context.Context, pause bool) error {
 		default:
 		}
 	}
-	a.log("INFO", "control", state, "全局自动化状态已更新", "", "")
+	a.log("INFO", "control", state, map[string]string{"running": "全局自动化已运行", "paused": "全局自动化已暂停", "pausing": "正在暂停全局自动化，等待当前写入结束"}[state], "", "")
 	return nil
 }
 

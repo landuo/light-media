@@ -8,13 +8,19 @@ import { VCard, VCardItem, VCardTitle, VCardText } from 'vuetify/components/VCar
 import { VBtn } from 'vuetify/components/VBtn';
 import { VIcon } from 'vuetify/components/VIcon';
 import { VDivider } from 'vuetify/components/VDivider';
-import { pluginMessageShortcut } from '../features/plugin-web-message';
+import { shortcutFromURL } from '../features/plugin-web-message';
 const ShortcutMessageDialog = defineAsyncComponent(() => import('./ShortcutMessageDialog.vue'));
+const NetworkTest = defineAsyncComponent(() => import('./NetworkTest.vue'));
 const PluginServices = defineAsyncComponent(() => import('./PluginServices.vue'));
 const menu = ref(false),
+  network = ref(false),
   services = ref(false),
   messages = ref(false),
   display = useDisplay();
+function openNetwork() {
+  menu.value = false;
+  network.value = true;
+}
 function openServices() {
   menu.value = false;
   services.value = true;
@@ -25,7 +31,9 @@ function openMessageDialog() {
 }
 defineExpose({ openMessageDialog });
 onMounted(() => {
-  if (pluginMessageShortcut(window.location.href)) openMessageDialog();
+  const shortcut = shortcutFromURL(window.location.href);
+  if (shortcut === 'message') openMessageDialog();
+  if (shortcut === 'netTest') openNetwork();
 });
 </script>
 <template>
@@ -61,6 +69,22 @@ onMounted(() => {
             class="shortcut-tool"
             role="button"
             tabindex="0"
+            @click="openNetwork"
+            @keydown.enter.prevent="openNetwork"
+            @keydown.space.prevent="openNetwork"
+          >
+            <VIcon color="primary" icon="mdi-network" size="24" />
+            <div>
+              <div class="shortcut-name">网络</div>
+              <div class="shortcut-subtitle">网速连通性测试</div>
+            </div>
+          </VCard>
+          <VCard
+            flat
+            hover
+            class="shortcut-tool"
+            role="button"
+            tabindex="0"
             @click="openServices"
             @keydown.enter.prevent="openServices"
             @keydown.space.prevent="openServices"
@@ -90,6 +114,30 @@ onMounted(() => {
       </VCard>
     </VMenu>
     <ShortcutMessageDialog v-if="messages" v-model="messages" @close="messages = false" />
+    <VDialog
+      v-if="network"
+      v-model="network"
+      max-width="35rem"
+      :fullscreen="!display.mdAndUp.value"
+      scrollable
+      aria-labelledby="network-test-title"
+      content-class="plugin-dialog-surface"
+    >
+      <VCard>
+        <VCardItem class="shortcut-dialog-heading">
+          <VCardTitle id="network-test-title">
+            <VIcon icon="mdi-network" class="shortcut-title-icon" />网速连通性测试
+          </VCardTitle>
+          <template #append>
+            <VBtn icon variant="text" aria-label="关闭网络测试" @click="network = false">
+              <VIcon icon="mdi-close" />
+            </VBtn>
+          </template>
+        </VCardItem>
+        <VDivider />
+        <VCardText class="shortcut-service-body"><NetworkTest /></VCardText>
+      </VCard>
+    </VDialog>
     <VDialog
       v-if="services"
       v-model="services"

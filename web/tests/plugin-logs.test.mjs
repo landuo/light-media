@@ -114,11 +114,14 @@ test('fixed physical-line parser, continuation metadata and 600-line bound are r
       secondDisplay: item.secondDisplay,
       timeDisplay: item.timeDisplay,
     });
-    assert.deepEqual(
-      actual.entries.map(projection),
-      sample.expected.entries.map(projection),
-      sample.name,
-    );
+    const expected = sample.expected.entries.map(projection);
+    if (sample.name === 'fixed-file-format-and-json-raw-bridge') {
+      // The source viewer folded the host module into the message. Display it
+      // separately while retaining the physical text and continuation rules.
+      assert.equal(expected[0].message, 'plugins - first');
+      expected[0] = { ...expected[0], source: 'plugins', message: 'first' };
+    }
+    assert.deepEqual(actual.entries.map(projection), expected, sample.name);
     assert.equal(actual.count, sample.expected.pending, sample.name);
     assert.deepEqual(
       appendPluginLogs(actual.entries, actual.entries).entries,
@@ -126,4 +129,19 @@ test('fixed physical-line parser, continuation metadata and 600-line bound are r
       'stable line identities survive resumed overlap',
     );
   }
+});
+
+test('plugin action is searchable and stays separate from dashes inside the message', () => {
+  const [entry] = pluginLogEntries(
+    {
+      id: 'log_one',
+      plugin_instance_id: 'one',
+      message: '站点 A - 签到成功',
+      raw: '【INFO】2026-10-26 12:00:00,001 - one · 站点签到 - 站点 A - 签到成功',
+    },
+    'one',
+  );
+  assert.equal(entry.source, 'one · 站点签到');
+  assert.equal(entry.message, '站点 A - 签到成功');
+  assert.equal(filterPluginLogGroups(groupPluginLogs([entry]), 'ALL', '站点签到').length, 1);
 });

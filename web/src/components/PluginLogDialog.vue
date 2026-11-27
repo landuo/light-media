@@ -337,7 +337,11 @@ onUnmounted(() => {
                       <div class="logging-record-body">
                         <span v-if="item.timeDisplay" class="logging-record-inline-time">{{
                           item.timeDisplay
-                        }}</span
+                        }}</span>
+                        <span
+                          v-if="item.source && item.source !== 'plugins'"
+                          class="logging-record-source"
+                          >{{ item.source }}</span
                         >{{ item.message }}
                       </div>
                     </div>
@@ -546,6 +550,11 @@ onUnmounted(() => {
 }
 .logging-record-level.level-info {
   color: rgb(var(--v-theme-success));
+}
+.logging-record-source {
+  color: rgb(var(--v-theme-on-surface));
+  font-weight: 600;
+  margin-inline-end: 0.5rem;
 }
 .logging-record-level.level-warning {
   color: rgb(var(--v-theme-warning));

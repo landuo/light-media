@@ -226,6 +226,9 @@ test('only 100 newest items live in memory; mark all read is local and does not 
   assert.equal(f.state().items[0].title, f.state().items[1].title);
   assert.notEqual(f.state().items[0].id, f.state().items[1].id);
   assert.equal(f.state().hasNew, true);
+  f.feed.markAllRead(f.state().items[1].id);
+  assert.equal(f.state().items[0].read, false);
+  assert.equal(f.state().hasNew, true);
   f.feed.destroy();
 });
 test('logout during initial delay clears timers and a new login receives a new delay', () => {
@@ -542,7 +545,7 @@ test('relative time autumn DST distinguishes the repeated hour and preserves day
     '几秒前',
   );
 });
-test('App uses one bell, text-only rendering, separate durable actions and explicit auth cleanup', () => {
+test('App uses one bell, text-only rendering, bulk and single read actions and explicit auth cleanup', () => {
   const source = readFileSync(new URL('../src/App.vue', import.meta.url), 'utf8');
   const helper = readFileSync(
     new URL('../src/features/system-messages.ts', import.meta.url),
@@ -559,10 +562,9 @@ test('App uses one bell, text-only rendering, separate durable actions and expli
   assert.match(system, /systemMessageRelativeTime\(n\.date, notificationTime\)/);
   assert.doesNotMatch(system, /v-html|innerHTML|\.note|readNotification\(/);
   assert.match(source, /api\('\/notifications\/'.*'\/read'/);
-  assert.match(
-    source,
-    /function readAllSystemMessages\(\) \{\s*systemMessageFeed\.markAllRead\(\);\s*notificationsOpen\.value = false;/,
-  );
+  const readAllButton = source.match(/<button\b[^>]*@click="readAllNotifications"[^>]*>[\s\S]*?<\/button>/)?.[0];
+  assert.ok(readAllButton?.includes('全部已读'));
+  assert.doesNotMatch(readAllButton, /v-if/);
   assert.match(
     source,
     /function expired\(\) \{[\s\S]*?systemMessageFeed\.setAuthenticated\(false\)/,

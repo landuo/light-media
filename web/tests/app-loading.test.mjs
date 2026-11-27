@@ -54,7 +54,14 @@ function mount(overrides = {}, hash = '#discover') {
             unmount = fn;
           },
         };
-      if (name === './api') return { ui, api, errorText: String, go: (path) => routes.push(path) };
+      if (name === './api')
+        return {
+          ui,
+          api,
+          action: (fn) => fn().catch(() => undefined),
+          errorText: String,
+          go: (path) => routes.push(path),
+        };
       if (name === './features/bounded-read') return { boundedRead: (fn, signal) => fn(signal) };
       if (name === './features/plugin-navigation')
         return {
@@ -99,6 +106,47 @@ function mount(overrides = {}, hash = '#discover') {
     },
   };
 }
+
+test('bulk read acknowledges the clicked snapshot once and refreshes durable badges', async () => {
+  const write = deferred();
+  const h = mount({
+    '/notifications/read-all': write.promise,
+    '/notifications': { items: [{ id: 'late', read: false }], unread: 1 },
+  });
+  await h.app.bootstrap();
+  h.app.notificationsOpen.value = true;
+  h.app.systemMessages.value = { items: [{ id: 10 }], hasNew: true };
+  const marked = [];
+  h.app.systemMessageFeed.markAllRead = (id) => marked.push(id);
+  const first = h.app.readAllNotifications();
+  await h.app.readAllNotifications();
+  h.app.systemMessages.value = { items: [{ id: 11 }, { id: 10 }], hasNew: true };
+  write.resolve({ updated: 103 });
+  await first;
+  assert.equal(h.requests.filter((path) => path === '/notifications/read-all').length, 1);
+  assert.deepEqual(marked, [10]);
+  assert.equal(h.app.notificationsOpen.value, false);
+  assert.equal(h.app.hasUnreadTasks.value, true);
+  assert.equal(h.app.notifications.value.unread, 1);
+  h.close();
+});
+
+test('failed bulk read keeps the panel and unread items for retry', async () => {
+  const h = mount({ '/notifications/read-all': () => Promise.reject(new Error('offline')) });
+  await h.app.bootstrap();
+  h.app.notificationsOpen.value = true;
+  h.app.hasUnreadTasks.value = true;
+  let marked = false;
+  h.app.systemMessageFeed.markAllRead = () => {
+    marked = true;
+  };
+  await h.app.readAllNotifications();
+  assert.equal(marked, false);
+  assert.equal(h.app.notificationsOpen.value, true);
+  assert.equal(h.app.hasUnreadTasks.value, true);
+  assert.equal(h.app.markingNotificationsRead.value, false);
+  h.close();
+});
 
 test('slow settings and statistics do not block independent browsing or plugin startup', async () => {
   const settings = deferred(),

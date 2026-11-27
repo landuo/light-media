@@ -92,8 +92,12 @@ func (a *App) writeError(w http.ResponseWriter, r *http.Request, e error) {
 	} else if errors.Is(e, sql.ErrNoRows) {
 		out = &APIError{"NOT_FOUND", "记录不存在", 404}
 	}
+	if capture, ok := w.(*statusWriter); ok {
+		capture.errorCode = out.Code
+	}
 	if out.Status >= 500 {
-		a.writeLog(map[string]any{"time": now(), "id": id("log_"), "level": "ERROR", "module": "api", "event": "request_failed", "message": e.Error(), "error_code": out.Code, "http_status": out.Status, "request_id": w.Header().Get("X-Request-ID"), "app_version": appVersion})
+		_, action := requestLogAction(r.URL.Path, r.Method)
+		a.writeLog(map[string]any{"time": now(), "id": id("log_"), "level": "ERROR", "module": "api", "event": "request_failed", "message": action + "失败：" + e.Error(), "error_code": out.Code, "http_status": out.Status, "request_id": w.Header().Get("X-Request-ID"), "app_version": appVersion})
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(out.Status)
@@ -368,6 +372,10 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	var out any
 	var e error
 	switch {
+	case p == "system/nettest/targets" && method == http.MethodGet:
+		out = map[string]any{"targets": systemNetTestTargets}
+	case p == "system/nettest" && method == http.MethodGet:
+		out, e = a.testNetworkTarget(ctx, r.URL.Query().Get("target_id"), w.Header().Get("X-Request-ID"))
 	case p == "settings/api-token/reveal" && method == "POST":
 		out = map[string]string{"token": a.Settings().APIToken}
 	case p == "plugins" || strings.HasPrefix(p, "plugins/"):

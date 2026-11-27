@@ -72,6 +72,6 @@ export function pluginWebMessages(value: unknown): PluginWebMessage[] {
 }
 
 // The pinned shortcut helper scans the full URL without decoding the value.
-export function pluginMessageShortcut(url: string) {
-  return /[?&]shortcut=([^&#]*)/i.exec(url)?.[1] === 'message';
+export function shortcutFromURL(url: string) {
+  return /[?&]shortcut=([^&#]*)/i.exec(url)?.[1];
 }

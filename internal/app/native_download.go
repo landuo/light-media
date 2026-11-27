@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -379,13 +380,13 @@ func (a *App) downloaderTaskAction(ctx context.Context, downloaderID, hash, acti
 	if err != nil {
 		return err
 	}
-	actual := ""
+	actual, name := "", ""
 	for _, task := range tasks {
 		if sameHash(task.Hash, hash) {
 			if !owned.contains(task) {
 				return bad("DOWNLOAD_NOT_MANAGED", "此任务不属于本程序，请在下载器中管理")
 			}
-			actual = task.Hash
+			actual, name = task.Hash, task.Name
 			break
 		}
 	}
@@ -436,8 +437,12 @@ func (a *App) downloaderTaskAction(ctx context.Context, downloaderID, hash, acti
 		if e = tx.Commit(); e != nil {
 			return e
 		}
-		return moduleErr
 	}
-	a.log("INFO", "downloads", action, "操作本程序的下载任务", "", "")
+	verb := map[string]string{"start": "开始下载", "pause": "暂停下载", "verify": "校验下载文件", "remove_keep_data": "删除下载任务并保留文件", "remove_with_data": "删除下载任务及文件"}[action]
+	level, outcome := "INFO", "已提交"
+	if moduleErr != nil {
+		level, outcome = "WARN", moduleErr.Error()
+	}
+	a.log(level, "downloads", action, fmt.Sprintf("%s「%s」（%s）：%s", verb, name, d.Name, outcome), "", "")
 	return moduleErr
 }

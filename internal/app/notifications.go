@@ -59,7 +59,7 @@ func (a *App) openNotification(record notificationRecord) (Notification, error) 
 }
 
 func (a *App) notifyFailed(ctx context.Context, j Job, message string) {
-	n := Notification{ID: "notice_" + j.ID, JobID: j.ID, WorkflowID: j.WorkflowID, Title: "任务需要处理", Message: a.clean(message), CreatedAt: now()}
+	n := Notification{ID: "notice_" + j.ID, JobID: j.ID, WorkflowID: j.WorkflowID, Title: a.clean(jobActionLabel(j.Kind) + "失败"), Message: a.clean(message), CreatedAt: now()}
 	_ = a.Store.Put(ctx, "notification", n.ID, n)
 }
 
@@ -95,6 +95,16 @@ func (a *App) notifications(ctx context.Context) (any, error) {
 	return map[string]any{"items": items, "unread": unread}, e
 }
 func (a *App) notificationAPI(r *http.Request, p string) (any, error) {
+	if p == "read-all" && r.Method == http.MethodPost {
+		// Keep history order, encrypted content and non-notification messages intact.
+		// The payload trigger also updates the indexed read column.
+		result, err := a.Store.DB.ExecContext(r.Context(), `UPDATE message SET payload=CAST(json_set(payload,'$.read',json('true')) AS BLOB) WHERE record_kind='notification' AND read=0`)
+		if err != nil {
+			return nil, err
+		}
+		updated, err := result.RowsAffected()
+		return map[string]int64{"updated": updated}, err
+	}
 	key := strings.TrimSuffix(p, "/read")
 	if !strings.HasSuffix(p, "/read") || r.Method != "POST" {
 		return nil, &APIError{"NOT_FOUND", "通知不存在", 404}

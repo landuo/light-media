@@ -91,7 +91,7 @@ func (a *App) enqueueAcceptedTx(ctx context.Context, tx *sql.Tx, kind string, pa
 	_, e = tx.ExecContext(ctx, `INSERT INTO jobs(id,workflow_id,kind,state,payload,run_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)`, j.ID, wf, kind, j.State, b, j.RunAt, j.CreatedAt, j.UpdatedAt)
 	if e == nil {
 		phase("event_insert")
-		_, e = tx.ExecContext(ctx, `INSERT INTO events(time,workflow_id,job_id,level,module,event,message) VALUES(?,?,?,?,?,?,?)`, now(), wf, j.ID, "INFO", kind, "queued", "任务已加入队列")
+		_, e = tx.ExecContext(ctx, `INSERT INTO events(time,workflow_id,job_id,level,module,event,message) VALUES(?,?,?,?,?,?,?)`, now(), wf, j.ID, "INFO", kind, "queued", jobActionLabel(kind)+"：已加入队列")
 	}
 	if e == nil {
 		phase("queue_group")
@@ -361,7 +361,7 @@ func (a *App) runClaimedJob(ctx context.Context, j Job) {
 	if j.importRun != nil {
 		defer j.importRun.release()
 	}
-	a.event(ctx, j, "INFO", j.Kind, "started", "开始执行任务")
+	a.event(ctx, j, "INFO", j.Kind, "started", jobActionLabel(j.Kind)+"：开始执行")
 	e := a.safeRun(a.traceContext(ctx, j.WorkflowID, j.ID, j.RequestID), j)
 	if ctx.Err() != nil {
 		return
@@ -406,15 +406,8 @@ func (a *App) runClaimedJob(ctx context.Context, j Job) {
 		a.notifyFailed(ctx, j, message)
 	}
 	if changed {
-		if code == "PLUGIN_REFRESH_PENDING" {
-			a.log("DEBUG", j.Kind, code, message, j.WorkflowID, j.ID)
-		} else if state == "cancelled" {
-			a.log("INFO", j.Kind, code, message, j.WorkflowID, j.ID)
-		} else if e != nil {
-			a.log("ERROR", j.Kind, code, message, j.WorkflowID, j.ID)
-		} else {
-			a.log("INFO", j.Kind, "completed", "任务完成", j.WorkflowID, j.ID)
-		}
+		level, event, description := jobCompletionLog(j, state, code, message)
+		a.log(level, j.Kind, event, description, j.WorkflowID, j.ID)
 	}
 }
 
@@ -616,7 +609,11 @@ func (a *App) jobAPI(w http.ResponseWriter, r *http.Request, p string) (any, err
 				return nil, e
 			}
 		}
-		a.event(r.Context(), j, "INFO", "jobs", parts[1], "管理员更新了任务状态")
+		action := "已重新加入队列"
+		if parts[1] == "cancel" {
+			action = "已取消"
+		}
+		a.event(r.Context(), j, "INFO", "jobs", parts[1], jobActionLabel(j.Kind)+"："+action)
 		return map[string]bool{"accepted": true}, nil
 	}
 	return nil, &APIError{"NOT_FOUND", "接口不存在", 404}
@@ -640,11 +637,11 @@ func (a *App) scheduler(ctx context.Context) {
 		}
 		if time.Since(lastPoll) >= 30*time.Second {
 			if e := a.pollDownloads(ctx); e != nil {
-				a.log("WARN", "downloads", "poll_failed", e.Error(), "", "")
+				a.log("WARN", "downloads", "poll_failed", "轮询下载任务失败："+e.Error(), "", "")
 			}
 			if !a.paused() {
 				if e := a.pollDirectoryFiles(ctx); e != nil {
-					a.log("WARN", "directories", "poll_failed", e.Error(), "", "")
+					a.log("WARN", "directories", "poll_failed", "轮询受监控目录失败："+e.Error(), "", "")
 				}
 			}
 			lastPoll = time.Now()

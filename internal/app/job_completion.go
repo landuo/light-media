@@ -6,6 +6,26 @@ import (
 	"fmt"
 )
 
+func jobCompletionLog(j Job, state, code, reason string) (level, event, message string) {
+	action := jobActionLabel(j.Kind)
+	switch state {
+	case "succeeded":
+		return "INFO", "completed", action + "：已完成"
+	case "cancelled":
+		return "INFO", code, action + "：已取消，" + reason
+	case "waiting_paused":
+		return "INFO", code, action + "：等待自动化恢复，" + reason
+	case "queued", "retry_wait":
+		level := "WARN"
+		if code == "PLUGIN_REFRESH_PENDING" {
+			level = "DEBUG"
+		}
+		return level, code, action + "：已重新排队，" + reason
+	default:
+		return "ERROR", code, action + "失败：" + reason
+	}
+}
+
 func (a *App) finishJob(ctx context.Context, j Job, state, code, message string, runAt int64) (bool, error) {
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
@@ -30,13 +50,7 @@ func (a *App) finishJob(ctx context.Context, j Job, state, code, message string,
 			return false, e
 		}
 	}
-	level, event, description := "INFO", "completed", "任务完成"
-	if state != "succeeded" {
-		level, event, description = "ERROR", code, message
-	}
-	if code == "PLUGIN_REFRESH_PENDING" {
-		level = "INFO"
-	}
+	level, event, description := jobCompletionLog(j, state, code, message)
 	if _, e = tx.ExecContext(ctx, `INSERT INTO events(time,workflow_id,job_id,level,module,event,message) VALUES(?,?,?,?,?,?,?)`, now(), j.WorkflowID, j.ID, level, j.Kind, event, description); e != nil {
 		return false, e
 	}

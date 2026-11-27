@@ -234,8 +234,10 @@ function parseBracketStyleLog(raw: string): ParsedLog | null {
   const [, rawLevel, remainder] = match;
   const level = normalizePluginLogLevel(rawLevel);
   const body = remainder.trim();
+  // Host files separate the timestamp and caller with " - ". Older source
+  // continuations use just whitespace at the same boundary.
   const bodyMatch = body.match(
-    /^(?:\[([^\]]+)\]\s+)?(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(?:,\d{3})?)\s+([^\s]+)\s+-\s+(.*)$/,
+    /^(?:\[([^\]]+)\]\s+)?(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(?:,\d{3})?)\s+(?:-\s+)?(.+?)\s+-\s+(.*)$/,
   );
 
   return {
