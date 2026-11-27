@@ -92,12 +92,19 @@ ORDER BY updated_at DESC, id DESC LIMIT 1`, path).Scan(&raw)
 	return &consumed, nil
 }
 
+// A remount can renumber the device for an unchanged file. Ignore that number
+// only when deciding whether to replay a deleted history at the same source path.
+func sameDeletedHistorySource(recorded, current importSnapshot) bool {
+	recorded.Device = current.Device
+	return recorded.Inode != 0 && recorded == current
+}
+
 func directorySourceHistoryDeleted(ctx context.Context, db qualityReader, path string, stamp importSnapshot) (bool, error) {
 	if stamp.Inode == 0 {
 		return false, nil
 	}
 	prior, err := lastDeletedDirectorySnapshot(ctx, db, path)
-	return prior != nil && *prior == stamp, err
+	return prior != nil && sameDeletedHistorySource(*prior, stamp), err
 }
 
 func (f *DirectoryObservedFile) retainDeletedHistory() {

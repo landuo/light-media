@@ -12,6 +12,27 @@ import (
 	"testing"
 )
 
+func TestDeletedHistorySourceIgnoresOnlyDevice(t *testing.T) {
+	recorded := importSnapshot{Device: 1, Inode: 2, Size: 3, ModNS: 4, Directory: "members"}
+	for _, tc := range []struct {
+		name string
+		edit func(*importSnapshot)
+		same bool
+	}{
+		{"device", func(s *importSnapshot) { s.Device++ }, true},
+		{"inode", func(s *importSnapshot) { s.Inode++ }, false},
+		{"size", func(s *importSnapshot) { s.Size++ }, false},
+		{"mtime", func(s *importSnapshot) { s.ModNS++ }, false},
+		{"directory contents", func(s *importSnapshot) { s.Directory = "changed" }, false},
+	} {
+		current := recorded
+		tc.edit(&current)
+		if sameDeletedHistorySource(recorded, current) != tc.same {
+			t.Errorf("unexpected match for changed %s", tc.name)
+		}
+	}
+}
+
 func TestDirectoryHistorySkipsPreviouslyManualSourceAcrossRuleChange(t *testing.T) {
 	a, rule, source := directoryFileFixture(t, true)
 	path := directoryMovieFile(t, source)
@@ -136,11 +157,13 @@ func reopenDirectoryHistoryApp(t *testing.T, a *App) *App {
 
 func TestDirectoryHistoryDeletionKeepsUnchangedSourceAcrossRestart(t *testing.T) {
 	for _, tc := range []struct {
-		name   string
-		target bool
+		name      string
+		target    bool
+		remounted bool
 	}{
-		{"record_only", false},
-		{"library_file_and_record", true},
+		{name: "record_only"},
+		{name: "library_file_and_record", target: true},
+		{name: "library_file_and_record_after_remount", target: true, remounted: true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			ctx := t.Context()
@@ -172,11 +195,20 @@ func TestDirectoryHistoryDeletionKeepsUnchangedSourceAcrossRestart(t *testing.T)
 				t.Fatalf("fixture needs a published hard link: %v", err)
 			}
 			removeDirectoryHistoryForTest(t, a, id, tc.target)
+			if tc.remounted {
+				// The NAS can report a different device number after a remount.
+				if _, err := a.Store.DB.Exec(`UPDATE history_hidden SET payload=json_set(payload,'$.source_snapshot.device',json_extract(payload,'$.source_snapshot.device')+1) WHERE id=?`, id); err != nil {
+					t.Fatal(err)
+				}
+			}
 			check := func(app *App) {
 				t.Helper()
 				for i := 0; i < 2; i++ {
 					directoryAge(t, app, rule, path)
 					directoryPoll(t, app, rule)
+					if got := directoryObservation(t, app, rule, path); got.State != "complete" {
+						t.Fatalf("expected deleted history to stay complete after scan, got %+v", got)
+					}
 				}
 				var rows, jobs int
 				if err := app.Store.DB.QueryRow(`SELECT (SELECT count(*) FROM transferhistory WHERE src=?),(SELECT count(*) FROM jobs WHERE kind IN ('organize_file','import') AND id!=?)`, path, f.JobID).Scan(&rows, &jobs); err != nil || rows != 0 || jobs != 0 {
@@ -249,7 +281,9 @@ func TestDirectoryHistoryDeletionUpgradeStopsPreexistingAutomaticJobs(t *testing
 				t.Fatalf("pre-upgrade %s job was not queued: %s %v", phase, state, err)
 			}
 			fresh := reopenDirectoryHistoryApp(t, a)
-			if match, err := directorySourceHistoryDeleted(ctx, fresh.Store.DB, item.Source, stamp); err != nil || !match {
+			remounted := stamp
+			remounted.Device++
+			if match, err := directorySourceHistoryDeleted(ctx, fresh.Store.DB, item.Source, remounted); err != nil || !match {
 				t.Fatalf("old receipt lost its exact source: %v", err)
 			}
 			var sourceNull bool
@@ -300,13 +334,21 @@ func TestDirectoryHistoryDeletionKeepsReplacementSeenBeforeDeleteEligible(t *tes
 		t.Fatal(err)
 	}
 	tmp := item.Source + ".new"
-	importWrite(t, tmp, []byte("new source version, same filename"))
+	// Isolate inode as the only distinction from the original source.
+	importWrite(t, tmp, bytes.Repeat([]byte("x"), int(before.Size())))
+	if err = os.Chtimes(tmp, before.ModTime(), before.ModTime()); err != nil {
+		t.Fatal(err)
+	}
 	if err = os.Rename(tmp, item.Source); err != nil {
 		t.Fatal(err)
 	}
 	stamp, err := snapshotTransferPath(item.Source)
 	if err != nil {
 		t.Fatal(err)
+	}
+	original, err := snapshot(before)
+	if err != nil || stamp.Inode == original.Inode || stamp.Size != original.Size || stamp.ModNS != original.ModNS {
+		t.Fatalf("expected same size and mtime on a different inode: original=%+v replacement=%+v, %v", original, stamp, err)
 	}
 	directoryPoll(t, a, rule)
 	observed := directoryObservation(t, a, rule, item.Source)

@@ -384,7 +384,7 @@ func (a *App) inspectDirectoryFiles(ctx context.Context, rule DirectoryRule, eve
 		if err != nil {
 			return err
 		}
-		if !hasHistory && !fresh && !changed && before.PlanID != "" && (before.State == "error" || before.State == "imported") {
+		if !hasHistory && !fresh && before.PlanID != "" && (before.State == "error" || before.State == "imported") && sameDeletedHistorySource(before.Snapshot, stamp) {
 			// Old observations can predate deletion receipts. Conversely, a
 			// replacement may already have been observed while the old row
 			// was visible. Only that new file should go through stability.
@@ -392,7 +392,7 @@ func (a *App) inspectDirectoryFiles(ctx context.Context, rule DirectoryRule, eve
 			if err != nil {
 				return err
 			}
-			if deleted == nil || *deleted == stamp {
+			if deleted == nil || sameDeletedHistorySource(*deleted, stamp) {
 				f.retainDeletedHistory()
 			} else {
 				f.PlanID, f.JobID = "", ""
