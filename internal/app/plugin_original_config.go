@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strings"
 
+	"light-media/builtinplugins/plugins/sitemessageautoread"
 	"light-media/internal/plugins"
 )
 
@@ -55,6 +56,11 @@ func (p *PluginStore) saveOriginalPluginConfiguration(ctx context.Context, in Pl
 	}
 	if len(raw) > observed.valueLimit || !json.Valid(raw) {
 		return PluginStoredValue{}, bad("INVALID_PLUGIN_VALUE", "插件数据不是有效JSON或超过大小上限")
+	}
+	if in.PluginID == sitemessageautoread.ID {
+		if _, err = sitemessageautoread.ParseConfig(raw); err != nil {
+			return PluginStoredValue{}, bad("INVALID_PLUGIN_VALUE", err.Error())
+		}
 	}
 	sealed, err := p.seal("config", in.InstanceID, "main", raw)
 	if err != nil {

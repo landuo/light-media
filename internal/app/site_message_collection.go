@@ -449,7 +449,7 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hook
 		if err != nil {
 			return siteSnapshot{}, err
 		}
-		policy, err := a.sourceSiteMessagePolicy(ctx, a.Settings())
+		policy, err := a.siteCollectionMessagePolicy(ctx, key)
 		if err != nil {
 			return siteSnapshot{}, err
 		}

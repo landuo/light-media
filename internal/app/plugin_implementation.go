@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"slices"
 
+	"light-media/builtinplugins/plugins/sitemessageautoread"
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/artifacts"
 	"light-media/internal/plugins/builtin"
@@ -151,6 +152,11 @@ func (a *App) adoptBuiltinVersions(ctx context.Context) {
 	if err != nil {
 		return
 	}
+	if a.pluginAcquisitionClosed() {
+		if err := a.initializeBuiltinSiteMessageAutoRead(ctx, catalog[sitemessageautoread.ID].manifest); err != nil {
+			a.log("ERROR", "plugins", "builtin_install_failed", "站点短讯自动已读插件初始化失败："+err.Error(), "", "")
+		}
+	}
 	ids, err := a.originalInstalledPluginIDs(ctx)
 	if err != nil {
 		return
@@ -178,6 +184,35 @@ func (a *App) adoptBuiltinVersions(ctx context.Context) {
 		}
 		a.log("INFO", "plugins", "builtin_adopted", "内置插件已随光影版本对齐："+in.PluginID+" "+in.Version+" -> "+entry.manifest.Version, "", "")
 	}
+}
+
+// Builtin deployments have no plugin acquisition UI. Introduce this new
+// class in the installed list with its default (disabled) configuration.
+func (a *App) initializeBuiltinSiteMessageAutoRead(ctx context.Context, manifest plugins.Manifest) error {
+	raw, err := json.Marshal(manifest)
+	if err != nil {
+		return err
+	}
+	in, err := validatePluginInstallation(PluginInstallation{
+		InstanceID: manifest.PluginID, PluginID: manifest.PluginID, Version: manifest.Version,
+		ManifestSchemaVersion: manifest.SchemaVersion, Manifest: raw, DesiredEnabled: true,
+	})
+	if err != nil {
+		return err
+	}
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	var exists bool
+	if err := tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM plugin_installations WHERE instance_id=?)`, in.InstanceID).Scan(&exists); err != nil || exists {
+		return err
+	}
+	if err = a.pluginStore.installTx(ctx, tx, in); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 // An already loaded object survives an unsuccessful force acquisition, just as

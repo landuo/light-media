@@ -156,14 +156,9 @@ func (r *sourceNexusReader) page(u *url.URL, params url.Values) []byte {
 	if len(raw) == 0 {
 		return nil
 	}
-	decoder, e := charset.NewReader(bytes.NewReader(raw), contentType)
+	raw, e = decodeNexusHTML(raw, contentType)
 	if e != nil {
-		r.err = errors.New("site_source_encoding_invalid")
-		return nil
-	}
-	raw, e = io.ReadAll(io.LimitReader(decoder, htmlLimit+1))
-	if e != nil || int64(len(raw)) > htmlLimit {
-		r.err = errors.New("site_body_limit")
+		r.err = e
 		return nil
 	}
 	if sourceAccountChallenge(raw) {
@@ -175,11 +170,25 @@ func (r *sourceNexusReader) page(u *url.URL, params url.Values) []byte {
 	return raw
 }
 
+func decodeNexusHTML(raw []byte, contentType string) ([]byte, error) {
+	decoder, err := charset.NewReader(bytes.NewReader(raw), contentType)
+	if err != nil {
+		return nil, errors.New("site_source_encoding_invalid")
+	}
+	decoded, err := io.ReadAll(io.LimitReader(decoder, htmlLimit+1))
+	if err != nil || len(decoded) > htmlLimit {
+		return nil, errors.New("site_body_limit")
+	}
+	return decoded, nil
+}
+
+const sourceNexusLoginMarkerXPath = `//a[contains(@href,"logout") or contains(@data-url,"logout") or contains(@href,"mybonus") or contains(@onclick,"logout") or contains(@href,"usercp") or contains(@lay-on,"logout")]|//form[contains(@action,"logout")]|//div[@class="user-info-side"]|//a[@id="myitem"]`
+
 func (r *sourceNexusReader) loggedIn(doc *html.Node) bool {
 	if doc == nil || len(r.x(doc, `//input[@type="password"]`)) > 0 {
 		return false
 	}
-	return len(r.x(doc, `//a[contains(@href,"logout") or contains(@data-url,"logout") or contains(@href,"mybonus") or contains(@onclick,"logout") or contains(@href,"usercp") or contains(@lay-on,"logout")]|//form[contains(@action,"logout")]|//div[@class="user-info-side"]|//a[@id="myitem"]`)) > 0
+	return len(r.x(doc, sourceNexusLoginMarkerXPath)) > 0
 }
 
 func (c *Client) sourceNexusUserStats(ctx context.Context, options UserStatsOptions, now time.Time) (s UserStats, dto *SourceUserData, err error) {

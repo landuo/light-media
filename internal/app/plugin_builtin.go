@@ -27,6 +27,7 @@ import (
 	"light-media/builtinplugins/plugins/removelink"
 	"light-media/builtinplugins/plugins/scrapefileclean"
 	"light-media/builtinplugins/plugins/seedrescue"
+	"light-media/builtinplugins/plugins/sitemessageautoread"
 	"light-media/builtinplugins/plugins/sitestatistic"
 	"light-media/builtinplugins/plugins/subscribegroup"
 	"light-media/builtinplugins/plugins/systemprocess"
@@ -178,6 +179,12 @@ var builtinClasses = []builtinPlugin{
 	}},
 	{pluginID: "SeedRescue", concurrent: true, manifest: func() any { return seedrescue.Manifest() }, newHandler: func() plugins.InProcessHandler {
 		plugin := seedrescue.NewPlugin()
+		return func(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
+			return plugin.Handle(ctx, method, raw, sdkBridge(host))
+		}
+	}},
+	{pluginID: sitemessageautoread.ID, concurrent: true, manifest: func() any { return sitemessageautoread.Manifest() }, newHandler: func() plugins.InProcessHandler {
+		plugin := sitemessageautoread.New()
 		return func(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
 			return plugin.Handle(ctx, method, raw, sdkBridge(host))
 		}

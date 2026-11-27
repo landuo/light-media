@@ -362,7 +362,7 @@ func (a *App) collectManagedSiteObserved(ctx context.Context, key, eventKey stri
 		if hooks == nil {
 			return siteMessagePolicy{enabled: siteMessagesEnabled(a.Settings())}, nil
 		}
-		return a.sourceSiteMessagePolicy(ctx, a.Settings())
+		return a.siteCollectionMessagePolicy(ctx, key)
 	}
 	messageOption, policyErr := readPolicy(ctx)
 	if policyErr != nil {

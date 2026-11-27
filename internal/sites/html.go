@@ -90,7 +90,7 @@ func firstClass(n *html.Node, class string) *html.Node {
 	return findFirst(n, func(ch *html.Node) bool { return hasClass(ch, class) })
 }
 
-func pageDOM(b []byte) (*html.Node, error) {
+func parsedSitePage(b []byte) (*html.Node, error) {
 	if hasLoginChallenge(b) {
 		return nil, errors.New("site_login_challenge")
 	}
@@ -102,6 +102,14 @@ func pageDOM(b []byte) (*html.Node, error) {
 		return n.Data == "input" && strings.EqualFold(attribute(n, "type"), "password")
 	}) != nil {
 		return nil, errors.New("site_authentication_failed")
+	}
+	return doc, nil
+}
+
+func pageDOM(b []byte) (*html.Node, error) {
+	doc, err := parsedSitePage(b)
+	if err != nil {
+		return nil, err
 	}
 	logout := findFirst(doc, func(a *html.Node) bool {
 		if a.Data != "a" {

@@ -23,6 +23,8 @@ func originalHostSitesCapability(method string) bool {
 		return true
 	case plugins.SitesReadCapability, plugins.SitesAccountReadCapability, plugins.SitesRefreshCapability, plugins.SitesResultWriteCapability, plugins.SitesBrowseCapability, plugins.SitesRSSCapability, plugins.SitesTorrentDownloadCapability:
 		return true
+	case plugins.SitesMessagesMarkReadCapability:
+		return true
 	}
 	return false
 }
@@ -31,6 +33,8 @@ func (a *App) originalHostSitesResource(ctx context.Context, scope originalBaseC
 	switch method {
 	case plugins.SitesSourceIndexerCapability, plugins.SitesSourceIndexersCapability, plugins.SitesSourceRefreshCapability, plugins.SitesSourceRefreshAllCapability, plugins.SitesSourceAccountsCapability:
 		return a.originalHostSourceSitesResource(ctx, scope, method, raw)
+	case plugins.SitesMessagesMarkReadCapability:
+		return a.originalHostMarkSiteMessagesRead(ctx, scope, raw)
 	case plugins.SitesReadCapability:
 		var in plugins.SiteHostRequestV1
 		if err := originalResourceDecode(raw, &in); err != nil {
