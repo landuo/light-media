@@ -217,14 +217,22 @@ func TestFileOperationsRejectStaleSymlinksAndProtectedPaths(t *testing.T) {
 		t.Fatal(e)
 	}
 	libraryRoot := fileBrowserRoot(t, a, target)
-	if _, e = a.previewBrowserOperation(ctx, browserOperationRequest{Action: "rename", RootID: libraryRoot.ID, Path: target, Paths: []string{filepath.Join(target, "existing.mkv")}, Name: "bad.mkv"}); fileCode(e) != "FILE_IN_USE" {
-		t.Fatal("library mutation permitted", e)
+	if _, e = a.previewBrowserOperation(ctx, browserOperationRequest{Action: "rename", RootID: libraryRoot.ID, Path: target, Paths: []string{filepath.Join(target, "existing.mkv")}, Name: "new.mkv"}); e != nil {
+		t.Fatal("registered library file cannot be renamed", e)
 	}
 	if e = os.Link(file, filepath.Join(source, "hardlink.mkv")); e != nil {
 		t.Fatal(e)
 	}
-	if _, e = a.previewBrowserOperation(ctx, browserOperationRequest{Action: "delete", RootID: root.ID, Path: source, Paths: []string{file}}); fileCode(e) != "FILE_LINK_PROTECTED" {
-		t.Fatal("hardlink destructive action accepted", e)
+	plan, e = a.previewBrowserOperation(ctx, browserOperationRequest{Action: "delete", RootID: root.ID, Path: source, Paths: []string{file}})
+	if e != nil {
+		t.Fatal(e)
+	}
+	if _, e = a.confirmBrowserOperation(ctx, plan.ID); e != nil {
+		t.Fatal(e)
+	}
+	remaining, e := os.ReadFile(filepath.Join(source, "hardlink.mkv"))
+	if e != nil || string(remaining) != "changed since preview" {
+		t.Fatal("removing one link changed data at the other name", e)
 	}
 	if e = os.Symlink(target, filepath.Join(source, "directory-link")); e != nil {
 		t.Fatal(e)
@@ -254,12 +262,13 @@ func TestFileOperationsProtectActiveImportAndDownloadMappings(t *testing.T) {
 	if e := os.Mkdir(dir, 0750); e != nil {
 		t.Fatal(e)
 	}
-	if _, e := a.previewBrowserOperation(ctx, browserOperationRequest{Action: "rename", RootID: root.ID, Path: source, Paths: []string{dir}, Name: "bad"}); fileCode(e) != "FILE_PROTECTED" {
-		t.Fatal("mapped downloader path not protected", e)
+	a.invalidateSettings()
+	if e := a.browserMutationAllowed(ctx, dir); fileCode(e) != "FILE_PROTECTED" {
+		t.Fatal("strict mutation guard allowed mapped downloader path", e)
 	}
 }
 
-func TestFileDestructiveOperationsProtectOtherExistingDaemonTasks(t *testing.T) {
+func TestStrictDownloaderGuardProtectsOtherExistingDaemonTasks(t *testing.T) {
 	a, source, _ := importTestApp(t)
 	ctx := context.Background()
 	var calls atomic.Int64
@@ -281,38 +290,26 @@ func TestFileDestructiveOperationsProtectOtherExistingDaemonTasks(t *testing.T) 
 	}))
 	defer server.Close()
 	a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "qb", Kind: "qbittorrent", BaseURL: server.URL}, DownloadPath: "/remote/application-download", Mappings: []PathMapping{{From: "/remote", To: source}}}}
-	root := fileBrowserRoot(t, a, source)
+	a.invalidateSettings()
 	directory := filepath.Join(source, "legacy")
 	file := filepath.Join(directory, "external-task.mkv")
 	importWrite(t, file, []byte("existing daemon source fixture"))
 	other := filepath.Join(directory, "other-fixture.mkv")
 	importWrite(t, other, []byte("other fixture"))
-	plan, e := a.previewBrowserOperation(ctx, browserOperationRequest{Action: "delete", RootID: root.ID, Path: directory, Paths: []string{file, other}})
-	if e != nil {
-		t.Fatal(e)
-	}
-	if calls.Load() != 1 {
-		t.Fatal("preview List count", calls.Load())
+	paths := []string{file, other}
+	if err := a.guardBrowserDownloaderSources(ctx, paths); err != nil {
+		t.Fatal(err)
 	}
 	saveDir.Store("/remote/legacy")
-	if _, e = a.confirmBrowserOperation(ctx, plan.ID); fileCode(e) != "FILE_DOWNLOADER_SOURCE_PROTECTED" {
-		t.Fatal("freshly-added existing task source not protected", e)
+	if err := a.guardBrowserDownloaderSources(ctx, paths); fileCode(err) != "FILE_DOWNLOADER_SOURCE_PROTECTED" {
+		t.Fatal("strict guard missed newly added daemon task", err)
 	}
 	if calls.Load() != 2 {
-		t.Fatal("confirm List count", calls.Load())
-	}
-	if _, e = os.Stat(file); e != nil {
-		t.Fatal("confirmation changed protected daemon source", e)
-	}
-	if _, e = a.previewBrowserOperation(ctx, browserOperationRequest{Action: "rename", RootID: root.ID, Path: directory, Paths: []string{file}, Name: "unsafe.mkv"}); fileCode(e) != "FILE_DOWNLOADER_SOURCE_PROTECTED" {
-		t.Fatal("preexisting non-application torrent not protected", e)
-	}
-	if calls.Load() != 3 {
-		t.Fatal("rename preview List count", calls.Load())
+		t.Fatal("expected one fresh list per guarded batch", calls.Load())
 	}
 }
 
-func TestFileDownloaderVerificationFailureAndUnrelatedRoot(t *testing.T) {
+func TestFileManagerCanRenameInsideOfflineDownloaderWithoutContactingIt(t *testing.T) {
 	a, source, _ := importTestApp(t)
 	ctx := context.Background()
 	var calls atomic.Int64
@@ -322,29 +319,31 @@ func TestFileDownloaderVerificationFailureAndUnrelatedRoot(t *testing.T) {
 	}))
 	defer server.Close()
 	a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "qb", Kind: "qbittorrent", BaseURL: server.URL}, DownloadPath: "/remote/app", Mappings: []PathMapping{{From: "/remote", To: source}}}}
+	a.invalidateSettings()
 	root := fileBrowserRoot(t, a, source)
-	file := filepath.Join(source, "ordinary.mkv")
+	directory := filepath.Join(source, "app")
+	file := filepath.Join(directory, "ordinary.mkv")
 	importWrite(t, file, []byte("ordinary fixture"))
-	if _, e := a.previewBrowserOperation(ctx, browserOperationRequest{Action: "delete", RootID: root.ID, Path: source, Paths: []string{file}}); fileCode(e) != "FILE_DOWNLOADER_UNVERIFIED" {
-		t.Fatal("unavailable downloader treated as no source", e)
+	if err := a.guardBrowserDownloaderSources(ctx, []string{file}); fileCode(err) != "FILE_DOWNLOADER_UNVERIFIED" {
+		t.Fatal("strict guard treated unavailable downloader as empty", err)
 	}
-	if calls.Load() != 1 {
-		t.Fatal("unexpected daemon requests", calls.Load())
+	before := calls.Load()
+	if before == 0 {
+		t.Fatal("strict guard did not check downloader")
 	}
-	a.config.Downloaders[0].Mappings = []PathMapping{{From: "/remote", To: "/unrelated-media-mapping"}}
-	plan, e := a.previewBrowserOperation(ctx, browserOperationRequest{Action: "rename", RootID: root.ID, Path: source, Paths: []string{file}, Name: "safe-rename.mkv"})
+	plan, e := a.previewBrowserOperation(ctx, browserOperationRequest{Action: "rename", RootID: root.ID, Path: directory, Paths: []string{file}, Name: "renamed.mkv"})
 	if e != nil {
-		t.Fatal("unrelated local browser root depended on offline downloader", e)
+		t.Fatal(e)
 	}
 	if _, e = a.confirmBrowserOperation(ctx, plan.ID); e != nil {
 		t.Fatal(e)
 	}
-	if calls.Load() != 1 {
-		t.Fatal("unrelated local operation contacted downloader", calls.Load())
+	if calls.Load() != before {
+		t.Fatal("file manager queried downloader while renaming its local file")
 	}
 }
 
-func TestFileConfirmRechecksWholeTreeAfterDownloaderVerification(t *testing.T) {
+func TestFileConfirmRechecksChangedChildDespiteUnchangedDirectoryStamp(t *testing.T) {
 	a, source, _ := importTestApp(t)
 	ctx := context.Background()
 	directory := filepath.Join(source, "directory")
@@ -354,39 +353,21 @@ func TestFileConfirmRechecksWholeTreeAfterDownloaderVerification(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	var lists atomic.Int64
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/api/v2/torrents/info" {
-			t.Errorf("unexpected endpoint %s", r.URL.Path)
-			http.NotFound(w, r)
-			return
-		}
-		if lists.Add(1) == 2 {
-			if e := os.WriteFile(child, []byte("changed child while daemon List was pending"), 0640); e != nil {
-				t.Error(e)
-			}
-		}
-		_ = json.NewEncoder(w).Encode([]any{})
-	}))
-	defer server.Close()
-	a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "qb", Kind: "qbittorrent", BaseURL: server.URL}, DownloadPath: "/remote/app", Mappings: []PathMapping{{From: "/remote", To: source}}}}
 	root := fileBrowserRoot(t, a, source)
 	plan, e := a.previewBrowserOperation(ctx, browserOperationRequest{Action: "delete", RootID: root.ID, Path: source, Paths: []string{directory}})
 	if e != nil {
 		t.Fatal(e)
 	}
+	importWrite(t, child, []byte("changed child after preview"))
 	if _, e = a.confirmBrowserOperation(ctx, plan.ID); fileCode(e) != "FILE_SNAPSHOT_CHANGED" {
-		t.Fatal("changed child during verification was moved", e)
+		t.Fatal("changed child was moved", e)
 	}
 	after, e := browserStat(directory)
 	if e != nil || after.ModNS != before.ModNS {
 		t.Fatal("fixture directory stamp changed or directory was renamed", e)
 	}
-	if lists.Load() != 2 {
-		t.Fatal("must List only once in each stage", lists.Load())
-	}
 	raw, e := os.ReadFile(child)
-	if e != nil || string(raw) != "changed child while daemon List was pending" {
+	if e != nil || string(raw) != "changed child after preview" {
 		t.Fatal("confirmation changed concurrent source contents", e)
 	}
 	if _, e = os.Stat(plan.Items[0].Target); !os.IsNotExist(e) {
@@ -412,6 +393,7 @@ func TestFileOperationPauseAndSettingsChanges(t *testing.T) {
 		t.Fatal(e)
 	}
 	a.config.AllowedRoots = nil
+	a.invalidateSettings()
 	if _, e = a.confirmBrowserOperation(ctx, plan.ID); fileCode(e) != "FILE_ROOT_CHANGED" {
 		t.Fatal("removed root capability still valid", e)
 	}

@@ -52,7 +52,7 @@ func (a *App) originalBrowserStorageList(ctx context.Context, path string, class
 	if truncated {
 		rows = rows[:10000]
 	}
-	protection := a.browserProtectionSnapshot()
+	protection := a.fileManagerProtection()
 	entries := make([]browserEntry, 0, len(rows))
 	for _, row := range rows {
 		entry, err := a.originalBrowserStorageEntryWithProtection(ctx, path, row, classifier, protection)
@@ -69,10 +69,10 @@ func originalBrowserStorageInvalid() error {
 }
 
 func (a *App) originalBrowserStorageEntry(ctx context.Context, directory string, raw json.RawMessage, classifier transferextensions.Classifier) (browserEntry, error) {
-	return a.originalBrowserStorageEntryWithProtection(ctx, directory, raw, classifier, a.browserProtectionSnapshot())
+	return a.originalBrowserStorageEntryWithProtection(ctx, directory, raw, classifier, a.fileManagerProtection())
 }
 
-func (a *App) originalBrowserStorageEntryWithProtection(ctx context.Context, directory string, raw json.RawMessage, classifier transferextensions.Classifier, protection browserProtection) (browserEntry, error) {
+func (a *App) originalBrowserStorageEntryWithProtection(ctx context.Context, directory string, raw json.RawMessage, classifier transferextensions.Classifier, protection *fileManagerBoundaries) (browserEntry, error) {
 	var fields map[string]json.RawMessage
 	if json.Unmarshal(raw, &fields) != nil || fields == nil {
 		return browserEntry{}, originalBrowserStorageInvalid()

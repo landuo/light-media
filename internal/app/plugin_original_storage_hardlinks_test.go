@@ -36,7 +36,7 @@ func TestOriginalPluginStorageActualSDKUnlinksOnlySelectedHardlink(t *testing.T)
 		t.Fatal(err)
 	}
 	if _, err = browserManifest(context.Background(), remove); fileCode(err) != "FILE_LINK_PROTECTED" {
-		t.Fatalf("interactive protection lost: %v", err)
+		t.Fatalf("strict manifest no longer rejects multiply linked files: %v", err)
 	}
 	raw, err := ownedHostServicesCall(t, object, plugins.StorageDeleteCapability, plugins.StorageFilesRequest{FileItem: hostServiceItem(t, remove)})
 	if err != nil {

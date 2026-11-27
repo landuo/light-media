@@ -23,7 +23,7 @@ func managedStorageFixture(t *testing.T) (*App, transferHistoryItem, *originalPl
 }
 
 // Fixed source LocalModule.delete178-195 and RemoveLink.unlink1246-1274 do not
-// consult media registration. The file manager keeps its separate policy.
+// consult media registration. The stricter background guard still does.
 func TestOriginalPluginStorageActualSDKDeletesRegisteredTargetRetainsHistoryAndSource(t *testing.T) {
 	a, item, object := managedStorageFixture(t)
 	ctx := context.Background()
@@ -36,7 +36,7 @@ func TestOriginalPluginStorageActualSDKDeletesRegisteredTargetRetainsHistoryAndS
 		t.Fatal("import did not produce a real hardlink", err)
 	}
 	if err := a.browserMutationAllowed(ctx, item.Target); fileCode(err) != "FILE_IN_USE" {
-		t.Fatal("interactive registered-file protection lost", err)
+		t.Fatal("strict registered-file protection lost", err)
 	}
 	var assetsBefore, managedBefore int
 	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM library_asset WHERE 1=1`).Scan(&assetsBefore); err != nil || assetsBefore == 0 {

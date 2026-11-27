@@ -39,8 +39,8 @@ func (a *App) originalBrowserDownload(ctx context.Context, path string) (string,
 	}
 	// An override must obey the same local content boundary as the original
 	// request; installing a module does not grant reads outside those roots.
-	for _, root := range a.browserRoots() {
-		if _, err := a.browserRoot(root.ID, target); err == nil {
+	for _, root := range a.fileManagerRoots() {
+		if within(root.Path, target) && !browserInternal(target) {
 			return target, nil
 		}
 	}

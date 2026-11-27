@@ -43,7 +43,7 @@ func TestFileLibraryUnmanagedEntriesCanBeRenamedAndQuarantined(t *testing.T) {
 	}
 }
 
-func TestFileLibraryManagedVideosSourcesAndSidecarsRemainProtected(t *testing.T) {
+func TestStrictMutationGuardProtectsRegisteredVideosSourcesAndSidecars(t *testing.T) {
 	a, source, target := importTestApp(t)
 	ctx := context.Background()
 	asset := Asset{ID: "active", RootID: "root", State: "present", Path: filepath.Join(target, "Show", "Season 1", "episode.mkv"), SourcePath: filepath.Join(source, "episode.mkv"), Media: catalog.Media{ID: 12, MediaType: "tv"}}
@@ -90,7 +90,7 @@ func TestFileLibraryInactiveOwnershipDoesNotPermanentlyLockOrdinaryFiles(t *test
 	}
 }
 
-func TestFileLibraryOwnershipAddedAfterPreviewStopsConfirmation(t *testing.T) {
+func TestFileLibraryOwnershipAddedAfterPreviewAllowsExplicitConfirmation(t *testing.T) {
 	a, _, target := importTestApp(t)
 	ctx := context.Background()
 	root := fileBrowserRoot(t, a, target)
@@ -106,10 +106,10 @@ func TestFileLibraryOwnershipAddedAfterPreviewStopsConfirmation(t *testing.T) {
 	if err = a.Store.Put(ctx, "managed_file", tokenHash(path), managedFile{Path: path, AssetID: "new-owner", Kind: "nfo"}); err != nil {
 		t.Fatal(err)
 	}
-	if _, err = a.confirmBrowserOperation(ctx, plan.ID); fileCode(err) != "FILE_IN_USE" {
-		t.Fatal("ownership added after preview was ignored", err)
+	if _, err = a.confirmBrowserOperation(ctx, plan.ID); err != nil {
+		t.Fatal("asset registration blocked an operator-confirmed deletion", err)
 	}
-	if data, err := os.ReadFile(path); err != nil || string(data) != "sidecar protected before confirmation" {
+	if data, err := os.ReadFile(plan.Items[0].Target); err != nil || string(data) != "sidecar protected before confirmation" {
 		t.Fatal("protected sidecar changed", err)
 	}
 }

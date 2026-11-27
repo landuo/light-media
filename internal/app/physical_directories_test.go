@@ -186,8 +186,8 @@ func TestUnconfiguredDaemonDefaultStillProtectsExistingSeedingFiles(t *testing.T
 	a.config.Downloaders = []DownloaderConfig{{Config: download.Config{ID: "qb", Kind: "qb", BaseURL: qb.URL}, SharedPaths: true}}
 	path := filepath.Join(source, "external", "seeding.mkv")
 	importWrite(t, path, []byte("seed data"))
-	root := fileBrowserRoot(t, a, source)
-	_, err := a.previewBrowserOperation(context.Background(), browserOperationRequest{Action: "delete", RootID: root.ID, Path: filepath.Dir(path), Paths: []string{path}})
+	a.invalidateSettings()
+	err := a.guardBrowserDownloaderSources(context.Background(), []string{path})
 	if fileCode(err) != "FILE_DOWNLOADER_SOURCE_PROTECTED" || calls.Load() != 1 {
 		t.Fatalf("unconfigured default skipped seeding check: %v calls=%d", err, calls.Load())
 	}

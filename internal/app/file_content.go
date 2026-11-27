@@ -8,7 +8,7 @@ import (
 
 func (a *App) serveBrowserContent(w http.ResponseWriter, r *http.Request) error {
 	path := r.URL.Query().Get("path")
-	if _, e := a.browserRoot(r.URL.Query().Get("root_id"), path); e != nil {
+	if _, e := a.fileManagerRoot(r.URL.Query().Get("root_id"), path); e != nil {
 		return e
 	}
 	file, e := a.browserReadableItem(r.Context(), path)

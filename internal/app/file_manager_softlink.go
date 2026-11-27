@@ -31,7 +31,7 @@ func (a *App) browserOwnedSoftlink(ctx context.Context, path string, requireRefe
 	return owned, true, nil
 }
 
-func (a *App) browserProjectSoftlink(ctx context.Context, entry *browserEntry, protection browserProtection) {
+func (a *App) browserProjectSoftlink(ctx context.Context, entry *browserEntry, protection *fileManagerBoundaries) {
 	owned, ok, err := a.browserOwnedSoftlink(ctx, entry.Path, false)
 	if err != nil || !ok {
 		entry.Type, entry.Protected = "symlink", "符号链接未取得当前整理归属，保留只读条目"

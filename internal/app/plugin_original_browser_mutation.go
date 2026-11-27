@@ -119,7 +119,7 @@ func (a *App) originalBrowserMutation(ctx context.Context, plan *browserOperatio
 		} else if len(managedHistory) > 0 && managedHistory[0] {
 			actual, e = originalHistoryManifest(item.Target)
 		} else {
-			actual, e = browserManifest(ctx, item.Target)
+			actual, e = browserManifestWithHardlinkGuard(ctx, item.Target, false)
 		}
 		done = e == nil && sameRebasedManifest(item.Manifest, actual, item.Source, item.Target)
 		if plan.Action == "delete" && errors.Is(e, os.ErrNotExist) {
