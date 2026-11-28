@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"reflect"
 	"strings"
+	"sync/atomic"
 	"testing"
 
 	"golang.org/x/text/encoding/simplifiedchinese"
@@ -132,6 +133,51 @@ func TestSelectivelyReadMTeamMessages(t *testing.T) {
 	want := MessageReadResult{Scanned: 5, Matched: 3, Marked: 1, Failed: 2}
 	if err == nil || err.Error() != "site_rate_limited" || got != want || !reflect.DeepEqual(marked, []string{"11", "13"}) {
 		t.Fatalf("result %+v, marked %v, error %v", got, marked, err)
+	}
+}
+
+func TestSelectiveMTeamMailboxAuthFailureIsScoped(t *testing.T) {
+	for _, lookupDenied := range []bool{true, false} {
+		t.Run(fmt.Sprintf("list_denied=%v", lookupDenied), func(t *testing.T) {
+			var markRequests atomic.Int32
+			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				switch r.URL.Path {
+				case "/api/msg/search":
+					if lookupDenied {
+						w.WriteHeader(http.StatusUnauthorized)
+						return
+					}
+					fmt.Fprint(w, `{"code":0,"data":{"data":[{"id":1,"unread":true,"title":"通知"},{"id":2,"unread":true,"title":"通知"}]}}`)
+				case "/api/msg/markRead":
+					markRequests.Add(1)
+					fmt.Fprint(w, `{"code":"401000"}`)
+				case "/api/member/profile":
+					w.WriteHeader(http.StatusUnauthorized)
+				default:
+					t.Error("unexpected API endpoint", r.URL.Path)
+				}
+			}))
+			defer server.Close()
+			base, err := url.Parse(server.URL)
+			if err != nil {
+				t.Fatal(err)
+			}
+			c := &Client{config: Config{ID: "test", Kind: "mteam", APIKey: "test-api-key"}, base: base, http: server.Client()}
+			result, err := c.MarkMatchingMessagesRead(t.Context(), func(title string) bool { return title == "通知" })
+			if !errors.Is(err, ErrMTeamMessageAccessDenied) || strings.Contains(err.Error(), "site_authentication_failed") {
+				t.Fatalf("mailbox rejection escaped as a site-wide authentication failure: %v", err)
+			}
+			want, wantRequests := MessageReadResult{}, int32(0)
+			if !lookupDenied {
+				want, wantRequests = MessageReadResult{Scanned: 2, Matched: 2, Failed: 2}, 1
+			}
+			if result != want || markRequests.Load() != wantRequests {
+				t.Fatalf("continued after mailbox rejection: result %+v, mark requests %d", result, markRequests.Load())
+			}
+			if _, err := c.statsJSON(t.Context(), "api/member/profile", map[string]any{}); err == nil || err.Error() != "site_authentication_failed" {
+				t.Fatalf("profile rejection should still be site-wide: %v", err)
+			}
+		})
 	}
 }
 

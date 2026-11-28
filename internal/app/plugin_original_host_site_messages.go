@@ -70,6 +70,8 @@ func (a *App) originalHostMarkSiteMessagesRead(ctx context.Context, scope origin
 	switch {
 	case errors.Is(err, sites.ErrMessageReadUnsupported):
 		out.SkippedReason = "unsupported_site"
+	case errors.Is(err, sites.ErrMTeamMessageAccessDenied):
+		out.ErrorReason = "馒头拒绝当前 API Token 访问短讯，本轮未能完成已读处理"
 	case errors.As(err, &apiErr):
 		out.ErrorReason = apiErr.Message
 	case errors.Is(err, context.DeadlineExceeded):

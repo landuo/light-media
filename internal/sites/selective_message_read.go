@@ -17,6 +17,9 @@ import (
 
 var ErrMessageReadUnsupported = errors.New("site_selective_message_read_unsupported")
 
+// ErrMTeamMessageAccessDenied applies only to the selective mailbox endpoints.
+var ErrMTeamMessageAccessDenied = errors.New("site_mteam_message_access_denied")
+
 var errMessageMailbox = errors.New("site_message_mailbox_unrecognized")
 var errMessagePagination = errors.New("site_message_pagination_incomplete")
 var errMessageMarkUnconfirmed = errors.New("site_message_mark_read_unconfirmed")
@@ -67,7 +70,7 @@ func (c *Client) MarkMatchingMessagesRead(ctx context.Context, matchesTitle func
 			if c.config.Kind == "mteam" {
 				// The installed adapter used msgId; current API docs use
 				// msgIds. Both fields address the same single message.
-				_, markErr = c.messageForm(ctx, "api/msg/markRead", url.Values{
+				_, markErr = c.selectiveMTeamMessageForm(ctx, "api/msg/markRead", url.Values{
 					"msgId": {message.id}, "msgIds": {message.id},
 				})
 			} else {
@@ -118,7 +121,7 @@ func (c *Client) MarkMatchingMessagesRead(ctx context.Context, matchesTitle func
 }
 
 func stopMessageMarking(err error) bool {
-	if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+	if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) || errors.Is(err, ErrMTeamMessageAccessDenied) {
 		return true
 	}
 	switch err.Error() {
@@ -129,11 +132,21 @@ func stopMessageMarking(err error) bool {
 	return false
 }
 
+func (c *Client) selectiveMTeamMessageForm(ctx context.Context, endpoint string, fields url.Values) (map[string]any, error) {
+	data, err := c.messageForm(ctx, endpoint, fields)
+	if err != nil && err.Error() == "site_authentication_failed" {
+		// The mailbox endpoints can reject a key that works for ordinary site
+		// operations. Keep their rejection out of the shared site cooldown.
+		return nil, ErrMTeamMessageAccessDenied
+	}
+	return data, err
+}
+
 func (c *Client) listUnreadMTeamMessages(ctx context.Context) ([]unreadMessage, error) {
 	var unread []unreadMessage
 	seen := map[string]bool{}
 	for page := 1; page <= 50; page++ {
-		data, err := c.messageForm(ctx, "api/msg/search", url.Values{
+		data, err := c.selectiveMTeamMessageForm(ctx, "api/msg/search", url.Values{
 			"keyword": {""}, "box": {"-2"}, "type": {"pageNumber"},
 			"pageSize": {"100"}, "pageNumber": {strconv.Itoa(page)}, "unread": {"true"},
 		})
