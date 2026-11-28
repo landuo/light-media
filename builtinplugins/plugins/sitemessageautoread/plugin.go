@@ -20,7 +20,7 @@ const (
 
 func Manifest() sdk.Manifest {
 	return sdk.Manifest{
-		SchemaVersion: 1, PluginID: ID, Name: name, Version: "1.0.2", Icon: "world.png",
+		SchemaVersion: 1, PluginID: ID, Name: name, Version: "1.0.3", Icon: "world.png",
 		Description: "所选站点的未读短讯标题包含任一关键词时，自动标为已读。",
 		Author:      "landuo", AuthorURL: "https://github.com/landuo", PluginOrder: 67,
 		Runtime: "go-executable", Entry: "site-message-autoread", HostAPIMin: 1, HostAPIMax: 1,

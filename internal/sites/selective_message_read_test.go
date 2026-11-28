@@ -271,7 +271,7 @@ func TestSelectiveNexusRecognizesPTTimeEmptyMailbox(t *testing.T) {
 		{"write action", "www.pttime.org", "messages.php?action=viewmessage&amp;id=15", false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			doc, err := nexusMessageDOM([]byte(`<a href="logout.php">退出</a><table id="outer"><tr><td><p>没有短讯，跳转。<a class="fcb" href="`+tc.href+`">所有短讯</a></p></td></tr></table><a href="torrents.php?page=1" rel="next">下一页</a>`), "text/html; charset=utf-8")
+			doc, err := nexusMessageDOM([]byte(`<a href="logout.php">退出</a><table id="outer"><tr><td>站点导航</td></tr></table><table id="outer"><tr><td><p>没有短讯，跳转。<a class="fcb" href="`+tc.href+`">所有短讯</a></p></td></tr></table><a href="torrents.php?page=1" rel="next">下一页</a>`), "text/html; charset=utf-8")
 			if err != nil {
 				t.Fatal(err)
 			}

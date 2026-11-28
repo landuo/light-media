@@ -415,11 +415,7 @@ func nexusMailboxRows(doc *html.Node, mailbox *url.URL, box string, page int) ([
 }
 
 func nexusEmptyMailboxOverview(doc *html.Node, mailbox *url.URL) bool {
-	outer := findFirst(doc, func(n *html.Node) bool { return attribute(n, "id") == "outer" })
-	if outer == nil {
-		return false
-	}
-	return findFirst(outer, func(n *html.Node) bool {
+	return findFirst(doc, func(n *html.Node) bool {
 		if n.Data != "a" || strings.TrimSpace(messageNodeString(n)) != "所有短讯" {
 			return false
 		}
@@ -429,7 +425,16 @@ func nexusEmptyMailboxOverview(doc *html.Node, mailbox *url.URL) bool {
 			return false
 		}
 		query, valid := selectiveMailboxQuery(mailbox, attribute(n, "href"))
-		return valid && len(query) == 0
+		if !valid || len(query) != 0 {
+			return false
+		}
+		// Some themes reuse #outer for navigation and mailbox content.
+		for parent := n.Parent; parent != nil; parent = parent.Parent {
+			if attribute(parent, "id") == "outer" {
+				return true
+			}
+		}
+		return false
 	}) != nil
 }
 
