@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"slices"
-	"strings"
 
 	"light-media/builtinplugins/plugins/sitemessageautoread"
 	"light-media/internal/plugins"
@@ -48,17 +47,12 @@ func (a *App) originalHostMarkSiteMessagesRead(ctx context.Context, scope origin
 	if err != nil {
 		return nil, err
 	}
-	titles := make(map[string]struct{}, len(request.Titles))
-	for _, title := range request.Titles {
-		titles[title] = struct{}{}
-	}
 	var result sites.MessageReadResult
 	err = a.withSite(ctx, site, scope.phase == "run", func(client *sites.Client) error {
 		client.AddRequestGuard(checkRules)
 		var readErr error
 		result, readErr = client.MarkMatchingMessagesRead(ctx, func(title string) bool {
-			_, matches := titles[strings.TrimSpace(title)]
-			return matches
+			return sitemessageautoread.MatchesTitle(title, request.Titles)
 		})
 		return readErr
 	})

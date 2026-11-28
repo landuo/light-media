@@ -41,11 +41,11 @@ func TestBuiltinSiteMessageAutoReadFromSettingsAndService(t *testing.T) {
 				case q.Get("box") == "-2":
 					fmt.Fprint(w, `<p>No messages.</p>`)
 				case q.Get("page") == "2" && matchedRead.Load() == 0:
-					fmt.Fprint(w, `<table><tr><td><img alt="Unread"></td><td><a href="messages.php?action=viewmessage&amp;id=2"> 每日通知 </a></td></tr></table>`)
+					fmt.Fprint(w, `<table><tr><td><img alt="Unread"></td><td><a href="messages.php?action=viewmessage&amp;id=2"> 【站务】每日通知（测试） </a></td></tr></table>`)
 				case q.Get("page") == "2":
 					fmt.Fprint(w, `<p>No messages.</p>`)
 				default:
-					fmt.Fprint(w, `<table><tr><td><img alt="Unread"></td><td><a href="messages.php?action=viewmessage&amp;id=1">每日通知（重要）</a></td></tr></table><a href="messages.php?action=viewmailbox&amp;box=1&amp;unread=yes&amp;page=2">下一页</a>`)
+					fmt.Fprint(w, `<table><tr><td><img alt="Unread"></td><td><a href="messages.php?action=viewmessage&amp;id=1">每日通报（重要）</a></td></tr></table><a href="messages.php?action=viewmailbox&amp;box=1&amp;unread=yes&amp;page=2">下一页</a>`)
 				}
 			case "viewmessage":
 				if q.Get("id") != "2" {
@@ -54,7 +54,7 @@ func TestBuiltinSiteMessageAutoReadFromSettingsAndService(t *testing.T) {
 					return
 				}
 				matchedRead.Add(1)
-				fmt.Fprint(w, `<h1>每日通知</h1><table><tr><td class="colhead">From</td></tr><tr><td>Date</td><td>2026-11-28</td></tr><tr><td>测试短讯</td></tr></table>`)
+				fmt.Fprint(w, `<h1>【站务】每日通知（测试）</h1><table><tr><td class="colhead">From</td></tr><tr><td>Date</td><td>2026-11-28</td></tr><tr><td>测试短讯</td></tr></table>`)
 			default:
 				t.Errorf("unexpected mailbox action %q", q.Get("action"))
 				http.Error(w, "unexpected action", http.StatusBadRequest)
@@ -117,7 +117,7 @@ func TestBuiltinSiteMessageAutoReadFromSettingsAndService(t *testing.T) {
 	if invalid.Code != http.StatusBadRequest {
 		t.Fatalf("blank title rules should fail: %d %s", invalid.Code, invalid.Body.String())
 	}
-	request("PUT", path, `{"enabled":true,"sites":["selected-pt"],"titles":" 每日通知 "}`)
+	request("PUT", path, `{"enabled":true,"sites":["selected-pt"],"titles":" 每日通知 \n 测试 "}`)
 	jobs := services()
 	if len(jobs) != 1 || jobs[0].InstanceID != pluginID || jobs[0].NextRun == nil {
 		t.Fatalf("missing registered schedule: %+v", jobs)
@@ -132,11 +132,11 @@ func TestBuiltinSiteMessageAutoReadFromSettingsAndService(t *testing.T) {
 	if err != nil || snapshot.Stats == nil || snapshot.Stats.Uploaded == nil || *snapshot.Stats.Uploaded != 2<<30 || mailboxFetched.Load() != 0 {
 		t.Fatalf("account refresh entered the mailbox or missed upload stats: %+v %v", snapshot, err)
 	}
-	request("PUT", path, `{"enabled":true,"onlyonce":true,"sites":["selected-pt"],"titles":" 每日通知 "}`)
+	request("PUT", path, `{"enabled":true,"onlyonce":true,"sites":["selected-pt"],"titles":" 每日通知 \n 测试 "}`)
 	a.wg.Wait()
 	stored := request("GET", path, "")
 	if !strings.Contains(stored, `"onlyonce":false`) || matchedRead.Load() != 1 {
-		t.Fatalf("one-shot setting did not process the exact match once: %d %s", matchedRead.Load(), stored)
+		t.Fatalf("one-shot setting did not process a title containing both keywords exactly once: %d %s", matchedRead.Load(), stored)
 	}
 	args := mustBuiltinJSON(t, map[string]string{"instance_id": pluginID, "service_id": jobs[0].ServiceID})
 	request("POST", "/api/plugins/services/run", string(args))

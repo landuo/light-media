@@ -45,8 +45,8 @@ func getForm(ctx context.Context, host sdk.HostCaller) (json.RawMessage, error) 
 		}},
 		{Component: "VRow", Content: []formNode{
 			formColumn(12, "VTextarea", map[string]any{
-				"model": "titles", "label": "自动已读的短讯标题", "rows": 5, "variant": "outlined",
-				"hint": "每行填写一个完整标题。匹配时忽略首尾空白，区分大小写。", "persistent-hint": true,
+				"model": "titles", "label": "短讯标题关键词", "rows": 5, "variant": "outlined",
+				"hint": "每行填写一个关键词。标题包含任一关键词即匹配，区分大小写。", "persistent-hint": true,
 			}),
 		}},
 		{Component: "VRow", Content: []formNode{

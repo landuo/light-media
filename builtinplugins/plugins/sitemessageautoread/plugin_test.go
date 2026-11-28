@@ -40,6 +40,34 @@ func TestParseConfig(t *testing.T) {
 	}
 }
 
+func TestMatchTitleContainsAnySavedKeyword(t *testing.T) {
+	cfg, err := ParseConfig(json.RawMessage(`{"titles":"  每日通知  \r\n\nBonus *"}`))
+	if err != nil || cfg.TitleText != "  每日通知  \r\n\nBonus *" {
+		t.Fatalf("saved keyword text changed: %q, %v", cfg.TitleText, err)
+	}
+	keywords := cfg.Titles()
+	for _, tc := range []struct {
+		title string
+		want  bool
+	}{
+		{" 每日通知 ", true},
+		{"【每日通知】做种积分", true},
+		{"新每日通知", true},
+		{"系统 Bonus * 提醒", true},
+		{"系统 Bonus 提醒", false},
+		{"系统 bonus * 提醒", false},
+		{"每日提醒", false},
+		{"", false},
+	} {
+		if got := MatchesTitle(tc.title, keywords); got != tc.want {
+			t.Errorf("MatchesTitle(%q, %v) = %t, want %t", tc.title, keywords, got, tc.want)
+		}
+	}
+	if MatchesTitle("未命中", []string{" ", "\r\n"}) || MatchesTitle("未命中", nil) {
+		t.Fatal("blank keyword matched an unrelated title")
+	}
+}
+
 type fixtureHost struct {
 	t             *testing.T
 	saveOrigin    bool

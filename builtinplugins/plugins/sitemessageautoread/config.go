@@ -36,11 +36,11 @@ func ParseConfig(raw json.RawMessage) (Config, error) {
 	}
 	titles := config.Titles()
 	if len(titles) > maxTitles {
-		return Config{}, errors.New("短讯标题最多可填写 200 条")
+		return Config{}, errors.New("短讯标题关键词最多可填写 200 条")
 	}
 	for _, title := range titles {
 		if len(title) > maxTitleBytes {
-			return Config{}, errors.New("每条短讯标题最多可填写 1024 字节")
+			return Config{}, errors.New("每个短讯标题关键词最多可填写 1024 字节")
 		}
 	}
 	if config.Enabled || config.OnlyOnce {
@@ -48,7 +48,7 @@ func ParseConfig(raw json.RawMessage) (Config, error) {
 			return Config{}, errors.New("请选择至少一个站点")
 		}
 		if len(titles) == 0 {
-			return Config{}, errors.New("请填写至少一个完整的短讯标题")
+			return Config{}, errors.New("请填写至少一个短讯标题关键词")
 		}
 	}
 	if config.Enabled {
@@ -67,6 +67,18 @@ func (config Config) Scheduled() bool {
 
 func (config Config) Titles() []string {
 	return uniqueValues(strings.Split(config.TitleText, "\n"))
+}
+
+// MatchesTitle applies a case-sensitive substring match for any nonblank keyword.
+func MatchesTitle(title string, keywords []string) bool {
+	title = strings.TrimSpace(title)
+	for _, keyword := range keywords {
+		keyword = strings.TrimSpace(keyword)
+		if keyword != "" && strings.Contains(title, keyword) {
+			return true
+		}
+	}
+	return false
 }
 
 func uniqueValues(values []string) []string {
