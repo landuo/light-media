@@ -5,6 +5,7 @@ import {
   computed,
   watch,
   onMounted,
+  onUnmounted,
   onActivated,
   defineAsyncComponent,
 } from "vue";
@@ -252,6 +253,7 @@ watch(tab, () => {
   load();
 });
 let loadInFlight: Promise<void> | undefined;
+let marketRequest: AbortController | undefined;
 let reloadRequested = false;
 let marketRefreshRequested = false;
 function pluginChanged() {
@@ -265,6 +267,7 @@ function load(forceMarket = false): Promise<void> {
     // the current request. Discard its old results, but do not amplify requests.
     reloadRequested = true;
     ++loadSerial;
+    marketRequest?.abort();
     return loadInFlight;
   }
   loadInFlight = (async () => {
@@ -284,6 +287,7 @@ function load(forceMarket = false): Promise<void> {
 async function loadOnce(forceMarket = false) {
   if (organizing.value || sortMode.value || dragging.value) return;
   const serial = ++loadSerial;
+  marketRequest?.abort();
   try {
     const [installed, groups] = await Promise.all([
       api("/plugins?state=installed"), api("/plugins/organization"),
@@ -312,68 +316,82 @@ async function loadOnce(forceMarket = false) {
       );
       if (current) selected.value = current;
     }
-    {
-      // Fixed refreshData reads local installed classes first, then the market.
-      const discovered = await api(
-        "/plugins/market?details=true" + (forceMarket ? "&force=true" : ""),
-      );
-      if (serial !== loadSerial) return;
-      if (!Array.isArray(discovered?.items) || !Array.isArray(discovered?.sources))
-        throw new Error("插件市场响应无效");
-      const updates = new Map<string, PluginCard>(
-        discovered.items
-          .filter((plugin: PluginCard) => plugin.installed && plugin.has_update)
-          .map((plugin: PluginCard) => [plugin.instance_id, plugin]),
-      );
-      // Original fetchUninstalledPlugins transfers upgrade metadata to the
-      // installed cards and excludes those cards from the marketplace grid.
-      items.value = items.value.map((plugin) => {
-        const candidate = updates.get(plugin.instance_id);
-        return {
-          ...plugin,
-          has_update: !!candidate,
-          update_blocked_reason: candidate?.update_blocked_reason,
-          ...(candidate
-            ? {
-                repo_url: candidate.repo_url,
-                repository_version: candidate.repository_version,
-              }
-            : {}),
-        };
-      });
-      market.value = discovered.items.filter(
-        (plugin: PluginCard) => !(plugin.installed && plugin.has_update),
-      );
-      // Fixed initOptions retains author/label choices across refreshes;
-      // only repository choices rebuild from the current market list.
-      for (const card of market.value) {
-        if (card.author && !authorOptions.value.includes(card.author)) authorOptions.value.push(card.author);
-        for (const label of pluginMarketLabels(card)) if (!labelOptions.value.includes(label)) labelOptions.value.push(label);
-      }
-      marketFailures.value = discovered.sources
-        .filter((source: { success: boolean }) => source.success !== true)
-        .map((source: { repo_url: string; message?: string }) => ({
-          repo_url: source.repo_url,
-          message: source.message || "仓库读取失败，请刷新重试",
-        }));
-    }
-    loading.value = false;
-    error.value = '';
-      try {
-        const statistics = await api('/plugins/statistic');
-        if (serial !== loadSerial) return;
-        if (!statistics || typeof statistics !== 'object' || Array.isArray(statistics)) throw new Error('插件统计响应无效');
-        marketStatistics.value = statistics;
-        marketStatisticsError.value = '';
-      } catch (e) {
-        if (serial !== loadSerial) return;
-        marketStatisticsError.value = errorText(e);
-      }
     error.value = "";
+    if (tab.value === "installed" && !forceMarket) {
+      // Repository metadata may update the cards later. Keep local refreshes
+      // and opening a configuration independent of those requests.
+      void enrichMarket(serial, false, true);
+    } else {
+      await enrichMarket(serial, forceMarket, false);
+    }
   } catch (e) {
-    error.value = errorText(e);
+    if (serial === loadSerial) error.value = errorText(e);
   } finally {
-    loading.value = false;
+    if (serial === loadSerial) loading.value = false;
+  }
+}
+async function enrichMarket(serial: number, forceMarket: boolean, quiet: boolean) {
+  const controller = new AbortController();
+  marketRequest = controller;
+  const current = () => serial === loadSerial && !controller.signal.aborted;
+  try {
+    const discovered = await api(
+      "/plugins/market?details=true" + (forceMarket ? "&force=true" : ""),
+      undefined, undefined, controller.signal, quiet,
+    );
+    if (!current()) return;
+    if (!Array.isArray(discovered?.items) || !Array.isArray(discovered?.sources))
+      throw new Error("插件市场响应无效");
+    const updates = new Map<string, PluginCard>(
+      discovered.items
+        .filter((plugin: PluginCard) => plugin.installed && plugin.has_update)
+        .map((plugin: PluginCard) => [plugin.instance_id, plugin]),
+    );
+    // Original fetchUninstalledPlugins transfers upgrade metadata to the
+    // installed cards and excludes those cards from the marketplace grid.
+    items.value = items.value.map((plugin) => {
+      const candidate = updates.get(plugin.instance_id);
+      return {
+        ...plugin,
+        has_update: !!candidate,
+        update_blocked_reason: candidate?.update_blocked_reason,
+        ...(candidate
+          ? {
+              repo_url: candidate.repo_url,
+              repository_version: candidate.repository_version,
+            }
+          : {}),
+      };
+    });
+    market.value = discovered.items.filter(
+      (plugin: PluginCard) => !(plugin.installed && plugin.has_update),
+    );
+    // Fixed initOptions retains author/label choices across refreshes;
+    // only repository choices rebuild from the current market list.
+    for (const card of market.value) {
+      if (card.author && !authorOptions.value.includes(card.author)) authorOptions.value.push(card.author);
+      for (const label of pluginMarketLabels(card)) if (!labelOptions.value.includes(label)) labelOptions.value.push(label);
+    }
+    marketFailures.value = discovered.sources
+      .filter((source: { success: boolean }) => source.success !== true)
+      .map((source: { repo_url: string; message?: string }) => ({
+        repo_url: source.repo_url,
+        message: source.message || "仓库读取失败，请刷新重试",
+      }));
+    if (!quiet) loading.value = false;
+    try {
+      const statistics = await api('/plugins/statistic', undefined, undefined, controller.signal, quiet);
+      if (!current()) return;
+      if (!statistics || typeof statistics !== 'object' || Array.isArray(statistics)) throw new Error('插件统计响应无效');
+      marketStatistics.value = statistics;
+      marketStatisticsError.value = '';
+    } catch (e) {
+      if (current()) marketStatisticsError.value = errorText(e);
+    }
+  } catch (e) {
+    if (current() && !quiet) error.value = errorText(e);
+  } finally {
+    if (marketRequest === controller) marketRequest = undefined;
   }
 }
 async function persistOrganization(next: PluginOrganization, rollbackOnFailure = false, forceOrder = false): Promise<boolean> {
@@ -686,6 +704,10 @@ onMounted(() => {
   load();
   // Fetch the dialog code while the cards load; read the plugin configuration only on open.
   void loadPluginConfigDialog().catch(() => {});
+});
+onUnmounted(() => {
+  ++loadSerial;
+  marketRequest?.abort();
 });
 let activatedCount = 0;
 onActivated(() => {

@@ -76,7 +76,7 @@ function focusAfterClick(event: MouseEvent) {
 }
 async function load() {
   try {
-    const form = await api(base + "/form");
+    const form = await api(base + "/form", undefined, undefined, controller.signal);
     if (!active) return;
     if (!form || !["vuetify", "vue"].includes(form.render_mode) ||
         !form.model || typeof form.model !== "object" || Array.isArray(form.model) ||

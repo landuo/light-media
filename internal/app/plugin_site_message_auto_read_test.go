@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -8,6 +9,7 @@ import (
 	"strings"
 	"sync/atomic"
 	"testing"
+	"time"
 
 	"light-media/builtinplugins/plugins/sitemessageautoread"
 	"light-media/internal/sites"
@@ -105,10 +107,34 @@ func TestBuiltinSiteMessageAutoReadFromSettingsAndService(t *testing.T) {
 		}
 		return response.Data
 	}
-	form := request("GET", "/api/plugins/"+pluginID+"/form", "")
+	formPath := "/api/plugins/" + pluginID + "/form"
+	form := request("GET", formPath, "")
 	if !strings.Contains(form, "selected-pt") || !strings.Contains(form, "VTextarea") || strings.Contains(form, "owned=fixture") {
 		t.Fatalf("plugin form did not expose site selection and title configuration: %s", form)
 	}
+	t.Run("form reads committed sites while writer is held", func(t *testing.T) {
+		writer, err := a.Store.DB.BeginTx(t.Context(), nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer writer.Rollback()
+		if _, err := writer.ExecContext(t.Context(), `UPDATE native_site_identities SET proof='uncommitted' WHERE site_id=?`, "selected-pt"); err != nil {
+			t.Fatal(err)
+		}
+		ctx, cancel := context.WithTimeout(t.Context(), 2*time.Second)
+		defer cancel()
+		req := httptest.NewRequestWithContext(ctx, http.MethodGet, formPath, nil)
+		req.AddCookie(cookie)
+		response := httptest.NewRecorder()
+		handler.ServeHTTP(response, req)
+		if response.Code != http.StatusOK {
+			t.Fatalf("form waited for the database writer: %d %s", response.Code, response.Body.String())
+		}
+		var before, during struct{ Data json.RawMessage }
+		if json.Unmarshal([]byte(form), &before) != nil || json.Unmarshal(response.Body.Bytes(), &during) != nil || string(before.Data) != string(during.Data) {
+			t.Fatalf("form differs with an uncommitted site write: %s", response.Body.String())
+		}
+	})
 	if jobs := services(); len(jobs) != 0 || mailboxFetched.Load() != 0 {
 		t.Fatalf("first launch should be disabled: %v", jobs)
 	}

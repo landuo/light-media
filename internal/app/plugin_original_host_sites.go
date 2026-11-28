@@ -53,11 +53,19 @@ func (a *App) originalHostSitesResource(ctx context.Context, scope originalBaseC
 		out := plugins.SiteHostResultV1{SchemaVersion: 1, Items: []plugins.SiteHostRowV1{}}
 		nativeOrder := map[string]int64{}
 		configured := a.Settings().Sites
+		tx, err := a.Store.reader().BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+		if err != nil {
+			return nil, err
+		}
+		defer tx.Rollback()
 		for _, s := range configured {
 			if in.ID != "" && s.ID != in.ID || in.ActiveOnly && !s.Enabled {
 				continue
 			}
-			identity, err := a.Store.nativeSiteByAppID(ctx, s.ID)
+			if s.ID == "" {
+				return nil, siteIdentityError()
+			}
+			identity, err := a.Store.readNativeSiteIdentity(ctx, tx, "site_id", s.ID)
 			if err != nil {
 				return nil, err
 			}
@@ -66,11 +74,15 @@ func (a *App) originalHostSitesResource(ctx context.Context, scope originalBaseC
 				return nil, siteIdentityError()
 			}
 			nativeOrder[s.ID] = identity.SourceID
-			sourceID, err := a.Store.nativeSourcePublicSiteID(ctx, a.Store.DB, identity)
+			sourceID, err := a.Store.nativeSourcePublicSiteID(ctx, tx, identity)
 			if err != nil {
 				return nil, err
 			}
 			out.Items = append(out.Items, plugins.SiteHostRowV1{ID: s.ID, SourceID: sourceID, Name: s.Name, Kind: s.Kind, Domain: originalBrushInventoryDomain(s, origin), URL: origin, Priority: s.Priority, Enabled: s.Enabled, Public: s.Public, Proxy: s.Proxy, Render: s.Render})
+		}
+		// Release the read snapshot before the authority check borrows a reader.
+		if err := tx.Commit(); err != nil {
+			return nil, err
 		}
 		sort.SliceStable(out.Items, func(i, j int) bool {
 			if in.OrderByPriority && out.Items[i].Priority != out.Items[j].Priority {

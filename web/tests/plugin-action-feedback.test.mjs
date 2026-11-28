@@ -22,7 +22,7 @@ const { descriptor } = parse(
 const compiled = transpile(compileScript(descriptor, { id: 'Plugins' }).content);
 const apiSource = transpile(readFileSync(new URL('../src/api.ts', import.meta.url), 'utf8'));
 
-function fixture(data, { status = 200, envelopeError, marketFetch, installedCards } = {}) {
+function fixture(data, { status = 200, envelopeError, marketFetch, statisticFetch, installedCards } = {}) {
   const requests = [],
     toasts = [];
   const apiModule = { exports: {} };
@@ -36,6 +36,7 @@ function fixture(data, { status = 200, envelopeError, marketFetch, installedCard
     async (path, options) => {
       requests.push({ path, ...options });
       if (path.startsWith('/plugins/market?') && marketFetch) return marketFetch(path);
+      if (path === '/plugins/statistic' && statisticFetch) return statisticFetch();
       const reading = options.method === 'GET';
       const result =
         path === '/plugins/organization' ? { revision: 0, folders: {}, order: [] } : path.startsWith('/plugins/market?') ? { items: [], sources: [] } : path === '/plugins?state=installed' && installedCards ? installedCards : [];
@@ -67,7 +68,7 @@ function fixture(data, { status = 200, envelopeError, marketFetch, installedCard
   const state = scope.run(() =>
     module.exports.default.setup({}, { expose: () => {}, emit: () => {} }),
   );
-  return { state, requests, toasts, stop: () => scope.stop() };
+  return { state, requests, toasts, ui: apiModule.exports.ui, stop: () => scope.stop() };
 }
 const plugin = {
   plugin_id: 'OwnedFixture',
@@ -246,6 +247,45 @@ test('old outstanding discovery cannot repopulate removed sources after settings
   await refresh;
   await new Promise(setImmediate);
   assert.deepEqual(f.state.market.value, []);
+});
+test('installed refresh completes during quiet discovery and statistics, superseding their stale results', async (t) => {
+  let finishOldMarket, finishOldStatistics;
+  const oldMarket = new Promise((resolve) => { finishOldMarket = resolve; });
+  const oldStatistics = new Promise((resolve) => { finishOldStatistics = resolve; });
+  const reply = (data) => ({ ok: true, status: 200, json: async () => ({ data }) });
+  let marketCalls = 0, statisticCalls = 0;
+  const f = fixture({}, {
+    installedCards: [external],
+    marketFetch: () => ++marketCalls === 1 ? oldMarket : reply({ items: [], sources: [] }),
+    statisticFetch: () => ++statisticCalls === 1 ? oldStatistics : reply({ current: 1 }),
+  });
+  t.after(f.stop);
+  let installedReady = false;
+  void f.state.load().then(() => { installedReady = true; });
+  await new Promise(setImmediate);
+  assert.equal(installedReady, true);
+  assert.equal(f.state.loading.value, false);
+  assert.equal(f.ui.busy, 0);
+  assert.deepEqual(f.state.items.value, [external]);
+
+  await f.state.load();
+  await new Promise(setImmediate);
+  assert.equal(marketCalls, 2);
+  assert.equal(statisticCalls, 1);
+  assert.equal(f.requests.find(r => r.path.startsWith('/plugins/market?')).signal.aborted, true);
+  assert.equal(f.ui.busy, 0);
+  finishOldMarket(reply({ items: [external, marketCandidate], sources: [] }));
+  await new Promise(setImmediate);
+  assert.equal(f.state.items.value[0].has_update, false);
+  assert.deepEqual(f.state.market.value, []);
+
+  await f.state.load();
+  await new Promise(setImmediate);
+  assert.equal(f.requests.find(r => r.path === '/plugins/statistic').signal.aborted, true);
+  finishOldStatistics(reply({ stale: 1 }));
+  await new Promise(setImmediate);
+  assert.deepEqual(f.state.marketStatistics.value, { current: 1 });
+  assert.equal(f.ui.busy, 0);
 });
 test('marketplace refresh follows entry and explicit actions without a periodic status timer', async (t) => {
   let finish,
