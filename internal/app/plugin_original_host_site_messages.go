@@ -72,6 +72,8 @@ func (a *App) originalHostMarkSiteMessagesRead(ctx context.Context, scope origin
 		out.SkippedReason = "unsupported_site"
 	case errors.As(err, &apiErr):
 		out.ErrorReason = apiErr.Message
+	case errors.Is(err, context.DeadlineExceeded):
+		out.ErrorReason = "站点收件箱请求超时"
 	case err != nil:
 		switch err.Error() {
 		case "site_authentication_failed":

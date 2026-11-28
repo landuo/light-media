@@ -182,6 +182,63 @@ func TestSelectivelyReadHhanClubMessages(t *testing.T) {
 	}
 }
 
+func TestHhanClubConfirmsUnrecognizedDetailsWithOneInboxReadback(t *testing.T) {
+	for _, refuseReadback := range []bool{false, true} {
+		t.Run(fmt.Sprintf("refuseReadback=%t", refuseReadback), func(t *testing.T) {
+			var pages, opened []string
+			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				query := r.URL.Query()
+				switch query.Get("action") {
+				case "viewmailbox":
+					page := query.Get("page")
+					pages = append(pages, page)
+					if refuseReadback && len(opened) != 0 {
+						http.Error(w, "unauthorized", http.StatusUnauthorized)
+						return
+					}
+					if page == "1" {
+						fmt.Fprint(w, `{"count":0,"data":[]}`)
+						return
+					}
+					first := "yes"
+					if len(opened) > 0 {
+						first = "no"
+					}
+					fmt.Fprintf(w, `{"count":2,"data":[{"id":"11","subject":"需清理","unread":%q},{"id":"12","subject":"需清理","unread":"yes"}]}`, first)
+				case "viewmessage":
+					if len(pages) != 2 {
+						t.Error("details must follow the initial inbox snapshot")
+					}
+					opened = append(opened, query.Get("id"))
+					fmt.Fprint(w, `<a data-url="logout.php">退出</a><h1>短讯</h1>`)
+				default:
+					t.Error("unexpected message action")
+				}
+			}))
+			defer server.Close()
+			client, err := New(Config{ID: "test", Kind: "hhanclub", BaseURL: server.URL, Cookie: "test-cookie"})
+			if err != nil {
+				t.Fatal(err)
+			}
+			result, err := client.MarkMatchingMessagesRead(context.Background(), func(title string) bool { return title == "需清理" })
+			if !reflect.DeepEqual(opened, []string{"11", "12"}) || err == nil {
+				t.Fatalf("unexpected requests or acknowledgement: opened %v, error %v", opened, err)
+			}
+			want := MessageReadResult{Scanned: 2, Matched: 2, Marked: 1, Failed: 1}
+			wantPages := []string{"0", "1", "0", "1"}
+			wantError := "site_message_mark_read_unconfirmed"
+			if refuseReadback {
+				want.Marked, want.Failed = 0, 2
+				wantPages = []string{"0", "1", "0"}
+				wantError = "site_authentication_failed"
+			}
+			if result != want || !reflect.DeepEqual(pages, wantPages) || err.Error() != wantError {
+				t.Fatalf("unexpected readback: %+v, pages %v, error %v", result, pages, err)
+			}
+		})
+	}
+}
+
 func TestSelectiveNexusRecognizesLocalizedEmptyMailboxes(t *testing.T) {
 	for _, label := range []string{"没有短讯", "沒有短訊", "No Messages.", "无效的短讯箱", "無效的短訊箱", "Invalid Mailbox"} {
 		t.Run(label, func(t *testing.T) {
@@ -209,12 +266,12 @@ func TestSelectiveNexusRecognizesPTTimeEmptyMailbox(t *testing.T) {
 	}{
 		{"PTTime main", "www.pttime.org", "messages.php", true},
 		{"PTTime alternate", "www.pttime.top", "/messages.php", true},
-		{"unrelated site", "tracker.example", "messages.php", false},
+		{"configured alias", "tracker.example", "messages.php", true},
 		{"foreign overview", "www.pttime.org", "https://foreign.example/messages.php", false},
 		{"write action", "www.pttime.org", "messages.php?action=viewmessage&amp;id=15", false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			doc, err := nexusMessageDOM([]byte(`<a href="logout.php">退出</a><table id="outer"><tr><td><p>没有短讯，跳转。</p><a href="`+tc.href+`">所有短讯</a></td></tr></table>`), "text/html; charset=utf-8")
+			doc, err := nexusMessageDOM([]byte(`<a href="logout.php">退出</a><table id="outer"><tr><td><p>没有短讯，跳转。<a class="fcb" href="`+tc.href+`">所有短讯</a></p></td></tr></table><a href="torrents.php?page=1" rel="next">下一页</a>`), "text/html; charset=utf-8")
 			if err != nil {
 				t.Fatal(err)
 			}

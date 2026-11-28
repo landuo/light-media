@@ -60,6 +60,7 @@ func (c *Client) MarkMatchingMessagesRead(ctx context.Context, matchesTitle func
 		return message.title == "" || !matchesTitle(message.title)
 	})
 	result.Matched = len(matched)
+	var pendingHhanReads map[string]struct{}
 	for i, message := range matched {
 		markErr := ctx.Err()
 		if markErr == nil {
@@ -77,13 +78,40 @@ func (c *Client) MarkMatchingMessagesRead(ctx context.Context, matchesTitle func
 			result.Marked++
 			continue
 		}
+		if c.config.Kind == "hhanclub" && errors.Is(markErr, errMessageMarkUnconfirmed) {
+			if pendingHhanReads == nil {
+				pendingHhanReads = make(map[string]struct{})
+			}
+			pendingHhanReads[message.id] = struct{}{}
+			continue
+		}
 		if stopMessageMarking(markErr) {
-			result.Failed += len(matched) - i
+			result.Failed += len(matched) - i + len(pendingHhanReads)
 			return result, markErr
 		}
 		result.Failed++
 		if err == nil {
 			err = markErr
+		}
+	}
+	if len(pendingHhanReads) > 0 {
+		// HhanClub can change unread state without rendering a recognizable
+		// detail page. Confirm those writes with one fresh inbox snapshot.
+		current, readbackErr := c.listUnreadHhanClubMessages(ctx)
+		if readbackErr != nil {
+			result.Failed += len(pendingHhanReads)
+			return result, readbackErr
+		}
+		stillUnread := 0
+		for _, message := range current {
+			if _, pending := pendingHhanReads[message.id]; pending {
+				stillUnread++
+			}
+		}
+		result.Marked += len(pendingHhanReads) - stillUnread
+		result.Failed += stillUnread
+		if stillUnread > 0 && err == nil {
+			err = errMessageMarkUnconfirmed
 		}
 	}
 	return result, err
@@ -303,6 +331,7 @@ func (c *Client) nexusMailboxURL(box string, page int) *url.URL {
 }
 
 func nexusMailboxRows(doc *html.Node, mailbox *url.URL, box string, page int) ([]unreadMessage, int, error) {
+	emptyOverview := nexusEmptyMailboxOverview(doc, mailbox)
 	recognized := findFirst(doc, func(n *html.Node) bool {
 		if hasClass(n, "pm-list") {
 			return true
@@ -318,8 +347,9 @@ func nexusMailboxRows(doc *html.Node, mailbox *url.URL, box string, page int) ([
 			return box == "-2" && page == 0
 		}
 		return false
-	}) != nil || pttimeEmptyMailbox(doc, mailbox)
+	}) != nil || emptyOverview
 	var messages []unreadMessage
+	hasMessageLinks := false
 	for _, row := range find(doc, func(n *html.Node) bool { return n.Data == "tr" || hasClass(n, "pm-item-row") }) {
 		modern := hasClass(row, "pm-item-row")
 		links := find(row, func(n *html.Node) bool {
@@ -334,6 +364,7 @@ func nexusMailboxRows(doc *html.Node, mailbox *url.URL, box string, page int) ([
 		if len(links) == 0 {
 			continue
 		}
+		hasMessageLinks = true
 		unread, read := nexusMessageRowStatus(row)
 		if unread && read || unread && len(links) != 1 {
 			return nil, 0, errMessageMailbox
@@ -355,6 +386,9 @@ func nexusMailboxRows(doc *html.Node, mailbox *url.URL, box string, page int) ([
 	}
 	if !recognized {
 		return nil, 0, errMessageMailbox
+	}
+	if emptyOverview && !hasMessageLinks {
+		return nil, 0, nil
 	}
 	next := 0
 	current := mailbox.Query()
@@ -380,23 +414,18 @@ func nexusMailboxRows(doc *html.Node, mailbox *url.URL, box string, page int) ([
 	return messages, next, nil
 }
 
-func pttimeEmptyMailbox(doc *html.Node, mailbox *url.URL) bool {
-	host := strings.TrimPrefix(strings.ToLower(mailbox.Hostname()), "www.")
-	if host != "pttime.org" && host != "pttime.top" {
-		return false
-	}
+func nexusEmptyMailboxOverview(doc *html.Node, mailbox *url.URL) bool {
 	outer := findFirst(doc, func(n *html.Node) bool { return attribute(n, "id") == "outer" })
 	if outer == nil {
 		return false
 	}
-	empty := false
-	walk(outer, func(n *html.Node) {
-		if n.Type == html.TextNode && strings.TrimSpace(n.Data) == "没有短讯，跳转。" {
-			empty = true
-		}
-	})
-	return empty && findFirst(outer, func(n *html.Node) bool {
+	return findFirst(outer, func(n *html.Node) bool {
 		if n.Data != "a" || strings.TrimSpace(messageNodeString(n)) != "所有短讯" {
+			return false
+		}
+		before := n.PrevSibling
+		if n.Parent == nil || n.Parent.Data != "p" || before == nil ||
+			before.Type != html.TextNode || strings.TrimSpace(before.Data) != "没有短讯，跳转。" {
 			return false
 		}
 		query, valid := selectiveMailboxQuery(mailbox, attribute(n, "href"))
