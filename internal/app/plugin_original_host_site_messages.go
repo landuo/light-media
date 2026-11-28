@@ -74,8 +74,12 @@ func (a *App) originalHostMarkSiteMessagesRead(ctx context.Context, scope origin
 		out.ErrorReason = apiErr.Message
 	case err != nil:
 		switch err.Error() {
-		case "site_authentication_failed", "site_redirect_blocked":
+		case "site_authentication_failed":
 			out.ErrorReason = "站点会话无法访问收件箱，请核对站点凭据"
+		case "site_redirect_blocked":
+			out.ErrorReason = "站点返回了重定向，收件箱请求已停止"
+		case "site_transport_error":
+			out.ErrorReason = "无法连接站点收件箱"
 		case "site_login_challenge", "site_forbidden_or_challenge", "site_forbidden":
 			out.ErrorReason = "站点拒绝短讯请求，请检查登录状态"
 		case "site_rate_limited":

@@ -294,10 +294,14 @@ func (c *Client) auth() map[string]string {
 }
 
 func (c *Client) request(ctx context.Context, method string, u *url.URL, body []byte, headers map[string]string, limit int64) ([]byte, string, error) {
-	return c.requestWithBrushReply(ctx, method, u, body, headers, limit, nil)
+	return c.requestHTTP(ctx, method, u, body, headers, limit, nil, nil)
 }
 
 func (c *Client) requestWithBrushReply(ctx context.Context, method string, u *url.URL, body []byte, headers map[string]string, limit int64, reply *BrushRecipeResponse) ([]byte, string, error) {
+	return c.requestHTTP(ctx, method, u, body, headers, limit, reply, nil)
+}
+
+func (c *Client) requestHTTP(ctx context.Context, method string, u *url.URL, body []byte, headers map[string]string, limit int64, reply *BrushRecipeResponse, contentType *string) ([]byte, string, error) {
 	if (len(headers) > 0 || c.config.Kind == "nexusphp") && !sameOrigin(u, c.base) {
 		return nil, "", errors.New("site_credential_origin_mismatch")
 	}
@@ -332,6 +336,9 @@ func (c *Client) requestWithBrushReply(ctx context.Context, method string, u *ur
 		return nil, "", errors.New("site_transport_error")
 	}
 	defer res.Body.Close()
+	if contentType != nil {
+		*contentType = res.Header.Get("Content-Type")
+	}
 	if reply != nil {
 		reply.Status = res.StatusCode
 		reply.ContentType = res.Header.Get("Content-Type")

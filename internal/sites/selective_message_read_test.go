@@ -135,6 +135,53 @@ func TestSelectivelyReadMTeamMessages(t *testing.T) {
 	}
 }
 
+func TestSelectivelyReadHhanClubMessages(t *testing.T) {
+	var pages, entries []string
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet || r.URL.Path != "/messages.php" || r.Header.Get("Cookie") != "test-cookie" {
+			t.Error("unexpected HhanClub message request")
+		}
+		query := r.URL.Query()
+		switch query.Get("action") {
+		case "viewmailbox":
+			if query.Get("box") != "1" || query.Get("unread") != "1" || query.Get("ajax") != "1" {
+				t.Error("HhanClub list did not use its unread inbox API")
+			}
+			w.Header().Set("Content-Type", "application/json")
+			page := query.Get("page")
+			pages = append(pages, page)
+			switch page {
+			case "0":
+				fmt.Fprint(w, `{"count":2,"data":[{"id":"11","subject":"需清理","unread":"yes"},{"id":"12","subject":"需清理","unread":"no"}]}`)
+			case "1":
+				fmt.Fprint(w, `{"count":2,"data":[{"id":"13","subject":"重要","unread":"yes"},{"id":"14","subject":"需清理","unread":"yes"}]}`)
+			case "2":
+				fmt.Fprint(w, `{"count":0,"data":[]}`)
+			default:
+				t.Error("unexpected HhanClub page", page)
+			}
+		case "viewmessage":
+			if len(pages) != 3 || len(query) != 2 {
+				t.Error("message opened before full HhanClub inbox snapshot")
+			}
+			entries = append(entries, query.Get("id"))
+			fmt.Fprint(w, `<a data-url="logout.php">退出</a><h1>需清理</h1><table><tr><td class="colhead">发件人</td></tr><tr><td>系统</td><td>2026-11-28</td></tr><tr><td>正文</td></tr></table>`)
+		default:
+			t.Error("unexpected HhanClub message action")
+		}
+	}))
+	defer server.Close()
+	client, err := New(Config{ID: "test", Kind: "hhanclub", BaseURL: server.URL, Cookie: "test-cookie"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, err := client.MarkMatchingMessagesRead(context.Background(), func(title string) bool { return title == "需清理" })
+	if err != nil || result != (MessageReadResult{Scanned: 3, Matched: 2, Marked: 2}) ||
+		!reflect.DeepEqual(pages, []string{"0", "1", "2"}) || !reflect.DeepEqual(entries, []string{"11", "14"}) {
+		t.Fatalf("unexpected HhanClub result: %+v, pages %v, opened %v, error %v", result, pages, entries, err)
+	}
+}
+
 func TestSelectiveNexusRecognizesLocalizedEmptyMailboxes(t *testing.T) {
 	for _, label := range []string{"没有短讯", "沒有短訊", "No Messages.", "无效的短讯箱", "無效的短訊箱", "Invalid Mailbox"} {
 		t.Run(label, func(t *testing.T) {
@@ -155,19 +202,63 @@ func TestSelectiveNexusRecognizesLocalizedEmptyMailboxes(t *testing.T) {
 	}
 }
 
+func TestSelectiveNexusRecognizesPTTimeEmptyMailbox(t *testing.T) {
+	for _, tc := range []struct {
+		name, host, href string
+		valid            bool
+	}{
+		{"PTTime main", "www.pttime.org", "messages.php", true},
+		{"PTTime alternate", "www.pttime.top", "/messages.php", true},
+		{"unrelated site", "tracker.example", "messages.php", false},
+		{"foreign overview", "www.pttime.org", "https://foreign.example/messages.php", false},
+		{"write action", "www.pttime.org", "messages.php?action=viewmessage&amp;id=15", false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			doc, err := nexusMessageDOM([]byte(`<a href="logout.php">退出</a><table id="outer"><tr><td><p>没有短讯，跳转。</p><a href="`+tc.href+`">所有短讯</a></td></tr></table>`), "text/html; charset=utf-8")
+			if err != nil {
+				t.Fatal(err)
+			}
+			for _, box := range []string{"1", "-2"} {
+				u, _ := url.Parse("https://" + tc.host + "/messages.php?action=viewmailbox&box=" + box + "&unread=yes")
+				rows, next, err := nexusMailboxRows(doc, u, box, 0)
+				if (err == nil) != tc.valid || len(rows) != 0 || next != 0 {
+					t.Fatalf("unexpected mailbox result: %+v, %d, %v", rows, next, err)
+				}
+			}
+		})
+	}
+}
+
 func TestSelectiveNexusDecodesGBKTitle(t *testing.T) {
-	raw, err := simplifiedchinese.GBK.NewEncoder().Bytes([]byte(`<a data-url="logout.php"></a><table><tr><td><img alt="Unread"></td><td><a href="messages.php?action=viewmessage&amp;id=15">每日通知</a></td></tr></table>`))
+	clientServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		query := r.URL.Query()
+		body := `<a data-url="logout.php">登出</a>`
+		switch {
+		case query.Get("action") == "viewmailbox" && query.Get("box") == "1":
+			body += `<table><tr><td><img title="未读"></td><td><a href="messages.php?action=viewmessage&amp;id=15">每日通知</a></td></tr></table>`
+		case query.Get("action") == "viewmailbox" && query.Get("box") == "-2":
+			body += `<p>没有短讯</p>`
+		case query.Get("action") == "viewmessage" && query.Get("id") == "15":
+			body += `<h1>每日通知</h1><table><tr><td class="colhead">发件人</td></tr><tr><td>系统</td><td>2026-11-28</td></tr><tr><td>短讯正文</td></tr></table>`
+		default:
+			t.Error("unexpected message request")
+		}
+		raw, err := simplifiedchinese.GBK.NewEncoder().Bytes([]byte(body))
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		w.Header().Set("Content-Type", "text/html; charset=gbk")
+		_, _ = w.Write(raw)
+	}))
+	defer clientServer.Close()
+	client, err := New(Config{ID: "test", Kind: "jiayuan", BaseURL: clientServer.URL, Cookie: "test-cookie"})
 	if err != nil {
 		t.Fatal(err)
 	}
-	doc, err := nexusMessageDOM(raw, "text/html; charset=gbk")
-	if err != nil {
-		t.Fatal(err)
-	}
-	base, _ := url.Parse("https://pt.example/messages.php?action=viewmailbox&box=1&unread=yes")
-	rows, _, err := nexusMailboxRows(doc, base, "1", 0)
-	if err != nil || !reflect.DeepEqual(rows, []unreadMessage{{id: "15", title: "每日通知"}}) {
-		t.Fatalf("GBK title not decoded: %+v, %v", rows, err)
+	result, err := client.MarkMatchingMessagesRead(context.Background(), func(title string) bool { return title == "每日通知" })
+	if err != nil || result != (MessageReadResult{Scanned: 1, Matched: 1, Marked: 1}) {
+		t.Fatalf("GBK title not decoded through the HTTP path: %+v, %v", result, err)
 	}
 }
 

@@ -45,7 +45,9 @@ func (c *Client) MarkMatchingMessagesRead(ctx context.Context, matchesTitle func
 	switch c.config.Kind {
 	case "mteam":
 		unread, err = c.listUnreadMTeamMessages(ctx)
-	case "nexusphp", "hhanclub", "ubits", "jiayuan", "1ptba":
+	case "hhanclub":
+		unread, err = c.listUnreadHhanClubMessages(ctx)
+	case "nexusphp", "ubits", "jiayuan", "1ptba":
 		unread, err = c.listUnreadNexusMessages(ctx)
 	default:
 		return result, ErrMessageReadUnsupported
@@ -167,6 +169,57 @@ func (c *Client) listUnreadMTeamMessages(ctx context.Context) ([]unreadMessage, 
 	return nil, errMessagePagination
 }
 
+func (c *Client) listUnreadHhanClubMessages(ctx context.Context) ([]unreadMessage, error) {
+	var unread []unreadMessage
+	seen := map[string]bool{}
+	headers := c.auth()
+	headers["Accept"] = "application/json"
+	for page := 0; page < 50; page++ {
+		u := c.endpoint("messages.php")
+		u.RawQuery = url.Values{
+			"action": {"viewmailbox"}, "box": {"1"}, "unread": {"1"},
+			"ajax": {"1"}, "page": {strconv.Itoa(page)},
+		}.Encode()
+		body, _, err := c.request(ctx, http.MethodGet, u, nil, headers, htmlLimit)
+		if err != nil {
+			return nil, err
+		}
+		var response struct {
+			Count *int `json:"count"`
+			Data  []struct {
+				ID      string `json:"id"`
+				Subject string `json:"subject"`
+				Unread  string `json:"unread"`
+			} `json:"data"`
+		}
+		if !decodeJSON(body, &response) || response.Count == nil || *response.Count < 0 || response.Data == nil {
+			return nil, errMessageMailbox
+		}
+		if len(response.Data) == 0 {
+			if *response.Count != 0 {
+				return nil, errMessagePagination
+			}
+			return unread, nil
+		}
+		if *response.Count == 0 || len(seen)+len(response.Data) > 10000 {
+			return nil, errMessagePagination
+		}
+		for _, row := range response.Data {
+			if !validMessageID(row.ID) || (row.Unread != "yes" && row.Unread != "no") {
+				return nil, errMessageMailbox
+			}
+			if seen[row.ID] {
+				return nil, errMessagePagination
+			}
+			seen[row.ID] = true
+			if row.Unread == "yes" {
+				unread = append(unread, unreadMessage{row.ID, strings.TrimSpace(row.Subject)})
+			}
+		}
+	}
+	return nil, errMessagePagination
+}
+
 func (c *Client) listUnreadNexusMessages(ctx context.Context) ([]unreadMessage, error) {
 	var unread []unreadMessage
 	seen := map[string]string{}
@@ -182,11 +235,7 @@ func (c *Client) listUnreadNexusMessages(ctx context.Context) ([]unreadMessage, 
 				return nil, errMessagePagination
 			}
 			u := c.nexusMailboxURL(box, page)
-			b, contentType, err := c.request(ctx, http.MethodGet, u, nil, c.auth(), htmlLimit)
-			if err != nil {
-				return nil, err
-			}
-			doc, err := nexusMessageDOM(b, contentType)
+			doc, err := c.fetchNexusMessagePage(ctx, u)
 			if err != nil {
 				return nil, err
 			}
@@ -216,6 +265,15 @@ func (c *Client) listUnreadNexusMessages(ctx context.Context) ([]unreadMessage, 
 		}
 	}
 	return unread, nil
+}
+
+func (c *Client) fetchNexusMessagePage(ctx context.Context, u *url.URL) (*html.Node, error) {
+	var contentType string
+	b, _, err := c.requestHTTP(ctx, http.MethodGet, u, nil, c.auth(), htmlLimit, nil, &contentType)
+	if err != nil {
+		return nil, err
+	}
+	return nexusMessageDOM(b, contentType)
 }
 
 func nexusMessageDOM(b []byte, contentType string) (*html.Node, error) {
@@ -260,7 +318,7 @@ func nexusMailboxRows(doc *html.Node, mailbox *url.URL, box string, page int) ([
 			return box == "-2" && page == 0
 		}
 		return false
-	}) != nil
+	}) != nil || pttimeEmptyMailbox(doc, mailbox)
 	var messages []unreadMessage
 	for _, row := range find(doc, func(n *html.Node) bool { return n.Data == "tr" || hasClass(n, "pm-item-row") }) {
 		modern := hasClass(row, "pm-item-row")
@@ -322,6 +380,30 @@ func nexusMailboxRows(doc *html.Node, mailbox *url.URL, box string, page int) ([
 	return messages, next, nil
 }
 
+func pttimeEmptyMailbox(doc *html.Node, mailbox *url.URL) bool {
+	host := strings.TrimPrefix(strings.ToLower(mailbox.Hostname()), "www.")
+	if host != "pttime.org" && host != "pttime.top" {
+		return false
+	}
+	outer := findFirst(doc, func(n *html.Node) bool { return attribute(n, "id") == "outer" })
+	if outer == nil {
+		return false
+	}
+	empty := false
+	walk(outer, func(n *html.Node) {
+		if n.Type == html.TextNode && strings.TrimSpace(n.Data) == "没有短讯，跳转。" {
+			empty = true
+		}
+	})
+	return empty && findFirst(outer, func(n *html.Node) bool {
+		if n.Data != "a" || strings.TrimSpace(messageNodeString(n)) != "所有短讯" {
+			return false
+		}
+		query, valid := selectiveMailboxQuery(mailbox, attribute(n, "href"))
+		return valid && len(query) == 0
+	}) != nil
+}
+
 func nexusMessageRowStatus(row *html.Node) (unread, read bool) {
 	unread = hasClass(row, "is-unread")
 	for _, node := range find(row, func(n *html.Node) bool {
@@ -374,11 +456,7 @@ func validMessageID(id string) bool {
 func (c *Client) readNexusMessage(ctx context.Context, message unreadMessage) error {
 	u := c.endpoint("messages.php")
 	u.RawQuery = url.Values{"action": {"viewmessage"}, "id": {message.id}}.Encode()
-	b, contentType, err := c.request(ctx, http.MethodGet, u, nil, c.auth(), htmlLimit)
-	if err != nil {
-		return err
-	}
-	doc, err := nexusMessageDOM(b, contentType)
+	doc, err := c.fetchNexusMessagePage(ctx, u)
 	if err != nil {
 		return err
 	}
